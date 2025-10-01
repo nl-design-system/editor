@@ -6,7 +6,7 @@
   "license": "SEE LICENSE IN LICENSE.md",
   "main": "dist/index.css",
   "keywords": [
-    "nl-design-system-community"
+    "nl-design-system"
   ],
   "private": true,
   "publishConfig": {
