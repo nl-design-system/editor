@@ -5,7 +5,6 @@ import Header from './components/header/Header.tsx';
 import { themeClass } from './theme.css.ts';
 
 function App() {
-
   return (
     <div className={clsx(appStyling, themeClass)}>
       <Header />

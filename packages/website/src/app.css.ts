@@ -15,9 +15,9 @@ globalStyle(':root', {
 globalStyle('body', {
   margin: 0,
   padding: 0,
-})
+});
 
 export const appStyling = style({
   margin: '0 auto',
   maxWidth: '800px',
-})
+});

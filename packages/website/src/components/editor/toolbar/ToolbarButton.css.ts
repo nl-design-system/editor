@@ -4,8 +4,7 @@ import { vars } from '../../../theme.css.ts';
 export const toolbarStyling = style({
   backgroundColor: '#fff',
   padding: vars.spacing.sm,
-})
-
+});
 
 export const toolbarButtonStyling = style({
   backgroundColor: '#1a1a1a',
