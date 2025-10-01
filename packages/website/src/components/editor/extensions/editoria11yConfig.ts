@@ -14,7 +14,7 @@ export const editoria11yConfig = {
   // that might be invisible, warn the user first:
   checkVisible: true,
 
-  cssUrls: ['/editoria11y.min.css'],
+  cssUrls: ['/vendor/editoria11y.min.css'],
 
   // Don't scan while the editor toolbar is open:
   doNotRun: '.editor-toolbar',
