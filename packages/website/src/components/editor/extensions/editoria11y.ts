@@ -1,11 +1,11 @@
-import { Extension } from '@tiptap/core'
+import { Extension } from '@tiptap/core';
 
 const Editoria11yExtension = Extension.create({
   name: 'customExtension',
 
   onUpdate() {
-    console.log(this.editor.getHTML())
+    console.log(this.editor.getHTML());
   },
-})
+});
 
-export default Editoria11yExtension
+export default Editoria11yExtension;

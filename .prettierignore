@@ -37,3 +37,5 @@ packages/web-components-stencil/www/
 # Use `terraform fmt` to fix formatting issues in Terraform files
 *.tf
 *.hcl
+
+packages/website/public

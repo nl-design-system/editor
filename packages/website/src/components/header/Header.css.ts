@@ -5,4 +5,4 @@ export const headerStyling = style({
   backgroundColor: '#78295F',
   color: '#fff',
   padding: vars.spacing.md,
-})
+});
