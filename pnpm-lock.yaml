@@ -54,6 +54,9 @@ importers:
       npm-package-json-lint:
         specifier: 9.0.0
         version: 9.0.0(typescript@5.8.3)
+      playwright:
+        specifier: 1.55.1
+        version: 1.55.1
       postcss:
         specifier: 8.5.6
         version: 8.5.6
