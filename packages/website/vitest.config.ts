@@ -1,5 +1,5 @@
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
-import { defineConfig } from 'vitest/config'
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [vanillaExtractPlugin()],
@@ -7,10 +7,8 @@ export default defineConfig({
     browser: {
       enabled: true,
       headless: true,
-      instances: [
-        { browser: 'chromium' },
-      ],
+      instances: [{ browser: 'chromium' }],
       provider: 'playwright',
     },
   },
-})
+});
