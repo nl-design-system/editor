@@ -10,5 +10,6 @@ export default defineConfig({
       instances: [{ browser: 'chromium' }],
       provider: 'playwright',
     },
+    exclude: ['**/e2e/**'],
   },
 });
