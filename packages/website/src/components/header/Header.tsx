@@ -1,4 +1,4 @@
-import { headerStyling } from './Header.css.ts';
+import { headerStyling } from './Header.css';
 
 function Header() {
   return (

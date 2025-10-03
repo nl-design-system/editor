@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import Header from './Header.tsx';
+import Header from './Header';
 
 test('<Header />', async () => {
   const { getByText } = render(<Header />);

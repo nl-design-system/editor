@@ -1,8 +1,8 @@
 import clsx from 'clsx';
-import { appStyling } from './app.css.ts';
-import TiptapEditor from './components/editor/TiptapEditor.tsx';
-import Header from './components/header/Header.tsx';
-import { themeClass } from './theme.css.ts';
+import { appStyling } from './app.css';
+import TiptapEditor from './components/editor/TiptapEditor';
+import Header from './components/header/Header';
+import { themeClass } from './theme.css';
 
 function App() {
   return (

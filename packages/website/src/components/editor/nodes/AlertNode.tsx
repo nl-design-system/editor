@@ -5,7 +5,7 @@ import { NodeViewWrapper, NodeViewContent, ReactNodeViewRenderer, type ReactNode
 const alertTypes: Array<'info' | 'warning' | 'error' | 'ok'> = ['info', 'warning', 'error', 'ok'];
 
 function AlertNodeView({ node, updateAttributes }: ReactNodeViewProps<HTMLDivElement>) {
-  const type = node.attrs.type || 'info';
+  const type = node.attrs['type'] || 'info';
   return (
     <NodeViewWrapper as="div">
       <select value={type} onChange={(e) => updateAttributes({ type: e.target.value as 'info' | 'warning' | 'error' })}>

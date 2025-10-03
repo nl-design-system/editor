@@ -3,12 +3,12 @@ import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
 import { useEditor, EditorContent, EditorContext } from '@tiptap/react';
 import { useEffect, useMemo } from 'react';
-import Editoria11yExtension from './extensions/editoria11y.ts';
-import { editoria11yConfig } from './extensions/editoria11yConfig.ts';
-import AlertNode from './nodes/AlertNode.tsx';
-import CustomHeadingNode from './nodes/CustomHeadingNode.ts';
-import { editorStyling } from './TiptapEditor.css.ts';
-import Toolbar from './toolbar/Toolbar.tsx';
+import Editoria11yExtension from './extensions/editoria11y';
+import { editoria11yConfig } from './extensions/editoria11yConfig';
+import AlertNode from './nodes/AlertNode';
+import CustomHeadingNode from './nodes/CustomHeadingNode';
+import { editorStyling } from './TiptapEditor.css';
+import Toolbar from './toolbar/Toolbar';
 
 let ed11yTest: unknown;
 

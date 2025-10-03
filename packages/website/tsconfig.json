@@ -1,4 +1,11 @@
 {
-  "files": [],
-  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "lib": ["dom"],
+    "module": "Preserve",
+    "moduleResolution": "bundler"
+  },
+  "extends": "@nl-design-system/tsconfig",
+  "include": ["./src/"]
 }

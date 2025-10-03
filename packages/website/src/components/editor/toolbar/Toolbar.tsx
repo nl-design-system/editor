@@ -1,6 +1,6 @@
 import { useCurrentEditor } from '@tiptap/react';
 import clsx from 'clsx';
-import { toolbarButtonStyling, toolbarStyling } from './ToolbarButton.css.ts';
+import { toolbarButtonStyling, toolbarStyling } from './ToolbarButton.css';
 
 function Toolbar() {
   const { editor } = useCurrentEditor();

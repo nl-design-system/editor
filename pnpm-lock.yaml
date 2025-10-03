@@ -124,6 +124,9 @@ importers:
       '@eslint/js':
         specifier: 9.36.0
         version: 9.36.0
+      '@nl-design-system/tsconfig':
+        specifier: 1.0.4
+        version: 1.0.4(typescript@5.8.3)
       '@playwright/test':
         specifier: 1.55.1
         version: 1.55.1
@@ -718,6 +721,11 @@ packages:
     resolution: {integrity: sha512-CU1IOIZk6gV9048rU/1wfV2OaQKhdRFCktpC7jNj4NpnNQstOHKUojmB08xajxPTzwwerQS303dGSrC1XW6r/w==}
     peerDependencies:
       eslint: ^9.22.0
+
+  '@nl-design-system/tsconfig@1.0.4':
+    resolution: {integrity: sha512-5EeIqrFCBrumZRlNPM3HlpnSzy+P2L6LwkrbfCdzDDRLtY0ZrlW+InsymvHbFOcWQa/4DgLq2VyzpTo5W7oDAg==}
+    peerDependencies:
+      typescript: ^5.4
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -4670,6 +4678,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
       - typescript
+
+  '@nl-design-system/tsconfig@1.0.4(typescript@5.8.3)':
+    dependencies:
+      typescript: 5.8.3
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
