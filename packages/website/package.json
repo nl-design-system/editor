@@ -14,7 +14,9 @@
     "build:analyze": "pnpx vite-bundle-analyzer",
     "lint": "eslint",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "pnpm run -r '/^test:.+$/'",
+    "test:vitest": "vitest",
+    "test:playwright": "playwright test"
   },
   "dependencies": {
     "@rijkshuisstijl-community/components-react": "7.0.0",
@@ -33,7 +35,9 @@
   },
   "devDependencies": {
     "@eslint/js": "9.36.0",
+    "@playwright/test": "1.55.1",
     "@rijkshuisstijl-community/font": "1.1.1",
+    "@types/node": "22.16.4",
     "@types/react": "19.1.15",
     "@types/react-dom": "19.1.9",
     "@vanilla-extract/vite-plugin": "5.1.1",
