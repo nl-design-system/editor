@@ -15,13 +15,14 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   // @ts-expect-error process.env.CI
   forbidOnly: !!process.env.CI,
+  outputDir: 'tmp/test-results',
   projects: [
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  reporter: 'html',
+  reporter: [['html', { outputFolder: 'tmp/playwright-report' }]],
   testDir: './e2e',
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */

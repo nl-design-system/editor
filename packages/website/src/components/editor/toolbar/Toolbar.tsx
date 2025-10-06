@@ -6,7 +6,7 @@ function Toolbar() {
   const { editor } = useCurrentEditor();
 
   return (
-    <div className={toolbarStyling} role="toolbar" aria-label="Werkbalk tekstbewerker">
+    <div className={toolbarStyling} aria-label="Werkbalk tekstbewerker">
       <button
         aria-label="Heading level 1"
         onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
