@@ -15,7 +15,7 @@
     "build:ts": "tsc -b",
     "build:vite": "vite build",
     "preview": "vite preview",
-    "test": "pnpm run -r '/^test:.+$/'",
+    "test": "pnpm run --recursive '/^test:.+$/'",
     "test:vitest": "vitest",
     "test:playwright": "playwright test"
   },
