@@ -1,5 +1,5 @@
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
-import { defineConfig } from 'vitest/config';
+import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [vanillaExtractPlugin()],
@@ -9,6 +9,20 @@ export default defineConfig({
       headless: true,
       instances: [{ browser: 'chromium' }],
       provider: 'playwright',
+    },
+    coverage: {
+      exclude: [
+        'src/main.tsx',
+        '**/vendor/**',
+        'playwright.config.ts',
+        '**/*.css.ts',
+        ...coverageConfigDefaults.exclude,
+      ],
+      thresholds: {
+        branches: 80,
+        lines: 80,
+        statements: 80,
+      },
     },
     exclude: ['**/e2e/**'],
   },

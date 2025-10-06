@@ -19,7 +19,7 @@ const content = `<h1>NL Design System Editor kop 1</h1>
 
 const TiptapEditor = () => {
   useEffect(() => {
-    if (!ed11yTest) {
+    if (!ed11yTest && import.meta.env.MODE !== 'test') {
       // @ts-expect-error global variable Ed11y
       ed11yTest = new Ed11y(editoria11yConfig);
     }
