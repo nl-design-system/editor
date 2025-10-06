@@ -1,47 +1,63 @@
-import { useCurrentEditor } from '@tiptap/react';
-import clsx from 'clsx';
-import { toolbarButtonStyling, toolbarStyling } from './ToolbarButton.css';
+import { useCurrentEditor, useEditorState } from '@tiptap/react';
+import { toolbarStyling } from './ToolbarButton.css';
+import ToolbarButton from './ToolbarButton.tsx';
 
 function Toolbar() {
   const { editor } = useCurrentEditor();
 
+  const editorState = useEditorState({
+    editor,
+    // the selector function is used to select the state you want to react to
+    selector: ({ editor }) => {
+      if (!editor) return null;
+
+      return {
+        isAlert: editor.isActive('alert'),
+        isHeading1: editor.isActive('heading', { level: 1 }),
+        isHeading2: editor.isActive('heading', { level: 2 }),
+        isHeading3: editor.isActive('heading', { level: 3 }),
+        isParagraph: editor.isActive('paragraph'),
+      };
+    },
+  });
+
   return (
     <div className={toolbarStyling} aria-label="Werkbalk tekstbewerker">
-      <button
+      <ToolbarButton
         aria-label="Heading level 1"
         onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
-        className={clsx(editor?.isActive('heading', { level: 1 }) ? 'is-active' : '', toolbarButtonStyling)}
+        isActive={!!editorState?.isHeading1}
       >
         H1
-      </button>
-      <button
+      </ToolbarButton>
+      <ToolbarButton
         aria-label="Heading level 2"
         onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={clsx(editor?.isActive('heading', { level: 2 }) ? 'is-active' : '', toolbarButtonStyling)}
+        isActive={!!editorState?.isHeading2}
       >
         H2
-      </button>
-      <button
+      </ToolbarButton>
+      <ToolbarButton
         aria-label="Heading level 3"
         onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}
-        className={clsx(editor?.isActive('heading', { level: 3 }) ? 'is-active' : '', toolbarButtonStyling)}
+        isActive={!!editorState?.isHeading3}
       >
         H3
-      </button>
-      <button
+      </ToolbarButton>
+      <ToolbarButton
         aria-label="Paragraph"
-        onClick={() => editor?.commands.setParagraph()}
-        className={clsx(editor?.isActive('paragraph') ? 'is-active' : '', toolbarButtonStyling)}
+        onClick={() => editor?.chain().focus().setParagraph()}
+        isActive={!!editorState?.isParagraph}
       >
         P
-      </button>
-      <button
+      </ToolbarButton>
+      <ToolbarButton
         aria-label="Alert"
         onClick={() => editor?.commands.setAlert('info')}
-        className={clsx(editor?.isActive('alert') ? 'is-active' : '', toolbarButtonStyling)}
+        isActive={!!editorState?.isAlert}
       >
         !
-      </button>
+      </ToolbarButton>
     </div>
   );
 }

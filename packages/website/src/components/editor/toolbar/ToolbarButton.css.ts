@@ -24,6 +24,9 @@ export const toolbarButtonStyling = style({
     '&:hover': {
       borderColor: '#646cff',
     },
+    '&.--active': {
+      backgroundColor: '#424242',
+    },
   },
   transition: 'border-color 0.25s',
 });
