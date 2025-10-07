@@ -12,7 +12,7 @@
     "dev": "vite",
     "build": "npm-run-all build:ts build:vite",
     "build:analyze": "cross-env ANALYZE_BUNDLE=true vite build",
-    "build:ts": "tsc -b",
+    "build:ts": "tsc --build",
     "build:vite": "vite build",
     "preview": "vite preview",
     "pretest": "pnpm exec playwright install --with-deps",

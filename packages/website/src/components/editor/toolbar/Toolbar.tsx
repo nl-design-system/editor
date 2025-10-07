@@ -26,35 +26,35 @@ function Toolbar() {
       <ToolbarButton
         aria-label="Heading level 1"
         onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
-        isActive={!!editorState?.isHeading1}
+        pressed={!!editorState?.isHeading1}
       >
         H1
       </ToolbarButton>
       <ToolbarButton
         aria-label="Heading level 2"
         onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
-        isActive={!!editorState?.isHeading2}
+        pressed={!!editorState?.isHeading2}
       >
         H2
       </ToolbarButton>
       <ToolbarButton
         aria-label="Heading level 3"
         onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}
-        isActive={!!editorState?.isHeading3}
+        pressed={!!editorState?.isHeading3}
       >
         H3
       </ToolbarButton>
       <ToolbarButton
         aria-label="Paragraph"
         onClick={() => editor?.chain().focus().setParagraph()}
-        isActive={!!editorState?.isParagraph}
+        pressed={!!editorState?.isParagraph}
       >
         P
       </ToolbarButton>
       <ToolbarButton
         aria-label="Alert"
         onClick={() => editor?.commands.setAlert('info')}
-        isActive={!!editorState?.isAlert}
+        pressed={!!editorState?.isAlert}
       >
         !
       </ToolbarButton>

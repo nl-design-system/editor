@@ -9,6 +9,7 @@ export default defineConfig({
       headless: true,
       instances: [{ browser: 'chromium' }],
       provider: 'playwright',
+      screenshotDirectory: 'tmp/screenshots',
     },
     coverage: {
       exclude: [
