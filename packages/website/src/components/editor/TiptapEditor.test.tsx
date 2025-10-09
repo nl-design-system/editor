@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import TiptapEditor from './TiptapEditor';
+import TiptapEditor from './TiptapEditor.ts';
 
 describe('<TiptapEditor />', () => {
   it('should change selected text to heading level 3', async () => {

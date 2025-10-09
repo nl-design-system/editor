@@ -13,7 +13,7 @@ export default defineConfig({
     },
     coverage: {
       exclude: [
-        'src/main.tsx',
+        'src/main.ts',
         '**/vendor/**',
         'playwright.config.ts',
         '**/*.css.ts',

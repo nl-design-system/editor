@@ -1,65 +1,49 @@
-import { useCurrentEditor, useEditorState } from '@tiptap/react';
-import { toolbarStyling } from './ToolbarButton.css';
-import ToolbarButton from './ToolbarButton.tsx';
+import type { Editor } from '@tiptap/core';
+import { consume } from '@lit/context';
+import { LitElement, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { tiptapContext } from '../context/TiptapContext.ts';
+import ToolbarStyles from './Toolbar.css.ts';
 
-function Toolbar() {
-  const { editor } = useCurrentEditor();
+@customElement('nlds-editor-toolbar')
+export class EditorToolbar extends LitElement {
+  @consume({ context: tiptapContext })
+  @property({ attribute: false })
+  public editor?: Editor;
 
-  const editorState = useEditorState({
-    editor,
-    // the selector function is used to select the state you want to react to
-    selector: ({ editor }) => {
-      if (!editor) return null;
+  static override styles = [ToolbarStyles];
 
-      return {
-        isAlert: editor.isActive('alert'),
-        isHeading1: editor.isActive('heading', { level: 1 }),
-        isHeading2: editor.isActive('heading', { level: 2 }),
-        isHeading3: editor.isActive('heading', { level: 3 }),
-        isParagraph: editor.isActive('paragraph'),
-      };
-    },
-  });
-
-  return (
-    <div className={toolbarStyling} aria-label="Werkbalk tekstbewerker">
-      <ToolbarButton
-        aria-label="Heading level 1"
-        onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
-        pressed={!!editorState?.isHeading1}
-      >
-        H1
-      </ToolbarButton>
-      <ToolbarButton
-        aria-label="Heading level 2"
-        onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
-        pressed={!!editorState?.isHeading2}
-      >
-        H2
-      </ToolbarButton>
-      <ToolbarButton
-        aria-label="Heading level 3"
-        onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}
-        pressed={!!editorState?.isHeading3}
-      >
-        H3
-      </ToolbarButton>
-      <ToolbarButton
-        aria-label="Paragraph"
-        onClick={() => editor?.chain().focus().setParagraph()}
-        pressed={!!editorState?.isParagraph}
-      >
-        P
-      </ToolbarButton>
-      <ToolbarButton
-        aria-label="Alert"
-        onClick={() => editor?.commands.setAlert('info')}
-        pressed={!!editorState?.isAlert}
-      >
-        !
-      </ToolbarButton>
-    </div>
-  );
+  override render() {
+    console.log(this.editor);
+    return html`
+      <div aria-label="Werkbalk tekstbewerker">
+        <button
+          aria-label="Heading level 1"
+          @click=${() => this.editor?.chain().focus().toggleHeading({ level: 1 }).run()}
+          .aria-pressed=${this.editor?.isActive('heading', { level: 1 }) ?? false}
+        >
+          H1
+        </button>
+        <button
+          aria-label="Heading level 2"
+          @click=${() => this.editor?.chain().focus().toggleHeading({ level: 2 }).run()}
+        >
+          H2
+        </button>
+        <button
+          aria-label="Heading level 3"
+          @click=${() => this.editor?.chain().focus().toggleHeading({ level: 3 }).run()}
+        >
+          H3
+        </button>
+        <button aria-label="Paragraph" @click=${() => this.editor?.chain().focus().setParagraph().run()}>P</button>
+      </div>
+    `;
+  }
 }
 
-export default Toolbar;
+declare global {
+  interface HTMLElementTagNameMap {
+    'nlds-editor-toolbar': EditorToolbar;
+  }
+}
