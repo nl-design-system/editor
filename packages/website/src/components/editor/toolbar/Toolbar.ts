@@ -51,9 +51,9 @@ export class EditorToolbar extends LitElement {
           H3
         </nlds-editor-toolbar-button>
         <nlds-editor-toolbar-button
-          label="Heading level 3"
-          .pressed=${this.editor?.isActive('heading', { level: 3 }) ?? false}
-          @click=${() => this.editor?.chain().focus().tog({ level: 3 }).run()}
+          label="Paragraph"
+          .pressed=${this.editor?.isActive('paragraph') ?? false}
+          @click=${() => this.editor?.chain().focus().setParagraph().run()}
         >
           P
         </nlds-editor-toolbar-button>

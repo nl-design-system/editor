@@ -7,7 +7,6 @@ import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { tiptapContext } from './context/TiptapContext.ts';
 import './toolbar/Toolbar.ts';
-import Editoria11yExtension from './extensions/editoria11y.ts';
 import CustomHeadingNode from './nodes/CustomHeadingNode.ts';
 
 const defaultContent = `
@@ -20,7 +19,7 @@ const defaultContent = `
 @customElement('nlds-editor')
 export class NLDSEditor extends LitElement {
   @provide({ context: tiptapContext })
-  editor = new Editor({
+  editor: Editor = new Editor({
     content: defaultContent,
     editorProps: {
       attributes: {
@@ -30,7 +29,7 @@ export class NLDSEditor extends LitElement {
       },
     },
     element: this.shadowRoot?.querySelector('.editor') as HTMLElement,
-    extensions: [Document, Paragraph, Text, CustomHeadingNode, Editoria11yExtension],
+    extensions: [Document, Paragraph, Text, CustomHeadingNode],
   });
 
   override firstUpdated() {
@@ -50,5 +49,11 @@ export class NLDSEditor extends LitElement {
       <nlds-editor-toolbar></nlds-editor-toolbar>
       <div class="editor"></div>
     `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'nlds-editor': NLDSEditor;
   }
 }

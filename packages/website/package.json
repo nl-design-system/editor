@@ -17,7 +17,7 @@
     "preview": "vite preview",
     "pretest": "pnpm exec playwright install --with-deps",
     "test": "pnpm run --recursive '/^test:.+$/'",
-    "test:vitest": "vitest",
+    "test:vitest": "vitest --coverage",
     "test:playwright": "playwright test"
   },
   "dependencies": {

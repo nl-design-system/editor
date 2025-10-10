@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rich-text Editor - NL Design System</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <script src="/vendor/editoria11y.min.js"></script>
     <style type="text/css">
       :root {
         --utrecht-root-font-family: 'Source Sans Pro';
         --utrecht-headings-font-family: 'Fira Sans';
         background-color: #242424;
-        font-family: Fira Sans, Arial, sans-serif;
+        font-family:
+          Fira Sans,
+          Arial,
+          sans-serif;
         font-synthesis: none;
         font-weight: 400;
         line-height: 1.5;
@@ -35,16 +37,16 @@
     </style>
   </head>
   <body class="utrecht-body">
-  <main>
-    <header>
-      <h1 class="utrecht-heading-1">Rich-text editor met editoria11y (PoC)</h1>
-      <p>
-        In dit project wordt de Tiptap rich text editor gebruikt, een flexibele en uitbreidbare editor gebaseerd op
-        ProseMirror. Editoria11y wordt ingezet voor live feedback aan de redacteur.
-      </p>
-    </header>
-    <nlds-editor></nlds-editor>
-  </main>
+    <main>
+      <header>
+        <h1 class="utrecht-heading-1">NL Design System - Rich-text editor</h1>
+        <p>
+          In dit project wordt een customized versie van de Tiptap rich text editor
+          gebruikt, een flexibele en uitbreidbare editor gebaseerd op ProseMirror.
+        </p>
+      </header>
+      <nlds-editor></nlds-editor>
+    </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
