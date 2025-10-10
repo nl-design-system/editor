@@ -1,7 +1,7 @@
 import { css } from 'lit';
 
 export default css`
-  button {
+  .nlds-editor-toolbar__button {
     background-color: #1a1a1a;
     border: 1px solid transparent;
     border-radius: 8px;
@@ -12,5 +12,9 @@ export default css`
     font-weight: 0;
     margin-right: 0.5rem;
     padding: 0.6em 1.2em;
+  }
+
+  .nlds-editor-toolbar__button--pressed {
+    background-color: #4c4c4c;
   }
 `;

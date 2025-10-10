@@ -6,7 +6,7 @@ import Text from '@tiptap/extension-text';
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { tiptapContext } from './context/TiptapContext.ts';
-import './toolbar/Toolbar.tsx';
+import './toolbar/Toolbar.ts';
 import Editoria11yExtension from './extensions/editoria11y.ts';
 import CustomHeadingNode from './nodes/CustomHeadingNode.ts';
 
