@@ -6,7 +6,7 @@ import { tiptapContext } from '../context/TiptapContext.ts';
 import toolbarStyles from './toolbar.css.ts';
 import './ToolbarButton.ts';
 
-@customElement('nlds-editor-toolbar')
+@customElement('clippy-editor-toolbar')
 export class EditorToolbar extends LitElement {
   @consume({ context: tiptapContext })
   @property({ attribute: false })
@@ -28,35 +28,35 @@ export class EditorToolbar extends LitElement {
 
   override render() {
     return html`
-      <div class="nlds-editor-toolbar__wrapper" aria-label="Werkbalk tekstbewerker">
-        <nlds-editor-toolbar-button
+      <div class="clippy-editor-toolbar__wrapper" aria-label="Werkbalk tekstbewerker">
+        <clippy-editor-toolbar-button
           label="Heading level 1"
           .pressed=${this.editor?.isActive('heading', { level: 1 }) ?? false}
           .onClick=${() => this.editor?.chain().focus().toggleHeading({ level: 1 }).run()}
         >
           H1
-        </nlds-editor-toolbar-button>
-        <nlds-editor-toolbar-button
+        </clippy-editor-toolbar-button>
+        <clippy-editor-toolbar-button
           label="Heading level 2"
           .pressed=${this.editor?.isActive('heading', { level: 2 }) ?? false}
           @click=${() => this.editor?.chain().focus().toggleHeading({ level: 2 }).run()}
         >
           H2
-        </nlds-editor-toolbar-button>
-        <nlds-editor-toolbar-button
+        </clippy-editor-toolbar-button>
+        <clippy-editor-toolbar-button
           label="Heading level 3"
           .pressed=${this.editor?.isActive('heading', { level: 3 }) ?? false}
           @click=${() => this.editor?.chain().focus().toggleHeading({ level: 3 }).run()}
         >
           H3
-        </nlds-editor-toolbar-button>
-        <nlds-editor-toolbar-button
+        </clippy-editor-toolbar-button>
+        <clippy-editor-toolbar-button
           label="Paragraph"
           .pressed=${this.editor?.isActive('paragraph') ?? false}
           @click=${() => this.editor?.chain().focus().setParagraph().run()}
         >
           P
-        </nlds-editor-toolbar-button>
+        </clippy-editor-toolbar-button>
       </div>
     `;
   }
@@ -64,6 +64,6 @@ export class EditorToolbar extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'nlds-editor-toolbar': EditorToolbar;
+    'clippy-editor-toolbar': EditorToolbar;
   }
 }

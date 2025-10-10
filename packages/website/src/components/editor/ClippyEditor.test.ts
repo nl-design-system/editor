@@ -1,11 +1,11 @@
 import userEvent from '@testing-library/user-event';
 import { page } from '@vitest/browser/context';
-import './TiptapEditor.ts';
+import './ClippyEditor.ts';
 import { describe, it, expect, beforeEach } from 'vitest';
 
-describe('<nlds-editor>', () => {
+describe('<clippy-editor>', () => {
   beforeEach(() => {
-    document.body.innerHTML = '<nlds-editor></nlds-editor>';
+    document.body.innerHTML = '<clippy-editor></clippy-editor>';
   });
 
   it('should change selected text to heading level 3', async () => {
