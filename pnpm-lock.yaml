@@ -93,6 +93,9 @@ importers:
       '@nl-design-system-community/ma-design-tokens':
         specifier: 2.5.0
         version: 2.5.0
+      '@tabler/icons':
+        specifier: 3.35.0
+        version: 3.35.0
       '@tiptap/core':
         specifier: 3.6.2
         version: 3.6.2(@tiptap/pm@3.6.2)
@@ -779,6 +782,9 @@ packages:
     resolution: {integrity: sha512-zGIbEVVXVtauFgl3MRwGWEN36P5ZGenHRMgNw88X5wEhEBpq0XrMEZwOn07+ICrwM17XO5xfMZqh0OldCH5VTA==}
     cpu: [x64]
     os: [win32]
+
+  '@tabler/icons@3.35.0':
+    resolution: {integrity: sha512-yYXe+gJ56xlZFiXwV9zVoe3FWCGuZ/D7/G4ZIlDtGxSx5CGQK110wrnT29gUj52kEZoxqF7oURTk97GQxELOFQ==}
 
   '@testing-library/dom@10.4.1':
     resolution: {integrity: sha512-o4PXJQidqJl82ckFaXUeoAW+XysPLauYI43Abki5hABd853iMhitooc6znOnczgbTYmEP6U6/y1ZyKAIsvMKGg==}
@@ -4661,6 +4667,8 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.52.3':
     optional: true
+
+  '@tabler/icons@3.35.0': {}
 
   '@testing-library/dom@10.4.1':
     dependencies:

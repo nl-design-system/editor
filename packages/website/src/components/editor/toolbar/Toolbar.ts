@@ -1,10 +1,15 @@
 import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
+import Heading1Icon from '@tabler/icons/outline/h-1.svg?raw';
+import Heading2Icon from '@tabler/icons/outline/h-2.svg?raw';
+import Heading3Icon from '@tabler/icons/outline/h-3.svg?raw';
+import PilcrowIcon from '@tabler/icons/outline/pilcrow.svg?raw';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { tiptapContext } from '../context/TiptapContext.ts';
-import toolbarStyles from './toolbar.css.ts';
 import './ToolbarButton.ts';
+import toolbarStyles from './toolbar.css.ts';
 
 @customElement('clippy-editor-toolbar')
 export class EditorToolbar extends LitElement {
@@ -18,11 +23,11 @@ export class EditorToolbar extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.editor?.on('selectionUpdate', this._onUpdate);
+    this.editor?.on('transaction', this._onUpdate);
   }
 
   override disconnectedCallback() {
-    this.editor?.off('selectionUpdate', this._onUpdate);
+    this.editor?.off('transaction', this._onUpdate);
     super.disconnectedCallback();
   }
 
@@ -34,28 +39,28 @@ export class EditorToolbar extends LitElement {
           .pressed=${this.editor?.isActive('heading', { level: 1 }) ?? false}
           .onClick=${() => this.editor?.chain().focus().toggleHeading({ level: 1 }).run()}
         >
-          H1
+          ${unsafeSVG(Heading1Icon)}
         </clippy-editor-toolbar-button>
         <clippy-editor-toolbar-button
           label="Heading level 2"
           .pressed=${this.editor?.isActive('heading', { level: 2 }) ?? false}
           @click=${() => this.editor?.chain().focus().toggleHeading({ level: 2 }).run()}
         >
-          H2
+          ${unsafeSVG(Heading2Icon)}
         </clippy-editor-toolbar-button>
         <clippy-editor-toolbar-button
           label="Heading level 3"
           .pressed=${this.editor?.isActive('heading', { level: 3 }) ?? false}
           @click=${() => this.editor?.chain().focus().toggleHeading({ level: 3 }).run()}
         >
-          H3
+          ${unsafeSVG(Heading3Icon)}
         </clippy-editor-toolbar-button>
         <clippy-editor-toolbar-button
           label="Paragraph"
           .pressed=${this.editor?.isActive('paragraph') ?? false}
           @click=${() => this.editor?.chain().focus().setParagraph().run()}
         >
-          P
+          ${unsafeSVG(PilcrowIcon)}
         </clippy-editor-toolbar-button>
       </div>
     `;

@@ -25,6 +25,7 @@
     "@fontsource/source-sans-pro": "5.2.5",
     "@lit/context": "1.1.6",
     "@nl-design-system-community/ma-design-tokens": "2.5.0",
+    "@tabler/icons": "3.35.0",
     "@tiptap/core": "3.6.2",
     "@tiptap/extension-document": "3.6.2",
     "@tiptap/extension-heading": "3.6.2",

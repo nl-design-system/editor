@@ -11,7 +11,7 @@ export default css`
     font-size: 1em;
     font-weight: 0;
     margin-right: 0.5rem;
-    padding: 0.6em 1.2em;
+    padding: 6px 10px;
   }
 
   .clippy-editor-toolbar__button--pressed {
