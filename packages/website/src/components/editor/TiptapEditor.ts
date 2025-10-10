@@ -8,6 +8,7 @@ import { customElement } from 'lit/decorators.js';
 import { tiptapContext } from './context/TiptapContext.ts';
 import './toolbar/Toolbar.ts';
 import CustomHeadingNode from './nodes/CustomHeadingNode.ts';
+import { editorStyles } from './tiptapEditor.css.ts';
 
 const defaultContent = `
 <h1>NL Design System Editor kop 1</h1>
@@ -31,6 +32,8 @@ export class NLDSEditor extends LitElement {
     element: this.shadowRoot?.querySelector('.editor') as HTMLElement,
     extensions: [Document, Paragraph, Text, CustomHeadingNode],
   });
+
+  static override styles = [editorStyles];
 
   override firstUpdated() {
     const editorEl = this.shadowRoot?.querySelector('.editor');

@@ -5,47 +5,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rich-text Editor - NL Design System</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <style type="text/css">
+    <style>
       :root {
         --utrecht-root-font-family: 'Source Sans Pro';
         --utrecht-headings-font-family: 'Fira Sans';
-        background-color: #242424;
-        font-family:
-          Fira Sans,
-          Arial,
-          sans-serif;
-        font-synthesis: none;
-        font-weight: 400;
-        line-height: 1.5;
+      }
+
+      body {
         margin: 0;
-        -moz-osx-font-smoothing: grayscale;
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
+        padding: 0;
       }
 
-      main {
-        display: block;
-        margin: 0 auto;
-        max-width: 800px;
+      .ma-banner {
+        --ma-banner-copy-max-inline-size: 39rem;
+
+        container-name: ma-banner;
+        container-type: inline-size;
       }
 
-      header {
-        background-color: #78295f;
-        color: #fff;
-        padding: 1rem;
+      .ma-banner__content {
+        column-gap: var(--ma-banner-content-column-gap);
+        display: grid;
+        grid-template-areas:
+          'header'
+          'copy'
+          'footer';
+        grid-template-columns: auto;
+        grid-template-rows: repeat(3, auto);
+        margin-inline: auto;
+        max-inline-size: var(--ma-banner-content-max-inline-size);
+        padding-block-end: var(--ma-banner-content-padding-block-end);
+        padding-block-start: var(--ma-banner-content-padding-block-start);
+        padding-inline-end: var(--ma-banner-content-padding-inline-end);
+        padding-inline-start: var(--ma-banner-content-padding-inline-start);
+        row-gap: var(--ma-banner-content-row-gap);
+
+        & .ma-banner__header {
+          grid-area: header;
+          max-inline-size: 622px;
+        }
+
+        & .ma-banner__copy {
+          grid-area: copy;
+          max-inline-size: 622px;
+        }
+
+        & .ma-banner__footer {
+          grid-area: footer;
+        }
+
+        @container ma-banner (min-width: 44rem) {
+          padding-block-end: var(--ma-banner-content-large-vw-padding-block-end);
+          padding-block-start: var(--ma-banner-content-large-vw-padding-block-start);
+          padding-inline-end: var(--ma-banner-content-large-vw-padding-inline-end);
+          padding-inline-start: var(--ma-banner-content-large-vw-padding-inline-start);
+        }
+      }
+
+      .ma-banner--hero {
+        background-color: var(--ma-banner-hero-background-color);
+      }
+
+      .ma-page-section {
+        --ma-page-section-max-inline-size: 1024px;
+        --ma-page-section-margin-block-end: 0;
+        --ma-page-section-margin-block-start: 0;
+        --ma-page-section-padding-inline-end: 0;
+        --ma-page-section-padding-inline-start: 0;
+        --ma-page-section-row-gap: var(--basis-space-inline-lg);
+
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        inline-size: 100%;
+        margin-block-end: var(--ma-page-section-margin-block-end, 0);
+        margin-block-start: var(--ma-page-section-margin-block-start, 0);
+        margin-inline-end: var(--ma-page-section-margin-inline-end, auto);
+        margin-inline-start: var(--ma-page-section-margin-inline-start, auto);
+        max-inline-size: var(--ma-page-section-max-inline-size);
+        padding-block-end: var(--ma-page-section-padding-block-end, 0);
+        padding-block-start: var(--ma-page-section-padding-block-start, 0);
+        padding-inline-end: var(--ma-page-section-padding-inline-end, 0);
+        padding-inline-start: var(--ma-page-section-padding-inline-start, 0);
+        row-gap: var(--ma-page-section-row-gap);
+      }
+
+      .ma-page-section--with-space {
+        --ma-page-section-margin-block-end: var(--basis-space-inline-6xl);
+        --ma-page-section-margin-block-start: var(--basis-space-inline-6xl);
+        --ma-page-section-padding-inline-end: var(--basis-space-inline-xl);
+        --ma-page-section-padding-inline-start: var(--basis-space-inline-xl);
       }
     </style>
   </head>
   <body class="utrecht-body">
     <main>
-      <header>
-        <h1 class="utrecht-heading-1">NL Design System - Rich-text editor</h1>
-        <p>
-          In dit project wordt een customized versie van de Tiptap rich text editor gebruikt, een flexibele en
-          uitbreidbare editor gebaseerd op ProseMirror.
-        </p>
-      </header>
-      <nlds-editor></nlds-editor>
+      <section class="ma-banner ma-banner--hero">
+        <div class="ma-banner__content">
+          <header class="ma-banner__header">
+            <h1 class="utrecht-heading-1">NL Design System - Rich-text editor</h1>
+          </header>
+          <div class="ma-banner__copy">
+            <p class="utrecht-paragraph">
+              In dit project wordt een customized versie van de Tiptap rich text editor gebruikt, een flexibele en
+              uitbreidbare editor gebaseerd op ProseMirror.
+            </p>
+          </div>
+          <footer class="ma-banner__footer">
+            <div class="utrecht-action-group">
+              <a
+                class="utrecht-button-link utrecht-button-link--html-a utrecht-button-link--primary-action"
+                href="https://github.com/nl-design-system/editor"
+              >
+                Clippy editor op GitHub
+              </a>
+            </div>
+          </footer>
+        </div>
+      </section>
+      <section class="ma-page-section ma-page-section--with-space">
+        <nlds-editor></nlds-editor>
+      </section>
     </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
