@@ -1,7 +1,7 @@
 import { css } from 'lit';
 
 export default css`
-  .clippy-editor-toolbar__button {
+  .clippy-toolbar-button {
     background-color: #fff;
     border: 1px solid var(--ma-color-paars-8);
     border-radius: 4px;
@@ -11,7 +11,7 @@ export default css`
     padding-inline: 10px;
   }
 
-  .clippy-editor-toolbar__button--pressed {
+  .clippy-toolbar-button--pressed {
     background-color: var(--ma-color-paars-1);
     border-color: var(--ma-color-grijs-6);
   }

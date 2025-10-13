@@ -17,8 +17,8 @@ export class ToolbarButton extends LitElement {
         aria-label=${this.label}
         aria-pressed=${this.pressed}
         class=${classMap({
-          'clippy-editor-toolbar__button': true,
-          'clippy-editor-toolbar__button--pressed': this.pressed,
+          'clippy-toolbar-button': true,
+          'clippy-toolbar-button--pressed': this.pressed,
         })}
         @click=${this.onClick}
       >
