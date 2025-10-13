@@ -4,6 +4,7 @@ export const editorStyles = css`
   :host {
     display: block;
     background-color: #fff;
-    padding: 1rem;
+    padding-block: 1rem;
+    padding-inline: 1rem;
   }
 `;

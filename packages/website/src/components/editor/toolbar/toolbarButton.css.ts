@@ -6,12 +6,9 @@ export default css`
     border: 1px solid var(--ma-color-paars-8);
     border-radius: 4px;
     color: var(--ma-color-paars-12);
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 1em;
-    font-weight: 0;
-    margin-right: 0.5rem;
-    padding: 6px 10px;
+    margin-inline-end: 0.5rem;
+    padding-block: 6px;
+    padding-inline: 10px;
   }
 
   .clippy-editor-toolbar__button--pressed {

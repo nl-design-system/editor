@@ -8,7 +8,7 @@ export default defineConfig({
       instances: [{ browser: 'chromium' }],
       provider: 'playwright',
       screenshotDirectory: 'tmp/screenshots',
-      viewport: { height: 800, width: 610 },
+      viewport: { height: 1280, width: 1024 },
     },
     coverage: {
       exclude: [

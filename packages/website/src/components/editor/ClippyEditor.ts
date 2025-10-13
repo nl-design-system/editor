@@ -10,6 +10,8 @@ import './toolbar/Toolbar.ts';
 import { tiptapContext } from './context/TiptapContext.ts';
 import CustomHeadingNode from './nodes/CustomHeadingNode.ts';
 
+const EDITOR_ID = 'editor';
+
 const defaultContent = `
 <h1>NL Design System Editor kop 1</h1>
 <p>Onder die steden, welke vanouds aan de grafelijke kroon van Holland gelijk zoovele edelgesteenten flonkerden, en wier macht en rijkdom tot een hechten steun verstrekten aan des Landsheer gezag, was Haarlem, gelijk genoeg bekend is, een der voornaamste. Haar ouderdom verloor zich in den nacht der tijden: ’t zij, dat men haar, met Boxhoorn voor de vroege verblijfplaats der Herulen houde en den naam Haarlem, als een verbastering van Herulen-heim aanmerke: ’t zij, dat men dien, met Langendijk, van den Noorman Hariald afleide: ’t zij, dat men met de oude landskronieken veronderstelle, dat zekere Koning of Vorst, Lem genaamd aan de door hem gestichte stad de benaming van Heer Lems stad, naderhand Haarlem hebbe achtergelaten, of met een lateren taalkenner eenvoudig aanneme, dat het woord harel dezelfde beteekenis hebbe als hard, en door harelheim een harde grond te verstaan zijn – genoeg is het, de juist de onzekerheid van dien naamoorsprong de aloudheid der plaats zelve aanduidt.</p>
@@ -29,14 +31,13 @@ export class ClippyEditor extends LitElement {
         role: 'textbox',
       },
     },
-    element: this.shadowRoot?.querySelector('.editor') as HTMLElement,
     extensions: [Document, Paragraph, Text, CustomHeadingNode],
   });
 
   static override styles = [editorStyles];
 
   override firstUpdated() {
-    const editorEl = this.shadowRoot?.querySelector('.editor');
+    const editorEl = this.shadowRoot?.getElementById(EDITOR_ID);
     if (editorEl) {
       this.editor.mount(editorEl);
     }
@@ -50,7 +51,7 @@ export class ClippyEditor extends LitElement {
   override render() {
     return html`
       <clippy-editor-toolbar></clippy-editor-toolbar>
-      <div class="editor"></div>
+      <div id=${EDITOR_ID}></div>
     `;
   }
 }
