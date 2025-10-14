@@ -12,7 +12,14 @@ describe('<clippy-editor>', () => {
     const user = userEvent.setup();
     await expect.element(page.getByText('NL Design System Editor kop 1')).toBeInTheDocument();
 
-    await page.getByRole('button', { name: 'Heading level 1' }).click();
+    const h1Button = document
+      .querySelector('clippy-editor')
+      ?.shadowRoot?.querySelector('clippy-toolbar')
+      ?.shadowRoot?.querySelector('clippy-toolbar-button')
+      ?.shadowRoot?.querySelector('button');
+
+    expect(h1Button).toBeTruthy();
+    await userEvent.click(h1Button as HTMLButtonElement);
 
     const text = page.getByText('NL Design System Editor kop 1').element();
     expect(text).toBeInTheDocument();

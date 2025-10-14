@@ -21,15 +21,15 @@ export class Toolbar extends LitElement {
 
   static override styles = [toolbarStyles];
 
-  private _onUpdate = () => this.requestUpdate();
+  #onUpdate = () => this.requestUpdate();
 
   override connectedCallback() {
     super.connectedCallback();
-    this.editor?.on('transaction', this._onUpdate);
+    this.editor?.on('transaction', this.#onUpdate);
   }
 
   override disconnectedCallback() {
-    this.editor?.off('transaction', this._onUpdate);
+    this.editor?.off('transaction', this.#onUpdate);
     super.disconnectedCallback();
   }
 
@@ -41,7 +41,7 @@ export class Toolbar extends LitElement {
           .pressed=${this.editor?.isActive('heading', { level: 1 }) ?? false}
           .onClick=${() => this.editor?.chain().focus().toggleHeading({ level: 1 }).run()}
         >
-          ${unsafeSVG(addAriaHidden(addAriaHidden(Heading1Icon)))}
+          ${unsafeSVG(addAriaHidden(Heading1Icon))}
         </clippy-toolbar-button>
         <clippy-toolbar-button
           label="Heading level 2"
