@@ -1,6 +1,6 @@
 import { css } from 'lit';
 
-export const editorStyles = css`
+export default css`
   :host {
     display: block;
     background-color: #fff;

@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import { page } from '@vitest/browser/context';
-import './ClippyEditor.ts';
+import './index.ts';
 import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('<clippy-editor>', () => {

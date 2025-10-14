@@ -1,14 +1,14 @@
 import { provide } from '@lit/context';
-import { Editor } from '@tiptap/core';
+import { Editor as TiptapEditor } from '@tiptap/core';
 import Document from '@tiptap/extension-document';
 import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { editorStyles } from './clippyEditor.css.ts';
-import './Toolbar';
 import { tiptapContext } from './context/TiptapContext.ts';
+import './Toolbar';
 import CustomHeadingNode from './nodes/CustomHeadingNode.ts';
+import editorStyles from './styles.ts';
 
 const EDITOR_ID = 'editor';
 
@@ -20,9 +20,9 @@ const defaultContent = `
 `;
 
 @customElement('clippy-editor')
-export class ClippyEditor extends LitElement {
+export class Editor extends LitElement {
   @provide({ context: tiptapContext })
-  editor: Editor = new Editor({
+  editor: TiptapEditor = new TiptapEditor({
     content: defaultContent,
     editorProps: {
       attributes: {
@@ -58,6 +58,6 @@ export class ClippyEditor extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'clippy-editor': ClippyEditor;
+    'clippy-editor': Editor;
   }
 }
