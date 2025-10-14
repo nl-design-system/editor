@@ -1,8 +1,10 @@
 import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
+import BoldIcon from '@tabler/icons/outline/bold.svg?raw';
 import Heading1Icon from '@tabler/icons/outline/h-1.svg?raw';
 import Heading2Icon from '@tabler/icons/outline/h-2.svg?raw';
 import Heading3Icon from '@tabler/icons/outline/h-3.svg?raw';
+import ItalicIcon from '@tabler/icons/outline/italic.svg?raw';
 import PilcrowIcon from '@tabler/icons/outline/pilcrow.svg?raw';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -63,6 +65,20 @@ export class Toolbar extends LitElement {
           @click=${() => this.editor?.chain().focus().setParagraph().run()}
         >
           ${unsafeSVG(addAriaHidden(PilcrowIcon))}
+        </clippy-toolbar-button>
+        <clippy-toolbar-button
+          label="Bold"
+          .pressed=${this.editor?.isActive('bold') ?? false}
+          @click=${() => this.editor?.chain().focus().setBold().run()}
+        >
+          ${unsafeSVG(addAriaHidden(BoldIcon))}
+        </clippy-toolbar-button>
+        <clippy-toolbar-button
+          label="Italic"
+          .pressed=${this.editor?.isActive('italic') ?? false}
+          @click=${() => this.editor?.chain().focus().setItalic().run()}
+        >
+          ${unsafeSVG(addAriaHidden(ItalicIcon))}
         </clippy-toolbar-button>
       </div>
     `;
