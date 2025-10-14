@@ -34,7 +34,7 @@ export class Editor extends LitElement {
     extensions: [Document, Paragraph, Text, CustomHeadingNode],
   });
 
-  static override styles = [editorStyles];
+  static override readonly styles = [editorStyles];
 
   override firstUpdated() {
     const editorEl = this.shadowRoot?.getElementById(EDITOR_ID);

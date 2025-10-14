@@ -19,9 +19,9 @@ export class Toolbar extends LitElement {
   @property({ attribute: false })
   public editor?: Editor;
 
-  static override styles = [toolbarStyles];
+  static override readonly styles = [toolbarStyles];
 
-  #onUpdate = () => this.requestUpdate();
+  readonly #onUpdate = () => this.requestUpdate();
 
   override connectedCallback() {
     super.connectedCallback();

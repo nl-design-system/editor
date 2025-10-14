@@ -9,7 +9,7 @@ export class ToolbarButton extends LitElement {
   @property({ type: Boolean }) pressed = false;
   @property({ type: Function }) onClick?: () => void;
 
-  static override styles = [toolbarButtonStyles];
+  static override readonly styles = [toolbarButtonStyles];
 
   override render() {
     return html`
