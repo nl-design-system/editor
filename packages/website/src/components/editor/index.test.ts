@@ -1,6 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import { page } from '@vitest/browser/context';
 import './index.ts';
+import { querySelectorDeep } from 'query-selector-shadow-dom';
 import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('<clippy-editor>', () => {
@@ -12,11 +13,7 @@ describe('<clippy-editor>', () => {
     const user = userEvent.setup();
     await expect.element(page.getByText('NL Design System Editor kop 1')).toBeInTheDocument();
 
-    const h1Button = document
-      .querySelector('clippy-editor')
-      ?.shadowRoot?.querySelector('clippy-toolbar')
-      ?.shadowRoot?.querySelector('clippy-toolbar-button')
-      ?.shadowRoot?.querySelector('button');
+    const h1Button = querySelectorDeep('button[aria-label="Heading level 1"]');
 
     expect(h1Button).toBeTruthy();
     await userEvent.click(h1Button as HTMLButtonElement);
