@@ -4,7 +4,7 @@ export default defineConfig({
   test: {
     browser: {
       enabled: true,
-      headless: true,
+      headless: false,
       instances: [{ browser: 'chromium' }],
       provider: 'playwright',
       screenshotDirectory: 'tmp/screenshots',

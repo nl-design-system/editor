@@ -8,11 +8,13 @@ import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { tiptapContext } from '../context/TiptapContext.ts';
-import './ToolbarButton.ts';
-import toolbarStyles from './toolbar.css.ts';
+import './ToolbarButton';
+import toolbarStyles from './styles.ts';
 
-@customElement('clippy-editor-toolbar')
-export class EditorToolbar extends LitElement {
+const addAriaHidden = (svg: string) => svg.replace('<svg', '<svg aria-hidden="true"');
+
+@customElement('clippy-toolbar')
+export class Toolbar extends LitElement {
   @consume({ context: tiptapContext })
   @property({ attribute: false })
   public editor?: Editor;
@@ -33,35 +35,35 @@ export class EditorToolbar extends LitElement {
 
   override render() {
     return html`
-      <div class="clippy-editor-toolbar__wrapper" aria-label="Werkbalk tekstbewerker">
-        <clippy-editor-toolbar-button
+      <div class="clippy-toolbar__wrapper" aria-label="Werkbalk tekstbewerker">
+        <clippy-toolbar-button
           label="Heading level 1"
           .pressed=${this.editor?.isActive('heading', { level: 1 }) ?? false}
           .onClick=${() => this.editor?.chain().focus().toggleHeading({ level: 1 }).run()}
         >
-          ${unsafeSVG(Heading1Icon)}
-        </clippy-editor-toolbar-button>
-        <clippy-editor-toolbar-button
+          ${unsafeSVG(addAriaHidden(addAriaHidden(Heading1Icon)))}
+        </clippy-toolbar-button>
+        <clippy-toolbar-button
           label="Heading level 2"
           .pressed=${this.editor?.isActive('heading', { level: 2 }) ?? false}
           @click=${() => this.editor?.chain().focus().toggleHeading({ level: 2 }).run()}
         >
-          ${unsafeSVG(Heading2Icon)}
-        </clippy-editor-toolbar-button>
-        <clippy-editor-toolbar-button
+          ${unsafeSVG(addAriaHidden(Heading2Icon))}
+        </clippy-toolbar-button>
+        <clippy-toolbar-button
           label="Heading level 3"
           .pressed=${this.editor?.isActive('heading', { level: 3 }) ?? false}
           @click=${() => this.editor?.chain().focus().toggleHeading({ level: 3 }).run()}
         >
-          ${unsafeSVG(Heading3Icon)}
-        </clippy-editor-toolbar-button>
-        <clippy-editor-toolbar-button
+          ${unsafeSVG(addAriaHidden(Heading3Icon))}
+        </clippy-toolbar-button>
+        <clippy-toolbar-button
           label="Paragraph"
           .pressed=${this.editor?.isActive('paragraph') ?? false}
           @click=${() => this.editor?.chain().focus().setParagraph().run()}
         >
-          ${unsafeSVG(PilcrowIcon)}
-        </clippy-editor-toolbar-button>
+          ${unsafeSVG(addAriaHidden(PilcrowIcon))}
+        </clippy-toolbar-button>
       </div>
     `;
   }
@@ -69,6 +71,6 @@ export class EditorToolbar extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'clippy-editor-toolbar': EditorToolbar;
+    'clippy-toolbar': Toolbar;
   }
 }

@@ -6,7 +6,7 @@ import Text from '@tiptap/extension-text';
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { editorStyles } from './clippyEditor.css.ts';
-import './toolbar/Toolbar.ts';
+import './Toolbar';
 import { tiptapContext } from './context/TiptapContext.ts';
 import CustomHeadingNode from './nodes/CustomHeadingNode.ts';
 
@@ -50,7 +50,7 @@ export class ClippyEditor extends LitElement {
 
   override render() {
     return html`
-      <clippy-editor-toolbar></clippy-editor-toolbar>
+      <clippy-toolbar></clippy-toolbar>
       <div id=${EDITOR_ID}></div>
     `;
   }

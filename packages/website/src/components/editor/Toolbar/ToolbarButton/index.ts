@@ -1,8 +1,9 @@
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import toolbarButtonStyles from './toolbarButton.css.ts';
-@customElement('clippy-editor-toolbar-button')
+import toolbarButtonStyles from './styles.ts';
+
+@customElement('clippy-toolbar-button')
 export class ToolbarButton extends LitElement {
   @property({ type: String }) label = '';
   @property({ type: Boolean }) pressed = false;
@@ -30,6 +31,6 @@ export class ToolbarButton extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'clippy-editor-toolbar-button': ToolbarButton;
+    'clippy-toolbar-button': ToolbarButton;
   }
 }
