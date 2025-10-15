@@ -66,7 +66,7 @@ export class Editor extends LitElement {
 
   override render() {
     return html`
-      <clippy-toolbar role="application"></clippy-toolbar>
+      <clippy-toolbar></clippy-toolbar>
       <div id=${EDITOR_ID}></div>
       <clippy-gutter></clippy-gutter>
     `;
