@@ -11,7 +11,7 @@ export default css`
 
   .clippy-gutter-list {
     list-style: none;
-    margin-block-start: 50px;
+    padding-inline: 0;
   }
 
   .clippy-gutter-item {
@@ -28,22 +28,41 @@ export default css`
   }
 
   .clippy-overlay-toggle {
+    align-items: center;
     background: var(--ma-color-paars-8);
+    block-size: 2rem;
     border: 0;
     color: white;
-    inset-block-end: 0;
+    display: flex;
+    inline-size: 2rem;
+    inset-block-end: 1rem;
+    inset-inline-end: 0;
+    justify-content: center;
+    padding-inline: 0;
+    position: absolute;
+  }
+
+  .clippy-overlay__content {
+    inline-size: 500px;
+    inset-block-end: 3rem;
     inset-inline-end: 0;
     position: absolute;
   }
 
-  .clippy-overlay-content {
-    background-color: rgb(255 255 255 / 80%);
-    block-size: 200px;
-    inline-size: 500px;
-    inset-block-end: 2rem;
-    inset-inline-end: 0;
+  .clippy-overlay__list {
+    background: oklch(from var(--ma-color-paars-8) l c h / 25%);
+    display: grid;
+    gap: 0.5rem;
+    list-style: none;
+    margin-block: 0;
+    padding-block: 0.5rem;
+    padding-inline: 0.5rem;
+  }
+
+  .clippy-overlay__list-item {
+    background-color: white;
+    border: 1px solid var(--ma-color-paars-8);
     padding-block: 1rem;
     padding-inline: 1rem;
-    position: absolute;
   }
 `;
