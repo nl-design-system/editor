@@ -12,8 +12,10 @@ const validateDocument = (editor: Editor) => {
       if (dom.node instanceof HTMLElement) {
         const payload: ValidationError = {
           id: pos,
+          offsetHeight: dom.node.offsetHeight,
           offsetTop: dom.node.offsetTop,
-          string: 'This is a mock validation error',
+          string: 'Mock heading validation error',
+          text: dom.node.innerText,
         };
         window.dispatchEvent(new CustomEvent('VALIDATION_ERROR', { detail: payload }));
       }

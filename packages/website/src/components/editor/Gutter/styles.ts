@@ -2,46 +2,48 @@ import { css } from 'lit';
 
 export default css`
   :host {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 1rem;
-    height: 100%;
+    block-size: 100%;
     display: flex;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    position: absolute;
   }
 
-  .gutter-list {
+  .clippy-gutter-list {
     list-style: none;
-    margin-top: 50px;
+    margin-block-start: 50px;
   }
 
-  .gutter-item {
-    position: absolute;
-    right: 0;
+  .clippy-gutter-item {
     background: var(--ma-color-paars-8);
-    opacity: 0.5;
+    block-size: 30px;
     display: block;
-    width: 1rem;
-    height: 30px;
+    inline-size: 1rem;
+    inset-inline-end: 0;
+    opacity: 50%;
+    position: absolute;
   }
-  .gutter-item:hover {
-    opacity: 1;
+  .clippy-gutter-item:hover {
+    opacity: 100%;
   }
 
-  .overlay-toggle {
-    position: absolute;
-    bottom: 0;
+  .clippy-overlay-toggle {
     background: var(--ma-color-paars-8);
     border: 0;
     color: white;
-    right: 0;
+    inset-block-end: 0;
+    inset-inline-end: 0;
+    position: absolute;
   }
 
-  .overlay-content {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    height: 200px;
-    width: 500px;
+  .clippy-overlay-content {
+    background-color: rgb(255 255 255 / 80%);
+    block-size: 200px;
+    inline-size: 500px;
+    inset-block-end: 2rem;
+    inset-inline-end: 0;
+    padding-block: 1rem;
+    padding-inline: 1rem;
+    position: absolute;
   }
 `;

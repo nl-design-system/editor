@@ -12,9 +12,11 @@ export class Gutter extends LitElement {
   static override readonly styles = [gutterStyles];
   @state()
   private isOpen = false;
+
+  @state()
   private validationErrors: ValidationError[] = [];
 
-  private toggleOpen = () => {
+  #toggleOpen = () => {
     this.isOpen = !this.isOpen;
   };
 
@@ -34,28 +36,45 @@ export class Gutter extends LitElement {
     super.disconnectedCallback();
   }
 
+  renderValidationContent() {
+    if (this.validationErrors.length === 0) {
+      return html`<p>Geen toegankelijkheidsfouten gevonden.</p>`;
+    }
+    return html`<ul>
+      ${map(this.validationErrors, (item) => html`<li>"<i>${item.text}</i>"<br />${item.string}</li>`)}
+    </ul>`;
+  }
+
   override render() {
     return html`<div>
-      <ol class="gutter-list" role="list">
+      <ol class="clippy-gutter-list" role="list">
         ${map(
           this.validationErrors,
-          (item) => html`<li class="gutter-item" style="top: ${item.offsetTop}px" title=${item.string}></li>`,
+          (item) =>
+            html`<li
+              class="clippy-gutter-item"
+              style="inset-block-start: ${item.offsetTop}px; block-size: ${item.offsetHeight}px"
+              title=${item.string}
+            ></li>`,
         )}
       </ol>
       <button
-        class="overlay-toggle"
-        @click=${this.toggleOpen}
+        class="clippy-overlay-toggle"
+        @click=${this.#toggleOpen}
         aria-expanded=${this.isOpen}
         aria-controls="overlay-content"
       >
         ${this.isOpen ? unsafeSVG(CloseIcon) : unsafeSVG(AccessibleIcon)}
       </button>
       ${this.isOpen
-        ? html`<div id="overlay-content" class="overlay-content" role="region" aria-label="Toegankelijkheidsfouten">
+        ? html`<div
+            id="overlay-content"
+            class="clippy-overlay-content"
+            role="region"
+            aria-label="Toegankelijkheidsfouten"
+          >
             <h2>Toegankelijkheidsfouten</h2>
-            <ul>
-              ${map(this.validationErrors, (item) => html`<li>${item.string}</li>`)}
-            </ul>
+            ${this.renderValidationContent()}
           </div>`
         : null}
     </div>`;
