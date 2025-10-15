@@ -1,9 +1,9 @@
 {
-  "name": "@nl-design-system-community/editor",
+  "name": "@nl-design-system-community/site",
   "repository": {
     "type": "git",
     "url": "https://github.com/nl-design-system/editor.git",
-    "directory": "packages/website"
+    "directory": "packages/site"
   },
   "private": true,
   "version": "0.0.0",
@@ -24,6 +24,7 @@
     "@fontsource/fira-sans": "5.2.7",
     "@fontsource/source-sans-pro": "5.2.5",
     "@lit/context": "1.1.6",
+    "@nl-design-system-community/editor": "workspace:*",
     "@nl-design-system-community/ma-design-tokens": "2.5.0",
     "@tabler/icons": "3.35.0",
     "@tiptap/core": "3.6.2",

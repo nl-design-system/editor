@@ -29,8 +29,8 @@ const validateDocument = (editor: Editor) => {
 export default Extension.create<ValidationOptions>({
   name: 'validation',
 
-  // onCreate({ editor }) {
-  //   validateDocument(editor);
+  // onCreate({ site }) {
+  //   validateDocument(site);
   // },
 
   onUpdate({ editor }) {

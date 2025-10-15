@@ -37,7 +37,7 @@ export class Editor extends LitElement {
     content: defaultContent,
     editorProps: {
       attributes: {
-        'aria-label': 'Rich text editor',
+        'aria-label': 'Rich text site',
         'aria-multiline': 'true',
         role: 'textbox',
       },
