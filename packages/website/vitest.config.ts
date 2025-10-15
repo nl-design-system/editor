@@ -1,8 +1,6 @@
-import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  plugins: [vanillaExtractPlugin()],
   test: {
     browser: {
       enabled: true,
@@ -10,10 +8,11 @@ export default defineConfig({
       instances: [{ browser: 'chromium' }],
       provider: 'playwright',
       screenshotDirectory: 'tmp/screenshots',
+      viewport: { height: 1280, width: 1024 },
     },
     coverage: {
       exclude: [
-        'src/main.tsx',
+        'src/main.ts',
         '**/vendor/**',
         'playwright.config.ts',
         '**/*.css.ts',

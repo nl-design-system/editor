@@ -1,0 +1,21 @@
+import { css } from 'lit';
+
+export default css`
+  .clippy-toolbar-button {
+    display: inline-flex;
+    background-color: #fff;
+    border: 1px solid var(--ma-color-paars-8);
+    border-radius: 3px;
+    color: var(--ma-color-paars-12);
+    margin-inline-end: 4px;
+    padding-block: 4px;
+    padding-inline: 8px;
+  }
+  ::slotted(svg) {
+    width: 16px;
+  }
+  .clippy-toolbar-button--pressed {
+    background-color: var(--ma-color-paars-1);
+    border-color: var(--ma-color-grijs-6);
+  }
+`;
