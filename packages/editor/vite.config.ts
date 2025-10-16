@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { analyzer } from 'vite-bundle-analyzer';
+import dts from 'vite-plugin-dts';
 
 export default defineConfig({
   build: {
@@ -13,12 +14,8 @@ export default defineConfig({
     analyzer({
       enabled: process.env['ANALYZE_BUNDLE'] === 'true',
     }),
+    dts(),
   ],
-  resolve: {
-    alias: {
-      '@': '/src',
-    },
-  },
   server: {
     port: 5173,
     strictPort: true,
