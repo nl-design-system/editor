@@ -1,6 +1,12 @@
 {
   "extends": ["stylelint-config-standard-scss"],
   "plugins": ["stylelint-order"],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "customSyntax": "postcss-lit"
+    }
+  ],
   "rules": {
     "order/order": ["custom-properties", "declarations"],
     "order/properties-alphabetical-order": true,
@@ -12,8 +18,8 @@
     "scss/percent-placeholder-pattern": "^(clippy|utrecht)-[a-z0-9-]+$",
     "scss/operator-no-newline-after": null,
     "scss/at-extend-no-missing-placeholder": null,
-    "custom-property-pattern": "^_?(clippy|denhaag|utrecht)-[a-z0-9-]+$",
-    "selector-class-pattern": "^(clippy|denhaag|utrecht)-[a-z0-9_-]+$",
+    "custom-property-pattern": "^_?(clippy|ma|denhaag|utrecht)-[a-z0-9-]+$",
+    "selector-class-pattern": "^(clippy|ma|denhaag|utrecht)-[a-z0-9_-]+$",
     "keyframes-name-pattern": "^(clippy|utrecht)-[a-z0-9-]+$",
     "at-rule-no-unknown": null,
     "block-no-empty": [true],

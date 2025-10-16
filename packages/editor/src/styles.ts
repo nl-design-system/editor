@@ -2,9 +2,10 @@ import { css } from 'lit';
 
 export default css`
   :host {
-    display: block;
     background-color: #fff;
+    display: block;
     padding-block: 1rem;
     padding-inline: 1rem;
+    position: relative;
   }
 `;
