@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import toolbarButtonStyles from './styles.ts';
+import toolbarButtonStyles from './styles.css';
 
 @customElement('clippy-toolbar-button')
 export class ToolbarButton extends LitElement {

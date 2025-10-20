@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import { analyzer } from 'vite-bundle-analyzer';
 import dts from 'vite-plugin-dts';
+import litCss from 'vite-plugin-lit-css';
 
 export default defineConfig({
   build: {
@@ -15,6 +16,7 @@ export default defineConfig({
       enabled: process.env['ANALYZE_BUNDLE'] === 'true',
     }),
     dts(),
+    litCss(),
   ],
   server: {
     port: 5173,
