@@ -267,7 +267,7 @@ importers:
         specifier: 7.1.7
         version: 7.1.7(@types/node@22.16.4)(yaml@2.8.0)
 
-  packages/site:
+  packages/website:
     dependencies:
       '@fontsource/fira-sans':
         specifier: 5.2.7
