@@ -1,30 +1,25 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "outDir": "./dist/",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "module": "preserve",
-    "moduleResolution": "bundler",
-
-    "target": "ES2022",
-    "useDefineForClassFields": false,
-    "types": ["vite/client"],
-
-    /* Bundler mode */
     "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "moduleDetection": "force",
-    "jsx": "react-jsx",
-
     "declaration": true,
     "emitDeclarationOnly": true,
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "preserve",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
+    "noUncheckedSideEffectImports": true,
+    "outDir": "./dist/",
+    "types": [
+      "vite/client"
+    ],
+    "useDefineForClassFields": false,
+    "verbatimModuleSyntax": true
   },
   "extends": "@nl-design-system/tsconfig",
   "include": ["src/**/*", "vite-env.d.ts"]
