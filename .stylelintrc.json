@@ -1,12 +1,6 @@
 {
   "extends": ["stylelint-config-standard-scss"],
   "plugins": ["stylelint-order"],
-  "overrides": [
-    {
-      "files": ["*.ts"],
-      "customSyntax": "postcss-lit"
-    }
-  ],
   "rules": {
     "order/order": ["custom-properties", "declarations"],
     "order/properties-alphabetical-order": true,

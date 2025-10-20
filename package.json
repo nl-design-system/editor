@@ -52,7 +52,7 @@
     "build": "pnpm --recursive run build",
     "clean": "pnpm --recursive run clean",
     "lint": "pnpm run --sequential '/^lint:.+$/'",
-    "lint:css": "stylelint --allow-empty-input '**/*.{css,scss,ts}'",
+    "lint:css": "stylelint --allow-empty-input '**/*.{css,scss}'",
     "lint:js": "eslint",
     "lint:md": "markdownlint '**/*.md'",
     "lint:package-json": "npmPkgJsonLint .",
