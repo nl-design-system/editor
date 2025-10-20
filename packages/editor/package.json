@@ -19,8 +19,7 @@
     "preview": "vite preview",
     "pretest": "pnpm exec playwright install --with-deps",
     "test": "pnpm run --recursive '/^test:.+$/'",
-    "test:vitest": "vitest",
-    "test:playwright": "playwright test"
+    "test:vitest": "vitest"
   },
   "dependencies": {
     "@fontsource/fira-sans": "5.2.7",

@@ -4,9 +4,9 @@ import './index.ts';
 import { querySelectorDeep } from 'query-selector-shadow-dom';
 import { describe, it, expect, beforeEach } from 'vitest';
 
-describe('<clippy-site>', () => {
+describe('<clippy-editor>', () => {
   beforeEach(() => {
-    document.body.innerHTML = '<clippy-site></clippy-site>';
+    document.body.innerHTML = '<clippy-editor></clippy-editor>';
   });
 
   it('should change selected text to heading level 3', async () => {

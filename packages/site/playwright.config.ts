@@ -37,7 +37,7 @@ export default defineConfig({
     command: 'pnpm run dev',
     // @ts-expect-error process.env.CI
     reuseExistingServer: !process.env.CI,
-    url: 'http://localhost:5173',
+    url: 'http://localhost:5174',
   },
 
   /* Opt out of parallel tests on CI. */

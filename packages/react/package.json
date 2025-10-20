@@ -14,11 +14,7 @@
     "build:analyze": "cross-env ANALYZE_BUNDLE=true vite build",
     "build:ts": "tsc --build",
     "build:vite": "vite build",
-    "preview": "vite preview",
-    "pretest": "pnpm exec playwright install --with-deps",
-    "test": "pnpm run --recursive '/^test:.+$/'",
-    "test:vitest": "vitest",
-    "test:playwright": "playwright test"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@nl-design-system-community/editor": "workspace:*",
