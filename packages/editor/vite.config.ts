@@ -15,7 +15,9 @@ export default defineConfig({
     analyzer({
       enabled: process.env['ANALYZE_BUNDLE'] === 'true',
     }),
-    dts(),
+    dts({
+      tsconfigPath: './tsconfig.app.json',
+    }),
     litCss(),
   ],
   server: {
