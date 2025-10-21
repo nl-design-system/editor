@@ -1,9 +1,9 @@
 {
-  "name": "@nl-design-system-community/site",
+  "name": "@nl-design-system-community/editor-website",
   "repository": {
     "type": "git",
     "url": "https://github.com/nl-design-system/editor.git",
-    "directory": "packages/site"
+    "directory": "packages/editor-website"
   },
   "private": true,
   "version": "0.0.0",

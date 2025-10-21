@@ -167,44 +167,7 @@ importers:
         specifier: 3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.16.4)(@vitest/browser@3.2.4)(yaml@2.8.0)
 
-  packages/react:
-    dependencies:
-      '@nl-design-system-community/editor':
-        specifier: workspace:*
-        version: link:../editor
-      react:
-        specifier: 19.2.0
-        version: 19.2.0
-      react-dom:
-        specifier: 19.2.0
-        version: 19.2.0(react@19.2.0)
-    devDependencies:
-      '@lit/react':
-        specifier: 1.0.8
-        version: 1.0.8(@types/react@19.2.2)
-      '@nl-design-system/tsconfig':
-        specifier: 1.0.4
-        version: 1.0.4(typescript@5.8.3)
-      '@types/node':
-        specifier: 22.16.4
-        version: 22.16.4
-      '@types/react':
-        specifier: 19.2.2
-        version: 19.2.2
-      '@types/react-dom':
-        specifier: 19.2.2
-        version: 19.2.2(@types/react@19.2.2)
-      npm-run-all:
-        specifier: 4.1.5
-        version: 4.1.5
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
-      vite:
-        specifier: 7.1.7
-        version: 7.1.7(@types/node@22.16.4)
-
-  packages/website:
+  packages/editor-website:
     dependencies:
       '@fontsource/fira-sans':
         specifier: 5.2.7
@@ -237,6 +200,43 @@ importers:
       playwright:
         specifier: 1.55.1
         version: 1.55.1
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
+      vite:
+        specifier: 7.1.7
+        version: 7.1.7(@types/node@22.16.4)(yaml@2.8.0)
+
+  packages/react:
+    dependencies:
+      '@nl-design-system-community/editor':
+        specifier: workspace:*
+        version: link:../editor
+      react:
+        specifier: 19.2.0
+        version: 19.2.0
+      react-dom:
+        specifier: 19.2.0
+        version: 19.2.0(react@19.2.0)
+    devDependencies:
+      '@lit/react':
+        specifier: 1.0.8
+        version: 1.0.8(@types/react@19.2.2)
+      '@nl-design-system/tsconfig':
+        specifier: 1.0.4
+        version: 1.0.4(typescript@5.8.3)
+      '@types/node':
+        specifier: 22.16.4
+        version: 22.16.4
+      '@types/react':
+        specifier: 19.2.2
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: 19.2.2
+        version: 19.2.2(@types/react@19.2.2)
+      npm-run-all:
+        specifier: 4.1.5
+        version: 4.1.5
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -8532,18 +8532,6 @@ snapshots:
     dependencies:
       lit: 3.3.1
       vite: 7.1.7(@types/node@22.16.4)(yaml@2.8.0)
-
-  vite@7.1.7(@types/node@22.16.4):
-    dependencies:
-      esbuild: 0.25.10
-      fdir: 6.5.0(picomatch@4.0.3)
-      picomatch: 4.0.3
-      postcss: 8.5.6
-      rollup: 4.52.3
-      tinyglobby: 0.2.15
-    optionalDependencies:
-      '@types/node': 22.16.4
-      fsevents: 2.3.3
 
   vite@7.1.7(@types/node@22.16.4)(yaml@2.8.0):
     dependencies:
