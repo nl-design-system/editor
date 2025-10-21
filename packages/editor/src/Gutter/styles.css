@@ -40,9 +40,9 @@
 }
 
 .clippy-overlay__content {
-  inline-size: 500px;
   inset-block-end: 3rem;
   inset-inline-end: 0;
+  max-inline-size: 500px;
   position: absolute;
 }
 
