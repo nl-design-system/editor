@@ -3,6 +3,5 @@
   "version": 2,
   "name": "editor",
   "buildCommand": "pnpm run build",
-  "outputDirectory": "packages/editor-website/dist",
-  "ignoreCommand": "[[ $(git log -1 --pretty=%an) == 'dependabot[bot]' ]]"
+  "outputDirectory": "packages/editor-website/dist"
 }
