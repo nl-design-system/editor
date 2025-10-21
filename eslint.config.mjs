@@ -9,7 +9,7 @@ import tseslint from 'typescript-eslint';
 
 export default defineConfig([
   // use the built-in globalIgnores utility to globally ignore files in the project
-  globalIgnores(['**/dist/', '**/build/', '**/coverage/', 'packages/editor/public/', '**/tsconfig*.json']),
+  globalIgnores(['**/dist/', '**/build/', '**/coverage/', '**/tsconfig*.json']),
   {
     // Use the Perfectionist recommended/natural configuration for all possible JavaScript, TypeScript and JSX files
     name: 'perfectionist/recommended/natural',
@@ -61,7 +61,7 @@ export default defineConfig([
   {
     // Use the @eslint/json recommended configuration to lint JSON files
     name: 'eslint/json/recommended',
-    files: ['**/*.json'],
+    files: ['**/*.json', 'vercel.json'],
     language: 'json/json',
     ...json.configs.recommended,
   },
