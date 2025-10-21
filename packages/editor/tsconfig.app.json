@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "erasableSyntaxOnly": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "preserve",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
+    "noUncheckedSideEffectImports": true,
+    "outDir": "./dist/",
+    "types": ["vite/client"],
+    "useDefineForClassFields": false,
+    "verbatimModuleSyntax": true
+  },
+  "extends": "@nl-design-system/tsconfig",
+  "include": ["src/**/*", "vite-env.d.ts"]
+}

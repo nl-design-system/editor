@@ -31,7 +31,7 @@ tsconfig.tsbuildinfo
 *.log
 *.tmp
 
-# Code editor files
+# Code site files
 .idea/
 .vs/
 .vscode/
