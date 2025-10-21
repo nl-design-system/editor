@@ -61,7 +61,7 @@ export default defineConfig([
   {
     // Use the @eslint/json recommended configuration to lint JSON files
     name: 'eslint/json/recommended',
-    files: ['**/*.json', 'vercel.json'],
+    files: ['**/*.json'],
     language: 'json/json',
     ...json.configs.recommended,
   },
