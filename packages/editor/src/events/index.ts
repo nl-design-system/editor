@@ -1,3 +1,4 @@
 export const CustomEvents = {
+  TEXT_FORMAT_CHANGE: 'TEXT_FORMAT_CHANGE',
   VALIDATION_ERROR: 'VALIDATION_ERROR',
 } as const;

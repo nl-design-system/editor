@@ -5,11 +5,15 @@ import Document from '@tiptap/extension-document';
 import Italic from '@tiptap/extension-italic';
 import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
+import { defineCustomElement as defineCustomElementButton } from '@utrecht/web-component-library-stencil/dist/components/utrecht-button';
+import { defineCustomElement as defineCustomElementHTMLContent } from '@utrecht/web-component-library-stencil/dist/components/utrecht-html-content';
+import { defineCustomElement as defineCustomElementIcon } from '@utrecht/web-component-library-stencil/dist/components/utrecht-icon';
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { tiptapContext } from './context/TiptapContext.ts';
 import './Toolbar';
 import './Gutter';
+import './components/combo-box';
+import { tiptapContext } from './context/TiptapContext.ts';
 import CustomHeadingNode from './nodes/CustomHeadingNode.ts';
 import editorStyles from './styles';
 import Validation from './validation';
@@ -17,6 +21,10 @@ import Validation from './validation';
 const EDITOR_ID = 'editor';
 
 export type content = string;
+
+defineCustomElementButton();
+defineCustomElementIcon();
+defineCustomElementHTMLContent();
 
 const defaultContent: content = `
 <h1>NL Design System Editor kop 1</h1>
