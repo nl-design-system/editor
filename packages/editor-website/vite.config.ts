@@ -3,6 +3,9 @@ import { defineConfig, searchForWorkspaceRoot } from "vite";
 
 export default defineConfig(({ mode }) => ({
   ...(mode === "development" && {
+    optimizeDeps: {
+      exclude: ["@nl-design-system-community/editor"],
+    },
     resolve: {
       alias: {
         "@nl-design-system-community/editor": resolve(__dirname, "../editor/src"),
