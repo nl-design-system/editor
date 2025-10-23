@@ -1,16 +1,15 @@
 import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import BoldIcon from '@tabler/icons/outline/bold.svg?raw';
-import Heading1Icon from '@tabler/icons/outline/h-1.svg?raw';
-import Heading2Icon from '@tabler/icons/outline/h-2.svg?raw';
-import Heading3Icon from '@tabler/icons/outline/h-3.svg?raw';
 import ItalicIcon from '@tabler/icons/outline/italic.svg?raw';
-import PilcrowIcon from '@tabler/icons/outline/pilcrow.svg?raw';
-import { LitElement, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { tiptapContext } from '../context/TiptapContext.ts';
 import './ToolbarButton';
+import { LitElement, html } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import type { ComboBoxOption } from '../components/combo-box/types.ts';
+import type { TextFormatChangeEvent } from '../types/formatChange.ts';
+import { tiptapContext } from '../context/TiptapContext.ts';
+import { CustomEvents } from '../events';
 import toolbarStyles from './styles.ts';
 
 const addAriaHidden = (svg: string) => svg.replace('<svg', '<svg aria-hidden="true"');
@@ -21,62 +20,82 @@ export class Toolbar extends LitElement {
   @property({ attribute: false })
   public editor?: Editor;
 
+  #isFormatActive(name: string, attributes?: Record<'level', number>): boolean {
+    return this.editor?.isActive(name, attributes) ?? false;
+  }
+
+  @state()
+  private get options(): ComboBoxOption[] {
+    return [
+      {
+        active: this.#isFormatActive('heading', { level: 1 }),
+        label: 'Kopniveau 1',
+        value: 'h1',
+      },
+      {
+        active: this.#isFormatActive('heading', { level: 2 }),
+        label: 'Kopniveau 2',
+        value: 'h2',
+      },
+      {
+        active: this.#isFormatActive('heading', { level: 3 }),
+        label: 'Kopniveau 3',
+        value: 'h3',
+      },
+      {
+        active: this.#isFormatActive('paragraph'),
+        label: 'Paragraaf',
+        value: 'paragraph',
+      },
+    ];
+  }
+
   static override readonly styles = [toolbarStyles];
 
   readonly #onUpdate = () => this.requestUpdate();
 
+  readonly #handleTextFormatChange = (event: CustomEventInit<TextFormatChangeEvent>) => {
+    const { value } = event.detail || {};
+    if (!value || !this.editor) return;
+
+    const chain = this.editor.chain().focus();
+
+    const formatCommands: Record<'h1' | 'h2' | 'h3' | 'paragraph', () => typeof chain> = {
+      h1: () => chain.toggleHeading({ level: 1 }),
+      h2: () => chain.toggleHeading({ level: 2 }),
+      h3: () => chain.toggleHeading({ level: 3 }),
+      paragraph: () => chain.setParagraph(),
+    };
+    formatCommands[value]().run();
+  };
+
   override connectedCallback() {
     super.connectedCallback();
+    window.addEventListener(CustomEvents.TEXT_FORMAT_CHANGE, this.#handleTextFormatChange);
     this.editor?.on('transaction', this.#onUpdate);
   }
 
   override disconnectedCallback() {
     this.editor?.off('transaction', this.#onUpdate);
+    window.removeEventListener(CustomEvents.TEXT_FORMAT_CHANGE, this.#handleTextFormatChange);
     super.disconnectedCallback();
   }
 
   override render() {
     return html`
       <div class="clippy-toolbar__wrapper" aria-label="Werkbalk tekstbewerker">
-        <clippy-toolbar-button
-          label="Heading level 1"
-          .pressed=${this.editor?.isActive('heading', { level: 1 }) ?? false}
-          .onClick=${() => this.editor?.chain().focus().toggleHeading({ level: 1 }).run()}
-        >
-          ${unsafeSVG(addAriaHidden(Heading1Icon))}
-        </clippy-toolbar-button>
-        <clippy-toolbar-button
-          label="Heading level 2"
-          .pressed=${this.editor?.isActive('heading', { level: 2 }) ?? false}
-          @click=${() => this.editor?.chain().focus().toggleHeading({ level: 2 }).run()}
-        >
-          ${unsafeSVG(addAriaHidden(Heading2Icon))}
-        </clippy-toolbar-button>
-        <clippy-toolbar-button
-          label="Heading level 3"
-          .pressed=${this.editor?.isActive('heading', { level: 3 }) ?? false}
-          @click=${() => this.editor?.chain().focus().toggleHeading({ level: 3 }).run()}
-        >
-          ${unsafeSVG(addAriaHidden(Heading3Icon))}
-        </clippy-toolbar-button>
-        <clippy-toolbar-button
-          label="Paragraph"
-          .pressed=${this.editor?.isActive('paragraph') ?? false}
-          @click=${() => this.editor?.chain().focus().setParagraph().run()}
-        >
-          ${unsafeSVG(addAriaHidden(PilcrowIcon))}
-        </clippy-toolbar-button>
+        <clippy-combo-box .options=${this.options}></clippy-combo-box>
         <clippy-toolbar-button
           label="Bold"
           .pressed=${this.editor?.isActive('bold') ?? false}
-          @click=${() => this.editor?.chain().focus().setBold().run()}
+          @click=${() => this.editor?.chain().focus().toggleBold().run()}
         >
           ${unsafeSVG(addAriaHidden(BoldIcon))}
         </clippy-toolbar-button>
         <clippy-toolbar-button
           label="Italic"
           .pressed=${this.editor?.isActive('italic') ?? false}
-          @click=${() => this.editor?.chain().focus().setItalic().run()}
+          @click=${() => this.editor?.chain().focus().toggleItalic().run()}
         >
           ${unsafeSVG(addAriaHidden(ItalicIcon))}
         </clippy-toolbar-button>
