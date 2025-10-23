@@ -1,22 +1,30 @@
-import { provide } from '@lit/context';
-import { Editor as TiptapEditor } from '@tiptap/core';
-import Bold from '@tiptap/extension-bold';
-import Document from '@tiptap/extension-document';
-import Italic from '@tiptap/extension-italic';
-import Paragraph from '@tiptap/extension-paragraph';
-import Text from '@tiptap/extension-text';
-import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import { tiptapContext } from './context/TiptapContext.ts';
-import './Toolbar';
-import './Gutter';
-import CustomHeadingNode from './nodes/CustomHeadingNode.ts';
-import editorStyles from './styles';
-import Validation from './validation';
+import { provide } from "@lit/context";
+import { Editor as TiptapEditor } from "@tiptap/core";
+import Bold from "@tiptap/extension-bold";
+import Document from "@tiptap/extension-document";
+import Italic from "@tiptap/extension-italic";
+import Paragraph from "@tiptap/extension-paragraph";
+import Text from "@tiptap/extension-text";
+import { defineCustomElement as defineCustomElementButton } from "@utrecht/web-component-library-stencil/dist/components/utrecht-button";
+import { defineCustomElement as defineCustomElementHTMLContent } from "@utrecht/web-component-library-stencil/dist/components/utrecht-html-content";
+import { defineCustomElement as defineCustomElementIcon } from "@utrecht/web-component-library-stencil/dist/components/utrecht-icon";
+import { LitElement, html } from "lit";
+import { customElement } from "lit/decorators.js";
+import "./Toolbar";
+import "./Gutter";
+import "./components/combo-box";
+import { tiptapContext } from "./context/TiptapContext.ts";
+import CustomHeadingNode from "./nodes/CustomHeadingNode.ts";
+import editorStyles from "./styles";
+import Validation from "./validation";
 
-const EDITOR_ID = 'editor';
+const EDITOR_ID = "editor";
 
 export type content = string;
+
+defineCustomElementButton();
+defineCustomElementIcon();
+defineCustomElementHTMLContent();
 
 const defaultContent: content = `
 <h1>NL Design System Editor kop 1</h1>
@@ -25,7 +33,7 @@ const defaultContent: content = `
 <p>Aan den over eener rivier gebouwd, waarvan zij zich als van twee armen bedienen kon, om, aan de eene zijde, het Haarlemmermeer en de daarom gelegen landen, aan de andere hij IJ, en door het IJ, de Zuiderzee te bereiken, had zij van deze gunstige ligging reeds vroeg partij getrokken, om een handel te drijven, die, schoon zich zelden verder uitstrekkende dan de gewesten, welke om die binnenzeeën gelegen waren, haar niettemin gelegenheid gaf, om de voortbrengselen van hare door heel Europa beroemde lakenweverijen te slijten en daardoor aan hare ingezetenen welvaart en aanzien te verschaffen: terwijl zij in hare bierbrouwerijen, die de bewoners der omliggende landstreken met den toenmaals zoo algemeenen drank voorzagen, een niet min voordeeligen tak van bestaan gevonden had, vooral, sedert door een grafelijk besluit het verkoopen van vreemd bier binnen Holland verboden en aan Haarlem alzoo een soort van alleenhandel in het graafschap vergund was.</p>
 `;
 
-@customElement('clippy-editor')
+@customElement("clippy-editor")
 export class Editor extends LitElement {
   static override readonly styles = [editorStyles];
 
@@ -58,6 +66,6 @@ export class Editor extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'clippy-editor': Editor;
+    "clippy-editor": Editor;
   }
 }
