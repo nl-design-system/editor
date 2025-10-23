@@ -3,6 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import type { ComboBoxOption } from "./types.ts";
+import { CustomEvents } from "../../events";
 
 @customElement("clippy-combo-box")
 export class ComboBox extends LitElement {
@@ -63,7 +64,7 @@ export class ComboBox extends LitElement {
         e.preventDefault();
         this.isOpen = true;
         this.activeIndex = this.activeIndex < filteredCount - 1 ? this.activeIndex + 1 : 0;
-        this.updateActiveDescendant();
+        this.updateActiveDescendant(); // TODO: needed?
         break;
 
       case "ArrowUp":
@@ -115,7 +116,7 @@ export class ComboBox extends LitElement {
     this.isOpen = false;
     this.activeIndex = -1;
 
-    this.dispatchEvent(new CustomEvent("change", { detail: { value: option.value } }));
+    window.dispatchEvent(new CustomEvent(CustomEvents.TEXT_FORMAT_CHANGE, { detail: { value: option.value } }));
   }
   override render() {
     const classes = {
@@ -233,6 +234,11 @@ export class ListboxOption extends LitElement {
         display: flex;
         padding-inline: var(--basis-space-inline-lg);
         padding-block: var(--basis-space-inline-lg);
+      }
+
+      .clippy-combobox__option:focus {
+        background-color: var(--basis-color-action-2-bg-default);
+        outline: none;
       }
 
       .clippy-combobox__option--active {

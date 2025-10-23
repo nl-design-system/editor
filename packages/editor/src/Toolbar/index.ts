@@ -6,9 +6,10 @@ import "./ToolbarButton";
 import { LitElement, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { unsafeSVG } from "lit/directives/unsafe-svg.js";
+import type { ComboBoxOption } from "../components/combo-box/types.ts";
 import { tiptapContext } from "../context/TiptapContext.ts";
 import toolbarStyles from "./styles.ts";
-import type { ComboBoxOption } from "../components/combo-box/types.ts";
+import { CustomEvents } from "../events";
 
 const addAriaHidden = (svg: string) => svg.replace("<svg", '<svg aria-hidden="true"');
 
@@ -48,13 +49,35 @@ export class Toolbar extends LitElement {
 
   readonly #onUpdate = () => this.requestUpdate();
 
+  // TODO: barf, find a better way to do this
+  readonly #handleTextFormatChange = (event) => {
+    switch (event.detail.value) {
+      case "h1":
+        this.editor?.chain().focus().toggleHeading({ level: 1 }).run();
+        break;
+      case "h2":
+        this.editor?.chain().focus().toggleHeading({ level: 2 }).run();
+        break;
+      case "h3":
+        this.editor?.chain().focus().toggleHeading({ level: 3 }).run();
+        break;
+      case "paragraph":
+        this.editor?.chain().focus().setParagraph().run();
+        break;
+      default:
+        break;
+    }
+  };
+
   override connectedCallback() {
     super.connectedCallback();
+    window.addEventListener(CustomEvents.TEXT_FORMAT_CHANGE, this.#handleTextFormatChange);
     this.editor?.on("transaction", this.#onUpdate);
   }
 
   override disconnectedCallback() {
     this.editor?.off("transaction", this.#onUpdate);
+    window.removeEventListener(CustomEvents.TEXT_FORMAT_CHANGE, this.#handleTextFormatChange);
     super.disconnectedCallback();
   }
 
