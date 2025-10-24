@@ -5,8 +5,11 @@
     "url": "https://github.com/nl-design-system/editor.git",
     "directory": "packages/react"
   },
-  "private": false,
-  "version": "0.0.0",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "version": "1.0.1",
   "type": "module",
   "files": [
     "dist"
