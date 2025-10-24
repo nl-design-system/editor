@@ -7,6 +7,9 @@ export default defineConfig({
       fileName: 'index',
       formats: ['es'],
     },
+    rollupOptions: {
+      external: ['react', 'react-dom'],
+    },
   },
   server: {
     port: 5175,
