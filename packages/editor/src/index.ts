@@ -11,7 +11,7 @@ import { tiptapContext } from './context/TiptapContext.ts';
 import './Toolbar';
 import './Gutter';
 import CustomHeadingNode from './nodes/CustomHeadingNode.ts';
-import editorStyles from './styles.css';
+import editorStyles from './styles';
 import Validation from './validation';
 
 const EDITOR_ID = 'editor';

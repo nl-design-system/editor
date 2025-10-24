@@ -18,7 +18,7 @@ export default {
     },
     {
       // for CSS and SCSS files:
-      files: ['*.css', '*.scss'],
+      files: ['*.css', '*.scss', '*.ts'],
       options: {
         // Use double quotes (")
         singleQuote: false,
