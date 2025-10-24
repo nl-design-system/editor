@@ -20,26 +20,30 @@ export class Toolbar extends LitElement {
   @property({ attribute: false })
   public editor?: Editor;
 
+  #isFormatActive(name: string, attributes?: Record<"level", number>): boolean {
+    return this.editor?.isActive(name, attributes) ?? false;
+  }
+
   @state()
   private get options(): ComboBoxOption[] {
     return [
       {
-        active: this.editor?.isActive("heading", { level: 1 }) ?? false,
+        active: this.#isFormatActive("heading", { level: 1 }),
         label: "Kopniveau 1",
         value: "h1",
       },
       {
-        active: this.editor?.isActive("heading", { level: 2 }) ?? false,
+        active: this.#isFormatActive("heading", { level: 2 }),
         label: "Kopniveau 2",
         value: "h2",
       },
       {
-        active: this.editor?.isActive("heading", { level: 3 }) ?? false,
+        active: this.#isFormatActive("heading", { level: 3 }),
         label: "Kopniveau 3",
         value: "h3",
       },
       {
-        active: this.editor?.isActive("paragraph") ?? false,
+        active: this.#isFormatActive("paragraph"),
         label: "Paragraaf",
         value: "paragraph",
       },
@@ -50,24 +54,19 @@ export class Toolbar extends LitElement {
 
   readonly #onUpdate = () => this.requestUpdate();
 
-  // TODO: barf, find a better way to do this
   readonly #handleTextFormatChange = (event: CustomEventInit<TextFormatChangeEvent>) => {
-    switch (event?.detail?.value) {
-      case "h1":
-        this.editor?.chain().focus().toggleHeading({ level: 1 }).run();
-        break;
-      case "h2":
-        this.editor?.chain().focus().toggleHeading({ level: 2 }).run();
-        break;
-      case "h3":
-        this.editor?.chain().focus().toggleHeading({ level: 3 }).run();
-        break;
-      case "paragraph":
-        this.editor?.chain().focus().setParagraph().run();
-        break;
-      default:
-        break;
-    }
+    const { value } = event.detail || {};
+    if (!value || !this.editor) return;
+
+    const chain = this.editor.chain().focus();
+
+    const formatCommands: Record<"h1" | "h2" | "h3" | "paragraph", () => typeof chain> = {
+      h1: () => chain.toggleHeading({ level: 1 }),
+      h2: () => chain.toggleHeading({ level: 2 }),
+      h3: () => chain.toggleHeading({ level: 3 }),
+      paragraph: () => chain.setParagraph(),
+    };
+    formatCommands[value]().run();
   };
 
   override connectedCallback() {

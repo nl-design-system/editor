@@ -1,3 +1,3 @@
 export interface TextFormatChangeEvent {
-  value: string;
+  value: "h1" | "h2" | "h3" | "paragraph";
 }
