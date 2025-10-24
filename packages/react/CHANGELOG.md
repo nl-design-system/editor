@@ -1,5 +1,11 @@
 # @nl-design-system-community/editor-react
 
+## 1.0.2
+
+### Patch Changes
+
+- 460ed19: Fix missing main field in package.json, move react to peerDependencies and version 18
+
 ## 1.0.1
 
 ### Patch Changes
