@@ -1,5 +1,11 @@
 # @nl-design-system-community/editor-react
 
+## 1.0.3
+
+### Patch Changes
+
+- 53a7634: Internal changes only.
+
 ## 1.0.2
 
 ### Patch Changes
