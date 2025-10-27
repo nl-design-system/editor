@@ -45,7 +45,7 @@ export default css`
   .clippy-overlay__content {
     inset-block-end: 3rem;
     inset-inline-end: 0;
-    max-inline-size: 500px;
+    inline-size: 500px;
     position: absolute;
   }
 

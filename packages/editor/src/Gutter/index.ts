@@ -43,7 +43,9 @@ export class Gutter extends LitElement {
         ? map(
             this.validationErrors,
             (item) =>
-              html`<li class="clippy-overlay__list-item" tabindex="0">"<i>${item.text}</i>"<br />${item.string}</li>`,
+              html`<li class="clippy-overlay__list-item" tabindex="0">
+                "<i>${item.textContent}</i>"<br />${item.message}
+              </li>`,
           )
         : html`<li class="clippy-overlay__list-item">Geen toegankelijkheidsfouten gevonden.</li>`}
     </ul>`;
@@ -54,11 +56,12 @@ export class Gutter extends LitElement {
       <ol class="clippy-gutter-list" role="list">
         ${map(
           this.validationErrors,
-          (item) =>
+          ({ domRect, message }) =>
+            domRect &&
             html`<li
               class="clippy-gutter-item"
-              style="inset-block-start: ${item.offsetTop}px; block-size: ${item.offsetHeight}px"
-              title=${item.string}
+              style="inset-block-start: ${domRect.top}px; block-size: ${domRect.height}px"
+              title=${message}
             ></li>`,
         )}
       </ol>
