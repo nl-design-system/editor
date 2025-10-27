@@ -84,6 +84,9 @@ importers:
       '@lit/context':
         specifier: 1.1.6
         version: 1.1.6
+      '@nl-design-system-candidate/number-badge-css':
+        specifier: 1.1.3
+        version: 1.1.3
       '@tabler/icons':
         specifier: 3.35.0
         version: 3.35.0
@@ -117,6 +120,9 @@ importers:
       lit:
         specifier: 3.3.1
         version: 3.3.1
+      prosemirror-model:
+        specifier: 1.25.4
+        version: 1.25.4
     devDependencies:
       '@fontsource/fira-sans':
         specifier: 5.2.7
@@ -741,6 +747,9 @@ packages:
 
   '@microsoft/tsdoc@0.15.1':
     resolution: {integrity: sha512-4aErSrCR/On/e5G2hDP0wjooqDdauzEbIq8hIkIe5pXV0rtWJZvdCEKL0ykZxex+IxIwBp0eGeV48hQN07dXtw==}
+
+  '@nl-design-system-candidate/number-badge-css@1.1.3':
+    resolution: {integrity: sha512-G5fgcJ4GOvFkGGHD8p8xRbWwgsvqsWq3foCXcZITb6KMcIJP2LTD5XHSNjsovURDkr9wyaY37O1nVzCt5I0wTw==}
 
   '@nl-design-system-community/ma-design-tokens@2.5.0':
     resolution: {integrity: sha512-3TYzzbo0C5br42SiS6jISScUL7u4hxgDvU2DZVBv6gJ40jBZPpXIgLI1T/JESQj79+nY2AddGm6l8xg2o2WLFA==}
@@ -3479,8 +3488,8 @@ packages:
   prosemirror-menu@1.2.5:
     resolution: {integrity: sha512-qwXzynnpBIeg1D7BAtjOusR+81xCp53j7iWu/IargiRZqRjGIlQuu1f3jFi+ehrHhWMLoyOQTSRx/IWZJqOYtQ==}
 
-  prosemirror-model@1.25.3:
-    resolution: {integrity: sha512-dY2HdaNXlARknJbrManZ1WyUtos+AP97AmvqdOQtWtrrC5g4mohVX5DTi9rXNFSk09eczLq9GuNTtq3EfMeMGA==}
+  prosemirror-model@1.25.4:
+    resolution: {integrity: sha512-PIM7E43PBxKce8OQeezAs9j4TP+5yDpZVbuurd1h5phUxEKIu+G2a+EUZzIC5nS1mJktDJWzbqS23n1tsAf5QA==}
 
   prosemirror-schema-basic@1.2.4:
     resolution: {integrity: sha512-ELxP4TlX3yr2v5rM7Sb70SqStq5NvI15c0j9j/gjsrO5vaw+fnnpovCLEGIcpeGfifkuqJwl4fon6b+KdrODYQ==}
@@ -4802,6 +4811,8 @@ snapshots:
 
   '@microsoft/tsdoc@0.15.1': {}
 
+  '@nl-design-system-candidate/number-badge-css@1.1.3': {}
+
   '@nl-design-system-community/ma-design-tokens@2.5.0': {}
 
   '@nl-design-system/eslint-config@2.1.1(eslint@9.31.0)(typescript@5.8.3)':
@@ -5017,12 +5028,12 @@ snapshots:
       prosemirror-keymap: 1.2.3
       prosemirror-markdown: 1.13.2
       prosemirror-menu: 1.2.5
-      prosemirror-model: 1.25.3
+      prosemirror-model: 1.25.4
       prosemirror-schema-basic: 1.2.4
       prosemirror-schema-list: 1.5.1
       prosemirror-state: 1.4.3
       prosemirror-tables: 1.8.1
-      prosemirror-trailing-node: 3.0.0(prosemirror-model@1.25.3)(prosemirror-state@1.4.3)(prosemirror-view@1.41.2)
+      prosemirror-trailing-node: 3.0.0(prosemirror-model@1.25.4)(prosemirror-state@1.4.3)(prosemirror-view@1.41.2)
       prosemirror-transform: 1.10.4
       prosemirror-view: 1.41.2
 
@@ -7831,7 +7842,7 @@ snapshots:
 
   prosemirror-commands@1.7.1:
     dependencies:
-      prosemirror-model: 1.25.3
+      prosemirror-model: 1.25.4
       prosemirror-state: 1.4.3
       prosemirror-transform: 1.10.4
 
@@ -7844,7 +7855,7 @@ snapshots:
   prosemirror-gapcursor@1.3.2:
     dependencies:
       prosemirror-keymap: 1.2.3
-      prosemirror-model: 1.25.3
+      prosemirror-model: 1.25.4
       prosemirror-state: 1.4.3
       prosemirror-view: 1.41.2
 
@@ -7869,7 +7880,7 @@ snapshots:
     dependencies:
       '@types/markdown-it': 14.1.2
       markdown-it: 14.1.0
-      prosemirror-model: 1.25.3
+      prosemirror-model: 1.25.4
 
   prosemirror-menu@1.2.5:
     dependencies:
@@ -7878,49 +7889,49 @@ snapshots:
       prosemirror-history: 1.4.1
       prosemirror-state: 1.4.3
 
-  prosemirror-model@1.25.3:
+  prosemirror-model@1.25.4:
     dependencies:
       orderedmap: 2.1.1
 
   prosemirror-schema-basic@1.2.4:
     dependencies:
-      prosemirror-model: 1.25.3
+      prosemirror-model: 1.25.4
 
   prosemirror-schema-list@1.5.1:
     dependencies:
-      prosemirror-model: 1.25.3
+      prosemirror-model: 1.25.4
       prosemirror-state: 1.4.3
       prosemirror-transform: 1.10.4
 
   prosemirror-state@1.4.3:
     dependencies:
-      prosemirror-model: 1.25.3
+      prosemirror-model: 1.25.4
       prosemirror-transform: 1.10.4
       prosemirror-view: 1.41.2
 
   prosemirror-tables@1.8.1:
     dependencies:
       prosemirror-keymap: 1.2.3
-      prosemirror-model: 1.25.3
+      prosemirror-model: 1.25.4
       prosemirror-state: 1.4.3
       prosemirror-transform: 1.10.4
       prosemirror-view: 1.41.2
 
-  prosemirror-trailing-node@3.0.0(prosemirror-model@1.25.3)(prosemirror-state@1.4.3)(prosemirror-view@1.41.2):
+  prosemirror-trailing-node@3.0.0(prosemirror-model@1.25.4)(prosemirror-state@1.4.3)(prosemirror-view@1.41.2):
     dependencies:
       '@remirror/core-constants': 3.0.0
       escape-string-regexp: 4.0.0
-      prosemirror-model: 1.25.3
+      prosemirror-model: 1.25.4
       prosemirror-state: 1.4.3
       prosemirror-view: 1.41.2
 
   prosemirror-transform@1.10.4:
     dependencies:
-      prosemirror-model: 1.25.3
+      prosemirror-model: 1.25.4
 
   prosemirror-view@1.41.2:
     dependencies:
-      prosemirror-model: 1.25.3
+      prosemirror-model: 1.25.4
       prosemirror-state: 1.4.3
       prosemirror-transform: 1.10.4
 
