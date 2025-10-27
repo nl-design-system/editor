@@ -6,7 +6,7 @@ import { map } from 'lit/directives/map.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationError } from '../types/validation.ts';
 import { CustomEvents } from '../events';
-import gutterStyles from './styles.css';
+import gutterStyles from './styles.ts';
 
 @customElement('clippy-gutter')
 export class Gutter extends LitElement {
