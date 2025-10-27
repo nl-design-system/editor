@@ -1,0 +1,68 @@
+import { css } from 'lit';
+
+export default css`
+  :host {
+    block-size: 100%;
+    display: flex;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    position: absolute;
+  }
+
+  .clippy-gutter-list {
+    list-style: none;
+    padding-inline: 0;
+  }
+
+  .clippy-gutter-item {
+    background: var(--ma-color-paars-8);
+    block-size: 30px;
+    display: block;
+    inline-size: 1rem;
+    inset-inline-end: 0;
+    opacity: 50%;
+    position: absolute;
+  }
+  .clippy-gutter-item:hover {
+    opacity: 100%;
+  }
+
+  .clippy-overlay-toggle {
+    align-items: center;
+    background: var(--ma-color-paars-8);
+    block-size: 2rem;
+    border: 0;
+    color: white;
+    display: flex;
+    inline-size: 2rem;
+    inset-block-end: 1rem;
+    inset-inline-end: 0;
+    justify-content: center;
+    padding-inline: 0;
+    position: absolute;
+  }
+
+  .clippy-overlay__content {
+    inset-block-end: 3rem;
+    inset-inline-end: 0;
+    max-inline-size: 500px;
+    position: absolute;
+  }
+
+  .clippy-overlay__list {
+    background: oklch(from var(--ma-color-paars-8) l c h / 25%);
+    display: grid;
+    gap: 0.5rem;
+    list-style: none;
+    margin-block: 0;
+    padding-block: 0.5rem;
+    padding-inline: 0.5rem;
+  }
+
+  .clippy-overlay__list-item {
+    background-color: white;
+    border: 1px solid var(--ma-color-paars-8);
+    padding-block: 1rem;
+    padding-inline: 1rem;
+  }
+`;

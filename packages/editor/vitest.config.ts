@@ -1,8 +1,6 @@
-import litCss from 'vite-plugin-lit-css';
 import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  plugins: [litCss()],
   test: {
     browser: {
       enabled: true,
