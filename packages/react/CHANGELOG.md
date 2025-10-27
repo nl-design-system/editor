@@ -1,5 +1,11 @@
 # @nl-design-system-community/editor-react
 
+## 1.0.4
+
+### Patch Changes
+
+- 9bd5f26: Fix: Add globals to rollup options for ssr react conflict
+
 ## 1.0.3
 
 ### Patch Changes
