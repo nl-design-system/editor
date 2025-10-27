@@ -11,7 +11,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { tiptapContext } from '../context/TiptapContext.ts';
 import './ToolbarButton';
-import toolbarStyles from './styles.css';
+import toolbarStyles from './styles.ts';
 
 const addAriaHidden = (svg: string) => svg.replace('<svg', '<svg aria-hidden="true"');
 
