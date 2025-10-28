@@ -6,8 +6,8 @@ import './ToolbarButton';
 import { LitElement, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import type { ComboBoxOption } from '../combo-box/types.ts';
 import type { TextFormatChangeEvent } from '../../types/formatChange.ts';
+import type { ComboBoxOption } from '../combo-box/types.ts';
 import { tiptapContext } from '../../context/TiptapContext.ts';
 import { CustomEvents } from '../../events';
 import toolbarStyles from './styles.ts';
@@ -81,10 +81,14 @@ export class Toolbar extends LitElement {
     super.disconnectedCallback();
   }
 
+  #onSelectionChange = (value: string) => {
+    window.dispatchEvent(new CustomEvent(CustomEvents.TEXT_FORMAT_CHANGE, { detail: { value: value } }));
+  };
+
   override render() {
     return html`
       <div class="clippy-toolbar__wrapper" aria-label="Werkbalk tekstbewerker">
-        <clippy-combo-box .options=${this.options}></clippy-combo-box>
+        <clippy-combo-box .onSelect=${this.#onSelectionChange} .options=${this.options}></clippy-combo-box>
         <clippy-toolbar-button
           label="Bold"
           .pressed=${this.editor?.isActive('bold') ?? false}

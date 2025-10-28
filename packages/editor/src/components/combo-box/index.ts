@@ -3,7 +3,6 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import type { ComboBoxOption } from './types.ts';
-import { CustomEvents } from '../../events';
 
 @customElement('clippy-combo-box')
 export class ComboBox extends LitElement {
@@ -13,6 +12,7 @@ export class ComboBox extends LitElement {
   @property({ type: Boolean }) private isOpen = false;
   @property({ type: Array }) private options: ComboBoxOption[] = [];
   @property({ type: String }) value = '';
+  @property({ type: Function }) onSelect = (value: string) => value;
 
   override willUpdate(changedProperties: PropertyValues) {
     if (changedProperties.has('options')) {
@@ -116,7 +116,7 @@ export class ComboBox extends LitElement {
     this.isOpen = false;
     this.activeIndex = -1;
 
-    window.dispatchEvent(new CustomEvent(CustomEvents.TEXT_FORMAT_CHANGE, { detail: { value: option.value } }));
+    this.onSelect(option.value);
   }
   override render() {
     const classes = {
