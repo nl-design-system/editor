@@ -82,7 +82,7 @@ export class Gutter extends LitElement {
                 <div class="clippy-dialog__list-item-link">
                   <utrecht-link
                     href="https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#voor-wie-zijn-toegankelijke-koppen-belangrijk"
-                    external="true"
+                    target="_blank"
                   >
                     Uitgebreide toelichting
                   </utrecht-link>
