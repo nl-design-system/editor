@@ -8,9 +8,9 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import type { ValidationError } from '../types/validation.ts';
-import { tiptapContext } from '../context/TiptapContext.ts';
-import { CustomEvents } from '../events';
+import type { ValidationError } from '../../types/validation.ts';
+import { tiptapContext } from '../../context/TiptapContext.ts';
+import { CustomEvents } from '../../events';
 import gutterStyles from './styles.ts';
 
 @customElement('clippy-gutter')

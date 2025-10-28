@@ -6,10 +6,10 @@ import './ToolbarButton';
 import { LitElement, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import type { ComboBoxOption } from '../components/combo-box/types.ts';
-import type { TextFormatChangeEvent } from '../types/formatChange.ts';
-import { tiptapContext } from '../context/TiptapContext.ts';
-import { CustomEvents } from '../events';
+import type { ComboBoxOption } from '../combo-box/types.ts';
+import type { TextFormatChangeEvent } from '../../types/formatChange.ts';
+import { tiptapContext } from '../../context/TiptapContext.ts';
+import { CustomEvents } from '../../events';
 import toolbarStyles from './styles.ts';
 
 const addAriaHidden = (svg: string) => svg.replace('<svg', '<svg aria-hidden="true"');
