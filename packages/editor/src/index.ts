@@ -5,9 +5,7 @@ import Document from '@tiptap/extension-document';
 import Italic from '@tiptap/extension-italic';
 import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
-import { defineCustomElement as defineCustomElementButton } from '@utrecht/web-component-library-stencil/dist/components/utrecht-button';
-import { defineCustomElement as defineCustomElementHTMLContent } from '@utrecht/web-component-library-stencil/dist/components/utrecht-html-content';
-import { defineCustomElement as defineCustomElementIcon } from '@utrecht/web-component-library-stencil/dist/components/utrecht-icon';
+import { defineCustomElements } from '@utrecht/web-component-library-stencil/loader';
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import './Toolbar';
@@ -22,9 +20,7 @@ const EDITOR_ID = 'editor';
 
 export type content = string;
 
-defineCustomElementButton();
-defineCustomElementIcon();
-defineCustomElementHTMLContent();
+defineCustomElements();
 
 const defaultContent: content = `
 <h1>NL Design System Editor kop 1</h1>
@@ -40,6 +36,11 @@ export class Editor extends LitElement {
   @provide({ context: tiptapContext })
   editor: TiptapEditor = new TiptapEditor({
     content: defaultContent,
+    editorProps: {
+      attributes: {
+        class: 'clippy-editor-content',
+      },
+    },
     extensions: [Document, Paragraph, Text, CustomHeadingNode, Bold, Italic, Validation],
   });
 
