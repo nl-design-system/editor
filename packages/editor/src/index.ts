@@ -5,6 +5,7 @@ import Document from '@tiptap/extension-document';
 import Italic from '@tiptap/extension-italic';
 import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
+import Underline from '@tiptap/extension-underline';
 import { defineCustomElements } from '@utrecht/web-component-library-stencil/loader';
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
@@ -41,7 +42,7 @@ export class Editor extends LitElement {
         class: 'clippy-editor-content',
       },
     },
-    extensions: [Document, Paragraph, Text, CustomHeadingNode, Bold, Italic, Validation],
+    extensions: [Document, Paragraph, Text, CustomHeadingNode, Bold, Italic, Underline, Validation],
   });
 
   override firstUpdated() {
