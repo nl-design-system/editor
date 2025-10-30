@@ -10,7 +10,6 @@ export default css`
     border-radius: 3px;
     color: var(--basis-color-action-1-color-active);
     display: inline-flex;
-    margin-inline-end: var(--basis-space-inline-sm);
     padding-block: var(--basis-space-inline-sm);
     padding-inline: var(--basis-space-inline-md);
   }

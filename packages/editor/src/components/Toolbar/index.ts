@@ -2,9 +2,13 @@ import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import BoldIcon from '@tabler/icons/outline/bold.svg?raw';
 import ItalicIcon from '@tabler/icons/outline/italic.svg?raw';
+import KeyboardIcon from '@tabler/icons/outline/keyboard.svg?raw';
+import UnderlineIcon from '@tabler/icons/outline/underline.svg?raw';
+import './shortcuts-dialog';
 import './ToolbarButton';
 import { LitElement, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { createRef, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { TextFormatChangeEvent } from '../../types/formatChange.ts';
 import type { ComboBoxOption } from '../combo-box/types.ts';
@@ -19,6 +23,17 @@ export class Toolbar extends LitElement {
   @consume({ context: tiptapContext })
   @property({ attribute: false })
   public editor?: Editor;
+
+  private dialogRef: Ref<HTMLDialogElement> = createRef();
+
+  #toggleOpen = () => {
+    const { value } = this.dialogRef;
+    if (this.dialogRef.value?.open) {
+      value?.close();
+    } else {
+      value?.showModal();
+    }
+  };
 
   #isFormatActive(name: string, attributes?: Record<'level', number>): boolean {
     return this.editor?.isActive(name, attributes) ?? false;
@@ -43,6 +58,21 @@ export class Toolbar extends LitElement {
         value: 'h3',
       },
       {
+        active: this.#isFormatActive('heading', { level: 4 }),
+        label: 'Kopniveau 4',
+        value: 'h3',
+      },
+      {
+        active: this.#isFormatActive('heading', { level: 5 }),
+        label: 'Kopniveau 5',
+        value: 'h3',
+      },
+      {
+        active: this.#isFormatActive('heading', { level: 6 }),
+        label: 'Kopniveau 6',
+        value: 'h3',
+      },
+      {
         active: this.#isFormatActive('paragraph'),
         label: 'Paragraaf',
         value: 'paragraph',
@@ -60,10 +90,13 @@ export class Toolbar extends LitElement {
 
     const chain = this.editor.chain().focus();
 
-    const formatCommands: Record<'h1' | 'h2' | 'h3' | 'paragraph', () => typeof chain> = {
+    const formatCommands: Record<'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'paragraph', () => typeof chain> = {
       h1: () => chain.toggleHeading({ level: 1 }),
       h2: () => chain.toggleHeading({ level: 2 }),
       h3: () => chain.toggleHeading({ level: 3 }),
+      h4: () => chain.toggleHeading({ level: 4 }),
+      h5: () => chain.toggleHeading({ level: 5 }),
+      h6: () => chain.toggleHeading({ level: 6 }),
       paragraph: () => chain.setParagraph(),
     };
     formatCommands[value]().run();
@@ -103,7 +136,23 @@ export class Toolbar extends LitElement {
         >
           ${unsafeSVG(addAriaHidden(ItalicIcon))}
         </clippy-toolbar-button>
+        <clippy-toolbar-button
+          label="Underline"
+          .pressed=${this.editor?.isActive('underline') ?? false}
+          @click=${() => this.editor?.chain().focus().toggleUnderline().run()}
+        >
+          ${unsafeSVG(addAriaHidden(UnderlineIcon))}
+        </clippy-toolbar-button>
+        <div class="clippy-toolbar__divider"></div>
+        <clippy-toolbar-button
+          label="Keyboard shortcuts"
+          .pressed=${this.dialogRef.value?.open ?? false}
+          @click=${this.#toggleOpen}
+        >
+          ${unsafeSVG(addAriaHidden(KeyboardIcon))}
+        </clippy-toolbar-button>
       </div>
+      <clippy-shortcuts .dialogRef=${this.dialogRef}></clippy-shortcuts>
     `;
   }
 }
