@@ -11,6 +11,9 @@
     "moduleResolution": "bundler",
     "noUncheckedSideEffectImports": true,
     "outDir": "./dist/",
+    "paths": {
+      "@/*": ["src/*"]
+    },
     "types": ["vite/client"],
     "useDefineForClassFields": false,
     "verbatimModuleSyntax": true

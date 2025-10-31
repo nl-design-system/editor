@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { defineConfig } from 'vite';
 import { analyzer } from 'vite-bundle-analyzer';
 import dts from 'vite-plugin-dts';
@@ -18,6 +19,11 @@ export default defineConfig({
       tsconfigPath: './tsconfig.app.json',
     }),
   ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
   server: {
     port: 5173,
     strictPort: true,
