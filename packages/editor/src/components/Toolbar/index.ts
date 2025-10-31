@@ -12,7 +12,7 @@ import { createRef, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { TextFormatChangeEvent } from '../../types/formatChange.ts';
 import type { ComboBoxOption } from '../combo-box/types.ts';
-import { tiptapContext } from '../../context/TiptapContext.ts';
+import { tiptapContext } from '../../context/tiptapContext.ts';
 import { CustomEvents } from '../../events';
 import toolbarStyles from './styles.ts';
 
