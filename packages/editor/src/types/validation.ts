@@ -1,6 +1,6 @@
+import { a11yValidations } from '../validation/a11yValidations.ts';
+
 export interface ValidationError {
-  id: number;
-  message: string;
-  domRect: DOMRect | null;
-  textContent: string;
+  id: typeof a11yValidations;
+  position: number;
 }

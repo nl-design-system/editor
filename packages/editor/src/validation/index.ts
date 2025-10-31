@@ -1,20 +1,13 @@
 import type { Node } from 'prosemirror-model';
 import { type Editor, Extension } from '@tiptap/core';
+import type { ValidationMeta, ValidationsMap } from '@/context/validationsContext.ts';
 import type { ValidationError } from '../types/validation.ts';
-import { CustomEvents } from '../events';
 import { debounce } from '../utils/debounce.ts';
+import { a11yValidations } from './a11yValidations.ts';
 
-type Validator = (node: Node, pos: number, editor: Editor) => ValidationError[];
+type Validator = (node: Node, pos: number, editor: Editor) => ValidationError | null;
 
 const validators = new Map<string, Validator[]>();
-
-const getDomRect = (editor: Editor, pos: number): DOMRect | null => {
-  const domNode = editor.view.nodeDOM(pos);
-  if (domNode instanceof HTMLElement) {
-    return domNode.getClientRects()[0];
-  }
-  return null;
-};
 
 export function registerValidator(nodeType: string, v: Validator) {
   const arr = validators.get(nodeType) ?? [];
@@ -33,59 +26,50 @@ const isEmpty = (node: Node): boolean => {
   return true;
 };
 
-registerValidator('heading', (node, pos, editor) => {
-  const textContent = node.textContent ?? '';
-
+registerValidator('heading', (node, position) => {
   if (isEmpty(node)) {
     const payload: ValidationError = {
-      id: pos,
-      domRect: getDomRect(editor, pos),
-      message: 'Heading must not be empty',
-      textContent,
+      id: a11yValidations.HEADING_MUST_NOT_BE_EMPTY,
+      position,
     };
-    return [payload];
+    return payload;
   }
 
-  return [];
+  return null;
 });
 
-const runValidation = (editor: Editor) => {
-  const errors: ValidationError[] = [];
+const errorKey = (e: ValidationError) => `${e.id}::${e.position}`;
 
+const runValidation = (editor: Editor, callback: (key: string, value: ValidationMeta) => void) => {
   editor.state.doc.descendants((node, pos) => {
     const nodeValidators = validators.get(node.type.name);
     if (!nodeValidators || nodeValidators.length === 0) return true;
-    for (const v of nodeValidators) {
+    for (const validator of nodeValidators) {
       try {
-        const result = v(node, pos, editor);
-        if (result && result.length) {
-          errors.push(...result);
+        const result = validator(node, pos, editor);
+        if (result) {
+          callback(errorKey(result), { ignore: false, pos, severity: 'warning', id: result.id });
         }
       } catch (err) {
         console.error('validator error', err);
       }
     }
-
     return true;
   });
-
-  for (const payload of errors) {
-    window.dispatchEvent(new CustomEvent(CustomEvents.VALIDATION_ERROR, { detail: payload }));
-  }
-
-  return errors;
 };
 
-const debouncedValidate = debounce(runValidation, 150);
+const debouncedValidate = debounce(runValidation, 500);
 
 export default Extension.create({
   name: 'validation',
 
   onCreate({ editor }) {
-    debouncedValidate(editor);
+    const { updateValidationsContext } = this.options;
+    debouncedValidate(editor, updateValidationsContext);
   },
 
   onUpdate({ editor }) {
-    debouncedValidate(editor);
+    const { updateValidationsContext } = this.options;
+    debouncedValidate(editor, updateValidationsContext);
   },
 });
