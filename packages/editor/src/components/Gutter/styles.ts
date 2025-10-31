@@ -57,6 +57,8 @@ export default css`
     margin-inline: unset;
     background: transparent;
     border: 0;
+    overflow: auto;
+    max-block-size: calc(100% - var(--basis-space-inline-xl) * 2);
     &:focus-visible {
       outline: none;
     }
