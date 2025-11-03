@@ -7,13 +7,13 @@ import Italic from '@tiptap/extension-italic';
 import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
 import Underline from '@tiptap/extension-underline';
+import { UndoRedo } from '@tiptap/extensions';
 import { defineCustomElements } from '@utrecht/web-component-library-stencil/loader';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import './components/toolbar';
 import './components/validations/gutter';
 import './components/validations/drawer';
-import './components/combo-box';
 import { tiptapContext } from './context/tiptapContext.ts';
 import { type ValidationMeta, validationsContext } from './context/validationsContext.ts';
 import editorStyles from './styles';
@@ -53,6 +53,7 @@ export class Editor extends LitElement {
       Bold,
       Italic,
       Underline,
+      UndoRedo,
       Validation.configure({
         updateValidationsContext: this.updateValidationsContext,
       }),

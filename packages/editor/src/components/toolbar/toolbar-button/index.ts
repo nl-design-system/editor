@@ -7,6 +7,7 @@ import toolbarButtonStyles from './styles.ts';
 export class ToolbarButton extends LitElement {
   @property({ type: String }) label = '';
   @property({ type: Boolean }) pressed = false;
+  @property({ type: Boolean }) disabled = false;
   @property({ type: Function }) onClick?: () => void;
 
   static override readonly styles = [toolbarButtonStyles];
@@ -17,6 +18,7 @@ export class ToolbarButton extends LitElement {
         type="button"
         aria-label=${this.label}
         aria-pressed=${this.pressed}
+        ?disabled=${this.disabled}
         class=${classMap({
           'clippy-toolbar-button': true,
           'clippy-toolbar-button--pressed': this.pressed,
