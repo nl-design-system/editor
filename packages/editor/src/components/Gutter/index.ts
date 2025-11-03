@@ -90,11 +90,11 @@ export class Gutter extends LitElement {
       <ol class="clippy-gutter-list" role="list">
         ${map(
           this.validationsContext?.values(),
-          ({ id, domRect }) =>
-            domRect &&
+          ({ id, boundingBox }) =>
+            boundingBox &&
             html`<li
               class="clippy-gutter-item"
-              style="inset-block-start: ${domRect.top}px; block-size: ${domRect.height}px"
+              style="inset-block-start: ${boundingBox.top}px; block-size: ${boundingBox.height}px"
               title=${id}
             ></li>`,
         )}

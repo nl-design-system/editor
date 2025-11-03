@@ -38,6 +38,14 @@ registerValidator('heading', (node, position) => {
   return null;
 });
 
+const getNodeBoundingBox = (editor: Editor, pos: number): { top: number; height: number } | null => {
+  const domNode = editor.view.nodeDOM(pos);
+  if (domNode instanceof HTMLElement) {
+    return { height: domNode.offsetHeight, top: domNode.offsetTop };
+  }
+  return null;
+};
+
 const errorKey = (e: ValidationError) => `${e.id}::${e.position}`;
 
 const runValidation = (editor: Editor, callback: (resultMap: Map<string, ValidationMeta>) => void) => {
@@ -49,7 +57,13 @@ const runValidation = (editor: Editor, callback: (resultMap: Map<string, Validat
       try {
         const result = validator(node, pos, editor);
         if (result) {
-          resultMap.set(errorKey(result), { id: result.id, ignore: false, pos, severity: 'warning' });
+          resultMap.set(errorKey(result), {
+            id: result.id,
+            boundingBox: getNodeBoundingBox(editor, pos),
+            ignore: false,
+            pos,
+            severity: 'warning',
+          });
         }
       } catch (err) {
         console.error('validator error', err);

@@ -1,12 +1,13 @@
 import { type Context, createContext } from '@lit/context';
-import { a11yValidations } from '@/validation/a11yValidations.ts';
+import type { BoundingBox, ValidationErrorId } from '@/types/validation.ts';
 
 export type ValidationSeverity = 'warning' | 'error';
 export type ValidationMeta = {
+  boundingBox: BoundingBox | null;
   severity: ValidationSeverity;
   ignore: boolean;
   pos: number;
-  id: typeof a11yValidations;
+  id: ValidationErrorId;
 };
 export type ValidationsMap = Map<string, ValidationMeta>;
 

@@ -12,7 +12,7 @@
     "noUncheckedSideEffectImports": true,
     "outDir": "./dist/",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
     "types": ["vite/client"],
     "useDefineForClassFields": false,
