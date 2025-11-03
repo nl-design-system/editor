@@ -9,8 +9,9 @@ import Underline from '@tiptap/extension-underline';
 import { defineCustomElements } from '@utrecht/web-component-library-stencil/loader';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import './components/Toolbar';
-import './components/Gutter';
+import './components/toolbar';
+import './components/validations/gutter';
+import './components/validations/drawer';
 import './components/combo-box';
 import { tiptapContext } from './context/tiptapContext.ts';
 import { type ValidationMeta, validationsContext } from './context/validationsContext.ts';
@@ -82,7 +83,8 @@ export class Editor extends LitElement {
     return html`
       <clippy-toolbar></clippy-toolbar>
       <div id=${EDITOR_ID}></div>
-      <clippy-gutter></clippy-gutter>
+      <clippy-validations-dialog></clippy-validations-dialog>
+      <clippy-validations-gutter></clippy-validations-gutter>
     `;
   }
 }
