@@ -3,14 +3,14 @@ import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import keyboardShortcutsDialogStyles from './styles.ts';
+import shortcutsDialogStyles from './styles.ts';
 
 @customElement('clippy-shortcuts')
 export class Index extends LitElement {
   @property({ attribute: false })
   public dialogRef?: Ref<HTMLDialogElement>;
 
-  static override readonly styles = [keyboardShortcutsDialogStyles];
+  static override readonly styles = [shortcutsDialogStyles];
 
   public close(): void {
     this.dialogRef?.value?.close();

@@ -1,8 +1,9 @@
-import { css, html, LitElement, type PropertyValues } from 'lit';
+import { html, LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import type { ComboBoxOption } from './types.ts';
+import comboBoxStyles from './styles.ts';
 
 @customElement('clippy-combo-box')
 export class ComboBox extends LitElement {
@@ -23,35 +24,14 @@ export class ComboBox extends LitElement {
     }
   }
 
-  static override readonly styles = [
-    css`
-      :host {
-        position: relative;
-        display: inline-block;
-      }
-      .clippy-combo-box {
-        inline-size: 100%;
-        max-inline-size: 500px;
-        position: relative;
-      }
-      .clippy-combobox__input {
-        line-height: 1.8em;
-        background-color: #fff;
-        border: 1px solid var(--basis-color-action-1-color-active);
-        border-radius: 3px;
-        color: var(--basis-color-action-1-color-active);
-        padding-block: var(--basis-space-inline-sm);
-        padding-inline: var(--basis-space-inline-md);
-      }
-    `,
-  ];
+  static override readonly styles = [comboBoxStyles];
 
-  private handleInput(e: Event) {
+  private handleInput = (e: Event) => {
     const input = e.target as HTMLInputElement;
     this.value = input.value.toLowerCase();
     this.isOpen = true;
     this.activeIndex = -1;
-  }
+  };
 
   private handleKeyDown(e: KeyboardEvent) {
     if (this.disabled || this.readOnly) return;

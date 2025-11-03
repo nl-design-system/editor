@@ -1,19 +1,22 @@
 import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
+import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
+import AccessibleIcon from '@tabler/icons/outline/accessible.svg?raw';
 import BoldIcon from '@tabler/icons/outline/bold.svg?raw';
 import ItalicIcon from '@tabler/icons/outline/italic.svg?raw';
-import KeyboardIcon from '@tabler/icons/outline/keyboard.svg?raw';
-import UnderlineIcon from '@tabler/icons/outline/underline.svg?raw';
 import './shortcuts-dialog';
-import './ToolbarButton';
-import { LitElement, html } from 'lit';
+import KeyboardIcon from '@tabler/icons/outline/keyboard.svg?raw';
+import './toolbar-button';
+import UnderlineIcon from '@tabler/icons/outline/underline.svg?raw';
+import { LitElement, html, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { createRef, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import type { TextFormatChangeEvent } from '../../types/formatChange.ts';
+import type { TextFormatChangeEvent } from '@/types/formatChange.ts';
+import { tiptapContext } from '@/context/tiptapContext.ts';
+import { validationsContext, type ValidationsMap } from '@/context/validationsContext.ts';
+import { CustomEvents } from '@/events';
 import type { ComboBoxOption } from '../combo-box/types.ts';
-import { tiptapContext } from '../../context/tiptapContext.ts';
-import { CustomEvents } from '../../events';
 import toolbarStyles from './styles.ts';
 
 const addAriaHidden = (svg: string) => svg.replace('<svg', '<svg aria-hidden="true"');
@@ -26,13 +29,27 @@ export class Toolbar extends LitElement {
 
   private dialogRef: Ref<HTMLDialogElement> = createRef();
 
-  #toggleOpen = () => {
+  @consume({ context: validationsContext, subscribe: true })
+  @property({ attribute: false })
+  validationsContext?: ValidationsMap;
+
+  #toggleOpenShortcuts = () => {
     const { value } = this.dialogRef;
     if (this.dialogRef.value?.open) {
       value?.close();
     } else {
       value?.showModal();
     }
+  };
+
+  #toggleOpenValidationsDialog = (key: string) => {
+    window.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, {
+        bubbles: true,
+        composed: true,
+        detail: { key },
+      }),
+    );
   };
 
   #isFormatActive(name: string, attributes?: Record<'level', number>): boolean {
@@ -80,7 +97,7 @@ export class Toolbar extends LitElement {
     ];
   }
 
-  static override readonly styles = [toolbarStyles];
+  static override readonly styles = [toolbarStyles, unsafeCSS(numberBadgeStyles)];
 
   readonly #onUpdate = () => this.requestUpdate();
 
@@ -119,6 +136,7 @@ export class Toolbar extends LitElement {
   };
 
   override render() {
+    const { size = 0 } = this.validationsContext || {};
     return html`
       <div class="clippy-toolbar__wrapper" aria-label="Werkbalk tekstbewerker">
         <clippy-combo-box .onSelect=${this.#onSelectionChange} .options=${this.options}></clippy-combo-box>
@@ -147,12 +165,29 @@ export class Toolbar extends LitElement {
         <clippy-toolbar-button
           label="Keyboard shortcuts"
           .pressed=${this.dialogRef.value?.open ?? false}
-          @click=${this.#toggleOpen}
+          @click=${this.#toggleOpenShortcuts}
         >
           ${unsafeSVG(addAriaHidden(KeyboardIcon))}
         </clippy-toolbar-button>
+        <clippy-toolbar-button
+          class="clippy-dialog-toggle"
+          @click=${this.#toggleOpenValidationsDialog}
+          aria-controls="dialog-content"
+        >
+          <span class="clippy-screen-reader-text">Toon toegankelijkheidsfouten</span>
+          ${unsafeSVG(AccessibleIcon)}
+          ${size > 0
+            ? html`<data value=${size} class="nl-number-badge nl-number-badge--clippy">
+                <span hidden aria-hidden="true" class="nl-number-badge__visible-label">${size}</span>
+                <span class="nl-number-badge__hidden-label">${size} toegankelijkheidsmeldingen</span>
+              </data>`
+            : null}
+        </clippy-toolbar-button>
       </div>
       <clippy-shortcuts .dialogRef=${this.dialogRef}></clippy-shortcuts>
+      <div class="clippy-screen-reader-text" aria-live=${size > 0 ? 'polite' : 'off'}>
+        Totaal ${size} gevonden toegankelijkheidsfouten.
+      </div>
     `;
   }
 }

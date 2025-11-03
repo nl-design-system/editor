@@ -5,6 +5,7 @@ export default css`
     display: inline-block;
   }
   .clippy-toolbar-button {
+    position: relative;
     background-color: #fff;
     border: 1px solid var(--basis-color-action-1-color-active);
     border-radius: 3px;
