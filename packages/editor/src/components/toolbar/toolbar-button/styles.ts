@@ -13,7 +13,13 @@ export default css`
     display: inline-flex;
     padding-block: var(--basis-space-inline-sm);
     padding-inline: var(--basis-space-inline-md);
+    block-size: 100%;
   }
+
+  .clippy-toolbar-button:disabled {
+    color: var(--basis-color-disabled-color-active);
+  }
+
   ::slotted(svg) {
     inline-size: 16px;
   }

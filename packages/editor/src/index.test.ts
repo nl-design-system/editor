@@ -28,12 +28,10 @@ describe('<clippy-editor>', () => {
       { keys: '[/MouseLeft]' },
     ]);
 
-    // find the combobox input inside shadow DOM and type "kopniveau 3" + Enter
-    const comboInput = querySelectorDeep('input[name="clippy-combo-box"]');
-    expect(comboInput).toBeTruthy();
-    await user.click(comboInput as Element);
+    const select = querySelectorDeep('select');
+    expect(select).toBeTruthy();
+    await user.selectOptions(select as Element, 'h3');
 
-    await user.type(comboInput as HTMLInputElement, '{Backspace}3');
     const h3Option = querySelectorDeep('li[role="option"]#h3');
     await user.click(h3Option as Element);
 
