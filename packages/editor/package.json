@@ -25,6 +25,7 @@
     "preview": "vite preview",
     "pretest": "pnpm exec playwright install --with-deps",
     "test": "pnpm run --recursive '/^test:.+$/'",
+    "test:vitest-": "vitest --browser.headless=false",
     "test:vitest": "vitest"
   },
   "dependencies": {

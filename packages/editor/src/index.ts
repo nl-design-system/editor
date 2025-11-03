@@ -8,7 +8,7 @@ import Text from '@tiptap/extension-text';
 import Underline from '@tiptap/extension-underline';
 import { defineCustomElements } from '@utrecht/web-component-library-stencil/loader';
 import { LitElement, html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import './components/Toolbar';
 import './components/Gutter';
 import './components/combo-box';
@@ -37,10 +37,8 @@ export class Editor extends LitElement {
   @provide({ context: validationsContext })
   validationsContext = new Map();
 
-  updateValidationsContext = (key: string, value: ValidationMeta): void => {
-    const updated = new Map(this.validationsContext);
-    updated.set(key, value);
-    this.validationsContext = updated;
+  updateValidationsContext = (resultMap: Map<string, ValidationMeta>): void => {
+    this.validationsContext = resultMap;
   };
 
   @provide({ context: tiptapContext })

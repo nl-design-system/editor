@@ -1,7 +1,7 @@
-import * as path from 'path';
 import { defineConfig } from 'vite';
 import { analyzer } from 'vite-bundle-analyzer';
 import dts from 'vite-plugin-dts';
+import alias from './vite.alias';
 
 export default defineConfig({
   build: {
@@ -20,9 +20,7 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-    },
+    ...alias,
   },
   server: {
     port: 5173,

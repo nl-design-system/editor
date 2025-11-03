@@ -1,6 +1,6 @@
 import type { Node } from 'prosemirror-model';
 import { type Editor, Extension } from '@tiptap/core';
-import type { ValidationMeta, ValidationsMap } from '@/context/validationsContext.ts';
+import type { ValidationMeta } from '@/context/validationsContext.ts';
 import type { ValidationError } from '../types/validation.ts';
 import { debounce } from '../utils/debounce.ts';
 import { a11yValidations } from './a11yValidations.ts';
@@ -40,7 +40,8 @@ registerValidator('heading', (node, position) => {
 
 const errorKey = (e: ValidationError) => `${e.id}::${e.position}`;
 
-const runValidation = (editor: Editor, callback: (key: string, value: ValidationMeta) => void) => {
+const runValidation = (editor: Editor, callback: (resultMap: Map<string, ValidationMeta>) => void) => {
+  const resultMap = new Map<string, ValidationMeta>();
   editor.state.doc.descendants((node, pos) => {
     const nodeValidators = validators.get(node.type.name);
     if (!nodeValidators || nodeValidators.length === 0) return true;
@@ -48,7 +49,7 @@ const runValidation = (editor: Editor, callback: (key: string, value: Validation
       try {
         const result = validator(node, pos, editor);
         if (result) {
-          callback(errorKey(result), { ignore: false, pos, severity: 'warning', id: result.id });
+          resultMap.set(errorKey(result), { id: result.id, ignore: false, pos, severity: 'warning' });
         }
       } catch (err) {
         console.error('validator error', err);
@@ -56,6 +57,7 @@ const runValidation = (editor: Editor, callback: (key: string, value: Validation
     }
     return true;
   });
+  callback(resultMap);
 };
 
 const debouncedValidate = debounce(runValidation, 500);

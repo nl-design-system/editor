@@ -11,14 +11,14 @@ describe('<clippy-editor>', () => {
 
   it('should change selected text to heading level 3', async () => {
     const user = userEvent.setup();
-    await expect.element(page.getByText('NL Design System Editor kop 1')).toBeInTheDocument();
+    await expect.element(page.getByText('Start met kopniveau 1')).toBeInTheDocument();
 
     const boldButton = querySelectorDeep('button[aria-label="Bold"]');
 
     expect(boldButton).toBeTruthy();
     await userEvent.click(boldButton as HTMLButtonElement);
 
-    const text = page.getByText('NL Design System Editor kop 1').element();
+    const text = page.getByText('Start met kopniveau 1').element();
     expect(text).toBeInTheDocument();
 
     // Select the text by simulating mouse selection
@@ -38,6 +38,6 @@ describe('<clippy-editor>', () => {
     await user.click(h3Option as Element);
 
     const h3Text = page.getByRole('heading', { level: 3 });
-    expect(h3Text).toHaveTextContent('NL Design System Editor kop 1');
+    expect(h3Text).toHaveTextContent('Start met kopniveau 1');
   });
 });
