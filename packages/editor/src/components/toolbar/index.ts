@@ -77,17 +77,17 @@ export class Toolbar extends LitElement {
       {
         active: this.#isFormatActive('heading', { level: 4 }),
         label: 'Kopniveau 4',
-        value: 'h3',
+        value: 'h4',
       },
       {
         active: this.#isFormatActive('heading', { level: 5 }),
         label: 'Kopniveau 5',
-        value: 'h3',
+        value: 'h5',
       },
       {
         active: this.#isFormatActive('heading', { level: 6 }),
         label: 'Kopniveau 6',
-        value: 'h3',
+        value: 'h6',
       },
       {
         active: this.#isFormatActive('paragraph'),

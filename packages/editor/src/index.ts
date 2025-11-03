@@ -2,6 +2,7 @@ import { provide } from '@lit/context';
 import { Editor as TiptapEditor } from '@tiptap/core';
 import Bold from '@tiptap/extension-bold';
 import Document from '@tiptap/extension-document';
+import Heading from '@tiptap/extension-heading';
 import Italic from '@tiptap/extension-italic';
 import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
@@ -15,7 +16,6 @@ import './components/validations/drawer';
 import './components/combo-box';
 import { tiptapContext } from './context/tiptapContext.ts';
 import { type ValidationMeta, validationsContext } from './context/validationsContext.ts';
-import CustomHeadingNode from './nodes/CustomHeadingNode.ts';
 import editorStyles from './styles';
 import Validation from './validation';
 
@@ -49,7 +49,7 @@ export class Editor extends LitElement {
       Document,
       Paragraph,
       Text,
-      CustomHeadingNode,
+      Heading,
       Bold,
       Italic,
       Underline,
