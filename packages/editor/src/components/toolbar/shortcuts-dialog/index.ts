@@ -6,7 +6,7 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import shortcutsDialogStyles from './styles.ts';
 
 @customElement('clippy-shortcuts')
-export class Index extends LitElement {
+export class ShortcutsDialog extends LitElement {
   @property({ attribute: false })
   public dialogRef?: Ref<HTMLDialogElement>;
 
@@ -121,6 +121,6 @@ export class Index extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'clippy-shortcuts': Index;
+    'clippy-shortcuts': ShortcutsDialog;
   }
 }

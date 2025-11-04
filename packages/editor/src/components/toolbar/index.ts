@@ -28,15 +28,15 @@ export class Toolbar extends LitElement {
   @property({ attribute: false })
   public editor?: Editor;
 
-  private dialogRef: Ref<HTMLDialogElement> = createRef();
+  #dialogRef: Ref<HTMLDialogElement> = createRef();
 
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
 
   #toggleOpenShortcuts = () => {
-    const { value } = this.dialogRef;
-    if (this.dialogRef.value?.open) {
+    const { value } = this.#dialogRef;
+    if (this.#dialogRef.value?.open) {
       value?.close();
     } else {
       value?.showModal();
@@ -98,7 +98,7 @@ export class Toolbar extends LitElement {
         <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-button
           label="Keyboard shortcuts"
-          .pressed=${this.dialogRef.value?.open ?? false}
+          .pressed=${this.#dialogRef.value?.open ?? false}
           @click=${this.#toggleOpenShortcuts}
         >
           ${unsafeSVG(addAriaHidden(KeyboardIcon))}
@@ -118,7 +118,7 @@ export class Toolbar extends LitElement {
             : null}
         </clippy-toolbar-button>
       </div>
-      <clippy-shortcuts .dialogRef=${this.dialogRef}></clippy-shortcuts>
+      <clippy-shortcuts .dialogRef=${this.#dialogRef}></clippy-shortcuts>
       <div class="clippy-screen-reader-text" aria-live=${size > 0 ? 'polite' : 'off'}>
         Totaal ${size} gevonden toegankelijkheidsfouten.
       </div>
