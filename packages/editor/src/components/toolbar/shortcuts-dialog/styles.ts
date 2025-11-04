@@ -5,7 +5,7 @@ export default css`
     background-color: #fff;
     border: 1px solid var(--basis-color-action-1-color-active);
     color: var(--basis-color-text);
-    padding-block: var(--basis-space-inline-xl);
+    padding-block: var(--basis-space-block-xl);
     padding-inline: var(--basis-space-inline-xl);
     inline-size: 100%;
     max-inline-size: 600px;
@@ -27,7 +27,7 @@ export default css`
     & caption {
       text-align: start;
       font-size: 1.5em;
-      padding-block: var(--basis-space-inline-xl);
+      padding-block: var(--basis-space-block-xl);
     }
     & thead {
       th {
@@ -38,14 +38,14 @@ export default css`
 
     & td,
     th {
-      padding-block: var(--basis-space-inline-sm);
+      padding-block: var(--basis-space-block-sm);
       padding-inline: var(--basis-space-inline-md);
     }
 
     kbd {
       display: inline-block;
       border: 1px solid var(--basis-color-action-1-color-active);
-      padding-block: var(--basis-space-inline-sm);
+      padding-block: var(--basis-space-block-sm);
       padding-inline: var(--basis-space-inline-sm);
       border-radius: 0.5em;
       background-color: var(--basis-color-default-bg-default);

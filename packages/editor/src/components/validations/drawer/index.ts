@@ -37,7 +37,7 @@ export class ValidationsDialog extends LitElement {
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
 
-  private dialogRef: Ref<HTMLDialogElement> = createRef();
+  #dialogRef: Ref<HTMLDialogElement> = createRef();
 
   override connectedCallback() {
     super.connectedCallback();
@@ -50,7 +50,7 @@ export class ValidationsDialog extends LitElement {
   }
 
   #toggleOpen = () => {
-    const { value } = this.dialogRef;
+    const { value } = this.#dialogRef;
     if (this.open) {
       value?.close();
     } else {
@@ -79,7 +79,7 @@ export class ValidationsDialog extends LitElement {
     const { size = 0 } = this.validationsContext || {};
     return html`
       <dialog
-        ${ref(this.dialogRef)}
+        ${ref(this.#dialogRef)}
         id="dialog-content"
         class="clippy-dialog__content"
         aria-label="Toegankelijkheidsfouten"
