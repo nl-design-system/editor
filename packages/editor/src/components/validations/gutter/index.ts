@@ -15,7 +15,7 @@ export class Gutter extends LitElement {
   validationsContext?: ValidationsMap;
 
   #goToValidation(key: string) {
-    window.dispatchEvent(
+    globalThis.dispatchEvent(
       new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, {
         bubbles: true,
         composed: true,

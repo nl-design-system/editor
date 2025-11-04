@@ -1,6 +1,7 @@
 import type { Node } from 'prosemirror-model';
 import { type Editor, Extension } from '@tiptap/core';
 import type { ValidationMeta } from '@/context/validationsContext.ts';
+import { CustomEvents } from '@/events';
 import type { ValidationError } from '../types/validation.ts';
 import { debounce } from '../utils/debounce.ts';
 import { a11yValidations } from './a11yValidations.ts';
@@ -78,6 +79,19 @@ const debouncedValidate = debounce(runValidation, 500);
 
 export default Extension.create({
   name: 'validation',
+
+  addKeyboardShortcuts() {
+    return {
+      'Mod-Alt-t': () => {
+        const event = new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, {
+          bubbles: true,
+          composed: true,
+        });
+        globalThis.dispatchEvent(event);
+        return true;
+      },
+    };
+  },
 
   onCreate({ editor }) {
     const { updateValidationsContext } = this.options;

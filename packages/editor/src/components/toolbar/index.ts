@@ -44,7 +44,7 @@ export class Toolbar extends LitElement {
   };
 
   #toggleOpenValidationsDialog = (key: string) => {
-    window.dispatchEvent(
+    globalThis.dispatchEvent(
       new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, {
         bubbles: true,
         composed: true,
