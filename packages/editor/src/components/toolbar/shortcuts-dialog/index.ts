@@ -114,6 +114,23 @@ export class ShortcutsDialog extends LitElement {
             </tr>
           </tbody>
         </table>
+        <table class="clippy-shortcuts__table">
+          <caption>
+            Toegankelijkheid
+          </caption>
+          <thead>
+          <tr>
+            <th>Commando</th>
+            <th>Windows/Linux</th>
+            <th>macOS</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>Toegankelijkheidsfouten</td>
+            <td><kbd>Control</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd></td>
+            <td><kbd>Command</kbd> + <kbd>Option</kbd> + <kbd>T</kbd></td>
+          </tr>
       </dialog>
     `;
   }

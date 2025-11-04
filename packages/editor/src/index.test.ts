@@ -3,6 +3,7 @@ import { page } from '@vitest/browser/context';
 import './index.ts';
 import { querySelectorDeep } from 'query-selector-shadow-dom';
 import { describe, it, expect, beforeEach } from 'vitest';
+import { isMacOS } from '@/utils/isMacOS.ts';
 
 describe('<clippy-editor>', () => {
   beforeEach(() => {
@@ -37,5 +38,22 @@ describe('<clippy-editor>', () => {
 
     const h3Text = page.getByRole('heading', { level: 3 });
     expect(h3Text).toHaveTextContent('Start met kopniveau 1');
+  });
+
+  it('should open the shortcuts dialog with Command/Control + Alt + T', async () => {
+    const user = userEvent.setup();
+    const text = page.getByText('Start met kopniveau 1').element();
+    expect(text).toBeInTheDocument();
+
+    await user.click(text);
+    if (isMacOS()) {
+      await user.keyboard('{meta>}{alt>}{t}{/alt}{/meta}');
+    } else {
+      await user.keyboard('{control>}{alt>}{t}{/alt}{/control}');
+    }
+    const a11yDialog = querySelectorDeep('#dialog-content');
+    expect(a11yDialog?.hasAttribute('open')).toBe(true);
+
+    expect(a11yDialog?.querySelector('ul li')?.textContent).toBe('Geen toegankelijkheidsfouten gevonden.');
   });
 });
