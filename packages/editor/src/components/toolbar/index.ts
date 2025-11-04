@@ -22,6 +22,9 @@ import toolbarStyles from './styles.ts';
 
 const addAriaHidden = (svg: string) => svg.replace('<svg', '<svg aria-hidden="true"');
 
+/**
+ * @summary The toolbar for the Clippy rich text editor
+ */
 @customElement('clippy-toolbar')
 export class Toolbar extends LitElement {
   @consume({ context: tiptapContext })
@@ -123,11 +126,5 @@ export class Toolbar extends LitElement {
         Totaal ${size} gevonden toegankelijkheidsfouten.
       </div>
     `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'clippy-toolbar': Toolbar;
   }
 }

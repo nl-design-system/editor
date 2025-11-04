@@ -3,12 +3,20 @@ import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import toolbarButtonStyles from './styles.ts';
 
+/**
+ * @summary Clippy toolbar button component
+ * @slot Button content
+ * @attr label {string} - Label for the button
+ * @attr pressed {boolean} - Whether the button is pressed
+ * @attr disabled {boolean} - Whether the button is disabled
+ * @attr onClick {function} - Callback function when the button is clicked
+ */
 @customElement('clippy-toolbar-button')
 export class ToolbarButton extends LitElement {
-  @property({ type: String }) label = '';
-  @property({ type: Boolean }) pressed = false;
-  @property({ type: Boolean }) disabled = false;
-  @property({ type: Function }) onClick?: () => void;
+  @property({ reflect: true, type: String }) label = '';
+  @property({ reflect: true, type: Boolean }) pressed = false;
+  @property({ reflect: true, type: Boolean }) disabled = false;
+  @property({ reflect: true, type: Function }) onClick?: () => void;
 
   static override readonly styles = [toolbarButtonStyles];
 
@@ -28,11 +36,5 @@ export class ToolbarButton extends LitElement {
         <slot></slot>
       </button>
     `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'clippy-toolbar-button': ToolbarButton;
   }
 }

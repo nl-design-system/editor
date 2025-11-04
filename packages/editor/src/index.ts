@@ -16,7 +16,7 @@ import './components/validations/gutter';
 import './components/validations/drawer';
 import { tiptapContext } from './context/tiptapContext.ts';
 import { type ValidationMeta, validationsContext } from './context/validationsContext.ts';
-import editorStyles from './styles';
+import editorStyles from './styles.ts';
 import Validation from './validation';
 
 const EDITOR_ID = 'editor';
@@ -25,11 +25,14 @@ export type content = string;
 
 defineCustomElements();
 
+/**
+ * @summary The Clippy rich text editor web component based on Tiptap and Lit
+ */
 @customElement('clippy-editor')
 export class Editor extends LitElement {
   static override readonly styles = [editorStyles];
 
-  @property({ type: String })
+  @property({ reflect: true, type: String })
   identifier = 'clippy-editor-id';
 
   @property({ type: String })
@@ -87,11 +90,5 @@ export class Editor extends LitElement {
       <clippy-validations-dialog></clippy-validations-dialog>
       <clippy-validations-gutter></clippy-validations-gutter>
     `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'clippy-editor': Editor;
   }
 }

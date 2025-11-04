@@ -6,6 +6,9 @@ import { validationsContext, type ValidationsMap } from '@/context/validationsCo
 import { CustomEvents } from '@/events';
 import gutterStyles from './styles.ts';
 
+/**
+ * @summary Clippy validations gutter component
+ */
 @customElement('clippy-validations-gutter')
 export class Gutter extends LitElement {
   static override readonly styles = [gutterStyles];
@@ -40,11 +43,5 @@ export class Gutter extends LitElement {
         )}
       </ol>
     `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'clippy-validations-gutter': Gutter;
   }
 }

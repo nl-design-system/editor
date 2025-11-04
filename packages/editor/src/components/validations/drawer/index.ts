@@ -23,6 +23,9 @@ const severityLevels: Record<'info' | 'warning' | 'error', string> = {
   warning: 'Waarschuwing',
 };
 
+/**
+ * @summary Clippy validations dialog component
+ */
 @customElement('clippy-validations-dialog')
 export class ValidationsDialog extends LitElement {
   static override readonly styles = [dialogStyles, unsafeCSS(numberBadgeStyles)];
@@ -116,11 +119,5 @@ export class ValidationsDialog extends LitElement {
         </ul>
       </dialog>
     `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'clippy-validations-dialog': ValidationsDialog;
   }
 }
