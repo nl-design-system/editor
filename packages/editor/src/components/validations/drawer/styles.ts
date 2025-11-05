@@ -20,6 +20,7 @@ export default css`
     background: transparent;
     border: 0;
     overflow: auto;
+    max-inline-size: 500px;
     max-block-size: calc(100% - var(--basis-space-inline-xl) * 2);
     &:focus-visible {
       outline: none;

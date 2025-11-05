@@ -15,8 +15,9 @@ import { LitElement, html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { createRef, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import type { ValidationsMap } from '@/types/validation.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
-import { validationsContext, type ValidationsMap } from '@/context/validationsContext.ts';
+import { validationsContext } from '@/context/validationsContext.ts';
 import { CustomEvents } from '@/events';
 import toolbarStyles from './styles.ts';
 

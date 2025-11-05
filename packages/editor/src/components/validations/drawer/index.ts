@@ -3,18 +3,52 @@ import { consume } from '@lit/context';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import AlertIcon from '@tabler/icons/outline/alert-circle.svg?raw';
 import ExclamationIcon from '@tabler/icons/outline/exclamation-circle.svg?raw';
-import { html, LitElement, unsafeCSS } from 'lit';
+import { html, LitElement, type TemplateResult, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import type { ValidationsMap } from '@/types/validation.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
-import { validationsContext, type ValidationsMap } from '@/context/validationsContext.ts';
+import { validationsContext } from '@/context/validationsContext.ts';
 import { CustomEvents } from '@/events';
+import { contentValidations, documentValidations } from '@/validators/constants.ts';
 import dialogStyles from './styles.ts';
 
-const validationMessages: Record<string, string> = {
-  'heading-must-not-be-empty': 'Koptekst mag niet leeg zijn',
+type ContentValidationKey = (typeof contentValidations)[keyof typeof contentValidations];
+type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentValidations];
+type ValidationKey = ContentValidationKey | DocumentValidationKey;
+
+type TipFn = (args?: Record<string, number | string>) => TemplateResult | null;
+
+type ValidationMessages = {
+  [K in ValidationKey]: { description: string; href?: string; tip?: TipFn };
+};
+
+const validationMessages: ValidationMessages = {
+  [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: {
+    description: 'Koptekst mag niet leeg zijn',
+    href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#voor-wie-zijn-toegankelijke-koppen-belangrijk',
+  },
+  [contentValidations.PARAGRAPH_MUST_NOT_BE_EMPTY]: {
+    description: 'Paragraaf mag niet leeg zijn',
+  },
+  [documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: {
+    description: 'Document moet correcte kopvolgorde hebben',
+    href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#kopniveaus',
+    tip: (params) => {
+      const { headingLevel, precedingHeadingLevel } = params || {};
+      if (typeof precedingHeadingLevel !== 'number' || !headingLevel) {
+        return null;
+      }
+      return html`<strong>Kopniveau ${headingLevel}</strong> mag niet direct volgen op een
+        <strong>kopniveau ${precedingHeadingLevel}</strong>. Gebruik een koptekst op niveau ${precedingHeadingLevel + 1}
+        of lager.`;
+    },
+  },
+  [documentValidations.DOCUMENT_MUST_HAVE_HEADING_1]: {
+    description: 'Document moet een kopniveau 1 bevatten',
+  },
 } as const;
 
 const severityLevels: Record<'info' | 'warning' | 'error', string> = {
@@ -77,6 +111,7 @@ export class ValidationsDialog extends LitElement {
 
   override render() {
     const { size = 0 } = this.validationsContext || {};
+
     return html`
       <dialog
         ${ref(this.#dialogRef)}
@@ -86,32 +121,33 @@ export class ValidationsDialog extends LitElement {
       >
         <ul class="clippy-dialog__list">
           ${size > 0
-            ? map(
-                this.validationsContext?.entries(),
-                ([, { id, pos, severity }]) =>
-                  html` <li class="clippy-dialog__list-item" xmlns="http://www.w3.org/1999/html" tabindex="0">
-                    <div class="clippy-dialog__list-item-message">
-                      <span class="clippy-dialog__list-item-severity clippy-dialog__list-item-severity--${severity}">
-                        ${severity === 'warning' ? unsafeSVG(AlertIcon) : unsafeSVG(ExclamationIcon)}
-                      </span>
-                      ${validationMessages[id]} (${severityLevels[severity]})
-                    </div>
-                    <div class="clippy-dialog__list-item-link">
-                      <utrecht-link
-                        href="https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#voor-wie-zijn-toegankelijke-koppen-belangrijk"
-                        target="_blank"
-                      >
-                        Uitgebreide toelichting
-                      </utrecht-link>
-                    </div>
-                    <div class="clippy-dialog__list-item-actions">
-                      <utrecht-button disabled="true">Negeren</utrecht-button>
-                      <utrecht-button appearance="secondary-action-button" @click=${() => this.#focusNode(pos)}
-                        >Aanpassen</utrecht-button
-                      >
-                    </div>
-                  </li>`,
-              )
+            ? map(this.validationsContext?.entries(), ([key, { pos, severity, tipPayload }]) => {
+                const { description, href, tip } = validationMessages[key as ValidationKey];
+                console.log(href);
+                const tipHtml = tip?.(tipPayload);
+                return html`<li class="clippy-dialog__list-item" xmlns="http://www.w3.org/1999/html" tabindex="0">
+                  <div class="clippy-dialog__list-item-message">
+                    <span class="clippy-dialog__list-item-severity clippy-dialog__list-item-severity--${severity}">
+                      ${severity === 'warning' ? unsafeSVG(AlertIcon) : unsafeSVG(ExclamationIcon)}
+                    </span>
+                    ${description} (${severityLevels[severity]})
+                  </div>
+                  ${tipHtml ? html`<div>${tipHtml}</div>` : null}
+                  ${href
+                    ? html`
+                        <div class="clippy-dialog__list-item-link">
+                          <utrecht-link href="${href}" target="_blank"> Uitgebreide toelichting </utrecht-link>
+                        </div>
+                      `
+                    : null}
+                  <div class="clippy-dialog__list-item-actions">
+                    <utrecht-button disabled="true">Negeren</utrecht-button>
+                    <utrecht-button appearance="secondary-action-button" @click=${() => this.#focusNode(pos)}
+                      >Aanpassen</utrecht-button
+                    >
+                  </div>
+                </li>`;
+              })
             : html`<li class="clippy-dialog__list-item">Geen toegankelijkheidsfouten gevonden.</li>`}
         </ul>
       </dialog>

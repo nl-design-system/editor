@@ -29,6 +29,7 @@ export default defineConfig({
         statements: 80,
       },
     },
-    exclude: ['**/e2e/**'],
+    exclude: ['**/e2e/**', '**/node_modules/**'],
+    include: ['**/src/**/*.test.ts'],
   },
 });

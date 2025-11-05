@@ -19,5 +19,6 @@
     "verbatimModuleSyntax": true
   },
   "extends": "@nl-design-system/tsconfig",
-  "include": ["src/**/*", "vite-env.d.ts"]
+  "include": ["src/**/*", "vite-env.d.ts"],
+  "exclude": ["**/*.test.ts"]
 }
