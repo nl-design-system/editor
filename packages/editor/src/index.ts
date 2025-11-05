@@ -14,10 +14,11 @@ import { customElement, property } from 'lit/decorators.js';
 import './components/toolbar';
 import './components/validations/gutter';
 import './components/validations/drawer';
+import type { ValidationResult } from '@/types/validation.ts';
 import { tiptapContext } from './context/tiptapContext.ts';
-import { type ValidationMeta, validationsContext } from './context/validationsContext.ts';
+import { validationsContext } from './context/validationsContext.ts';
 import editorStyles from './styles';
-import Validation from './validation';
+import Validation from './validators';
 
 const EDITOR_ID = 'editor';
 
@@ -38,7 +39,7 @@ export class Editor extends LitElement {
   @provide({ context: validationsContext })
   validationsContext = new Map();
 
-  updateValidationsContext = (resultMap: Map<string, ValidationMeta>): void => {
+  updateValidationsContext = (resultMap: Map<string, ValidationResult>): void => {
     this.validationsContext = resultMap;
   };
 

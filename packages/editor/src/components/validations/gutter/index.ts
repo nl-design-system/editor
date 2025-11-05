@@ -2,7 +2,8 @@ import { consume } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
-import { validationsContext, type ValidationsMap } from '@/context/validationsContext.ts';
+import type { ValidationsMap } from '@/types/validation.ts';
+import { validationsContext } from '@/context/validationsContext.ts';
 import { CustomEvents } from '@/events';
 import gutterStyles from './styles.ts';
 
