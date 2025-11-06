@@ -1,5 +1,11 @@
 # @nl-design-system-community/editor
 
+## 1.1.0
+
+### Minor Changes
+
+- 19c101e: Editor validation flow, shortcuts dialog, restructure
+
 ## 1.0.1
 
 ### Patch Changes
