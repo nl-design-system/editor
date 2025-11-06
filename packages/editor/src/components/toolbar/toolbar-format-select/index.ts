@@ -12,11 +12,18 @@ export interface SelectOption {
   value: string;
 }
 
+/**
+ * @summary Clippy format select component
+ * @attr {boolean} disabled - Whether the select is disabled
+ * @attr {boolean} readonly - Whether the select is readOnly
+ * @attr {function} onSelect - Callback function when an option is selected
+ */
 @customElement('clippy-format-select')
 export class FormatSelect extends LitElement {
-  @property({ type: Boolean }) disabled = false;
-  @property({ type: Boolean }) readOnly = false;
+  @property({ reflect: true, type: Boolean }) disabled = false;
+  @property({ reflect: true, type: Boolean }) readonly = false;
   @property({ type: Function }) onSelect = (value: string) => value;
+
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
   public editor?: Editor;
@@ -107,11 +114,5 @@ export class FormatSelect extends LitElement {
         )}
       </select>
     `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'clippy-format-select': FormatSelect;
   }
 }

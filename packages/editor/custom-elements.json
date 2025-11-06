@@ -1,0 +1,698 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/components/editor.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "Editor",
+          "members": [
+            {
+              "kind": "field",
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "'clippy-editor-id'",
+              "attribute": "identifier",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "initialContent",
+              "attribute": "initialContent"
+            },
+            {
+              "kind": "field",
+              "name": "validationsContext",
+              "default": "new Map()"
+            },
+            {
+              "kind": "field",
+              "name": "updateValidationsContext"
+            },
+            {
+              "kind": "field",
+              "name": "editor",
+              "type": {
+                "text": "TiptapEditor"
+              },
+              "default": "new TiptapEditor({ content: this.initialContent, extensions: [ Document, Paragraph, Text, Heading, Bold, Italic, Underline, UndoRedo, Validation.configure({ updateValidationsContext: this.updateValidationsContext, }), ], })"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "identifier",
+              "type": {
+                "text": "string"
+              },
+              "default": "'clippy-editor-id'",
+              "fieldName": "identifier"
+            },
+            {
+              "name": "initialContent",
+              "fieldName": "initialContent"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "summary": "The Clippy rich text editor web component based on Tiptap and Lit",
+          "tagName": "clippy-editor",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "Editor",
+          "declaration": {
+            "name": "Editor",
+            "module": "src/components/editor.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "clippy-editor",
+          "declaration": {
+            "name": "Editor",
+            "module": "src/components/editor.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toolbar/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "Toolbar",
+          "members": [
+            {
+              "kind": "field",
+              "name": "editor",
+              "type": {
+                "text": "Editor | undefined"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "#dialogRef",
+              "privacy": "private",
+              "type": {
+                "text": "Ref<HTMLDialogElement>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationsContext",
+              "type": {
+                "text": "ValidationsMap | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#toggleOpenShortcuts",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#toggleOpenValidationsDialog",
+              "privacy": "private"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "summary": "The toolbar for the Clippy rich text editor",
+          "tagName": "clippy-toolbar",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "Toolbar",
+          "declaration": {
+            "name": "Toolbar",
+            "module": "src/components/toolbar/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "clippy-toolbar",
+          "declaration": {
+            "name": "Toolbar",
+            "module": "src/components/toolbar/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toolbar/styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/components/toolbar/styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toolbar/toolbar-button/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ToolbarButton",
+          "slots": [
+            {
+              "description": "content",
+              "name": "Button"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "pressed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "pressed",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "onClick",
+              "type": {
+                "text": "() => void | undefined"
+              },
+              "attribute": "onClick",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "description": "{string} - Label for the button",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "label"
+            },
+            {
+              "description": "{boolean} - Whether the button is pressed",
+              "name": "pressed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "pressed"
+            },
+            {
+              "description": "{boolean} - Whether the button is disabled",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "description": "{function} - Callback function when the button is clicked",
+              "name": "onClick",
+              "type": {
+                "text": "() => void | undefined"
+              },
+              "fieldName": "onClick"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "summary": "Clippy toolbar button component",
+          "tagName": "clippy-toolbar-button",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ToolbarButton",
+          "declaration": {
+            "name": "ToolbarButton",
+            "module": "src/components/toolbar/toolbar-button/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "clippy-toolbar-button",
+          "declaration": {
+            "name": "ToolbarButton",
+            "module": "src/components/toolbar/toolbar-button/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toolbar/toolbar-button/styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/components/toolbar/toolbar-button/styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toolbar/shortcuts-dialog/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ShortcutsDialog",
+          "members": [
+            {
+              "kind": "field",
+              "name": "dialogRef",
+              "type": {
+                "text": "Ref<HTMLDialogElement> | undefined"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "summary": "Clippy shortcuts dialog component",
+          "tagName": "clippy-shortcuts",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ShortcutsDialog",
+          "declaration": {
+            "name": "ShortcutsDialog",
+            "module": "src/components/toolbar/shortcuts-dialog/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "clippy-shortcuts",
+          "declaration": {
+            "name": "ShortcutsDialog",
+            "module": "src/components/toolbar/shortcuts-dialog/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toolbar/shortcuts-dialog/styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/components/toolbar/shortcuts-dialog/styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/toolbar/toolbar-format-select/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "FormatSelect",
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "onSelect",
+              "attribute": "onSelect"
+            },
+            {
+              "kind": "field",
+              "name": "editor",
+              "type": {
+                "text": "Editor | undefined"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "#isFormatActive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "attributes",
+                  "optional": true,
+                  "type": {
+                    "text": "Record<'level', number>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#handleTextFormatChange",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onUpdate",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "SelectOption[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the select is disabled",
+              "name": "disabled",
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the select is readOnly",
+              "name": "readonly",
+              "default": "false",
+              "fieldName": "readonly"
+            },
+            {
+              "type": {
+                "text": "function"
+              },
+              "description": "Callback function when an option is selected",
+              "name": "onSelect",
+              "fieldName": "onSelect"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "summary": "Clippy format select component",
+          "tagName": "clippy-format-select",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FormatSelect",
+          "declaration": {
+            "name": "FormatSelect",
+            "module": "src/components/toolbar/toolbar-format-select/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "clippy-format-select",
+          "declaration": {
+            "name": "FormatSelect",
+            "module": "src/components/toolbar/toolbar-format-select/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/validations/drawer/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ValidationsDialog",
+          "members": [
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "editor",
+              "type": {
+                "text": "Editor | undefined"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "validationsContext",
+              "type": {
+                "text": "ValidationsMap | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dialogRef",
+              "privacy": "private",
+              "type": {
+                "text": "Ref<HTMLDialogElement>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#toggleOpen",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#focusNode",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "pos",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "summary": "Clippy validations dialog component",
+          "tagName": "clippy-validations-dialog",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ValidationsDialog",
+          "declaration": {
+            "name": "ValidationsDialog",
+            "module": "src/components/validations/drawer/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "clippy-validations-dialog",
+          "declaration": {
+            "name": "ValidationsDialog",
+            "module": "src/components/validations/drawer/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/validations/drawer/styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/components/validations/drawer/styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/validations/gutter/index.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "Gutter",
+          "members": [
+            {
+              "kind": "field",
+              "name": "validationsContext",
+              "type": {
+                "text": "ValidationsMap | undefined"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#goToValidation",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "summary": "Clippy validations gutter component",
+          "tagName": "clippy-validations-gutter",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "Gutter",
+          "declaration": {
+            "name": "Gutter",
+            "module": "src/components/validations/gutter/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "clippy-validations-gutter",
+          "declaration": {
+            "name": "Gutter",
+            "module": "src/components/validations/gutter/index.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/validations/gutter/styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/components/validations/gutter/styles.ts"
+          }
+        }
+      ]
+    }
+  ]
+}
