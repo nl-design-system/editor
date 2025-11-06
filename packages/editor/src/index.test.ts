@@ -1,8 +1,8 @@
 import userEvent from '@testing-library/user-event';
-import { page } from '@vitest/browser/context';
-import './index.ts';
 import { querySelectorDeep } from 'query-selector-shadow-dom';
+import './index.ts';
 import { describe, it, expect, beforeEach } from 'vitest';
+import { page } from 'vitest/browser';
 import { isMacOS } from '@/utils/isMacOS.ts';
 
 describe('<clippy-editor>', () => {

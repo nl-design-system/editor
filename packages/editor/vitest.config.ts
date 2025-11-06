@@ -1,3 +1,4 @@
+import { playwright } from '@vitest/browser-playwright';
 import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 import alias from './vite.alias';
 
@@ -10,7 +11,7 @@ export default defineConfig({
       enabled: true,
       headless: true,
       instances: [{ browser: 'chromium' }],
-      provider: 'playwright',
+      provider: playwright(),
       screenshotDirectory: 'tmp/screenshots',
       viewport: { height: 1280, width: 1024 },
     },
