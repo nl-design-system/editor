@@ -1,9 +1,10 @@
 import type { Editor } from '@tiptap/core';
 import type { Node } from 'prosemirror-model';
+import type { EditorSettings } from '@/types/settings.ts';
 
 export type BoundingBox = { top: number; height: number };
 
-export type DocumentValidator = (editor: Editor) => ValidationResult | null;
+export type DocumentValidator = (editor: Editor, settings: EditorSettings) => ValidationResult | null;
 
 export type ContentValidator = (editor: Editor, node: Node, pos: number) => ValidationResult | null;
 

@@ -1,6 +1,6 @@
 import { vi, describe, it, expect } from 'vitest';
-import { createTestEditor } from '../../../test/createTestEditor.ts';
-import { documentMustHaveCorrectHeadingOrder } from './index.ts';
+import { createTestEditor } from '../../../test/createTestEditor';
+import { documentMustHaveCorrectHeadingOrder } from './index';
 
 describe('Document validations', () => {
   it('returns the ValidationMap after Editor.onCreated', async () => {
@@ -52,6 +52,32 @@ describe('Document validations', () => {
       tipPayload: {
         headingLevel: 3,
         precedingHeadingLevel: 1,
+      },
+    });
+  });
+
+  it('returns error for invalid top level heading', async () => {
+    const callback = vi.fn();
+
+    createTestEditor(
+      `
+      <h1>Title</h1>
+      <p>Text</p>
+    `,
+      callback,
+      { topHeadingLevel: 2 },
+    );
+    await vi.waitFor(() => {
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+    const mapArg = callback.mock.calls[0][0];
+    expect(mapArg).toBeInstanceOf(Map);
+    expect(mapArg.get('document-must-have-top-level-heading')).toEqual({
+      boundingBox: null,
+      pos: 0,
+      severity: 'info',
+      tipPayload: {
+        topHeadingLevel: 2,
       },
     });
   });

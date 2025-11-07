@@ -1,6 +1,6 @@
 export const documentValidations = {
   DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER: 'document-must-have-correct-heading-order',
-  DOCUMENT_MUST_HAVE_HEADING_1: 'document-must-have-heading-1',
+  DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING: 'document-must-have-top-level-heading',
 } as const;
 
 export const contentValidations = {

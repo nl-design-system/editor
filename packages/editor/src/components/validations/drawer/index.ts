@@ -5,13 +5,14 @@ import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import type { ValidationsMap } from '@/types/validation.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { CustomEvents } from '@/events';
 import { contentValidations, documentValidations } from '@/validators/constants.ts';
-import dialogStyles from './styles.ts';
 import './validation-list-item';
+import dialogStyles from './styles.ts';
 
 type ContentValidationKey = (typeof contentValidations)[keyof typeof contentValidations];
 type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentValidations];
@@ -44,8 +45,12 @@ const validationMessages: ValidationMessages = {
         of lager.`;
     },
   },
-  [documentValidations.DOCUMENT_MUST_HAVE_HEADING_1]: {
-    description: 'Document moet een kopniveau 1 bevatten',
+  [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING]: {
+    description: 'Document moet starten met het juiste kopniveau',
+    tip: (params) => {
+      const { topHeadingLevel } = params || {};
+      return `Verwachting: <strong>kopniveau ${topHeadingLevel ?? 1}</strong>`;
+    },
   },
 } as const;
 
@@ -87,7 +92,7 @@ export class ValidationsDialog extends LitElement {
     this.open = !this.open;
   };
 
-  #focusNode = (event: CustomEventInit<{ pos: number }>) => {
+  readonly #focusNode = (event: CustomEventInit<{ pos: number }>) => {
     const { pos = 0 } = event.detail || {};
     try {
       const { view } = this.editor || {};
@@ -125,8 +130,9 @@ export class ValidationsDialog extends LitElement {
                     .severity=${severity}
                     .description=${description}
                     .href=${href}
-                    .tipHtml=${tipHtml}
-                  ></clippy-validation-list-item>
+                  >
+                    <div slot="tip-html">${unsafeHTML(tipHtml!)}</div>
+                  </clippy-validation-list-item>
                 `;
               })
             : html`<li class="clippy-dialog__list-item">Geen toegankelijkheidsfouten gevonden.</li>`}

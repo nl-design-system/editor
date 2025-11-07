@@ -1,14 +1,18 @@
-import AlertIcon from '@tabler/icons/outline/alert-circle.svg?raw';
-import ExclamationIcon from '@tabler/icons/outline/exclamation-circle.svg?raw';
+import AlertCircleIcon from '@tabler/icons/outline/alert-circle.svg?raw';
+import AlertTriangleIcon from '@tabler/icons/outline/alert-triangle.svg?raw';
+import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { CustomEvents } from '@/events';
+import { validationSeverity } from '@/validators/constants.ts';
 import validationListItemStyles from './styles.ts';
 
-const severityLevels: Record<'error' | 'warning', string> = {
+type SeverityLevel = (typeof validationSeverity)[keyof typeof validationSeverity];
+
+const severityLevels: Record<SeverityLevel, string> = {
   error: 'Fout',
+  info: 'Info',
   warning: 'Waarschuwing',
 };
 
@@ -22,13 +26,22 @@ export class ClippyValidationItem extends LitElement {
   @property({ type: String }) severity!: ValidationSeverity;
   @property({ type: String }) description!: string;
   @property({ type: String }) href?: string;
-  // Accept TemplateResult or raw HTML string. Keep out of attributes to avoid stringification.
-  @property({ type: String }) tipHtml?: string;
 
-  #focusNode = () => {
+  readonly #focusNode = () => {
     this.dispatchEvent(
       new CustomEvent(CustomEvents.FOCUS_NODE, { bubbles: true, composed: true, detail: { pos: this.pos } }),
     );
+  };
+
+  readonly #getAlertIcon = () => {
+    switch (this.severity) {
+      case 'error':
+        return AlertTriangleIcon;
+      case 'warning':
+        return AlertCircleIcon;
+      default:
+        return InfoCircleIcon;
+    }
   };
 
   override render() {
@@ -36,13 +49,11 @@ export class ClippyValidationItem extends LitElement {
       <li class="clippy-dialog__list-item" tabindex="0">
         <div class="clippy-dialog__list-item-message">
           <span class="clippy-dialog__list-item-severity clippy-dialog__list-item-severity--${this.severity}">
-            ${this.severity === 'warning' ? unsafeSVG(AlertIcon) : unsafeSVG(ExclamationIcon)}
+            ${unsafeSVG(this.#getAlertIcon())}
           </span>
           ${this.description} (${severityLevels[this.severity]})
         </div>
-        ${this.tipHtml
-          ? html`<div class="clippy-dialog__list-item-tip" data-test-id="tip-html">${unsafeHTML(this.tipHtml)}</div>`
-          : null}
+        <slot name="tip-html" class="clippy-dialog__list-item-tip"></slot>
         ${this.href
           ? html`
               <div class="clippy-dialog__list-item-link">
