@@ -1,4 +1,5 @@
 import type { Editor } from '@tiptap/core';
+import type { EditorSettings } from '@/types/settings.ts';
 import type { DocumentValidator, ValidationResult } from '@/types/validation.ts';
 import { documentValidations, validationSeverity } from '@/validators/constants.ts';
 import { getNodeBoundingBox } from '@/validators/helpers.ts';
@@ -33,9 +34,15 @@ export const documentMustHaveCorrectHeadingOrder = (editor: Editor): ValidationR
   return null;
 };
 
-const documentMustHaveHeading1 = (editor: Editor): ValidationResult | null => {
-  if (editor.$doc.node.childCount === 0) {
-    console.log('Document is empty');
+export const documentMustHaveTopLevelHeading = (editor: Editor, settings: EditorSettings): ValidationResult | null => {
+  const { firstChild } = editor.$doc.node;
+  if (firstChild?.attrs['level'] !== settings.topHeadingLevel) {
+    return {
+      boundingBox: null,
+      pos: 0,
+      severity: validationSeverity.INFO,
+      tipPayload: { topHeadingLevel: settings.topHeadingLevel },
+    };
   }
   return null;
 };
@@ -44,7 +51,7 @@ type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentV
 
 const documentValidatorMap: { [K in DocumentValidationKey]: DocumentValidator } = {
   [documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: documentMustHaveCorrectHeadingOrder,
-  [documentValidations.DOCUMENT_MUST_HAVE_HEADING_1]: documentMustHaveHeading1,
+  [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING]: documentMustHaveTopLevelHeading,
 };
 
 for (const [key, validator] of Object.entries(documentValidatorMap)) {

@@ -1,4 +1,5 @@
 import { type Editor, Extension } from '@tiptap/core';
+import type { EditorSettings } from '@/types/settings.ts';
 import type { ValidationResult } from '@/types/validation.ts';
 import { CustomEvents } from '@/events';
 import contentValidator from '@/validators/content';
@@ -7,12 +8,16 @@ import { debounce } from '../utils/debounce.ts';
 
 const VALIDATION_TIMEOUT = 500;
 
-const runValidation = (editor: Editor, callback: (resultMap: Map<string, ValidationResult>) => void) => {
+const runValidation = (
+  editor: Editor,
+  settings: EditorSettings,
+  callback: (resultMap: Map<string, ValidationResult>) => void,
+) => {
   let validationResultMap = new Map<string, ValidationResult>();
 
   for (const [key, validator] of documentValidators.entries()) {
     try {
-      const result = validator(editor);
+      const result = validator(editor, settings);
       if (result) {
         validationResultMap.set(key, result);
       }
@@ -52,12 +57,12 @@ export default Extension.create({
   },
 
   onCreate({ editor }) {
-    const { updateValidationsContext } = this.options;
-    runValidation(editor, updateValidationsContext);
+    const { settings, updateValidationsContext } = this.options;
+    runValidation(editor, settings, updateValidationsContext);
   },
 
   onUpdate({ editor }) {
-    const { updateValidationsContext } = this.options;
-    debouncedValidate(editor, updateValidationsContext);
+    const { settings, updateValidationsContext } = this.options;
+    debouncedValidate(editor, settings, updateValidationsContext);
   },
 });

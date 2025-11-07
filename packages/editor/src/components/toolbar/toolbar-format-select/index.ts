@@ -1,4 +1,5 @@
 import type { Editor } from '@tiptap/core';
+import type { Level } from '@tiptap/extension-heading';
 import { consume } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
@@ -11,6 +12,11 @@ export interface SelectOption {
   label: string;
   value: string;
 }
+
+const getConfiguredHeadingLevels = (editor: Editor): Level[] => {
+  const headingExt = editor.extensionManager.extensions.find((ext) => ext.name === 'heading');
+  return headingExt?.options.levels;
+};
 
 @customElement('clippy-format-select')
 export class FormatSelect extends LitElement {
@@ -59,37 +65,15 @@ export class FormatSelect extends LitElement {
 
   @state()
   private get options(): SelectOption[] {
+    if (!this.editor) return [];
+    const headingLevels = getConfiguredHeadingLevels(this.editor);
+    const headingOptions: SelectOption[] = headingLevels.map((level) => ({
+      active: this.#isFormatActive('heading', { level }),
+      label: `Kopniveau ${level}`,
+      value: `h${level}`,
+    }));
     return [
-      {
-        active: this.#isFormatActive('heading', { level: 1 }),
-        label: 'Kopniveau 1',
-        value: 'h1',
-      },
-      {
-        active: this.#isFormatActive('heading', { level: 2 }),
-        label: 'Kopniveau 2',
-        value: 'h2',
-      },
-      {
-        active: this.#isFormatActive('heading', { level: 3 }),
-        label: 'Kopniveau 3',
-        value: 'h3',
-      },
-      {
-        active: this.#isFormatActive('heading', { level: 4 }),
-        label: 'Kopniveau 4',
-        value: 'h4',
-      },
-      {
-        active: this.#isFormatActive('heading', { level: 5 }),
-        label: 'Kopniveau 5',
-        value: 'h5',
-      },
-      {
-        active: this.#isFormatActive('heading', { level: 6 }),
-        label: 'Kopniveau 6',
-        value: 'h6',
-      },
+      ...headingOptions,
       {
         active: this.#isFormatActive('paragraph'),
         label: 'Paragraaf',

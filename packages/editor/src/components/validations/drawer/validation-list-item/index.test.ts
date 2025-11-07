@@ -1,4 +1,5 @@
 import './index.ts';
+import { querySelectorDeep } from 'query-selector-shadow-dom';
 import { describe, it, expect } from 'vitest';
 
 describe('<validation-list-item>', () => {
@@ -8,13 +9,13 @@ describe('<validation-list-item>', () => {
         severity="error"
         description="Beware of the great error!"
         href="https://example.com"
-        tipHtml="This is a <strong>great</strong> tip!"></clippy-validation-list-item>`;
+        >
+        <div slot="tip-html">This is a <strong>great</strong> tip!</div>
+        </clippy-validation-list-item>`;
 
     const item = document.querySelector('clippy-validation-list-item');
     await item?.updateComplete;
-    expect(item?.shadowRoot?.querySelector('[data-test-id="tip-html"]')?.innerHTML).toContain(
-      'This is a <strong>great</strong> tip!',
-    );
+    expect(querySelectorDeep('[slot="tip-html"]')?.innerHTML).toContain('This is a <strong>great</strong> tip!');
     expect(item).toBeTruthy();
   });
 });
