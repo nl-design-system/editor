@@ -30,12 +30,11 @@ export class Gutter extends LitElement {
       <ol class="clippy-validations-gutter__list" role="list">
         ${map(
           this.validationsContext?.entries(),
-          ([key, { boundingBox }]) =>
+          ([key, { boundingBox, severity }]) =>
             boundingBox &&
             html`<li
-              class="clippy-validations-gutter__indicator"
+              class="clippy-validations-gutter__indicator clippy-validations-gutter__indicator--${severity}"
               style="inset-block-start: ${boundingBox.top}px; block-size: ${boundingBox.height}px"
-              title=${key}
               @click=${() => this.#goToValidation(key)}
             ></li>`,
         )}

@@ -4,24 +4,15 @@ import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import type { ValidationSeverity } from '@/types/validation.ts';
 import { CustomEvents } from '@/events';
-import { validationSeverity } from '@/validators/constants.ts';
 import validationListItemStyles from './styles.ts';
-
-type SeverityLevel = (typeof validationSeverity)[keyof typeof validationSeverity];
-
-const severityLevels: Record<SeverityLevel, string> = {
-  error: 'Fout',
-  info: 'Info',
-  warning: 'Waarschuwing',
-};
-
-export type ValidationSeverity = keyof typeof severityLevels;
 
 @customElement('clippy-validation-list-item')
 export class ClippyValidationItem extends LitElement {
   static override readonly styles = [validationListItemStyles];
 
+  @property({ type: String }) key: string = '';
   @property({ type: Number }) pos: number = 0;
   @property({ type: String }) severity!: ValidationSeverity;
   @property({ type: String }) description!: string;
@@ -46,12 +37,16 @@ export class ClippyValidationItem extends LitElement {
 
   override render() {
     return html`
-      <li class="clippy-dialog__list-item" tabindex="0">
+      <li
+        class="clippy-dialog__list-item clippy-dialog__list-item--${this.severity}"
+        data-validation-key="${this.key}"
+        tabindex="-1"
+      >
         <div class="clippy-dialog__list-item-message">
+          <strong>${this.description}</strong>
           <span class="clippy-dialog__list-item-severity clippy-dialog__list-item-severity--${this.severity}">
             ${unsafeSVG(this.#getAlertIcon())}
           </span>
-          ${this.description} (${severityLevels[this.severity]})
         </div>
         <slot name="tip-html" class="clippy-dialog__list-item-tip"></slot>
         ${this.href

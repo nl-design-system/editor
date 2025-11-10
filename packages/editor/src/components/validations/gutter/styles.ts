@@ -8,29 +8,58 @@ export default css`
     position: absolute;
     align-items: flex-end;
     display: flex;
-    inline-size: fit-content;
-    pointer-events: none;
-  }
-
-  :host > * {
-    pointer-events: auto;
+    inline-size: 1rem;
   }
 
   .clippy-validations-gutter__list {
     list-style: none;
     padding-inline: 0;
+    inline-size: 100%;
   }
 
   .clippy-validations-gutter__indicator {
-    background: var(--ma-color-paars-8);
     block-size: 30px;
     display: block;
-    inline-size: 1rem;
+    cursor: pointer;
+    inline-size: 100%;
     inset-inline-end: 0;
-    opacity: 50%;
     position: absolute;
+    mask-repeat: repeat;
+    transition: filter 0.5s 0s;
+
+    &::before {
+      content: '';
+      display: block;
+      inline-size: calc(1rem / 3);
+      block-size: 100%;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      background-color: var(--ma-color-neutral-8);
+      border-radius: calc(1rem / 6);
+      outline: 1px solid var(--ma-color-white);
+      transition: all 0.2s 0s;
+      mask-image: var(--clippy-background-texture-info);
+      mask-repeat: repeat;
+      mask-composite: subtract;
+      mask-size: 10px;
+    }
+    &.clippy-validations-gutter__indicator--info::before {
+      mask-position: -1px;
+    }
+    &.clippy-validations-gutter__indicator--warning::before {
+      margin-inline-start: calc(1rem / 3);
+      background-color: var(--ma-color-signal-warning-700);
+      mask-image: var(--clippy-background-texture-warning);
+    }
+    &.clippy-validations-gutter__indicator--error::before {
+      margin-inline-start: calc(1rem * 2 / 3);
+      background-color: var(--ma-color-signal-rood-500);
+      mask-image: var(--clippy-background-texture-error);
+    }
   }
-  .clippy-validations-gutter__indicator:hover {
-    opacity: 100%;
+  .clippy-validations-gutter__indicator:hover::before {
+    transition: all 0.1s 0s;
+    margin-inline-start: 0;
+    inline-size: 100%;
   }
 `;

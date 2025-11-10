@@ -8,6 +8,8 @@ export type DocumentValidator = (editor: Editor, settings: EditorSettings) => Va
 
 export type ContentValidator = (editor: Editor, node: Node, pos: number) => ValidationResult | null;
 
+export type ValidationEntry = readonly [key: string, value: ValidationResult];
+
 export type ValidationResult = {
   boundingBox: BoundingBox | null;
   severity: ValidationSeverity;

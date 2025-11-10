@@ -9,6 +9,11 @@ export default css`
     align-items: flex-end;
     display: flex;
     inline-size: fit-content;
+    pointer-events: none;
+  }
+
+  :host > * {
+    pointer-events: auto;
   }
 
   .clippy-dialog__content {
@@ -28,7 +33,6 @@ export default css`
   }
 
   .clippy-dialog__list {
-    background: oklch(from var(--ma-color-paars-8) l c h / 25%);
     display: grid;
     gap: 0.5rem;
     list-style: none;
