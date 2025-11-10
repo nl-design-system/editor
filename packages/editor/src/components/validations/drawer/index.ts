@@ -45,6 +45,10 @@ const validationMessages: ValidationMessages = {
         of lager.`;
     },
   },
+  [documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS]: {
+    description: 'Lijst moet een semantische lijst zijn',
+    href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/opsommingen/#genummerde-en-ongenummerde-lijsten',
+  },
   [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING]: {
     description: 'Document moet starten met het juiste kopniveau',
     tip: (params) => {
@@ -60,7 +64,7 @@ export class ValidationsDialog extends LitElement {
   @state()
   private open = false;
 
-  @consume({ context: tiptapContext })
+  @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
   public editor?: Editor;
 
