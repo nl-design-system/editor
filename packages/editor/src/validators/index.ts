@@ -1,14 +1,13 @@
-import { type Editor, Extension } from '@tiptap/core';
+import { type Editor } from '@tiptap/core';
 import type { EditorSettings } from '@/types/settings.ts';
 import type { ValidationResult } from '@/types/validation.ts';
-import { CustomEvents } from '@/events';
 import contentValidator from '@/validators/content';
 import documentValidators from '@/validators/document';
 import { debounce } from '../utils/debounce.ts';
 
 const VALIDATION_TIMEOUT = 500;
 
-const runValidation = (
+export const runValidation = (
   editor: Editor,
   settings: EditorSettings,
   callback: (resultMap: Map<string, ValidationResult>) => void,
@@ -38,31 +37,4 @@ const runValidation = (
   callback(validationResultMap);
 };
 
-const debouncedValidate = debounce(runValidation, VALIDATION_TIMEOUT);
-
-export default Extension.create({
-  name: 'validation',
-
-  addKeyboardShortcuts() {
-    return {
-      'Mod-Alt-t': () => {
-        const event = new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, {
-          bubbles: true,
-          composed: true,
-        });
-        globalThis.dispatchEvent(event);
-        return true;
-      },
-    };
-  },
-
-  onCreate({ editor }) {
-    const { settings, updateValidationsContext } = this.options;
-    runValidation(editor, settings, updateValidationsContext);
-  },
-
-  onUpdate({ editor }) {
-    const { settings, updateValidationsContext } = this.options;
-    debouncedValidate(editor, settings, updateValidationsContext);
-  },
-});
+export const debouncedValidate = debounce(runValidation, VALIDATION_TIMEOUT);

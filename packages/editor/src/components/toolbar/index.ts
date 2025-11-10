@@ -8,12 +8,14 @@ import './shortcuts-dialog';
 import BoldIcon from '@tabler/icons/outline/bold.svg?raw';
 import ItalicIcon from '@tabler/icons/outline/italic.svg?raw';
 import KeyboardIcon from '@tabler/icons/outline/keyboard.svg?raw';
+import OrderedListIcon from '@tabler/icons/outline/list-numbers.svg?raw';
+import BulletListIcon from '@tabler/icons/outline/list.svg?raw';
 import './toolbar-button';
 import './toolbar-format-select';
 import UnderlineIcon from '@tabler/icons/outline/underline.svg?raw';
 import { LitElement, html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { createRef, type Ref } from 'lit/directives/ref.js';
+import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationsMap } from '@/types/validation.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
@@ -25,15 +27,20 @@ const addAriaHidden = (svg: string) => svg.replace('<svg', '<svg aria-hidden="tr
 
 @customElement('clippy-toolbar')
 export class Toolbar extends LitElement {
-  @consume({ context: tiptapContext })
+  @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
   public editor?: Editor;
 
   #dialogRef: Ref<HTMLDialogElement> = createRef();
+  #focusNode: Ref<HTMLButtonElement> = createRef();
 
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
+
+  readonly #onUpdate = () => {
+    this.requestUpdate();
+  };
 
   #toggleOpenShortcuts = () => {
     const { value } = this.#dialogRef;
@@ -43,7 +50,10 @@ export class Toolbar extends LitElement {
       value?.showModal();
     }
   };
-
+  #onToolbarFocus = () => {
+    const { value } = this.#focusNode;
+    value?.shadowRoot?.querySelector('button')?.focus();
+  };
   #toggleOpenValidationsDialog = (key: string) => {
     globalThis.dispatchEvent(
       new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, {
@@ -53,6 +63,21 @@ export class Toolbar extends LitElement {
       }),
     );
   };
+
+  override connectedCallback() {
+    globalThis.addEventListener(CustomEvents.FOCUS_TOOLBAR, this.#onToolbarFocus);
+    super.connectedCallback();
+  }
+
+  override firstUpdated(): void {
+    this.editor?.on('selectionUpdate', this.#onUpdate);
+  }
+
+  override disconnectedCallback() {
+    this.editor?.off('selectionUpdate', this.#onUpdate);
+    globalThis.removeEventListener(CustomEvents.FOCUS_TOOLBAR, this.#onToolbarFocus);
+    super.disconnectedCallback();
+  }
 
   static override readonly styles = [toolbarStyles, unsafeCSS(numberBadgeStyles)];
 
@@ -65,6 +90,7 @@ export class Toolbar extends LitElement {
           label="Bold"
           .pressed=${this.editor?.isActive('bold') ?? false}
           @click=${() => this.editor?.chain().focus().toggleBold().run()}
+          ${ref(this.#focusNode)}
         >
           ${unsafeSVG(addAriaHidden(BoldIcon))}
         </clippy-toolbar-button>
@@ -95,6 +121,24 @@ export class Toolbar extends LitElement {
           ?disabled=${!(this.editor?.can().redo() ?? false)}
           @click=${() => this.editor?.commands.redo()}
           >${unsafeSVG(addAriaHidden(ArrowForwardUpIcon))}
+        </clippy-toolbar-button>
+        <div class="clippy-toolbar__divider"></div>
+        <clippy-toolbar-button
+          label="Ordered list"
+          .pressed=${this.editor?.isActive('orderedList') ?? false}
+          @click=${() => {
+            console.log(this.editor);
+            this.editor?.chain().focus().toggleOrderedList().run();
+          }}
+        >
+          ${unsafeSVG(addAriaHidden(OrderedListIcon))}
+        </clippy-toolbar-button>
+        <clippy-toolbar-button
+          label="Bullet list"
+          .pressed=${this.editor?.isActive('bulletList') ?? false}
+          @click=${() => this.editor?.chain().focus().toggleBulletList().run()}
+        >
+          ${unsafeSVG(addAriaHidden(BulletListIcon))}
         </clippy-toolbar-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-button

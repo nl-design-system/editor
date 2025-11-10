@@ -8,8 +8,8 @@ import Text from '@tiptap/extension-text';
 import Underline from '@tiptap/extension-underline';
 import { UndoRedo } from '@tiptap/extensions';
 import { vi } from 'vitest';
+import Validation from '../src/extentions/Validation';
 import { EditorSettings } from '../src/types/settings';
-import Validation from '../src/validators';
 
 export function createTestEditor(
   content: string,

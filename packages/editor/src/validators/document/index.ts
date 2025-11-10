@@ -1,4 +1,5 @@
 import type { Editor } from '@tiptap/core';
+import type { Node } from 'prosemirror-model';
 import type { EditorSettings } from '@/types/settings.ts';
 import type { DocumentValidator, ValidationResult } from '@/types/validation.ts';
 import { documentValidations, validationSeverity } from '@/validators/constants.ts';
@@ -34,6 +35,131 @@ export const documentMustHaveCorrectHeadingOrder = (editor: Editor): ValidationR
   return null;
 };
 
+const getParagraphLines = (node: Node): string[] => {
+  const lines: string[] = [];
+  let buffer = '';
+  node.content.forEach((child) => {
+    if (child.type.name === 'hardBreak') {
+      if (buffer.trim().length) {
+        lines.push(buffer);
+      }
+      buffer = '';
+    } else {
+      buffer += child.textContent;
+    }
+  });
+  if (buffer.trim().length) {
+    lines.push(buffer);
+  }
+  return lines;
+};
+
+export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult | null => {
+  if (!editor.$nodes('paragraph')?.length) {
+    return null;
+  }
+  const $paragraphs: Node[] = [];
+  editor.$doc.node.descendants((node: Node) => {
+    if (node.type.name === 'paragraph') {
+      $paragraphs.push(node);
+    }
+  });
+
+  // Set up checks for types of strings.
+  const numberMatch = new RegExp(/(([023456789][\d\s])|(1\d))/, ''); // All numbers but 1.
+  const alphabeticMatch = /(^[aA1]|[^\p{Alphabetic}\s])[-\s.)]/u;
+
+  const secondTextNoMatch = ['a', 'A', '1'];
+  const prefixDecrement = {
+    '2': '1',
+    b: 'a',
+    B: 'A',
+  } as const;
+  type PrefixKey = keyof typeof prefixDecrement;
+  const isPrefixKey = (s: string): s is PrefixKey => s === '2' || s === 'b' || s === 'B';
+
+  const decrement = (el: string): string =>
+    el.replace(/^[bB2]/, (match: string) => (isPrefixKey(match) ? prefixDecrement[match] : match));
+
+  // Variables to carry in loop.
+  const activeMatch = ''; // Carried in loop for second paragraph.
+  let firstText = ''; // Text of previous paragraph.
+
+  $paragraphs?.forEach((paragraph, i) => {
+    let secondText: boolean | string = false;
+    let hit = false;
+    firstText = firstText ? firstText : paragraph.textContent.replace('(', '');
+    const firstPrefix = firstText.substring(0, 2);
+
+    // Grab first two characters.
+    const isAlphabetic = firstPrefix.match(alphabeticMatch) !== null;
+    const isNumber = firstPrefix.match(numberMatch) !== null;
+
+    console.log('firstPrefix', firstPrefix);
+    console.log('activeMatch', activeMatch);
+    console.log('!isNumber', !isNumber);
+    console.log('isAlphabetic', isAlphabetic);
+    console.log('---');
+    if (firstPrefix.length > 0 && firstPrefix !== activeMatch && !isNumber && isAlphabetic) {
+      // We have a prefix and a possible hit; check next detected paragraph.
+      const secondP = $paragraphs[i + 1];
+      compareP: if (secondP) {
+        secondText = secondP.textContent.replace('(', '').substring(0, 2);
+        if (secondTextNoMatch.includes(secondText?.toLowerCase().trim())) {
+          break compareP;
+        }
+        const secondPrefix = decrement(secondText);
+        if (isAlphabetic) {
+          // Check for repeats (*,*) or increments(a,b)
+          if (firstPrefix !== 'A ' && firstPrefix === secondPrefix) {
+            hit = true;
+          }
+        }
+      }
+
+      console.log(hit);
+
+      if (!hit) {
+        const lines = getParagraphLines(paragraph);
+        if (lines.length < 2) {
+          return null;
+        }
+
+        let textAfterBreak = '';
+        console.log(paragraph.content);
+        paragraph.content.forEach((child) => {
+          if (child.type.name === 'hardBreak') {
+            // console.log(paragraph.content[index + 1]);
+            // textAfterBreak = paragraph.content[index + 1].textContent;
+          }
+        });
+
+        if (textAfterBreak) {
+          textAfterBreak = textAfterBreak
+            .replace(/<\/?[^>]+(>|$)/g, '')
+            .replace('(', '')
+            .trim()
+            .substring(0, 2);
+          if (firstPrefix === decrement(textAfterBreak)) {
+            hit = true;
+          }
+        }
+      }
+      if (hit) {
+        // TODO: get position
+        return {
+          boundingBox: getNodeBoundingBox(editor, 0),
+          pos: 0,
+          severity: validationSeverity.INFO, // informational: suggest converting to semantic list
+        };
+      }
+      return null;
+    }
+    return null;
+  });
+  return null;
+};
+
 export const documentMustHaveTopLevelHeading = (editor: Editor, settings: EditorSettings): ValidationResult | null => {
   const { firstChild } = editor.$doc.node;
   if (firstChild?.attrs['level'] !== settings.topHeadingLevel) {
@@ -51,6 +177,7 @@ type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentV
 
 const documentValidatorMap: { [K in DocumentValidationKey]: DocumentValidator } = {
   [documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: documentMustHaveCorrectHeadingOrder,
+  [documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS]: documentMustHaveSemanticLists,
   [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING]: documentMustHaveTopLevelHeading,
 };
 

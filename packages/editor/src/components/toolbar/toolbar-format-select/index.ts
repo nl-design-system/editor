@@ -51,7 +51,9 @@ export class FormatSelect extends LitElement {
     formatCommands[value]().run();
   };
 
-  readonly #onUpdate = () => this.requestUpdate();
+  readonly #onUpdate = () => {
+    this.requestUpdate();
+  };
 
   override connectedCallback() {
     super.connectedCallback();
