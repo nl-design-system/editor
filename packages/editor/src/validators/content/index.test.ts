@@ -34,4 +34,20 @@ describe('Content validations', () => {
     expect(mapArg).toBeInstanceOf(Map);
     expect(mapArg.has('document-must-have-semantic-lists_0')).toBeTruthy();
   });
+
+  it.skip('should find content that resembles a list', async () => {
+    const callback = vi.fn();
+    createTestEditor(
+      `
+    <p>- tet<br>- test<br>- test</p>`,
+      callback,
+    );
+
+    await vi.waitFor(() => {
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+    const mapArg = callback.mock.calls[0][0];
+    expect(mapArg).toBeInstanceOf(Map);
+    expect(mapArg.has('list-must-be-semantic-list')).toBeTruthy();
+  });
 });

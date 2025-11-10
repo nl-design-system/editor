@@ -56,12 +56,11 @@ export class Toolbar extends LitElement {
     value?.shadowRoot?.querySelector('button')?.focus();
   };
 
-  #toggleOpenValidationsDialog = (key: string) => {
+  #toggleOpenValidationsDialog = () => {
     globalThis.dispatchEvent(
       new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, {
         bubbles: true,
         composed: true,
-        detail: { key },
       }),
     );
   };

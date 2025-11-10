@@ -3,10 +3,11 @@ import { consume } from '@lit/context';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { queryAll } from 'lit/decorators/query-all.js';
 import { map } from 'lit/directives/map.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import type { ValidationsMap } from '@/types/validation.ts';
+import type { ValidationEntry, ValidationsMap } from '@/types/validation.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { CustomEvents } from '@/events';
@@ -23,6 +24,8 @@ type TipFn = (args?: Record<string, number | string>) => string | null;
 type ValidationMessages = {
   [K in ValidationKey]: { description: string; href?: string; tip?: TipFn };
 };
+
+const sortByPos = (a: ValidationEntry, b: ValidationEntry) => a[1].pos - b[1].pos;
 
 const validationMessages: ValidationMessages = {
   [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: {
@@ -71,6 +74,9 @@ export class ValidationsDialog extends LitElement {
   @state()
   private open = false;
 
+  @queryAll('clippy-validation-list-item')
+  private validationListItems: HTMLUListElement[] | undefined;
+
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
   public editor?: Editor;
@@ -83,15 +89,29 @@ export class ValidationsDialog extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    globalThis.addEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpen);
+    globalThis.addEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpenAndFocus);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
   }
 
   override disconnectedCallback() {
-    globalThis.removeEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpen);
+    globalThis.removeEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpenAndFocus);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
     super.disconnectedCallback();
   }
+
+  #toggleOpenAndFocus = (event: CustomEventInit<{ key: string }>) => {
+    if (event.detail?.key) {
+      if (!this.open) {
+        this.#toggleOpen();
+      }
+      this.validationListItems?.forEach((el) => {
+        const listItem = el.shadowRoot?.querySelector(`[data-validation-key="${event.detail?.key}"]`);
+        if (listItem instanceof HTMLElement) listItem.focus();
+      });
+    } else {
+      this.#toggleOpen();
+    }
+  };
 
   #toggleOpen = () => {
     const { value } = this.#dialogRef;
@@ -122,6 +142,8 @@ export class ValidationsDialog extends LitElement {
 
   override render() {
     const { size = 0 } = this.validationsContext || {};
+    const validations = [...(this.validationsContext?.entries() ?? [])];
+    const sortedValidations = validations.sort(sortByPos);
 
     return html`
       <dialog
@@ -130,14 +152,15 @@ export class ValidationsDialog extends LitElement {
         class="clippy-dialog__content"
         aria-label="Toegankelijkheidsfouten"
       >
-        <ul class="clippy-dialog__list">
+        <ul class="clippy-dialog__list" id="validation-list">
           ${size > 0
-            ? map(this.validationsContext?.entries(), ([key, { pos, severity, tipPayload }]) => {
+            ? map(sortedValidations, ([key, { pos, severity, tipPayload }]) => {
                 const validationKey = key.split('_')[0] as ValidationKey;
                 const { description, href, tip } = validationMessages[validationKey];
                 const tipHtml = tip?.(tipPayload) ?? null;
                 return html`
                   <clippy-validation-list-item
+                    .key=${key}
                     .pos=${pos}
                     .severity=${severity}
                     .description=${description}
