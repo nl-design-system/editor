@@ -1,4 +1,7 @@
 import { customElementJetBrainsPlugin } from 'custom-element-jet-brains-integration';
+import { customElementVsCodePlugin } from 'custom-element-vs-code-integration';
+
+const outdir = 'cem';
 
 export default {
   dependencies: false,
@@ -6,7 +9,8 @@ export default {
   exclude: [],
   globs: ['src/components/**/*.ts'],
   litelement: true,
+  outdir,
   packagejson: true,
-  plugins: [customElementJetBrainsPlugin()],
+  plugins: [customElementJetBrainsPlugin({ outdir }), customElementVsCodePlugin({ outdir })],
   watch: true,
 };

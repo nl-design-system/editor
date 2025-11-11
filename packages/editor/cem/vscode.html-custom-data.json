@@ -1,0 +1,79 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vscode-html-languageservice/main/docs/customData.schema.json",
+  "version": 1.1,
+  "tags": [
+    {
+      "name": "clippy-toolbar",
+      "description": "The toolbar for the Clippy rich text editor\n---\n",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "clippy-shortcuts",
+      "description": "Clippy shortcuts dialog component\n---\n",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "clippy-toolbar-button",
+      "description": "Clippy toolbar button component\n---\n\n\n### **Slots:**\n - **Button** - content",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "{string} - Label for the button",
+          "values": []
+        },
+        {
+          "name": "pressed",
+          "description": "{boolean} - Whether the button is pressed",
+          "values": []
+        },
+        {
+          "name": "disabled",
+          "description": "{boolean} - Whether the button is disabled",
+          "values": []
+        },
+        {
+          "name": "onClick",
+          "description": "{function} - Callback function when the button is clicked",
+          "values": [{ "name": "() => void" }]
+        }
+      ],
+      "references": []
+    },
+    {
+      "name": "clippy-validations-gutter",
+      "description": "Clippy validations gutter component\n---\n",
+      "attributes": [],
+      "references": []
+    },
+    {
+      "name": "clippy-format-select",
+      "description": "Clippy format select component\n---\n",
+      "attributes": [
+        {
+          "name": "disabled",
+          "description": "Whether the select is disabled",
+          "values": []
+        },
+        {
+          "name": "readonly",
+          "description": "Whether the select is readOnly",
+          "values": []
+        },
+        {
+          "name": "onSelect",
+          "description": "Callback function when an option is selected",
+          "values": [{ "name": "function" }]
+        }
+      ],
+      "references": []
+    },
+    {
+      "name": "clippy-validations-dialog",
+      "description": "Clippy validations dialog component\n---\n",
+      "attributes": [],
+      "references": []
+    }
+  ]
+}

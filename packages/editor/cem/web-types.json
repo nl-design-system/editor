@@ -7,29 +7,6 @@
     "html": {
       "elements": [
         {
-          "name": "clippy-editor",
-          "description": "The Clippy rich text editor web component based on Tiptap and Lit\n---\n",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "identifier",
-              "value": { "type": "string", "default": "'clippy-editor-id'" }
-            },
-            { "name": "initialContent", "value": { "type": "string" } }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "identifier", "type": "string" },
-              { "name": "initialContent" },
-              { "name": "validationsContext" },
-              { "name": "updateValidationsContext" },
-              { "name": "editor", "type": "TiptapEditor" }
-            ],
-            "events": []
-          }
-        },
-        {
           "name": "clippy-toolbar",
           "description": "The toolbar for the Clippy rich text editor\n---\n",
           "doc-url": "",
@@ -41,6 +18,22 @@
               {
                 "name": "validationsContext",
                 "type": "ValidationsMap | undefined"
+              }
+            ],
+            "events": []
+          }
+        },
+        {
+          "name": "clippy-shortcuts",
+          "description": "Clippy shortcuts dialog component\n---\n",
+          "doc-url": "",
+          "attributes": [],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "dialogRef",
+                "type": "Ref<HTMLDialogElement> | undefined"
               }
             ],
             "events": []
@@ -85,16 +78,16 @@
           }
         },
         {
-          "name": "clippy-shortcuts",
-          "description": "Clippy shortcuts dialog component\n---\n",
+          "name": "clippy-validations-gutter",
+          "description": "Clippy validations gutter component\n---\n",
           "doc-url": "",
           "attributes": [],
           "events": [],
           "js": {
             "properties": [
               {
-                "name": "dialogRef",
-                "type": "Ref<HTMLDialogElement> | undefined"
+                "name": "validationsContext",
+                "type": "ValidationsMap | undefined"
               }
             ],
             "events": []
@@ -141,22 +134,6 @@
           "js": {
             "properties": [
               { "name": "editor", "type": "Editor | undefined" },
-              {
-                "name": "validationsContext",
-                "type": "ValidationsMap | undefined"
-              }
-            ],
-            "events": []
-          }
-        },
-        {
-          "name": "clippy-validations-gutter",
-          "description": "Clippy validations gutter component\n---\n",
-          "doc-url": "",
-          "attributes": [],
-          "events": [],
-          "js": {
-            "properties": [
               {
                 "name": "validationsContext",
                 "type": "ValidationsMap | undefined"
