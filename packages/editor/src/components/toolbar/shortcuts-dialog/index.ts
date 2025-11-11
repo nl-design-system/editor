@@ -112,6 +112,16 @@ export class ShortcutsDialog extends LitElement {
               <td><kbd>Control</kbd> + <kbd>Alt</kbd> + <kbd>6</kbd></td>
               <td><kbd>Cmd</kbd> + <kbd>Alt</kbd> + <kbd>6</kbd></td>
             </tr>
+            <tr>
+              <td>Genummerde lijst</td>
+              <td><kbd>Control</kbd> + <kbd>Shift</kbd> + <kbd>7</kbd></td>
+              <td><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>7</kbd></td>
+            </tr>
+            <tr>
+              <td>Ongenummerde lijst</td>
+              <td><kbd>Control</kbd> + <kbd>Shift</kbd> + <kbd>8</kbd></td>
+              <td><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>8</kbd></td>
+            </tr>
           </tbody>
         </table>
         <table class="clippy-shortcuts__table">
@@ -130,6 +140,11 @@ export class ShortcutsDialog extends LitElement {
             <td>Toegankelijkheidsfouten</td>
             <td><kbd>Control</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd></td>
             <td><kbd>Command</kbd> + <kbd>Option</kbd> + <kbd>T</kbd></td>
+          </tr>
+          <tr>
+            <td>Focus toolbar</td>
+            <td><kbd>Alt</kbd> + <kbd>F10</kbd></td>
+            <td>( <kbd>Fn</kbd> ) + <kbd>Option</kbd> + <kbd>F10</kbd></td>
           </tr>
       </dialog>
     `;
