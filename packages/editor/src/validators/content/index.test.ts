@@ -5,7 +5,7 @@ describe('Content validations', () => {
   it('returns the ValidationMap after Editor.onCreated', async () => {
     const callback = vi.fn();
 
-    createTestEditor(
+    await createTestEditor(
       `
       <h1></h1>
     `,
@@ -21,7 +21,7 @@ describe('Content validations', () => {
 
   it.skip('should find content that resembles a list', async () => {
     const callback = vi.fn();
-    createTestEditor(
+    await createTestEditor(
       `
     <p>- tet<br>- test<br>- test</p>`,
       callback,

@@ -113,12 +113,12 @@ export class ShortcutsDialog extends LitElement {
               <td><kbd>Cmd</kbd> + <kbd>Alt</kbd> + <kbd>6</kbd></td>
             </tr>
             <tr>
-              <td>Genummerde lijst</td>
+              <td>Geordende lijst</td>
               <td><kbd>Control</kbd> + <kbd>Shift</kbd> + <kbd>7</kbd></td>
               <td><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>7</kbd></td>
             </tr>
             <tr>
-              <td>Ongenummerde lijst</td>
+              <td>Ongeordende lijst</td>
               <td><kbd>Control</kbd> + <kbd>Shift</kbd> + <kbd>8</kbd></td>
               <td><kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>8</kbd></td>
             </tr>

@@ -48,6 +48,13 @@ const validationMessages: ValidationMessages = {
   [documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS]: {
     description: 'Lijst moet een semantische lijst zijn',
     href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/opsommingen/#genummerde-en-ongenummerde-lijsten',
+    tip: (params) => {
+      const { prefix } = params || {};
+      if (!prefix) {
+        return null;
+      }
+      return `Gebruik een semantische lijst in plaats van regels die beginnen met "<strong>${prefix}</strong>"`;
+    },
   },
   [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING]: {
     description: 'Document moet starten met het juiste kopniveau',

@@ -47,121 +47,70 @@ const getParagraphLines = (node: Node): string[] => {
   return lines;
 };
 
+const orderedListIndicator = new RegExp(/^\d+[.)\]/ ]$/);
+const unorderedListIndicator = new RegExp(/^\s*([•\-*+])\s+/);
+
 export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult[] => {
-  if (!editor.$nodes('paragraph')?.length) {
-    return [];
-  }
-  const $paragraphs: Node[] = [];
-  editor.$doc.node.descendants((node: Node) => {
-    if (node.type.name === 'paragraph') {
-      $paragraphs.push(node);
+  const errors: ValidationResult[] = [];
+  const $blocks: { node: Node; pos: number }[] = [];
+  editor.$doc.node.descendants((node: Node, pos: number) => {
+    if (node.type.isBlock) {
+      $blocks.push({ node, pos });
     }
   });
 
-  // Set up checks for types of strings.
-  const numberMatch = new RegExp(/(([023456789][\d\s])|(1\d))/, ''); // All numbers but 1.
-  const alphabeticMatch = /(^[aA1]|[^\p{Alphabetic}\s])[-\s.)]/u;
+  const decrement = (prefix: string): string => (prefix.startsWith('2') ? prefix.replace('2', '1') : prefix);
 
-  const secondTextNoMatch = ['a', 'A', '1'];
-  const prefixDecrement = {
-    '2': '1',
-    b: 'a',
-    B: 'A',
-  } as const;
-  type PrefixKey = keyof typeof prefixDecrement;
-  const isPrefixKey = (s: string): s is PrefixKey => s === '2' || s === 'b' || s === 'B';
+  for (const [index, { node, pos }] of $blocks.entries()) {
+    if (node.type.name !== 'paragraph') {
+      continue;
+    }
+    const firstPrefix = node.textContent.substring(0, 2);
 
-  const decrement = (el: string): string =>
-    el.replace(/^[bB2]/, (match: string) => (isPrefixKey(match) ? prefixDecrement[match] : match));
+    const isOrdered = orderedListIndicator.test(firstPrefix);
+    const isUnordered = unorderedListIndicator.test(firstPrefix);
 
-  // Variables to carry in loop.
-  const activeMatch = ''; // Carried in loop for second paragraph.
-  let firstText = ''; // Text of previous paragraph.
+    if (!isOrdered && !isUnordered) {
+      // Not a potential list
+      continue;
+    }
 
-  $paragraphs?.forEach((paragraph, i) => {
-    let secondText: boolean | string = false;
-    let hit = false;
-    firstText = firstText ? firstText : paragraph.textContent.replace('(', '');
-    const firstPrefix = firstText.substring(0, 2);
-
-    // Grab first two characters.
-    const isAlphabetic = firstPrefix.match(alphabeticMatch) !== null;
-    const isNumber = firstPrefix.match(numberMatch) !== null;
-
-    console.log('firstPrefix', firstPrefix);
-    console.log('activeMatch', activeMatch);
-    console.log('!isNumber', !isNumber);
-    console.log('isAlphabetic', isAlphabetic);
-    console.log('---');
-    if (firstPrefix.length > 0 && firstPrefix !== activeMatch && !isNumber && isAlphabetic) {
-      // We have a prefix and a possible hit; check next detected paragraph.
-      const secondP = $paragraphs[i + 1];
-      compareP: if (secondP) {
-        secondText = secondP.textContent.replace('(', '').substring(0, 2);
-        if (secondTextNoMatch.includes(secondText?.toLowerCase().trim())) {
-          break compareP;
-        }
-        const secondPrefix = decrement(secondText);
-        if (isAlphabetic) {
-          // Check for repeats (*,*) or increments(a,b)
-          if (firstPrefix !== 'A ' && firstPrefix === secondPrefix) {
-            hit = true;
-          }
-        }
-      }
-
-      console.log(hit);
-
-      if (!hit) {
-        const lines = getParagraphLines(paragraph);
-        if (lines.length < 2) {
-          return null;
-        }
-
-        let textAfterBreak = '';
-        console.log(paragraph.content);
-        paragraph.content.forEach((child) => {
-          if (child.type.name === 'hardBreak') {
-            // console.log(paragraph.content[index + 1]);
-            // textAfterBreak = paragraph.content[index + 1].textContent;
-          }
+    if ($blocks[index + 1] && $blocks[index + 1].node.type.name === 'paragraph') {
+      const secondPrefix = $blocks[index + 1].node.textContent.substring(0, 2);
+      const decrementedSecondPrefix = decrement(secondPrefix);
+      if (decrementedSecondPrefix === firstPrefix) {
+        errors.push({
+          boundingBox: getNodeBoundingBox(editor, pos),
+          pos,
+          severity: validationSeverity.INFO,
+          tipPayload: { prefix: firstPrefix.trim() },
         });
-
-        if (textAfterBreak) {
-          textAfterBreak = textAfterBreak
-            .replace(/<\/?[^>]+(>|$)/g, '')
-            .replace('(', '')
-            .trim()
-            .substring(0, 2);
-          if (firstPrefix === decrement(textAfterBreak)) {
-            hit = true;
-          }
-        }
       }
-      if (hit) {
-        // TODO: get position
-        return {
-          boundingBox: getNodeBoundingBox(editor, 0),
-          pos: 0,
-          severity: validationSeverity.INFO, // informational: suggest converting to semantic list
-        };
-      }
-      return null;
     }
-    return null;
-  });
-  return [];
+
+    const lines = getParagraphLines(node);
+    if (lines.length > 1 && firstPrefix === decrement(lines[1].substring(0, 2))) {
+      errors.push({
+        boundingBox: getNodeBoundingBox(editor, pos),
+        pos,
+        severity: validationSeverity.INFO,
+        tipPayload: { prefix: firstPrefix.trim() },
+      });
+    }
+  }
+  return errors;
 };
 
-export const documentMustHaveTopLevelHeading = (editor: Editor, settings: EditorSettings): ValidationResult[] => {
+export const documentMustHaveTopLevelHeading = (editor: Editor, settings?: EditorSettings): ValidationResult[] => {
   const { firstChild } = editor.$doc.node;
-  if (firstChild?.attrs['level'] !== settings.topHeadingLevel) {
+  const topHeadingLevel = settings?.topHeadingLevel ?? 1;
+  if (firstChild?.attrs['level'] !== topHeadingLevel) {
     return [
       {
         boundingBox: null,
         pos: 0,
         severity: validationSeverity.INFO,
-        tipPayload: { topHeadingLevel: settings.topHeadingLevel },
+        tipPayload: { topHeadingLevel },
       },
     ];
   }
