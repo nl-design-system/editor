@@ -50,10 +50,12 @@ export class Toolbar extends LitElement {
       value?.showModal();
     }
   };
-  #onToolbarFocus = () => {
+
+  readonly #onToolbarFocus = () => {
     const { value } = this.#focusNode;
     value?.shadowRoot?.querySelector('button')?.focus();
   };
+
   #toggleOpenValidationsDialog = (key: string) => {
     globalThis.dispatchEvent(
       new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, {
@@ -127,7 +129,6 @@ export class Toolbar extends LitElement {
           label="Ordered list"
           .pressed=${this.editor?.isActive('orderedList') ?? false}
           @click=${() => {
-            console.log(this.editor);
             this.editor?.chain().focus().toggleOrderedList().run();
           }}
         >
