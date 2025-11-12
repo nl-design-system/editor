@@ -7,32 +7,25 @@ import { getNodeBoundingBox } from '@/validators/helpers.ts';
 
 const documentValidators = new Map<string, DocumentValidator>();
 
-export const documentMustHaveCorrectHeadingOrder = (editor: Editor): ValidationResult | null => {
-  let errorHeadingLevel = 0;
-  let errorPrecedingHeadingLevel = 0;
-
+export const documentMustHaveCorrectHeadingOrder = (editor: Editor): ValidationResult[] => {
+  const errors: ValidationResult[] = [];
   let precedingHeadingLevel = 0;
-  let errorPosition: number | null = null;
+
   editor.$doc.node.descendants((node, pos) => {
     if (node.type.name === 'heading') {
       const headingLevel = node.attrs['level'];
       if (headingLevel > precedingHeadingLevel + 1) {
-        errorPosition = pos;
-        errorPrecedingHeadingLevel = precedingHeadingLevel;
-        errorHeadingLevel = headingLevel;
+        errors.push({
+          boundingBox: getNodeBoundingBox(editor, pos),
+          pos,
+          severity: validationSeverity.WARNING,
+          tipPayload: { headingLevel: headingLevel, precedingHeadingLevel: precedingHeadingLevel },
+        });
       }
       precedingHeadingLevel = headingLevel;
     }
   });
-  if (errorPosition) {
-    return {
-      boundingBox: getNodeBoundingBox(editor, errorPosition),
-      pos: errorPosition,
-      severity: validationSeverity.WARNING,
-      tipPayload: { headingLevel: errorHeadingLevel, precedingHeadingLevel: errorPrecedingHeadingLevel },
-    };
-  }
-  return null;
+  return errors;
 };
 
 const getParagraphLines = (node: Node): string[] => {
@@ -54,9 +47,9 @@ const getParagraphLines = (node: Node): string[] => {
   return lines;
 };
 
-export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult | null => {
+export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult[] => {
   if (!editor.$nodes('paragraph')?.length) {
-    return null;
+    return [];
   }
   const $paragraphs: Node[] = [];
   editor.$doc.node.descendants((node: Node) => {
@@ -157,20 +150,22 @@ export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult 
     }
     return null;
   });
-  return null;
+  return [];
 };
 
-export const documentMustHaveTopLevelHeading = (editor: Editor, settings: EditorSettings): ValidationResult | null => {
+export const documentMustHaveTopLevelHeading = (editor: Editor, settings: EditorSettings): ValidationResult[] => {
   const { firstChild } = editor.$doc.node;
   if (firstChild?.attrs['level'] !== settings.topHeadingLevel) {
-    return {
-      boundingBox: null,
-      pos: 0,
-      severity: validationSeverity.INFO,
-      tipPayload: { topHeadingLevel: settings.topHeadingLevel },
-    };
+    return [
+      {
+        boundingBox: null,
+        pos: 0,
+        severity: validationSeverity.INFO,
+        tipPayload: { topHeadingLevel: settings.topHeadingLevel },
+      },
+    ];
   }
-  return null;
+  return [];
 };
 
 type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentValidations];
