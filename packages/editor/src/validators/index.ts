@@ -17,8 +17,10 @@ export const runValidation = (
   for (const [key, validator] of documentValidators.entries()) {
     try {
       const result = validator(editor, settings);
-      if (result) {
-        validationResultMap.set(key, result);
+      if (result.length > 0) {
+        for (const res of result) {
+          validationResultMap.set(`${key}_${res.pos}`, res);
+        }
       }
     } catch (err) {
       console.error('document validator error', err);

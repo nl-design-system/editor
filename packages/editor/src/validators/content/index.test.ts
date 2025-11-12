@@ -16,7 +16,7 @@ describe('Content validations', () => {
     });
     const mapArg = callback.mock.calls[0][0];
     expect(mapArg).toBeInstanceOf(Map);
-    expect(mapArg.has('heading-must-not-be-empty')).toBeTruthy();
+    expect(mapArg.has('heading-must-not-be-empty_0')).toBeTruthy();
   });
 
   it.skip('should find content that resembles a list', async () => {

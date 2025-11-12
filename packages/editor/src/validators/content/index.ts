@@ -50,7 +50,7 @@ const contentValidator = (editor: Editor) => {
     for (const [key, validator] of Object.entries(contentValidatorMap)) {
       const result = validator(editor, node, pos);
       if (result) {
-        errors.set(key, result);
+        errors.set(`${key}_${pos}`, result);
       }
     }
   });
