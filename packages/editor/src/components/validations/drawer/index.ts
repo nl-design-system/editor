@@ -126,7 +126,8 @@ export class ValidationsDialog extends LitElement {
         <ul class="clippy-dialog__list">
           ${size > 0
             ? map(this.validationsContext?.entries(), ([key, { pos, severity, tipPayload }]) => {
-                const { description, href, tip } = validationMessages[key as ValidationKey];
+                const validationKey = key.split('_')[0] as ValidationKey;
+                const { description, href, tip } = validationMessages[validationKey];
                 const tipHtml = tip?.(tipPayload) ?? null;
                 return html`
                   <clippy-validation-list-item
