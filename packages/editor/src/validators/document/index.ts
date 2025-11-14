@@ -1,9 +1,9 @@
 import type { Editor } from '@tiptap/core';
 import type { Node } from 'prosemirror-model';
 import type { EditorSettings } from '@/types/settings.ts';
-import type { DocumentValidator, ValidationResult } from '@/types/validation.ts';
+import type { DocumentValidator } from '@/types/validation.ts';
 import { documentValidations, validationSeverity } from '@/validators/constants.ts';
-import { getNodeBoundingBox } from '@/validators/helpers.ts';
+import { ValidationResult } from '../classes/ValidationResult';
 
 const documentValidators = new Map<string, DocumentValidator>();
 
@@ -15,12 +15,15 @@ export const documentMustHaveCorrectHeadingOrder = (editor: Editor): ValidationR
     if (node.type.name === 'heading') {
       const headingLevel = node.attrs['level'];
       if (headingLevel > precedingHeadingLevel + 1) {
-        errors.push({
-          boundingBox: getNodeBoundingBox(editor, pos),
-          pos,
-          severity: validationSeverity.WARNING,
-          tipPayload: { headingLevel: headingLevel, precedingHeadingLevel: precedingHeadingLevel },
-        });
+        const tipPayload = { headingLevel: headingLevel, precedingHeadingLevel: precedingHeadingLevel };
+        errors.push(
+          new ValidationResult({
+            editor,
+            pos,
+            severity: validationSeverity.WARNING,
+            tipPayload,
+          }),
+        );
       }
       precedingHeadingLevel = headingLevel;
     }
@@ -79,23 +82,27 @@ export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult[
       const secondPrefix = $blocks[index + 1].node.textContent.substring(0, 2);
       const decrementedSecondPrefix = decrement(secondPrefix);
       if (decrementedSecondPrefix === firstPrefix) {
-        errors.push({
-          boundingBox: getNodeBoundingBox(editor, pos),
-          pos,
-          severity: validationSeverity.INFO,
-          tipPayload: { prefix: firstPrefix.trim() },
-        });
+        errors.push(
+          new ValidationResult({
+            editor,
+            pos,
+            severity: validationSeverity.INFO,
+            tipPayload: { prefix: firstPrefix.trim() },
+          }),
+        );
       }
     }
 
     const lines = getParagraphLines(node);
     if (lines.length > 1 && firstPrefix === decrement(lines[1].substring(0, 2))) {
-      errors.push({
-        boundingBox: getNodeBoundingBox(editor, pos),
-        pos,
-        severity: validationSeverity.INFO,
-        tipPayload: { prefix: firstPrefix.trim() },
-      });
+      errors.push(
+        new ValidationResult({
+          editor,
+          pos,
+          severity: validationSeverity.INFO,
+          tipPayload: { prefix: firstPrefix.trim() },
+        }),
+      );
     }
   }
   return errors;
@@ -105,14 +112,7 @@ export const documentMustHaveTopLevelHeading = (editor: Editor, settings?: Edito
   const { firstChild } = editor.$doc.node;
   const topHeadingLevel = settings?.topHeadingLevel ?? 1;
   if (firstChild?.attrs['level'] !== topHeadingLevel) {
-    return [
-      {
-        boundingBox: null,
-        pos: 0,
-        severity: validationSeverity.INFO,
-        tipPayload: { topHeadingLevel },
-      },
-    ];
+    return [new ValidationResult({ editor, severity: validationSeverity.INFO, tipPayload: { topHeadingLevel } })];
   }
   return [];
 };

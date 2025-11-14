@@ -1,6 +1,6 @@
 import { type Editor } from '@tiptap/core';
 import type { EditorSettings } from '@/types/settings.ts';
-import type { ValidationResult } from '@/types/validation.ts';
+import type { ValidationResult } from '@/validators/classes/ValidationResult.ts';
 import contentValidator from '@/validators/content';
 import documentValidators from '@/validators/document';
 import { debounce } from '../utils/debounce.ts';

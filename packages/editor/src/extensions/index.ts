@@ -9,7 +9,7 @@ import Text from '@tiptap/extension-text';
 import Underline from '@tiptap/extension-underline';
 import { UndoRedo } from '@tiptap/extensions';
 import type { EditorSettings } from '@/types/settings.ts';
-import type { ValidationResult } from '@/types/validation.ts';
+import type { ValidationResult } from '@/validators/classes/ValidationResult.ts';
 import KeyboardShortcuts from '@/extensions/KeyboardShortcuts.ts';
 import { CustomListItem } from '@/extensions/ListItem.ts';
 import Validation from '@/extensions/Validation.ts';

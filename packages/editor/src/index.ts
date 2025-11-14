@@ -6,7 +6,7 @@ import './components/validations/gutter';
 import './components/validations/drawer';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import type { ValidationResult } from '@/types/validation.ts';
+import type { ValidationResult } from '@/validators/classes/ValidationResult.ts';
 import { editorExtensions } from '@/extensions';
 import { tiptapContext } from './context/tiptapContext.ts';
 import { validationsContext } from './context/validationsContext.ts';

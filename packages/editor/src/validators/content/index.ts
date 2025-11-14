@@ -1,8 +1,8 @@
 import type { Editor } from '@tiptap/core';
 import type { Node } from 'prosemirror-model';
-import type { ContentValidator, ValidationResult } from '@/types/validation.ts';
+import type { ContentValidator } from '@/types/validation.ts';
+import { ValidationResult } from '@/validators/classes/ValidationResult.ts';
 import { contentValidations, validationSeverity } from '@/validators/constants.ts';
-import { getNodeBoundingBox } from '@/validators/helpers.ts';
 
 const isEmptyOrWhitespaceString = (str: string): boolean => /^\s*$/.test(str);
 
@@ -17,22 +17,14 @@ const isEmpty = (node: Node): boolean => {
 
 const paragraphMustNotBeEmpty = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
   if (node.type.name === 'paragraph' && isEmpty(node)) {
-    return {
-      boundingBox: getNodeBoundingBox(editor, pos),
-      pos,
-      severity: 'error',
-    };
+    return new ValidationResult({ editor, pos, severity: validationSeverity.ERROR });
   }
   return null;
 };
 
 const headingMustNotBeEmpty = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
   if (node.type.name === 'heading' && isEmpty(node)) {
-    return {
-      boundingBox: getNodeBoundingBox(editor, pos),
-      pos,
-      severity: validationSeverity.ERROR,
-    };
+    return new ValidationResult({ editor, pos, severity: validationSeverity.ERROR });
   }
   return null;
 };
