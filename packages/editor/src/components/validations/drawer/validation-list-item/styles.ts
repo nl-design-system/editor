@@ -13,7 +13,7 @@ export default css`
     border-radius: 1rem;
 
     &:focus {
-      outline: oklch(from var(--ma-color-neutral-8) l c h / 0.1) solid 8px;
+      outline: oklch(from var(--ma-color-neutral-8) l c h) solid 1px;
     }
   }
 
@@ -37,7 +37,7 @@ export default css`
     border: 1px solid var(--ma-color-signal-warning-700);
 
     &:focus {
-      outline-color: oklch(from var(--ma-color-signal-warning-700) l c h / 0.1);
+      outline-color: oklch(from var(--ma-color-signal-warning-700) l c h);
     }
 
     &::after {
@@ -50,7 +50,7 @@ export default css`
     border: 1px solid var(--ma-color-signal-rood-500);
 
     &:focus {
-      outline-color: oklch(from var(--ma-color-signal-rood-500) l c h / 0.1);
+      outline-color: oklch(from var(--ma-color-signal-rood-500) l c h);
     }
 
     &::after {
