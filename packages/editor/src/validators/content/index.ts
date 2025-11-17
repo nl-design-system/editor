@@ -15,6 +15,17 @@ const isEmpty = (node: Node): boolean => {
   return true;
 };
 
+const imageMustHaveAltText = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
+  if (node.type.name === 'image' && (!node.attrs['alt'] || isEmptyOrWhitespaceString(node.attrs['alt']))) {
+    return {
+      boundingBox: getNodeBoundingBox(editor, pos),
+      pos,
+      severity: validationSeverity.WARNING,
+    };
+  }
+  return null;
+};
+
 const paragraphMustNotBeEmpty = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
   if (node.type.name === 'paragraph' && isEmpty(node)) {
     return {
@@ -41,6 +52,7 @@ type ContentValidationKey = (typeof contentValidations)[keyof typeof contentVali
 
 const contentValidatorMap: { [K in ContentValidationKey]: ContentValidator } = {
   [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: headingMustNotBeEmpty,
+  [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: imageMustHaveAltText,
   [contentValidations.PARAGRAPH_MUST_NOT_BE_EMPTY]: paragraphMustNotBeEmpty,
 };
 
