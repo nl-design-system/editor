@@ -22,6 +22,7 @@ import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { CustomEvents } from '@/events';
 import toolbarStyles from './styles.ts';
+import './toolbar-image-upload';
 
 const addAriaHidden = (svg: string) => svg.replace('<svg', '<svg aria-hidden="true"');
 
@@ -140,6 +141,8 @@ export class Toolbar extends LitElement {
         >
           ${unsafeSVG(addAriaHidden(BulletListIcon))}
         </clippy-toolbar-button>
+        <div class="clippy-toolbar__divider"></div>
+        <clippy-toolbar-image-upload></clippy-toolbar-image-upload>
         <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-button
           label="Keyboard shortcuts"

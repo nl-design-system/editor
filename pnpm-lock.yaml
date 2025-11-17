@@ -99,10 +99,19 @@ importers:
       '@tiptap/extension-document':
         specifier: 3.10.2
         version: 3.10.2(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))
+      '@tiptap/extension-dropcursor':
+        specifier: 3.10.7
+        version: 3.10.7(@tiptap/extensions@3.10.2(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))(@tiptap/pm@3.10.2))
+      '@tiptap/extension-file-handler':
+        specifier: 3.10.2
+        version: 3.10.2(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))(@tiptap/pm@3.10.2)
       '@tiptap/extension-hard-break':
         specifier: 3.10.2
         version: 3.10.2(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))
       '@tiptap/extension-heading':
+        specifier: 3.10.2
+        version: 3.10.2(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))
+      '@tiptap/extension-image':
         specifier: 3.10.2
         version: 3.10.2(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))
       '@tiptap/extension-italic':
@@ -1058,6 +1067,18 @@ packages:
     peerDependencies:
       '@tiptap/core': ^3.10.2
 
+  '@tiptap/extension-dropcursor@3.10.7':
+    resolution: {integrity: sha512-VnI+lRpXi9Qa/RFeZYqGd5taApM8SD6qYBnL1FqwRx7eLpWH3UyH911d9/sFqYxouDy06XRDHPoqlyMw5afdwQ==}
+    peerDependencies:
+      '@tiptap/extensions': ^3.10.7
+
+  '@tiptap/extension-file-handler@3.10.2':
+    resolution: {integrity: sha512-SpbqdKyOcJKk5qZnSkPBSSNg/8VIewUFfnYh0Md6tg0TNWaXTZF8qxfoFAhoYFP2JVdoUHlRZi8CoEnuKQWYhw==}
+    peerDependencies:
+      '@tiptap/core': ^3.10.2
+      '@tiptap/extension-text-style': ^3.10.2
+      '@tiptap/pm': ^3.10.2
+
   '@tiptap/extension-hard-break@3.10.2':
     resolution: {integrity: sha512-gQdfzTcDb43JNxqpj83v/XAzIRlgsX2oSf5WPPtSoHj9xpgSbFv87W2PnVxUbzlTYH6Cb44iED+jwI1Sexn6LA==}
     peerDependencies:
@@ -1065,6 +1086,11 @@ packages:
 
   '@tiptap/extension-heading@3.10.2':
     resolution: {integrity: sha512-f4NaJHYejn88IN8Q7yeGT2sdS+jb5fLUhj5zKiqC4fWqVeXa4Sh4TpA8Be13Un8KBRY4KSrVLBjcuF121hEYCw==}
+    peerDependencies:
+      '@tiptap/core': ^3.10.2
+
+  '@tiptap/extension-image@3.10.2':
+    resolution: {integrity: sha512-+EeEOwUCQ4K7wFw0xkVPCwrzRMj5lEW7VdtRj+0zVtAMI+HxO4B6/+ZXyuDybBjtGBgZKdg5DP3pOz0XUCA+vw==}
     peerDependencies:
       '@tiptap/core': ^3.10.2
 
@@ -5248,11 +5274,24 @@ snapshots:
     dependencies:
       '@tiptap/core': 3.10.2(@tiptap/pm@3.10.2)
 
+  '@tiptap/extension-dropcursor@3.10.7(@tiptap/extensions@3.10.2(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))(@tiptap/pm@3.10.2))':
+    dependencies:
+      '@tiptap/extensions': 3.10.2(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))(@tiptap/pm@3.10.2)
+
+  '@tiptap/extension-file-handler@3.10.2(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))(@tiptap/pm@3.10.2)':
+    dependencies:
+      '@tiptap/core': 3.10.2(@tiptap/pm@3.10.2)
+      '@tiptap/pm': 3.10.2
+
   '@tiptap/extension-hard-break@3.10.2(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))':
     dependencies:
       '@tiptap/core': 3.10.2(@tiptap/pm@3.10.2)
 
   '@tiptap/extension-heading@3.10.2(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))':
+    dependencies:
+      '@tiptap/core': 3.10.2(@tiptap/pm@3.10.2)
+
+  '@tiptap/extension-image@3.10.2(@tiptap/core@3.10.2(@tiptap/pm@3.10.2))':
     dependencies:
       '@tiptap/core': 3.10.2(@tiptap/pm@3.10.2)
 
