@@ -20,7 +20,7 @@ const imageMustHaveAltText = (editor: Editor, node: Node, pos: number): Validati
     return {
       boundingBox: getNodeBoundingBox(editor, pos),
       pos,
-      severity: validationSeverity.WARNING,
+      severity: validationSeverity.INFO,
     };
   }
   return null;

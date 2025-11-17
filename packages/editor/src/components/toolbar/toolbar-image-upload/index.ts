@@ -22,16 +22,21 @@ export class ToolbarImageUpload extends LitElement {
   files: ImageUpload[] = [];
   @state()
   position = 0;
+  @state()
+  replace = false;
 
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
   public editor?: Editor;
 
-  readonly #toggleImageUploadDialog = (event: CustomEventInit<{ files: ImageUpload[]; position: number }>) => {
+  readonly #toggleImageUploadDialog = (
+    event: CustomEventInit<{ files: ImageUpload[]; position: number; replace: boolean }>,
+  ) => {
     if (event.detail?.files) {
       this.#dialogRef.value?.showModal();
       this.files = event.detail.files;
       this.position = event.detail.position;
+      this.replace = event.detail.replace || false;
     } else {
       this.#inputRef.value?.click();
     }
@@ -62,10 +67,14 @@ export class ToolbarImageUpload extends LitElement {
 
   readonly #insertImages = () => {
     this.#dialogRef.value?.close();
+    // If replacing, delete the existing node first
+    const chain = this.editor?.chain();
+    if (chain && this.replace) {
+      chain.deleteSelection();
+    }
     for (const file of this.files) {
-      this.editor
-        ?.chain()
-        .insertContentAt(this.position, {
+      chain
+        ?.insertContentAt(this.position, {
           attrs: {
             alt: file.name,
             src: file.url,
@@ -101,11 +110,7 @@ export class ToolbarImageUpload extends LitElement {
           @change=${this.#handleOnChange}
         />
       </clippy-toolbar-button>
-      <dialog
-        id="clippy-image-upload-dialog"
-        class="clippy-toolbar-image-upload--dialog"
-        ${ref(this.#dialogRef)}
-      >
+      <dialog id="clippy-image-upload-dialog" class="clippy-toolbar-image-upload--dialog" ${ref(this.#dialogRef)}>
         ${map(
           this.files,
           (file, index) =>

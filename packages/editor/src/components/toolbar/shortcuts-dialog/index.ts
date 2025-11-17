@@ -142,9 +142,14 @@ export class ShortcutsDialog extends LitElement {
             <td><kbd>Command</kbd> + <kbd>Option</kbd> + <kbd>T</kbd></td>
           </tr>
           <tr>
-            <td>Focus toolbar</td>
+            <td>Focus werkbalk</td>
             <td><kbd>Alt</kbd> + <kbd>F10</kbd></td>
             <td>( <kbd>Fn</kbd> ) + <kbd>Option</kbd> + <kbd>F10</kbd></td>
+          </tr>
+          <tr>
+            <td>Focus plaatselijke werkbalk</td>
+            <td><kbd>Control</kbd> + <kbd>F9</kbd></td>
+            <td>( <kbd>Fn</kbd> ) + <kbd>Command</kbd> + <kbd>F9</kbd></td>
           </tr>
       </dialog>
     `;

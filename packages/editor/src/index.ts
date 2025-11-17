@@ -4,6 +4,7 @@ import { defineCustomElements } from '@utrecht/web-component-library-stencil/loa
 import './components/toolbar';
 import './components/validations/gutter';
 import './components/validations/drawer';
+import './components/bubble-menu';
 import { LitElement, html } from 'lit';
 import { customElement, property, queryAssignedElements } from 'lit/decorators.js';
 import type { ValidationResult } from '@/types/validation.ts';
@@ -81,6 +82,7 @@ export class Editor extends LitElement {
       <div class="clippy-editor-container" id=${EDITOR_ID}>
         <slot name="content" hidden></slot>
         <clippy-validations-gutter></clippy-validations-gutter>
+        <clippy-bubble-menu class="clippy-bubble-menu"></clippy-bubble-menu>
       </div>
       <clippy-validations-dialog></clippy-validations-dialog>
     `;
