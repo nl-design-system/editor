@@ -32,6 +32,9 @@ const validationMessages: ValidationMessages = {
     description: 'Koptekst mag niet leeg zijn',
     href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#voor-wie-zijn-toegankelijke-koppen-belangrijk',
   },
+  [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: {
+    description: 'Afbeelding moet alternatieve tekst hebben',
+  },
   [contentValidations.PARAGRAPH_MUST_NOT_BE_EMPTY]: {
     description: 'Paragraaf mag niet leeg zijn',
   },
