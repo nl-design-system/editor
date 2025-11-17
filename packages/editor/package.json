@@ -33,6 +33,7 @@
     "@tabler/icons": "3.35.0",
     "@tiptap/core": "3.10.2",
     "@tiptap/extension-bold": "3.10.2",
+    "@tiptap/extension-bubble-menu": "3.10.7",
     "@tiptap/extension-document": "3.10.2",
     "@tiptap/extension-dropcursor": "3.10.7",
     "@tiptap/extension-file-handler": "3.10.2",

@@ -32,8 +32,8 @@ export class Toolbar extends LitElement {
   @property({ attribute: false })
   public editor?: Editor;
 
-  #dialogRef: Ref<HTMLDialogElement> = createRef();
-  #focusNode: Ref<HTMLButtonElement> = createRef();
+  readonly #dialogRef: Ref<HTMLDialogElement> = createRef();
+  readonly #focusNode: Ref<HTMLButtonElement> = createRef();
 
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
@@ -43,7 +43,7 @@ export class Toolbar extends LitElement {
     this.requestUpdate();
   };
 
-  #toggleOpenShortcuts = () => {
+  readonly #toggleOpenShortcuts = () => {
     const { value } = this.#dialogRef;
     if (this.#dialogRef.value?.open) {
       value?.close();
@@ -57,7 +57,7 @@ export class Toolbar extends LitElement {
     value?.shadowRoot?.querySelector('button')?.focus();
   };
 
-  #toggleOpenValidationsDialog = () => {
+  readonly #toggleOpenValidationsDialog = () => {
     globalThis.dispatchEvent(
       new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, {
         bubbles: true,

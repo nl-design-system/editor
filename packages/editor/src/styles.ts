@@ -12,6 +12,14 @@ export default css`
     --clippy-background-texture-error: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjZweCIgaGVpZ2h0PSI2cHgiIHZpZXdCb3g9IjAgMCA2IDYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogIDxkZWZzPgogICAgPG1hc2sgaWQ9ImN1dG91dCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgbWFza0NvbnRlbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgogICAgICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNiIgaGVpZ2h0PSI2IiBmaWxsPSIjRkZGRkZGIi8+CiAgICAgIDxwb2x5Z29uIHBvaW50cz0iNSAwIDYgMCAwIDYgMCA1IiBmaWxsPSIjMDAwMDAwIi8+CiAgICAgIDxwb2x5Z29uIHBvaW50cz0iNiA1IDYgNiA1IDYiIGZpbGw9IiMwMDAwMDAiLz4KICAgIDwvbWFzaz4KICA8L2RlZnM+CiAgPCEtLSBDaGFuZ2UgZmlsbCB0byBkZXNpcmVkIHNvbGlkIGNvbG9yIC0tPgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIGZpbGw9IiNGRkZGRkYiIG1hc2s9InVybCgjY3V0b3V0KSIvPgo8L3N2Zz4K');
   }
 
+  .ProseMirror-selectednode {
+    anchor-name: --bubble-menu;
+    display: inline-block !important;
+  }
+  .clippy-bubble-menu {
+    position-anchor: --bubble-menu;
+    position-area: top center;
+  }
   .clippy-editor-container {
     position: relative;
     padding-inline-end: 1rem;

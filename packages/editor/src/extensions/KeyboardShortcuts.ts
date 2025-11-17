@@ -15,6 +15,15 @@ export default Extension.create({
         );
         return true;
       },
+      'Mod-F9': () => {
+        globalThis.dispatchEvent(
+          new CustomEvent(CustomEvents.FOCUS_BUBBLE_MENU, {
+            bubbles: true,
+            composed: true,
+          }),
+        );
+        return true;
+      },
     };
   },
 });

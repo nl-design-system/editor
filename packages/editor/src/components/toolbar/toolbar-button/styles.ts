@@ -15,7 +15,9 @@ export default css`
     padding-inline: var(--basis-space-inline-md);
     block-size: 100%;
   }
-
+  .clippy-toolbar-button:focus {
+    outline: 2px solid var(--basis-color-action-1-color-active);
+  }
   .clippy-toolbar-button:disabled {
     color: var(--basis-color-disabled-color-active);
   }

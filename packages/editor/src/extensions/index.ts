@@ -1,4 +1,5 @@
 import Bold from '@tiptap/extension-bold';
+import BubbleMenu from '@tiptap/extension-bubble-menu';
 import Document from '@tiptap/extension-document';
 import HardBreak from '@tiptap/extension-hard-break';
 import Heading, { type Level } from '@tiptap/extension-heading';
@@ -47,6 +48,20 @@ export const editorExtensions = (
   Dropcursor.configure({
     class: 'dropcursor',
     width: 2,
+  }),
+  BubbleMenu.configure({
+    element: document.getElementById('bubble-menu'),
+    shouldShow: ({ editor, state }) => {
+      const { selection } = state;
+      const { $from } = selection;
+
+      console.log($from.parent.type.name);
+      // Check if current node is an image
+      if ($from.parent.type.name === 'image') return true;
+
+      // Check if image is selected
+      return editor.isActive('image');
+    },
   }),
   KeyboardShortcuts,
   Validation.configure({
