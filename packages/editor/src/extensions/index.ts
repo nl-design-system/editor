@@ -45,7 +45,8 @@ export const editorExtensions = (
   Image,
   CustomFileHandler,
   Dropcursor.configure({
-    color: '#ff0000',
+    class: 'dropcursor',
+    width: 2,
   }),
   KeyboardShortcuts,
   Validation.configure({

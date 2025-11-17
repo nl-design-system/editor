@@ -78,10 +78,11 @@ export class Editor extends LitElement {
   override render() {
     return html`
       <clippy-toolbar></clippy-toolbar>
-      <slot name="content" hidden></slot>
-      <div id=${EDITOR_ID}></div>
+      <div class="clippy-editor-container" id=${EDITOR_ID}>
+        <slot name="content" hidden></slot>
+        <clippy-validations-gutter></clippy-validations-gutter>
+      </div>
       <clippy-validations-dialog></clippy-validations-dialog>
-      <clippy-validations-gutter></clippy-validations-gutter>
     `;
   }
 }
