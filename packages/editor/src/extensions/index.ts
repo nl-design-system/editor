@@ -43,7 +43,15 @@ export const editorExtensions = (
   BulletList,
   OrderedList,
   CustomListItem,
-  Image,
+  Image.configure({
+    resize: {
+      alwaysPreserveAspectRatio: true,
+      directions: ['top', 'bottom', 'left', 'right', 'top-right', 'top-left', 'bottom-right', 'bottom-left'],
+      enabled: true,
+      minHeight: 50,
+      minWidth: 50,
+    },
+  }),
   CustomFileHandler,
   Dropcursor.configure({
     class: 'dropcursor',
