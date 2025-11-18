@@ -1,5 +1,11 @@
 # @nl-design-system-community/editor
 
+## 1.2.0
+
+### Minor Changes
+
+- 018197f: Heading, list and paragraph validations, severity levels and drawer iteration
+
 ## 1.1.0
 
 ### Minor Changes

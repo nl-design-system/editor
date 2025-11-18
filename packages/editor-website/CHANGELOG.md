@@ -1,5 +1,12 @@
 # @nl-design-system-community/editor-website
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [018197f]
+  - @nl-design-system-community/editor@1.2.0
+
 ## 0.0.3
 
 ### Patch Changes
