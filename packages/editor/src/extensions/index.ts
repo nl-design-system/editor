@@ -7,7 +7,7 @@ import { BulletList, OrderedList } from '@tiptap/extension-list';
 import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
 import Underline from '@tiptap/extension-underline';
-import { UndoRedo } from '@tiptap/extensions';
+import { UndoRedo, Placeholder } from '@tiptap/extensions';
 import type { EditorSettings } from '@/types/settings.ts';
 import type { ValidationResult } from '@/types/validation.ts';
 import KeyboardShortcuts from '@/extensions/KeyboardShortcuts.ts';
@@ -24,6 +24,9 @@ export const editorExtensions = (
   callback: (resultMap: Map<string, ValidationResult>) => void,
 ) => [
   Document,
+  Placeholder.configure({
+    placeholder: 'Start met typen...',
+  }),
   Paragraph,
   Text,
   Heading.configure({

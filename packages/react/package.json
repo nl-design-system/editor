@@ -21,7 +21,8 @@
     "build:analyze": "cross-env ANALYZE_BUNDLE=true vite build",
     "build:ts": "tsc --build",
     "build:vite": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "dependencies": {
     "@nl-design-system-community/editor": "workspace:*"
@@ -32,15 +33,18 @@
     "@lit/react": "1.0.8",
     "@nl-design-system-community/ma-design-tokens": "2.5.0",
     "@nl-design-system/tsconfig": "1.0.5",
+    "@testing-library/react": "16.3.0",
     "@types/node": "22.19.0",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "@utrecht/component-library-css": "8.1.5",
+    "@vitest/browser-playwright": "4.0.7",
     "npm-run-all": "4.1.5",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "typescript": "5.9.3",
-    "vite": "7.1.7"
+    "vite": "7.1.7",
+    "vitest": "4.0.7"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
