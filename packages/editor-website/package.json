@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "vite",
     "build": "npm-run-all build:ts build:vite",
-    "build:analyze": "cross-env ANALYZE_BUNDLE=true vite build",
+    "build:analyze": "vite build",
     "build:ts": "tsc --build",
     "build:vite": "vite build",
     "preview": "vite preview",
