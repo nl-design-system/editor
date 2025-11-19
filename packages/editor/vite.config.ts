@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { analyzer } from 'vite-bundle-analyzer';
 import dts from 'vite-plugin-dts';
 import alias from './vite.alias';
 
@@ -11,6 +12,9 @@ export default defineConfig({
     },
   },
   plugins: [
+    analyzer({
+      enabled: process.env['ANALYZE_BUNDLE'] === 'true',
+    }),
     dts({
       tsconfigPath: './tsconfig.app.json',
     }),
