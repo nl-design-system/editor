@@ -54,7 +54,7 @@ export class Editor extends LitElement {
       editorProps: {
         attributes: {
           id: this.identifier,
-          class: 'clippy-editor-content',
+          class: 'clippy-editor-content-test',
         },
       },
       extensions: editorExtensions({ topHeadingLevel: sanitizedTopHeadingLevel }, this.updateValidationsContext),
