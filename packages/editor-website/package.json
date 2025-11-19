@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "vite",
     "build": "npm-run-all build:ts build:vite",
-    "build:analyze": "cross-env ANALYZE_BUNDLE=true vite build",
+    "build:analyze": "vite build",
     "build:ts": "tsc --build",
     "build:vite": "vite build",
     "preview": "vite preview",
@@ -33,6 +33,6 @@
     "npm-run-all": "4.1.5",
     "playwright": "1.56.1",
     "typescript": "5.9.3",
-    "vite": "7.1.7"
+    "vite": "7.1.11"
   }
 }

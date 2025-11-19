@@ -5,7 +5,7 @@ import './components/toolbar';
 import './components/validations/gutter';
 import './components/validations/drawer';
 import { LitElement, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, queryAssignedElements } from 'lit/decorators.js';
 import type { ValidationResult } from '@/types/validation.ts';
 import { editorExtensions } from '@/extensions';
 import { tiptapContext } from './context/tiptapContext.ts';
@@ -13,8 +13,6 @@ import { validationsContext } from './context/validationsContext.ts';
 import editorStyles from './styles';
 
 const EDITOR_ID = 'editor';
-
-export type content = string;
 
 defineCustomElements();
 
@@ -35,7 +33,8 @@ export class Editor extends LitElement {
   @property({ attribute: 'top-heading-level', reflect: true, type: Number })
   topHeadingLevel = 1;
 
-  initialContent = this.querySelector('template')?.innerHTML ?? '<h1>Start met kopniveau 1</h1><p>Lorem ipsum</p>';
+  @queryAssignedElements({ flatten: true, slot: 'content' })
+  contentSlot!: HTMLElement[];
 
   @provide({ context: validationsContext })
   validationsContext = new Map();
@@ -49,8 +48,9 @@ export class Editor extends LitElement {
 
   private createEditor(): void {
     const sanitizedTopHeadingLevel = sanitizeTopHeadingLevel(this.topHeadingLevel);
+    const content = this.contentSlot.find((el) => el instanceof HTMLDivElement)?.innerHTML || '';
     this.editor = new TiptapEditor({
-      content: this.initialContent,
+      content,
       editorProps: {
         attributes: {
           id: this.identifier,
@@ -61,6 +61,7 @@ export class Editor extends LitElement {
     });
     const mountTarget = this.shadowRoot?.getElementById(EDITOR_ID);
     if (mountTarget) {
+      this.contentSlot.forEach((el) => el.remove());
       this.editor.mount(mountTarget);
     }
   }
@@ -77,6 +78,7 @@ export class Editor extends LitElement {
   override render() {
     return html`
       <clippy-toolbar></clippy-toolbar>
+      <slot name="content" hidden></slot>
       <div id=${EDITOR_ID}></div>
       <clippy-validations-dialog></clippy-validations-dialog>
       <clippy-validations-gutter></clippy-validations-gutter>

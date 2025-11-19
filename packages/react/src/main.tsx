@@ -13,6 +13,11 @@ const root = createRoot(document.getElementById('app')!);
 root.render(
   <>
     <h1>Clippy Editor (React)</h1>
-    <ClippyEditor />
+    <ClippyEditor>
+      <div slot="content" hidden>
+        <h1>Kopniveau 1 in React editor</h1>
+        <p>Dit is een voorbeeld van de Clippy Editor met een Lit React wrapper</p>
+      </div>
+    </ClippyEditor>
   </>,
 );
