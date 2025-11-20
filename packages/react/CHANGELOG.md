@@ -1,5 +1,16 @@
 # @nl-design-system-community/editor-react
 
+## 1.1.0
+
+### Minor Changes
+
+- 40f3ceb: Render slot content in react and editor package
+
+### Patch Changes
+
+- Updated dependencies [40f3ceb]
+  - @nl-design-system-community/editor@1.3.0
+
 ## 1.0.6
 
 ### Patch Changes
