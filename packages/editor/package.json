@@ -5,6 +5,10 @@
     "url": "https://github.com/nl-design-system/editor.git",
     "directory": "packages/editor"
   },
+  "keywords": [
+    "expertteam-digitale-toegankelijkheid",
+    "nl-design-system"
+  ],
   "publishConfig": {
     "access": "public",
     "provenance": true
