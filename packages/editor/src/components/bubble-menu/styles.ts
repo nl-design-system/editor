@@ -14,7 +14,7 @@ export default css`
     border-radius: 0.25rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 
-    ::after {
+    &::after {
       content: ' ';
       position: absolute;
       top: 100%;
