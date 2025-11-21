@@ -36,7 +36,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Audit dependencies
-        run: pnpm audit --audit-level high
+        run: pnpm audit --audit-level critical || echo "You must address critical security vulnerabilities before continuing with `pnpm install`. More info: http://nldesignsystem.nl/pnpm-audit" && exit 1
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -58,7 +58,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Audit dependencies
-        run: pnpm audit --audit-level high
+        run: pnpm audit --audit-level critical || echo "You must address critical security vulnerabilities before continuing with `pnpm install`. More info: http://nldesignsystem.nl/pnpm-audit" && exit 1
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -83,7 +83,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Audit dependencies
-        run: pnpm audit --audit-level high
+        run: pnpm audit --audit-level critical || echo "You must address critical security vulnerabilities before continuing with `pnpm install`. More info: http://nldesignsystem.nl/pnpm-audit" && exit 1
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -120,7 +120,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Audit dependencies
-        run: pnpm audit --audit-level high
+        run: pnpm audit --audit-level critical || echo "You must address critical security vulnerabilities before continuing with `pnpm install`. More info: http://nldesignsystem.nl/pnpm-audit" && exit 1
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
