@@ -4,7 +4,7 @@ import AlignLeftIcon from '@tabler/icons/outline/align-left.svg?raw';
 import AlignRightIcon from '@tabler/icons/outline/align-right.svg?raw';
 import EditIcon from '@tabler/icons/outline/edit.svg?raw';
 import { NodeSelection } from '@tiptap/pm/state';
-import { LitElement, html, nothing } from 'lit';
+import { html, LitElement, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { createRef, type Ref, ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
@@ -53,8 +53,8 @@ export class ImageBubbleMenu extends LitElement {
 
   readonly #editImage = () => {
     const selection = (this.editor?.state.selection as NodeSelection) || null;
+    if (!selection) return;
     const { alt, src } = selection.node.attrs;
-    console.log(selection.node);
     globalThis.dispatchEvent(
       new CustomEvent(CustomEvents.OPEN_IMAGE_DIALOG, {
         bubbles: true,
@@ -75,7 +75,7 @@ export class ImageBubbleMenu extends LitElement {
   };
 
   override render() {
-    if (!this.editor) return html``;
+    if (!this.editor) return nothing;
 
     const attrs = this.editor.getAttributes('image');
     const isImageSelected = this.editor.isActive('image');

@@ -63,7 +63,6 @@ export const editorExtensions = (
       const { selection } = state;
       const { $from } = selection;
 
-      console.log($from.parent.type.name);
       // Check if current node is an image
       if ($from.parent.type.name === 'image') return true;
 
