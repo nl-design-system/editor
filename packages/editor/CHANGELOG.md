@@ -1,5 +1,11 @@
 # @nl-design-system-community/editor
 
+## 1.3.1
+
+### Patch Changes
+
+- 9dd7ac4: Add `expertteam-digitale-toegankelijkheid` keyword to npm packages.
+
 ## 1.3.0
 
 ### Minor Changes
