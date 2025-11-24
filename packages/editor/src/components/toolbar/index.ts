@@ -11,10 +11,11 @@ import KeyboardIcon from '@tabler/icons/outline/keyboard.svg?raw';
 import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
 import OrderedListIcon from '@tabler/icons/outline/list-numbers.svg?raw';
 import BulletListIcon from '@tabler/icons/outline/list.svg?raw';
+import TableIcon from '@tabler/icons/outline/table.svg?raw';
 import './toolbar-button';
 import './toolbar-format-select';
 import UnderlineIcon from '@tabler/icons/outline/underline.svg?raw';
-import { LitElement, html, unsafeCSS } from 'lit';
+import { LitElement, html, unsafeCSS, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
@@ -150,6 +151,15 @@ export class Toolbar extends LitElement {
           ${unsafeSVG(addAriaHidden(ListDetailsIcon))}
         </clippy-toolbar-button>
         <div class="clippy-toolbar__divider"></div>
+        <clippy-toolbar-button
+          label="Tabel invoegen"
+          .pressed=${this.editor?.isActive('table') ?? false}
+          @click=${() => this.editor?.chain().focus().insertTable({ cols: 3, rows: 2, withHeaderRow: true }).run()}
+        >
+          ${unsafeSVG(addAriaHidden(TableIcon))}
+        </button>
+        </clippy-toolbar-button>
+        <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-image-upload></clippy-toolbar-image-upload>
         <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-button
@@ -166,12 +176,14 @@ export class Toolbar extends LitElement {
         >
           <span class="clippy-screen-reader-text">Toon toegankelijkheidsfouten</span>
           ${unsafeSVG(AccessibleIcon)}
-          ${size > 0
-            ? html`<data value=${size} class="nl-number-badge nl-number-badge--clippy">
-                <span hidden aria-hidden="true" class="nl-number-badge__visible-label">${size}</span>
-                <span class="nl-number-badge__hidden-label">${size} toegankelijkheidsmeldingen</span>
-              </data>`
-            : null}
+          ${
+            size > 0
+              ? html`<data value=${size} class="nl-number-badge nl-number-badge--clippy">
+                  <span hidden aria-hidden="true" class="nl-number-badge__visible-label">${size}</span>
+                  <span class="nl-number-badge__hidden-label">${size} toegankelijkheidsmeldingen</span>
+                </data>`
+              : nothing
+          }
         </clippy-toolbar-button>
       </div>
       <clippy-shortcuts .dialogRef=${this.#dialogRef}></clippy-shortcuts>
