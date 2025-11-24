@@ -35,9 +35,9 @@ describe('Content validations', () => {
     expect(mapArg.has('document-must-have-semantic-lists_0')).toBeTruthy();
   });
 
-  it.skip('should find content that resembles a list', async () => {
+  it('should find content that resembles a list', async () => {
     const callback = vi.fn();
-    createTestEditor(
+    await createTestEditor(
       `
     <p>- tet<br>- test<br>- test</p>`,
       callback,
@@ -48,6 +48,42 @@ describe('Content validations', () => {
     });
     const mapArg = callback.mock.calls[0][0];
     expect(mapArg).toBeInstanceOf(Map);
-    expect(mapArg.has('list-must-be-semantic-list')).toBeTruthy();
+    expect(mapArg.has('document-must-have-semantic-lists_0')).toBeTruthy();
+  });
+
+  it('should notify editor of empty nodes p, li, dt and dd', async () => {
+    const callback = vi.fn();
+    await createTestEditor(
+      `
+    <h1>foo</h1><p></p><ul><li>foo</li><li> </li></ul><dl><dt>Term</dt><dd>Description</dd><dt></dt><dd></dd></dl>`,
+      callback,
+    );
+
+    await vi.waitFor(() => {
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+    const mapArg = callback.mock.calls[0][0];
+    expect(mapArg).toBeInstanceOf(Map);
+    expect(mapArg.get('node-should-not-be-empty_5').tipPayload.nodeType).toBe('paragraph');
+    expect(mapArg.get('node-should-not-be-empty_13').tipPayload.nodeType).toBe('listItem');
+    expect(mapArg.get('node-should-not-be-empty_36').tipPayload.nodeType).toBe('definitionTerm');
+    expect(mapArg.get('node-should-not-be-empty_38').tipPayload.nodeType).toBe('definitionDescription');
+  });
+
+  it('should notify editor of empty nodes th and td', async () => {
+    const callback = vi.fn();
+    await createTestEditor(
+      `
+    <h1>foo</h1><table><tr><th>test</th><th></th></tr><tr><td> </td></td></tr></table>`,
+      callback,
+    );
+
+    await vi.waitFor(() => {
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+    const mapArg = callback.mock.calls[0][0];
+    expect(mapArg).toBeInstanceOf(Map);
+    expect(mapArg.get('node-should-not-be-empty_15').tipPayload.nodeType).toBe('tableHeader');
+    expect(mapArg.get('node-should-not-be-empty_21').tipPayload.nodeType).toBe('tableCell');
   });
 });

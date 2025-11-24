@@ -26,12 +26,17 @@ const imageMustHaveAltText = (editor: Editor, node: Node, pos: number): Validati
   return null;
 };
 
-const paragraphMustNotBeEmpty = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
-  if (node.type.name === 'paragraph' && isEmpty(node)) {
+const nonEmptyNodes = ['definitionTerm', 'definitionDescription', 'paragraph', 'listItem', 'tableHeader', 'tableCell'];
+
+const nodeShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
+  if (nonEmptyNodes.includes(node.type.name) && isEmpty(node)) {
     return {
       boundingBox: getNodeBoundingBox(editor, pos),
       pos,
-      severity: 'error',
+      severity: validationSeverity.INFO,
+      tipPayload: {
+        nodeType: node.type.name,
+      },
     };
   }
   return null;
@@ -53,7 +58,7 @@ type ContentValidationKey = (typeof contentValidations)[keyof typeof contentVali
 const contentValidatorMap: { [K in ContentValidationKey]: ContentValidator } = {
   [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: headingMustNotBeEmpty,
   [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: imageMustHaveAltText,
-  [contentValidations.PARAGRAPH_MUST_NOT_BE_EMPTY]: paragraphMustNotBeEmpty,
+  [contentValidations.NODE_SHOULD_NOT_BE_EMPTY]: nodeShouldNotBeEmpty,
 };
 
 const contentValidator = (editor: Editor) => {
