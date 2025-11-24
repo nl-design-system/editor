@@ -8,6 +8,7 @@ import './shortcuts-dialog';
 import BoldIcon from '@tabler/icons/outline/bold.svg?raw';
 import ItalicIcon from '@tabler/icons/outline/italic.svg?raw';
 import KeyboardIcon from '@tabler/icons/outline/keyboard.svg?raw';
+import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
 import OrderedListIcon from '@tabler/icons/outline/list-numbers.svg?raw';
 import BulletListIcon from '@tabler/icons/outline/list.svg?raw';
 import './toolbar-button';
@@ -140,6 +141,13 @@ export class Toolbar extends LitElement {
           @click=${() => this.editor?.chain().focus().toggleBulletList().run()}
         >
           ${unsafeSVG(addAriaHidden(BulletListIcon))}
+        </clippy-toolbar-button>
+        <clippy-toolbar-button
+          label="Definition list"
+          .pressed=${this.editor?.isActive('definitionList') ?? false}
+          @click=${() => this.editor?.chain().focus().insertDefinitionList().run()}
+        >
+          ${unsafeSVG(addAriaHidden(ListDetailsIcon))}
         </clippy-toolbar-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-image-upload></clippy-toolbar-image-upload>

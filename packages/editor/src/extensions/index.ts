@@ -13,6 +13,7 @@ import { Dropcursor, UndoRedo, Placeholder } from '@tiptap/extensions';
 import type { EditorSettings } from '@/types/settings.ts';
 import type { ValidationResult } from '@/types/validation.ts';
 import { CustomFileHandler } from '@/extensions/CustomFileHandler.ts';
+import { DefinitionList } from '@/extensions/DefinitionList.ts';
 import KeyboardShortcuts from '@/extensions/KeyboardShortcuts.ts';
 import { CustomListItem } from '@/extensions/ListItem.ts';
 import Validation from '@/extensions/Validation.ts';
@@ -43,6 +44,7 @@ export const editorExtensions = (
   BulletList,
   OrderedList,
   CustomListItem,
+  DefinitionList,
   Image.configure({
     resize: {
       alwaysPreserveAspectRatio: true,
