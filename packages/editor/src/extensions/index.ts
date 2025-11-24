@@ -7,6 +7,7 @@ import Image from '@tiptap/extension-image';
 import Italic from '@tiptap/extension-italic';
 import { BulletList, OrderedList } from '@tiptap/extension-list';
 import Paragraph from '@tiptap/extension-paragraph';
+import { TableKit } from '@tiptap/extension-table';
 import Text from '@tiptap/extension-text';
 import Underline from '@tiptap/extension-underline';
 import { Dropcursor, UndoRedo, Placeholder } from '@tiptap/extensions';
@@ -53,6 +54,9 @@ export const editorExtensions = (
       minHeight: 50,
       minWidth: 50,
     },
+  }),
+  TableKit.configure({
+    table: { resizable: true },
   }),
   CustomFileHandler,
   Dropcursor.configure({
