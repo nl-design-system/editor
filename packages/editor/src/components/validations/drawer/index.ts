@@ -27,6 +27,15 @@ type ValidationMessages = {
 
 const sortByPos = (a: ValidationEntry, b: ValidationEntry) => a[1].pos - b[1].pos;
 
+const nodeTypesTranslations: Record<string, string> = {
+  definitionDescription: 'definitiebeschrijving',
+  definitionTerm: 'definitieterm',
+  listItem: 'lijstregel',
+  paragraph: 'paragraaf',
+  tableCell: 'tabelcel',
+  tableHeader: 'tabelkop',
+};
+
 const validationMessages: ValidationMessages = {
   [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: {
     description: 'Koptekst mag niet leeg zijn',
@@ -35,8 +44,15 @@ const validationMessages: ValidationMessages = {
   [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: {
     description: 'Afbeelding moet alternatieve tekst hebben',
   },
-  [contentValidations.PARAGRAPH_MUST_NOT_BE_EMPTY]: {
-    description: 'Paragraaf mag niet leeg zijn',
+  [contentValidations.NODE_SHOULD_NOT_BE_EMPTY]: {
+    description: 'Vermijd lege elementen',
+    tip: (params) => {
+      const { nodeType } = params || {};
+      if (!nodeType) {
+        return null;
+      }
+      return `Verwijder de lege <strong>${nodeTypesTranslations[nodeType]}</strong> of voeg tekst toe.`;
+    },
   },
   [documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: {
     description: 'Document moet correcte kopvolgorde hebben',

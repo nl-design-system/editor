@@ -7,7 +7,7 @@ export const documentValidations = {
 export const contentValidations = {
   HEADING_MUST_NOT_BE_EMPTY: 'heading-must-not-be-empty',
   IMAGE_MUST_HAVE_ALT_TEXT: 'image-must-have-alt-text',
-  PARAGRAPH_MUST_NOT_BE_EMPTY: 'paragraph-must-not-be-empty',
+  NODE_SHOULD_NOT_BE_EMPTY: 'node-should-not-be-empty',
 } as const;
 
 export const validationSeverity = {
