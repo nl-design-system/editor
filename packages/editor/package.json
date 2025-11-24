@@ -47,6 +47,7 @@
     "@tiptap/extension-italic": "3.10.2",
     "@tiptap/extension-list": "3.10.2",
     "@tiptap/extension-paragraph": "3.10.2",
+    "@tiptap/extension-table": "3.10.2",
     "@tiptap/extension-text": "3.10.2",
     "@tiptap/extension-underline": "3.10.2",
     "@tiptap/extensions": "3.10.2",
