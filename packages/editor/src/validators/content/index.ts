@@ -42,6 +42,22 @@ const nodeShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): Validati
   return null;
 };
 
+const markShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
+  if (node.type.name === 'text' && node.marks?.filter((mark) => mark.type.name === 'link').length) {
+    if (!node.text || isEmptyOrWhitespaceString(node.text)) {
+      return {
+        boundingBox: getNodeBoundingBox(editor, pos),
+        pos,
+        severity: validationSeverity.INFO,
+        tipPayload: {
+          nodeType: 'link',
+        },
+      };
+    }
+  }
+  return null;
+};
+
 const headingMustNotBeEmpty = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
   if (node.type.name === 'heading' && isEmpty(node)) {
     return {
@@ -58,6 +74,7 @@ type ContentValidationKey = (typeof contentValidations)[keyof typeof contentVali
 const contentValidatorMap: { [K in ContentValidationKey]: ContentValidator } = {
   [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: headingMustNotBeEmpty,
   [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: imageMustHaveAltText,
+  [contentValidations.MARK_SHOULD_NOT_BE_EMPTY]: markShouldNotBeEmpty,
   [contentValidations.NODE_SHOULD_NOT_BE_EMPTY]: nodeShouldNotBeEmpty,
 };
 
