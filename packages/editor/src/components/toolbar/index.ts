@@ -4,8 +4,8 @@ import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/numb
 import AccessibleIcon from '@tabler/icons/outline/accessible.svg?raw';
 import ArrowBackUpIcon from '@tabler/icons/outline/arrow-back-up.svg?raw';
 import ArrowForwardUpIcon from '@tabler/icons/outline/arrow-forward-up.svg?raw';
-import './shortcuts-dialog';
 import BoldIcon from '@tabler/icons/outline/bold.svg?raw';
+import './shortcuts-dialog';
 import ItalicIcon from '@tabler/icons/outline/italic.svg?raw';
 import KeyboardIcon from '@tabler/icons/outline/keyboard.svg?raw';
 import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
@@ -25,6 +25,7 @@ import { validationsContext } from '@/context/validationsContext.ts';
 import { CustomEvents } from '@/events';
 import toolbarStyles from './styles.ts';
 import './toolbar-image-upload';
+import './toolbar-link';
 
 const addAriaHidden = (svg: string) => svg.replace('<svg', '<svg aria-hidden="true"');
 
@@ -160,6 +161,7 @@ export class Toolbar extends LitElement {
         </button>
         </clippy-toolbar-button>
         <div class="clippy-toolbar__divider"></div>
+        <clippy-toolbar-link></clippy-toolbar-link>
         <clippy-toolbar-image-upload></clippy-toolbar-image-upload>
         <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-button

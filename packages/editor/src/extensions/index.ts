@@ -5,6 +5,7 @@ import HardBreak from '@tiptap/extension-hard-break';
 import Heading, { type Level } from '@tiptap/extension-heading';
 import Image from '@tiptap/extension-image';
 import Italic from '@tiptap/extension-italic';
+import Link from '@tiptap/extension-link';
 import { BulletList, OrderedList } from '@tiptap/extension-list';
 import Paragraph from '@tiptap/extension-paragraph';
 import { TableKit } from '@tiptap/extension-table';
@@ -46,6 +47,10 @@ export const editorExtensions = (
   OrderedList,
   CustomListItem,
   DefinitionList,
+  Link.configure({
+    defaultProtocol: 'https',
+    openOnClick: false,
+  }),
   Image.configure({
     resize: {
       alwaysPreserveAspectRatio: true,
