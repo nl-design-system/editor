@@ -86,4 +86,20 @@ describe('Content validations', () => {
     expect(mapArg.get('node-should-not-be-empty_15').tipPayload.nodeType).toBe('tableHeader');
     expect(mapArg.get('node-should-not-be-empty_21').tipPayload.nodeType).toBe('tableCell');
   });
+
+  it('should notify editor of empty link', async () => {
+    const callback = vi.fn();
+    await createTestEditor(
+      `
+    <h1>foo</h1><p>test with an empty<a href="https://example.com"> </a>link</p>`,
+      callback,
+    );
+
+    await vi.waitFor(() => {
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+    const mapArg = callback.mock.calls[0][0];
+    expect(mapArg).toBeInstanceOf(Map);
+    expect(mapArg.get('mark-should-not-be-empty_24').tipPayload.nodeType).toBe('link');
+  });
 });

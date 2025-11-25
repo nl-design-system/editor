@@ -30,6 +30,7 @@ const sortByPos = (a: ValidationEntry, b: ValidationEntry) => a[1].pos - b[1].po
 const nodeTypesTranslations: Record<string, string> = {
   definitionDescription: 'definitiebeschrijving',
   definitionTerm: 'definitieterm',
+  link: 'linktekst',
   listItem: 'lijstregel',
   paragraph: 'paragraaf',
   tableCell: 'tabelcel',
@@ -43,6 +44,16 @@ const validationMessages: ValidationMessages = {
   },
   [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: {
     description: 'Afbeelding moet alternatieve tekst hebben',
+  },
+  [contentValidations.MARK_SHOULD_NOT_BE_EMPTY]: {
+    description: 'Link mag niet leeg zijn',
+    tip: (params) => {
+      const { nodeType } = params || {};
+      if (!nodeType) {
+        return null;
+      }
+      return `Vul de <strong>${nodeTypesTranslations[nodeType]}</strong> met tekst of verwijder de lege link.`;
+    },
   },
   [contentValidations.NODE_SHOULD_NOT_BE_EMPTY]: {
     description: 'Vermijd lege elementen',
