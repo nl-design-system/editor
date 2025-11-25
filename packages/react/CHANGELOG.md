@@ -1,5 +1,11 @@
 # @nl-design-system-community/editor-react
 
+## 1.2.0
+
+### Minor Changes
+
+- 04c84a9: Release with type definitions
+
 ## 1.1.1
 
 ### Patch Changes
