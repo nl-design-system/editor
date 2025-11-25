@@ -1,9 +1,12 @@
 import userEvent from '@testing-library/user-event';
-import { querySelectorDeep } from 'query-selector-shadow-dom';
+import { defineCustomElements } from '@utrecht/web-component-library-stencil/loader';
 import './index.ts';
+import { querySelectorDeep } from 'query-selector-shadow-dom';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { page } from 'vitest/browser';
 import { isMacOS } from '@/utils/isMacOS.ts';
+
+defineCustomElements();
 
 describe('<clippy-editor>', () => {
   beforeEach(() => {
