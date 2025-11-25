@@ -26,10 +26,17 @@ const imageMustHaveAltText = (editor: Editor, node: Node, pos: number): Validati
   return null;
 };
 
-const nonEmptyNodes = ['definitionTerm', 'definitionDescription', 'paragraph', 'listItem', 'tableHeader', 'tableCell'];
+const nodeTypesRequiringContent = new Set([
+  'definitionTerm',
+  'definitionDescription',
+  'paragraph',
+  'listItem',
+  'tableHeader',
+  'tableCell',
+]);
 
 const nodeShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
-  if (nonEmptyNodes.includes(node.type.name) && isEmpty(node)) {
+  if (nodeTypesRequiringContent.has(node.type.name) && isEmpty(node)) {
     return {
       boundingBox: getNodeBoundingBox(editor, pos),
       pos,
