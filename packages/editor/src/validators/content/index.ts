@@ -65,6 +65,17 @@ const markShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): Validati
   return null;
 };
 
+const markShouldNotBeUnderlined = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
+  if (node.type.name === 'text' && node.marks?.some((mark) => mark.type.name === 'underline')) {
+    return {
+      boundingBox: getNodeBoundingBox(editor, pos),
+      pos,
+      severity: validationSeverity.INFO,
+    };
+  }
+  return null;
+};
+
 const headingMustNotBeEmpty = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
   if (node.type.name === 'heading' && isEmpty(node)) {
     return {
@@ -82,6 +93,7 @@ const contentValidatorMap: { [K in ContentValidationKey]: ContentValidator } = {
   [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: headingMustNotBeEmpty,
   [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: imageMustHaveAltText,
   [contentValidations.MARK_SHOULD_NOT_BE_EMPTY]: markShouldNotBeEmpty,
+  [contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED]: markShouldNotBeUnderlined,
   [contentValidations.NODE_SHOULD_NOT_BE_EMPTY]: nodeShouldNotBeEmpty,
 };
 
