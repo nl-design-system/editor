@@ -55,6 +55,11 @@ const validationMessages: ValidationMessages = {
       return `Vul de <strong>${nodeTypesTranslations[nodeType]}</strong> met tekst of verwijder de lege link.`;
     },
   },
+  [contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED]: {
+    description: 'Tekst mag niet onderstreept zijn. Dit lijkt te veel op een link.',
+    href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/tekst-benadrukken/#onderstrepen',
+    tip: () => `Verwijder de onderstreping van de tekst.`,
+  },
   [contentValidations.NODE_SHOULD_NOT_BE_EMPTY]: {
     description: 'Vermijd lege elementen',
     tip: (params) => {

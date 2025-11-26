@@ -102,4 +102,18 @@ describe('Content validations', () => {
     expect(mapArg).toBeInstanceOf(Map);
     expect(mapArg.get('mark-should-not-be-empty_24').tipPayload.nodeType).toBe('link');
   });
+
+  it('should notify editor of usage of underlined', async () => {
+    const callback = vi.fn();
+    await createTestEditor(
+      `
+    <h1>foo</h1><p>test with an <u>underlined text</u></p>`,
+      callback,
+    );
+
+    await vi.waitFor(() => {
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+    expect(callback.mock.calls[0][0].get('mark-should-not-be-underlined_19').severity).toBe('info');
+  });
 });
