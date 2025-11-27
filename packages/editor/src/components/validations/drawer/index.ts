@@ -1,7 +1,7 @@
 import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
-import { html, LitElement, unsafeCSS } from 'lit';
+import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { queryAll } from 'lit/decorators/query-all.js';
 import { map } from 'lit/directives/map.js';
@@ -41,6 +41,9 @@ const validationMessages: ValidationMessages = {
   [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: {
     description: 'Koptekst mag niet leeg zijn',
     href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#voor-wie-zijn-toegankelijke-koppen-belangrijk',
+  },
+  [contentValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: {
+    description: 'Koptekst mag geen vetgedrukte of cursieve tekst bevatten',
   },
   [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: {
     description: 'Afbeelding moet alternatieve tekst hebben',
@@ -101,6 +104,10 @@ const validationMessages: ValidationMessages = {
       return `Verwachting: <strong>kopniveau ${topHeadingLevel ?? 1}</strong>`;
     },
   },
+  [documentValidations.DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS]: {
+    description: 'Koptekst mag geen vetgedrukte of cursieve tekst bevatten',
+    href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#opmaak-van-koppen',
+  },
 } as const;
 
 @customElement('clippy-validations-dialog')
@@ -110,7 +117,7 @@ export class ValidationsDialog extends LitElement {
   private open = false;
 
   @queryAll('clippy-validation-list-item')
-  private validationListItems: HTMLUListElement[] | undefined;
+  private readonly validationListItems: HTMLUListElement[] | undefined;
 
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
@@ -120,7 +127,7 @@ export class ValidationsDialog extends LitElement {
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
 
-  #dialogRef: Ref<HTMLDialogElement> = createRef();
+  readonly #dialogRef: Ref<HTMLDialogElement> = createRef();
 
   override connectedCallback() {
     super.connectedCallback();
@@ -134,7 +141,7 @@ export class ValidationsDialog extends LitElement {
     super.disconnectedCallback();
   }
 
-  #toggleOpenAndFocus = (event: CustomEventInit<{ key: string }>) => {
+  readonly #toggleOpenAndFocus = (event: CustomEventInit<{ key: string }>) => {
     if (event.detail?.key) {
       if (!this.open) {
         this.#toggleOpen();
@@ -148,7 +155,7 @@ export class ValidationsDialog extends LitElement {
     }
   };
 
-  #toggleOpen = () => {
+  readonly #toggleOpen = () => {
     const { value } = this.#dialogRef;
     if (this.open) {
       value?.close();
@@ -178,7 +185,7 @@ export class ValidationsDialog extends LitElement {
   override render() {
     const { size = 0 } = this.validationsContext || {};
     const validations = [...(this.validationsContext?.entries() ?? [])];
-    const sortedValidations = validations.sort(sortByPos);
+    const sortedValidations = validations.slice().sort(sortByPos);
 
     return html`
       <dialog
@@ -201,7 +208,7 @@ export class ValidationsDialog extends LitElement {
                     .description=${description}
                     .href=${href}
                   >
-                    <div slot="tip-html">${unsafeHTML(tipHtml!)}</div>
+                    ${tipHtml ? html`<div slot="tip-html">${unsafeHTML(tipHtml)}</div>` : nothing}
                   </clippy-validation-list-item>
                 `;
               })

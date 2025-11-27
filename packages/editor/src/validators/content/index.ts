@@ -2,7 +2,7 @@ import type { Editor } from '@tiptap/core';
 import type { Node } from 'prosemirror-model';
 import type { ContentValidator, ValidationResult } from '@/types/validation.ts';
 import { contentValidations, validationSeverity } from '@/validators/constants.ts';
-import { getNodeBoundingBox } from '@/validators/helpers.ts';
+import { getNodeBoundingBox, isBold, isItalic } from '@/validators/helpers.ts';
 
 const isEmptyOrWhitespaceString = (str: string): boolean => /^\s*$/.test(str);
 
@@ -87,10 +87,22 @@ const headingMustNotBeEmpty = (editor: Editor, node: Node, pos: number): Validat
   return null;
 };
 
+const headingShouldNotContainBoldOrItalic = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
+  if (node.type.name === 'heading' && (node.marks.some(isBold) || node.marks.some(isItalic))) {
+    return {
+      boundingBox: getNodeBoundingBox(editor, pos),
+      pos,
+      severity: validationSeverity.INFO,
+    };
+  }
+  return null;
+};
+
 type ContentValidationKey = (typeof contentValidations)[keyof typeof contentValidations];
 
 const contentValidatorMap: { [K in ContentValidationKey]: ContentValidator } = {
   [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: headingMustNotBeEmpty,
+  [contentValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: headingShouldNotContainBoldOrItalic,
   [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: imageMustHaveAltText,
   [contentValidations.MARK_SHOULD_NOT_BE_EMPTY]: markShouldNotBeEmpty,
   [contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED]: markShouldNotBeUnderlined,

@@ -1,4 +1,5 @@
 import type { Editor } from '@tiptap/core';
+import type { Mark } from 'prosemirror-model';
 
 export const getNodeBoundingBox = (editor: Editor, pos: number): { top: number; height: number } | null => {
   const domNode = editor.view.nodeDOM(pos);
@@ -20,3 +21,6 @@ export const getNodeBoundingBox = (editor: Editor, pos: number): { top: number; 
 
   return null;
 };
+
+export const isBold = (value: Mark): boolean => value.type.name === 'bold';
+export const isItalic = (value: Mark): boolean => value.type.name === 'italic';
