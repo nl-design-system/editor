@@ -3,7 +3,7 @@ import type { Node } from 'prosemirror-model';
 import type { EditorSettings } from '@/types/settings.ts';
 import type { DocumentValidator, ValidationResult } from '@/types/validation.ts';
 import { documentValidations, validationSeverity } from '@/validators/constants.ts';
-import { getNodeBoundingBox } from '@/validators/helpers.ts';
+import { getNodeBoundingBox, isBold } from '@/validators/helpers.ts';
 
 const documentValidators = new Map<string, DocumentValidator>();
 
@@ -75,7 +75,7 @@ export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult[
       continue;
     }
 
-    if ($blocks[index + 1] && $blocks[index + 1].node.type.name === 'paragraph') {
+    if ($blocks[index + 1]?.node.type.name === 'paragraph') {
       const secondPrefix = $blocks[index + 1].node.textContent.substring(0, 2);
       const decrementedSecondPrefix = decrement(secondPrefix);
       if (decrementedSecondPrefix === firstPrefix) {
@@ -117,12 +117,39 @@ export const documentMustHaveTopLevelHeading = (editor: Editor, settings?: Edito
   return [];
 };
 
+const isDirectChildOfDoc = (editor: Editor, pos: number): boolean => {
+  const $pos = editor.state.doc.resolve(pos);
+  return $pos.parent.type.name === 'doc';
+};
+
+const documentShouldNotHaveHeadingResemblingParagraphs = (editor: Editor): ValidationResult[] => {
+  const errors: ValidationResult[] = [];
+  editor.$doc.node.descendants((node, pos) => {
+    if (
+      node.type.name === 'paragraph' &&
+      isDirectChildOfDoc(editor, pos) &&
+      node.marks.every(isBold) &&
+      node.textContent.trim().length <= 60
+    ) {
+      errors.push({
+        boundingBox: getNodeBoundingBox(editor, pos),
+        pos,
+        severity: validationSeverity.INFO,
+      });
+    }
+  });
+
+  return errors;
+};
+
 type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentValidations];
 
 const documentValidatorMap: { [K in DocumentValidationKey]: DocumentValidator } = {
   [documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: documentMustHaveCorrectHeadingOrder,
   [documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS]: documentMustHaveSemanticLists,
   [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING]: documentMustHaveTopLevelHeading,
+  [documentValidations.DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS]:
+    documentShouldNotHaveHeadingResemblingParagraphs,
 };
 
 for (const [key, validator] of Object.entries(documentValidatorMap)) {

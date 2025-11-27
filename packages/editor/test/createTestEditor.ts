@@ -3,10 +3,12 @@ import { vi } from 'vitest';
 import { editorExtensions } from '../src/extensions';
 import { EditorSettings } from '../src/types/settings';
 
+const DEFAULT_EDITOR_SETTINGS: EditorSettings = { topHeadingLevel: 1 };
+
 export async function createTestEditor(
   content: string,
   callback: (resultMap: Map<string, unknown>) => void = vi.fn(),
-  settings: EditorSettings = { topHeadingLevel: 1 },
+  settings: EditorSettings = DEFAULT_EDITOR_SETTINGS,
 ): Promise<Editor> {
   const editor = new Editor({
     content,
