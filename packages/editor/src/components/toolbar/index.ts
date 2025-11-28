@@ -4,16 +4,18 @@ import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/numb
 import AccessibleIcon from '@tabler/icons/outline/accessible.svg?raw';
 import ArrowBackUpIcon from '@tabler/icons/outline/arrow-back-up.svg?raw';
 import ArrowForwardUpIcon from '@tabler/icons/outline/arrow-forward-up.svg?raw';
-import './shortcuts-dialog';
 import BoldIcon from '@tabler/icons/outline/bold.svg?raw';
+import './shortcuts-dialog';
 import ItalicIcon from '@tabler/icons/outline/italic.svg?raw';
 import KeyboardIcon from '@tabler/icons/outline/keyboard.svg?raw';
+import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
 import OrderedListIcon from '@tabler/icons/outline/list-numbers.svg?raw';
 import BulletListIcon from '@tabler/icons/outline/list.svg?raw';
+import TableIcon from '@tabler/icons/outline/table.svg?raw';
 import './toolbar-button';
 import './toolbar-format-select';
 import UnderlineIcon from '@tabler/icons/outline/underline.svg?raw';
-import { LitElement, html, unsafeCSS } from 'lit';
+import { LitElement, html, unsafeCSS, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
@@ -23,6 +25,7 @@ import { validationsContext } from '@/context/validationsContext.ts';
 import { CustomEvents } from '@/events';
 import toolbarStyles from './styles.ts';
 import './toolbar-image-upload';
+import './toolbar-link';
 
 const addAriaHidden = (svg: string) => svg.replace('<svg', '<svg aria-hidden="true"');
 
@@ -141,7 +144,24 @@ export class Toolbar extends LitElement {
         >
           ${unsafeSVG(addAriaHidden(BulletListIcon))}
         </clippy-toolbar-button>
+        <clippy-toolbar-button
+          label="Definition list"
+          .pressed=${this.editor?.isActive('definitionList') ?? false}
+          @click=${() => this.editor?.chain().focus().insertDefinitionList().run()}
+        >
+          ${unsafeSVG(addAriaHidden(ListDetailsIcon))}
+        </clippy-toolbar-button>
         <div class="clippy-toolbar__divider"></div>
+        <clippy-toolbar-button
+          label="Tabel invoegen"
+          .pressed=${this.editor?.isActive('table') ?? false}
+          @click=${() => this.editor?.chain().focus().insertTable({ cols: 3, rows: 2, withHeaderRow: true }).run()}
+        >
+          ${unsafeSVG(addAriaHidden(TableIcon))}
+        </button>
+        </clippy-toolbar-button>
+        <div class="clippy-toolbar__divider"></div>
+        <clippy-toolbar-link></clippy-toolbar-link>
         <clippy-toolbar-image-upload></clippy-toolbar-image-upload>
         <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-button
@@ -158,12 +178,14 @@ export class Toolbar extends LitElement {
         >
           <span class="clippy-screen-reader-text">Toon toegankelijkheidsfouten</span>
           ${unsafeSVG(AccessibleIcon)}
-          ${size > 0
-            ? html`<data value=${size} class="nl-number-badge nl-number-badge--clippy">
-                <span hidden aria-hidden="true" class="nl-number-badge__visible-label">${size}</span>
-                <span class="nl-number-badge__hidden-label">${size} toegankelijkheidsmeldingen</span>
-              </data>`
-            : null}
+          ${
+            size > 0
+              ? html`<data value=${size} class="nl-number-badge nl-number-badge--clippy">
+                  <span hidden aria-hidden="true" class="nl-number-badge__visible-label">${size}</span>
+                  <span class="nl-number-badge__hidden-label">${size} toegankelijkheidsmeldingen</span>
+                </data>`
+              : nothing
+          }
         </clippy-toolbar-button>
       </div>
       <clippy-shortcuts .dialogRef=${this.#dialogRef}></clippy-shortcuts>

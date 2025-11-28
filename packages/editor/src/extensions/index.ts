@@ -5,14 +5,17 @@ import HardBreak from '@tiptap/extension-hard-break';
 import Heading, { type Level } from '@tiptap/extension-heading';
 import Image from '@tiptap/extension-image';
 import Italic from '@tiptap/extension-italic';
+import Link from '@tiptap/extension-link';
 import { BulletList, OrderedList } from '@tiptap/extension-list';
 import Paragraph from '@tiptap/extension-paragraph';
+import { TableKit } from '@tiptap/extension-table';
 import Text from '@tiptap/extension-text';
 import Underline from '@tiptap/extension-underline';
 import { Dropcursor, UndoRedo, Placeholder } from '@tiptap/extensions';
 import type { EditorSettings } from '@/types/settings.ts';
 import type { ValidationResult } from '@/types/validation.ts';
 import { CustomFileHandler } from '@/extensions/CustomFileHandler.ts';
+import { DefinitionList } from '@/extensions/DefinitionList.ts';
 import KeyboardShortcuts from '@/extensions/KeyboardShortcuts.ts';
 import { CustomListItem } from '@/extensions/ListItem.ts';
 import Validation from '@/extensions/Validation.ts';
@@ -43,6 +46,11 @@ export const editorExtensions = (
   BulletList,
   OrderedList,
   CustomListItem,
+  DefinitionList,
+  Link.configure({
+    defaultProtocol: 'https',
+    openOnClick: false,
+  }),
   Image.configure({
     resize: {
       alwaysPreserveAspectRatio: true,
@@ -51,6 +59,9 @@ export const editorExtensions = (
       minHeight: 50,
       minWidth: 50,
     },
+  }),
+  TableKit.configure({
+    table: { resizable: true },
   }),
   CustomFileHandler,
   Dropcursor.configure({

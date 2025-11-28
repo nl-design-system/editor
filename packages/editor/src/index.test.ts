@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
-import { querySelectorDeep } from 'query-selector-shadow-dom';
 import './index.ts';
+import { querySelectorDeep } from 'query-selector-shadow-dom';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { page } from 'vitest/browser';
 import { isMacOS } from '@/utils/isMacOS.ts';
