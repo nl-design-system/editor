@@ -124,12 +124,14 @@ const isDirectChildOfDoc = (editor: Editor, pos: number): boolean => {
 
 const documentShouldNotHaveHeadingResemblingParagraphs = (editor: Editor): ValidationResult[] => {
   const errors: ValidationResult[] = [];
-  editor.$doc.node.descendants((node, pos) => {
+
+  editor.$doc.node.descendants(({ content, textContent, type }, pos) => {
     if (
-      node.type.name === 'paragraph' &&
+      type.name === 'paragraph' &&
+      content.content.length === 1 &&
       isDirectChildOfDoc(editor, pos) &&
-      node.marks.every(isBold) &&
-      node.textContent.trim().length <= 60
+      content.content.every(({ marks }) => marks.every(isBold)) &&
+      textContent.trim().length <= 60
     ) {
       errors.push({
         boundingBox: getNodeBoundingBox(editor, pos),
