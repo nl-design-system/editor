@@ -105,7 +105,7 @@ const validationMessages: ValidationMessages = {
     },
   },
   [documentValidations.DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS]: {
-    description: 'Koptekst mag geen vetgedrukte of cursieve tekst bevatten',
+    description: 'Paragraaf die op een koptekst lijkt vermijden',
     href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#opmaak-van-koppen',
   },
 } as const;
