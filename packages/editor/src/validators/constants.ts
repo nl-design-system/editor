@@ -9,6 +9,7 @@ export const contentValidations = {
   HEADING_MUST_NOT_BE_EMPTY: 'heading-must-not-be-empty',
   HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC: 'heading-should-contain-bold-or-italic',
   IMAGE_MUST_HAVE_ALT_TEXT: 'image-must-have-alt-text',
+  LINK_SHOULD_NOT_BE_TOO_GENERIC: 'link-should-not-be-too-generic',
   MARK_SHOULD_NOT_BE_EMPTY: 'mark-should-not-be-empty',
   MARK_SHOULD_NOT_BE_UNDERLINED: 'mark-should-not-be-underlined',
   NODE_SHOULD_NOT_BE_EMPTY: 'node-should-not-be-empty',
