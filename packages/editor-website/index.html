@@ -132,8 +132,8 @@
         </div>
       </section>
       <section class="ma-page-section ma-page-section--with-space">
-        <clippy-editor>
-          <template>
+        <clippy-editor identifier="clippy-editor-localhost">
+          <div slot="content">
             <h1>NL Design System Editor kop 1</h1>
             <p>
               Onder die steden, <strong>welke</strong> <i>vanouds</i> aan de <strong><i>grafelijke</i></strong> kroon
@@ -144,12 +144,34 @@
             <p></p>
             <h4>Dat mag niet, he</h4>
             <p>
-              Aan den over eener rivier gebouwd, waarvan zij zich als van twee armen bedienen kon, om, aan de eene
-              zijde, het Haarlemmermeer en de daarom gelegen landen, aan de andere hij IJ, en door het IJ, de Zuiderzee
-              te bereiken, had zij van deze gunstige ligging reeds vroeg partij getrokken, om een handel te drijven,
-              die, schoon zich zelden verder uitstrekkende dan de gewesten, welke om die binnenzeeën gelegen waren, haar
-              niettemin gelegenheid gaf.
+              Aan den over eener rivier gebouwd, waarvan zij zich als van
+              <a href="https://example.com">twee armen bedienen</a> kon, om, aan de eene zijde, het Haarlemmermeer en de
+              daarom gelegen landen, aan de andere hij IJ, en door het IJ, de Zuiderzee te bereiken, had zij van deze
+              gunstige ligging reeds vroeg partij getrokken, om een handel te drijven, die, schoon zich zelden verder
+              uitstrekkende dan de gewesten, welke om die binnenzeeën gelegen waren, haar niettemin gelegenheid gaf.
             </p>
+            <table>
+              <tbody>
+                <tr>
+                  <th>Naam</th>
+                  <th colspan="3">Beschrijving</th>
+                </tr>
+                <tr>
+                  <td>Rij 1, cel 1</td>
+                  <td>Rij 1, cel 2</td>
+                  <td>Rij 1, cel 3</td>
+                  <td>Rij 1, cel 4</td>
+                </tr>
+              </tbody>
+            </table>
+            <dl>
+              <dt>Foo</dt>
+              <dd>The meaning of foo</dd>
+              <dt>Bar</dt>
+              <dd>The meaning of bar</dd>
+            </dl>
+            <h2>Afbeeldingen</h2>
+            <img alt="Test size 800x400" src="https://placehold.co/800x400" />
             <h3>Correct lijst</h3>
             <ul>
               <li>Test</li>
@@ -158,7 +180,7 @@
             </ul>
             <h3>Incorrect genummerde lijst</h3>
             <p>1 - Test<br />2 - Test<br />3 - Test</p>
-          </template>
+          </div>
         </clippy-editor>
       </section>
     </main>

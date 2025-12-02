@@ -1,7 +1,7 @@
 import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
-import { html, LitElement, unsafeCSS } from 'lit';
+import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { queryAll } from 'lit/decorators/query-all.js';
 import { map } from 'lit/directives/map.js';
@@ -27,16 +27,55 @@ type ValidationMessages = {
 
 const sortByPos = (a: ValidationEntry, b: ValidationEntry) => a[1].pos - b[1].pos;
 
+const nodeTypesTranslations: Record<string, string> = {
+  definitionDescription: 'definitiebeschrijving',
+  definitionTerm: 'definitieterm',
+  link: 'linktekst',
+  listItem: 'lijstregel',
+  paragraph: 'paragraaf',
+  tableCell: 'tabelcel',
+  tableHeader: 'tabelkop',
+};
+
 const validationMessages: ValidationMessages = {
   [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: {
     description: 'Koptekst mag niet leeg zijn',
     href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#voor-wie-zijn-toegankelijke-koppen-belangrijk',
   },
+  [contentValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: {
+    description: 'Koptekst mag geen vetgedrukte of cursieve tekst bevatten',
+  },
   [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: {
     description: 'Afbeelding moet alternatieve tekst hebben',
   },
-  [contentValidations.PARAGRAPH_MUST_NOT_BE_EMPTY]: {
-    description: 'Paragraaf mag niet leeg zijn',
+  [contentValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC]: {
+    description: 'Linktekst mag niet te algemeen zijn',
+    href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/linkteksten/',
+  },
+  [contentValidations.MARK_SHOULD_NOT_BE_EMPTY]: {
+    description: 'Link mag niet leeg zijn',
+    tip: (params) => {
+      const { nodeType } = params || {};
+      if (!nodeType) {
+        return null;
+      }
+      return `Vul de <strong>${nodeTypesTranslations[nodeType]}</strong> met tekst of verwijder de lege link.`;
+    },
+  },
+  [contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED]: {
+    description: 'Tekst mag niet onderstreept zijn. Dit lijkt te veel op een link.',
+    href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/tekst-benadrukken/#onderstrepen',
+    tip: () => `Verwijder de onderstreping van de tekst.`,
+  },
+  [contentValidations.NODE_SHOULD_NOT_BE_EMPTY]: {
+    description: 'Vermijd lege elementen',
+    tip: (params) => {
+      const { nodeType } = params || {};
+      if (!nodeType) {
+        return null;
+      }
+      return `Verwijder de lege <strong>${nodeTypesTranslations[nodeType]}</strong> of voeg tekst toe.`;
+    },
   },
   [documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: {
     description: 'Document moet correcte kopvolgorde hebben',
@@ -69,6 +108,10 @@ const validationMessages: ValidationMessages = {
       return `Verwachting: <strong>kopniveau ${topHeadingLevel ?? 1}</strong>`;
     },
   },
+  [documentValidations.DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS]: {
+    description: 'Paragraaf die op een koptekst lijkt vermijden',
+    href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#opmaak-van-koppen',
+  },
 } as const;
 
 @customElement('clippy-validations-dialog')
@@ -78,7 +121,7 @@ export class ValidationsDialog extends LitElement {
   private open = false;
 
   @queryAll('clippy-validation-list-item')
-  private validationListItems: HTMLUListElement[] | undefined;
+  private readonly validationListItems: HTMLUListElement[] | undefined;
 
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
@@ -88,7 +131,7 @@ export class ValidationsDialog extends LitElement {
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
 
-  #dialogRef: Ref<HTMLDialogElement> = createRef();
+  readonly #dialogRef: Ref<HTMLDialogElement> = createRef();
 
   override connectedCallback() {
     super.connectedCallback();
@@ -102,7 +145,7 @@ export class ValidationsDialog extends LitElement {
     super.disconnectedCallback();
   }
 
-  #toggleOpenAndFocus = (event: CustomEventInit<{ key: string }>) => {
+  readonly #toggleOpenAndFocus = (event: CustomEventInit<{ key: string }>) => {
     if (event.detail?.key) {
       if (!this.open) {
         this.#toggleOpen();
@@ -116,7 +159,7 @@ export class ValidationsDialog extends LitElement {
     }
   };
 
-  #toggleOpen = () => {
+  readonly #toggleOpen = () => {
     const { value } = this.#dialogRef;
     if (this.open) {
       value?.close();
@@ -146,7 +189,7 @@ export class ValidationsDialog extends LitElement {
   override render() {
     const { size = 0 } = this.validationsContext || {};
     const validations = [...(this.validationsContext?.entries() ?? [])];
-    const sortedValidations = validations.sort(sortByPos);
+    const sortedValidations = validations.slice().sort(sortByPos);
 
     return html`
       <dialog
@@ -169,7 +212,7 @@ export class ValidationsDialog extends LitElement {
                     .description=${description}
                     .href=${href}
                   >
-                    <div slot="tip-html">${unsafeHTML(tipHtml!)}</div>
+                    ${tipHtml ? html`<div slot="tip-html">${unsafeHTML(tipHtml)}</div>` : nothing}
                   </clippy-validation-list-item>
                 `;
               })
