@@ -116,4 +116,20 @@ describe('Content validations', () => {
     });
     expect(callback.mock.calls[0][0].get('mark-should-not-be-underlined_19').severity).toBe('info');
   });
+
+  it('should notify of empty link or generic link', async () => {
+    const callback = vi.fn();
+    await createTestEditor(
+      `
+    <h1>foo</h1><p>Een lege link<a href="https://example.com"> </a></p><p>test with an underlined text. <a href="https://example.com">Klik hier</a></p>`,
+      callback,
+    );
+
+    await vi.waitFor(() => {
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    expect(callback.mock.calls[0][0].get('document-should-not-have-heading-resembling-paragraph_5').pos).toBe(5);
+    expect(callback.mock.calls[0][0].get('link-should-not-be-too-generic_51').severity).toBe('info');
+  });
 });

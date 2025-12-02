@@ -48,6 +48,10 @@ const validationMessages: ValidationMessages = {
   [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: {
     description: 'Afbeelding moet alternatieve tekst hebben',
   },
+  [contentValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC]: {
+    description: 'Linktekst mag niet te algemeen zijn',
+    href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/linkteksten/',
+  },
   [contentValidations.MARK_SHOULD_NOT_BE_EMPTY]: {
     description: 'Link mag niet leeg zijn',
     tip: (params) => {
