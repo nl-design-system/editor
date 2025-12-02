@@ -65,6 +65,22 @@ const markShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): Validati
   return null;
 };
 
+const genericLinkTexts = new Set(['lees meer', 'klik hier']);
+
+const linkShouldNotBeTooGeneric = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
+  if (node.type.name === 'text' && node.marks?.filter((mark) => mark.type.name === 'link').length) {
+    const text = (node.text ?? node.textContent ?? '').trim().toLowerCase();
+    if (genericLinkTexts.has(text)) {
+      return {
+        boundingBox: getNodeBoundingBox(editor, pos),
+        pos,
+        severity: validationSeverity.INFO,
+      };
+    }
+  }
+  return null;
+};
+
 const markShouldNotBeUnderlined = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
   if (node.type.name === 'text' && node.marks?.some((mark) => mark.type.name === 'underline')) {
     return {
@@ -104,6 +120,7 @@ const contentValidatorMap: { [K in ContentValidationKey]: ContentValidator } = {
   [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: headingMustNotBeEmpty,
   [contentValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: headingShouldNotContainBoldOrItalic,
   [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: imageMustHaveAltText,
+  [contentValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC]: linkShouldNotBeTooGeneric,
   [contentValidations.MARK_SHOULD_NOT_BE_EMPTY]: markShouldNotBeEmpty,
   [contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED]: markShouldNotBeUnderlined,
   [contentValidations.NODE_SHOULD_NOT_BE_EMPTY]: nodeShouldNotBeEmpty,
