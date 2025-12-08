@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import './index.ts';
-import { querySelectorDeep } from 'query-selector-shadow-dom';
+import { querySelectorAllDeep, querySelectorDeep } from 'query-selector-shadow-dom';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { page } from 'vitest/browser';
 import { isMacOS } from '@/utils/isMacOS.ts';
@@ -19,8 +19,8 @@ describe('<clippy-editor>', () => {
 
     const boldButton = querySelectorDeep('button[aria-label="Bold"]');
 
-    const button = querySelectorDeep('utrecht-button');
-    await button?.componentOnReady();
+    const buttons = querySelectorAllDeep('utrecht-button');
+    await Promise.all(buttons.map((button) => button.componentOnReady()));
 
     expect(boldButton).toBeTruthy();
     await userEvent.click(boldButton as HTMLButtonElement);
@@ -50,8 +50,14 @@ describe('<clippy-editor>', () => {
     const user = userEvent.setup();
     const text = page.getByText('Start met kopniveau 1').element();
     expect(text).toBeInTheDocument();
-    const button = querySelectorDeep('utrecht-button');
-    await button?.componentOnReady();
+    const buttons = querySelectorAllDeep('utrecht-button');
+    console.log(buttons);
+    await Promise.all(
+      buttons.map((button) => {
+        console.log(button.componentOnReady);
+        return button.componentOnReady();
+      }),
+    );
 
     await user.click(text);
     if (isMacOS()) {
