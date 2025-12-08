@@ -27,7 +27,7 @@ export class Gutter extends LitElement {
 
   override render() {
     return html`
-      <ol class="clippy-validations-gutter__list" role="list">
+      <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
         ${map(
           this.validationsContext?.entries(),
           ([key, { boundingBox, severity }]) =>

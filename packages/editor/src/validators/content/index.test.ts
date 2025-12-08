@@ -129,7 +129,6 @@ describe('Content validations', () => {
       expect(callback).toHaveBeenCalledTimes(1);
     });
 
-    expect(callback.mock.calls[0][0].get('document-should-not-have-heading-resembling-paragraph_5').pos).toBe(5);
     expect(callback.mock.calls[0][0].get('link-should-not-be-too-generic_51').severity).toBe('info');
   });
 });

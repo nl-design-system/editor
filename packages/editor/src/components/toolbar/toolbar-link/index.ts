@@ -72,13 +72,13 @@ export class ToolbarLink extends LitElement {
         <div>
           <label>Link to:<input value=${this.previousUrl} ${ref(this.#inputRef)} type="text" /></label>
         </div>
-        <utrecht-buttong-group>
+        <utrecht-button-group>
           <utrecht-button @click=${() => this.#dialogRef.value?.close()}>Sluiten</utrecht-button>
           <utrecht-button @click=${this.#unsetLink}>Verwijder link</utrecht-button>
           <utrecht-button appearance="secondary-action-button" @click=${this.#updateLink}
             >Link toevoegen</utrecht-button
           >
-        </utrecht-buttong-group>
+        </utrecht-button-group>
       </dialog>
     `;
   }
