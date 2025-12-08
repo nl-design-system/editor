@@ -6,15 +6,19 @@ import { page } from 'vitest/browser';
 import { isMacOS } from '@/utils/isMacOS.ts';
 
 describe('<clippy-editor>', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     document.body.innerHTML =
       '<clippy-editor><div slot="content" hidden><h1>Start met kopniveau 1</h1></div></clippy-editor>';
+    const editor = document.querySelector('clippy-editor');
+    await editor?.updateComplete;
+
+    // Wait for all utrecht-button elements to be ready
+    const buttons = querySelectorAllDeep('utrecht-button');
+    await Promise.all(buttons.map((button) => button.componentOnReady()));
   });
 
   it('should change selected text to heading level 3', async () => {
     const user = userEvent.setup();
-    const editor = document.querySelector('clippy-editor');
-    await editor?.updateComplete;
     await expect.element(page.getByRole('heading', { name: 'Start met kopniveau 1' })).toBeInTheDocument();
 
     const boldButton = querySelectorDeep('button[aria-label="Bold"]');
@@ -50,14 +54,6 @@ describe('<clippy-editor>', () => {
     const user = userEvent.setup();
     const text = page.getByText('Start met kopniveau 1').element();
     expect(text).toBeInTheDocument();
-    const buttons = querySelectorAllDeep('utrecht-button');
-    console.log(buttons);
-    await Promise.all(
-      buttons.map((button) => {
-        console.log(button.componentOnReady);
-        return button.componentOnReady();
-      }),
-    );
 
     await user.click(text);
     if (isMacOS()) {
