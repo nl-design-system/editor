@@ -19,6 +19,9 @@ describe('<clippy-editor>', () => {
 
     const boldButton = querySelectorDeep('button[aria-label="Bold"]');
 
+    const button = querySelectorDeep('utrecht-button');
+    await button?.componentOnReady();
+
     expect(boldButton).toBeTruthy();
     await userEvent.click(boldButton as HTMLButtonElement);
 
@@ -47,6 +50,8 @@ describe('<clippy-editor>', () => {
     const user = userEvent.setup();
     const text = page.getByText('Start met kopniveau 1').element();
     expect(text).toBeInTheDocument();
+    const button = querySelectorDeep('utrecht-button');
+    await button?.componentOnReady();
 
     await user.click(text);
     if (isMacOS()) {
