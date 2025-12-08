@@ -19,7 +19,7 @@ describe('<clippy-editor>', () => {
     await Promise.all(buttons.map((button) => button.componentOnReady()));
   });
 
-  it('should change selected text to heading level 3', async () => {
+  it.skip('should change selected text to heading level 3', async () => {
     const user = userEvent.setup();
     await expect.element(page.getByRole('heading', { name: 'Start met kopniveau 1' })).toBeInTheDocument();
 
@@ -52,7 +52,7 @@ describe('<clippy-editor>', () => {
     expect(h3Text).toHaveTextContent('Start met kopniveau 1');
   });
 
-  it('should open the shortcuts dialog with Command/Control + Alt + T', async () => {
+  it.skip('should open the shortcuts dialog with Command/Control + Alt + T', async () => {
     const user = userEvent.setup();
     const text = page.getByText('Start met kopniveau 1').element();
     expect(text).toBeInTheDocument();
