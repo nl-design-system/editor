@@ -14,7 +14,7 @@ test('Page has correct title', async ({ page }) => {
   await page.waitForTimeout(200); // Wait for selector
   await page.getByRole('combobox').selectOption('h3');
   expect(page.getByRole('heading', { level: 3 })).toBeDefined();
-  await page.getByLabel('Werkbalk tekstbewerker').getByText('5', { exact: true }).click();
+  await page.getByLabel('Werkbalk tekstbewerker').getByText('6', { exact: true }).click();
   page.getByText('Lijst moet een semantische lijst zijn');
-  await expect(page.getByRole('button', { name: 'Aanpassen' })).toHaveCount(5);
+  await expect(page.getByRole('button', { name: 'Aanpassen' })).toHaveCount(6);
 });
