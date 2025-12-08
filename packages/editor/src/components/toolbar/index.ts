@@ -172,6 +172,7 @@ export class Toolbar extends LitElement {
           ${unsafeSVG(addAriaHidden(KeyboardIcon))}
         </clippy-toolbar-button>
         <clippy-toolbar-button
+          label="Toon toegankelijkheidsfouten"
           class="clippy-dialog-toggle"
           @click=${this.#toggleOpenValidationsDialog}
           aria-controls="dialog-content"

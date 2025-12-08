@@ -134,4 +134,14 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Test
-        run: pnpm run test
+        run: |
+          pnpm run build
+          pnpm run test
+
+      - name: Store Playwright artifacts
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        if: failure()
+        with:
+          name: playwright-results
+          path: packages/*/tmp/playwright-report
+          retention-days: 1

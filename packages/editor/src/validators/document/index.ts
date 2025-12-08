@@ -130,7 +130,7 @@ const documentShouldNotHaveHeadingResemblingParagraphs = (editor: Editor): Valid
       type.name === 'paragraph' &&
       content.content.length === 1 &&
       isDirectChildOfDoc(editor, pos) &&
-      content.content.every(({ marks }) => marks.every(isBold)) &&
+      content.content.every(({ marks }) => marks.length > 0 && marks.every(isBold)) &&
       textContent.trim().length <= 60
     ) {
       errors.push({
