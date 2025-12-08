@@ -68,7 +68,7 @@
     "@testing-library/user-event": "14.6.1",
     "@types/node": "22.19.0",
     "@types/query-selector-shadow-dom": "1.0.4",
-    "@utrecht/component-library-css": "8.1.5",
+    "@utrecht/component-library-css": "8.2.1",
     "@vitest/browser-playwright": "4.0.7",
     "@vitest/coverage-v8": "4.0.7",
     "cross-env": "10.1.0",
