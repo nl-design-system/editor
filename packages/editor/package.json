@@ -58,7 +58,7 @@
   "devDependencies": {
     "@fontsource/fira-sans": "5.2.7",
     "@fontsource/source-sans-pro": "5.2.5",
-    "@nl-design-system-community/ma-design-tokens": "2.5.0",
+    "@nl-design-system-community/ma-design-tokens": "3.0.0",
     "@nl-design-system/tsconfig": "1.0.5",
     "@playwright/test": "1.57.0",
     "@testing-library/dom": "10.4.1",
