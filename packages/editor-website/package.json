@@ -27,7 +27,7 @@
     "@fontsource/fira-sans": "5.2.7",
     "@fontsource/source-sans-pro": "5.2.5",
     "@nl-design-system-community/editor": "workspace:*",
-    "@nl-design-system-community/ma-design-tokens": "2.5.0",
+    "@nl-design-system-community/ma-design-tokens": "3.0.0",
     "@utrecht/component-library-css": "8.2.1"
   },
   "devDependencies": {
