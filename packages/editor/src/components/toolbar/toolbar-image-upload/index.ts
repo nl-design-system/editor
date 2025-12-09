@@ -110,7 +110,12 @@ export class ToolbarImageUpload extends LitElement {
           @change=${this.#handleOnChange}
         />
       </clippy-toolbar-button>
-      <dialog id="clippy-image-upload-dialog" class="clippy-toolbar-image-upload--dialog" ${ref(this.#dialogRef)}>
+      <dialog
+        closedby="any"
+        id="clippy-image-upload-dialog"
+        class="clippy-toolbar-image-upload--dialog"
+        ${ref(this.#dialogRef)}
+      >
         ${map(
           this.files,
           (file, index) =>

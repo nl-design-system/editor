@@ -19,6 +19,7 @@ export class ShortcutsDialog extends LitElement {
   override render() {
     return html`
       <dialog
+        closedby="any"
         id="clippy-shortcuts"
         class="clippy-shortcuts__dialog"
         aria-labelledby="clippy-shortcuts-title"
