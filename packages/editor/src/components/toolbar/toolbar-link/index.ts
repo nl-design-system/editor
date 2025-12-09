@@ -68,7 +68,7 @@ export class ToolbarLink extends LitElement {
       >
         ${unsafeSVG(LinkIcon)}
       </clippy-toolbar-button>
-      <dialog id="clippy-link-dialog" class="link--dialog" ${ref(this.#dialogRef)}>
+      <dialog closedby="any" id="clippy-link-dialog" class="link--dialog" ${ref(this.#dialogRef)}>
         <div>
           <label>Link to:<input value=${this.previousUrl} ${ref(this.#inputRef)} type="text" /></label>
         </div>
