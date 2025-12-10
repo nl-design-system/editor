@@ -126,16 +126,16 @@ const contentValidatorMap: { [K in ContentValidationKey]: ContentValidator } = {
   [contentValidations.NODE_SHOULD_NOT_BE_EMPTY]: nodeShouldNotBeEmpty,
 };
 
-const contentValidator = (editor: Editor) => {
+const contentValidator = (document: HTMLElement) => {
   const errors: Map<string, ValidationResult> = new Map();
-  editor.$doc.node.descendants((node, pos) => {
-    for (const [key, validator] of Object.entries(contentValidatorMap)) {
-      const result = validator(editor, node, pos);
-      if (result) {
-        errors.set(`${key}_${pos}`, result);
-      }
-    }
-  });
+  // editor.$doc.node.descendants((node, pos) => {
+  //   for (const [key, validator] of Object.entries(contentValidatorMap)) {
+  //     const result = validator(editor, node, pos);
+  //     if (result) {
+  //       errors.set(`${key}_${pos}`, result);
+  //     }
+  //   }
+  // });
   return errors;
 };
 

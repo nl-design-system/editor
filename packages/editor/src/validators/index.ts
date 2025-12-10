@@ -13,10 +13,11 @@ export const runValidation = (
   callback: (resultMap: Map<string, ValidationResult>) => void,
 ) => {
   let validationResultMap = new Map<string, ValidationResult>();
+  const document = editor.view.dom;
 
   for (const [key, validator] of documentValidators.entries()) {
     try {
-      const result = validator(editor, settings);
+      const result = validator(document, settings);
       if (result.length > 0) {
         for (const res of result) {
           validationResultMap.set(`${key}_${res.pos}`, res);
@@ -28,7 +29,7 @@ export const runValidation = (
   }
 
   try {
-    const contentValidationResultMap = contentValidator(editor);
+    const contentValidationResultMap = contentValidator(document);
     if (contentValidationResultMap.size > 0) {
       validationResultMap = new Map<string, ValidationResult>([...validationResultMap, ...contentValidationResultMap]);
     }

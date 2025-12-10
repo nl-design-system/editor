@@ -1,22 +1,10 @@
-import type { Editor } from '@tiptap/core';
 import type { Mark } from 'prosemirror-model';
 
-export const getNodeBoundingBox = (editor: Editor, pos: number): { top: number; height: number } | null => {
-  const domNode = editor.view.nodeDOM(pos);
-  if (domNode instanceof HTMLElement) {
-    return { height: domNode.offsetHeight, top: domNode.offsetTop };
-  }
-
-  if (domNode instanceof Text) {
-    const range = document.createRange();
-    range.selectNodeContents(domNode);
-    const rect = range.getBoundingClientRect();
-    const editorRect = editor.view.dom.getBoundingClientRect();
-
-    return {
-      height: rect.height,
-      top: rect.top - editorRect.top + editor.view.dom.scrollTop,
-    };
+export const getNodeBoundingBox = (element: Element): { top: number; height: number } | null => {
+  if (element instanceof HTMLElement) {
+    console.log(element.getBoundingClientRect());
+    // TODO: Detached DOM does not provide offsetTop/offsetHeight. Use TipTap anyway?
+    return { height: element.offsetHeight, top: element.offsetTop };
   }
 
   return null;
