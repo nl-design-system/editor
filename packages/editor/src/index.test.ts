@@ -28,7 +28,7 @@ describe('<clippy-editor>', () => {
     const buttons = querySelectorAllDeep('utrecht-button');
     await Promise.all(buttons.map((button) => button.componentOnReady()));
 
-    expect(boldButton).toBeTruthy();
+    expect(boldButton).toBeDefined();
     await userEvent.click(boldButton as HTMLButtonElement);
 
     const text = page.getByText('Start met kopniveau 1').element();
@@ -42,7 +42,7 @@ describe('<clippy-editor>', () => {
     ]);
 
     const select = querySelectorDeep('select');
-    expect(select).toBeTruthy();
+    expect(select).toBeDefined();
     await user.selectOptions(select as Element, 'h3');
 
     const h3Option = querySelectorDeep('li[role="option"]#h3');

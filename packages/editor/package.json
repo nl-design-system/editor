@@ -29,7 +29,8 @@
     "preview": "vite preview",
     "pretest": "pnpm exec playwright install --with-deps",
     "test": "pnpm run --recursive '/^test:.+$/'",
-    "test:vitest": "vitest"
+    "test:vitest": "vitest",
+    "test-coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@lit/context": "1.1.6",
