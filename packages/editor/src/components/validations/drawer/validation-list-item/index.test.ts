@@ -16,6 +16,6 @@ describe('<validation-list-item>', () => {
     const item = document.querySelector('clippy-validation-list-item');
     await item?.updateComplete;
     expect(querySelectorDeep('[slot="tip-html"]')?.innerHTML).toContain('This is a <strong>great</strong> tip!');
-    expect(item).toBeTruthy();
+    expect(item).toBeDefined();
   });
 });

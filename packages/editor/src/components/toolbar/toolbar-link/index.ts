@@ -52,6 +52,7 @@ export class ToolbarLink extends LitElement {
       <clippy-toolbar-button
         class="clippy-toolbar-link--button"
         @click=${this.#openLinkDialog}
+        label="Link"
         aria-controls="clippy-link-dialog"
         .pressed=${this.editor?.isActive('link') ?? false}
       >
