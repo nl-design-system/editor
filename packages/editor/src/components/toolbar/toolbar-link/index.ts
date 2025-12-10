@@ -1,11 +1,10 @@
 import type { Editor } from '@tiptap/core';
-import { consume } from '@lit/context';
 import LinkIcon from '@tabler/icons/outline/link.svg?raw';
 import { html, LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { tiptapContext } from '@/context/tiptapContext.ts';
+import { TipTapController } from '@/controllers/TipTapController.ts';
 
 @customElement('clippy-toolbar-link')
 export class ToolbarLink extends LitElement {
@@ -21,21 +20,13 @@ export class ToolbarLink extends LitElement {
   @state()
   replace = false;
 
-  @consume({ context: tiptapContext, subscribe: true })
-  @property({ attribute: false })
-  public editor?: Editor;
-
-  readonly #onUpdate = (): void => {
-    this.requestUpdate();
-  };
-
-  override firstUpdated(): void {
-    this.editor?.on('transaction', this.#onUpdate);
+  private readonly controller = new TipTapController(this);
+  private get editor(): Editor | undefined {
+    return this.controller.editor;
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.editor?.off('transaction', this.#onUpdate);
   }
 
   readonly #unsetLink = () => {

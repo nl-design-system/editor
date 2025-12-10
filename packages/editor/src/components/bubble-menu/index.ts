@@ -1,22 +1,22 @@
 import type { Editor } from '@tiptap/core';
-import { consume } from '@lit/context';
 import AlignLeftIcon from '@tabler/icons/outline/align-left.svg?raw';
 import AlignRightIcon from '@tabler/icons/outline/align-right.svg?raw';
 import EditIcon from '@tabler/icons/outline/edit.svg?raw';
 import { NodeSelection } from '@tiptap/pm/state';
 import { html, LitElement, nothing } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { createRef, type Ref, ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { tiptapContext } from '@/context/tiptapContext.ts';
+import { TipTapController } from '@/controllers/TipTapController.ts';
 import { CustomEvents } from '@/events';
 import bubbleMenuStyles from './styles.ts';
 
 @customElement('clippy-bubble-menu')
 export class ImageBubbleMenu extends LitElement {
-  @consume({ context: tiptapContext, subscribe: true })
-  @property({ attribute: false })
-  editor?: Editor;
+  private readonly controller = new TipTapController(this);
+  private get editor(): Editor | undefined {
+    return this.controller.editor;
+  }
 
   readonly #focusNode: Ref<HTMLButtonElement> = createRef();
 
@@ -25,23 +25,17 @@ export class ImageBubbleMenu extends LitElement {
 
   static override readonly styles = [bubbleMenuStyles];
 
-  readonly #onUpdate = (): void => {
-    this.requestUpdate();
-  };
-
   readonly #focusFirstElement = () => {
     const { value } = this.#focusNode;
     value?.shadowRoot?.querySelector('button')?.focus();
   };
 
   override firstUpdated(): void {
-    this.editor?.on('transaction', this.#onUpdate);
     globalThis.addEventListener(CustomEvents.FOCUS_BUBBLE_MENU, this.#focusFirstElement);
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.editor?.off('transaction', this.#onUpdate);
     globalThis.removeEventListener(CustomEvents.FOCUS_BUBBLE_MENU, this.#focusFirstElement);
   }
 

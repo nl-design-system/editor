@@ -20,21 +20,17 @@ import { customElement, property } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationsMap } from '@/types/validation.ts';
-import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
+import { TipTapController } from '@/controllers/TipTapController.ts';
 import { CustomEvents } from '@/events';
-import toolbarStyles from './styles.ts';
 import './toolbar-image-upload';
 import './toolbar-link';
+import toolbarStyles from './styles.ts';
 
 const addAriaHidden = (svg: string) => svg.replace('<svg', '<svg aria-hidden="true"');
 
 @customElement('clippy-toolbar')
 export class Toolbar extends LitElement {
-  @consume({ context: tiptapContext, subscribe: true })
-  @property({ attribute: false })
-  public editor?: Editor;
-
   readonly #dialogRef: Ref<HTMLDialogElement> = createRef();
   readonly #focusNode: Ref<HTMLButtonElement> = createRef();
 
@@ -42,9 +38,10 @@ export class Toolbar extends LitElement {
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
 
-  readonly #onUpdate = () => {
-    this.requestUpdate();
-  };
+  private readonly controller = new TipTapController(this);
+  private get editor(): Editor | undefined {
+    return this.controller.editor;
+  }
 
   readonly #toggleOpenShortcuts = () => {
     const { value } = this.#dialogRef;
@@ -74,12 +71,7 @@ export class Toolbar extends LitElement {
     super.connectedCallback();
   }
 
-  override firstUpdated(): void {
-    this.editor?.on('selectionUpdate', this.#onUpdate);
-  }
-
   override disconnectedCallback() {
-    this.editor?.off('selectionUpdate', this.#onUpdate);
     globalThis.removeEventListener(CustomEvents.FOCUS_TOOLBAR, this.#onToolbarFocus);
     super.disconnectedCallback();
   }

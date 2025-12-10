@@ -1,10 +1,9 @@
 import type { Editor } from '@tiptap/core';
 import type { Level } from '@tiptap/extension-heading';
-import { consume } from '@lit/context';
 import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
-import { tiptapContext } from '@/context/tiptapContext.ts';
+import { TipTapController } from '@/controllers/TipTapController.ts';
 import buttonStyles from './../toolbar-button/styles.ts';
 
 export interface SelectOption {
@@ -23,10 +22,12 @@ export class FormatSelect extends LitElement {
   @property({ type: Boolean }) disabled = false;
   @property({ type: Boolean }) readOnly = false;
   @property({ type: Function }) onSelect = (value: string) => value;
-  @consume({ context: tiptapContext, subscribe: true })
-  @property({ attribute: false })
-  public editor?: Editor;
   static override readonly styles = [buttonStyles];
+
+  private readonly controller = new TipTapController(this);
+  private get editor(): Editor | undefined {
+    return this.controller.editor;
+  }
 
   #isFormatActive(name: string, attributes?: Record<'level', number>): boolean {
     return this.editor?.isActive(name, attributes) ?? false;
@@ -50,20 +51,6 @@ export class FormatSelect extends LitElement {
     };
     formatCommands[value]().run();
   };
-
-  readonly #onUpdate = () => {
-    this.requestUpdate();
-  };
-
-  override connectedCallback() {
-    super.connectedCallback();
-    this.editor?.on('transaction', this.#onUpdate);
-  }
-
-  override disconnectedCallback() {
-    this.editor?.off('transaction', this.#onUpdate);
-    super.disconnectedCallback();
-  }
 
   @state()
   private get options(): SelectOption[] {
