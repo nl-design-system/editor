@@ -3,7 +3,7 @@ import type { Level } from '@tiptap/extension-heading';
 import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
-import { TipTapController } from '@/controllers/TipTapController.ts';
+import { editor } from '@/decorators/TipTapDecorator.ts';
 import buttonStyles from './../toolbar-button/styles.ts';
 
 export interface SelectOption {
@@ -24,10 +24,8 @@ export class FormatSelect extends LitElement {
   @property({ type: Function }) onSelect = (value: string) => value;
   static override readonly styles = [buttonStyles];
 
-  private readonly controller = new TipTapController(this);
-  private get editor(): Editor | undefined {
-    return this.controller.editor;
-  }
+  @editor()
+  private readonly editor: Editor | undefined;
 
   #isFormatActive(name: string, attributes?: Record<'level', number>): boolean {
     return this.editor?.isActive(name, attributes) ?? false;

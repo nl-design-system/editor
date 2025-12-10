@@ -21,7 +21,7 @@ import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationsMap } from '@/types/validation.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
-import { TipTapController } from '@/controllers/TipTapController.ts';
+import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
 import './toolbar-image-upload';
 import './toolbar-link';
@@ -38,10 +38,8 @@ export class Toolbar extends LitElement {
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
 
-  private readonly controller = new TipTapController(this);
-  private get editor(): Editor | undefined {
-    return this.controller.editor;
-  }
+  @editor()
+  private readonly editor: Editor | undefined;
 
   readonly #toggleOpenShortcuts = () => {
     const { value } = this.#dialogRef;

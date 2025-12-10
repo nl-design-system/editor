@@ -7,16 +7,14 @@ import { html, LitElement, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { createRef, type Ref, ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { TipTapController } from '@/controllers/TipTapController.ts';
+import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
 import bubbleMenuStyles from './styles.ts';
 
 @customElement('clippy-bubble-menu')
 export class ImageBubbleMenu extends LitElement {
-  private readonly controller = new TipTapController(this);
-  private get editor(): Editor | undefined {
-    return this.controller.editor;
-  }
+  @editor()
+  private readonly editor: Editor | undefined;
 
   readonly #focusNode: Ref<HTMLButtonElement> = createRef();
 

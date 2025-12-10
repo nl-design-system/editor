@@ -4,7 +4,7 @@ import { html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { TipTapController } from '@/controllers/TipTapController.ts';
+import { editor } from '@/decorators/TipTapDecorator.ts';
 
 @customElement('clippy-toolbar-link')
 export class ToolbarLink extends LitElement {
@@ -20,10 +20,8 @@ export class ToolbarLink extends LitElement {
   @state()
   replace = false;
 
-  private readonly controller = new TipTapController(this);
-  private get editor(): Editor | undefined {
-    return this.controller.editor;
-  }
+  @editor()
+  private readonly editor: Editor | undefined;
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
