@@ -7,23 +7,21 @@ import { getNodeBoundingBox, isBold } from '@/validators/helpers.ts';
 
 const documentValidators = new Map<string, DocumentValidator>();
 
-export const documentMustHaveCorrectHeadingOrder = (editor: Editor): ValidationResult[] => {
+export const documentMustHaveCorrectHeadingOrder = (document: HTMLElement): ValidationResult[] => {
   const errors: ValidationResult[] = [];
   let precedingHeadingLevel = 0;
-
-  editor.$doc.node.descendants((node, pos) => {
-    if (node.type.name === 'heading') {
-      const headingLevel = node.attrs['level'];
-      if (headingLevel > precedingHeadingLevel + 1) {
-        errors.push({
-          boundingBox: getNodeBoundingBox(editor, pos),
-          pos,
-          severity: validationSeverity.WARNING,
-          tipPayload: { headingLevel: headingLevel, precedingHeadingLevel: precedingHeadingLevel },
-        });
-      }
-      precedingHeadingLevel = headingLevel;
+  const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  headings.forEach((heading) => {
+    const headingLevel = Number.parseInt(heading.tagName.substring(1), 10);
+    if (headingLevel > precedingHeadingLevel + 1) {
+      errors.push({
+        boundingBox: getNodeBoundingBox(heading),
+        pos: 0,
+        severity: validationSeverity.WARNING,
+        tipPayload: { headingLevel: headingLevel, precedingHeadingLevel: precedingHeadingLevel },
+      });
     }
+    precedingHeadingLevel = headingLevel;
   });
   return errors;
 };
@@ -148,10 +146,10 @@ type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentV
 
 const documentValidatorMap: { [K in DocumentValidationKey]: DocumentValidator } = {
   [documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: documentMustHaveCorrectHeadingOrder,
-  [documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS]: documentMustHaveSemanticLists,
-  [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING]: documentMustHaveTopLevelHeading,
-  [documentValidations.DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS]:
-    documentShouldNotHaveHeadingResemblingParagraphs,
+  //[documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS]: documentMustHaveSemanticLists,
+  //[documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING]: documentMustHaveTopLevelHeading,
+  //[documentValidations.DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS]:
+  //documentShouldNotHaveHeadingResemblingParagraphs,
 };
 
 for (const [key, validator] of Object.entries(documentValidatorMap)) {
