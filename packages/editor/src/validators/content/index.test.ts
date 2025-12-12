@@ -131,4 +131,20 @@ describe('Content validations', () => {
 
     expect(callback.mock.calls[0][0].get('link-should-not-be-too-generic_51').severity).toBe('info');
   });
+
+  it('should notify of incorrect definition list', async () => {
+    const callback = vi.fn();
+    await createTestEditor(
+      `
+    <h1>foo</h1><dl></dl><dl><dt>term only</dt></dl><dl><dd>description only</dd></dl>`,
+      callback,
+    );
+
+    await vi.waitFor(() => {
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+    expect(callback.mock.calls[0][0].get('description-list-must-contain-term_5').severity).toBe('error');
+    expect(callback.mock.calls[0][0].get('definition-description-must-follow-term_8').severity).toBe('error');
+    expect(callback.mock.calls[0][0].get('description-list-must-contain-term_20').severity).toBe('error');
+  });
 });

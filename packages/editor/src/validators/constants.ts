@@ -6,6 +6,8 @@ export const documentValidations = {
 } as const;
 
 export const contentValidations = {
+  DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM: 'definition-description-must-follow-term',
+  DESCRIPTION_LIST_MUST_CONTAIN_TERM: 'description-list-must-contain-term',
   HEADING_MUST_NOT_BE_EMPTY: 'heading-must-not-be-empty',
   HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC: 'heading-should-contain-bold-or-italic',
   IMAGE_MUST_HAVE_ALT_TEXT: 'image-must-have-alt-text',

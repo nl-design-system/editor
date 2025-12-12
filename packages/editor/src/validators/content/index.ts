@@ -114,9 +114,47 @@ const headingShouldNotContainBoldOrItalic = (editor: Editor, node: Node, pos: nu
   return null;
 };
 
+const descriptionListMustContainTerm = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
+  if (node.type.name === 'definitionList') {
+    const hasDefinitionTerm = node.content?.content.some((child) => child.type.name === 'definitionTerm');
+    if (!hasDefinitionTerm) {
+      return {
+        boundingBox: getNodeBoundingBox(editor, pos),
+        pos,
+        severity: validationSeverity.ERROR,
+      };
+    }
+  }
+  return null;
+};
+
+const definitionDescriptionMustFollowTerm = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
+  if (node.type.name === 'definitionTerm') {
+    const parent = editor.$doc.node.resolve(pos).parent;
+    if (parent.type.name === 'definitionList') {
+      const children = parent.content.content;
+      const currentIndex = children.findIndex((child) => {
+        return child.type.name === 'definitionTerm';
+      });
+
+      const nextSibling = children[currentIndex + 1];
+      if (nextSibling?.type.name !== 'definitionDescription') {
+        return {
+          boundingBox: getNodeBoundingBox(editor, pos),
+          pos,
+          severity: validationSeverity.ERROR,
+        };
+      }
+    }
+  }
+  return null;
+};
+
 type ContentValidationKey = (typeof contentValidations)[keyof typeof contentValidations];
 
 const contentValidatorMap: { [K in ContentValidationKey]: ContentValidator } = {
+  [contentValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM]: definitionDescriptionMustFollowTerm,
+  [contentValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM]: descriptionListMustContainTerm,
   [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: headingMustNotBeEmpty,
   [contentValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: headingShouldNotContainBoldOrItalic,
   [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: imageMustHaveAltText,

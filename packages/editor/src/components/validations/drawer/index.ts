@@ -38,6 +38,12 @@ const nodeTypesTranslations: Record<string, string> = {
 };
 
 const validationMessages: ValidationMessages = {
+  [contentValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM]: {
+    description: 'Definitiebeschrijving moet volgen op een definitieterm',
+  },
+  [contentValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM]: {
+    description: 'Definitielijst moet een definitieterm bevatten',
+  },
   [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: {
     description: 'Koptekst mag niet leeg zijn',
     href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#voor-wie-zijn-toegankelijke-koppen-belangrijk',

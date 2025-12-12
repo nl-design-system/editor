@@ -10,13 +10,13 @@ declare module '@tiptap/core' {
 
 const DefinitionListNode = Node.create({
   name: 'definitionList',
-  content: '(definitionTerm definitionDescription)+',
+  content: '(definitionTerm | definitionDescription)*',
   group: 'block',
   parseHTML() {
     return [{ tag: 'dl' }];
   },
-  renderHTML() {
-    return ['dl', 0];
+  renderHTML({ HTMLAttributes }) {
+    return ['dl', HTMLAttributes, 0];
   },
 });
 
@@ -34,7 +34,7 @@ const DefinitionTermNode = Node.create({
 
 const DefinitionDescriptionNode = Node.create({
   name: 'definitionDescription',
-  content: 'inline+',
+  content: 'inline*',
   group: 'definitionList',
   parseHTML() {
     return [{ tag: 'dd' }];

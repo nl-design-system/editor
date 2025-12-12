@@ -1,10 +1,12 @@
 import type { Editor } from '@tiptap/core';
 import type { Mark } from 'prosemirror-model';
 
+const MIN_GUTTER_ITEM_HEIGHT = 8;
+
 export const getNodeBoundingBox = (editor: Editor, pos: number): { top: number; height: number } | null => {
   const domNode = editor.view.nodeDOM(pos);
   if (domNode instanceof HTMLElement) {
-    return { height: domNode.offsetHeight, top: domNode.offsetTop };
+    return { height: Math.max(domNode.offsetHeight, MIN_GUTTER_ITEM_HEIGHT), top: domNode.offsetTop };
   }
 
   if (domNode instanceof Text) {
@@ -14,7 +16,7 @@ export const getNodeBoundingBox = (editor: Editor, pos: number): { top: number; 
     const editorRect = editor.view.dom.getBoundingClientRect();
 
     return {
-      height: rect.height,
+      height: Math.max(rect.height, MIN_GUTTER_ITEM_HEIGHT),
       top: rect.top - editorRect.top + editor.view.dom.scrollTop,
     };
   }
