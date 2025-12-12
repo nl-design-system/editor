@@ -7,13 +7,27 @@ import { getNodeBoundingBox, isBold } from '@/validators/helpers.ts';
 
 const documentValidators = new Map<string, DocumentValidator>();
 
-export const documentMustHaveCorrectHeadingOrder = (editor: Editor): ValidationResult[] => {
+export const documentMustHaveCorrectHeadingOrder = (editor: Editor, settings?: EditorSettings): ValidationResult[] => {
   const errors: ValidationResult[] = [];
-  let precedingHeadingLevel = 0;
-
+  const { topHeadingLevel = 1 } = settings || {};
+  let precedingHeadingLevel = topHeadingLevel;
   editor.$doc.node.descendants((node, pos) => {
     if (node.type.name === 'heading') {
       const headingLevel = node.attrs['level'];
+
+      if (headingLevel < topHeadingLevel) {
+        errors.push({
+          boundingBox: getNodeBoundingBox(editor, pos),
+          pos,
+          severity: validationSeverity.ERROR,
+          tipPayload: {
+            exceedsTopLevel: true,
+            headingLevel: headingLevel,
+            precedingHeadingLevel: precedingHeadingLevel,
+          },
+        });
+      }
+
       if (headingLevel > precedingHeadingLevel + 1) {
         errors.push({
           boundingBox: getNodeBoundingBox(editor, pos),
@@ -101,16 +115,36 @@ export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult[
   return errors;
 };
 
-export const documentMustHaveTopLevelHeading = (editor: Editor, settings?: EditorSettings): ValidationResult[] => {
+export const documentMustHaveSingleHeadingOne = (editor: Editor): ValidationResult[] => {
+  const headingOneNodes: { pos: number; node: Node }[] = [];
+  editor.$doc.node.descendants((node, pos) => {
+    if (node.type.name === 'heading' && node.attrs['level'] === 1) {
+      headingOneNodes.push({ node, pos });
+    }
+  });
+
+  if (headingOneNodes.length > 1) {
+    const incorrectHeadingOneNodes = [...headingOneNodes];
+    incorrectHeadingOneNodes.shift();
+
+    return incorrectHeadingOneNodes?.map(({ pos }) => ({
+      boundingBox: getNodeBoundingBox(editor, pos),
+      pos,
+      severity: validationSeverity.ERROR,
+    }));
+  }
+  return [];
+};
+
+export const documentMustHaveTopLevelHeadingOne = (editor: Editor, settings?: EditorSettings): ValidationResult[] => {
   const { firstChild } = editor.$doc.node;
   const topHeadingLevel = settings?.topHeadingLevel ?? 1;
-  if (firstChild?.attrs['level'] !== topHeadingLevel) {
+  if (topHeadingLevel === 1 && firstChild?.attrs['level'] !== topHeadingLevel) {
     return [
       {
-        boundingBox: null,
-        pos: 0,
+        boundingBox: getNodeBoundingBox(editor, 1),
+        pos: 1,
         severity: validationSeverity.INFO,
-        tipPayload: { topHeadingLevel },
       },
     ];
   }
@@ -149,7 +183,8 @@ type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentV
 const documentValidatorMap: { [K in DocumentValidationKey]: DocumentValidator } = {
   [documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: documentMustHaveCorrectHeadingOrder,
   [documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS]: documentMustHaveSemanticLists,
-  [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING]: documentMustHaveTopLevelHeading,
+  [documentValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE]: documentMustHaveSingleHeadingOne,
+  [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE]: documentMustHaveTopLevelHeadingOne,
   [documentValidations.DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS]:
     documentShouldNotHaveHeadingResemblingParagraphs,
 };

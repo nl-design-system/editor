@@ -1,7 +1,8 @@
 export const documentValidations = {
   DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER: 'document-must-have-correct-heading-order',
   DOCUMENT_MUST_HAVE_SEMANTIC_LISTS: 'document-must-have-semantic-lists',
-  DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING: 'document-must-have-top-level-heading',
+  DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE: 'document-must-have-single-heading-one',
+  DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE: 'document-must-have-top-level-heading',
   DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS: 'document-should-not-have-heading-resembling-paragraph',
 } as const;
 
