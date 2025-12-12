@@ -2,7 +2,7 @@ import Bold from '@tiptap/extension-bold';
 import BubbleMenu from '@tiptap/extension-bubble-menu';
 import Document from '@tiptap/extension-document';
 import HardBreak from '@tiptap/extension-hard-break';
-import Heading, { type Level } from '@tiptap/extension-heading';
+import Heading from '@tiptap/extension-heading';
 import Image from '@tiptap/extension-image';
 import Italic from '@tiptap/extension-italic';
 import Link from '@tiptap/extension-link';
@@ -20,11 +20,6 @@ import KeyboardShortcuts from '@/extensions/KeyboardShortcuts.ts';
 import { CustomListItem } from '@/extensions/ListItem.ts';
 import Validation from '@/extensions/Validation.ts';
 
-const getHeadingLevels = (topHeadingLevel: number): Level[] =>
-  Heading.options.levels.filter((level: Level) => {
-    return level >= topHeadingLevel;
-  });
-
 export const editorExtensions = (
   settings: EditorSettings,
   callback: (resultMap: Map<string, ValidationResult>) => void,
@@ -35,9 +30,7 @@ export const editorExtensions = (
   }),
   Paragraph,
   Text,
-  Heading.configure({
-    levels: getHeadingLevels(settings.topHeadingLevel),
-  }),
+  Heading,
   Bold,
   Italic,
   Underline,
