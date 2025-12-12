@@ -14,7 +14,7 @@ export type ValidationResult = {
   boundingBox: BoundingBox | null;
   severity: ValidationSeverity;
   pos: number;
-  tipPayload?: Record<string, number | string>;
+  tipPayload?: Record<string, number | string | boolean>;
 };
 
 export type ValidationSeverity = 'info' | 'warning' | 'error';

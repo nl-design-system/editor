@@ -19,7 +19,7 @@ type ContentValidationKey = (typeof contentValidations)[keyof typeof contentVali
 type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentValidations];
 type ValidationKey = ContentValidationKey | DocumentValidationKey;
 
-type TipFn = (args?: Record<string, number | string>) => string | null;
+type TipFn = (args?: Record<string, number | string | boolean>) => string | null;
 
 type ValidationMessages = {
   [K in ValidationKey]: { description: string; href?: string; tip?: TipFn };
@@ -62,7 +62,7 @@ const validationMessages: ValidationMessages = {
     description: 'Link mag niet leeg zijn',
     tip: (params) => {
       const { nodeType } = params || {};
-      if (!nodeType) {
+      if (!nodeType || typeof nodeType !== 'string') {
         return null;
       }
       return `Vul de <strong>${nodeTypesTranslations[nodeType]}</strong> met tekst of verwijder de lege link.`;
@@ -77,7 +77,7 @@ const validationMessages: ValidationMessages = {
     description: 'Vermijd lege elementen',
     tip: (params) => {
       const { nodeType } = params || {};
-      if (!nodeType) {
+      if (!nodeType || typeof nodeType !== 'string') {
         return null;
       }
       return `Verwijder de lege <strong>${nodeTypesTranslations[nodeType]}</strong> of voeg tekst toe.`;
@@ -87,10 +87,20 @@ const validationMessages: ValidationMessages = {
     description: 'Document moet correcte kopvolgorde hebben',
     href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#kopniveaus',
     tip: (params) => {
-      const { headingLevel, precedingHeadingLevel } = params || {};
+      const { exceedsTopLevel, headingLevel, precedingHeadingLevel } = params || {};
+
+      if (exceedsTopLevel) {
+        return `<strong>Kopniveau ${headingLevel}</strong> overschrijdt het hoogste toegestane kopniveau (${precedingHeadingLevel}) in dit document.`;
+      }
+
       if (typeof precedingHeadingLevel !== 'number' || !headingLevel) {
         return null;
       }
+
+      if (precedingHeadingLevel === 0) {
+        return `<strong>Kopniveau ${headingLevel}</strong> mag niet het eerste kopniveau in het document zijn.`;
+      }
+
       return `<strong>Kopniveau ${headingLevel}</strong> mag niet direct volgen op een
         <strong>kopniveau ${precedingHeadingLevel}</strong>. Gebruik een koptekst op niveau ${precedingHeadingLevel + 1}
         of lager.`;
@@ -107,12 +117,12 @@ const validationMessages: ValidationMessages = {
       return `Gebruik een semantische lijst in plaats van regels die beginnen met "<strong>${prefix}</strong>"`;
     },
   },
-  [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING]: {
-    description: 'Document moet starten met het juiste kopniveau',
-    tip: (params) => {
-      const { topHeadingLevel } = params || {};
-      return `Verwachting: <strong>kopniveau ${topHeadingLevel ?? 1}</strong>`;
-    },
+  [documentValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE]: {
+    description: 'Document mag maar één kopniveau 1 hebben',
+    href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen',
+  },
+  [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE]: {
+    description: 'Document moet starten met het kopniveau 1',
   },
   [documentValidations.DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS]: {
     description: 'Paragraaf die op een koptekst lijkt vermijden',
