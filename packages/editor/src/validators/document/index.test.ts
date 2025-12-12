@@ -58,29 +58,79 @@ describe('Document validations', () => {
     ]);
   });
 
+  it('returns error for invalid heading order with top level heading 2', async () => {
+    const editor = await createTestEditor(
+      `
+      <h1>Title</h1>
+      <h2>Subtitle</h2>
+      <h4>Subtitle</h4>
+    `,
+      undefined,
+      { topHeadingLevel: 2 },
+    );
+
+    const result = documentMustHaveCorrectHeadingOrder(editor, { topHeadingLevel: 2 });
+    expect(result).toEqual([
+      {
+        boundingBox: expect.any(Object),
+        pos: 0,
+        severity: 'error',
+        tipPayload: {
+          exceedsTopLevel: true,
+          headingLevel: 1,
+          precedingHeadingLevel: 2,
+        },
+      },
+      {
+        boundingBox: expect.any(Object),
+        pos: 17,
+        severity: 'warning',
+        tipPayload: {
+          headingLevel: 4,
+          precedingHeadingLevel: 2,
+        },
+      },
+    ]);
+  });
+
+  it('returns error when content contains multiple level 1 headings', async () => {
+    const callback = vi.fn();
+
+    await createTestEditor(
+      `
+        <h1>test</h1>
+        <p>paragraaf tekst</p>
+        <h1>test</h1>
+        <p>Nog een paragraaf tekst</p>
+    `,
+      callback,
+    );
+    await vi.waitFor(() => {
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+    const mapArg = callback.mock.calls[0][0];
+    expect(mapArg.get('document-must-have-single-heading-one_23').pos).toBe(23);
+  });
+
   it('returns error for invalid top level heading', async () => {
     const callback = vi.fn();
 
     await createTestEditor(
       `
-      <h1>Title</h1>
+      <h2>Title</h2>
       <p>Text</p>
     `,
       callback,
-      { topHeadingLevel: 2 },
     );
     await vi.waitFor(() => {
       expect(callback).toHaveBeenCalledTimes(1);
     });
     const mapArg = callback.mock.calls[0][0];
     expect(mapArg).toBeInstanceOf(Map);
-    expect(mapArg.get('document-must-have-top-level-heading_0')).toEqual({
-      boundingBox: null,
-      pos: 0,
+    expect(mapArg.get('document-must-have-top-level-heading_1')).toEqual({
+      boundingBox: expect.any(Object),
+      pos: 1,
       severity: 'info',
-      tipPayload: {
-        topHeadingLevel: 2,
-      },
     });
   });
 
