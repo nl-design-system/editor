@@ -45,7 +45,7 @@ describe('Document validations', () => {
     expect(result).toEqual([
       {
         boundingBox: {
-          height: 0,
+          height: 8,
           top: 0,
         },
         pos: 7,
