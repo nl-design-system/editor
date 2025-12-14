@@ -4,6 +4,9 @@ export default css`
   :host {
     display: inline-block;
   }
+  :host([hidden]) {
+    display: none;
+  }
   .clippy-toolbar-button {
     position: relative;
     background-color: #fff;
