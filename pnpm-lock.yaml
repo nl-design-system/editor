@@ -84,6 +84,9 @@ importers:
       '@lit/context':
         specifier: 1.1.6
         version: 1.1.6
+      '@nl-design-system-candidate/link-css':
+        specifier: 2.0.2
+        version: 2.0.2
       '@nl-design-system-candidate/number-badge-css':
         specifier: 1.1.4
         version: 1.1.4
@@ -156,6 +159,12 @@ importers:
       '@tiptap/pm':
         specifier: 3.11.1
         version: 3.11.1
+      '@utrecht/ordered-list-css':
+        specifier: 3.0.1
+        version: 3.0.1
+      '@utrecht/unordered-list-css':
+        specifier: 2.0.1
+        version: 2.0.1
       '@utrecht/web-component-library-stencil':
         specifier: 3.7.0
         version: 3.7.0
@@ -889,6 +898,9 @@ packages:
 
   '@nl-design-system-candidate/heading-css@1.1.2':
     resolution: {integrity: sha512-rDJ2WuXlfFsfcBDipb3DqWIg2xzQaVB8w5DHpB3hSH2/1oMzDhIU0Wk53xPEDAWFtbcsPp1ljCAth2ExZdy5pg==}
+
+  '@nl-design-system-candidate/link-css@2.0.2':
+    resolution: {integrity: sha512-s0r4PnL9LmmGpCX3D0O+j63dzumnm00nNMru6ZPj/7uhQKRw5WBh1ShwlYlYBuNRFAF72eqrcq0K6R3CbQRO7Q==}
 
   '@nl-design-system-candidate/mark-css@1.0.4':
     resolution: {integrity: sha512-o3uoCfPkBGSM1QdF+fzr8ZXBmc6Z/XY/6vENyIg+oHXsCJpx3FyqvRtbYI8La56kycnOewjX7eAav/HowgbtjQ==}
@@ -5260,6 +5272,8 @@ snapshots:
   '@nl-design-system-candidate/code-css@2.0.4': {}
 
   '@nl-design-system-candidate/heading-css@1.1.2': {}
+
+  '@nl-design-system-candidate/link-css@2.0.2': {}
 
   '@nl-design-system-candidate/mark-css@1.0.4': {}
 
