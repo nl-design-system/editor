@@ -5,6 +5,7 @@ import CodeBlock from '@tiptap/extension-code-block';
 import Document from '@tiptap/extension-document';
 import HardBreak from '@tiptap/extension-hard-break';
 import Heading from '@tiptap/extension-heading';
+import Highlight from '@tiptap/extension-highlight';
 import Image from '@tiptap/extension-image';
 import Italic from '@tiptap/extension-italic';
 import Link from '@tiptap/extension-link';
@@ -135,5 +136,11 @@ export const editorExtensions = (
   Validation.configure({
     settings,
     updateValidationsContext: callback,
+  }),
+  Highlight.configure({
+    HTMLAttributes: {
+      class: 'nl-mark',
+    },
+    multicolor: true,
   }),
 ];
