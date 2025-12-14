@@ -4,7 +4,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import buttonStyles from './../toolbar-button/styles.ts';
-import { languages, type Language } from './languages.ts';
+import { languages, isSameLanguage, type Language } from './languages.ts';
 
 export interface SelectOption {
   active: boolean;
@@ -13,9 +13,6 @@ export interface SelectOption {
 }
 
 const languageOptions: Language[] = [...languages, { dir: null, i18n: {}, lang: '' }];
-
-// Normalize language code before comparing. To make "EN" match "en"
-const isSameLanguage = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
 
 @customElement('clippy-language-select')
 export class FormatSelect extends LitElement {

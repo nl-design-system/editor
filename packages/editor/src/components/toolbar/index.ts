@@ -13,6 +13,8 @@ import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
 import OrderedListIcon from '@tabler/icons/outline/list-numbers.svg?raw';
 import BulletListIcon from '@tabler/icons/outline/list.svg?raw';
 import TableIcon from '@tabler/icons/outline/table.svg?raw';
+import IconTextDirectionLtr from '@tabler/icons/outline/text-direction-ltr.svg?raw';
+import IconTextDirectionRtl from '@tabler/icons/outline/text-direction-rtl.svg?raw';
 import './toolbar-button';
 import './toolbar-format-select';
 import './toolbar-language-select';
@@ -28,6 +30,7 @@ import { CustomEvents } from '@/events';
 import './toolbar-image-upload';
 import './toolbar-link';
 import toolbarStyles from './styles.ts';
+import { isDefaultDir } from './toolbar-language-select/languages.ts';
 
 const addAriaHidden = (svg: string) => svg.replace('<svg', '<svg aria-hidden="true"');
 
@@ -66,6 +69,22 @@ export class Toolbar extends LitElement {
     );
   };
 
+  readonly #toggleTextDirection = (dir: string) => {
+    const nodeTypeName = this.editor?.state.selection.$anchor.node().type.name;
+
+    if (!nodeTypeName) {
+      return;
+    }
+
+    // When the Button is pressed, remove the dir="rtl" attribute.
+    // When the Button is not pressed, set the dir="rtl" attribute.
+    const isActive = this.editor?.isActive(nodeTypeName, { dir });
+
+    const newValue = isActive ? null : dir;
+
+    this.editor?.chain().focus().updateAttributes(nodeTypeName, { dir: newValue }).run();
+  };
+
   override connectedCallback() {
     globalThis.addEventListener(CustomEvents.FOCUS_TOOLBAR, this.#onToolbarFocus);
     super.connectedCallback();
@@ -75,6 +94,24 @@ export class Toolbar extends LitElement {
     globalThis.removeEventListener(CustomEvents.FOCUS_TOOLBAR, this.#onToolbarFocus);
     super.disconnectedCallback();
   }
+
+  #getCurrentLanguage(): string | null {
+    return this.editor?.state.selection.$anchor.node().attrs['lang'];
+  }
+
+  #getCurrentTextDirection(): string | null {
+    return this.editor?.state.selection.$anchor.node().attrs['dir'];
+  }
+
+  readonly #isOddTextDirection = () => {
+    const lang = this.#getCurrentLanguage();
+    const dir = this.#getCurrentTextDirection();
+
+    if (!lang && !dir) {
+      return false;
+    }
+    return !isDefaultDir(lang ?? '', dir ?? '');
+  };
 
   static override readonly styles = [toolbarStyles, unsafeCSS(numberBadgeStyles)];
 
@@ -165,6 +202,23 @@ export class Toolbar extends LitElement {
         <clippy-toolbar-link></clippy-toolbar-link>
         <clippy-toolbar-image-upload></clippy-toolbar-image-upload>
         <div class="clippy-toolbar__divider"></div>
+        <clippy-toolbar-button
+          label="Links naar rechts"
+          .pressed=${this.editor?.isActive(this.editor?.state.selection.$anchor.node().type.name, { dir: 'ltr' }) ?? false}
+          @click=${() => this.#toggleTextDirection('rtl')}
+          ?hidden=${!this.#isOddTextDirection()}
+        >
+          ${unsafeSVG(addAriaHidden(IconTextDirectionLtr))}
+        </clippy-toolbar-button>
+        <clippy-toolbar-button
+          label="Rechts naar links"
+          .pressed=${this.editor?.isActive(this.editor?.state.selection.$anchor.node().type.name, { dir: 'rtl' }) ?? false}
+          @click=${() => this.#toggleTextDirection('rtl')}
+          ?hidden=${!this.#isOddTextDirection()}
+        >
+          ${unsafeSVG(addAriaHidden(IconTextDirectionRtl))}
+        </clippy-toolbar-button>
+        <div class="clippy-toolbar__divider" ?hidden=${!this.#isOddTextDirection()}></div>
         <clippy-toolbar-button
           label="Keyboard shortcuts"
           .pressed=${this.#dialogRef.value?.open ?? false}
