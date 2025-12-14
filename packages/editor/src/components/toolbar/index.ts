@@ -15,6 +15,7 @@ import BulletListIcon from '@tabler/icons/outline/list.svg?raw';
 import TableIcon from '@tabler/icons/outline/table.svg?raw';
 import './toolbar-button';
 import './toolbar-format-select';
+import './toolbar-language-select';
 import UnderlineIcon from '@tabler/icons/outline/underline.svg?raw';
 import { LitElement, html, unsafeCSS, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -82,6 +83,7 @@ export class Toolbar extends LitElement {
     return html`
       <div class="clippy-toolbar__wrapper" aria-label="Werkbalk tekstbewerker">
         <clippy-format-select></clippy-format-select>
+        <clippy-language-select matchTextDirection></clippy-language-select>
         <clippy-toolbar-button
           label="Bold"
           .pressed=${this.editor?.isActive('bold') ?? false}
