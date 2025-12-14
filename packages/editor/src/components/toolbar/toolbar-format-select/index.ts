@@ -60,7 +60,7 @@ export class FormatSelect extends LitElement {
       label: `Kopniveau ${level}`,
       value: `h${level}`,
     }));
-    return [
+    let options = [
       ...headingOptions,
       {
         active: this.#isFormatActive('paragraph'),
@@ -73,6 +73,18 @@ export class FormatSelect extends LitElement {
         value: 'codeBlock',
       },
     ];
+
+    if (!options.some(({ active }) => active)) {
+      options = [
+        {
+          active: true,
+          label: '(onbekend)',
+          value: '',
+        },
+        ...options,
+      ];
+    }
+    return options;
   }
 
   override render() {
