@@ -5,6 +5,7 @@ import AccessibleIcon from '@tabler/icons/outline/accessible.svg?raw';
 import ArrowBackUpIcon from '@tabler/icons/outline/arrow-back-up.svg?raw';
 import ArrowForwardUpIcon from '@tabler/icons/outline/arrow-forward-up.svg?raw';
 import BoldIcon from '@tabler/icons/outline/bold.svg?raw';
+import CodeIcon from '@tabler/icons/outline/code.svg?raw';
 import './shortcuts-dialog';
 import ItalicIcon from '@tabler/icons/outline/italic.svg?raw';
 import KeyboardIcon from '@tabler/icons/outline/keyboard.svg?raw';
@@ -102,6 +103,14 @@ export class Toolbar extends LitElement {
           @click=${() => this.editor?.chain().focus().toggleUnderline().run()}
         >
           ${unsafeSVG(addAriaHidden(UnderlineIcon))}
+        </clippy-toolbar-button>
+        <clippy-toolbar-button
+          label="Code"
+          .pressed=${this.editor?.isActive('code') ?? false}
+          @click=${() => this.editor?.chain().focus().toggleCode().run()}
+          ${ref(this.#focusNode)}
+        >
+          ${unsafeSVG(addAriaHidden(CodeIcon))}
         </clippy-toolbar-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-button

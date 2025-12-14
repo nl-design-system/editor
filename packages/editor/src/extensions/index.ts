@@ -1,5 +1,6 @@
 import Bold from '@tiptap/extension-bold';
 import BubbleMenu from '@tiptap/extension-bubble-menu';
+import Code from '@tiptap/extension-code';
 import Document from '@tiptap/extension-document';
 import HardBreak from '@tiptap/extension-hard-break';
 import Heading, { type Level } from '@tiptap/extension-heading';
@@ -39,6 +40,11 @@ export const editorExtensions = (
     levels: getHeadingLevels(settings.topHeadingLevel),
   }),
   Bold,
+  Code.configure({
+    HTMLAttributes: {
+      class: 'nl-code',
+    },
+  }),
   Italic,
   Underline,
   UndoRedo,
