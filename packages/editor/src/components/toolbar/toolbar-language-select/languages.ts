@@ -32,3 +32,11 @@ export const languages: Language[] = [
   { dir: 'rtl', i18n: { ar: 'اللغة العربية', en: 'Arabic' }, lang: 'ar' },
   { dir: 'rtl', i18n: { en: 'Hebrew', he: 'עברית' }, lang: 'he' },
 ];
+
+// Normalize language code before comparing. To make "EN" match "en"
+export const isSameLanguage = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
+
+export const findLanguage = (lang: string, options: Language[] = languages) =>
+  options.find((item) => isSameLanguage(lang, item.lang));
+
+export const isDefaultDir = (lang: string, dir: string) => dir === findLanguage(lang)?.dir;
