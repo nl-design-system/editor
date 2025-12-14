@@ -1,3 +1,4 @@
+import { mergeAttributes } from '@tiptap/core';
 import Bold from '@tiptap/extension-bold';
 import BubbleMenu from '@tiptap/extension-bubble-menu';
 import Code from '@tiptap/extension-code';
@@ -50,7 +51,25 @@ export const editorExtensions = (
       return {
         dir: {},
         lang: {},
+        // `level` is copied from the original `Heading` implementation
+        level: {
+          default: 1,
+          rendered: false,
+        },
       };
+    },
+    renderHTML({ HTMLAttributes, node }) {
+      const hasLevel = this.options.levels.includes(node.attrs['level']);
+      const level = hasLevel ? node.attrs['level'] : this.options.levels[0];
+      return [
+        `h${level}`,
+        mergeAttributes(
+          { class: `nl-heading nl-heading--level-${level}` },
+          this.options.HTMLAttributes,
+          HTMLAttributes,
+        ),
+        0,
+      ];
     },
   }),
   Bold,
@@ -75,6 +94,10 @@ export const editorExtensions = (
         lang: {},
       };
     },
+  }).configure({
+    HTMLAttributes: {
+      class: 'utrecht-unordered-list utrecht-unordered-list--html-content',
+    },
   }),
   OrderedList.extend({
     addAttributes() {
@@ -82,6 +105,10 @@ export const editorExtensions = (
         dir: {},
         lang: {},
       };
+    },
+  }).configure({
+    HTMLAttributes: {
+      class: 'utrecht-ordered-list utrecht-ordered-list--html-content',
     },
   }),
   CustomListItem.extend({
@@ -95,6 +122,9 @@ export const editorExtensions = (
   DefinitionList,
   Link.configure({
     defaultProtocol: 'https',
+    HTMLAttributes: {
+      class: 'nl-link',
+    },
     openOnClick: false,
   }),
   Image.configure({

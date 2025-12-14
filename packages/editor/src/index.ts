@@ -1,10 +1,18 @@
 import { provide } from '@lit/context';
-import { Editor as TiptapEditor } from '@tiptap/core';
+import codeBlockStyle from '@nl-design-system-candidate/code-block-css/code-block.css?inline';
+import codeStyle from '@nl-design-system-candidate/code-css/code.css?inline';
 import './components/toolbar';
 import './components/validations/gutter';
 import './components/validations/drawer';
 import './components/bubble-menu';
-import { LitElement, html } from 'lit';
+import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
+import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
+import markStyle from '@nl-design-system-candidate/mark-css/mark.css?inline';
+import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
+import { Editor as TiptapEditor } from '@tiptap/core';
+import orderedListStyle from '@utrecht/ordered-list-css/dist/index.css?inline';
+import unorderedListStyle from '@utrecht/unordered-list-css/dist/index.css?inline';
+import { LitElement, html, unsafeCSS } from 'lit';
 import { customElement, property, queryAssignedElements } from 'lit/decorators.js';
 import type { ValidationResult } from '@/types/validation.ts';
 import { editorExtensions } from '@/extensions';
@@ -23,7 +31,17 @@ const sanitizeTopHeadingLevel = (number: number): number => {
 
 @customElement('clippy-editor')
 export class Editor extends LitElement {
-  static override readonly styles = [editorStyles];
+  static override readonly styles = [
+    editorStyles,
+    unsafeCSS(codeBlockStyle),
+    unsafeCSS(codeStyle),
+    unsafeCSS(headingStyle),
+    unsafeCSS(linkStyle),
+    unsafeCSS(markStyle),
+    unsafeCSS(orderedListStyle),
+    unsafeCSS(paragraphStyle),
+    unsafeCSS(unorderedListStyle),
+  ];
 
   @property({ type: String })
   identifier = 'clippy-editor-id';
