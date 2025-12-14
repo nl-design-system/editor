@@ -34,9 +34,27 @@ export const editorExtensions = (
   Placeholder.configure({
     placeholder: 'Start met typen...',
   }),
-  Paragraph,
+  Paragraph.extend({
+    addAttributes() {
+      return {
+        dir: {},
+        lang: {},
+      };
+    },
+  }).configure({
+    HTMLAttributes: {
+      class: 'nl-paragraph',
+    },
+  }),
   Text,
-  Heading.configure({
+  Heading.extend({
+    addAttributes() {
+      return {
+        dir: {},
+        lang: {},
+      };
+    },
+  }).configure({
     levels: getHeadingLevels(settings.topHeadingLevel),
   }),
   Bold,
@@ -49,9 +67,30 @@ export const editorExtensions = (
   Underline,
   UndoRedo,
   HardBreak,
-  BulletList,
-  OrderedList,
-  CustomListItem,
+  BulletList.extend({
+    addAttributes() {
+      return {
+        dir: {},
+        lang: {},
+      };
+    },
+  }),
+  OrderedList.extend({
+    addAttributes() {
+      return {
+        dir: {},
+        lang: {},
+      };
+    },
+  }),
+  CustomListItem.extend({
+    addAttributes() {
+      return {
+        dir: {},
+        lang: {},
+      };
+    },
+  }),
   DefinitionList,
   Link.configure({
     defaultProtocol: 'https',
