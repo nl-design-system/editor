@@ -38,6 +38,8 @@
     "@tiptap/core": "3.11.1",
     "@tiptap/extension-bold": "3.11.1",
     "@tiptap/extension-bubble-menu": "3.11.1",
+    "@tiptap/extension-code": "3.13.0",
+    "@tiptap/extension-code-block": "3.13.0",
     "@tiptap/extension-document": "3.11.1",
     "@tiptap/extension-dropcursor": "3.11.1",
     "@tiptap/extension-file-handler": "3.11.1",
