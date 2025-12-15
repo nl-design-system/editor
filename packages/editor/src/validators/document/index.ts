@@ -178,12 +178,68 @@ const documentShouldNotHaveHeadingResemblingParagraphs = (editor: Editor): Valid
   return errors;
 };
 
+export const documentMustHaveTableWithHeadings = (editor: Editor): ValidationResult[] => {
+  const errors: ValidationResult[] = [];
+
+  editor.$doc.node.descendants((node: Node, pos: number) => {
+    if (node.type.name !== 'table') {
+      return false;
+    }
+
+    let hasHeaderRow = false;
+    let hasHeaderColumn = false;
+
+    // Find first row with explicit type
+    let firstRow: Node | undefined;
+    node.descendants((child: Node) => {
+      if (!firstRow && child.type.name === 'tableRow') {
+        firstRow = child;
+        return false;
+      }
+      return true;
+    });
+
+    // Check if first row has header cells
+    if (firstRow) {
+      hasHeaderRow = firstRow.content.content.every((cell: Node) => cell.type.name === 'tableHeader');
+    }
+
+    // Check first cell of each row for header cells
+    if (!hasHeaderRow) {
+      const firstCells: Node[] = [];
+      node.descendants((row: Node) => {
+        if (row.type.name === 'tableRow' && row.firstChild) {
+          firstCells.push(row.firstChild);
+        }
+      });
+
+      hasHeaderColumn =
+        firstCells.length > 0 &&
+        firstCells.every((cell: Node) => {
+          return cell.type.name === 'tableHeader';
+        });
+    }
+
+    if (!hasHeaderRow && !hasHeaderColumn) {
+      errors.push({
+        boundingBox: getNodeBoundingBox(editor, pos),
+        pos,
+        severity: validationSeverity.WARNING,
+      });
+    }
+    return true;
+  });
+
+  return errors;
+};
+
 type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentValidations];
 
 const documentValidatorMap: { [K in DocumentValidationKey]: DocumentValidator } = {
   [documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: documentMustHaveCorrectHeadingOrder,
   [documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS]: documentMustHaveSemanticLists,
   [documentValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE]: documentMustHaveSingleHeadingOne,
+  [documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_HEADINGS]: documentMustHaveTableWithHeadings,
   [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE]: documentMustHaveTopLevelHeadingOne,
   [documentValidations.DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS]:
     documentShouldNotHaveHeadingResemblingParagraphs,

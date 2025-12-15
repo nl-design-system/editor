@@ -121,6 +121,9 @@ const validationMessages: ValidationMessages = {
     description: 'Document mag maar één kopniveau 1 hebben',
     href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen',
   },
+  [documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_HEADINGS]: {
+    description: 'Tabel moet kopteksten bevatten',
+  },
   [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE]: {
     description: 'Document moet starten met het kopniveau 1',
   },

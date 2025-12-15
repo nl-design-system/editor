@@ -18,6 +18,7 @@ import { CustomFileHandler } from '@/extensions/CustomFileHandler.ts';
 import { DefinitionList } from '@/extensions/DefinitionList.ts';
 import KeyboardShortcuts from '@/extensions/KeyboardShortcuts.ts';
 import { CustomListItem } from '@/extensions/ListItem.ts';
+import { Table, TableBody, TableCaption, TableFoot, TableHead } from '@/extensions/Table';
 import Validation from '@/extensions/Validation.ts';
 
 export const editorExtensions = (
@@ -53,8 +54,13 @@ export const editorExtensions = (
       minWidth: 50,
     },
   }),
+  Table,
+  TableHead,
+  TableFoot,
+  TableCaption,
+  TableBody,
   TableKit.configure({
-    table: { resizable: true },
+    table: false,
   }),
   CustomFileHandler,
   Dropcursor.configure({
