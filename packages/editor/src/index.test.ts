@@ -55,4 +55,20 @@ describe('<clippy-editor>', () => {
 
     expect(a11yDialog).toHaveTextContent('Geen toegankelijkheidsfouten gevonden.');
   });
+
+  it('all toolbar buttons are visible, regardless of viewport size', async () => {
+    expect(page.getByRole('button', { name: 'Bold' })).toBeVisible();
+    expect(page.getByRole('button', { name: 'Italic' })).toBeVisible();
+    expect(page.getByRole('button', { name: 'Underline' })).toBeVisible();
+    expect(page.getByRole('button', { name: 'Undo' })).toBeVisible();
+    expect(page.getByRole('button', { name: 'Redo' })).toBeVisible();
+    expect(page.getByRole('button', { name: 'Ordered list' })).toBeVisible();
+    expect(page.getByRole('button', { name: 'Bullet list' })).toBeVisible();
+    expect(page.getByRole('button', { name: 'Definition list' })).toBeVisible();
+    expect(page.getByRole('button', { name: 'Tabel invoegen' })).toBeVisible();
+    expect(page.getByRole('button', { name: 'Link' })).toBeVisible();
+    expect(page.getByRole('button', { name: 'Afbeelding' })).toBeVisible();
+    expect(page.getByRole('button', { name: 'Keyboard shortcuts' })).toBeVisible();
+    expect(page.getByRole('button', { name: 'Toon toegankelijkheidsfouten' })).toBeVisible();
+  });
 });
