@@ -15,7 +15,17 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { height: 1024, width: 1280 },
+      },
+    },
+    {
+      name: 'chromium-400-zoom',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { height: 1024, width: 320 },
+      },
     },
   ],
   reporter: [['html', { outputFolder: 'tmp/playwright-report' }]],
