@@ -124,6 +124,9 @@ const validationMessages: ValidationMessages = {
   [documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_HEADINGS]: {
     description: 'Tabel moet kopteksten bevatten',
   },
+  [documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_MULTIPLE_ROWS]: {
+    description: 'Tabel moet meerdere rijen bevatten',
+  },
   [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE]: {
     description: 'Document moet starten met het kopniveau 1',
   },

@@ -233,6 +233,36 @@ export const documentMustHaveTableWithHeadings = (editor: Editor): ValidationRes
   return errors;
 };
 
+export const documentMustHaveTableWithMultipleRows = (editor: Editor): ValidationResult[] => {
+  const errors: ValidationResult[] = [];
+
+  editor.$doc.node.descendants((node: Node, pos: number) => {
+    if (node.type.name !== 'table') {
+      return false;
+    }
+
+    let rowCount = 0;
+    console.log(node);
+    node.descendants((child: Node) => {
+      if (child.type.name === 'tableRow') {
+        rowCount++;
+      }
+    });
+
+    if (rowCount < 2) {
+      errors.push({
+        boundingBox: getNodeBoundingBox(editor, pos),
+        pos,
+        severity: validationSeverity.WARNING,
+      });
+    }
+
+    return true;
+  });
+
+  return errors;
+};
+
 type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentValidations];
 
 const documentValidatorMap: { [K in DocumentValidationKey]: DocumentValidator } = {
@@ -240,6 +270,7 @@ const documentValidatorMap: { [K in DocumentValidationKey]: DocumentValidator } 
   [documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS]: documentMustHaveSemanticLists,
   [documentValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE]: documentMustHaveSingleHeadingOne,
   [documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_HEADINGS]: documentMustHaveTableWithHeadings,
+  [documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_MULTIPLE_ROWS]: documentMustHaveTableWithMultipleRows,
   [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE]: documentMustHaveTopLevelHeadingOne,
   [documentValidations.DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS]:
     documentShouldNotHaveHeadingResemblingParagraphs,

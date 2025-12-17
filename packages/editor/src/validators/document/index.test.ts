@@ -351,5 +351,28 @@ describe('Document validations', () => {
       const result = documentMustHaveTableWithHeadings(editor);
       expect(result).toEqual([]);
     });
+
+    it('returns error for table with single row', async () => {
+      const editor = await createTestEditor(`
+      <h1>Title</h1>
+      <table>
+        <tbody>
+          <tr>
+            <td>Single row table cell</td>
+            <td>Single row table cell</td>
+          </tr>
+        </tbody>
+      </table>
+    `);
+
+      const result = documentMustHaveTableWithHeadings(editor);
+      expect(result).toEqual([
+        {
+          boundingBox: expect.any(Object),
+          pos: 7,
+          severity: 'warning',
+        },
+      ]);
+    });
   });
 });

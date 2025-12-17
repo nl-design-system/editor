@@ -3,6 +3,7 @@ export const documentValidations = {
   DOCUMENT_MUST_HAVE_SEMANTIC_LISTS: 'document-must-have-semantic-lists',
   DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE: 'document-must-have-single-heading-one',
   DOCUMENT_MUST_HAVE_TABLE_WITH_HEADINGS: 'document-must-have-table-with-headings',
+  DOCUMENT_MUST_HAVE_TABLE_WITH_MULTIPLE_ROWS: 'document-must-have-table-with-multiple-rows',
   DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE: 'document-must-have-top-level-heading',
   DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS: 'document-should-not-have-heading-resembling-paragraph',
 } as const;
