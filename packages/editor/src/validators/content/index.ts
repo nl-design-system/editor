@@ -33,6 +33,7 @@ const nodeTypesRequiringContent = new Set([
   'listItem',
   'tableHeader',
   'tableCell',
+  'tableCaption',
 ]);
 
 const nodeShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
