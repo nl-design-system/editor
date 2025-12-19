@@ -242,7 +242,6 @@ export const documentMustHaveTableWithMultipleRows = (editor: Editor): Validatio
     }
 
     let rowCount = 0;
-    console.log(node);
     node.descendants((child: Node) => {
       if (child.type.name === 'tableRow') {
         rowCount++;
