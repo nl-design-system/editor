@@ -82,7 +82,7 @@ describe('<clippy-validations-dialog>', () => {
       ],
       [`${contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED}_40`, { boundingBox: null, pos: 40, severity: 'warning' }],
       [
-        `${documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING}_45`,
+        `${documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE}_45`,
         { boundingBox: null, pos: 45, severity: 'error', tipPayload: { topHeadingLevel: 1 } },
       ],
     ]);
