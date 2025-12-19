@@ -55,6 +55,7 @@ export class ToolbarLink extends LitElement {
         label="Link"
         aria-controls="clippy-link-dialog"
         .pressed=${this.editor?.isActive('link') ?? false}
+        label="Link"
       >
         ${unsafeSVG(LinkIcon)}
       </clippy-toolbar-button>

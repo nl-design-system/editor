@@ -98,6 +98,7 @@ export class ToolbarImageUpload extends LitElement {
         class="clippy-toolbar-image-upload--button"
         @click=${this.#toggleImageUploadDialog}
         aria-controls="clippy-image-upload-dialog"
+        label="Afbeelding"
       >
         ${unsafeSVG(PhotoIcon)}
         <input
