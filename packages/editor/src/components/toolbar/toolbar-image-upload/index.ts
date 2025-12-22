@@ -98,12 +98,13 @@ export class ToolbarImageUpload extends LitElement {
         class="clippy-toolbar-image-upload--button"
         @click=${this.#toggleImageUploadDialog}
         aria-controls="clippy-image-upload-dialog"
+        label="Afbeelding"
       >
         ${unsafeSVG(PhotoIcon)}
         <input
           ${ref(this.#inputRef)}
           type="file"
-          id="clippy-image-upload"
+          data-testid="clippy-image-upload"
           style="display:none"
           accept="image/*"
           multiple
@@ -115,6 +116,7 @@ export class ToolbarImageUpload extends LitElement {
         id="clippy-image-upload-dialog"
         class="clippy-toolbar-image-upload--dialog"
         ${ref(this.#dialogRef)}
+        data-testid="clippy-image-upload-dialog"
       >
         ${map(
           this.files,

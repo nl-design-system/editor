@@ -23,8 +23,10 @@ export class ShortcutsDialog extends LitElement {
         id="clippy-shortcuts"
         class="clippy-shortcuts__dialog"
         aria-labelledby="clippy-shortcuts-title"
+        data-testid="clippy-shortcuts-dialog"
         ${ref(this.dialogRef)}
       >
+        <utrecht-button>test</utrecht-button>
         <div class="clippy-shortcuts__header">
           <h1 id="clippy-shortcuts-title">Sneltoetsen</h1>
           <clippy-toolbar-button @click=${() => this.close()} aria-label="Sluit sneltoetsen dialog">
