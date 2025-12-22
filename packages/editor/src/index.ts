@@ -1,10 +1,10 @@
 import { provide } from '@lit/context';
 import { Editor as TiptapEditor } from '@tiptap/core';
-import { defineCustomElements } from '@utrecht/web-component-library-stencil/loader';
 import './components/toolbar';
 import './components/validations/gutter';
 import './components/validations/drawer';
 import './components/bubble-menu';
+import { defineCustomElements } from '@utrecht/web-component-library-stencil/loader';
 import { LitElement, html } from 'lit';
 import { customElement, property, queryAssignedElements } from 'lit/decorators.js';
 import type { ValidationResult } from '@/types/validation.ts';

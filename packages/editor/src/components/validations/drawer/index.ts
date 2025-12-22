@@ -216,11 +216,11 @@ export class ValidationsDialog extends LitElement {
     return html`
       <dialog
         ${ref(this.#dialogRef)}
-        id="dialog-content"
+        data-testid="clippy-validations-drawer"
         class="clippy-dialog__content"
         aria-label="Toegankelijkheidsfouten"
       >
-        <ul class="clippy-dialog__list" id="validation-list">
+        <ul class="clippy-dialog__list" data-testid="clippy-validations-list">
           ${size > 0
             ? map(sortedValidations, ([key, { pos, severity, tipPayload }]) => {
                 const validationKey = key.split('_')[0] as ValidationKey;

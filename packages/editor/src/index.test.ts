@@ -1,35 +1,26 @@
 import userEvent from '@testing-library/user-event';
 import './index.ts';
-import { defineCustomElements } from '@utrecht/web-component-library-stencil/loader';
-import { querySelectorAllDeep, querySelectorDeep } from 'query-selector-shadow-dom';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { page } from 'vitest/browser';
 import { isMacOS } from '@/utils/isMacOS.ts';
+import './index';
 
 describe('<clippy-editor>', () => {
-  beforeEach(async () => {
-    defineCustomElements();
+  let user: ReturnType<typeof userEvent.setup>;
+
+  beforeEach(() => {
+    user = userEvent.setup();
     document.body.innerHTML =
       '<clippy-editor><div slot="content" hidden><h1>Start met kopniveau 1</h1></div></clippy-editor>';
-    const editor = document.querySelector('clippy-editor');
-    await editor?.updateComplete;
-
-    // Wait for all utrecht-button elements to be ready
-    const buttons = querySelectorAllDeep('utrecht-button');
-    await Promise.all(buttons.map((button) => button.componentOnReady()));
   });
 
-  it.skip('should change selected text to heading level 3', async () => {
-    const user = userEvent.setup();
-    await expect.element(page.getByRole('heading', { name: 'Start met kopniveau 1' })).toBeInTheDocument();
+  it('should change selected text to heading level 3', async () => {
+    await expect(page.getByRole('heading', { name: 'Start met kopniveau 1' })).toBeInTheDocument();
 
-    const boldButton = querySelectorDeep('button[aria-label="Bold"]');
+    const boldButton = page.getByRole('button', { name: 'Bold' }).element();
 
-    const buttons = querySelectorAllDeep('utrecht-button');
-    await Promise.all(buttons.map((button) => button.componentOnReady()));
-
-    expect(boldButton).toBeDefined();
-    await userEvent.click(boldButton as HTMLButtonElement);
+    expect(boldButton).toBeInTheDocument();
+    await user.click(boldButton);
 
     const text = page.getByText('Start met kopniveau 1').element();
     expect(text).toBeInTheDocument();
@@ -41,31 +32,30 @@ describe('<clippy-editor>', () => {
       { keys: '[/MouseLeft]' },
     ]);
 
-    const select = querySelectorDeep('select');
-    expect(select).toBeDefined();
-    await user.selectOptions(select as Element, 'h3');
+    const select = page.getByLabelText('Tekst formaat selecteren');
+    expect(select).toBeInTheDocument();
+    await user.selectOptions(select.element(), 'h3');
 
-    const h3Option = querySelectorDeep('li[role="option"]#h3');
-    await user.click(h3Option as Element);
+    const h3Option = select.getByRole('option', { name: 'Kopniveau 1' }).element();
+    await user.click(h3Option);
 
     const h3Text = page.getByRole('heading', { level: 3 });
     expect(h3Text).toHaveTextContent('Start met kopniveau 1');
   });
 
-  it.skip('should open the shortcuts dialog with Command/Control + Alt + T', async () => {
-    const user = userEvent.setup();
+  it('should open the shortcuts dialog with Command/Control + Alt + T', async () => {
     const text = page.getByText('Start met kopniveau 1').element();
     expect(text).toBeInTheDocument();
-
+    expect(page.getByLabelText('Toegankelijkheidsfouten', { exact: true })).not.toHaveAttribute('open');
     await user.click(text);
     if (isMacOS()) {
       await user.keyboard('{meta>}{alt>}{t}{/alt}{/meta}');
     } else {
       await user.keyboard('{control>}{alt>}{t}{/alt}{/control}');
     }
-    const a11yDialog = querySelectorDeep('#dialog-content');
-    expect(a11yDialog?.hasAttribute('open')).toBe(true);
+    const a11yDialog = page.getByRole('dialog').element();
+    expect(a11yDialog).toHaveAttribute('open');
 
-    expect(a11yDialog?.querySelector('ul li')?.textContent).toBe('Geen toegankelijkheidsfouten gevonden.');
+    expect(a11yDialog).toHaveTextContent('Geen toegankelijkheidsfouten gevonden.');
   });
 });

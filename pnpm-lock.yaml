@@ -148,8 +148,8 @@ importers:
         specifier: 3.14.0
         version: 3.14.0
       '@utrecht/web-component-library-stencil':
-        specifier: 3.7.0
-        version: 3.7.0
+        specifier: 4.0.0
+        version: 4.0.0
       lit:
         specifier: 3.3.2
         version: 3.3.2
@@ -1703,8 +1703,8 @@ packages:
   '@utrecht/url-data-css@2.0.1':
     resolution: {integrity: sha512-ujZgby3gjgaC4qlo20K/4ksEZ31aQWwfb/Uhheza6HBTabfBPatowifFsfp2gxaQ4jvF+bc6uddBAuBaKnOQKQ==}
 
-  '@utrecht/web-component-library-stencil@3.7.0':
-    resolution: {integrity: sha512-JvJ6rQAJlRtVbQApFODOMC25FgGsiLkTOs773VZo3u/rvvL4GhpXdri5Zap1yn0oD9dfjC4VWLq9LM+dPsLTDQ==}
+  '@utrecht/web-component-library-stencil@4.0.0':
+    resolution: {integrity: sha512-rN1F01RRCnGbP5bvjfoD1HZzNX/YAElFjzlkmLMFxkvOVaxq/Qo/FSxrbnzpH5UsgtVM6qx/tQAA9fOkIgit9Q==}
 
   '@utrecht/youtube-video-css@2.0.1':
     resolution: {integrity: sha512-h4wGXrIDLUevryoUvPsAj8C6dSo23KkN7M0BgQxAhlOy6KB59aUOGBlmY+xhZtsIgL/XrHPctjwlZKw8crd3IA==}
@@ -6046,7 +6046,7 @@ snapshots:
 
   '@utrecht/url-data-css@2.0.1': {}
 
-  '@utrecht/web-component-library-stencil@3.7.0':
+  '@utrecht/web-component-library-stencil@4.0.0':
     dependencies:
       '@stencil/core': 4.18.3
 

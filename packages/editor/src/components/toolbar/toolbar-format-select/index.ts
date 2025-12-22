@@ -71,7 +71,11 @@ export class FormatSelect extends LitElement {
 
   override render() {
     return html`
-      <select class="clippy-toolbar-button" @change=${this.#handleTextFormatChange}>
+      <select
+        class="clippy-toolbar-button"
+        @change=${this.#handleTextFormatChange}
+        aria-label="Tekst formaat selecteren"
+      >
         ${map(
           this.options,
           (option) => html`<option ?selected=${option.active} value=${option.value}>${option.label}</option>`,
