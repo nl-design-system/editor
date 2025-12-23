@@ -20,6 +20,7 @@ export const getDeeplyMountedCustomElement = async <T extends LitElement>(select
     if (typeof customEl.componentOnReady === 'function') {
       console.log('---\n' + customEl.tagName + '\n');
       await customEl.componentOnReady();
+      console.log(customEl.shadowRoot?.innerHTML);
     }
     if (customEl.updateComplete instanceof Promise) {
       await customEl.updateComplete;
