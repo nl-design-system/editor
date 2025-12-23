@@ -5,7 +5,6 @@ import { tiptapContext } from '@/context/tiptapContext.ts';
 
 export class TipTapController implements ReactiveController {
   private readonly host: ReactiveControllerHost;
-  private unbindTransaction?: Editor;
   // @ts-expect-error TypeScript cannot infer the type correctly here
   private readonly editorConsumer: ContextConsumer<
     { __context__: Editor | undefined },
@@ -32,11 +31,9 @@ export class TipTapController implements ReactiveController {
   }
 
   private handleEditorChange(editor?: Editor) {
-    // Clean up existing listener
-    // this.unbindTransaction?.();
     if (editor) {
       this._editor = editor;
-      this.unbindTransaction = editor.on('transaction', () => {
+      editor.on('transaction', () => {
         this.host.requestUpdate();
       });
     }
@@ -47,6 +44,11 @@ export class TipTapController implements ReactiveController {
   }
 
   hostDisconnected() {
-    // this.unbindTransaction?.();
+    // Context consumer handles the subscription
+    if (this._editor) {
+      this._editor.off('transaction', () => {
+        this.host.requestUpdate();
+      });
+    }
   }
 }
