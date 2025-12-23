@@ -1,4 +1,3 @@
-// typescript
 import './index.ts';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
@@ -39,7 +38,6 @@ describe('<clippy-toolbar>', () => {
 
     const button = page.getByRole('button', { name: 'Keyboard shortcuts' });
     await button.click();
-    console.log(page.getByTestId('clippy-shortcuts-dialog'));
     expect(page.getByTestId('clippy-shortcuts-dialog')).toHaveAttribute('open');
   });
 
@@ -48,11 +46,11 @@ describe('<clippy-toolbar>', () => {
     await user.click(linkButton);
 
     expect(page.getByTestId('clippy-link-dialog')).toHaveAttribute('open');
-    const urlInput = page.getByRole('textbox');
+    const urlInput = page.getByLabelText('Link to:');
     await user.type(urlInput, 'https://example.com');
 
     await user.keyboard('{Enter}');
-    expect(page.getByRole('textbox')).toHaveValue('https://example.com');
+    expect(page.getByLabelText('Link to:')).toHaveValue('https://example.com');
     await user.click(page.getByRole('button', { name: 'Link toevoegen' }));
     expect(page.getByTestId('clippy-link-dialog')).not.toHaveAttribute('open');
   });
