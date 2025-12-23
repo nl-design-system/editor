@@ -23,6 +23,7 @@ export class ShortcutsDialog extends LitElement {
         id="clippy-shortcuts"
         class="clippy-shortcuts__dialog"
         aria-labelledby="clippy-shortcuts-title"
+        data-testid="clippy-shortcuts-dialog"
         ${ref(this.dialogRef)}
       >
         <div class="clippy-shortcuts__header">
