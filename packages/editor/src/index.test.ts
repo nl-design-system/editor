@@ -1,7 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import './index.ts';
 import { defineCustomElements } from '@utrecht/web-component-library-stencil/loader';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, beforeAll } from 'vitest';
 import { page } from 'vitest/browser';
 import { isMacOS } from '@/utils/isMacOS.ts';
 import { getDeeplyMountedCustomElement } from '../test/helpers';
@@ -11,6 +11,11 @@ defineCustomElements();
 
 describe('<clippy-editor>', () => {
   let user: ReturnType<typeof userEvent.setup>;
+
+  beforeAll(() => {
+    defineCustomElements();
+  });
+
   beforeEach(async () => {
     user = userEvent.setup();
     document.body.innerHTML =
