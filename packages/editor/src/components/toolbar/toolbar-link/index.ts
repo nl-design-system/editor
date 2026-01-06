@@ -1,11 +1,12 @@
 import type { Editor } from '@tiptap/core';
+import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 import LinkIcon from '@tabler/icons/outline/link.svg?raw';
-import { html, LitElement } from 'lit';
+import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { editor } from '@/decorators/TipTapDecorator.ts';
 import './../toolbar-button';
+import { editor } from '@/decorators/TipTapDecorator.ts';
 
 const tag = 'clippy-toolbar-link';
 
@@ -17,7 +18,7 @@ declare global {
 
 @customElement(tag)
 export class ToolbarLink extends LitElement {
-  static override readonly styles = [];
+  static override readonly styles = [unsafeCSS(buttonCss)];
 
   readonly #dialogRef: Ref<HTMLDialogElement> = createRef();
   readonly #inputRef: Ref<HTMLInputElement> = createRef();
@@ -72,9 +73,13 @@ export class ToolbarLink extends LitElement {
           <label>Link to:<input value=${this.previousUrl} ${ref(this.#inputRef)} type="text" /></label>
         </div>
         <div>
-          <button @click=${() => this.#dialogRef.value?.close()}>Sluiten</button>
-          <button @click=${this.#unsetLink}>Verwijder link</button>
-          <button @click=${this.#updateLink}>Link toevoegen</button>
+          <button class="nl-button nl-button--secondary " @click=${() => this.#dialogRef.value?.close()}>
+            Sluiten
+          </button>
+          <button class="nl-button nl-button--secondary nl-button--negative" @click=${this.#unsetLink}>
+            Verwijder link
+          </button>
+          <button class="nl-button nl-button--primary" @click=${this.#updateLink}>Link toevoegen</button>
         </div>
       </dialog>
     `;

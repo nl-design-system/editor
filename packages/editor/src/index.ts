@@ -4,7 +4,6 @@ import './components/toolbar';
 import './components/validations/gutter';
 import './components/validations/drawer';
 import './components/bubble-menu';
-import { defineCustomElements } from '@utrecht/web-component-library-stencil/loader';
 import { LitElement, html } from 'lit';
 import { customElement, property, queryAssignedElements } from 'lit/decorators.js';
 import type { ValidationResult } from '@/types/validation.ts';
@@ -14,8 +13,6 @@ import { validationsContext } from './context/validationsContext.ts';
 import editorStyles from './styles';
 
 const EDITOR_ID = 'editor';
-
-defineCustomElements();
 
 const sanitizeTopHeadingLevel = (number: number): number => {
   if (!Number.isNaN(number) && number >= 1 && number <= 6) {

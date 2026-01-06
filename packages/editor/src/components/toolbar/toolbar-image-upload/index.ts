@@ -1,7 +1,8 @@
 import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
+import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 import PhotoIcon from '@tabler/icons/outline/photo.svg?raw';
-import { html, LitElement } from 'lit';
+import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
@@ -13,7 +14,7 @@ import imageUploadDialogStyles from './styles.ts';
 
 @customElement('clippy-toolbar-image-upload')
 export class ToolbarImageUpload extends LitElement {
-  static override readonly styles = [imageUploadDialogStyles];
+  static override readonly styles = [imageUploadDialogStyles, unsafeCSS(buttonCss)];
 
   readonly #dialogRef: Ref<HTMLDialogElement> = createRef();
   readonly #inputRef: Ref<HTMLInputElement> = createRef();
@@ -130,7 +131,7 @@ export class ToolbarImageUpload extends LitElement {
               </div>
             </li>`,
         )}
-        <button @click=${this.#insertImages}>Invoegen</button>
+        <button class="nl-button nl-button--primary" @click=${this.#insertImages}>Invoegen</button>
       </dialog>
     `;
   }

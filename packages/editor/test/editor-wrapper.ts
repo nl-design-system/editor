@@ -1,11 +1,8 @@
 import type { Editor } from '@tiptap/core';
 import { ContextProvider, Context } from '@lit/context';
-import { defineCustomElements } from '@utrecht/web-component-library-stencil/loader';
 import { html, LitElement, type TemplateResult } from 'lit';
 import { tiptapContext } from '../src/context/tiptapContext';
 import { createTestEditor } from './createTestEditor';
-
-defineCustomElements();
 
 export class EditorTestWrapper extends LitElement {
   static override readonly properties = {
