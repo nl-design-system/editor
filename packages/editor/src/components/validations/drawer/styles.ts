@@ -5,15 +5,21 @@ export default css`
     block-size: 100%;
     inset-block-start: 0;
     inset-inline-end: 0;
-    position: absolute;
-    align-items: flex-end;
+    position: fixed;
+    align-items: flex-start;
     display: flex;
     inline-size: fit-content;
     pointer-events: none;
+    background: #fff;
+    border-inline-start: 1px solid #7f7f7f;
   }
-
   :host > * {
     pointer-events: auto;
+  }
+  .clippy-dialog__close-button {
+    border: none;
+    background: none;
+    float: inline-end;
   }
 
   .clippy-dialog__content {
@@ -34,10 +40,10 @@ export default css`
 
   .clippy-dialog__list {
     display: grid;
-    gap: 0.5rem;
+    gap: var(--basis-space-inline-xl);
     list-style: none;
-    margin-block: 0;
-    padding-block: 0.5rem;
-    padding-inline: 0.5rem;
+    margin-block: var(--basis-space-inline-xl) 0;
+    padding-block: 0;
+    padding-inline: 0;
   }
 `;
