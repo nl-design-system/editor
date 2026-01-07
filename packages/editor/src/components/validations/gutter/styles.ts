@@ -62,4 +62,15 @@ export default css`
     margin-inline-start: 0;
     inline-size: 100%;
   }
+
+  .clippy-validation-gutter__tooltip {
+    display: none;
+    position: absolute;
+    right: 100%;
+    top: 0;
+  }
+
+  .clippy-validation-gutter__tooltip--active {
+    display: block;
+  }
 `;
