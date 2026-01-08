@@ -4,6 +4,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import shortcutsDialogStyles from './styles.ts';
+import './../toolbar-button';
 
 @customElement('clippy-shortcuts')
 export class ShortcutsDialog extends LitElement {
@@ -23,6 +24,7 @@ export class ShortcutsDialog extends LitElement {
         id="clippy-shortcuts"
         class="clippy-shortcuts__dialog"
         aria-labelledby="clippy-shortcuts-title"
+        data-testid="clippy-shortcuts-dialog"
         ${ref(this.dialogRef)}
       >
         <div class="clippy-shortcuts__header">

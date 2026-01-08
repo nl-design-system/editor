@@ -1,7 +1,7 @@
 import './index.ts';
 import type { Editor } from '@tiptap/core';
-import { querySelectorDeep } from 'query-selector-shadow-dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { page } from 'vitest/browser';
 import { createTestEditor } from '../../../../test/createTestEditor';
 import { CustomEvents } from '../../../events';
 import { ValidationResult } from '../../../types/validation';
@@ -30,9 +30,8 @@ describe('<clippy-validations-dialog>', () => {
       element.editor = editor;
       await element.updateComplete;
     }
-
-    const dialog = querySelectorDeep('dialog#dialog-content') as HTMLDialogElement;
-    expect(dialog?.getAttribute('open')).toBeNull();
+    const dialog = page.getByTestId('clippy-validations-drawer');
+    expect(dialog).not.toHaveAttribute('open');
 
     globalThis.dispatchEvent(new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG));
     await element?.updateComplete;
@@ -93,8 +92,7 @@ describe('<clippy-validations-dialog>', () => {
       await element.updateComplete;
     }
 
-    const validationList = querySelectorDeep('ul#validation-list');
-    expect(validationList).toBeDefined();
+    const validationList = page.getByTestId('clippy-validations-list').element();
 
     const validationItems = validationList?.querySelectorAll('clippy-validation-list-item');
     expect(validationItems?.length).toBe(10);

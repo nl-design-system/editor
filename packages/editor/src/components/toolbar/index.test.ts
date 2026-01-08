@@ -1,77 +1,64 @@
-// typescript
 import './index.ts';
-import userEvent from '@testing-library/user-event';
-import { querySelectorDeep } from 'query-selector-shadow-dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import type { Toolbar } from './index';
+import { page, userEvent } from 'vitest/browser';
+import { cleanupTestEditor, EditorTestSetup, setupTestEditor } from '../../../test/setupTestEditor';
+
+const tag = 'clippy-toolbar';
 
 describe('<clippy-toolbar>', () => {
-  let container: HTMLElement;
+  let testSetup: EditorTestSetup;
   let user: ReturnType<typeof userEvent.setup>;
-  let element: Toolbar;
 
   beforeEach(async () => {
-    container = document.createElement('div');
-    document.body.appendChild(container);
     user = userEvent.setup();
-
-    container.innerHTML = '<clippy-toolbar></clippy-toolbar>';
-    element = container.querySelector<Toolbar>('clippy-toolbar')!;
-    await element.updateComplete;
+    testSetup = setupTestEditor(`<${tag}></{tag}>`);
   });
 
   afterEach(() => {
-    document.body.removeChild(container);
+    cleanupTestEditor(testSetup.container);
   });
 
   it('renders correctly with required toolbar elements', async () => {
-    expect(element).toBeDefined();
-    expect(querySelectorDeep('div[aria-label="Werkbalk tekstbewerker"]')).toBeDefined();
-    expect(querySelectorDeep('button[aria-label="Bold"]')).toBeDefined();
-    expect(querySelectorDeep('button[aria-label="Italic"]')).toBeDefined();
-    const linkButton = querySelectorDeep('clippy-toolbar-link');
-    await linkButton?.updateComplete;
-    expect(querySelectorDeep('button[aria-label="Link"]')).toBeDefined();
+    expect(page.getByLabelText('Werkbalk tekstbewerker')).toBeInTheDocument();
+    expect(page.getByLabelText('Bold')).toBeInTheDocument();
+    expect(page.getByLabelText('Italic')).toBeInTheDocument();
+    expect(page.getByLabelText('Link', { exact: true })).toBeInTheDocument();
   });
 
   it('updates all toolbar buttons when editor content changes', async () => {
-    const boldButton = querySelectorDeep('button[aria-label="Bold"]');
-    expect(boldButton?.getAttribute('aria-pressed')).toBe('false');
+    expect(page.getByLabelText('Bold')).toHaveAttribute('aria-pressed', 'false');
   });
 
   it('opens shortcuts dialog when keyboard shortcuts button is clicked', async () => {
-    const shortcutsButton = querySelectorDeep('clippy-shortcuts');
-    await shortcutsButton?.updateComplete;
+    expect(page.getByTestId('clippy-shortcuts-dialog')).not.toHaveAttribute('open');
 
-    const shortcutsButton2 = querySelectorDeep('button[aria-label="Keyboard shortcuts"]') as HTMLButtonElement;
-    await user.click(shortcutsButton2);
-    await shortcutsButton?.updateComplete;
-    const dialog = querySelectorDeep('dialog#clippy-shortcuts') as HTMLDialogElement;
-    const title = dialog.querySelector('#clippy-shortcuts-title');
-    expect(title?.innerHTML).toBe('Sneltoetsen');
+    const button = page.getByRole('button', { name: 'Keyboard shortcuts' });
+    await button.click();
+    expect(page.getByTestId('clippy-shortcuts-dialog')).toHaveAttribute('open');
   });
 
   it('changes link URL when link is edited', async () => {
-    const linkWC = querySelectorDeep('clippy-toolbar-link');
-    await linkWC?.updateComplete;
-    const linkButton = querySelectorDeep('button[aria-label="Link"]') as HTMLButtonElement;
+    const linkButton = page.getByLabelText('Link', { exact: true });
     await user.click(linkButton);
 
-    const linkElement = querySelectorDeep('clippy-toolbar-link');
-    await linkElement?.updateComplete;
+    expect(page.getByTestId('clippy-link-dialog')).toHaveAttribute('open');
+    const urlInput = page.getByLabelText('Link to:');
+    await user.type(urlInput, 'https://example.com');
 
-    const dialog = querySelectorDeep('dialog#clippy-link-dialog') as HTMLDialogElement;
-    expect(dialog).toHaveAttribute('open');
+    await user.keyboard('{Enter}');
+    expect(page.getByLabelText('Link to:')).toHaveValue('https://example.com');
+    await user.click(page.getByRole('button', { name: 'Link toevoegen' }));
+    expect(page.getByTestId('clippy-link-dialog')).not.toHaveAttribute('open');
   });
 
   it('adds an image when image upload is completed', async () => {
-    const imageUploadElement = querySelectorDeep('clippy-toolbar-image-upload');
-    await imageUploadElement?.updateComplete;
+    const button = page.getByRole('button', { name: 'Afbeelding' });
+    await button.click();
+    expect(page.getByTestId('clippy-image-upload-dialog')).not.toHaveAttribute('open');
+    const fileInput = page.getByTestId('clippy-image-upload');
 
-    const dialog = querySelectorDeep('dialog#clippy-image-upload-dialog') as HTMLDialogElement;
-    dialog?.showModal();
-    await imageUploadElement?.updateComplete;
+    await userEvent.upload(fileInput, new File(['(⌐□_□)'], 'clippy.png', { type: 'image/png' }));
 
-    expect(dialog).toHaveAttribute('open');
+    expect(page.getByRole('listitem').getByRole('img')).toHaveAttribute('alt', 'clippy.png');
   });
 });

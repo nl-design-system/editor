@@ -1,6 +1,5 @@
 import { provide } from '@lit/context';
 import { Editor as TiptapEditor } from '@tiptap/core';
-import { defineCustomElements } from '@utrecht/web-component-library-stencil/loader';
 import './components/toolbar';
 import './components/validations/gutter';
 import './components/validations/drawer';
@@ -14,8 +13,6 @@ import { validationsContext } from './context/validationsContext.ts';
 import editorStyles from './styles';
 
 const EDITOR_ID = 'editor';
-
-defineCustomElements();
 
 const sanitizeTopHeadingLevel = (number: number): number => {
   if (!Number.isNaN(number) && number >= 1 && number <= 6) {

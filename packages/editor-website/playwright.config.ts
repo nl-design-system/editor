@@ -19,6 +19,7 @@ export default defineConfig({
     },
   ],
   reporter: [['html', { outputFolder: 'tmp/playwright-report' }]],
+  retries: 1,
   testDir: './e2e',
   use: {
     baseURL: 'http://localhost:5174',

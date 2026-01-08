@@ -1,7 +1,9 @@
+import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
+import linkCss from '@nl-design-system-candidate/link-css/link.css?inline';
 import AlertCircleIcon from '@tabler/icons/outline/alert-circle.svg?raw';
 import AlertTriangleIcon from '@tabler/icons/outline/alert-triangle.svg?raw';
 import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
-import { LitElement, html } from 'lit';
+import { LitElement, html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationSeverity } from '@/types/validation.ts';
@@ -10,7 +12,7 @@ import validationListItemStyles from './styles.ts';
 
 @customElement('clippy-validation-list-item')
 export class ClippyValidationItem extends LitElement {
-  static override readonly styles = [validationListItemStyles];
+  static override readonly styles = [validationListItemStyles, unsafeCSS(linkCss), unsafeCSS(buttonCss)];
 
   @property({ type: String }) key: string = '';
   @property({ type: Number }) pos: number = 0;
@@ -52,13 +54,13 @@ export class ClippyValidationItem extends LitElement {
         ${this.href
           ? html`
               <div class="clippy-dialog__list-item-link">
-                <utrecht-link href="${this.href}" target="_blank"> Uitgebreide toelichting </utrecht-link>
+                <a class="nl-link" href="${this.href}" target="_blank"> Uitgebreide toelichting </a>
               </div>
             `
           : null}
         <div class="clippy-dialog__list-item-actions">
-          <utrecht-button disabled="true">Negeren</utrecht-button>
-          <utrecht-button appearance="secondary-action-button" @click=${this.#focusNode}>Aanpassen</utrecht-button>
+          <button class="nl-button nl-button--disabled" disabled>Negeren</button>
+          <button class="nl-button nl-button--secondary" @click=${this.#focusNode}>Aanpassen</button>
         </div>
       </li>
     `;

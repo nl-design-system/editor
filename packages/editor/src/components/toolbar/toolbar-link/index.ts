@@ -1,14 +1,24 @@
 import type { Editor } from '@tiptap/core';
+import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 import LinkIcon from '@tabler/icons/outline/link.svg?raw';
-import { html, LitElement } from 'lit';
+import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import './../toolbar-button';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 
-@customElement('clippy-toolbar-link')
+const tag = 'clippy-toolbar-link';
+
+declare global {
+  interface HTMLElementTagNameMap {
+    [tag]: ToolbarLink;
+  }
+}
+
+@customElement(tag)
 export class ToolbarLink extends LitElement {
-  static override readonly styles = [];
+  static override readonly styles = [unsafeCSS(buttonCss)];
 
   readonly #dialogRef: Ref<HTMLDialogElement> = createRef();
   readonly #inputRef: Ref<HTMLInputElement> = createRef();
@@ -58,24 +68,20 @@ export class ToolbarLink extends LitElement {
       >
         ${unsafeSVG(LinkIcon)}
       </clippy-toolbar-button>
-      <dialog closedby="any" id="clippy-link-dialog" class="link--dialog" ${ref(this.#dialogRef)}>
+      <dialog closedby="any" class="link--dialog" ${ref(this.#dialogRef)} data-testid="clippy-link-dialog">
         <div>
           <label>Link to:<input value=${this.previousUrl} ${ref(this.#inputRef)} type="text" /></label>
         </div>
-        <utrecht-button-group>
-          <utrecht-button @click=${() => this.#dialogRef.value?.close()}>Sluiten</utrecht-button>
-          <utrecht-button @click=${this.#unsetLink}>Verwijder link</utrecht-button>
-          <utrecht-button appearance="secondary-action-button" @click=${this.#updateLink}
-            >Link toevoegen</utrecht-button
-          >
-        </utrecht-button-group>
+        <div>
+          <button class="nl-button nl-button--secondary " @click=${() => this.#dialogRef.value?.close()}>
+            Sluiten
+          </button>
+          <button class="nl-button nl-button--secondary nl-button--negative" @click=${this.#unsetLink}>
+            Verwijder link
+          </button>
+          <button class="nl-button nl-button--primary" @click=${this.#updateLink}>Link toevoegen</button>
+        </div>
       </dialog>
     `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'clippy-toolbar-link': ToolbarLink;
   }
 }
