@@ -59,7 +59,7 @@ export class ClippyValidationItem extends LitElement {
             `
           : null}
         <div class="clippy-dialog__list-item-actions">
-          <button class="nl-button nl-button--disabled" disabled>Negeren</button>
+          <button class="nl-button nl-button--disabled" aria-disabled="true">Negeren</button>
           <button class="nl-button nl-button--secondary" @click=${this.#focusNode}>Aanpassen</button>
         </div>
       </li>

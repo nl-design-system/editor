@@ -1,6 +1,6 @@
 import type { Editor } from '@tiptap/core';
-import { ClippyModal } from '@nl-design-system-community/clippy-components/clippy-modal';
 import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
+import { ClippyModal } from '@nl-design-system-community/clippy-components/clippy-modal';
 import LinkIcon from '@tabler/icons/outline/link.svg?raw';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, query, state } from 'lit/decorators.js';
@@ -73,15 +73,18 @@ export class ToolbarLink extends LitElement {
       >
         ${unsafeSVG(LinkIcon)}
       </clippy-toolbar-button>
-      <clippy-modal .title="Link toevoegen" actions="none" aria-describedby=${ariaDescribedby} data-testid="clippy-link-dialog">
+      <clippy-modal
+        .title="Link toevoegen"
+        actions="none"
+        aria-describedby=${ariaDescribedby}
+        data-testid="clippy-link-dialog"
+      >
         <p id=${ariaDescribedby}>Link toevoegen</p>
         <div>
           <label>Link to:<input value=${this.previousUrl} ${ref(this.#inputRef)} type="text" /></label>
         </div>
         <div>
-          <button class="nl-button nl-button--secondary " @click=${() => this.modalDialog.close()}>
-            Sluiten
-          </button>
+          <button class="nl-button nl-button--secondary " @click=${() => this.modalDialog.close()}>Sluiten</button>
           <button class="nl-button nl-button--secondary nl-button--negative" @click=${this.#unsetLink}>
             Verwijder link
           </button>

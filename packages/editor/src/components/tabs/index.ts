@@ -6,9 +6,9 @@ import { classMap } from 'lit/directives/class-map.js';
 import { map } from 'lit/directives/map.js';
 import type { ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
+import { CustomEvents } from '@/events';
 import { validationSeverity } from '@/validators/constants.ts';
 import tabsStyles from './styles.ts';
-import { CustomEvents } from '@/events';
 
 type TabKey = ValidationSeverity | 'all';
 

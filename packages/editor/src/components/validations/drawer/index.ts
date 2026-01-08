@@ -96,8 +96,8 @@ export class ValidationsDialog extends LitElement {
     }
   };
 
-  readonly #handleTabChange = (event: CustomEvent<{ severity: ValidationSeverity | null }>) => {
-    this.selectedSeverity = event.detail.severity;
+  readonly #handleTabChange = (event: CustomEventInit<{ severity: ValidationSeverity }>) => {
+    this.selectedSeverity = event.detail?.severity || null;
   };
 
   #getFilteredValidations(): ValidationEntry[] {
