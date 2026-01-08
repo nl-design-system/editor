@@ -34,8 +34,8 @@ importers:
         specifier: 10.1.8
         version: 10.1.8(eslint@9.39.2)
       eslint-plugin-perfectionist:
-        specifier: 4.15.1
-        version: 4.15.1(eslint@9.39.2)(typescript@5.9.3)
+        specifier: 5.2.0
+        version: 5.2.0(eslint@9.39.2)(typescript@5.9.3)
       eslint-plugin-react:
         specifier: 7.37.5
         version: 7.37.5(eslint@9.39.2)
@@ -87,6 +87,9 @@ importers:
       '@nl-design-system-candidate/number-badge-css':
         specifier: 1.1.5
         version: 1.1.5
+      '@nl-design-system-community/clippy-components':
+        specifier: 1.0.0
+        version: 1.0.0
       '@tabler/icons':
         specifier: 3.36.0
         version: 3.36.0
@@ -330,6 +333,12 @@ importers:
   proprietary/font: {}
 
 packages:
+
+  '@amsterdam/design-system-css@2.2.0':
+    resolution: {integrity: sha512-fcYZ60h8HTu00qSGu0IxxX/Qlo41V4J3wITaMFxg10yDgrpeoY3paJRSoK8k+IS3wbwSIoPlG7RTBZJt7yf05w==}
+    peerDependencies:
+      '@amsterdam/design-system-assets': 1.1.0
+      '@amsterdam/design-system-tokens': 2.2.0
 
   '@babel/code-frame@7.27.1':
     resolution: {integrity: sha512-cjQ7ZlQ0Mv3b47hABuTevyTuYN4i+loJKGeV9flcCgIK37cCXRh+L1bd3iBHlynerhQ7BhCkn2BPbQUL+rGqFg==}
@@ -865,6 +874,9 @@ packages:
 
   '@nl-design-system-candidate/number-badge-css@1.1.5':
     resolution: {integrity: sha512-H9/+72dHiuKZUk+xixykqpgoH7O70SUw1Ak71NIAscVcBbivWK4Hzj9fF4uNXpIXdERxVdiJxa1TIBhCdMRwAQ==}
+
+  '@nl-design-system-community/clippy-components@1.0.0':
+    resolution: {integrity: sha512-sun3fESC47joyqRCDRKUTbt4e/NtGBisvMyBbvavJRMlWat1yI6USrWu/N/0LVL4UywE8jMu79FkJNqB2dP1tA==}
 
   '@nl-design-system-community/ma-design-tokens@3.0.0':
     resolution: {integrity: sha512-95uF6BODj/RldOGIdB0i4L8ISoJ4CauQVzZb6sgD8GBA4btEdX3Cdc6VOKncKbknads5WePeNFap7lo7YrlRGg==}
@@ -2350,6 +2362,12 @@ packages:
     peerDependencies:
       eslint: '>=8.45.0'
 
+  eslint-plugin-perfectionist@5.2.0:
+    resolution: {integrity: sha512-rLD4VyA6sxcCPlG/koqjp0D46JTNRURSDs22Jr1JeVbOiu1BoeRdROnJoqDoGESuXbwxvGEnMSqClX/Q3HSMig==}
+    engines: {node: ^20.0.0 || >=22.0.0}
+    peerDependencies:
+      eslint: '>=8.45.0'
+
   eslint-plugin-react@7.37.5:
     resolution: {integrity: sha512-Qteup0SqU15kdocexFNAJMvCJEfa2xUKNV4CC1xsVMrIIqEy3SQ/rqyxCWNzfrd3/ldy6HMlD2e0JDVpDg2qIA==}
     engines: {node: '>=4'}
@@ -3198,6 +3216,10 @@ packages:
 
   memfs@4.51.0:
     resolution: {integrity: sha512-4zngfkVM/GpIhC8YazOsM6E8hoB33NP0BCESPOA6z7qaL6umPJNqkO8CNYaLV2FB2MV6H1O3x2luHHOSqppv+A==}
+
+  memoize@10.2.0:
+    resolution: {integrity: sha512-DeC6b7QBrZsRs3Y02A6A7lQyzFbsQbqgjI6UW0GigGWV+u1s25TycMr0XHZE4cJce7rY/vyw2ctMQqfDkIhUEA==}
+    engines: {node: '>=18'}
 
   memorystream@0.3.1:
     resolution: {integrity: sha512-S3UwM3yj5mtUSEfP41UZmt/0SCoVYUcU1rkXv+BQ5Ig8ndL4sPoJNBUJERafdPb5jjHJGuMgytgKvKIf58XNBw==}
@@ -4582,6 +4604,8 @@ packages:
 
 snapshots:
 
+  '@amsterdam/design-system-css@2.2.0': {}
+
   '@babel/code-frame@7.27.1':
     dependencies:
       '@babel/helper-validator-identifier': 7.28.5
@@ -5177,6 +5201,19 @@ snapshots:
 
   '@nl-design-system-candidate/number-badge-css@1.1.5': {}
 
+  '@nl-design-system-community/clippy-components@1.0.0':
+    dependencies:
+      '@amsterdam/design-system-css': 2.2.0
+      '@utrecht/button-css': 3.0.1
+      '@utrecht/combobox-css': 2.0.1
+      '@utrecht/listbox-css': 2.0.1
+      '@utrecht/textbox-css': 3.0.1
+      lit: 3.3.2
+      memoize: 10.2.0
+    transitivePeerDependencies:
+      - '@amsterdam/design-system-assets'
+      - '@amsterdam/design-system-tokens'
+
   '@nl-design-system-community/ma-design-tokens@3.0.0': {}
 
   '@nl-design-system/eslint-config@2.2.0(eslint@9.39.2)(typescript@5.9.3)':
@@ -5568,8 +5605,8 @@ snapshots:
 
   '@typescript-eslint/project-service@8.46.2(typescript@5.9.3)':
     dependencies:
-      '@typescript-eslint/tsconfig-utils': 8.46.2(typescript@5.9.3)
-      '@typescript-eslint/types': 8.46.2
+      '@typescript-eslint/tsconfig-utils': 8.51.0(typescript@5.9.3)
+      '@typescript-eslint/types': 8.51.0
       debug: 4.4.3
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -5577,8 +5614,8 @@ snapshots:
 
   '@typescript-eslint/project-service@8.46.3(typescript@5.9.3)':
     dependencies:
-      '@typescript-eslint/tsconfig-utils': 8.46.3(typescript@5.9.3)
-      '@typescript-eslint/types': 8.46.3
+      '@typescript-eslint/tsconfig-utils': 8.51.0(typescript@5.9.3)
+      '@typescript-eslint/types': 8.51.0
       debug: 4.4.3
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -5627,7 +5664,7 @@ snapshots:
       '@typescript-eslint/utils': 8.46.2(eslint@9.39.2)(typescript@5.9.3)
       debug: 4.4.3
       eslint: 9.39.2
-      ts-api-utils: 2.1.0(typescript@5.9.3)
+      ts-api-utils: 2.3.0(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
       - supports-color
@@ -6835,6 +6872,15 @@ snapshots:
       - supports-color
       - typescript
 
+  eslint-plugin-perfectionist@5.2.0(eslint@9.39.2)(typescript@5.9.3):
+    dependencies:
+      '@typescript-eslint/utils': 8.51.0(eslint@9.39.2)(typescript@5.9.3)
+      eslint: 9.39.2
+      natural-orderby: 5.0.0
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
   eslint-plugin-react@7.37.5(eslint@9.39.2):
     dependencies:
       array-includes: 3.1.8
@@ -7731,6 +7777,10 @@ snapshots:
       tree-dump: 1.1.0(tslib@2.8.1)
       tslib: 2.8.1
 
+  memoize@10.2.0:
+    dependencies:
+      mimic-function: 5.0.1
+
   memorystream@0.3.1: {}
 
   meow@13.2.0: {}
@@ -8001,7 +8051,7 @@ snapshots:
     dependencies:
       hosted-git-info: 4.1.0
       is-core-module: 2.16.1
-      semver: 7.7.2
+      semver: 7.7.3
       validate-npm-package-license: 3.0.4
 
   normalize-path@3.0.0: {}

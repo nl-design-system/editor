@@ -1,16 +1,29 @@
 import type { Editor } from '@tiptap/core';
+import { ClippyModal } from '@nl-design-system-community/clippy-components/clippy-modal';
 import LinkIcon from '@tabler/icons/outline/link.svg?raw';
 import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, query, state } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 
-@customElement('clippy-toolbar-link')
+const ariaDescribedby = 'clippy-toolbar-link-dialog';
+
+const tag = 'clippy-toolbar-link';
+
+declare global {
+  interface HTMLElementTagNameMap {
+    [tag]: ToolbarLink;
+  }
+}
+
+@customElement(tag)
 export class ToolbarLink extends LitElement {
   static override readonly styles = [];
 
-  readonly #dialogRef: Ref<HTMLDialogElement> = createRef();
+  @query('clippy-modal')
+  private readonly modalDialog!: ClippyModal;
+
   readonly #inputRef: Ref<HTMLInputElement> = createRef();
 
   @state()
@@ -29,7 +42,7 @@ export class ToolbarLink extends LitElement {
 
   readonly #unsetLink = () => {
     this.editor?.chain().focus().extendMarkRange('link').unsetLink().run();
-    this.#dialogRef.value?.close();
+    this.modalDialog.close();
   };
 
   readonly #updateLink = () => {
@@ -39,12 +52,12 @@ export class ToolbarLink extends LitElement {
     } catch (error) {
       console.error(error);
     }
-    this.#dialogRef.value?.close();
+    this.modalDialog.close();
   };
 
   readonly #openLinkDialog = () => {
     this.previousUrl = this.editor?.getAttributes('link')['href'];
-    this.#dialogRef.value?.showModal();
+    this.modalDialog.open();
   };
 
   override render() {
@@ -58,24 +71,19 @@ export class ToolbarLink extends LitElement {
       >
         ${unsafeSVG(LinkIcon)}
       </clippy-toolbar-button>
-      <dialog closedby="any" id="clippy-link-dialog" class="link--dialog" ${ref(this.#dialogRef)}>
+      <clippy-modal .title="Link toevoegen" actions="none" aria-describedby=${ariaDescribedby}>
+        <p id=${ariaDescribedby}>Link toevoegen</p>
         <div>
           <label>Link to:<input value=${this.previousUrl} ${ref(this.#inputRef)} type="text" /></label>
         </div>
         <utrecht-button-group>
-          <utrecht-button @click=${() => this.#dialogRef.value?.close()}>Sluiten</utrecht-button>
+          <utrecht-button @click=${() => this.modalDialog.close()}>Sluiten</utrecht-button>
           <utrecht-button @click=${this.#unsetLink}>Verwijder link</utrecht-button>
           <utrecht-button appearance="secondary-action-button" @click=${this.#updateLink}
             >Link toevoegen</utrecht-button
           >
         </utrecht-button-group>
-      </dialog>
+      </clippy-modal>
     `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'clippy-toolbar-link': ToolbarLink;
   }
 }
