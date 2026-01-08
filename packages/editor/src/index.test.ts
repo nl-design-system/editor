@@ -36,9 +36,6 @@ describe('<clippy-editor>', () => {
     expect(select).toBeInTheDocument();
     await user.selectOptions(select.element(), 'h3');
 
-    const h3Option = select.getByRole('option', { name: 'Kopniveau 1' }).element();
-    await user.click(h3Option);
-
     const h3Text = page.getByRole('heading', { level: 3 });
     expect(h3Text).toHaveTextContent('Start met kopniveau 1');
   });

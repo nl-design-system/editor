@@ -53,13 +53,13 @@ export class ClippyValidationItem extends LitElement {
         <slot name="tip-html" class="clippy-dialog__list-item-tip"></slot>
         ${this.href
           ? html`
-            <div class="clippy-dialog__list-item-link">
-              <a class="nl-link" href="${this.href}" target="_blank"> Uitgebreide toelichting </anl-link>
-            </div>
-          `
+              <div class="clippy-dialog__list-item-link">
+                <a class="nl-link" href="${this.href}" target="_blank"> Uitgebreide toelichting </a>
+              </div>
+            `
           : null}
         <div class="clippy-dialog__list-item-actions">
-          <button class="nl-button nl-button--disabled" disabled="disabled">Negeren</button>
+          <button class="nl-button nl-button--disabled" disabled>Negeren</button>
           <button class="nl-button nl-button--secondary" @click=${this.#focusNode}>Aanpassen</button>
         </div>
       </li>

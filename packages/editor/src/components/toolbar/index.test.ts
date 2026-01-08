@@ -1,8 +1,6 @@
 import './index.ts';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
-import type { Toolbar } from './index';
-import { getDeeplyMountedCustomElement } from '../../../test/helpers';
 import { cleanupTestEditor, EditorTestSetup, setupTestEditor } from '../../../test/setupTestEditor';
 
 const tag = 'clippy-toolbar';
@@ -14,8 +12,6 @@ describe('<clippy-toolbar>', () => {
   beforeEach(async () => {
     user = userEvent.setup();
     testSetup = setupTestEditor(`<${tag}></{tag}>`);
-
-    await getDeeplyMountedCustomElement<Toolbar>(tag);
   });
 
   afterEach(() => {
