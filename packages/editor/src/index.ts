@@ -2,6 +2,7 @@ import { provide } from '@lit/context';
 import { Editor as TiptapEditor } from '@tiptap/core';
 import './components/toolbar';
 import './components/validations/gutter';
+import './components/validations/list';
 import './components/validations/drawer';
 import './components/bubble-menu';
 import { LitElement, html } from 'lit';
@@ -31,6 +32,34 @@ export class Editor extends LitElement {
   @property({ attribute: 'top-heading-level', reflect: true, type: Number })
   topHeadingLevel = 1;
 
+  @property({
+    attribute: 'enable-rules',
+    converter: {
+      fromAttribute: (value: string) => {
+        return value.split(/\s+/g);
+      },
+      toAttribute: (value: string[]) => {
+        return value.join(' ');
+      },
+    },
+    reflect: true,
+  })
+  enableRules: string[] = ['*'];
+
+  @property({
+    attribute: 'disable-rules',
+    converter: {
+      fromAttribute: (value: string) => {
+        return value.split(/\s+/g);
+      },
+      toAttribute: (value: string[]) => {
+        return value.join(' ');
+      },
+    },
+    reflect: true,
+  })
+  disableRules: string[] = [];
+
   @queryAssignedElements({ flatten: true, slot: 'content' })
   contentSlot!: HTMLElement[];
 
@@ -55,7 +84,10 @@ export class Editor extends LitElement {
           class: 'clippy-editor-content',
         },
       },
-      extensions: editorExtensions({ topHeadingLevel: sanitizedTopHeadingLevel }, this.updateValidationsContext),
+      extensions: editorExtensions(
+        { disableRules: this.disableRules, enableRules: this.enableRules, topHeadingLevel: sanitizedTopHeadingLevel },
+        this.updateValidationsContext,
+      ),
     });
     const mountTarget = this.shadowRoot?.getElementById(EDITOR_ID);
     if (mountTarget) {
