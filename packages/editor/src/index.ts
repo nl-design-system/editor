@@ -1,5 +1,6 @@
 import { provide } from '@lit/context';
 import { Editor as TiptapEditor } from '@tiptap/core';
+import './components/guideline';
 import './components/toolbar';
 import './components/validations/gutter';
 import './components/validations/list';
