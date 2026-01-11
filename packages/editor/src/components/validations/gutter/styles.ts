@@ -62,4 +62,10 @@ export default css`
     margin-inline-start: 0;
     inline-size: 100%;
   }
+  @media (forced-colors: active) {
+    .clippy-validations-gutter__indicator::before {
+      background-color: CanvasText !important;
+      color: Canvas !important;
+    }
+  }
 `;
