@@ -5,7 +5,7 @@ test('Page has correct title', async ({ page }) => {
 
   await expect(page).toHaveTitle('Rich-text Editor - NL Design System');
   await page.getByRole('paragraph').filter({ hasText: /^$/ }).fill('Paragraaf.');
-  await page.getByTestId('clippy-validations-gutter').getByRole('listitem').nth(1).click();
+  await page.getByLabel('Werkbalk tekstbewerker').getByText('3', { exact: true }).click();
   await page.waitForTimeout(500);
   await page.getByRole('button', { name: 'Aanpassen' }).first().click();
   await page.waitForTimeout(500);
