@@ -153,7 +153,7 @@ const definitionDescriptionMustFollowTerm = (editor: Editor, node: Node, pos: nu
 
 type ContentValidationKey = (typeof contentValidations)[keyof typeof contentValidations];
 
-const contentValidatorMap: { [K in ContentValidationKey]: ContentValidator } = {
+export const contentValidatorMap: { [K in ContentValidationKey]: ContentValidator } = {
   [contentValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM]: definitionDescriptionMustFollowTerm,
   [contentValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM]: descriptionListMustContainTerm,
   [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: headingMustNotBeEmpty,
@@ -165,10 +165,14 @@ const contentValidatorMap: { [K in ContentValidationKey]: ContentValidator } = {
   [contentValidations.NODE_SHOULD_NOT_BE_EMPTY]: nodeShouldNotBeEmpty,
 };
 
-const contentValidator = (editor: Editor) => {
+const contentValidator = (
+  editor: Editor,
+  validatorMap: Partial<{ [K in ContentValidationKey]: ContentValidator }> = contentValidatorMap,
+): Map<string, ValidationResult> => {
   const errors: Map<string, ValidationResult> = new Map();
+
   editor.$doc.node.descendants((node, pos) => {
-    for (const [key, validator] of Object.entries(contentValidatorMap)) {
+    for (const [key, validator] of Object.entries(validatorMap)) {
       const result = validator(editor, node, pos);
       if (result) {
         errors.set(`${key}_${pos}`, result);

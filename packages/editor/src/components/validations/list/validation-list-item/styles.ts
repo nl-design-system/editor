@@ -84,4 +84,11 @@ export default css`
     justify-content: flex-end;
     gap: var(--basis-space-inline-md);
   }
+
+  @media (forced-colors: active) {
+    .clippy-dialog__list-item::after {
+      background-color: CanvasText;
+      color: Canvas;
+    }
+  }
 `;

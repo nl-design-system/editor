@@ -1,9 +1,10 @@
 import { type Editor } from '@tiptap/core';
 import type { EditorSettings } from '@/types/settings.ts';
 import type { ValidationResult } from '@/types/validation.ts';
-import contentValidator from '@/validators/content';
-import documentValidators from '@/validators/document';
+import contentValidator, { contentValidatorMap } from '@/validators/content';
+import { documentValidatorObject } from '@/validators/document';
 import { debounce } from '../utils/debounce.ts';
+import { getEntries, isKeyOf } from './helpers.ts';
 
 const VALIDATION_TIMEOUT = 500;
 
@@ -12,9 +13,28 @@ export const runValidation = (
   settings: EditorSettings,
   callback: (resultMap: Map<string, ValidationResult>) => void,
 ) => {
+  const documentValidationSettings = {
+    disableRules: settings.disableRules.filter((x) => x === '*' || isKeyOf(documentValidatorObject)(x)),
+    enableRules: settings.enableRules.filter((x) => x === '*' || isKeyOf(documentValidatorObject)(x)),
+  };
+  const contentValidationSettings = {
+    disableRules: settings.disableRules.filter((x) => x === '*' || isKeyOf(contentValidatorMap)(x)),
+    enableRules: settings.enableRules.filter((x) => x === '*' || isKeyOf(contentValidatorMap)(x)),
+  };
   let validationResultMap = new Map<string, ValidationResult>();
-
-  for (const [key, validator] of documentValidators.entries()) {
+  const documentValidators = Object.entries(
+    getEntries(
+      documentValidatorObject,
+      documentValidationSettings.enableRules,
+      documentValidationSettings.disableRules,
+    ),
+  );
+  const contentValidators = getEntries(
+    contentValidatorMap,
+    contentValidationSettings.enableRules,
+    contentValidationSettings.disableRules,
+  );
+  for (const [key, validator] of documentValidators) {
     try {
       const result = validator(editor, settings);
       if (result.length > 0) {
@@ -28,7 +48,7 @@ export const runValidation = (
   }
 
   try {
-    const contentValidationResultMap = contentValidator(editor);
+    const contentValidationResultMap = contentValidator(editor, contentValidators);
     if (contentValidationResultMap.size > 0) {
       validationResultMap = new Map<string, ValidationResult>([...validationResultMap, ...contentValidationResultMap]);
     }

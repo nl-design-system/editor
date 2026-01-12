@@ -40,4 +40,11 @@ export default css`
     padding-block: 0.5rem;
     padding-inline: 0.5rem;
   }
+
+  @media (forced-colors: active) {
+    .clippy-dialog__list-item::after {
+      background-color: CanvasText;
+      color: Canvas;
+    }
+  }
 `;

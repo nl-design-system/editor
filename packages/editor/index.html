@@ -14,32 +14,255 @@
   </head>
   <body class="utrecht-body">
     <main>
-      <clippy-editor identifier="clippy-editor-localhost" top-heading-level="2">
+      <!--
+      <h2>Inline element editor</h2>
+      <clippy-editor xenable-rules="mark-should-not-be-empty" identifier="foo">
+        <div slot="content">Just <b>some inline text</b>!</div>
+        <h2><clippy-editor-content inline shadow="foo"></clippy-editor-content></h2>
+        <clippy-editor-ui></clippy-editor-ui>
+        <clippy-validations-list></clippy-validations-list>
+      </clippy-editor-context>
+      -->
+      <clippy-editor-context enable-rules="node-should-not-be-empty">
         <div slot="content">
-          <h1>NL Design System Editor kop 1</h1>
-          <p>
-            Onder die steden, <strong>welke</strong> <i>vanouds</i> aan de <strong><i>grafelijke</i></strong> kroon van
-            Holland gelijk zoovele edelgesteenten flonkerden, en wier macht en rijkdom tot een hechten steun verstrekten
-            aan des Landsheer gezag, was <u>Haarlem</u>, gelijk genoeg bekend is, een der voornaamste.
-          </p>
-          <h3>NL Design System Editor kop 3</h3>
-          <p></p>
-          <h4>Dat mag niet, he</h4>
-          <p>
-            Aan den over eener rivier gebouwd, waarvan zij zich als van
-            <a href="https://example.com">twee armen bedienen</a> kon, om, aan de eene zijde, het Haarlemmermeer en de
-            daarom gelegen landen, aan de andere hij IJ, en door het IJ, de Zuiderzee te bereiken, had zij van deze
-            gunstige ligging reeds vroeg partij getrokken,<a href="https://example.com"> </a>om een handel te drijven,
-            die, schoon zich zelden verder uitstrekkende dan de gewesten, welke om die binnenzeeën gelegen waren, haar
-            niettemin gelegenheid gaf. <a href="https://example.com">Klik hier</a> om meer te lezen.
-          </p>
+          <p>Hoi,</p>
+          <p>&nbsp;</p>
+          <p>Groetjes,</p>
+          <p>Robbert</p>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: lege alinea</span>
+          <div slot="description">
+            <p>Je moet geen alinea's leeg houden om ruimte te maken.</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="mark-should-not-be-empty">
+        <div slot="content">
+          <h2>Bold</h2>
+          <p>Empty Bold: <b>definition-description-must-follow-term</b></p>
+          <p>Bold with text: <b>text</b></p>
+          <h2>Link</h2>
+          <p>Empty Link: <a href="#"></a></p>
+          <p>Link with text: <a href="#">text</a></p>
+          <h2>Underline</h2>
+          <p>Empty Underline: <u></u></p>
+          <p>Underline with text: <u>text</u></p>
+          <h2>Strong</h2>
+          <p>Empty Strong: <strong></strong></p>
+          <p>Strong with text: <strong>text</strong></p>
+          <h2>Mark</h2>
+          <p>Empty Mark: <mark></mark></p>
+          <p>Mark with text: <mark>text</mark></p>
+          <h2>Emphasis</h2>
+          <p>Empty Emphasis: <em></em></p>
+          <p>Emphasis with text: <em>text</em></p>
+          <h2>Strikethrough</h2>
+          <p>Empty Strikethrough: <s></s></p>
+          <p>Strikethrough with text: <s>text</s></p>
+          <h2>Italic</h2>
+          <p>Empty Italic: <i></i></p>
+          <p>Italic with text: <i>text</i></p>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: lege inline elementen</span>
+          <div slot="description">
+            <p>Ruim lege elementen op.</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="mark-should-not-be-underlined">
+        <div slot="content">
+          <p>Er is onvoldoende verschil tussen de onderstreping van een <u>underline</u> en <a href="#">link</a>.</p>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: tekst onderstrepen</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="node-should-not-be-empty">
+        <div slot="content">
+          <ul>
+            <li>Optie 1</li>
+            <li>Optie 2</li>
+            <li>Optie 3</li>
+            <li></li>
+          </ul>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: lege list items</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="node-should-not-be-empty">
+        <div slot="content">
+          <ol>
+            <li>Optie 1</li>
+            <li>Optie 2</li>
+            <li>Optie 3</li>
+            <li></li>
+          </ol>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: lege list items</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="document-must-have-semantic-lists">
+        <div slot="content">
+          <p>1. Optie 1<br />2. Optie 2<br />3. Optie 3</p>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: geordende lijst zonder opmaak</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="document-must-have-semantic-lists">
+        <div slot="content">
+          <p>- Optie 1<br />- Optie 2<br />- Optie 3</p>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: lijst zonder opmaak</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="node-should-not-be-empty">
+        <div slot="content">
+          <dl>
+            <div>
+              <dt></dt>
+              <dd></dd>
+            </div>
+            <div>
+              <dt>text</dt>
+              <dd>text</dd>
+            </div>
+          </dl>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: Lege Definition List</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="node-should-not-be-empty">
+        <div slot="content">
           <table>
-            <caption>
-              Table caption
-            </caption>
+            <tbody>
+              <tr>
+                <td>text</td>
+                <td>text</td>
+                <td>text</td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>text</td>
+                <td>text</td>
+                <td>text</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: Lege rij in een tabel</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="image-must-have-alt-text">
+        <div slot="content">
+          <p><img src="https://placehold.co/320x240" /></p>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: Afbeelding zonder alt-tekst</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="document-should-not-have-heading-resembling-paragraph">
+        <div slot="content">
+          <p><strong>Als het eruit ziet als een header, dan is het een header</strong></p>
+          <p>Foo</p>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: Koptekst zonder opmaak</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="document-must-have-correct-heading-order">
+        <div slot="content">
+          <h1>Kopniveau 1</h1>
+          <h3>Kopniveau 3</h3>
+          <p>Een niveau overslaan is niet de bedoeling!</p>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: Kopniveau overslaan</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="document-must-have-table-with-headings">
+        <div slot="content">
+          <table>
             <thead>
               <tr>
-                <th colspan="4">Tabelkop</th>
+                <td colspan="4">Tabelkop</td>
               </tr>
             </thead>
             <tbody>
@@ -51,27 +274,178 @@
               </tr>
             </tbody>
           </table>
-          <dl>
-            <dt>Foo</dt>
-            <dd>The meaning of foo</dd>
-            <dt>Bar</dt>
-            <dd>The meaning of bar</dd>
-          </dl>
-          <h2>Afbeeldingen</h2>
-          <img alt="Test size 800x400" src="https://placehold.co/800x400" />
-          <p><strong>Als het eruit ziet als een header, dan is het een header</strong></p>
-          <h3>Correct lijst</h3>
-          <ul>
-            <li>Test</li>
-            <li>Test</li>
-            <li>Test</li>
-          </ul>
-          <h3>Incorrect <strong>genummerde</strong> lijst</h3>
-          <p>1 - Test<br />2 - Test<br />3 - Test</p>
-          <p>Test <strong>met ook een boel vetgedrukte tekst</strong></p>
         </div>
-      </clippy-editor>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: Tabel zonder kopcellen</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="document-must-have-table-with-multiple-rows">
+        <div slot="content">
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <h2>Kolom 1</h2>
+                  <p>...</p>
+                </td>
+                <td>
+                  <h2>Kolom 2</h2>
+                  <p>...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: Tabel zonder kopcellen</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="document-must-have-single-heading-one">
+        <div slot="content">
+          <h1>Kopniveau 1</h1>
+          <h1>Kopniveau 2</h1>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: Meer dan 1 hoofdkop</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="document-must-have-top-level-heading">
+        <div slot="content">
+          <p>Tekst zonder hoofdkop</p>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: Geen hoofdkop</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="definition-description-must-follow-term">
+        <div slot="content">
+          <dl>
+            <div>
+              <dd>Losse definitie</dd>
+              <dt>Met een term erna</dt>
+            </div>
+          </dl>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: Definitie zonder term</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="description-list-must-contain-term">
+        <div slot="content">
+          <dl>
+            <div>
+              <dd>Losse definitie</dd>
+            </div>
+          </dl>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: Definitie zonder term</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="heading-should-contain-bold-or-italic">
+        <div slot="content">
+          <h1>Heading met <strong>bold</strong></h1>
+          <p>...</p>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: Heading met bold</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="heading-should-contain-bold-or-italic">
+        <div slot="content">
+          <h1>Heading met <em>italic</em></h1>
+          <p>...</p>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: Heading met italic</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <clippy-editor-context enable-rules="link-should-not-be-too-generic">
+        <div slot="content">
+          <p>
+            Lees meer waarom een linktekst zo belangrijk is, in de blogpost "<a
+              href="https://example.com/blog/klik-hier"
+              >klik hier</a
+            >".
+          </p>
+        </div>
+        <clippy-guideline type="negative">
+          <span slot="heading">Niet doen: Onduidelijke linktekst</span>
+          <div slot="description">
+            <p>...</p>
+          </div>
+          <clippy-editor-content slot="example"></clippy-editor-content>
+          <clippy-validations-list slot="status"></clippy-validations-list>
+        </clippy-guideline>
+      </clippy-editor-context>
+
+      <style>
+        td,
+        th {
+          border-width: 1px;
+          border-style: solid;
+          border-color: silver;
+        }
+      </style>
     </main>
     <script type="module" src="/src/main.ts"></script>
+    <style>
+      .nlds-guideline__example [contenteditable] {
+        /* Add a border to contain the margins, and have the focus ring align nicely */
+        border-block-start: 1px solid transparent;
+        border-block-end: 1px solid transparent;
+
+        padding-inline-start: var(--basis-space-inline-md);
+        padding-inline-end: var(--basis-space-inline-md);
+      }
+    </style>
   </body>
 </html>
