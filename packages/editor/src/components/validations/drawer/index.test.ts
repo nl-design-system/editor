@@ -94,7 +94,7 @@ describe('<clippy-validations-dialog>', () => {
 
     const validationList = page.getByTestId('clippy-validations-list').element();
 
-    const validationItems = validationList?.querySelectorAll('clippy-validation-list-item');
+    const validationItems = validationList?.querySelectorAll('clippy-validation-item');
     expect(validationItems?.length).toBe(10);
 
     // Verify first validation item has correct attributes

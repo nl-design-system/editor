@@ -53,7 +53,7 @@ export class Gutter extends LitElement {
                   'clippy-validation-gutter__tooltip--active': isActive,
                 })}"
               >
-                <clippy-validation-list-item
+                <clippy-validation-item
                   .key=${key}
                   .pos=${pos}
                   .severity=${severity}
@@ -61,7 +61,7 @@ export class Gutter extends LitElement {
                   .href=${href}
                 >
                   ${tipHtml ? html`<div slot="tip-html">${unsafeHTML(tipHtml)}</div>` : nothing}
-                </clippy-validation-list-item>
+                </clippy-validation-item>
               </div>
             </li> `
           );

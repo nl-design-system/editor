@@ -10,8 +10,16 @@ import type { ValidationSeverity } from '@/types/validation.ts';
 import { CustomEvents } from '@/events';
 import validationListItemStyles from './styles.ts';
 
-@customElement('clippy-validation-list-item')
-export class ClippyValidationItem extends LitElement {
+const tag = 'clippy-validation-item';
+
+declare global {
+  interface HTMLElementTagNameMap {
+    [tag]: ValidationItem;
+  }
+}
+
+@customElement(tag)
+export class ValidationItem extends LitElement {
   static override readonly styles = [validationListItemStyles, unsafeCSS(linkCss), unsafeCSS(buttonCss)];
 
   @property({ type: String }) key: string = '';
@@ -64,11 +72,5 @@ export class ClippyValidationItem extends LitElement {
         </div>
       </li>
     `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'clippy-validation-list-item': ClippyValidationItem;
   }
 }

@@ -10,7 +10,7 @@ import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationEntry, ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
-import './validation-list-item';
+import '../validation-item';
 import { type ValidationKey, validationMessages } from '@/components/validations/messages.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
@@ -29,7 +29,7 @@ export class ValidationsDialog extends LitElement {
   @state()
   private selectedSeverity: ValidationSeverity | null = null;
 
-  @queryAll('clippy-validation-list-item')
+  @queryAll('clippy-validation-item')
   private readonly validationListItems: HTMLUListElement[] | undefined;
 
   @consume({ context: tiptapContext, subscribe: true })
@@ -130,7 +130,7 @@ export class ValidationsDialog extends LitElement {
                 const { description, href, tip } = validationMessages[validationKey];
                 const tipHtml = tip?.(tipPayload) ?? null;
                 return html`
-                  <clippy-validation-list-item
+                  <clippy-validation-item
                     .key=${key}
                     .pos=${pos}
                     .severity=${severity}
@@ -138,7 +138,7 @@ export class ValidationsDialog extends LitElement {
                     .href=${href}
                   >
                     ${tipHtml ? html`<div slot="tip-html">${unsafeHTML(tipHtml)}</div>` : nothing}
-                  </clippy-validation-list-item>
+                  </clippy-validation-item>
                 `;
               })
             : html`<li class="clippy-dialog__list-item">Geen toegankelijkheidsfouten gevonden.</li>`}
