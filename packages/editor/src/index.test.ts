@@ -66,7 +66,10 @@ describe('<clippy-editor>', () => {
     expect(page.getByRole('button', { name: 'Bullet list' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Definition list' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Tabel invoegen' })).toBeVisible();
-    expect(page.getByRole('button', { name: 'Link' })).toBeVisible();
+    const toolbar = await page.getByLabelText('Werkbalk tekstbewerker').element();
+    await toolbar.querySelector('clippy-toolbar-link').updateComplete;
+    await toolbar.querySelector('clippy-toolbar-image-upload').updateComplete;
+    await expect(page.getByRole('button', { name: 'Link' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Afbeelding' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Keyboard shortcuts' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Toon toegankelijkheidsfouten' })).toBeVisible();
