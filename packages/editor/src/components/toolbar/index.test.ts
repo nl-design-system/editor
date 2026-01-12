@@ -40,16 +40,14 @@ describe('<clippy-toolbar>', () => {
   it('changes link URL when link is edited', async () => {
     const linkButton = page.getByLabelText('Link', { exact: true });
     await user.click(linkButton);
-    const openedDialog = page.getByTestId('clippy-link-dialog').element().shadowRoot?.querySelector('dialog');
-    expect(openedDialog).toHaveAttribute('open');
+    expect(page.getByRole('dialog')).toHaveAttribute('open');
     const urlInput = page.getByLabelText('Link to:');
     await user.type(urlInput, 'https://example.com');
 
     await user.keyboard('{Enter}');
     expect(page.getByLabelText('Link to:')).toHaveValue('https://example.com');
     await user.click(page.getByRole('button', { name: 'Link toevoegen' }));
-    const closedDialog = page.getByTestId('clippy-link-dialog').element().shadowRoot?.querySelector('dialog');
-    expect(closedDialog).not.toHaveAttribute('open');
+    expect(page.getByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('adds an image when image upload is completed', async () => {
