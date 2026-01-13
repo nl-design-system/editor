@@ -5,3 +5,4 @@ import '@fontsource/source-sans-pro/700.css';
 import '@nl-design-system-community/ma-design-tokens/dist/theme.css';
 import '@utrecht/component-library-css/dist/index.css';
 import '@nl-design-system-community/editor';
+import '@nl-design-system-community/editor/theme.css';
