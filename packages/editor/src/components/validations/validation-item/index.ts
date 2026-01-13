@@ -10,8 +10,16 @@ import type { ValidationSeverity } from '@/types/validation.ts';
 import { CustomEvents } from '@/events';
 import validationListItemStyles from './styles.ts';
 
-@customElement('clippy-validation-list-item')
-export class ClippyValidationItem extends LitElement {
+const tag = 'clippy-validation-item';
+
+declare global {
+  interface HTMLElementTagNameMap {
+    [tag]: ValidationItem;
+  }
+}
+
+@customElement(tag)
+export class ValidationItem extends LitElement {
   static override readonly styles = [validationListItemStyles, unsafeCSS(linkCss), unsafeCSS(buttonCss)];
 
   @property({ type: String }) key: string = '';
@@ -59,16 +67,10 @@ export class ClippyValidationItem extends LitElement {
             `
           : null}
         <div class="clippy-dialog__list-item-actions">
-          <button class="nl-button nl-button--disabled" disabled>Negeren</button>
+          <button class="nl-button nl-button--disabled" aria-disabled="true">Negeren</button>
           <button class="nl-button nl-button--secondary" @click=${this.#focusNode}>Aanpassen</button>
         </div>
       </li>
     `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'clippy-validation-list-item': ClippyValidationItem;
   }
 }
