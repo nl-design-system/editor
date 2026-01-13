@@ -4,7 +4,7 @@ export default css`
   .clippy-tabs {
     display: flex;
     gap: 0;
-    border-block-end: 1px solid #e0e0e0;
+    border-block-end: 1px solid var(--clippy-validations-dialog-tabs-border-color);
   }
 
   .clippy-tabs__tab {

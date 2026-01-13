@@ -11,7 +11,7 @@ export default css`
     inline-size: fit-content;
     pointer-events: none;
     background: #fff;
-    border-inline-start: 1px solid #7f7f7f;
+    border-inline-start: 1px solid var(--clippy-validations-dialog-border-color);
   }
   :host > * {
     pointer-events: auto;

@@ -66,8 +66,8 @@ export default css`
   .clippy-validation-gutter__tooltip {
     display: none;
     position: absolute;
-    right: 100%;
-    top: 0;
+    inset-inline-end: 100%;
+    inset-block-start: 0;
   }
 
   .clippy-validation-gutter__tooltip--active {
