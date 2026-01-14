@@ -87,6 +87,7 @@ export class Toolbar extends LitElement {
           ${ref(this.#focusNode)}
           icon-only
           size="small"
+          purpose="secondary"
         >
           ${unsafeSVG(addSlotNameAndAriaHidden(BoldIcon))} Vet
         </clippy-button>
@@ -96,6 +97,7 @@ export class Toolbar extends LitElement {
           @click=${() => this.editor?.chain().focus().toggleItalic().run()}
           icon-only
           size="small"
+          purpose="secondary"
         >
           ${unsafeSVG(addSlotNameAndAriaHidden(ItalicIcon))} Cursief
         </clippy-button>
@@ -105,6 +107,7 @@ export class Toolbar extends LitElement {
           @click=${() => this.editor?.chain().focus().toggleUnderline().run()}
           icon-only
           size="small"
+          purpose="secondary"
         >
           ${unsafeSVG(addSlotNameAndAriaHidden(UnderlineIcon))} Onderstrepen
         </clippy-button>
@@ -114,6 +117,7 @@ export class Toolbar extends LitElement {
           @click=${() => this.editor?.commands.undo()}
           icon-only
           size="small"
+          purpose="secondary"
         >
           ${unsafeSVG(addSlotNameAndAriaHidden(ArrowBackUpIcon))} Ongedaan maken
         </clippy-button>
@@ -122,6 +126,7 @@ export class Toolbar extends LitElement {
           @click=${() => this.editor?.commands.redo()}
           icon-only
           size="small"
+          purpose="secondary"
         >
           ${unsafeSVG(addSlotNameAndAriaHidden(ArrowForwardUpIcon))} Opnieuw
         </clippy-button>
@@ -134,6 +139,7 @@ export class Toolbar extends LitElement {
           }}
           icon-only
           size="small"
+          purpose="secondary"
         >
           ${unsafeSVG(addSlotNameAndAriaHidden(OrderedListIcon))}
         </clippy-button>
@@ -143,6 +149,7 @@ export class Toolbar extends LitElement {
           @click=${() => this.editor?.chain().focus().toggleBulletList().run()}
           icon-only
           size="small"
+          purpose="secondary"
         >
           ${unsafeSVG(addSlotNameAndAriaHidden(BulletListIcon))} Geordende lijst
         </clippy-button>
@@ -152,6 +159,7 @@ export class Toolbar extends LitElement {
           @click=${() => this.editor?.chain().focus().insertDefinitionList().run()}
           icon-only
           size="small"
+          purpose="secondary"
         >
           ${unsafeSVG(addSlotNameAndAriaHidden(ListDetailsIcon))} Definitielijst
         </clippy-button>
@@ -161,6 +169,7 @@ export class Toolbar extends LitElement {
           @click=${() => this.editor?.chain().focus().insertTable({ cols: 3, rows: 2, withHeaderRow: true }).run()}
           icon-only
           size="small"
+          purpose="secondary"
         >
           ${unsafeSVG(addSlotNameAndAriaHidden(TableIcon))} Tabel invoegen
         </clippy-button>
@@ -173,6 +182,7 @@ export class Toolbar extends LitElement {
           @click=${this.#toggleOpenShortcuts}
           icon-only
           size="small"
+          purpose="secondary"
         >
           ${unsafeSVG(addSlotNameAndAriaHidden(KeyboardIcon))} Sneltoetsen
         </clippy-button>
@@ -182,6 +192,7 @@ export class Toolbar extends LitElement {
             aria-controls="dialog-content"
             icon-only
             size="small"
+            purpose="secondary"
           >
             ${unsafeSVG(addSlotNameAndAriaHidden(AccessibleIcon))} Toon toegankelijkheidsmeldingen
           </clippy-button>

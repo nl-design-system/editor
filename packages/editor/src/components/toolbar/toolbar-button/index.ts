@@ -2,7 +2,7 @@ import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline'
 import { LitElement, html, unsafeCSS, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import toolbarButtonStyles from './styles.ts';
+import buttonStyles from './styles.ts';
 
 const tag = 'clippy-button';
 
@@ -12,8 +12,10 @@ declare global {
   }
 }
 
-type ButtonSize = 'small' | 'medium';
-const defaultSize: ButtonSize = 'medium';
+type Purpose = 'primary' | 'secondary' | 'subtle';
+
+type Size = 'small' | 'medium';
+const defaultSize: Size = 'medium';
 
 @customElement(tag)
 export class ToolbarButton extends LitElement {
@@ -24,7 +26,7 @@ export class ToolbarButton extends LitElement {
   @property({ type: Boolean }) disabled = false;
   @property({
     converter: {
-      fromAttribute: (value: string | null): ButtonSize => {
+      fromAttribute: (value: string | null): Size => {
         if (value === 'small' || value === 'medium') {
           return value;
         }
@@ -34,9 +36,23 @@ export class ToolbarButton extends LitElement {
     },
     type: String,
   })
-  size: ButtonSize = defaultSize;
+  size: Size = defaultSize;
 
-  static override readonly styles = [toolbarButtonStyles, unsafeCSS(buttonCss)];
+  @property({
+    converter: {
+      fromAttribute: (value: string | null): Purpose | undefined => {
+        if (value === 'primary' || value === 'secondary' || value === 'subtle') {
+          return value;
+        }
+        console.warn(`Invalid purpose "${value}".`);
+        return undefined;
+      },
+    },
+    type: String,
+  })
+  purpose: Purpose | undefined;
+
+  static override readonly styles = [buttonStyles, unsafeCSS(buttonCss)];
 
   override render() {
     return html`
@@ -45,6 +61,7 @@ export class ToolbarButton extends LitElement {
         aria-disabled=${this.disabled || nothing}
         class=${classMap({
           [`clippy-nl-button--${this.size}`]: this.size !== defaultSize,
+          [`nl-button--${this.purpose}`]: !!this.purpose,
           'nl-button': true,
           'nl-button--busy': this.busy,
           'nl-button--disabled': this.disabled,

@@ -101,6 +101,7 @@ export class ToolbarImageUpload extends LitElement {
         aria-controls="clippy-image-upload-dialog"
         icon-only
         size="small"
+        purpose="secondary"
       >
         ${unsafeSVG(addSlotNameAndAriaHidden(PhotoIcon))} Afbeelding
       </clippy-button>

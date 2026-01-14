@@ -71,6 +71,7 @@ export class ToolbarLink extends LitElement {
           .pressed=${this.editor?.isActive('link') ?? false}
           icon-only
           size="small"
+          purpose="secondary"
         >
           ${unsafeSVG(addSlotNameAndAriaHidden(LinkIcon))} Link
         </clippy-button>
