@@ -5,7 +5,7 @@ test('Page has correct title', async ({ page }) => {
 
   await expect(page).toHaveTitle('Rich-text Editor - NL Design System');
   await page.getByRole('paragraph').filter({ hasText: /^$/ }).fill('Paragraaf.');
-  const a11yButton = page.getByRole('button', { name: 'Toon toegankelijkheidsfouten' });
+  const a11yButton = page.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' });
   await expect(page.locator('data .nl-number-badge__visible-label')).toHaveText('3');
   await a11yButton.click();
   await page.waitForTimeout(500);
