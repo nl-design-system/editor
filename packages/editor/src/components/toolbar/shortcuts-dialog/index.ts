@@ -1,17 +1,18 @@
+import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 import CrossIcon from '@tabler/icons/outline/x.svg?raw';
-import { LitElement, html } from 'lit';
+import { LitElement, html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import shortcutsDialogStyles from './styles.ts';
 import './../toolbar-button';
+import shortcutsDialogStyles from './styles.ts';
 
 @customElement('clippy-shortcuts')
 export class ShortcutsDialog extends LitElement {
   @property({ attribute: false })
   public dialogRef?: Ref<HTMLDialogElement>;
 
-  static override readonly styles = [shortcutsDialogStyles];
+  static override readonly styles = [shortcutsDialogStyles, unsafeCSS(buttonCss)];
 
   public close(): void {
     this.dialogRef?.value?.close();
@@ -29,9 +30,10 @@ export class ShortcutsDialog extends LitElement {
       >
         <div class="clippy-shortcuts__header">
           <h1 id="clippy-shortcuts-title">Sneltoetsen</h1>
-          <clippy-toolbar-button @click=${() => this.close()} aria-label="Sluit sneltoetsen dialog">
+          <button class="nl-button nl-button--subtle nl-button--icon-only" @click=${() => this.close()}>
+            <span class="nl-button__label">Sluit sneltoetsen dialog</span>
             ${unsafeSVG(CrossIcon)}
-          </clippy-toolbar-button>
+          </button>
         </div>
         <table class="clippy-shortcuts__table">
           <caption>
@@ -140,7 +142,7 @@ export class ShortcutsDialog extends LitElement {
           </thead>
           <tbody>
           <tr>
-            <td>Toegankelijkheidsfouten</td>
+            <td>Toegankelijkheidsmeldingen</td>
             <td><kbd>Control</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd></td>
             <td><kbd>Command</kbd> + <kbd>Option</kbd> + <kbd>T</kbd></td>
           </tr>

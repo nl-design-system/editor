@@ -82,7 +82,7 @@ export class Toolbar extends LitElement {
       <div class="clippy-toolbar__wrapper" aria-label="Werkbalk tekstbewerker">
         <clippy-format-select></clippy-format-select>
         <clippy-toolbar-button
-          label="Bold"
+          label="Vet"
           .pressed=${this.editor?.isActive('bold') ?? false}
           @click=${() => this.editor?.chain().focus().toggleBold().run()}
           ${ref(this.#focusNode)}
@@ -90,14 +90,14 @@ export class Toolbar extends LitElement {
           ${unsafeSVG(addAriaHidden(BoldIcon))}
         </clippy-toolbar-button>
         <clippy-toolbar-button
-          label="Italic"
+          label="Cursief"
           .pressed=${this.editor?.isActive('italic') ?? false}
           @click=${() => this.editor?.chain().focus().toggleItalic().run()}
         >
           ${unsafeSVG(addAriaHidden(ItalicIcon))}
         </clippy-toolbar-button>
         <clippy-toolbar-button
-          label="Underline"
+          label="Onderstrepen"
           .pressed=${this.editor?.isActive('underline') ?? false}
           @click=${() => this.editor?.chain().focus().toggleUnderline().run()}
         >
@@ -105,21 +105,22 @@ export class Toolbar extends LitElement {
         </clippy-toolbar-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-button
-          label="Undo"
+          label="Ongedaan maken"
           ?disabled=${!(this.editor?.can().undo() ?? false)}
           @click=${() => this.editor?.commands.undo()}
         >
           ${unsafeSVG(addAriaHidden(ArrowBackUpIcon))}
         </clippy-toolbar-button>
         <clippy-toolbar-button
-          label="Redo"
+          label="Opnieuw"
           ?disabled=${!(this.editor?.can().redo() ?? false)}
           @click=${() => this.editor?.commands.redo()}
-          >${unsafeSVG(addAriaHidden(ArrowForwardUpIcon))}
+        >
+          ${unsafeSVG(addAriaHidden(ArrowForwardUpIcon))}
         </clippy-toolbar-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-button
-          label="Ordered list"
+          label="Genummerde lijst"
           .pressed=${this.editor?.isActive('orderedList') ?? false}
           @click=${() => {
             this.editor?.chain().focus().toggleOrderedList().run();
@@ -128,14 +129,14 @@ export class Toolbar extends LitElement {
           ${unsafeSVG(addAriaHidden(OrderedListIcon))}
         </clippy-toolbar-button>
         <clippy-toolbar-button
-          label="Bullet list"
+          label="Geordende lijst"
           .pressed=${this.editor?.isActive('bulletList') ?? false}
           @click=${() => this.editor?.chain().focus().toggleBulletList().run()}
         >
           ${unsafeSVG(addAriaHidden(BulletListIcon))}
         </clippy-toolbar-button>
         <clippy-toolbar-button
-          label="Definition list"
+          label="Definitielijst"
           .pressed=${this.editor?.isActive('definitionList') ?? false}
           @click=${() => this.editor?.chain().focus().insertDefinitionList().run()}
         >
@@ -155,19 +156,19 @@ export class Toolbar extends LitElement {
         <clippy-toolbar-image-upload></clippy-toolbar-image-upload>
         <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-button
-          label="Keyboard shortcuts"
+          label="Sneltoetsen"
           .pressed=${this.#dialogRef.value?.open ?? false}
           @click=${this.#toggleOpenShortcuts}
         >
           ${unsafeSVG(addAriaHidden(KeyboardIcon))}
         </clippy-toolbar-button>
         <clippy-toolbar-button
-          label="Toon toegankelijkheidsfouten"
+          label="Toon toegankelijkheidsmeldingen"
           class="clippy-dialog-toggle"
           @click=${this.#toggleOpenValidationsDialog}
           aria-controls="dialog-content"
         >
-          <span class="clippy-screen-reader-text">Toon toegankelijkheidsfouten</span>
+          <span class="clippy-screen-reader-text">Toon toegankelijkheidsmeldingen</span>
           ${unsafeSVG(AccessibleIcon)}
           ${
             size > 0
@@ -181,7 +182,7 @@ export class Toolbar extends LitElement {
       </div>
       <clippy-shortcuts .dialogRef=${this.#dialogRef}></clippy-shortcuts>
       <div class="clippy-screen-reader-text" aria-live=${size > 0 ? 'polite' : 'off'}>
-        Totaal ${size} gevonden toegankelijkheidsfouten.
+        Totaal ${size} toegankelijkheidsmeldingen gevonden.
       </div>
     `;
   }

@@ -119,7 +119,7 @@ export class ValidationsDialog extends LitElement {
         ${ref(this.#dialogRef)}
         data-testid="clippy-validations-drawer"
         class="clippy-dialog__content"
-        aria-label="Toegankelijkheidsfouten"
+        aria-label="Toegankelijkheidsmeldingen"
       >
         <button class="clippy-dialog__close-button" @click=${() => this.#toggleOpen()}>${unsafeSVG(X)}</button>
         <clippy-tabs></clippy-tabs>
@@ -141,7 +141,7 @@ export class ValidationsDialog extends LitElement {
                   </clippy-validation-item>
                 `;
               })
-            : html`<li class="clippy-dialog__list-item">Geen toegankelijkheidsfouten gevonden.</li>`}
+            : html`<li class="clippy-dialog__list-item">Geen toegankelijkheidsmeldingen gevonden.</li>`}
         </ul>
       </dialog>
     `;

@@ -18,6 +18,8 @@ declare global {
   }
 }
 
+const ariaDescribedBy = 'validation-item-header';
+
 @customElement(tag)
 export class ValidationItem extends LitElement {
   static override readonly styles = [validationListItemStyles, unsafeCSS(linkCss), unsafeCSS(buttonCss)];
@@ -53,7 +55,7 @@ export class ValidationItem extends LitElement {
         tabindex="-1"
       >
         <div class="clippy-dialog__list-item-message">
-          <strong>${this.description}</strong>
+          <h3 id=${ariaDescribedBy}>${this.description}</h3>
           <span class="clippy-dialog__list-item-severity clippy-dialog__list-item-severity--${this.severity}">
             ${unsafeSVG(this.#getAlertIcon())}
           </span>
@@ -62,13 +64,17 @@ export class ValidationItem extends LitElement {
         ${this.href
           ? html`
               <div class="clippy-dialog__list-item-link">
-                <a class="nl-link" href="${this.href}" target="_blank"> Uitgebreide toelichting </a>
+                <a class="nl-link" href="${this.href}" target="_blank" aria-describedby=${ariaDescribedBy}>
+                  Uitgebreide toelichting
+                </a>
               </div>
             `
           : null}
         <div class="clippy-dialog__list-item-actions">
           <button class="nl-button nl-button--disabled" aria-disabled="true">Negeren</button>
-          <button class="nl-button nl-button--secondary" @click=${this.#focusNode}>Aanpassen</button>
+          <button class="nl-button nl-button--secondary" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
+            Aanpassen
+          </button>
         </div>
       </li>
     `;

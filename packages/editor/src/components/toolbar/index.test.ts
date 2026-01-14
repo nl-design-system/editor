@@ -20,19 +20,19 @@ describe('<clippy-toolbar>', () => {
 
   it('renders correctly with required toolbar elements', async () => {
     expect(page.getByLabelText('Werkbalk tekstbewerker')).toBeInTheDocument();
-    expect(page.getByLabelText('Bold')).toBeInTheDocument();
-    expect(page.getByLabelText('Italic')).toBeInTheDocument();
+    expect(page.getByLabelText('Vet')).toBeInTheDocument();
+    expect(page.getByLabelText('Cursief')).toBeInTheDocument();
     expect(page.getByLabelText('Link', { exact: true })).toBeInTheDocument();
   });
 
   it('updates all toolbar buttons when editor content changes', async () => {
-    expect(page.getByLabelText('Bold')).toHaveAttribute('aria-pressed', 'false');
+    expect(page.getByLabelText('Vet')).toHaveAttribute('aria-pressed', 'false');
   });
 
   it('opens shortcuts dialog when keyboard shortcuts button is clicked', async () => {
     expect(page.getByTestId('clippy-shortcuts-dialog')).not.toHaveAttribute('open');
 
-    const button = page.getByRole('button', { name: 'Keyboard shortcuts' });
+    const button = page.getByRole('button', { name: 'Sneltoetsen' });
     await button.click();
     expect(page.getByTestId('clippy-shortcuts-dialog')).toHaveAttribute('open');
   });
