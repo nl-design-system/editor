@@ -8,6 +8,7 @@ import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import './../toolbar-button';
 import { editor } from '@/decorators/TipTapDecorator.ts';
+import { addSlotNameAndAriaHidden } from '@/utils/svgConverter.ts';
 
 const ariaDescribedby = 'clippy-toolbar-link-dialog';
 
@@ -64,33 +65,34 @@ export class ToolbarLink extends LitElement {
 
   override render() {
     return html`
-      <clippy-toolbar-button
-        class="clippy-toolbar-link--button"
-        @click=${this.#openLinkDialog}
-        label="Link"
-        aria-controls="clippy-link-dialog"
-        .pressed=${this.editor?.isActive('link') ?? false}
-      >
-        ${unsafeSVG(LinkIcon)}
-      </clippy-toolbar-button>
-      <clippy-modal
-        .title="Link toevoegen"
-        actions="none"
-        aria-describedby=${ariaDescribedby}
-        data-testid="clippy-link-dialog"
-      >
-        <p id=${ariaDescribedby}>Link toevoegen</p>
-        <div>
-          <label>Link to:<input value=${this.previousUrl} ${ref(this.#inputRef)} type="text" /></label>
-        </div>
-        <div>
-          <button class="nl-button nl-button--secondary " @click=${() => this.modalDialog.close()}>Sluiten</button>
-          <button class="nl-button nl-button--secondary nl-button--negative" @click=${this.#unsetLink}>
-            Verwijder link
-          </button>
-          <button class="nl-button nl-button--primary" @click=${this.#updateLink}>Link toevoegen</button>
-        </div>
-      </clippy-modal>
+        <clippy-button
+          @click=${this.#openLinkDialog}
+          aria-controls="clippy-link-dialog"
+          .pressed=${this.editor?.isActive('link') ?? false}
+          icon-only
+          size="small"
+        >
+          ${unsafeSVG(addSlotNameAndAriaHidden(LinkIcon))} Link
+        </clippy-button>
+        <clippy-modal
+          .title="Link toevoegen"
+          actions="none"
+          aria-describedby=${ariaDescribedby}
+          data-testid="clippy-link-dialog"
+        >
+          <p id=${ariaDescribedby}>Link toevoegen</p>
+          <div>
+            <label>Link to:<input value=${this.previousUrl} ${ref(this.#inputRef)} type="text" /></label>
+          </div>
+          <div>
+            <button class="nl-button nl-button--secondary " @click=${() => this.modalDialog.close()}>Sluiten</button>
+            <button class="nl-button nl-button--secondary nl-button--negative" @click=${this.#unsetLink}>
+              Verwijder link
+            </button>
+            <button class="nl-button nl-button--primary" @click=${this.#updateLink}>Link toevoegen</button>
+          </div>
+        </clippy-modal>
+      </clippy-button>
     `;
   }
 }

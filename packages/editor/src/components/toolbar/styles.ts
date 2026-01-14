@@ -19,18 +19,6 @@ export default css`
     background: var(--ma-color-paars-8);
   }
 
-  .clippy-screen-reader-text {
-    border: 0;
-    clip-path: inset(50%);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-    word-wrap: normal !important;
-  }
-
   .nl-number-badge--clippy {
     position: absolute;
     inset-block-start: calc(var(--nl-number-badge-min-block-size) * -0.3);

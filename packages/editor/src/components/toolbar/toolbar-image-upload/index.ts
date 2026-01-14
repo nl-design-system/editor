@@ -11,6 +11,7 @@ import type { ImageUpload } from '@/types/image.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { CustomEvents } from '@/events';
 import imageUploadDialogStyles from './styles.ts';
+import { addSlotNameAndAriaHidden } from '@/utils/svgConverter.ts';
 
 @customElement('clippy-toolbar-image-upload')
 export class ToolbarImageUpload extends LitElement {
@@ -95,23 +96,23 @@ export class ToolbarImageUpload extends LitElement {
 
   override render() {
     return html`
-      <clippy-toolbar-button
-        class="clippy-toolbar-image-upload--button"
+      <clippy-button
         @click=${this.#toggleImageUploadDialog}
         aria-controls="clippy-image-upload-dialog"
-        label="Afbeelding"
+        icon-only
+        size="small"
       >
-        ${unsafeSVG(PhotoIcon)}
-        <input
-          ${ref(this.#inputRef)}
-          type="file"
-          data-testid="clippy-image-upload"
-          style="display:none"
-          accept="image/*"
-          multiple
-          @change=${this.#handleOnChange}
-        />
-      </clippy-toolbar-button>
+        ${unsafeSVG(addSlotNameAndAriaHidden(PhotoIcon))} Afbeelding
+      </clippy-button>
+      <input
+        ${ref(this.#inputRef)}
+        type="file"
+        data-testid="clippy-image-upload"
+        style="display:none"
+        accept="image/*"
+        multiple
+        @change=${this.#handleOnChange}
+      />
       <dialog
         closedby="any"
         id="clippy-image-upload-dialog"

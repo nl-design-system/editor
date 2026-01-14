@@ -1,32 +1,15 @@
 import { css } from 'lit';
 
 export default css`
-  :host {
-    display: inline-block;
-  }
-  .clippy-toolbar-button {
-    position: relative;
-    background-color: #fff;
-    border: 1px solid var(--basis-color-action-1-color-active);
-    border-radius: 3px;
-    color: var(--basis-color-action-1-color-active);
-    display: inline-flex;
-    padding-block: var(--basis-space-inline-sm);
-    padding-inline: var(--basis-space-inline-md);
-    block-size: 100%;
-  }
-  .clippy-toolbar-button:focus {
-    outline: 2px solid var(--basis-color-action-1-color-active);
-  }
-  .clippy-toolbar-button:disabled {
-    color: var(--basis-color-disabled-color-active);
+  .clippy-nl-button--small {
+    --nl-button-min-inline-size: 32px;
+    --nl-button-min-block-size: 32px;
+    --nl-button-icon-size: 18px;
   }
 
-  ::slotted(svg) {
-    inline-size: 16px;
-  }
-  .clippy-toolbar-button--pressed {
-    background-color: var(--basis-color-action-1-bg-default);
-    border-color: var(--ma-color-grijs-6);
+  .clippy-nl-button--small ::slotted([slot='iconStart']),
+  .clippy-nl-button--small ::slotted([slot='iconEnd']) {
+    height: var(--nl-button-icon-size);
+    width: var(--nl-button-icon-size);
   }
 `;
