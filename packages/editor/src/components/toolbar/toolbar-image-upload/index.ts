@@ -10,8 +10,8 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ImageUpload } from '@/types/image.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { CustomEvents } from '@/events';
-import imageUploadDialogStyles from './styles.ts';
 import { addSlotNameAndAriaHidden } from '@/utils/svgConverter.ts';
+import imageUploadDialogStyles from './styles.ts';
 
 @customElement('clippy-toolbar-image-upload')
 export class ToolbarImageUpload extends LitElement {

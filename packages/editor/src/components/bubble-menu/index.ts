@@ -9,8 +9,8 @@ import { createRef, type Ref, ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
-import bubbleMenuStyles from './styles.ts';
 import { addSlotNameAndAriaHidden } from '@/utils/svgConverter.ts';
+import bubbleMenuStyles from './styles.ts';
 
 @customElement('clippy-bubble-menu')
 export class ImageBubbleMenu extends LitElement {

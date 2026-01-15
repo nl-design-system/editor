@@ -132,7 +132,6 @@ export class Toolbar extends LitElement {
         </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-button
-          label="Genummerde lijst"
           .pressed=${this.editor?.isActive('orderedList') ?? false}
           @click=${() => {
             this.editor?.chain().focus().toggleOrderedList().run();
@@ -141,7 +140,7 @@ export class Toolbar extends LitElement {
           size="small"
           purpose="secondary"
         >
-          ${unsafeSVG(addSlotNameAndAriaHidden(OrderedListIcon))}
+          ${unsafeSVG(addSlotNameAndAriaHidden(OrderedListIcon))} Genummerde lijst
         </clippy-button>
         <clippy-button
           toggle
