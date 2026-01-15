@@ -12,7 +12,8 @@ import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
 import OrderedListIcon from '@tabler/icons/outline/list-numbers.svg?raw';
 import BulletListIcon from '@tabler/icons/outline/list.svg?raw';
 import TableIcon from '@tabler/icons/outline/table.svg?raw';
-import './toolbar-button';
+import './clippy-button';
+import './clippy-icon';
 import './toolbar-format-select';
 import UnderlineIcon from '@tabler/icons/outline/underline.svg?raw';
 import { LitElement, html, unsafeCSS, nothing } from 'lit';
@@ -25,7 +26,6 @@ import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
 import './toolbar-image-upload';
 import './toolbar-link';
-import { addSlotNameAndAriaHidden } from '@/utils/svgConverter.ts';
 import toolbarStyles from './styles.ts';
 
 @customElement('clippy-toolbar')
@@ -89,7 +89,8 @@ export class Toolbar extends LitElement {
           size="small"
           purpose="secondary"
         >
-          ${unsafeSVG(addSlotNameAndAriaHidden(BoldIcon))} Vet
+          <clippy-icon slot="iconStart">${unsafeSVG(BoldIcon)}</clippy-icon>
+          Vet
         </clippy-button>
         <clippy-button
           toggle
@@ -99,7 +100,8 @@ export class Toolbar extends LitElement {
           size="small"
           purpose="secondary"
         >
-          ${unsafeSVG(addSlotNameAndAriaHidden(ItalicIcon))} Cursief
+          <clippy-icon slot="iconStart">${unsafeSVG(ItalicIcon)}</clippy-icon>
+          Cursief
         </clippy-button>
         <clippy-button
           toggle
@@ -109,7 +111,8 @@ export class Toolbar extends LitElement {
           size="small"
           purpose="secondary"
         >
-          ${unsafeSVG(addSlotNameAndAriaHidden(UnderlineIcon))} Onderstrepen
+          <clippy-icon slot="iconStart">${unsafeSVG(UnderlineIcon)}</clippy-icon>
+          Onderstrepen
         </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-button
@@ -119,7 +122,8 @@ export class Toolbar extends LitElement {
           size="small"
           purpose="secondary"
         >
-          ${unsafeSVG(addSlotNameAndAriaHidden(ArrowBackUpIcon))} Ongedaan maken
+          <clippy-icon slot="iconStart">${unsafeSVG(ArrowBackUpIcon)}</clippy-icon>
+          Ongedaan maken
         </clippy-button>
         <clippy-button
           ?disabled=${!(this.editor?.can().redo() ?? false)}
@@ -128,7 +132,8 @@ export class Toolbar extends LitElement {
           size="small"
           purpose="secondary"
         >
-          ${unsafeSVG(addSlotNameAndAriaHidden(ArrowForwardUpIcon))} Opnieuw
+          <clippy-icon slot="iconStart">${unsafeSVG(ArrowForwardUpIcon)}</clippy-icon>
+          Opnieuw
         </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-button
@@ -140,7 +145,8 @@ export class Toolbar extends LitElement {
           size="small"
           purpose="secondary"
         >
-          ${unsafeSVG(addSlotNameAndAriaHidden(OrderedListIcon))} Genummerde lijst
+          <clippy-icon slot="iconStart">${unsafeSVG(OrderedListIcon)}</clippy-icon>
+          Genummerde lijst
         </clippy-button>
         <clippy-button
           toggle
@@ -150,7 +156,8 @@ export class Toolbar extends LitElement {
           size="small"
           purpose="secondary"
         >
-          ${unsafeSVG(addSlotNameAndAriaHidden(BulletListIcon))} Geordende lijst
+          <clippy-icon slot="iconStart">${unsafeSVG(BulletListIcon)}</clippy-icon>
+          Geordende lijst
         </clippy-button>
         <clippy-button
           toggle
@@ -160,7 +167,8 @@ export class Toolbar extends LitElement {
           size="small"
           purpose="secondary"
         >
-          ${unsafeSVG(addSlotNameAndAriaHidden(ListDetailsIcon))} Definitielijst
+          <clippy-icon slot="iconStart">${unsafeSVG(ListDetailsIcon)}</clippy-icon>
+          Definitielijst
         </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-button
@@ -170,7 +178,8 @@ export class Toolbar extends LitElement {
           size="small"
           purpose="secondary"
         >
-          ${unsafeSVG(addSlotNameAndAriaHidden(TableIcon))} Tabel invoegen
+          <clippy-icon slot="iconStart">${unsafeSVG(TableIcon)}</clippy-icon>
+          Tabel invoegen
         </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-link></clippy-toolbar-link>
@@ -183,7 +192,8 @@ export class Toolbar extends LitElement {
           size="small"
           purpose="secondary"
         >
-          ${unsafeSVG(addSlotNameAndAriaHidden(KeyboardIcon))} Sneltoetsen
+          <clippy-icon slot="iconStart">${unsafeSVG(KeyboardIcon)}</clippy-icon>
+          Sneltoetsen
         </clippy-button>
         <span style="position: relative;">
           <clippy-button
@@ -193,7 +203,8 @@ export class Toolbar extends LitElement {
             size="small"
             purpose="secondary"
           >
-            ${unsafeSVG(addSlotNameAndAriaHidden(AccessibleIcon))} Toon toegankelijkheidsmeldingen
+            <clippy-icon slot="iconStart">${unsafeSVG(AccessibleIcon)}</clippy-icon>
+            Toon toegankelijkheidsmeldingen
           </clippy-button>
           ${size > 0
             ? html`<data value=${size} class="nl-number-badge nl-number-badge--clippy">

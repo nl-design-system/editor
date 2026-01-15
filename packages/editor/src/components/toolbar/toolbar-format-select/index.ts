@@ -4,8 +4,8 @@ import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline'
 import { html, LitElement, unsafeCSS, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
+import buttonStyles from '@/components/toolbar/clippy-button/styles.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
-import buttonStyles from './../toolbar-button/styles.ts';
 
 export interface SelectOption {
   active: boolean;
@@ -27,7 +27,7 @@ export class FormatSelect extends LitElement {
     buttonStyles,
     unsafeCSS(buttonCss),
     css`
-      .clippy-nl-button--small {
+      .clippy-button--small {
         padding-block-end: 0;
         padding-block-start: 0;
       }
@@ -82,7 +82,7 @@ export class FormatSelect extends LitElement {
   override render() {
     return html`
       <select
-        class="nl-button nl-button--secondary clippy-nl-button--small"
+        class="nl-button nl-button--secondary clippy-button--small"
         @change=${this.#handleTextFormatChange}
         aria-label="Tekst formaat selecteren"
       >

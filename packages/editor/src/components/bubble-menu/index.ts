@@ -9,7 +9,6 @@ import { createRef, type Ref, ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
-import { addSlotNameAndAriaHidden } from '@/utils/svgConverter.ts';
 import bubbleMenuStyles from './styles.ts';
 
 @customElement('clippy-bubble-menu')
@@ -85,7 +84,8 @@ export class ImageBubbleMenu extends LitElement {
           size="small"
           purpose="secondary"
         >
-          ${unsafeSVG(addSlotNameAndAriaHidden(AlignLeftIcon))} Align left
+          <clippy-icon slot="iconStart">${unsafeSVG(AlignLeftIcon)}</clippy-icon>
+          Align left
         </clippy-button>
         <clippy-button
           pressed="${attrs['alignment'] === 'right'}"
@@ -94,10 +94,12 @@ export class ImageBubbleMenu extends LitElement {
           size="small"
           purpose="secondary"
         >
-          ${unsafeSVG(addSlotNameAndAriaHidden(AlignRightIcon))} Align right
+          <clippy-icon slot="iconStart">${unsafeSVG(AlignRightIcon)}</clippy-icon>
+          Align right
         </clippy-button>
         <clippy-button @click=${this.#editImage} icon-only size="small" purpose="secondary">
-          ${unsafeSVG(addSlotNameAndAriaHidden(EditIcon))} Afbeelding bewerken
+          <clippy-icon slot="iconStart">${unsafeSVG(EditIcon)}</clippy-icon>
+          Afbeelding bewerken
         </clippy-button>
       </div>
     `;

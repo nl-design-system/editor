@@ -73,7 +73,7 @@ export class ToolbarButton extends LitElement {
         aria-pressed=${this.toggle ? this.pressed : nothing}
         aria-disabled=${this.disabled || nothing}
         class=${classMap({
-          [`clippy-nl-button--${this.size}`]: this.size !== defaultSize,
+          [`clippy-button--${this.size}`]: this.size !== defaultSize,
           [`nl-button--${this.hint}`]: !!this.hint,
           [`nl-button--${this.purpose}`]: !!this.purpose,
           'nl-button': true,
