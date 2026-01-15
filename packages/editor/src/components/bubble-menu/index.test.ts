@@ -24,7 +24,7 @@ describe('<clippy-bubble-menu>', () => {
 
     await element?.updateComplete;
 
-    const el = element?.shadowRoot?.querySelector('clippy-clippy-button');
+    const el = element?.shadowRoot?.querySelector('clippy-button');
     expect(el).toBeDefined();
   });
 });
