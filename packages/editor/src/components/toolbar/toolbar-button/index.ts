@@ -13,6 +13,7 @@ declare global {
 }
 
 type Purpose = 'primary' | 'secondary' | 'subtle';
+type Hint = 'positive' | 'negative';
 
 type Size = 'small' | 'medium';
 const defaultSize: Size = 'medium';
@@ -23,6 +24,19 @@ export class ToolbarButton extends LitElement {
   @property({ type: Boolean }) toggle = undefined;
   @property({ type: Boolean }) pressed = false;
   @property({ type: Boolean }) busy = false;
+  @property({
+    converter: {
+      fromAttribute: (value: string | null): Hint | undefined => {
+        if (value === 'positive' || value === 'negative') {
+          return value;
+        }
+        console.warn(`Invalid hint "${value}".`);
+        return undefined;
+      },
+    },
+    type: String,
+  })
+  hint: Hint | undefined;
   @property({ type: Boolean }) disabled = false;
   @property({
     converter: {
@@ -37,7 +51,6 @@ export class ToolbarButton extends LitElement {
     type: String,
   })
   size: Size = defaultSize;
-
   @property({
     converter: {
       fromAttribute: (value: string | null): Purpose | undefined => {
@@ -61,6 +74,7 @@ export class ToolbarButton extends LitElement {
         aria-disabled=${this.disabled || nothing}
         class=${classMap({
           [`clippy-nl-button--${this.size}`]: this.size !== defaultSize,
+          [`nl-button--${this.hint}`]: !!this.hint,
           [`nl-button--${this.purpose}`]: !!this.purpose,
           'nl-button': true,
           'nl-button--busy': this.busy,
