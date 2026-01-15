@@ -186,7 +186,7 @@ export class Toolbar extends LitElement {
         >
           ${unsafeSVG(addSlotNameAndAriaHidden(KeyboardIcon))} Sneltoetsen
         </clippy-button>
-        <span>
+        <span style="position: relative;">
           <clippy-button
             @click=${this.#toggleOpenValidationsDialog}
             aria-controls="dialog-content"
