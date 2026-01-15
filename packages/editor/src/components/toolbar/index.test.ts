@@ -20,13 +20,13 @@ describe('<clippy-toolbar>', () => {
 
   it('renders correctly with required toolbar elements', async () => {
     expect(page.getByLabelText('Werkbalk tekstbewerker')).toBeInTheDocument();
-    expect(page.getByLabelText('Vet')).toBeInTheDocument();
-    expect(page.getByLabelText('Cursief')).toBeInTheDocument();
-    expect(page.getByLabelText('Link', { exact: true })).toBeInTheDocument();
+    expect(page.getByRole('button', { name: 'Vet' })).toBeInTheDocument();
+    expect(page.getByRole('button', { name: 'Cursief' })).toBeInTheDocument();
+    expect(page.getByRole('button', { name: 'Link' }, { exact: true })).toBeInTheDocument();
   });
 
   it('updates all toolbar buttons when editor content changes', async () => {
-    expect(page.getByLabelText('Vet')).toHaveAttribute('aria-pressed', 'false');
+    expect(page.getByRole('button', { name: 'Vet' })).toHaveAttribute('aria-pressed', 'false');
   });
 
   it('opens shortcuts dialog when keyboard shortcuts button is clicked', async () => {
@@ -38,7 +38,7 @@ describe('<clippy-toolbar>', () => {
   });
 
   it('changes link URL when link is edited', async () => {
-    const linkButton = page.getByLabelText('Link', { exact: true });
+    const linkButton = page.getByRole('button', { name: 'Link' }, { exact: true });
     await user.click(linkButton);
     expect(page.getByRole('dialog')).toHaveAttribute('open');
     const urlInput = page.getByLabelText('Link to:');

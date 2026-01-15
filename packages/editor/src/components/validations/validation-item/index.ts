@@ -1,4 +1,3 @@
-import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 import linkCss from '@nl-design-system-candidate/link-css/link.css?inline';
 import AlertCircleIcon from '@tabler/icons/outline/alert-circle.svg?raw';
 import AlertTriangleIcon from '@tabler/icons/outline/alert-triangle.svg?raw';
@@ -9,6 +8,7 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationSeverity } from '@/types/validation.ts';
 import { CustomEvents } from '@/events';
 import validationListItemStyles from './styles.ts';
+import '@/components/toolbar/clippy-button';
 
 const tag = 'clippy-validation-item';
 
@@ -22,7 +22,7 @@ const ariaDescribedBy = 'validation-item-header';
 
 @customElement(tag)
 export class ValidationItem extends LitElement {
-  static override readonly styles = [validationListItemStyles, unsafeCSS(linkCss), unsafeCSS(buttonCss)];
+  static override readonly styles = [validationListItemStyles, unsafeCSS(linkCss)];
 
   @property({ type: String }) key: string = '';
   @property({ type: Number }) pos: number = 0;
@@ -71,10 +71,10 @@ export class ValidationItem extends LitElement {
             `
           : null}
         <div class="clippy-dialog__list-item-actions">
-          <button class="nl-button nl-button--disabled" aria-disabled="true">Negeren</button>
-          <button class="nl-button nl-button--secondary" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
+          <clippy-button disabled>Negeren</clippy-button>
+          <clippy-button purpose="secondary" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
             Aanpassen
-          </button>
+          </clippy-button>
         </div>
       </li>
     `;
