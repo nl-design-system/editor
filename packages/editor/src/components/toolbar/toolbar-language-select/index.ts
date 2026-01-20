@@ -12,9 +12,17 @@ export interface SelectOption {
   value: string;
 }
 
+const tag = 'clippy-language-select';
+
 const languageOptions: Language[] = [...languages, { dir: null, i18n: {}, lang: '' }];
 
-@customElement('clippy-language-select')
+declare global {
+  interface HTMLElementTagNameMap {
+    [tag]: FormatSelect;
+  }
+}
+
+@customElement(tag)
 export class FormatSelect extends LitElement {
   @property({ type: Boolean }) disabled = false;
   @property({ type: Boolean }) readOnly = false;
@@ -90,11 +98,5 @@ export class FormatSelect extends LitElement {
         )}
       </select>
     `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'clippy-language-select': FormatSelect;
   }
 }
