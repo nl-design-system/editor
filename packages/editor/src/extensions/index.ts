@@ -136,7 +136,11 @@ export const editorExtensions = (
       minWidth: 50,
     },
   }),
-  Table,
+  Table.configure({
+    HTMLAttributes: {
+      class: 'utrecht-table utrecht-table--html-table',
+    },
+  }),
   TableHead,
   TableFoot,
   TableCaption,

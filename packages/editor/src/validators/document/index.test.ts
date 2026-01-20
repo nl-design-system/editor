@@ -223,7 +223,7 @@ describe('Document validations', () => {
         </tbody>
       </table>`);
         expect(editor.getHTML()).toEqual(
-          `<h1 class="nl-heading nl-heading--level-1">Title</h1><table class="utrecht-table"><caption>caption</caption><thead><tr><th colspan="1" rowspan="1"><p class="nl-paragraph">tablehead</p></th><th colspan="1" rowspan="1"><p class="nl-paragraph">tablehead</p></th></tr></thead><tbody headrows="0" rowheadcolumns="0"><tr><td colspan="1" rowspan="1"><p class="nl-paragraph">table body cell</p></td><td colspan="1" rowspan="1"><p class="nl-paragraph">table body cell</p></td></tr></tbody></table>`,
+          `<h1 class="nl-heading nl-heading--level-1">Title</h1><table class="utrecht-table utrecht-table--html-table"><caption>caption</caption><thead><tr><th colspan="1" rowspan="1"><p class="nl-paragraph">tablehead</p></th><th colspan="1" rowspan="1"><p class="nl-paragraph">tablehead</p></th></tr></thead><tbody headrows="0" rowheadcolumns="0"><tr><td colspan="1" rowspan="1"><p class="nl-paragraph">table body cell</p></td><td colspan="1" rowspan="1"><p class="nl-paragraph">table body cell</p></td></tr></tbody></table>`,
         );
       });
 
