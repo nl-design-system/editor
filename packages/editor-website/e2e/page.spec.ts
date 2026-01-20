@@ -12,7 +12,7 @@ test('Page has correct title', async ({ page }) => {
   await page.getByRole('button', { name: 'Aanpassen' }).first().click();
   await page.waitForTimeout(500);
   await page.keyboard.type(' heading');
-  await page.getByRole('combobox').selectOption('h3');
+  await page.getByLabel('Tekst formaat selecteren').selectOption('h3');
   expect(page.getByRole('heading', { level: 3 })).toBeDefined();
   await expect(page.locator('data .nl-number-badge__visible-label')).toHaveText('2');
   await a11yButton.click();
