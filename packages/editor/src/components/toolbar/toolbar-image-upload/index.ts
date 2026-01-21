@@ -10,8 +10,8 @@ import type { ImageUpload } from '@/types/image.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { CustomEvents } from '@/events';
 import imageUploadDialogStyles from './styles.ts';
-import '@/components/toolbar/clippy-button';
-import '@/components/toolbar/clippy-icon';
+import '@nl-design-system-community/clippy-components/clippy-button';
+import '@nl-design-system-community/clippy-components/clippy-icon';
 
 @customElement('clippy-toolbar-image-upload')
 export class ToolbarImageUpload extends LitElement {

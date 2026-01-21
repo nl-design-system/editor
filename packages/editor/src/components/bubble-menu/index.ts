@@ -10,6 +10,8 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
 import bubbleMenuStyles from './styles.ts';
+import '@nl-design-system-community/clippy-components/clippy-button';
+import '@nl-design-system-community/clippy-components/clippy-icon';
 
 @customElement('clippy-bubble-menu')
 export class ImageBubbleMenu extends LitElement {

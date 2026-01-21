@@ -8,7 +8,8 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationSeverity } from '@/types/validation.ts';
 import { CustomEvents } from '@/events';
 import validationListItemStyles from './styles.ts';
-import '@/components/toolbar/clippy-button';
+import '@nl-design-system-community/clippy-components/clippy-button';
+import '@nl-design-system-community/clippy-components/clippy-icon';
 
 const tag = 'clippy-validation-item';
 

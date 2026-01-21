@@ -3,8 +3,8 @@ import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import '../clippy-button';
-import '../clippy-icon';
+import '@nl-design-system-community/clippy-components/clippy-button';
+import '@nl-design-system-community/clippy-components/clippy-icon';
 import shortcutsDialogStyles from './styles.ts';
 
 @customElement('clippy-shortcuts')

@@ -15,8 +15,8 @@ import { type ValidationKey, validationMessages } from '@/components/validations
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import '@/components/tabs';
-import '@/components/toolbar/clippy-button';
-import '@/components/toolbar/clippy-icon';
+import '@nl-design-system-community/clippy-components/clippy-button';
+import '@nl-design-system-community/clippy-components/clippy-icon';
 import { CustomEvents } from '@/events';
 import dialogStyles from './styles.ts';
 

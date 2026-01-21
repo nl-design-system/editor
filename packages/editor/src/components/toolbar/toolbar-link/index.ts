@@ -5,8 +5,8 @@ import { html, LitElement } from 'lit';
 import { customElement, query, state } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import '../clippy-button';
-import '../clippy-icon';
+import '@nl-design-system-community/clippy-components/clippy-button';
+import '@nl-design-system-community/clippy-components/clippy-icon';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 
 const ariaDescribedby = 'clippy-toolbar-link-dialog';

@@ -4,7 +4,6 @@ import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline'
 import { html, LitElement, unsafeCSS, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
-import buttonStyles from '@/components/toolbar/clippy-button/styles.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 
 export interface SelectOption {
@@ -24,10 +23,12 @@ export class FormatSelect extends LitElement {
   @property({ type: Boolean }) readOnly = false;
   @property({ type: Function }) onSelect = (value: string) => value;
   static override readonly styles = [
-    buttonStyles,
     unsafeCSS(buttonCss),
     css`
       .clippy-button--small {
+        --nl-button-min-inline-size: var(--clippy-button-small-min-inline-size, 32px);
+        --nl-button-min-block-size: var(--clippy-button-small-min-block-size, 32px);
+        --clippy-icon-size: var(--clippy-button-small-icon, 18px);
         padding-block-end: 0;
         padding-block-start: 0;
       }
