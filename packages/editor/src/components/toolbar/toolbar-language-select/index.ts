@@ -1,10 +1,10 @@
 import type { Editor } from '@tiptap/core';
-import { html, LitElement } from 'lit';
+import { css, html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { editor } from '@/decorators/TipTapDecorator.ts';
-import buttonStyles from './../toolbar-button/styles.ts';
 import { languages, isSameLanguage, type Language } from './languages.ts';
+import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 
 export interface SelectOption {
   active: boolean;
@@ -28,7 +28,18 @@ export class FormatSelect extends LitElement {
   @property({ type: Boolean }) readOnly = false;
   @property({ type: Boolean }) matchTextDirection = false;
   @property({ type: Function }) onSelect = (value: string) => value;
-  static override readonly styles = [buttonStyles];
+  static override readonly styles = [
+    unsafeCSS(buttonCss),
+    css`
+      .clippy-button--small {
+        --nl-button-min-inline-size: var(--clippy-button-small-min-inline-size, 32px);
+        --nl-button-min-block-size: var(--clippy-button-small-min-block-size, 32px);
+        --clippy-icon-size: var(--clippy-button-small-icon, 18px);
+        padding-block-end: 0;
+        padding-block-start: 0;
+      }
+    `,
+  ];
 
   @editor()
   private readonly editor: Editor | undefined;
@@ -91,7 +102,11 @@ export class FormatSelect extends LitElement {
 
   override render() {
     return html`
-      <select class="clippy-toolbar-button" @change=${this.#handleValueChange} aria-label="Taal van het onderdeel">
+      <select
+        class="nl-button nl-button--secondary clippy-button--small"
+        @change=${this.#handleValueChange}
+        aria-label="Taal van het onderdeel"
+      >
         ${map(
           this.options,
           (option) => html`<option ?selected=${option.active} value=${option.value}>${option.label}</option>`,
