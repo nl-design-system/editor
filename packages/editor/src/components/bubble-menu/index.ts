@@ -10,6 +10,8 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
 import bubbleMenuStyles from './styles.ts';
+import '@nl-design-system-community/clippy-components/clippy-button';
+import '@nl-design-system-community/clippy-components/clippy-icon';
 
 @customElement('clippy-bubble-menu')
 export class ImageBubbleMenu extends LitElement {
@@ -76,24 +78,31 @@ export class ImageBubbleMenu extends LitElement {
 
     return html`
       <div class="bubble-menu" role="toolbar" aria-label="Image alignment options">
-        <clippy-toolbar-button
-          aria-label="Align left"
+        <clippy-button
           pressed="${attrs['alignment'] === 'left'}"
           @click="${() => this.#setAlignment('left')}"
           ${ref(this.#focusNode)}
+          icon-only
+          size="small"
+          purpose="secondary"
         >
-          ${unsafeSVG(AlignLeftIcon)}
-        </clippy-toolbar-button>
-        <clippy-toolbar-button
-          aria-label="Align right"
+          <clippy-icon slot="iconStart">${unsafeSVG(AlignLeftIcon)}</clippy-icon>
+          Align left
+        </clippy-button>
+        <clippy-button
           pressed="${attrs['alignment'] === 'right'}"
           @click="${() => this.#setAlignment('right')}"
+          icon-only
+          size="small"
+          purpose="secondary"
         >
-          ${unsafeSVG(AlignRightIcon)}
-        </clippy-toolbar-button>
-        <clippy-toolbar-button aria-label="Afbeelding bewerken" @click=${this.#editImage}>
-          ${unsafeSVG(EditIcon)}
-        </clippy-toolbar-button>
+          <clippy-icon slot="iconStart">${unsafeSVG(AlignRightIcon)}</clippy-icon>
+          Align right
+        </clippy-button>
+        <clippy-button @click=${this.#editImage} icon-only size="small" purpose="secondary">
+          <clippy-icon slot="iconStart">${unsafeSVG(EditIcon)}</clippy-icon>
+          Afbeelding bewerken
+        </clippy-button>
       </div>
     `;
   }

@@ -15,6 +15,8 @@ import { type ValidationKey, validationMessages } from '@/components/validations
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import '@/components/tabs';
+import '@nl-design-system-community/clippy-components/clippy-button';
+import '@nl-design-system-community/clippy-components/clippy-icon';
 import { CustomEvents } from '@/events';
 import dialogStyles from './styles.ts';
 
@@ -121,7 +123,15 @@ export class ValidationsDialog extends LitElement {
         class="clippy-dialog__content"
         aria-label="Toegankelijkheidsmeldingen"
       >
-        <button class="clippy-dialog__close-button" @click=${() => this.#toggleOpen()}>${unsafeSVG(X)}</button>
+        <clippy-button
+          class="clippy-dialog__close-button"
+          icon-only
+          purpose="subtle"
+          @click=${() => this.#toggleOpen()}
+        >
+          <clippy-icon slot="iconStart">${unsafeSVG(X)}</clippy-icon>
+          Sluiten
+        </clippy-button>
         <clippy-tabs></clippy-tabs>
         <ul class="clippy-dialog__list" data-testid="clippy-validations-list">
           ${size > 0

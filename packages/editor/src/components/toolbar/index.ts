@@ -12,7 +12,8 @@ import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
 import OrderedListIcon from '@tabler/icons/outline/list-numbers.svg?raw';
 import BulletListIcon from '@tabler/icons/outline/list.svg?raw';
 import TableIcon from '@tabler/icons/outline/table.svg?raw';
-import './toolbar-button';
+import '@nl-design-system-community/clippy-components/clippy-button';
+import '@nl-design-system-community/clippy-components/clippy-icon';
 import './toolbar-format-select';
 import UnderlineIcon from '@tabler/icons/outline/underline.svg?raw';
 import { LitElement, html, unsafeCSS, nothing } from 'lit';
@@ -26,8 +27,6 @@ import { CustomEvents } from '@/events';
 import './toolbar-image-upload';
 import './toolbar-link';
 import toolbarStyles from './styles.ts';
-
-const addAriaHidden = (svg: string) => svg.replace('<svg', '<svg aria-hidden="true"');
 
 @customElement('clippy-toolbar')
 export class Toolbar extends LitElement {
@@ -81,104 +80,139 @@ export class Toolbar extends LitElement {
     return html`
       <div class="clippy-toolbar__wrapper" aria-label="Werkbalk tekstbewerker">
         <clippy-format-select></clippy-format-select>
-        <clippy-toolbar-button
-          label="Vet"
+        <clippy-button
+          toggle
           .pressed=${this.editor?.isActive('bold') ?? false}
           @click=${() => this.editor?.chain().focus().toggleBold().run()}
           ${ref(this.#focusNode)}
+          icon-only
+          size="small"
+          purpose="secondary"
         >
-          ${unsafeSVG(addAriaHidden(BoldIcon))}
-        </clippy-toolbar-button>
-        <clippy-toolbar-button
-          label="Cursief"
+          <clippy-icon slot="iconStart">${unsafeSVG(BoldIcon)}</clippy-icon>
+          Vet
+        </clippy-button>
+        <clippy-button
+          toggle
           .pressed=${this.editor?.isActive('italic') ?? false}
           @click=${() => this.editor?.chain().focus().toggleItalic().run()}
+          icon-only
+          size="small"
+          purpose="secondary"
         >
-          ${unsafeSVG(addAriaHidden(ItalicIcon))}
-        </clippy-toolbar-button>
-        <clippy-toolbar-button
-          label="Onderstrepen"
+          <clippy-icon slot="iconStart">${unsafeSVG(ItalicIcon)}</clippy-icon>
+          Cursief
+        </clippy-button>
+        <clippy-button
+          toggle
           .pressed=${this.editor?.isActive('underline') ?? false}
           @click=${() => this.editor?.chain().focus().toggleUnderline().run()}
+          icon-only
+          size="small"
+          purpose="secondary"
         >
-          ${unsafeSVG(addAriaHidden(UnderlineIcon))}
-        </clippy-toolbar-button>
+          <clippy-icon slot="iconStart">${unsafeSVG(UnderlineIcon)}</clippy-icon>
+          Onderstrepen
+        </clippy-button>
         <div class="clippy-toolbar__divider"></div>
-        <clippy-toolbar-button
-          label="Ongedaan maken"
+        <clippy-button
           ?disabled=${!(this.editor?.can().undo() ?? false)}
           @click=${() => this.editor?.commands.undo()}
+          icon-only
+          size="small"
+          purpose="secondary"
         >
-          ${unsafeSVG(addAriaHidden(ArrowBackUpIcon))}
-        </clippy-toolbar-button>
-        <clippy-toolbar-button
-          label="Opnieuw"
+          <clippy-icon slot="iconStart">${unsafeSVG(ArrowBackUpIcon)}</clippy-icon>
+          Ongedaan maken
+        </clippy-button>
+        <clippy-button
           ?disabled=${!(this.editor?.can().redo() ?? false)}
           @click=${() => this.editor?.commands.redo()}
+          icon-only
+          size="small"
+          purpose="secondary"
         >
-          ${unsafeSVG(addAriaHidden(ArrowForwardUpIcon))}
-        </clippy-toolbar-button>
+          <clippy-icon slot="iconStart">${unsafeSVG(ArrowForwardUpIcon)}</clippy-icon>
+          Opnieuw
+        </clippy-button>
         <div class="clippy-toolbar__divider"></div>
-        <clippy-toolbar-button
-          label="Genummerde lijst"
+        <clippy-button
           .pressed=${this.editor?.isActive('orderedList') ?? false}
           @click=${() => {
             this.editor?.chain().focus().toggleOrderedList().run();
           }}
+          icon-only
+          size="small"
+          purpose="secondary"
         >
-          ${unsafeSVG(addAriaHidden(OrderedListIcon))}
-        </clippy-toolbar-button>
-        <clippy-toolbar-button
-          label="Geordende lijst"
+          <clippy-icon slot="iconStart">${unsafeSVG(OrderedListIcon)}</clippy-icon>
+          Genummerde lijst
+        </clippy-button>
+        <clippy-button
+          toggle
           .pressed=${this.editor?.isActive('bulletList') ?? false}
           @click=${() => this.editor?.chain().focus().toggleBulletList().run()}
+          icon-only
+          size="small"
+          purpose="secondary"
         >
-          ${unsafeSVG(addAriaHidden(BulletListIcon))}
-        </clippy-toolbar-button>
-        <clippy-toolbar-button
-          label="Definitielijst"
+          <clippy-icon slot="iconStart">${unsafeSVG(BulletListIcon)}</clippy-icon>
+          Geordende lijst
+        </clippy-button>
+        <clippy-button
+          toggle
           .pressed=${this.editor?.isActive('definitionList') ?? false}
           @click=${() => this.editor?.chain().focus().insertDefinitionList().run()}
+          icon-only
+          size="small"
+          purpose="secondary"
         >
-          ${unsafeSVG(addAriaHidden(ListDetailsIcon))}
-        </clippy-toolbar-button>
+          <clippy-icon slot="iconStart">${unsafeSVG(ListDetailsIcon)}</clippy-icon>
+          Definitielijst
+        </clippy-button>
         <div class="clippy-toolbar__divider"></div>
-        <clippy-toolbar-button
-          label="Tabel invoegen"
+        <clippy-button
           .pressed=${this.editor?.isActive('table') ?? false}
           @click=${() => this.editor?.chain().focus().insertTable({ cols: 3, rows: 2, withHeaderRow: true }).run()}
+          icon-only
+          size="small"
+          purpose="secondary"
         >
-          ${unsafeSVG(addAriaHidden(TableIcon))}
-        </button>
-        </clippy-toolbar-button>
+          <clippy-icon slot="iconStart">${unsafeSVG(TableIcon)}</clippy-icon>
+          Tabel invoegen
+        </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-link></clippy-toolbar-link>
         <clippy-toolbar-image-upload></clippy-toolbar-image-upload>
         <div class="clippy-toolbar__divider"></div>
-        <clippy-toolbar-button
-          label="Sneltoetsen"
+        <clippy-button
           .pressed=${this.#dialogRef.value?.open ?? false}
           @click=${this.#toggleOpenShortcuts}
+          icon-only
+          size="small"
+          purpose="secondary"
         >
-          ${unsafeSVG(addAriaHidden(KeyboardIcon))}
-        </clippy-toolbar-button>
-        <clippy-toolbar-button
-          label="Toon toegankelijkheidsmeldingen"
-          class="clippy-dialog-toggle"
-          @click=${this.#toggleOpenValidationsDialog}
-          aria-controls="dialog-content"
-        >
-          <span class="clippy-screen-reader-text">Toon toegankelijkheidsmeldingen</span>
-          ${unsafeSVG(AccessibleIcon)}
-          ${
-            size > 0
-              ? html`<data value=${size} class="nl-number-badge nl-number-badge--clippy">
-                  <span hidden aria-hidden="true" class="nl-number-badge__visible-label">${size}</span>
-                  <span class="nl-number-badge__hidden-label">${size} toegankelijkheidsmeldingen</span>
-                </data>`
-              : nothing
-          }
-        </clippy-toolbar-button>
+          <clippy-icon slot="iconStart">${unsafeSVG(KeyboardIcon)}</clippy-icon>
+          Sneltoetsen
+        </clippy-button>
+        <span style="position: relative;">
+          <clippy-button
+            @click=${this.#toggleOpenValidationsDialog}
+            aria-controls="dialog-content"
+            icon-only
+            size="small"
+            purpose="secondary"
+          >
+            <clippy-icon slot="iconStart">${unsafeSVG(AccessibleIcon)}</clippy-icon>
+            Toon toegankelijkheidsmeldingen
+          </clippy-button>
+          ${size > 0
+            ? html`<data value=${size} class="nl-number-badge nl-number-badge--clippy">
+                <span hidden aria-hidden="true" class="nl-number-badge__visible-label">${size}</span>
+                <span class="nl-number-badge__hidden-label">${size} toegankelijkheidsmeldingen</span>
+              </data>`
+            : nothing}
+        </span>
       </div>
       <clippy-shortcuts .dialogRef=${this.#dialogRef}></clippy-shortcuts>
       <div class="clippy-screen-reader-text" aria-live=${size > 0 ? 'polite' : 'off'}>

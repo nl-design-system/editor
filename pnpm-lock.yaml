@@ -94,8 +94,8 @@ importers:
         specifier: 1.1.5
         version: 1.1.5
       '@nl-design-system-community/clippy-components':
-        specifier: 1.0.0
-        version: 1.0.0
+        specifier: 1.1.0
+        version: 1.1.0
       '@tabler/icons':
         specifier: 3.36.0
         version: 3.36.0
@@ -866,14 +866,20 @@ packages:
   '@nl-design-system-candidate/button-css@1.0.0':
     resolution: {integrity: sha512-TjXFCCeCrSfxBRwcdKWFO/gLAZDfeBAnxC3DuCNvu53JwYIA30++GOivFgeRmDyXDhJysoG19/SVq1r1jfUP5Q==}
 
+  '@nl-design-system-candidate/code-css@2.0.3':
+    resolution: {integrity: sha512-7cuwem+GDRBGT4/4h4QFZesr6l2ruRG4AAULhvPuyvmvftTMzb7Q8G5O2cmNzBt/VuQKO789Qe3w79UcXRjxNw==}
+
+  '@nl-design-system-candidate/color-sample-css@1.0.4':
+    resolution: {integrity: sha512-zDQKBqdWnxKg+y08WMOc2FKTCbKYM+IVLgzWd044sAo2U+q3XKREP+VZDUKAmSDEPcaDn2hia1QFO6eJkhMFAQ==}
+
   '@nl-design-system-candidate/link-css@2.0.3':
     resolution: {integrity: sha512-NpRIm9YDCK1bihslc9UD3OvV5hmm91Dc7v2oBIllqlZZyS1THFmPsyi+sJ1Vd7ZDa54GgqjuzUJOzAoQDJOFzQ==}
 
   '@nl-design-system-candidate/number-badge-css@1.1.5':
     resolution: {integrity: sha512-H9/+72dHiuKZUk+xixykqpgoH7O70SUw1Ak71NIAscVcBbivWK4Hzj9fF4uNXpIXdERxVdiJxa1TIBhCdMRwAQ==}
 
-  '@nl-design-system-community/clippy-components@1.0.0':
-    resolution: {integrity: sha512-sun3fESC47joyqRCDRKUTbt4e/NtGBisvMyBbvavJRMlWat1yI6USrWu/N/0LVL4UywE8jMu79FkJNqB2dP1tA==}
+  '@nl-design-system-community/clippy-components@1.1.0':
+    resolution: {integrity: sha512-xocNfU8N6EsXaY85Rt9TS9tKgkmNnYPmsFE7CsXijXdvmlxkKN2+SR5TmeJ7DL7ZxzlfU24brIlCSPirK7Fv3A==}
 
   '@nl-design-system-community/ma-design-tokens@3.0.0':
     resolution: {integrity: sha512-95uF6BODj/RldOGIdB0i4L8ISoJ4CauQVzZb6sgD8GBA4btEdX3Cdc6VOKncKbknads5WePeNFap7lo7YrlRGg==}
@@ -2049,6 +2055,9 @@ packages:
 
   colorette@2.0.20:
     resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
+
+  colorjs.io@0.6.0-beta.3:
+    resolution: {integrity: sha512-LuZuWmlCc3oeGnZ9IdH6Uo0OOf1wBfLCedZEoaNsO8VYqTbsqkFp9QHcd9Yt2KilpCHJArOM3kHmG43arZ7OHw==}
 
   commander@12.1.0:
     resolution: {integrity: sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==}
@@ -5167,17 +5176,25 @@ snapshots:
 
   '@nl-design-system-candidate/button-css@1.0.0': {}
 
+  '@nl-design-system-candidate/code-css@2.0.3': {}
+
+  '@nl-design-system-candidate/color-sample-css@1.0.4': {}
+
   '@nl-design-system-candidate/link-css@2.0.3': {}
 
   '@nl-design-system-candidate/number-badge-css@1.1.5': {}
 
-  '@nl-design-system-community/clippy-components@1.0.0':
+  '@nl-design-system-community/clippy-components@1.1.0':
     dependencies:
       '@amsterdam/design-system-css': 2.2.0
+      '@nl-design-system-candidate/button-css': 1.0.0
+      '@nl-design-system-candidate/code-css': 2.0.3
+      '@nl-design-system-candidate/color-sample-css': 1.0.4
       '@utrecht/button-css': 3.0.1
       '@utrecht/combobox-css': 2.0.1
       '@utrecht/listbox-css': 2.0.1
       '@utrecht/textbox-css': 3.0.1
+      colorjs.io: 0.6.0-beta.3
       lit: 3.3.2
       memoize: 10.2.0
     transitivePeerDependencies:
@@ -6465,6 +6482,8 @@ snapshots:
   colord@2.9.3: {}
 
   colorette@2.0.20: {}
+
+  colorjs.io@0.6.0-beta.3: {}
 
   commander@12.1.0: {}
 

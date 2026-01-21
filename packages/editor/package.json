@@ -41,7 +41,7 @@
     "@nl-design-system-candidate/button-css": "1.0.0",
     "@nl-design-system-candidate/link-css": "2.0.3",
     "@nl-design-system-candidate/number-badge-css": "1.1.5",
-    "@nl-design-system-community/clippy-components": "1.0.0",
+    "@nl-design-system-community/clippy-components": "1.1.0",
     "@tabler/icons": "3.36.0",
     "@tiptap/core": "3.14.0",
     "@tiptap/extension-bold": "3.14.0",

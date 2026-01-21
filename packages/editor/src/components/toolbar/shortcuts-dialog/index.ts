@@ -1,10 +1,10 @@
-import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 import CrossIcon from '@tabler/icons/outline/x.svg?raw';
-import { LitElement, html, unsafeCSS } from 'lit';
+import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import './../toolbar-button';
+import '@nl-design-system-community/clippy-components/clippy-button';
+import '@nl-design-system-community/clippy-components/clippy-icon';
 import shortcutsDialogStyles from './styles.ts';
 
 @customElement('clippy-shortcuts')
@@ -12,7 +12,7 @@ export class ShortcutsDialog extends LitElement {
   @property({ attribute: false })
   public dialogRef?: Ref<HTMLDialogElement>;
 
-  static override readonly styles = [shortcutsDialogStyles, unsafeCSS(buttonCss)];
+  static override readonly styles = [shortcutsDialogStyles];
 
   public close(): void {
     this.dialogRef?.value?.close();
@@ -30,10 +30,10 @@ export class ShortcutsDialog extends LitElement {
       >
         <div class="clippy-shortcuts__header">
           <h1 id="clippy-shortcuts-title">Sneltoetsen</h1>
-          <button class="nl-button nl-button--subtle nl-button--icon-only" @click=${() => this.close()}>
-            <span class="nl-button__label">Sluit sneltoetsen dialog</span>
-            ${unsafeSVG(CrossIcon)}
-          </button>
+          <clippy-button icon-only purpose="subtle" @click=${() => this.close()}>
+            <clippy-icon slot="iconStart">${unsafeSVG(CrossIcon)}</clippy-icon>
+            Sluit sneltoetsen dialog
+          </clippy-button>
         </div>
         <table class="clippy-shortcuts__table">
           <caption>
