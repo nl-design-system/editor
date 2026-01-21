@@ -1,10 +1,10 @@
 import type { Editor } from '@tiptap/core';
+import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 import { css, html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import { languages, isSameLanguage, type Language } from './languages.ts';
-import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 
 export interface SelectOption {
   active: boolean;

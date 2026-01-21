@@ -248,7 +248,8 @@ export class Toolbar extends LitElement {
         <clippy-toolbar-image-upload></clippy-toolbar-image-upload>
         <div class="clippy-toolbar__divider"></div>
         <clippy-button
-          .pressed=${this.editor?.isActive(this.editor?.state.selection.$anchor.node().type.name, { dir: 'ltr' }) ?? false}
+          .pressed=${this.editor?.isActive(this.editor?.state.selection.$anchor.node().type.name, { dir: 'ltr' }) ??
+          false}
           @click=${() => this.#toggleTextDirection('rtl')}
           icon-only
           size="small"
@@ -259,7 +260,8 @@ export class Toolbar extends LitElement {
           Links naar rechts
         </clippy-button>
         <clippy-button
-          .pressed=${this.editor?.isActive(this.editor?.state.selection.$anchor.node().type.name, { dir: 'rtl' }) ?? false}
+          .pressed=${this.editor?.isActive(this.editor?.state.selection.$anchor.node().type.name, { dir: 'rtl' }) ??
+          false}
           @click=${() => this.#toggleTextDirection('rtl')}
           icon-only
           size="small"
