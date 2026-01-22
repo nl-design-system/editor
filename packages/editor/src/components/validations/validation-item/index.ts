@@ -63,7 +63,7 @@ export class ValidationItem extends LitElement {
         tabindex="-1"
       >
         <div class="clippy-dialog__list-item-message">
-          <h3 class="nl-heading nl-heading--level-3" id=${ariaDescribedBy}>${this.description}</h3>
+          <h4 class="nl-heading nl-heading--level-4" id=${ariaDescribedBy}>${this.description}</h4>
           <span class="clippy-dialog__list-item-severity clippy-dialog__list-item-severity--${this.severity}">
             ${unsafeSVG(this.#getAlertIcon())}
           </span>
