@@ -1,5 +1,6 @@
 import { consume } from '@lit/context';
-import { html, LitElement, nothing } from 'lit';
+import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
+import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { map } from 'lit/directives/map.js';
@@ -19,7 +20,7 @@ declare global {
 
 @customElement(tag)
 export class Gutter extends LitElement {
-  static override readonly styles = [gutterStyles];
+  static override readonly styles = [gutterStyles, unsafeCSS(paragraphStyle)];
 
   @state()
   private activeTooltipKey: string | null = null;
@@ -60,7 +61,7 @@ export class Gutter extends LitElement {
                   .description=${description}
                   .href=${href}
                 >
-                  ${tipHtml ? html`<div slot="tip-html">${unsafeHTML(tipHtml)}</div>` : nothing}
+                  ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${unsafeHTML(tipHtml)}</p>` : nothing}
                 </clippy-validation-item>
               </div>
             </li> `
