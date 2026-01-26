@@ -13,6 +13,9 @@ import KeyboardIcon from '@tabler/icons/outline/keyboard.svg?raw';
 import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
 import OrderedListIcon from '@tabler/icons/outline/list-numbers.svg?raw';
 import BulletListIcon from '@tabler/icons/outline/list.svg?raw';
+import SeparatorIcon from '@tabler/icons/outline/separator.svg?raw';
+import SubscriptIcon from '@tabler/icons/outline/subscript.svg?raw';
+import SuperscriptIcon from '@tabler/icons/outline/superscript.svg?raw';
 import TableIcon from '@tabler/icons/outline/table.svg?raw';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
@@ -176,6 +179,28 @@ export class Toolbar extends LitElement {
           <clippy-icon slot="iconStart">${unsafeSVG(IconHighlight)}</clippy-icon>
           Mark
         </clippy-button>
+        <clippy-button
+          .pressed=${this.editor?.isActive('superscript') ?? false}
+          toggle
+          @click=${() => this.editor?.chain().focus().toggleSuperscript().run()}
+          icon-only
+          size="small"
+          purpose="secondary"
+        >
+          <clippy-icon slot="iconStart">${unsafeSVG(SuperscriptIcon)}</clippy-icon>
+          Superscript
+        </clippy-button>
+        <clippy-button
+          .pressed=${this.editor?.isActive('subscript') ?? false}
+          toggle
+          @click=${() => this.editor?.chain().focus().toggleSubscript().run()}
+          icon-only
+          size="small"
+          purpose="secondary"
+        >
+          <clippy-icon slot="iconStart">${unsafeSVG(SubscriptIcon)}</clippy-icon>
+          Subscript
+        </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-button
           ?disabled=${!(this.editor?.can().undo() ?? false)}
@@ -246,6 +271,15 @@ export class Toolbar extends LitElement {
         <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-link></clippy-toolbar-link>
         <clippy-toolbar-image-upload></clippy-toolbar-image-upload>
+        <clippy-button
+          @click=${() => this.editor?.chain().focus().setHorizontalRule().run()}
+          icon-only
+          size="small"
+          purpose="secondary"
+        >
+          <clippy-icon slot="iconStart">${unsafeSVG(SeparatorIcon)}</clippy-icon>
+          Horizontale lijn
+        </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-button
           .pressed=${this.editor?.isActive(this.editor?.state.selection.$anchor.node().type.name, { dir: 'ltr' }) ??

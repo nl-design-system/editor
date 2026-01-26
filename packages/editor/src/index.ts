@@ -10,7 +10,11 @@ import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
 import markStyle from '@nl-design-system-candidate/mark-css/mark.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { Editor as TiptapEditor } from '@tiptap/core';
+import blockquoteStyle from '@utrecht/blockquote-css/dist/index.css?inline';
 import orderedListStyle from '@utrecht/ordered-list-css/dist/index.css?inline';
+import separatorStyle from '@utrecht/separator-css/dist/index.css?inline';
+import subscriptStyle from '@utrecht/subscript-css/dist/index.css?inline';
+import superscriptStyle from '@utrecht/superscript-css/dist/index.css?inline';
 import tableStyle from '@utrecht/table-css/dist/index.css?inline';
 import unorderedListStyle from '@utrecht/unordered-list-css/dist/index.css?inline';
 import { LitElement, html, unsafeCSS } from 'lit';
@@ -43,6 +47,10 @@ export class Editor extends LitElement {
     unsafeCSS(paragraphStyle),
     unsafeCSS(unorderedListStyle),
     unsafeCSS(tableStyle),
+    unsafeCSS(separatorStyle),
+    unsafeCSS(subscriptStyle),
+    unsafeCSS(superscriptStyle),
+    unsafeCSS(blockquoteStyle),
   ];
 
   @property({ type: String })
