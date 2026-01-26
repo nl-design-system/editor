@@ -1,6 +1,7 @@
 import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
+import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import X from '@tabler/icons/outline/x.svg?raw';
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
@@ -9,14 +10,14 @@ import { map } from 'lit/directives/map.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import type { ValidationEntry, ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
 import '../validation-item';
+import type { ValidationEntry, ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
 import { type ValidationKey, validationMessages } from '@/components/validations/messages.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
-import { validationsContext } from '@/context/validationsContext.ts';
 import '@/components/tabs';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
+import { validationsContext } from '@/context/validationsContext.ts';
 import { CustomEvents } from '@/events';
 import dialogStyles from './styles.ts';
 
@@ -24,7 +25,7 @@ const sortByPos = (a: ValidationEntry, b: ValidationEntry) => a[1].pos - b[1].po
 
 @customElement('clippy-validations-dialog')
 export class ValidationsDialog extends LitElement {
-  static override readonly styles = [dialogStyles, unsafeCSS(numberBadgeStyles)];
+  static override readonly styles = [dialogStyles, unsafeCSS(numberBadgeStyles), unsafeCSS(paragraphStyle)];
   @state()
   private open = false;
 
@@ -147,7 +148,7 @@ export class ValidationsDialog extends LitElement {
                     .description=${description}
                     .href=${href}
                   >
-                    ${tipHtml ? html`<div slot="tip-html">${unsafeHTML(tipHtml)}</div>` : nothing}
+                    ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${unsafeHTML(tipHtml)}</p>` : nothing}
                   </clippy-validation-item>
                 `;
               })

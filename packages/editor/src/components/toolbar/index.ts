@@ -5,7 +5,9 @@ import AccessibleIcon from '@tabler/icons/outline/accessible.svg?raw';
 import ArrowBackUpIcon from '@tabler/icons/outline/arrow-back-up.svg?raw';
 import ArrowForwardUpIcon from '@tabler/icons/outline/arrow-forward-up.svg?raw';
 import BoldIcon from '@tabler/icons/outline/bold.svg?raw';
+import CodeIcon from '@tabler/icons/outline/code.svg?raw';
 import './shortcuts-dialog';
+import IconHighlight from '@tabler/icons/outline/highlight.svg?raw';
 import ItalicIcon from '@tabler/icons/outline/italic.svg?raw';
 import KeyboardIcon from '@tabler/icons/outline/keyboard.svg?raw';
 import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
@@ -14,7 +16,10 @@ import BulletListIcon from '@tabler/icons/outline/list.svg?raw';
 import TableIcon from '@tabler/icons/outline/table.svg?raw';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
+import IconTextDirectionLtr from '@tabler/icons/outline/text-direction-ltr.svg?raw';
+import IconTextDirectionRtl from '@tabler/icons/outline/text-direction-rtl.svg?raw';
 import './toolbar-format-select';
+import './toolbar-language-select';
 import UnderlineIcon from '@tabler/icons/outline/underline.svg?raw';
 import { LitElement, html, unsafeCSS, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -27,6 +32,7 @@ import { CustomEvents } from '@/events';
 import './toolbar-image-upload';
 import './toolbar-link';
 import toolbarStyles from './styles.ts';
+import { isDefaultDir } from './toolbar-language-select/languages.ts';
 
 @customElement('clippy-toolbar')
 export class Toolbar extends LitElement {
@@ -63,6 +69,22 @@ export class Toolbar extends LitElement {
     );
   };
 
+  readonly #toggleTextDirection = (dir: string) => {
+    const nodeTypeName = this.editor?.state.selection.$anchor.node().type.name;
+
+    if (!nodeTypeName) {
+      return;
+    }
+
+    // When the Button is pressed, remove the dir="rtl" attribute.
+    // When the Button is not pressed, set the dir="rtl" attribute.
+    const isActive = this.editor?.isActive(nodeTypeName, { dir });
+
+    const newValue = isActive ? null : dir;
+
+    this.editor?.chain().focus().updateAttributes(nodeTypeName, { dir: newValue }).run();
+  };
+
   override connectedCallback() {
     globalThis.addEventListener(CustomEvents.FOCUS_TOOLBAR, this.#onToolbarFocus);
     super.connectedCallback();
@@ -73,6 +95,24 @@ export class Toolbar extends LitElement {
     super.disconnectedCallback();
   }
 
+  #getCurrentLanguage(): string | null {
+    return this.editor?.state.selection.$anchor.node().attrs['lang'];
+  }
+
+  #getCurrentTextDirection(): string | null {
+    return this.editor?.state.selection.$anchor.node().attrs['dir'];
+  }
+
+  readonly #isOddTextDirection = () => {
+    const lang = this.#getCurrentLanguage();
+    const dir = this.#getCurrentTextDirection();
+
+    if (!lang && !dir) {
+      return false;
+    }
+    return !isDefaultDir(lang ?? '', dir ?? '');
+  };
+
   static override readonly styles = [toolbarStyles, unsafeCSS(numberBadgeStyles)];
 
   override render() {
@@ -80,6 +120,7 @@ export class Toolbar extends LitElement {
     return html`
       <div class="clippy-toolbar__wrapper" aria-label="Werkbalk tekstbewerker">
         <clippy-format-select></clippy-format-select>
+        <clippy-language-select matchTextDirection></clippy-language-select>
         <clippy-button
           toggle
           .pressed=${this.editor?.isActive('bold') ?? false}
@@ -113,6 +154,27 @@ export class Toolbar extends LitElement {
         >
           <clippy-icon slot="iconStart">${unsafeSVG(UnderlineIcon)}</clippy-icon>
           Onderstrepen
+        </clippy-button>
+        <clippy-button
+          toggle
+          .pressed=${this.editor?.isActive('code') ?? false}
+          @click=${() => this.editor?.chain().focus().toggleCode().run()}
+          icon-only
+          size="small"
+          purpose="secondary"
+        >
+          <clippy-icon slot="iconStart">${unsafeSVG(CodeIcon)}</clippy-icon>
+          Code
+        </clippy-button>
+        <clippy-button
+          .pressed=${this.editor?.isActive('highlight') ?? false}
+          @click=${() => this.editor?.chain().focus().toggleHighlight().run()}
+          icon-only
+          size="small"
+          purpose="secondary"
+        >
+          <clippy-icon slot="iconStart">${unsafeSVG(IconHighlight)}</clippy-icon>
+          Mark
         </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-button
@@ -185,6 +247,31 @@ export class Toolbar extends LitElement {
         <clippy-toolbar-link></clippy-toolbar-link>
         <clippy-toolbar-image-upload></clippy-toolbar-image-upload>
         <div class="clippy-toolbar__divider"></div>
+        <clippy-button
+          .pressed=${this.editor?.isActive(this.editor?.state.selection.$anchor.node().type.name, { dir: 'ltr' }) ??
+          false}
+          @click=${() => this.#toggleTextDirection('rtl')}
+          icon-only
+          size="small"
+          purpose="secondary"
+          ?hidden=${!this.#isOddTextDirection()}
+        >
+          <clippy-icon slot="iconStart">${unsafeSVG(IconTextDirectionLtr)}</clippy-icon>
+          Links naar rechts
+        </clippy-button>
+        <clippy-button
+          .pressed=${this.editor?.isActive(this.editor?.state.selection.$anchor.node().type.name, { dir: 'rtl' }) ??
+          false}
+          @click=${() => this.#toggleTextDirection('rtl')}
+          icon-only
+          size="small"
+          purpose="secondary"
+          ?hidden=${!this.#isOddTextDirection()}
+        >
+          <clippy-icon slot="iconStart">${unsafeSVG(IconTextDirectionRtl)}</clippy-icon>
+          Rechts naar links
+        </clippy-button>
+        <div class="clippy-toolbar__divider" ?hidden=${!this.#isOddTextDirection()}></div>
         <clippy-button
           .pressed=${this.#dialogRef.value?.open ?? false}
           @click=${this.#toggleOpenShortcuts}
