@@ -10,6 +10,7 @@ import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
 import markStyle from '@nl-design-system-candidate/mark-css/mark.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { Editor as TiptapEditor } from '@tiptap/core';
+import dataListStyle from '@utrecht/data-list-css/dist/index.css?inline';
 import orderedListStyle from '@utrecht/ordered-list-css/dist/index.css?inline';
 import tableStyle from '@utrecht/table-css/dist/index.css?inline';
 import unorderedListStyle from '@utrecht/unordered-list-css/dist/index.css?inline';
@@ -43,6 +44,7 @@ export class Editor extends LitElement {
     unsafeCSS(paragraphStyle),
     unsafeCSS(unorderedListStyle),
     unsafeCSS(tableStyle),
+    unsafeCSS(dataListStyle),
   ];
 
   @property({ type: String })

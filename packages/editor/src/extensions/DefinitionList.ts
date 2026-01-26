@@ -10,37 +10,66 @@ declare module '@tiptap/core' {
 
 const DefinitionListNode = Node.create({
   name: 'definitionList',
-  content: '(definitionTerm | definitionDescription)*',
+  content: 'definitionListItem+',
   group: 'block',
   parseHTML() {
-    return [{ tag: 'dl' }];
+    return [
+      {
+        getAttrs: (node) => {
+          const element = node as HTMLElement;
+          return element.classList.contains('utrecht-data-list') ? {} : false;
+        },
+        tag: 'dl',
+      },
+    ];
   },
-  renderHTML({ HTMLAttributes }) {
-    return ['dl', HTMLAttributes, 0];
+  renderHTML() {
+    return [
+      'dl',
+      {
+        class: 'utrecht-data-list utrecht-data-list--html-dl utrecht-data-list--rows',
+      },
+      0,
+    ];
+  },
+});
+
+const DefinitionListItemNode = Node.create({
+  name: 'definitionListItem',
+  content: 'definitionTerm definitionDescription',
+  parseHTML() {
+    return [{ tag: 'div.utrecht-data-list__item' }];
+  },
+  renderHTML() {
+    return ['div', { class: 'utrecht-data-list__item' }, 0];
   },
 });
 
 const DefinitionTermNode = Node.create({
   name: 'definitionTerm',
   content: 'inline*',
-  group: 'definitionList',
   parseHTML() {
     return [{ tag: 'dt' }];
   },
   renderHTML() {
-    return ['dt', 0];
+    return ['dt', { class: 'utrecht-data-list__item-key' }, 0];
   },
 });
 
 const DefinitionDescriptionNode = Node.create({
   name: 'definitionDescription',
   content: 'inline*',
-  group: 'definitionList',
   parseHTML() {
     return [{ tag: 'dd' }];
   },
   renderHTML() {
-    return ['dd', 0];
+    return [
+      'dd',
+      {
+        class: 'utrecht-data-list__item-value utrecht-data-list__item-value--html-dd',
+      },
+      0,
+    ];
   },
 });
 
@@ -55,12 +84,17 @@ export const DefinitionList = Extension.create({
           return commands.insertContent({
             content: [
               {
-                content: [{ text: 'Term', type: 'text' }],
-                type: 'definitionTerm',
-              },
-              {
-                content: [{ text: 'Detailbeschrijving', type: 'text' }],
-                type: 'definitionDescription',
+                content: [
+                  {
+                    content: [{ text: 'Term', type: 'text' }],
+                    type: 'definitionTerm',
+                  },
+                  {
+                    content: [{ text: 'Detailbeschrijving', type: 'text' }],
+                    type: 'definitionDescription',
+                  },
+                ],
+                type: 'definitionListItem',
               },
             ],
             type: 'definitionList',
@@ -70,6 +104,6 @@ export const DefinitionList = Extension.create({
   },
 
   addExtensions() {
-    return [DefinitionListNode, DefinitionTermNode, DefinitionDescriptionNode];
+    return [DefinitionListNode, DefinitionListItemNode, DefinitionTermNode, DefinitionDescriptionNode];
   },
 });
