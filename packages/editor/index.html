@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="nl" dir="ltr" class="ma-theme clippy-theme utrecht-root">
+<html lang="nl" dir="ltr" class="ma-theme clippy-theme">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,7 +12,7 @@
       }
     </style>
   </head>
-  <body class="utrecht-body">
+  <body>
     <main>
       <clippy-editor identifier="clippy-editor-localhost" top-heading-level="2">
         <div slot="content">
@@ -33,6 +33,16 @@
             die, schoon zich zelden verder uitstrekkende dan de gewesten, welke om die binnenzeeën gelegen waren, haar
             niettemin gelegenheid gaf. <a href="https://example.com">Klik hier</a> om meer te lezen.
           </p>
+          <h2>Meertalige content</h2>
+          <p lang="en" dir="ltr">This paragraph is in English and flows left-to-right.</p>
+          <p lang="ar" dir="rtl">هذه الفقرة باللغة العربية وتتدفق من اليمين إلى اليسار.</p>
+          <p lang="fr" dir="ltr">Ce paragraphe est en français.</p>
+
+          <h3>Mixed language content</h3>
+          <p>
+            Dit is een Nederlandse zin met een <span lang="en">English phrase</span> erin. En hier is
+            <span lang="de">ein deutscher Satz</span> in dezelfde paragraaf.
+          </p>
           <table>
             <caption>
               Table caption
@@ -48,6 +58,12 @@
                 <td>Rij 1, cel 2</td>
                 <td>Rij 1, cel 3</td>
                 <td>Rij 1, cel 4</td>
+              </tr>
+              <tr>
+                <td>Rij 2, cel 1</td>
+                <td>Rij 2, cel 2</td>
+                <td>Rij 2, cel 3</td>
+                <td>Rij 2, cel 4</td>
               </tr>
             </tbody>
           </table>

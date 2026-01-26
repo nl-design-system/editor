@@ -99,6 +99,6 @@ describe('<clippy-validations-dialog>', () => {
 
     // Verify first validation item has correct attributes
     const firstItem = validationItems?.[0];
-    expect(firstItem?.shadowRoot?.querySelector('h3')?.innerText).toBe('Koptekst mag niet leeg zijn');
+    expect(firstItem?.shadowRoot?.querySelector('h4')?.innerText).toBe('Koptekst mag niet leeg zijn');
   });
 });
