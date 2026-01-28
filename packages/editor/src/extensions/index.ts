@@ -131,12 +131,12 @@ export const editorExtensions = (
   }),
   Superscript.configure({
     HTMLAttributes: {
-      class: 'utrecht-superscript--open-type',
+      class: 'utrecht-superscript',
     },
   }),
   Subscript.configure({
     HTMLAttributes: {
-      class: 'utrecht-subscript--open-type',
+      class: 'utrecht-subscript',
     },
   }),
   Blockquote.configure({
@@ -152,6 +152,9 @@ export const editorExtensions = (
     openOnClick: false,
   }),
   Image.configure({
+    HTMLAttributes: {
+      class: 'utrecht-image',
+    },
     resize: {
       alwaysPreserveAspectRatio: true,
       directions: ['top', 'bottom', 'left', 'right', 'top-right', 'top-left', 'bottom-right', 'bottom-left'],

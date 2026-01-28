@@ -180,6 +180,9 @@ importers:
       '@utrecht/blockquote-css':
         specifier: 2.0.1
         version: 2.0.1
+      '@utrecht/img-css':
+        specifier: 2.0.1
+        version: 2.0.1
       '@utrecht/ordered-list-css':
         specifier: 3.0.1
         version: 3.0.1

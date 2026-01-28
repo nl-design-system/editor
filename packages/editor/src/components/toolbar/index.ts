@@ -109,7 +109,6 @@ export class Toolbar extends LitElement {
   readonly #isOddTextDirection = () => {
     const lang = this.#getCurrentLanguage();
     const dir = this.#getCurrentTextDirection();
-
     if (!lang && !dir) {
       return false;
     }
@@ -177,7 +176,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(IconHighlight)}</clippy-icon>
-          Mark
+          Markeren
         </clippy-button>
         <clippy-button
           .pressed=${this.editor?.isActive('superscript') ?? false}
@@ -282,6 +281,7 @@ export class Toolbar extends LitElement {
         </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-button
+          toggle
           .pressed=${this.editor?.isActive(this.editor?.state.selection.$anchor.node().type.name, { dir: 'ltr' }) ??
           false}
           @click=${() => this.#toggleTextDirection('rtl')}
@@ -294,6 +294,7 @@ export class Toolbar extends LitElement {
           Links naar rechts
         </clippy-button>
         <clippy-button
+          toggle
           .pressed=${this.editor?.isActive(this.editor?.state.selection.$anchor.node().type.name, { dir: 'rtl' }) ??
           false}
           @click=${() => this.#toggleTextDirection('rtl')}

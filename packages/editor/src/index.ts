@@ -11,6 +11,7 @@ import markStyle from '@nl-design-system-candidate/mark-css/mark.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { Editor as TiptapEditor } from '@tiptap/core';
 import blockquoteStyle from '@utrecht/blockquote-css/dist/index.css?inline';
+import imgStyle from '@utrecht/img-css/dist/index.css?inline';
 import orderedListStyle from '@utrecht/ordered-list-css/dist/index.css?inline';
 import separatorStyle from '@utrecht/separator-css/dist/index.css?inline';
 import subscriptStyle from '@utrecht/subscript-css/dist/index.css?inline';
@@ -51,6 +52,7 @@ export class Editor extends LitElement {
     unsafeCSS(subscriptStyle),
     unsafeCSS(superscriptStyle),
     unsafeCSS(blockquoteStyle),
+    unsafeCSS(imgStyle),
   ];
 
   @property({ type: String })
