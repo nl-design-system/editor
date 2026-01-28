@@ -65,6 +65,7 @@
     "@tiptap/extension-superscript": "3.14.0",
     "@tiptap/extension-table": "3.14.0",
     "@tiptap/extension-text": "3.14.0",
+    "@tiptap/extension-text-align": "3.14.0",
     "@tiptap/extension-text-style": "3.14.0",
     "@tiptap/extension-underline": "3.14.0",
     "@tiptap/extensions": "3.14.0",

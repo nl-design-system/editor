@@ -23,6 +23,7 @@ import IconTextDirectionLtr from '@tabler/icons/outline/text-direction-ltr.svg?r
 import IconTextDirectionRtl from '@tabler/icons/outline/text-direction-rtl.svg?raw';
 import './toolbar-format-select';
 import './toolbar-language-select';
+import './toolbar-text-align';
 import UnderlineIcon from '@tabler/icons/outline/underline.svg?raw';
 import { LitElement, html, unsafeCSS, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -258,7 +259,6 @@ export class Toolbar extends LitElement {
         </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-button
-          .pressed=${this.editor?.isActive('table') ?? false}
           @click=${() => this.editor?.chain().focus().insertTable({ cols: 3, rows: 2, withHeaderRow: true }).run()}
           icon-only
           size="small"
@@ -267,6 +267,8 @@ export class Toolbar extends LitElement {
           <clippy-icon slot="iconStart">${unsafeSVG(TableIcon)}</clippy-icon>
           Tabel invoegen
         </clippy-button>
+        <div class="clippy-toolbar__divider"></div>
+        <clippy-toolbar-text-align></clippy-toolbar-text-align>
         <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-link></clippy-toolbar-link>
         <clippy-toolbar-image-upload></clippy-toolbar-image-upload>

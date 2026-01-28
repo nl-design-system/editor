@@ -10,6 +10,7 @@ import Heading from '@tiptap/extension-heading';
 import Highlight from '@tiptap/extension-highlight';
 import HorizontalRule from '@tiptap/extension-horizontal-rule';
 import Image from '@tiptap/extension-image';
+import TextAlign from '@tiptap/extension-text-align';
 import Italic from '@tiptap/extension-italic';
 import Link from '@tiptap/extension-link';
 import { BulletList, OrderedList } from '@tiptap/extension-list';
@@ -150,6 +151,9 @@ export const editorExtensions = (
       class: 'nl-link',
     },
     openOnClick: false,
+  }),
+  TextAlign.configure({
+    types: ['heading', 'paragraph'],
   }),
   Image.configure({
     HTMLAttributes: {
