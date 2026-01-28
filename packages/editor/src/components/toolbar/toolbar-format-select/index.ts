@@ -50,6 +50,7 @@ export class FormatSelect extends LitElement {
     const chain = this.editor.chain().focus();
 
     const formatCommands: Record<string, () => typeof chain> = {
+      blockquote: () => chain.toggleBlockquote(),
       codeBlock: () => chain.setCodeBlock(),
       h1: () => chain.toggleHeading({ level: 1 }),
       h2: () => chain.toggleHeading({ level: 2 }),
@@ -80,8 +81,13 @@ export class FormatSelect extends LitElement {
       },
       {
         active: this.#isFormatActive('codeBlock'),
-        label: 'Code Block',
+        label: 'Codeblok',
         value: 'codeBlock',
+      },
+      {
+        active: this.#isFormatActive('blockquote'),
+        label: 'Citaatblok',
+        value: 'blockquote',
       },
     ];
 
