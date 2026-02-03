@@ -1,5 +1,6 @@
 import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
+import { msg } from '@lit/localize';
 import PhotoIcon from '@tabler/icons/outline/photo.svg?raw';
 import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
@@ -9,9 +10,9 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ImageUpload } from '@/types/image.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { CustomEvents } from '@/events';
-import imageUploadDialogStyles from './styles.ts';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
+import imageUploadDialogStyles from './styles.ts';
 
 @customElement('clippy-toolbar-image-upload')
 export class ToolbarImageUpload extends LitElement {
@@ -104,7 +105,7 @@ export class ToolbarImageUpload extends LitElement {
         purpose="secondary"
       >
         <clippy-icon slot="iconStart">${unsafeSVG(PhotoIcon)}</clippy-icon>
-        Afbeelding
+        ${msg('Image')}
       </clippy-button>
       <input
         ${ref(this.#inputRef)}
@@ -129,12 +130,12 @@ export class ToolbarImageUpload extends LitElement {
               <img src="${file.url}" alt="${file.name}" />
               <div>
                 <label
-                  >Alt text:<input type="text" .value="${file.name}" @change=${this.#updateAltText(index)}
+                  >${msg('Alt text:')}<input type="text" .value="${file.name}" @change=${this.#updateAltText(index)}
                 /></label>
               </div>
             </li>`,
         )}
-        <clippy-button purpose="primary" @click=${this.#insertImages}>Invoegen</clippy-button>
+        <clippy-button purpose="primary" @click=${this.#insertImages}>${msg('Insert')}</clippy-button>
       </dialog>
     `;
   }

@@ -1,12 +1,13 @@
 import type { Editor } from '@tiptap/core';
+import { localized, msg } from '@lit/localize';
 import { ClippyModal } from '@nl-design-system-community/clippy-components/clippy-modal';
 import LinkIcon from '@tabler/icons/outline/link.svg?raw';
 import { html, LitElement } from 'lit';
 import { customElement, query, state } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
-import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
+import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 
 const ariaDescribedby = 'clippy-toolbar-link-dialog';
@@ -19,6 +20,7 @@ declare global {
   }
 }
 
+@localized()
 @customElement(tag)
 export class ToolbarLink extends LitElement {
   @query('clippy-modal')
@@ -71,24 +73,24 @@ export class ToolbarLink extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(LinkIcon)}</clippy-icon>
-          Link
+          ${msg('Link')}
         </clippy-button>
         <clippy-modal
-          .title="Link toevoegen"
+          .title=${msg('Add link')}
           actions="none"
           aria-describedby=${ariaDescribedby}
           data-testid="clippy-link-dialog"
         >
-          <p id=${ariaDescribedby}>Link toevoegen</p>
+          <p id=${ariaDescribedby}>${msg('Add link')}</p>
           <div>
-            <label>Link to:<input value=${this.previousUrl} ${ref(this.#inputRef)} type="text" /></label>
+            <label>${msg('Link to:')}<input value=${this.previousUrl} ${ref(this.#inputRef)} type="text" /></label>
           </div>
           <div>
-            <clippy-button @click=${() => this.modalDialog.close()}>Sluiten</clippy-button>
+            <clippy-button @click=${() => this.modalDialog.close()}>${msg('Close')}</clippy-button>
             <clippy-button purpose="secondary" hint="negative" @click=${this.#unsetLink}>
-              Verwijder link
+              ${msg('Remove link')}
             </clippy-button>
-            <clippy-button purpose="primary" @click=${this.#updateLink}>Link toevoegen</clippy-button>
+            <clippy-button purpose="primary" @click=${this.#updateLink}>${msg('Add link')}</clippy-button>
           </div>
         </clippy-modal>
       </clippy-button>

@@ -1,12 +1,13 @@
 import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
+import { localized, msg, str } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import AccessibleIcon from '@tabler/icons/outline/accessible.svg?raw';
 import ArrowBackUpIcon from '@tabler/icons/outline/arrow-back-up.svg?raw';
 import ArrowForwardUpIcon from '@tabler/icons/outline/arrow-forward-up.svg?raw';
 import BoldIcon from '@tabler/icons/outline/bold.svg?raw';
-import CodeIcon from '@tabler/icons/outline/code.svg?raw';
 import './shortcuts-dialog';
+import CodeIcon from '@tabler/icons/outline/code.svg?raw';
 import IconHighlight from '@tabler/icons/outline/highlight.svg?raw';
 import ItalicIcon from '@tabler/icons/outline/italic.svg?raw';
 import KeyboardIcon from '@tabler/icons/outline/keyboard.svg?raw';
@@ -38,6 +39,7 @@ import './toolbar-link';
 import toolbarStyles from './styles.ts';
 import { isDefaultDir } from './toolbar-language-select/languages.ts';
 
+@localized()
 @customElement('clippy-toolbar')
 export class Toolbar extends LitElement {
   readonly #dialogRef: Ref<HTMLDialogElement> = createRef();
@@ -121,7 +123,7 @@ export class Toolbar extends LitElement {
   override render() {
     const { size = 0 } = this.validationsContext || {};
     return html`
-      <div class="clippy-toolbar__wrapper" aria-label="Werkbalk tekstbewerker">
+      <div class="clippy-toolbar__wrapper" aria-label=${msg('Text editor toolbar')}>
         <clippy-format-select></clippy-format-select>
         <clippy-language-select matchTextDirection></clippy-language-select>
         <clippy-button
@@ -134,7 +136,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(BoldIcon)}</clippy-icon>
-          Vet
+          ${msg('Bold')}
         </clippy-button>
         <clippy-button
           toggle
@@ -145,7 +147,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(ItalicIcon)}</clippy-icon>
-          Cursief
+          ${msg('Italic')}
         </clippy-button>
         <clippy-button
           toggle
@@ -156,7 +158,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(UnderlineIcon)}</clippy-icon>
-          Onderstrepen
+          ${msg('Underline')}
         </clippy-button>
         <clippy-button
           toggle
@@ -167,7 +169,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(CodeIcon)}</clippy-icon>
-          Code
+          ${msg('Code')}
         </clippy-button>
         <clippy-button
           .pressed=${this.editor?.isActive('highlight') ?? false}
@@ -177,7 +179,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(IconHighlight)}</clippy-icon>
-          Markeren
+          ${msg('Highlight')}
         </clippy-button>
         <clippy-button
           .pressed=${this.editor?.isActive('superscript') ?? false}
@@ -188,7 +190,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(SuperscriptIcon)}</clippy-icon>
-          Superscript
+          ${msg('Superscript')}
         </clippy-button>
         <clippy-button
           .pressed=${this.editor?.isActive('subscript') ?? false}
@@ -199,7 +201,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(SubscriptIcon)}</clippy-icon>
-          Subscript
+          ${msg('Subscript')}
         </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-button
@@ -210,7 +212,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(ArrowBackUpIcon)}</clippy-icon>
-          Ongedaan maken
+          ${msg('Undo')}
         </clippy-button>
         <clippy-button
           ?disabled=${!(this.editor?.can().redo() ?? false)}
@@ -220,7 +222,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(ArrowForwardUpIcon)}</clippy-icon>
-          Opnieuw
+          ${msg('Redo')}
         </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-button
@@ -233,7 +235,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(OrderedListIcon)}</clippy-icon>
-          Genummerde lijst
+          ${msg('Numbered list')}
         </clippy-button>
         <clippy-button
           toggle
@@ -244,7 +246,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(BulletListIcon)}</clippy-icon>
-          Geordende lijst
+          ${msg('Bullet list')}
         </clippy-button>
         <clippy-button
           toggle
@@ -255,7 +257,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(ListDetailsIcon)}</clippy-icon>
-          Definitielijst
+          ${msg('Definition list')}
         </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-button
@@ -265,7 +267,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(TableIcon)}</clippy-icon>
-          Tabel invoegen
+          ${msg('Insert table')}
         </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-toolbar-text-align></clippy-toolbar-text-align>
@@ -279,7 +281,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(SeparatorIcon)}</clippy-icon>
-          Horizontale lijn
+          ${msg('Horizontal rule')}
         </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-button
@@ -293,7 +295,7 @@ export class Toolbar extends LitElement {
           ?hidden=${!this.#isOddTextDirection()}
         >
           <clippy-icon slot="iconStart">${unsafeSVG(IconTextDirectionLtr)}</clippy-icon>
-          Links naar rechts
+          ${msg('Left to right')}
         </clippy-button>
         <clippy-button
           toggle
@@ -306,7 +308,7 @@ export class Toolbar extends LitElement {
           ?hidden=${!this.#isOddTextDirection()}
         >
           <clippy-icon slot="iconStart">${unsafeSVG(IconTextDirectionRtl)}</clippy-icon>
-          Rechts naar links
+          ${msg('Right to left')}
         </clippy-button>
         <div class="clippy-toolbar__divider" ?hidden=${!this.#isOddTextDirection()}></div>
         <clippy-button
@@ -317,7 +319,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(KeyboardIcon)}</clippy-icon>
-          Sneltoetsen
+          ${msg('Keyboard shortcuts')}
         </clippy-button>
         <span style="position: relative;">
           <clippy-button
@@ -328,19 +330,19 @@ export class Toolbar extends LitElement {
             purpose="secondary"
           >
             <clippy-icon slot="iconStart">${unsafeSVG(AccessibleIcon)}</clippy-icon>
-            Toon toegankelijkheidsmeldingen
+            ${msg('Show accessibility notifications')}
           </clippy-button>
           ${size > 0
             ? html`<data value=${size} class="nl-number-badge nl-number-badge--clippy">
                 <span hidden aria-hidden="true" class="nl-number-badge__visible-label">${size}</span>
-                <span class="nl-number-badge__hidden-label">${size} toegankelijkheidsmeldingen</span>
+                <span class="nl-number-badge__hidden-label">${size} accessibility notifications</span>
               </data>`
             : nothing}
         </span>
       </div>
       <clippy-shortcuts .dialogRef=${this.#dialogRef}></clippy-shortcuts>
       <div class="clippy-screen-reader-text" aria-live=${size > 0 ? 'polite' : 'off'}>
-        Totaal ${size} toegankelijkheidsmeldingen gevonden.
+        ${msg(str`Total ${size} accessibility notifications found.`)}
       </div>
     `;
   }

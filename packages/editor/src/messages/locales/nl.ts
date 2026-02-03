@@ -1,14 +1,5 @@
+import type { ValidationMessages } from '@/messages';
 import { contentValidations, documentValidations } from '@/validators/constants.ts';
-
-type TipFn = (args?: Record<string, number | string | boolean>) => string | null;
-
-type ContentValidationKey = (typeof contentValidations)[keyof typeof contentValidations];
-type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentValidations];
-export type ValidationKey = ContentValidationKey | DocumentValidationKey;
-
-type ValidationMessages = {
-  [K in ValidationKey]: { description: string; href?: string; tip?: TipFn };
-};
 
 export const nodeTypesTranslations: Record<string, string> = {
   definitionDescription: 'definitiebeschrijving',

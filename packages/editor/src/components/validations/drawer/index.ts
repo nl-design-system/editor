@@ -1,28 +1,31 @@
 import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
+import { localized } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import X from '@tabler/icons/outline/x.svg?raw';
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { queryAll } from 'lit/decorators/query-all.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { map } from 'lit/directives/map.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '../validation-item';
+import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationEntry, ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
-import { type ValidationKey, validationMessages } from '@/components/validations/messages.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import '@/components/tabs';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { CustomEvents } from '@/events';
+import { createLocaleTask } from '@/localization.ts';
+import { type ValidationKey, type ValidationMessages } from '@/messages';
 import dialogStyles from './styles.ts';
 
 const sortByPos = (a: ValidationEntry, b: ValidationEntry) => a[1].pos - b[1].pos;
 
+@localized()
 @customElement('clippy-validations-dialog')
 export class ValidationsDialog extends LitElement {
   static override readonly styles = [dialogStyles, unsafeCSS(numberBadgeStyles), unsafeCSS(paragraphStyle)];
@@ -38,6 +41,8 @@ export class ValidationsDialog extends LitElement {
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
   public editor?: Editor;
+
+  readonly #validationMessagesTask = createLocaleTask(this);
 
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
@@ -113,10 +118,9 @@ export class ValidationsDialog extends LitElement {
     return validations.filter(([, validation]) => validation.severity === this.selectedSeverity).sort(sortByPos);
   }
 
-  override render() {
+  #getDialogHTML(messages: ValidationMessages) {
     const { size = 0 } = this.validationsContext || {};
     const filteredValidations = this.#getFilteredValidations();
-
     return html`
       <dialog
         ${ref(this.#dialogRef)}
@@ -138,7 +142,7 @@ export class ValidationsDialog extends LitElement {
           ${size > 0
             ? map(filteredValidations, ([key, { pos, severity, tipPayload }]) => {
                 const validationKey = key.split('_')[0] as ValidationKey;
-                const { description, href, tip } = validationMessages[validationKey];
+                const { description, href, tip } = messages[validationKey];
                 const tipHtml = tip?.(tipPayload) ?? null;
                 return html`
                   <clippy-validation-item
@@ -148,7 +152,9 @@ export class ValidationsDialog extends LitElement {
                     .description=${description}
                     .href=${href}
                   >
-                    ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${unsafeHTML(tipHtml)}</p>` : nothing}
+                    ${tipHtml
+                      ? html`<p class="nl-paragraph" slot="tip-html">${unsafeHTML(tipHtml as string)}</p>`
+                      : nothing}
                   </clippy-validation-item>
                 `;
               })
@@ -156,6 +162,19 @@ export class ValidationsDialog extends LitElement {
         </ul>
       </dialog>
     `;
+  }
+
+  override render() {
+    return this.#validationMessagesTask.render({
+      complete: (messages) => {
+        return this.#getDialogHTML(messages as ValidationMessages);
+      },
+      error: (e) => {
+        console.error('Error loading validation messages', e);
+        return {};
+      },
+      pending: () => 'Loading...',
+    });
   }
 }
 

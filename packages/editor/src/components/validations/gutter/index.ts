@@ -1,13 +1,14 @@
 import { consume } from '@lit/context';
+import { localized } from '@lit/localize';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { map } from 'lit/directives/map.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import type { ValidationsMap } from '@/types/validation.ts';
-import { type ValidationKey, validationMessages } from '@/components/validations/messages.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
+import { createLocaleTask } from '@/localization.ts';
+import { type ValidationKey, type ValidationMessages } from '@/messages';
 import gutterStyles from './styles.ts';
 
 const tag = 'clippy-validations-gutter';
@@ -18,6 +19,7 @@ declare global {
   }
 }
 
+@localized()
 @customElement(tag)
 export class Gutter extends LitElement {
   static override readonly styles = [gutterStyles, unsafeCSS(paragraphStyle)];
@@ -33,12 +35,20 @@ export class Gutter extends LitElement {
     this.activeTooltipKey = this.activeTooltipKey === key ? null : key;
   }
 
-  override render() {
+  readonly #validationMessagesTask = createLocaleTask(this);
+
+  #renderGutter() {
+    if (!this.validationsContext || this.validationsContext.size === 0) {
+      return nothing;
+    }
+
+    const { value: validationMessages } = this.#validationMessagesTask;
+
     return html`
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
         ${map(this.validationsContext?.entries(), ([key, { boundingBox, pos, severity, tipPayload }]) => {
           const validationKey = key.split('_')[0] as ValidationKey;
-          const { description, href, tip } = validationMessages[validationKey];
+          const { description, href, tip } = (validationMessages as ValidationMessages)[validationKey];
           const tipHtml = tip?.(tipPayload) ?? null;
           const isActive = this.activeTooltipKey === key;
           return (
@@ -61,7 +71,7 @@ export class Gutter extends LitElement {
                   .description=${description}
                   .href=${href}
                 >
-                  ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${unsafeHTML(tipHtml)}</p>` : nothing}
+                  ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
                 </clippy-validation-item>
               </div>
             </li> `
@@ -69,5 +79,13 @@ export class Gutter extends LitElement {
         })}
       </ol>
     `;
+  }
+
+  override render() {
+    return this.#validationMessagesTask.render({
+      complete: () => this.#renderGutter(),
+      error: () => nothing,
+      pending: () => nothing,
+    });
   }
 }

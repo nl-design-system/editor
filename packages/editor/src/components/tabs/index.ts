@@ -1,4 +1,5 @@
 import { consume } from '@lit/context';
+import { localized, msg } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
@@ -17,13 +18,6 @@ interface Tab {
   label: string;
 }
 
-const tabs: Tab[] = [
-  { key: 'all', label: 'Alle' },
-  { key: validationSeverity.ERROR, label: 'Fouten' },
-  { key: validationSeverity.WARNING, label: 'Waarschuwingen' },
-  { key: validationSeverity.INFO, label: 'Tips' },
-];
-
 const tag = 'clippy-tabs';
 
 declare global {
@@ -32,6 +26,7 @@ declare global {
   }
 }
 
+@localized()
 @customElement(tag)
 export class Tabs extends LitElement {
   static override readonly styles = [tabsStyles, unsafeCSS(numberBadgeStyles)];
@@ -42,6 +37,15 @@ export class Tabs extends LitElement {
 
   @state()
   private activeTab: TabKey = 'all';
+
+  get #tabs(): Tab[] {
+    return [
+      { key: 'all', label: msg('All') },
+      { key: validationSeverity.ERROR, label: msg('Errors') },
+      { key: validationSeverity.WARNING, label: msg('Warnings') },
+      { key: validationSeverity.INFO, label: msg('Tips') },
+    ];
+  }
 
   #getCountForSeverity(severity: ValidationSeverity): number {
     if (!this.validationsContext) return 0;
@@ -71,7 +75,7 @@ export class Tabs extends LitElement {
   override render() {
     return html`
       <div class="clippy-tabs" role="tablist" aria-label="Filter validaties op ernst">
-        ${map(tabs, ({ key, label }) => {
+        ${map(this.#tabs, ({ key, label }) => {
           const count = this.#getCount(key);
           const isActive = this.activeTab === key;
 
