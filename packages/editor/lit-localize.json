@@ -9,7 +9,7 @@
   },
   "interchange": {
     "format": "xliff",
-    "xliffDir": "./src/xliff/"
+    "xliffDir": "./xliff/"
   },
   "inputFiles": ["src/**/*.ts", "src/**/*.html"]
 }
