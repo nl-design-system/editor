@@ -5,6 +5,7 @@ import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { map } from 'lit/directives/map.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import type { ValidationsMap } from '@/types/validation.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { createLocaleTask } from '@/localization.ts';
@@ -71,7 +72,9 @@ export class Gutter extends LitElement {
                   .description=${description}
                   .href=${href}
                 >
-                  ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
+                  ${tipHtml
+                    ? html`<p slot="tip-html" class="nl-paragraph">${unsafeHTML(tipHtml as string)}</p>`
+                    : nothing}
                 </clippy-validation-item>
               </div>
             </li> `

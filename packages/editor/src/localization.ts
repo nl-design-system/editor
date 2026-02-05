@@ -1,8 +1,8 @@
 import type { ReactiveControllerHost } from 'lit';
 import { configureLocalization } from '@lit/localize';
 import { Task } from '@lit/task';
-import { sourceLocale, targetLocales } from './generated/locale-codes.js';
 import { getValidationMessages } from '@/messages';
+import { sourceLocale, targetLocales } from './generated/locale-codes.js';
 
 const localizedTemplates = new Map(targetLocales.map((locale) => [locale, import(`./generated/locales/${locale}.ts`)]));
 
