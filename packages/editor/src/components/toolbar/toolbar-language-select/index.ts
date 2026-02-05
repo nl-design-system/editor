@@ -29,7 +29,7 @@ export class FormatSelect extends LitElement {
   @property({ type: Boolean }) disabled = false;
   @property({ type: Boolean }) readOnly = false;
   @property({ type: Boolean }) matchTextDirection = false;
-  @property({ type: Function }) onSelect = (value: string) => value;
+
   static override readonly styles = [
     unsafeCSS(buttonCss),
     css`
