@@ -29,6 +29,7 @@ describe('<clippy-validations-dialog>', () => {
     if (element) {
       element.editor = editor;
       await element.updateComplete;
+      await new Promise((resolve) => setTimeout(resolve, 500));
     }
     const dialog = page.getByTestId('clippy-validations-drawer');
     expect(dialog).not.toHaveAttribute('open');
@@ -90,6 +91,8 @@ describe('<clippy-validations-dialog>', () => {
       element.editor = editor;
       element.validationsContext = validationsMap;
       await element.updateComplete;
+      // Wait for the lit task to finish; find better way to do this in the future
+      await new Promise((resolve) => setTimeout(resolve, 500));
     }
 
     const validationList = page.getByTestId('clippy-validations-list').element();

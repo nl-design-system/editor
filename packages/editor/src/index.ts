@@ -101,6 +101,18 @@ export class Editor extends LitElement {
     this.createEditor();
   }
 
+  private isLocaleInitialized = false;
+
+  override connectedCallback() {
+    super.connectedCallback();
+    if (!this.isLocaleInitialized) {
+      this.isLocaleInitialized = true;
+      initializeLocale().then(() => {
+        this.requestUpdate();
+      });
+    }
+  }
+
   override disconnectedCallback() {
     this.editor?.destroy();
     super.disconnectedCallback();

@@ -246,7 +246,7 @@ export class Toolbar extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(BulletListIcon)}</clippy-icon>
-          ${msg('Bullet list')}
+          ${msg('Unordered list')}
         </clippy-button>
         <clippy-button
           toggle

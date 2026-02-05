@@ -167,13 +167,17 @@ export class ValidationsDialog extends LitElement {
   override render() {
     return this.#validationMessagesTask.render({
       complete: (messages) => {
+        console.log('complete');
         return this.#getDialogHTML(messages as ValidationMessages);
       },
       error: (e) => {
         console.error('Error loading validation messages', e);
         return {};
       },
-      pending: () => 'Loading...',
+      pending: () => {
+        console.log('pending');
+        return 'Loading...';
+      },
     });
   }
 }

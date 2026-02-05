@@ -58,10 +58,6 @@
         <source>Numbered list</source>
         <target>Genummerde lijst</target>
       </trans-unit>
-      <trans-unit id="s4fda29344ca51803">
-        <source>Bullet list</source>
-        <target>Opsommingslijst</target>
-      </trans-unit>
       <trans-unit id="s77958f74fde3c368">
         <source>Definition list</source>
         <target>Definitielijst</target>
@@ -88,7 +84,7 @@
       </trans-unit>
       <trans-unit id="s33c26204494fd8c0">
         <source>Show accessibility notifications</source>
-        <target>Toegankelijkheidsmeldingen weergeven</target>
+        <target>Toon toegankelijkheidsmeldingen</target>
       </trans-unit>
       <trans-unit id="sd4f05efa968b90ff">
         <source>Total <x id="0" equiv-text="${size}"/> accessibility notifications found.</source>
@@ -96,7 +92,7 @@
       </trans-unit>
       <trans-unit id="sd79022be2c5470fc">
         <source>Text editor toolbar</source>
-        <target>Teksteditor werkbalk</target>
+        <target>Werkbalk tekstbewerker</target>
       </trans-unit>
 <trans-unit id="se750d38689a2c65b">
   <source>Alt text:</source>
@@ -218,10 +214,6 @@
   <source>Tips</source>
   <target>Tips</target>
 </trans-unit>
-<trans-unit id="sd85b875fac3ec430">
-  <source>No accessibility notifications found.</source>
-  <target>Geen toegankelijkheidsmeldingen gevonden.</target>
-</trans-unit>
 <trans-unit id="s5fc9e5ed7b80e521">
   <source>Extensive explanation</source>
   <target>Uitgebreide uitleg</target>
@@ -229,126 +221,6 @@
 <trans-unit id="sdab2b4d8533bd75e">
   <source>Adjust</source>
   <target>Aanpassen</target>
-</trans-unit>
-<trans-unit id="sd7cbea773be90a4a">
-  <source>definition description</source>
-  <target>definitiebeschrijving</target>
-</trans-unit>
-<trans-unit id="sc0ccc1191e1c2652">
-  <source>definition term</source>
-  <target>definitieterm</target>
-</trans-unit>
-<trans-unit id="sa080b7c76b63f1bc">
-  <source>link text</source>
-  <target>linktekst</target>
-</trans-unit>
-<trans-unit id="s18a0d9f5f5cadfb4">
-  <source>list item</source>
-  <target>lijstitem</target>
-</trans-unit>
-<trans-unit id="sb0d8560183547fb9">
-  <source>paragraph</source>
-  <target>paragraaf</target>
-</trans-unit>
-<trans-unit id="s37b4954f9a78e31d">
-  <source>table cell</source>
-  <target>tabelcel</target>
-</trans-unit>
-<trans-unit id="sb7b758bfd9655218">
-  <source>table header</source>
-  <target>tabelkop</target>
-</trans-unit>
-<trans-unit id="sc716a380ec8e3282">
-  <source>Definition description must follow a definition term</source>
-  <target>Definitiebeschrijving moet een definitieterm volgen</target>
-</trans-unit>
-<trans-unit id="sa5fda4a0a007ee47">
-  <source>Definition list must contain a definition term</source>
-  <target>Definitielijst moet een definitieterm bevatten</target>
-</trans-unit>
-<trans-unit id="s5d7c1ae0725564e1">
-  <source>Heading must not be empty</source>
-  <target>Kop mag niet leeg zijn</target>
-</trans-unit>
-<trans-unit id="s6084b2bb8b3448de">
-  <source>Heading should not contain bold or italic text</source>
-  <target>Kop mag geen vetgedrukte of cursieve tekst bevatten</target>
-</trans-unit>
-<trans-unit id="sc5c4c16296a2ad67">
-  <source>Image must have alternative text</source>
-  <target>Afbeelding moet alternatieve tekst hebben</target>
-</trans-unit>
-<trans-unit id="sf8da2c9b6d4f8618">
-  <source>Link text should not be too generic</source>
-  <target>Linktekst mag niet te algemeen zijn</target>
-</trans-unit>
-<trans-unit id="s7f93cf6586c12e55">
-  <source>Link must not be empty</source>
-  <target>Link mag niet leeg zijn</target>
-</trans-unit>
-<trans-unit id="h86b1666bdb695a40">
-  <source>Fill the <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations[nodeType]}&lt;/strong&gt;"/> with text or remove the empty link.</source>
-  <target>Vul de <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations[nodeType]}&lt;/strong&gt;"/> met tekst of verwijder de lege link.</target>
-</trans-unit>
-<trans-unit id="s965f8f5ffc0754da">
-  <source>Text should not be underlined. This looks too much like a link.</source>
-  <target>Tekst mag niet worden onderstreept. Dit lijkt te veel op een link.</target>
-</trans-unit>
-<trans-unit id="s274e78669e453ed4">
-  <source>Avoid empty elements</source>
-  <target>Vermijd lege elementen</target>
-</trans-unit>
-<trans-unit id="h8fb14075251fbc85">
-  <source>Remove the empty <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations[nodeType]}&lt;/strong&gt;"/> or add text.</source>
-  <target>Verwijder het lege <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations[nodeType]}&lt;/strong&gt;"/> of voeg tekst toe.</target>
-</trans-unit>
-<trans-unit id="s503a57cce1fec059">
-  <source>Document must have correct heading order</source>
-  <target>Document moet de juiste kopvolgorde hebben</target>
-</trans-unit>
-<trans-unit id="s7531ad652d20e032">
-  <source>Heading level <x id="0" equiv-text="${headingLevel}"/> exceeds the highest allowed heading level (<x id="1" equiv-text="${precedingHeadingLevel}"/>) in this document.</source>
-  <target>Kopniveau <x id="0" equiv-text="${headingLevel}"/> overschrijdt het hoogste toegestane kopniveau (<x id="1" equiv-text="${precedingHeadingLevel}"/>) in dit document.</target>
-</trans-unit>
-<trans-unit id="s922ab18d43750111">
-  <source>Heading level <x id="0" equiv-text="${headingLevel}"/> cannot be the first heading level in the document.</source>
-  <target>Kopniveau <x id="0" equiv-text="${headingLevel}"/> kan niet het eerste kopniveau in het document zijn.</target>
-</trans-unit>
-<trans-unit id="seb07976a8cf493de">
-  <source>Heading level <x id="0" equiv-text="${headingLevel}"/> cannot directly follow heading level <x id="1" equiv-text="${precedingHeadingLevel}"/>. Use a heading at level <x id="2" equiv-text="${precedingHeadingLevel + 1}"/> or lower.</source>
-  <target>Kopniveau <x id="0" equiv-text="${headingLevel}"/> kan niet direct volgen op kopniveau <x id="1" equiv-text="${precedingHeadingLevel}"/>. Gebruik een kop op niveau <x id="2" equiv-text="${precedingHeadingLevel + 1}"/> of lager.</target>
-</trans-unit>
-<trans-unit id="s3e81ea8dc02d8a2c">
-  <source>List must be a semantic list</source>
-  <target>Lijst moet een semantische lijst zijn</target>
-</trans-unit>
-<trans-unit id="sfcbd63a3136891b3">
-  <source>Use a semantic list instead of lines starting with "<x id="0" equiv-text="${prefix}"/>"</source>
-  <target>Gebruik een semantische lijst in plaats van regels die beginnen met "<x id="0" equiv-text="${prefix}"/>"</target>
-</trans-unit>
-<trans-unit id="s01905f4d183ed5ae">
-  <source>Document may only have one heading level 1</source>
-  <target>Document mag slechts één kopniveau 1 hebben</target>
-</trans-unit>
-<trans-unit id="s7d22b9e3bdf46607">
-  <source>Table must contain headings</source>
-  <target>Tabel moet koppen bevatten</target>
-</trans-unit>
-<trans-unit id="s5cfc5f93e0e50d31">
-  <source>Table must contain multiple rows</source>
-  <target>Tabel moet meerdere rijen bevatten</target>
-</trans-unit>
-<trans-unit id="s9c35c2ac811b2484">
-  <source>Document must start with heading level 1</source>
-  <target>Document moet beginnen met kopniveau 1</target>
-</trans-unit>
-<trans-unit id="s20d2d5a6ee857cf2">
-  <source>Avoid paragraphs that resemble headings</source>
-  <target>Vermijd paragrafen die op koppen lijken</target>
-</trans-unit>
-<trans-unit id="h71080533c3b54c62">
-  <source>Remove the underline from the text.</source>
-  <target>Verwijder de onderstreping van de tekst.</target>
 </trans-unit>
 <trans-unit id="s917734d83f35efa3">
   <source>Ignore</source>

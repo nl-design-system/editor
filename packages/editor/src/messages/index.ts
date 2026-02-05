@@ -13,7 +13,17 @@ type ValidationMessages = {
 
 export type { ValidationMessages };
 
-export async function getValidationMessages(locale: 'en' | 'nl' = 'en'): Promise<ValidationMessages | null> {
+function getDocumentLang(): 'en' | 'nl' {
+  const lang = document.documentElement.lang.split('-')[0];
+  if (lang === 'en' || lang === 'nl') {
+    return lang;
+  }
+  return 'en';
+}
+
+export async function getValidationMessages(
+  locale: 'en' | 'nl' = getDocumentLang(),
+): Promise<ValidationMessages | null> {
   const { validationMessages } = await import(`./locales/${locale}.ts`);
   return validationMessages;
 }

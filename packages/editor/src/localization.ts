@@ -20,7 +20,6 @@ export const initializeLocale = async (): Promise<void> => {
   const userLocale = document.documentElement.lang.split('-')[0];
 
   if (userLocale === 'en' || userLocale === 'nl') {
-    console.log(`Setting locale to ${userLocale}`);
     await setLocale(userLocale);
   }
 };
