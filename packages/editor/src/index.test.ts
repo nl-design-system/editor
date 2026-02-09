@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import './index.ts';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { page } from 'vitest/browser';
 import { isMacOS } from '@/utils/isMacOS.ts';
 import './index';
@@ -44,7 +44,9 @@ describe('<clippy-editor>', () => {
     const text = page.getByRole('heading', { name: 'Start met kopniveau 1' }).element();
     expect(text).toBeInTheDocument();
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await vi.waitFor(() => {
+      expect(page.getByLabelText('Toegankelijkheidsmeldingen', { exact: true })).toBeInTheDocument();
+    });
 
     expect(page.getByLabelText('Toegankelijkheidsmeldingen', { exact: true })).not.toHaveAttribute('open');
     expect(page.getByTestId('clippy-validations-drawer')).not.toHaveAttribute('open');

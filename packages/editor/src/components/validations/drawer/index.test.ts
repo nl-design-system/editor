@@ -1,6 +1,6 @@
 import './index.ts';
 import type { Editor } from '@tiptap/core';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { page } from 'vitest/browser';
 import { createTestEditor } from '../../../../test/createTestEditor';
 import { CustomEvents } from '../../../events';
@@ -26,11 +26,10 @@ describe('<clippy-validations-dialog>', () => {
     container.innerHTML = '<clippy-validations-dialog></clippy-validations-dialog>';
     const element = container.querySelector('clippy-validations-dialog');
 
-    if (element) {
-      element.editor = editor;
-      await element.updateComplete;
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    }
+    await vi.waitFor(() => {
+      expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
+    });
+
     const dialog = page.getByTestId('clippy-validations-drawer');
     expect(dialog).not.toHaveAttribute('open');
 
@@ -91,9 +90,11 @@ describe('<clippy-validations-dialog>', () => {
       element.editor = editor;
       element.validationsContext = validationsMap;
       await element.updateComplete;
-      // Wait for the lit task to finish; find better way to do this in the future
-      await new Promise((resolve) => setTimeout(resolve, 500));
     }
+
+    await vi.waitFor(() => {
+      expect(page.getByTestId('clippy-validations-list')).toBeInTheDocument();
+    });
 
     const validationList = page.getByTestId('clippy-validations-list').element();
 
