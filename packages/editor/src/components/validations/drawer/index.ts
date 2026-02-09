@@ -9,7 +9,6 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { queryAll } from 'lit/decorators/query-all.js';
 import { map } from 'lit/directives/map.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import '../validation-item';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationEntry, ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
@@ -19,8 +18,7 @@ import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { CustomEvents } from '@/events';
-import { createLocaleTask } from '@/localization.ts';
-import { type ValidationKey, type ValidationMessages } from '@/messages';
+import { validationMessages, type ValidationKey } from '@/messages';
 import dialogStyles from './styles.ts';
 
 const sortByPos = (a: ValidationEntry, b: ValidationEntry) => a[1].pos - b[1].pos;
@@ -41,8 +39,6 @@ export class ValidationsDialog extends LitElement {
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
   public editor?: Editor;
-
-  readonly #validationMessagesTask = createLocaleTask(this);
 
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
@@ -118,7 +114,7 @@ export class ValidationsDialog extends LitElement {
     return validations.filter(([, validation]) => validation.severity === this.selectedSeverity).sort(sortByPos);
   }
 
-  #getDialogHTML(messages: ValidationMessages) {
+  override render() {
     const { size = 0 } = this.validationsContext || {};
     const filteredValidations = this.#getFilteredValidations();
     return html`
@@ -142,7 +138,7 @@ export class ValidationsDialog extends LitElement {
           ${size > 0
             ? map(filteredValidations, ([key, { pos, severity, tipPayload }]) => {
                 const validationKey = key.split('_')[0] as ValidationKey;
-                const { description, href, tip } = messages[validationKey];
+                const { description, href, tip } = validationMessages()[validationKey];
                 const tipHtml = tip?.(tipPayload) ?? null;
                 return html`
                   <clippy-validation-item
@@ -152,9 +148,7 @@ export class ValidationsDialog extends LitElement {
                     .description=${description}
                     .href=${href}
                   >
-                    ${tipHtml
-                      ? html`<p class="nl-paragraph" slot="tip-html">${unsafeHTML(tipHtml as string)}</p>`
-                      : nothing}
+                    ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${tipHtml}</p>` : nothing}
                   </clippy-validation-item>
                 `;
               })
@@ -162,23 +156,6 @@ export class ValidationsDialog extends LitElement {
         </ul>
       </dialog>
     `;
-  }
-
-  override render() {
-    return this.#validationMessagesTask.render({
-      complete: (messages) => {
-        console.log('complete');
-        return this.#getDialogHTML(messages as ValidationMessages);
-      },
-      error: (e) => {
-        console.error('Error loading validation messages', e);
-        return {};
-      },
-      pending: () => {
-        console.log('pending');
-        return 'Loading...';
-      },
-    });
   }
 }
 
