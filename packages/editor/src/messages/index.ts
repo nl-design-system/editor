@@ -1,5 +1,5 @@
 import { type TemplateResult } from 'lit';
-import { getDocumentLang } from '@/localization.ts';
+import { getDocumentLang, type Locale } from '@/localization.ts';
 import { contentValidations, documentValidations } from '@/validators/constants.ts';
 
 type TipFn = (args?: Record<string, number | string | boolean>) => string | TemplateResult | null;
@@ -14,9 +14,7 @@ type ValidationMessages = {
 
 export type { ValidationMessages };
 
-export async function getValidationMessages(
-  locale: 'en' | 'nl' = getDocumentLang(),
-): Promise<ValidationMessages | null> {
+export async function getValidationMessages(locale: Locale = getDocumentLang()): Promise<ValidationMessages | null> {
   const { validationMessages } = await import(`./locales/${locale}.ts`);
   return validationMessages;
 }

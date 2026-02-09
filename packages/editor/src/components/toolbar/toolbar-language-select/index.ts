@@ -4,6 +4,7 @@ import { css, html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { editor } from '@/decorators/TipTapDecorator.ts';
+import { sourceLocale } from '@/generated/locale-codes.ts';
 import { findNearestAncestorAttribute } from '@/utils/domTraverser.ts';
 import { languages, isSameLanguage, type Language } from './languages.ts';
 
@@ -16,8 +17,6 @@ export interface SelectOption {
 const tag = 'clippy-language-select';
 
 const languageOptions: Language[] = [...languages, { dir: null, i18n: {}, lang: '' }];
-
-const DEFAULT_LANG = 'en';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -51,7 +50,7 @@ export class FormatSelect extends LitElement {
 
   @property()
   override get lang() {
-    return this.#lang || DEFAULT_LANG;
+    return this.#lang || sourceLocale;
   }
 
   override set lang(value: string) {
@@ -61,7 +60,7 @@ export class FormatSelect extends LitElement {
   override connectedCallback(): void {
     super.connectedCallback();
 
-    this.lang = findNearestAncestorAttribute(this.parentElement, 'lang') || DEFAULT_LANG;
+    this.lang = findNearestAncestorAttribute(this.parentElement, 'lang') || sourceLocale;
   }
 
   #getCurrentLanguage(): string | null {

@@ -4,6 +4,8 @@ import { Task } from '@lit/task';
 import { getValidationMessages } from '@/messages';
 import { allLocales, sourceLocale, targetLocales } from './generated/locale-codes.js';
 
+export type Locale = (typeof allLocales)[number];
+
 const localizedTemplates = new Map(targetLocales.map((locale) => [locale, import(`./generated/locales/${locale}.ts`)]));
 
 export function getDocumentLang() {
@@ -28,6 +30,6 @@ export const initializeLocale = async () => {
 export const createLocaleTask = <T>(host: ReactiveControllerHost): Task<readonly [string], T> => {
   return new Task(host, {
     args: () => [getLocale()] as const,
-    task: async ([locale]) => (await getValidationMessages(locale as 'en' | 'nl')) as unknown as T,
+    task: async ([locale]) => (await getValidationMessages(locale as Locale)) as unknown as T,
   });
 };
