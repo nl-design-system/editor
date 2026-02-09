@@ -13,10 +13,10 @@ export default css`
     gap: var(--basis-space-inline-md);
     padding-inline: var(--basis-space-inline-md);
     padding-block: var(--basis-space-block-sm);
+    font-family: var(--nl-paragraph-font-family, inherit);
     background-color: transparent;
     border: none;
     border-block-end: 4px solid transparent;
-    font-family: inherit;
     font-size: 0.875rem;
     cursor: pointer;
     position: relative;

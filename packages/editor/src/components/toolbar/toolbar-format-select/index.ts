@@ -1,10 +1,19 @@
 import type { Editor } from '@tiptap/core';
 import type { Level } from '@tiptap/extension-heading';
+import { localized, msg, str } from '@lit/localize';
 import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 import { html, LitElement, unsafeCSS, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { editor } from '@/decorators/TipTapDecorator.ts';
+
+const tag = 'clippy-format-select';
+
+declare global {
+  interface HTMLElementTagNameMap {
+    [tag]: FormatSelect;
+  }
+}
 
 export interface SelectOption {
   active: boolean;
@@ -17,7 +26,8 @@ const getConfiguredHeadingLevels = (editor: Editor): Level[] => {
   return headingExt?.options.levels;
 };
 
-@customElement('clippy-format-select')
+@localized()
+@customElement(tag)
 export class FormatSelect extends LitElement {
   @property({ type: Boolean }) disabled = false;
   @property({ type: Boolean }) readOnly = false;
@@ -69,24 +79,24 @@ export class FormatSelect extends LitElement {
     const headingLevels = getConfiguredHeadingLevels(this.editor);
     const headingOptions: SelectOption[] = headingLevels.map((level) => ({
       active: this.#isFormatActive('heading', { level }),
-      label: `Kopniveau ${level}`,
+      label: msg(str`Heading level ${level}`),
       value: `h${level}`,
     }));
     let options = [
       ...headingOptions,
       {
         active: this.#isFormatActive('paragraph'),
-        label: 'Paragraaf',
+        label: msg('Paragraph'),
         value: 'paragraph',
       },
       {
         active: this.#isFormatActive('codeBlock'),
-        label: 'Codeblok',
+        label: msg('Code block'),
         value: 'codeBlock',
       },
       {
         active: this.#isFormatActive('blockquote'),
-        label: 'Citaatblok',
+        label: msg('Blockquote'),
         value: 'blockquote',
       },
     ];
@@ -95,7 +105,7 @@ export class FormatSelect extends LitElement {
       options = [
         {
           active: true,
-          label: '(onbekend)',
+          label: msg('(unknown)'),
           value: '',
         },
         ...options,
@@ -109,7 +119,7 @@ export class FormatSelect extends LitElement {
       <select
         class="nl-button nl-button--secondary clippy-button--small"
         @change=${this.#handleTextFormatChange}
-        aria-label="Tekst formaat selecteren"
+        aria-label=${msg('Select text format')}
       >
         ${map(
           this.options,
@@ -117,11 +127,5 @@ export class FormatSelect extends LitElement {
         )}
       </select>
     `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'clippy-format-select': FormatSelect;
   }
 }

@@ -34,10 +34,13 @@
     "pretest": "pnpm exec playwright install --with-deps",
     "test": "pnpm run --recursive '/^test:.+$/'",
     "test:vitest": "vitest --run",
-    "test-coverage": "vitest run --coverage"
+    "test-coverage": "vitest run --coverage",
+    "localize:extract": "lit-localize extract",
+    "localize:build": "lit-localize build"
   },
   "dependencies": {
     "@lit/context": "1.1.6",
+    "@lit/localize": "0.12.2",
     "@nl-design-system-candidate/button-css": "1.0.0",
     "@nl-design-system-candidate/link-css": "2.0.3",
     "@nl-design-system-candidate/number-badge-css": "1.1.5",
@@ -65,6 +68,7 @@
     "@tiptap/extension-superscript": "3.14.0",
     "@tiptap/extension-table": "3.14.0",
     "@tiptap/extension-text": "3.14.0",
+    "@tiptap/extension-text-align": "3.14.0",
     "@tiptap/extension-text-style": "3.14.0",
     "@tiptap/extension-underline": "3.14.0",
     "@tiptap/extensions": "3.14.0",
@@ -83,6 +87,7 @@
   "devDependencies": {
     "@fontsource/fira-sans": "5.2.7",
     "@fontsource/source-sans-pro": "5.2.5",
+    "@lit/localize-tools": "0.8.1",
     "@nl-design-system-candidate/code-block-css": "1.1.4",
     "@nl-design-system-candidate/code-css": "2.0.4",
     "@nl-design-system-candidate/heading-css": "1.1.2",

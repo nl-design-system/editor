@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import './index.ts';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { page } from 'vitest/browser';
 import { isMacOS } from '@/utils/isMacOS.ts';
 import './index';
@@ -16,7 +16,6 @@ describe('<clippy-editor>', () => {
 
   it('should change selected text to heading level 3', async () => {
     await expect(page.getByRole('heading', { name: 'Start met kopniveau 1' })).toBeInTheDocument();
-
     const boldButton = page.getByRole('button', { name: 'Vet' }).element();
 
     expect(boldButton).toBeInTheDocument();
@@ -32,7 +31,7 @@ describe('<clippy-editor>', () => {
       { keys: '[/MouseLeft]' },
     ]);
 
-    const select = page.getByLabelText('Tekst formaat selecteren');
+    const select = page.getByLabelText('Selecteer tekstformaat');
     expect(select).toBeInTheDocument();
     await user.selectOptions(select.element(), 'h3');
 
@@ -41,9 +40,16 @@ describe('<clippy-editor>', () => {
   });
 
   it('should open the shortcuts dialog with Command/Control + Alt + T', async () => {
-    const text = page.getByText('Start met kopniveau 1').element();
+    await expect(page.getByRole('heading', { name: 'Start met kopniveau 1' })).toBeInTheDocument();
+    const text = page.getByRole('heading', { name: 'Start met kopniveau 1' }).element();
     expect(text).toBeInTheDocument();
+
+    await vi.waitFor(() => {
+      expect(page.getByLabelText('Toegankelijkheidsmeldingen', { exact: true })).toBeInTheDocument();
+    });
+
     expect(page.getByLabelText('Toegankelijkheidsmeldingen', { exact: true })).not.toHaveAttribute('open');
+    expect(page.getByTestId('clippy-validations-drawer')).not.toHaveAttribute('open');
     await user.click(text);
     if (isMacOS()) {
       await user.keyboard('{meta>}{alt>}{t}{/alt}{/meta}');
@@ -53,7 +59,7 @@ describe('<clippy-editor>', () => {
     const a11yDialog = page.getByRole('dialog').element();
     expect(a11yDialog).toHaveAttribute('open');
 
-    expect(a11yDialog).toHaveTextContent('Geen toegankelijkheidsmeldingen gevonden.');
+    await expect(a11yDialog).toHaveTextContent('Geen toegankelijkheidsmeldingen gevonden.');
   });
 
   it('all toolbar buttons are visible, regardless of viewport size', async () => {
@@ -69,7 +75,7 @@ describe('<clippy-editor>', () => {
     const toolbar = await page.getByLabelText('Werkbalk tekstbewerker').element();
     await toolbar.querySelector('clippy-toolbar-link').updateComplete;
     await toolbar.querySelector('clippy-toolbar-image-upload').updateComplete;
-    await expect(page.getByRole('button', { name: 'Link' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Link', exact: true })).toBeVisible();
     expect(page.getByRole('button', { name: 'Afbeelding' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Sneltoetsen' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' })).toBeVisible();

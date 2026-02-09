@@ -19,9 +19,9 @@ describe('<clippy-toolbar>', () => {
   });
 
   it('renders correctly with required toolbar elements', async () => {
-    expect(page.getByLabelText('Werkbalk tekstbewerker')).toBeInTheDocument();
-    expect(page.getByRole('button', { name: 'Vet' })).toBeInTheDocument();
-    expect(page.getByRole('button', { name: 'Cursief' })).toBeInTheDocument();
+    expect(page.getByLabelText('Text editor toolbar')).toBeInTheDocument();
+    expect(page.getByRole('button', { name: 'Bold' })).toBeInTheDocument();
+    expect(page.getByRole('button', { name: 'Italic' })).toBeInTheDocument();
     expect(page.getByRole('button', { name: 'Link' }, { exact: true })).toBeInTheDocument();
   });
 
@@ -38,14 +38,14 @@ describe('<clippy-toolbar>', () => {
   });
 
   it('changes link URL when link is edited', async () => {
-    const linkButton = page.getByRole('button', { name: 'Link' }, { exact: true });
+    const linkButton = page.getByRole('button', { name: 'Link' }, { exact: true }).nth(1);
     await user.click(linkButton);
     expect(page.getByRole('dialog')).toHaveAttribute('open');
-    const urlInput = page.getByLabelText('Link to:');
+    const urlInput = page.getByLabelText('Link naar:');
     await user.type(urlInput, 'https://example.com');
 
     await user.keyboard('{Enter}');
-    expect(page.getByLabelText('Link to:')).toHaveValue('https://example.com');
+    expect(page.getByLabelText('Link naar:')).toHaveValue('https://example.com');
     await user.click(page.getByRole('button', { name: 'Link toevoegen' }));
     expect(page.getByRole('dialog')).not.toBeInTheDocument();
   });

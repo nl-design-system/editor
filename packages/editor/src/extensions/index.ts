@@ -18,6 +18,7 @@ import Subscript from '@tiptap/extension-subscript';
 import Superscript from '@tiptap/extension-superscript';
 import { TableKit } from '@tiptap/extension-table';
 import Text from '@tiptap/extension-text';
+import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
 import { Dropcursor, UndoRedo, Placeholder } from '@tiptap/extensions';
 import type { EditorSettings } from '@/types/settings.ts';
@@ -150,6 +151,9 @@ export const editorExtensions = (
       class: 'nl-link',
     },
     openOnClick: false,
+  }),
+  TextAlign.configure({
+    types: ['heading', 'paragraph'],
   }),
   Image.configure({
     HTMLAttributes: {
