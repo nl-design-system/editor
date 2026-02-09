@@ -252,7 +252,7 @@
       </trans-unit>
       <trans-unit id="s5d7c1ae0725564e1">
         <source>Heading must not be empty</source>
-        <target>Kop mag niet leeg zijn</target>
+        <target>Koptekst mag niet leeg zijn</target>
       </trans-unit>
       <trans-unit id="s6084b2bb8b3448de">
         <source>Heading should not contain bold or italic text</source>

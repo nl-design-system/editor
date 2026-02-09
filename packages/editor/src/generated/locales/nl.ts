@@ -50,7 +50,7 @@
 's599dcd2472c75c19': `Paragraaf`,
 's5ada999b33ccc808': `Invoegen`,
 's5cfc5f93e0e50d31': `Tabel moet meerdere rijen bevatten`,
-'s5d7c1ae0725564e1': `Kop mag niet leeg zijn`,
+'s5d7c1ae0725564e1': `Koptekst mag niet leeg zijn`,
 's5e8250fb85d64c23': `Sluiten`,
 's5fc9e5ed7b80e521': `Uitgebreide uitleg`,
 's6074f9804681f4f7': `Toegankelijkheidsmeldingen`,
