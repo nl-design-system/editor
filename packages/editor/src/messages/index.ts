@@ -1,5 +1,5 @@
 import { type TemplateResult } from 'lit';
-import { allLocales, sourceLocale } from '@/generated/locale-codes.ts';
+import { getDocumentLang } from '@/localization.ts';
 import { contentValidations, documentValidations } from '@/validators/constants.ts';
 
 type TipFn = (args?: Record<string, number | string | boolean>) => string | TemplateResult | null;
@@ -13,11 +13,6 @@ type ValidationMessages = {
 };
 
 export type { ValidationMessages };
-
-function getDocumentLang() {
-  const lang = document.documentElement.lang.split('-')[0];
-  return allLocales.find((locale) => lang === locale) ?? sourceLocale;
-}
 
 export async function getValidationMessages(
   locale: 'en' | 'nl' = getDocumentLang(),
