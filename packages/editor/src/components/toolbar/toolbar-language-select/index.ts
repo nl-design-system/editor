@@ -33,12 +33,11 @@ export class FormatSelect extends LitElement {
   static override readonly styles = [
     unsafeCSS(buttonCss),
     css`
-      .clippy-button--small {
-        --nl-button-min-inline-size: var(--clippy-button-small-min-inline-size, 32px);
-        --nl-button-min-block-size: var(--clippy-button-small-min-block-size, 32px);
-        --clippy-icon-size: var(--clippy-button-small-icon, 18px);
-        padding-block-end: 0;
-        padding-block-start: 0;
+      clippy-lang-combobox {
+        /* overrides for clippy-lang-combobox to make it fit in the toolbar */
+        --utrecht-pointer-target-min-size: var(--clippy-button-small-min-block-size);
+        --utrecht-textbox-padding-block-end: 0;
+        --utrecht-textbox-padding-block-start: 0;
       }
     `,
   ];
