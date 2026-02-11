@@ -88,7 +88,7 @@ export class FormatSelect extends LitElement {
       <clippy-lang-combobox
         @change=${this.#handleValueChange}
         hidden-label="Taal van het onderdeel"
-        .options=${languageOptions.map(({lang}) => lang)}
+        .options=${languageOptions.map(({ lang }) => lang)}
         value=${this.#getCurrentLanguage() || ''}
         format="both"
       >
