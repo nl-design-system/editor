@@ -5,7 +5,7 @@ import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/numb
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import X from '@tabler/icons/outline/x.svg?raw';
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
-import { customElement, property, state, queryAll } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import '../validation-item';
@@ -15,9 +15,6 @@ import '@/components/tabs';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { tiptapContext } from '@/context/tiptapContext.ts';
-import '@/components/tabs';
-import '@nl-design-system-community/clippy-components/clippy-button';
-import '@nl-design-system-community/clippy-components/clippy-icon';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { CustomEvents } from '@/events';
 import { validationMessages, type ValidationKey } from '@/messages';
@@ -34,9 +31,6 @@ export class ValidationsDialog extends LitElement {
 
   @state()
   private selectedSeverity: ValidationSeverity | null = null;
-
-  @queryAll('clippy-validation-item')
-  private readonly validationListItems: HTMLUListElement[] | undefined;
 
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })

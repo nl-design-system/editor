@@ -9,6 +9,7 @@ export default css`
     align-items: flex-end;
     display: flex;
     inline-size: 1rem;
+    z-index: 1;
   }
 
   .clippy-validations-gutter__list {

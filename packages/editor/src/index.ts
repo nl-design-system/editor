@@ -202,8 +202,8 @@ export class Editor extends EditorContext {
       <clippy-toolbar></clippy-toolbar>
       <div class="clippy-editor-container" id=${EDITOR_ID}>
         <slot name="content" hidden></slot>
-        <clippy-editor-content></clippy-editor-content>
         <clippy-validations-gutter></clippy-validations-gutter>
+        <clippy-editor-content></clippy-editor-content>
         <clippy-bubble-menu class="clippy-bubble-menu"></clippy-bubble-menu>
       </div>
       <clippy-validations-dialog></clippy-validations-dialog>
@@ -257,6 +257,7 @@ export class EditorContent extends LitElement {
 
   override connectedCallback(): void {
     super.connectedCallback();
+    this.style.position = 'relative';
   }
 
   override disconnectedCallback() {

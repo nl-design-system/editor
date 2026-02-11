@@ -20,7 +20,7 @@ export default css`
   }
 
   .clippy-guideline + .clippy-guideline {
-    margin-block-start: -var(--basis-space-block-3xl);
+    margin-block-start: var(--basis-space-block-3xl);
   }
 
   .clippy-guideline__description {
@@ -28,8 +28,11 @@ export default css`
   }
 
   .clippy-guideline__example {
-    border-block-width: 1px;
+    border-block-end-width: 0;
+    border-block-start-width: 1px;
     border-inline-width: 0;
+    padding-inline: var(--basis-space-inline-xl);
+    padding-block: var(--basis-space-block-xl);
     border-style: solid;
     border-color: var(--basis-color-default-border-default);
   }

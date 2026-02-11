@@ -69,9 +69,6 @@ export class ClippyGuideline extends LitElement {
             </div>
           </div>
         </div>
-        <div class="clippy-guideline__status">
-          <slot name="status"></slot>
-        </div>
       </div>
     `;
   }

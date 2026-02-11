@@ -9,7 +9,7 @@ export default css`
     border: 1px solid var(--ma-color-neutral-8);
     padding-block: 1rem;
     padding-inline: 2rem 1rem;
-    min-inline-size: 250px;
+    min-inline-size: 320px;
     border-radius: 1rem;
 
     &:focus {
