@@ -38,6 +38,12 @@ export class FormatSelect extends LitElement {
         --utrecht-pointer-target-min-size: var(--clippy-button-small-min-block-size);
         --utrecht-textbox-padding-block-end: 0;
         --utrecht-textbox-padding-block-start: 0;
+        --utrecht-textbox-border-color: var(--nl-button-secondary-border-color);
+        --utrecht-form-control-border-color: var(--nl-button-secondary-border-color);
+        --utrecht-textbox-color: var(--nl-button-secondary-color);
+        --utrecht-textbox-font-weight: var(--nl-button-secondary-font-weight);
+        --utrecht-textbox-border-radius: var(--nl-button-border-radius);
+        --utrecht-textbox-line-height: 30px;
       }
     `,
   ];
