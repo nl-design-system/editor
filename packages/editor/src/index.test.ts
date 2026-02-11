@@ -31,9 +31,11 @@ describe('<clippy-editor>', () => {
       { keys: '[/MouseLeft]' },
     ]);
 
-    const select = page.getByLabelText('Selecteer tekstformaat');
-    expect(select).toBeInTheDocument();
-    await user.selectOptions(select.element(), 'h3');
+    const combobox = page.getByRole('combobox', { name: 'Selecteer tekstformaat' });
+    expect(combobox).toBeInTheDocument();
+    await user.click(combobox.element());
+    const option = page.getByRole('option', { name: 'Kopniveau 3' });
+    await user.click(option.element());
 
     const h3Text = page.getByRole('heading', { level: 3 });
     expect(h3Text).toHaveTextContent('Start met kopniveau 1');
