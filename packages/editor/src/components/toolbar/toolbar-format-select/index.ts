@@ -1,11 +1,10 @@
 import type { Editor } from '@tiptap/core';
 import type { Level } from '@tiptap/extension-heading';
 import { localized, msg, str } from '@lit/localize';
-import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
-import { html, LitElement, unsafeCSS, css } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { map } from 'lit/directives/map.js';
 import { editor } from '@/decorators/TipTapDecorator.ts';
+import '@nl-design-system-community/clippy-components/clippy-combobox';
 
 const tag = 'clippy-format-select';
 
@@ -16,7 +15,6 @@ declare global {
 }
 
 export interface SelectOption {
-  active: boolean;
   label: string;
   value: string;
 }
@@ -32,14 +30,17 @@ export class FormatSelect extends LitElement {
   @property({ type: Boolean }) disabled = false;
   @property({ type: Boolean }) readOnly = false;
   static override readonly styles = [
-    unsafeCSS(buttonCss),
     css`
-      .clippy-button--small {
-        --nl-button-min-inline-size: var(--clippy-button-small-min-inline-size, 32px);
-        --nl-button-min-block-size: var(--clippy-button-small-min-block-size, 32px);
-        --clippy-icon-size: var(--clippy-button-small-icon, 18px);
-        padding-block-end: 0;
-        padding-block-start: 0;
+      clippy-combobox {
+        --utrecht-pointer-target-min-size: var(--clippy-button-small-min-block-size);
+        --utrecht-textbox-padding-block-end: 0;
+        --utrecht-textbox-padding-block-start: 0;
+        --utrecht-textbox-border-color: var(--nl-button-secondary-border-color);
+        --utrecht-textbox-color: var(--nl-button-secondary-color);
+        --utrecht-textbox-font-weight: var(--nl-button-secondary-font-weight);
+        --utrecht-textbox-border-radius: var(--nl-button-border-radius);
+        --utrecht-listbox-border-radius: var(--nl-button-border-radius);
+        --utrecht-textbox-line-height: 30px;
       }
     `,
   ];
@@ -76,55 +77,36 @@ export class FormatSelect extends LitElement {
   private get options(): SelectOption[] {
     if (!this.editor) return [];
     const headingLevels = getConfiguredHeadingLevels(this.editor);
-    const headingOptions: SelectOption[] = headingLevels.map((level) => ({
-      active: this.#isFormatActive('heading', { level }),
-      label: msg(str`Heading level ${level}`),
-      value: `h${level}`,
-    }));
-    let options = [
-      ...headingOptions,
-      {
-        active: this.#isFormatActive('paragraph'),
-        label: msg('Paragraph'),
-        value: 'paragraph',
-      },
-      {
-        active: this.#isFormatActive('codeBlock'),
-        label: msg('Code block'),
-        value: 'codeBlock',
-      },
-      {
-        active: this.#isFormatActive('blockquote'),
-        label: msg('Blockquote'),
-        value: 'blockquote',
-      },
+    return [
+      ...headingLevels.map((level) => ({
+        label: msg(str`Heading level ${level}`),
+        value: `h${level}`,
+      })),
+      { label: msg('Paragraph'), value: 'paragraph' },
+      { label: msg('Code block'), value: 'codeBlock' },
+      { label: msg('Blockquote'), value: 'blockquote' },
     ];
+  }
 
-    if (!options.some(({ active }) => active)) {
-      options = [
-        {
-          active: true,
-          label: msg('(unknown)'),
-          value: '',
-        },
-        ...options,
-      ];
-    }
-    return options;
+  get #selectedIndex(): number {
+    return this.options.findIndex(({ value }) => {
+      if (value.startsWith('h')) {
+        const level = Number(value[1]);
+        return this.#isFormatActive('heading', { level });
+      }
+      return this.#isFormatActive(value);
+    });
   }
 
   override render() {
     return html`
-      <select
-        class="nl-button nl-button--secondary clippy-button--small"
+      <clippy-combobox
         @change=${this.#handleTextFormatChange}
-        aria-label=${msg('Select text format')}
-      >
-        ${map(
-          this.options,
-          (option) => html`<option ?selected=${option.active} value=${option.value}>${option.label}</option>`,
-        )}
-      </select>
+        hidden-label=${msg('Select text format')}
+        value=${this.options[this.#selectedIndex]?.value || ''}
+        .selectedIndex=${this.#selectedIndex}
+        .options=${this.options}
+      ></clippy-combobox>
     `;
   }
 }
