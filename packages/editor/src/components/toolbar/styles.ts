@@ -2,9 +2,11 @@ import { css } from 'lit';
 
 export default css`
   .clippy-toolbar__wrapper {
+    /* Wrap the toolbar to make a toolbar with many items fit on small screens. */
     display: flex;
+    flex-wrap: wrap;
     gap: var(--basis-space-inline-sm);
-    background-color: var(--ma-color-paars-1);
+    background-color: var(--ma-color-white);
     border: 1px solid var(--ma-color-paars-8);
     border-radius: 3px;
     padding-block: var(--basis-space-inline-md);

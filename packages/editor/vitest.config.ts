@@ -31,5 +31,6 @@ export default defineConfig({
     },
     exclude: ['**/e2e/**', '**/node_modules/**'],
     include: ['**/src/**/*.test.ts'],
+    setupFiles: ['./vitest.setup.ts'],
   },
 });

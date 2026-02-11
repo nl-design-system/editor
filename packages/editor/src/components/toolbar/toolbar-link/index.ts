@@ -1,12 +1,16 @@
 import type { Editor } from '@tiptap/core';
-import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
+import { localized, msg } from '@lit/localize';
+import { ClippyModal } from '@nl-design-system-community/clippy-components/clippy-modal';
 import LinkIcon from '@tabler/icons/outline/link.svg?raw';
-import { html, LitElement, unsafeCSS } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { html, LitElement } from 'lit';
+import { customElement, query, state } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
+import '@nl-design-system-community/clippy-components/clippy-button';
+import '@nl-design-system-community/clippy-components/clippy-icon';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import './../toolbar-button';
 import { editor } from '@/decorators/TipTapDecorator.ts';
+
+const ariaDescribedby = 'clippy-toolbar-link-dialog';
 
 const tag = 'clippy-toolbar-link';
 
@@ -16,11 +20,12 @@ declare global {
   }
 }
 
+@localized()
 @customElement(tag)
 export class ToolbarLink extends LitElement {
-  static override readonly styles = [unsafeCSS(buttonCss)];
+  @query('clippy-modal')
+  private readonly modalDialog!: ClippyModal;
 
-  readonly #dialogRef: Ref<HTMLDialogElement> = createRef();
   readonly #inputRef: Ref<HTMLInputElement> = createRef();
 
   @state()
@@ -39,7 +44,7 @@ export class ToolbarLink extends LitElement {
 
   readonly #unsetLink = () => {
     this.editor?.chain().focus().extendMarkRange('link').unsetLink().run();
-    this.#dialogRef.value?.close();
+    this.modalDialog.close();
   };
 
   readonly #updateLink = () => {
@@ -49,39 +54,46 @@ export class ToolbarLink extends LitElement {
     } catch (error) {
       console.error(error);
     }
-    this.#dialogRef.value?.close();
+    this.modalDialog.close();
   };
 
   readonly #openLinkDialog = () => {
     this.previousUrl = this.editor?.getAttributes('link')['href'];
-    this.#dialogRef.value?.showModal();
+    this.modalDialog.open();
   };
 
   override render() {
     return html`
-      <clippy-toolbar-button
-        class="clippy-toolbar-link--button"
-        @click=${this.#openLinkDialog}
-        label="Link"
-        aria-controls="clippy-link-dialog"
-        .pressed=${this.editor?.isActive('link') ?? false}
-      >
-        ${unsafeSVG(LinkIcon)}
-      </clippy-toolbar-button>
-      <dialog closedby="any" class="link--dialog" ${ref(this.#dialogRef)} data-testid="clippy-link-dialog">
-        <div>
-          <label>Link to:<input value=${this.previousUrl} ${ref(this.#inputRef)} type="text" /></label>
-        </div>
-        <div>
-          <button class="nl-button nl-button--secondary " @click=${() => this.#dialogRef.value?.close()}>
-            Sluiten
-          </button>
-          <button class="nl-button nl-button--secondary nl-button--negative" @click=${this.#unsetLink}>
-            Verwijder link
-          </button>
-          <button class="nl-button nl-button--primary" @click=${this.#updateLink}>Link toevoegen</button>
-        </div>
-      </dialog>
+        <clippy-button
+          @click=${this.#openLinkDialog}
+          aria-controls="clippy-link-dialog"
+          .pressed=${this.editor?.isActive('link') ?? false}
+          icon-only
+          size="small"
+          purpose="secondary"
+        >
+          <clippy-icon slot="iconStart">${unsafeSVG(LinkIcon)}</clippy-icon>
+          ${msg('Link')}
+        </clippy-button>
+        <clippy-modal
+          .title=${msg('Add link')}
+          actions="none"
+          aria-describedby=${ariaDescribedby}
+          data-testid="clippy-link-dialog"
+        >
+          <p id=${ariaDescribedby}>${msg('Add link')}</p>
+          <div>
+            <label>${msg('Link to:')}<input value=${this.previousUrl} ${ref(this.#inputRef)} type="text" /></label>
+          </div>
+          <div>
+            <clippy-button @click=${() => this.modalDialog.close()}>${msg('Close')}</clippy-button>
+            <clippy-button purpose="secondary" hint="negative" @click=${this.#unsetLink}>
+              ${msg('Remove link')}
+            </clippy-button>
+            <clippy-button purpose="primary" @click=${this.#updateLink}>${msg('Add link')}</clippy-button>
+          </div>
+        </clippy-modal>
+      </clippy-button>
     `;
   }
 }

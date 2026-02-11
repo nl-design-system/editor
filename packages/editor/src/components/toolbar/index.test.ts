@@ -19,36 +19,35 @@ describe('<clippy-toolbar>', () => {
   });
 
   it('renders correctly with required toolbar elements', async () => {
-    expect(page.getByLabelText('Werkbalk tekstbewerker')).toBeInTheDocument();
-    expect(page.getByLabelText('Bold')).toBeInTheDocument();
-    expect(page.getByLabelText('Italic')).toBeInTheDocument();
-    expect(page.getByLabelText('Link', { exact: true })).toBeInTheDocument();
+    expect(page.getByLabelText('Text editor toolbar')).toBeInTheDocument();
+    expect(page.getByRole('button', { name: 'Bold' })).toBeInTheDocument();
+    expect(page.getByRole('button', { name: 'Italic' })).toBeInTheDocument();
+    expect(page.getByRole('button', { name: 'Link' }, { exact: true })).toBeInTheDocument();
   });
 
   it('updates all toolbar buttons when editor content changes', async () => {
-    expect(page.getByLabelText('Bold')).toHaveAttribute('aria-pressed', 'false');
+    expect(page.getByRole('button', { name: 'Vet' })).toHaveAttribute('aria-pressed', 'false');
   });
 
   it('opens shortcuts dialog when keyboard shortcuts button is clicked', async () => {
     expect(page.getByTestId('clippy-shortcuts-dialog')).not.toHaveAttribute('open');
 
-    const button = page.getByRole('button', { name: 'Keyboard shortcuts' });
+    const button = page.getByRole('button', { name: 'Sneltoetsen' });
     await button.click();
     expect(page.getByTestId('clippy-shortcuts-dialog')).toHaveAttribute('open');
   });
 
   it('changes link URL when link is edited', async () => {
-    const linkButton = page.getByLabelText('Link', { exact: true });
+    const linkButton = page.getByRole('button', { name: 'Link' }, { exact: true }).nth(1);
     await user.click(linkButton);
-
-    expect(page.getByTestId('clippy-link-dialog')).toHaveAttribute('open');
-    const urlInput = page.getByLabelText('Link to:');
+    expect(page.getByRole('dialog')).toHaveAttribute('open');
+    const urlInput = page.getByLabelText('Link naar:');
     await user.type(urlInput, 'https://example.com');
 
     await user.keyboard('{Enter}');
-    expect(page.getByLabelText('Link to:')).toHaveValue('https://example.com');
+    expect(page.getByLabelText('Link naar:')).toHaveValue('https://example.com');
     await user.click(page.getByRole('button', { name: 'Link toevoegen' }));
-    expect(page.getByTestId('clippy-link-dialog')).not.toHaveAttribute('open');
+    expect(page.getByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('adds an image when image upload is completed', async () => {

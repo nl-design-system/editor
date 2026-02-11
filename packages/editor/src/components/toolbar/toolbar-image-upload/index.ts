@@ -1,8 +1,8 @@
 import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
-import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
+import { msg } from '@lit/localize';
 import PhotoIcon from '@tabler/icons/outline/photo.svg?raw';
-import { html, LitElement, unsafeCSS } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
@@ -10,11 +10,13 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ImageUpload } from '@/types/image.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { CustomEvents } from '@/events';
+import '@nl-design-system-community/clippy-components/clippy-button';
+import '@nl-design-system-community/clippy-components/clippy-icon';
 import imageUploadDialogStyles from './styles.ts';
 
 @customElement('clippy-toolbar-image-upload')
 export class ToolbarImageUpload extends LitElement {
-  static override readonly styles = [imageUploadDialogStyles, unsafeCSS(buttonCss)];
+  static override readonly styles = [imageUploadDialogStyles];
 
   readonly #dialogRef: Ref<HTMLDialogElement> = createRef();
   readonly #inputRef: Ref<HTMLInputElement> = createRef();
@@ -95,23 +97,25 @@ export class ToolbarImageUpload extends LitElement {
 
   override render() {
     return html`
-      <clippy-toolbar-button
-        class="clippy-toolbar-image-upload--button"
+      <clippy-button
         @click=${this.#toggleImageUploadDialog}
         aria-controls="clippy-image-upload-dialog"
-        label="Afbeelding"
+        icon-only
+        size="small"
+        purpose="secondary"
       >
-        ${unsafeSVG(PhotoIcon)}
-        <input
-          ${ref(this.#inputRef)}
-          type="file"
-          data-testid="clippy-image-upload"
-          style="display:none"
-          accept="image/*"
-          multiple
-          @change=${this.#handleOnChange}
-        />
-      </clippy-toolbar-button>
+        <clippy-icon slot="iconStart">${unsafeSVG(PhotoIcon)}</clippy-icon>
+        ${msg('Image')}
+      </clippy-button>
+      <input
+        ${ref(this.#inputRef)}
+        type="file"
+        data-testid="clippy-image-upload"
+        style="display:none"
+        accept="image/*"
+        multiple
+        @change=${this.#handleOnChange}
+      />
       <dialog
         closedby="any"
         id="clippy-image-upload-dialog"
@@ -126,12 +130,12 @@ export class ToolbarImageUpload extends LitElement {
               <img src="${file.url}" alt="${file.name}" />
               <div>
                 <label
-                  >Alt text:<input type="text" .value="${file.name}" @change=${this.#updateAltText(index)}
+                  >${msg('Alt text:')}<input type="text" .value="${file.name}" @change=${this.#updateAltText(index)}
                 /></label>
               </div>
             </li>`,
         )}
-        <button class="nl-button nl-button--primary" @click=${this.#insertImages}>Invoegen</button>
+        <clippy-button purpose="primary" @click=${this.#insertImages}>${msg('Insert')}</clippy-button>
       </dialog>
     `;
   }

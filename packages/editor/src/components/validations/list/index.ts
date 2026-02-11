@@ -9,7 +9,7 @@ import type { ValidationEntry, ValidationsMap } from '@/types/validation.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { contentValidations, documentValidations } from '@/validators/constants.ts';
-import './validation-list-item';
+import './../validation-item';
 import listStyles from './styles.ts';
 
 type ContentValidationKey = (typeof contentValidations)[keyof typeof contentValidations];
@@ -169,7 +169,7 @@ export class ValidationsList extends LitElement {
               const { description, href, tip } = validationMessages[validationKey];
               const tipHtml = tip?.(tipPayload) ?? null;
               return html`
-                <clippy-validation-list-item
+                <clippy-validation-item
                   .key=${key}
                   .pos=${pos}
                   .severity=${severity}
@@ -177,7 +177,7 @@ export class ValidationsList extends LitElement {
                   .href=${href}
                 >
                   ${tipHtml ? html`<div slot="tip-html">${unsafeHTML(tipHtml)}</div>` : nothing}
-                </clippy-validation-list-item>
+                </clippy-validation-item>
               `;
             })
           : html`<li class="clippy-dialog__list-item">Geen toegankelijkheidsfouten gevonden.</li>`}

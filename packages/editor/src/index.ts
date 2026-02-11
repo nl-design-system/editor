@@ -1,20 +1,36 @@
 import { consume, ContextProvider, provide } from '@lit/context';
-import { Editor as TiptapEditor } from '@tiptap/core';
+import codeBlockStyle from '@nl-design-system-candidate/code-block-css/code-block.css?inline';
+import codeStyle from '@nl-design-system-candidate/code-css/code.css?inline';
 import './components/guideline';
 import './components/toolbar';
 import './components/validations/gutter';
-import './components/validations/list';
 import './components/validations/drawer';
 import './components/bubble-menu';
-import { LitElement, css, html, nothing } from 'lit';
+import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
+import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
+import markStyle from '@nl-design-system-candidate/mark-css/mark.css?inline';
+import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
+import { Editor as TiptapEditor } from '@tiptap/core';
+import blockquoteStyle from '@utrecht/blockquote-css/dist/index.css?inline';
+import imgStyle from '@utrecht/img-css/dist/index.css?inline';
+import orderedListStyle from '@utrecht/ordered-list-css/dist/index.css?inline';
+import separatorStyle from '@utrecht/separator-css/dist/index.css?inline';
+import subscriptStyle from '@utrecht/subscript-css/dist/index.css?inline';
+import superscriptStyle from '@utrecht/superscript-css/dist/index.css?inline';
+import tableStyle from '@utrecht/table-css/dist/index.css?inline';
+import unorderedListStyle from '@utrecht/unordered-list-css/dist/index.css?inline';
+import { LitElement, css, html, unsafeCSS, nothing } from 'lit';
 import { customElement, property, queryAssignedElements } from 'lit/decorators.js';
 import type { ValidationResult, ValidationsMap } from '@/types/validation.ts';
 import { editorExtensions } from '@/extensions';
+import { initializeLocale } from '@/localization.ts';
 import { tiptapContext } from './context/tiptapContext.ts';
 import { validationsContext } from './context/validationsContext.ts';
 import editorStyles from './styles';
 
 const EDITOR_ID = 'editor';
+
+initializeLocale();
 
 const sanitizeTopHeadingLevel = (number: number): number => {
   if (!Number.isNaN(number) && number >= 1 && number <= 6) {
@@ -39,7 +55,23 @@ const sanitizeTopHeadingLevel = (number: number): number => {
  */
 @customElement('clippy-editor-context')
 export class EditorContext extends LitElement {
-  static override readonly styles = [editorStyles];
+  static override readonly styles = [
+    editorStyles,
+    unsafeCSS(codeBlockStyle),
+    unsafeCSS(codeStyle),
+    unsafeCSS(headingStyle),
+    unsafeCSS(linkStyle),
+    unsafeCSS(markStyle),
+    unsafeCSS(orderedListStyle),
+    unsafeCSS(paragraphStyle),
+    unsafeCSS(unorderedListStyle),
+    unsafeCSS(tableStyle),
+    unsafeCSS(separatorStyle),
+    unsafeCSS(subscriptStyle),
+    unsafeCSS(superscriptStyle),
+    unsafeCSS(blockquoteStyle),
+    unsafeCSS(imgStyle),
+  ];
 
   @property({ type: String })
   identifier = 'clippy-editor-id';
@@ -119,10 +151,17 @@ export class EditorContext extends LitElement {
     this.createEditor();
   }
 
-  override connectedCallback() {
-    this.lightValidationsContext.hostConnected();
-    super.connectedCallback();
+  private isLocaleInitialized = false;
 
+  override connectedCallback() {
+    super.connectedCallback();
+    this.lightValidationsContext.hostConnected();
+    if (!this.isLocaleInitialized) {
+      this.isLocaleInitialized = true;
+      initializeLocale().then(() => {
+        this.requestUpdate();
+      });
+    }
     // Find custom elements that are already defined, and might have dispatched the `context-request` event already
     const isCustomElement = (x: Element) => /-/.test(x.localName);
     Array.from(this.querySelectorAll(':defined'))

@@ -9,7 +9,7 @@ import tseslint from 'typescript-eslint';
 
 export default defineConfig([
   // use the built-in globalIgnores utility to globally ignore files in the project
-  globalIgnores(['**/dist/', '**/build/', '**/coverage/', '**/tsconfig*.json']),
+  globalIgnores(['**/dist/', '**/build/', '**/coverage/', '**/generated/', '**/tsconfig*.json']),
   {
     // Use the Perfectionist recommended/natural configuration for all possible JavaScript, TypeScript and JSX files
     name: 'perfectionist/recommended/natural',
@@ -22,7 +22,7 @@ export default defineConfig([
         'error',
         {
           ignoreCase: false,
-          newlinesBetween: 'never',
+          newlinesBetween: 0,
         },
       ],
       // Sort objects sensibly, allow `id` and `name` properties to go first and `overrides` to go last

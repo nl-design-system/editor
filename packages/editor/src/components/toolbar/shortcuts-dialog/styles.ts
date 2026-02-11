@@ -8,7 +8,7 @@ export default css`
     padding-block: var(--basis-space-block-xl);
     padding-inline: var(--basis-space-inline-xl);
     inline-size: 100%;
-    max-inline-size: 600px;
+    max-inline-size: 650px;
   }
 
   .clippy-shortcuts__header {
@@ -20,35 +20,18 @@ export default css`
     }
   }
 
-  .clippy-shortcuts__table {
-    inline-size: 100%;
-    border-collapse: collapse;
+  hr {
+    --utrecht-space-around: 1;
+    --utrecht-separator-margin-block-start: 12px;
+    --utrecht-separator-margin-block-end: 12px;
+  }
 
-    & caption {
-      text-align: start;
-      font-size: 1.5em;
-      padding-block: var(--basis-space-block-xl);
-    }
-    & thead {
-      th {
-        text-align: start;
-        border-block-end: 2px solid var(--basis-color-action-1-color-active);
-      }
-    }
-
-    & td,
-    th {
-      padding-block: var(--basis-space-block-sm);
-      padding-inline: var(--basis-space-inline-md);
-    }
-
-    kbd {
-      display: inline-block;
-      border: 1px solid var(--basis-color-action-1-color-active);
-      padding-block: var(--basis-space-block-sm);
-      padding-inline: var(--basis-space-inline-sm);
-      border-radius: 0.5em;
-      background-color: var(--basis-color-default-bg-default);
-    }
+  kbd {
+    display: inline-block;
+    border: 1px solid var(--basis-color-action-1-color-active);
+    padding-block: var(--basis-space-block-sm);
+    padding-inline: var(--basis-space-inline-sm);
+    border-radius: 0.5em;
+    background-color: var(--basis-color-default-bg-default);
   }
 `;

@@ -1,6 +1,7 @@
 import { LitElement, html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import guidelineStyles from './styles';
+import './../validations/list';
 
 @customElement('clippy-guideline')
 export class ClippyGuideline extends LitElement {

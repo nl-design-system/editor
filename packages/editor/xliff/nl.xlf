@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file target-language="nl" source-language="en" original="lit-localize-inputs" datatype="plaintext">
+    <body>
+      <trans-unit id="s3643189d1abbb7f4">
+        <source>Code</source>
+        <target state="translated">Code</target>
+      </trans-unit>
+      <trans-unit id="sdf946172dfa0328f">
+        <source>Superscript</source>
+        <target>Superscript</target>
+      </trans-unit>
+      <trans-unit id="s587ac858dd80f6fa">
+        <source>Subscript</source>
+        <target>Subscript</target>
+      </trans-unit>
+      <trans-unit id="sb38d497d992ab4a4">
+        <source>Center</source>
+        <target>Centreren</target>
+      </trans-unit>
+      <trans-unit id="s05e9759cfd99c48f">
+        <source>Justify</source>
+        <target>Uitvullen</target>
+      </trans-unit>
+      <trans-unit id="s626daf42b1ab7df7">
+        <source>Align left</source>
+        <target>Links uitlijnen</target>
+      </trans-unit>
+      <trans-unit id="sac687b8649989de8">
+        <source>Align right</source>
+        <target>Rechts uitlijnen</target>
+      </trans-unit>
+      <trans-unit id="sf7c0eba7c822e3d6">
+        <source>Bold</source>
+        <target>Vetgedrukt</target>
+      </trans-unit>
+      <trans-unit id="s523eb9043213ff0d">
+        <source>Italic</source>
+        <target>Cursief</target>
+      </trans-unit>
+      <trans-unit id="sb206d700d26b14ff">
+        <source>Underline</source>
+        <target>Onderstrepen</target>
+      </trans-unit>
+      <trans-unit id="s4827add401eae7c7">
+        <source>Highlight</source>
+        <target>Markeren</target>
+      </trans-unit>
+      <trans-unit id="s8f4be9f086eb530f">
+        <source>Undo</source>
+        <target>Ongedaan maken</target>
+      </trans-unit>
+      <trans-unit id="s7417792bbe720149">
+        <source>Redo</source>
+        <target>Opnieuw</target>
+      </trans-unit>
+      <trans-unit id="sa1cc184ce2a00abb">
+        <source>Numbered list</source>
+        <target>Genummerde lijst</target>
+      </trans-unit>
+      <trans-unit id="s77958f74fde3c368">
+        <source>Definition list</source>
+        <target>Definitielijst</target>
+      </trans-unit>
+      <trans-unit id="s521bc67da47df79c">
+        <source>Insert table</source>
+        <target>Tabel invoegen</target>
+      </trans-unit>
+      <trans-unit id="s2dd973ed898d0cf5">
+        <source>Horizontal rule</source>
+        <target>Horizontale lijn</target>
+      </trans-unit>
+      <trans-unit id="s0628c840adfd38af">
+        <source>Left to right</source>
+        <target>Links naar rechts</target>
+      </trans-unit>
+      <trans-unit id="s3bdd07186f7cfa5b">
+        <source>Right to left</source>
+        <target>Rechts naar links</target>
+      </trans-unit>
+      <trans-unit id="se3b4c857f91f80d7">
+        <source>Keyboard shortcuts</source>
+        <target>Sneltoetsen</target>
+      </trans-unit>
+      <trans-unit id="s33c26204494fd8c0">
+        <source>Show accessibility notifications</source>
+        <target>Toon toegankelijkheidsmeldingen</target>
+      </trans-unit>
+      <trans-unit id="sd4f05efa968b90ff">
+        <source>Total <x id="0" equiv-text="${size}"/> accessibility notifications found.</source>
+        <target>Totaal <x id="0" equiv-text="${size}"/> toegankelijkheidsmeldingen gevonden.</target>
+      </trans-unit>
+      <trans-unit id="sd79022be2c5470fc">
+        <source>Text editor toolbar</source>
+        <target>Werkbalk tekstbewerker</target>
+      </trans-unit>
+      <trans-unit id="se750d38689a2c65b">
+        <source>Alt text:</source>
+        <target>Alt-tekst:</target>
+      </trans-unit>
+      <trans-unit id="s599dcd2472c75c19">
+        <source>Paragraph</source>
+        <target>Paragraaf</target>
+      </trans-unit>
+      <trans-unit id="sacf637865b8d2075">
+        <source>Code block</source>
+        <target>Code-blok</target>
+      </trans-unit>
+      <trans-unit id="s35c3125c7750681e">
+        <source>Blockquote</source>
+        <target>Citaatblok</target>
+      </trans-unit>
+      <trans-unit id="s435e32524ae7b922">
+        <source>(unknown)</source>
+        <target>(onbekend)</target>
+      </trans-unit>
+      <trans-unit id="s83545917a8791873">
+        <source>Select text format</source>
+        <target>Selecteer tekstformaat</target>
+      </trans-unit>
+      <trans-unit id="s5ada999b33ccc808">
+        <source>Insert</source>
+        <target>Invoegen</target>
+      </trans-unit>
+      <trans-unit id="s3d93f9ea0c5a13fa">
+        <source>Image</source>
+        <target>Afbeelding</target>
+      </trans-unit>
+      <trans-unit id="s3cf89cb47fdde7e9">
+        <source>Link</source>
+        <target>Link</target>
+      </trans-unit>
+      <trans-unit id="saee580759589d4cc">
+        <source>Add link</source>
+        <target>Link toevoegen</target>
+      </trans-unit>
+      <trans-unit id="s64666f3c1e287e34">
+        <source>Link to:</source>
+        <target>Link naar:</target>
+      </trans-unit>
+      <trans-unit id="s5e8250fb85d64c23">
+        <source>Close</source>
+        <target>Sluiten</target>
+      </trans-unit>
+      <trans-unit id="se44dd3f2702d6bdb">
+        <source>Remove link</source>
+        <target>Link verwijderen</target>
+      </trans-unit>
+      <trans-unit id="s0bdca49248ba4820">
+        <source>Shortcuts</source>
+        <target>Sneltoetsen</target>
+      </trans-unit>
+      <trans-unit id="s460bf77c46d93bb4">
+        <source>Close shortcuts dialog</source>
+        <target>Sneltoetsen dialoog sluiten</target>
+      </trans-unit>
+      <trans-unit id="s0c33193c5b0c8726">
+        <source>Structure</source>
+        <target>Structuur</target>
+      </trans-unit>
+      <trans-unit id="s8bea2885ff2d1272">
+        <source>Command</source>
+        <target>Commando</target>
+      </trans-unit>
+      <trans-unit id="sd6048d71ae60e1d2">
+        <source>Strike through</source>
+        <target>Doorhalen</target>
+      </trans-unit>
+      <trans-unit id="s39bbeaebc5bc3b41">
+        <source>Text formatting</source>
+        <target>Tekstopmaak</target>
+      </trans-unit>
+      <trans-unit id="s620c25bb9799375e">
+        <source>Ordered list</source>
+        <target>Geordende lijst</target>
+      </trans-unit>
+      <trans-unit id="se6c7473600624125">
+        <source>Unordered list</source>
+        <target>Ongeordende lijst</target>
+      </trans-unit>
+      <trans-unit id="s11fdceabe7befeff">
+        <source>Accessibility</source>
+        <target>Toegankelijkheid</target>
+      </trans-unit>
+      <trans-unit id="s6074f9804681f4f7">
+        <source>Accessibility notifications</source>
+        <target>Toegankelijkheidsmeldingen</target>
+      </trans-unit>
+      <trans-unit id="s13b294079af53394">
+        <source>Focus toolbar</source>
+        <target>Focus werkbalk</target>
+      </trans-unit>
+      <trans-unit id="s50d3ec3a622ed705">
+        <source>Focus contextual toolbar</source>
+        <target>Focus contextuele werkbalk</target>
+      </trans-unit>
+      <trans-unit id="s4f538163e5545779">
+        <source>Heading level <x id="0" equiv-text="${level}"/></source>
+        <target>Kopniveau <x id="0" equiv-text="${level}"/></target>
+      </trans-unit>
+      <trans-unit id="sf993bb199fefbe04">
+        <source>All</source>
+        <target>Alle</target>
+      </trans-unit>
+      <trans-unit id="sb05ee36313adad06">
+        <source>Errors</source>
+        <target>Fouten</target>
+      </trans-unit>
+      <trans-unit id="s8a7f6fa052132a14">
+        <source>Warnings</source>
+        <target>Waarschuwingen</target>
+      </trans-unit>
+      <trans-unit id="s48d094fb2ffff8fb">
+        <source>Tips</source>
+        <target>Tips</target>
+      </trans-unit>
+      <trans-unit id="s5fc9e5ed7b80e521">
+        <source>Extensive explanation</source>
+        <target>Uitgebreide uitleg</target>
+      </trans-unit>
+      <trans-unit id="sdab2b4d8533bd75e">
+        <source>Adjust</source>
+        <target>Aanpassen</target>
+      </trans-unit>
+      <trans-unit id="s917734d83f35efa3">
+        <source>Ignore</source>
+        <target>Negeren</target>
+      </trans-unit>
+      <trans-unit id="s503a57cce1fec059">
+        <source>Document must have correct heading order</source>
+        <target>Document moet correcte kopvolgorde hebben</target>
+      </trans-unit>
+      <trans-unit id="h2078919f121dea29">
+        <source><x id="0" equiv-text="&lt;strong&gt;"/>Heading level <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> must not be the first heading level in the document.</source>
+        <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> mag niet het eerste kopniveau in het document zijn.</target>
+      </trans-unit>
+      <trans-unit id="s71080533c3b54c62">
+        <source>Remove the underline from the text.</source>
+        <target>Verwijder de onderstreping van de tekst.</target>
+      </trans-unit>
+      <trans-unit id="s965f8f5ffc0754da">
+        <source>Text should not be underlined. This looks too much like a link.</source>
+        <target>Tekst mag niet onderstreept zijn. Dit lijkt teveel op een link.</target>
+      </trans-unit>
+      <trans-unit id="sc716a380ec8e3282">
+        <source>Definition description must follow a definition term</source>
+        <target>Definitiebeschrijving moet een definitieterm volgen</target>
+      </trans-unit>
+      <trans-unit id="sa5fda4a0a007ee47">
+        <source>Definition list must contain a definition term</source>
+        <target>Definitielijst moet een definitieterm bevatten</target>
+      </trans-unit>
+      <trans-unit id="s5d7c1ae0725564e1">
+        <source>Heading must not be empty</source>
+        <target>Koptekst mag niet leeg zijn</target>
+      </trans-unit>
+      <trans-unit id="s6084b2bb8b3448de">
+        <source>Heading should not contain bold or italic text</source>
+        <target>Kop mag geen vetgedrukte of cursieve tekst bevatten</target>
+      </trans-unit>
+      <trans-unit id="sc5c4c16296a2ad67">
+        <source>Image must have alternative text</source>
+        <target>Afbeelding moet alternatieve tekst hebben</target>
+      </trans-unit>
+      <trans-unit id="sf8da2c9b6d4f8618">
+        <source>Link text should not be too generic</source>
+        <target>Linktekst mag niet te algemeen zijn</target>
+      </trans-unit>
+      <trans-unit id="s7f93cf6586c12e55">
+        <source>Link must not be empty</source>
+        <target>Link mag niet leeg zijn</target>
+      </trans-unit>
+      <trans-unit id="h86b1666bdb695a40">
+        <source>Fill the <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations[nodeType]}&lt;/strong&gt;"/> with text or remove the empty link.</source>
+        <target>Vul de <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations[nodeType]}&lt;/strong&gt;"/> met tekst of verwijder de lege link.</target>
+      </trans-unit>
+      <trans-unit id="s274e78669e453ed4">
+        <source>Avoid empty elements</source>
+        <target>Vermijd lege elementen</target>
+      </trans-unit>
+      <trans-unit id="h8fb14075251fbc85">
+        <source>Remove the empty <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations[nodeType]}&lt;/strong&gt;"/> or add text.</source>
+        <target>Verwijder de lege <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations[nodeType]}&lt;/strong&gt;"/> of voeg tekst toe.</target>
+      </trans-unit>
+      <trans-unit id="s3e81ea8dc02d8a2c">
+        <source>List must be a semantic list</source>
+        <target>Lijst moet een semantische lijst zijn</target>
+      </trans-unit>
+      <trans-unit id="h5353ca323af02848">
+        <source>Use a semantic list instead of lines starting with "<x id="0" equiv-text="&lt;strong&gt;${prefix}&lt;/strong&gt;"/>"</source>
+        <target>Gebruik een semantische lijst in plaats van regels die beginnen met "<x id="0" equiv-text="&lt;strong&gt;${prefix}&lt;/strong&gt;"/>"</target>
+      </trans-unit>
+      <trans-unit id="sce6f94ba35ec8b8e">
+        <source>Document must have only one heading level 1</source>
+        <target>Document mag maar één kopniveau 1 hebben</target>
+      </trans-unit>
+      <trans-unit id="s7d22b9e3bdf46607">
+        <source>Table must contain headings</source>
+        <target>Tabel moet koppen bevatten</target>
+      </trans-unit>
+      <trans-unit id="s5cfc5f93e0e50d31">
+        <source>Table must contain multiple rows</source>
+        <target>Tabel moet meerdere rijen bevatten</target>
+      </trans-unit>
+      <trans-unit id="s9c35c2ac811b2484">
+        <source>Document must start with heading level 1</source>
+        <target>Document moet beginnen met kopniveau 1</target>
+      </trans-unit>
+      <trans-unit id="s20d2d5a6ee857cf2">
+        <source>Avoid paragraphs that resemble headings</source>
+        <target>Vermijd alinea's die op koppen lijken</target>
+      </trans-unit>
+      <trans-unit id="sd7cbea773be90a4a">
+        <source>definition description</source>
+        <target>definitiebeschrijving</target>
+      </trans-unit>
+      <trans-unit id="sc0ccc1191e1c2652">
+        <source>definition term</source>
+        <target>definitieterm</target>
+      </trans-unit>
+      <trans-unit id="sa080b7c76b63f1bc">
+        <source>link text</source>
+        <target>linktekst</target>
+      </trans-unit>
+      <trans-unit id="s18a0d9f5f5cadfb4">
+        <source>list item</source>
+        <target>lijstitem</target>
+      </trans-unit>
+      <trans-unit id="sb0d8560183547fb9">
+        <source>paragraph</source>
+        <target>paragraaf</target>
+      </trans-unit>
+      <trans-unit id="s37b4954f9a78e31d">
+        <source>table cell</source>
+        <target>tabelcel</target>
+      </trans-unit>
+      <trans-unit id="sb7b758bfd9655218">
+        <source>table header</source>
+        <target>tabelkop</target>
+      </trans-unit>
+      <trans-unit id="h3a4689bd2e1e317d">
+        <source><x id="0" equiv-text="&lt;strong&gt;"/>Heading level <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> exceeds the highest allowed heading level
+          (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in this document.</source>
+          <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> overschrijdt het hoogste toegestane kopniveau
+            (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in dit document.</target>
+      </trans-unit>
+      <trans-unit id="h5f5c9257c67862ea">
+        <source><x id="0" equiv-text="&lt;strong&gt;"/>Heading level <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> must not directly follow a
+          <x id="2" equiv-text="&lt;strong&gt;"/>heading level <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Use a heading at level <x id="4" equiv-text="${precedingHeadingLevel + 1}"/>
+          or lower.</source>
+          <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> mag niet direct volgen op een
+            <x id="2" equiv-text="&lt;strong&gt;"/>kopniveau <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Gebruik een kop op niveau <x id="4" equiv-text="${precedingHeadingLevel + 1}"/>
+            of lager.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
