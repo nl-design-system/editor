@@ -1,11 +1,11 @@
 import { consume, ContextProvider, provide } from '@lit/context';
 import codeBlockStyle from '@nl-design-system-candidate/code-block-css/code-block.css?inline';
-import codeStyle from '@nl-design-system-candidate/code-css/code.css?inline';
 import './components/guideline';
 import './components/toolbar';
 import './components/validations/gutter';
 import './components/validations/drawer';
 import './components/bubble-menu';
+import codeStyle from '@nl-design-system-candidate/code-css/code.css?inline';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
 import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
 import markStyle from '@nl-design-system-candidate/mark-css/mark.css?inline';
