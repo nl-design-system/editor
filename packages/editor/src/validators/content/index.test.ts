@@ -127,9 +127,9 @@ describe('Content validations', () => {
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
       expect(mapArg.get('node-should-not-be-empty_5').tipPayload.nodeType).toBe('paragraph');
-      expect(mapArg.get('node-should-not-be-empty_13').tipPayload.nodeType).toBe('listItem');
-      expect(mapArg.get('node-should-not-be-empty_38').tipPayload.nodeType).toBe('definitionTerm');
-      expect(mapArg.get('node-should-not-be-empty_40').tipPayload.nodeType).toBe('definitionDescription');
+      expect(mapArg.get('node-should-not-be-empty_15').tipPayload.nodeType).toBe('listItem');
+      expect(mapArg.get('node-should-not-be-empty_42').tipPayload.nodeType).toBe('definitionTerm');
+      expect(mapArg.get('node-should-not-be-empty_44').tipPayload.nodeType).toBe('definitionDescription');
     });
   });
 
