@@ -1,4 +1,5 @@
 import type { Editor } from '@tiptap/core';
+import { localized, msg } from '@lit/localize';
 import AlignLeftIcon from '@tabler/icons/outline/align-left.svg?raw';
 import AlignRightIcon from '@tabler/icons/outline/align-right.svg?raw';
 import EditIcon from '@tabler/icons/outline/edit.svg?raw';
@@ -13,6 +14,7 @@ import bubbleMenuStyles from './styles.ts';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 
+@localized()
 @customElement('clippy-bubble-menu')
 export class ImageBubbleMenu extends LitElement {
   @editor()
@@ -77,7 +79,7 @@ export class ImageBubbleMenu extends LitElement {
     if (!isImageSelected || !attrs) return nothing;
 
     return html`
-      <div class="bubble-menu" role="toolbar" aria-label="Image alignment options">
+      <div class="bubble-menu" role="toolbar" aria-label=${msg('Image alignment options')}>
         <clippy-button
           pressed="${attrs['alignment'] === 'left'}"
           @click="${() => this.#setAlignment('left')}"
@@ -87,7 +89,7 @@ export class ImageBubbleMenu extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(AlignLeftIcon)}</clippy-icon>
-          Align left
+          ${msg('Align left')}
         </clippy-button>
         <clippy-button
           pressed="${attrs['alignment'] === 'right'}"
@@ -97,11 +99,11 @@ export class ImageBubbleMenu extends LitElement {
           purpose="secondary"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(AlignRightIcon)}</clippy-icon>
-          Align right
+          ${msg('Align right')}
         </clippy-button>
         <clippy-button @click=${this.#editImage} icon-only size="small" purpose="secondary">
           <clippy-icon slot="iconStart">${unsafeSVG(EditIcon)}</clippy-icon>
-          Afbeelding bewerken
+          ${msg('Edit image')}
         </clippy-button>
       </div>
     `;

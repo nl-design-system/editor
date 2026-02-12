@@ -1,5 +1,5 @@
 import { consume } from '@lit/context';
-import { localized, msg } from '@lit/localize';
+import { localized, msg, str } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
@@ -74,7 +74,7 @@ export class Tabs extends LitElement {
 
   override render() {
     return html`
-      <div class="clippy-tabs" role="tablist" aria-label="Filter validaties op ernst">
+      <div class="clippy-tabs" role="tablist" aria-label=${msg('Filter validations by severity')}>
         ${map(this.#tabs, ({ key, label }) => {
           const count = this.#getCount(key);
           const isActive = this.activeTab === key;
@@ -92,7 +92,7 @@ export class Tabs extends LitElement {
               ?disabled="${count === 0}"
             >
               <span class="clippy-tabs__label">${label}</span>
-              <span class="nl-number-badge" aria-label="${count} items"> ${count} </span>
+              <span class="nl-number-badge" aria-label=${msg(str`${count} items`)}> ${count} </span>
             </button>
           `;
         })}
