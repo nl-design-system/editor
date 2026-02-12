@@ -16,30 +16,32 @@ test.describe('Page basics', () => {
 });
 
 test.describe('Toolbar visibility', () => {
-  test('all toolbar buttons are visible', async ({ page }) => {
-    const buttons = [
-      'Vetgedrukt',
-      'Cursief',
-      'Onderstrepen',
-      'Code',
-      'Markeren',
-      'Superscript',
-      'Subscript',
-      'Ongedaan maken',
-      'Opnieuw',
-      'Genummerde lijst',
-      'Ongeordende lijst',
-      'Definitielijst',
-      'Tabel invoegen',
-      'Horizontale lijn',
-      'Sneltoetsen',
-      'Toon toegankelijkheidsmeldingen',
-    ];
+  const buttons = [
+    'Vetgedrukt',
+    'Cursief',
+    'Onderstrepen',
+    'Code',
+    'Markeren',
+    'Superscript',
+    'Subscript',
+    'Ongedaan maken',
+    'Opnieuw',
+    'Genummerde lijst',
+    'Ongeordende lijst',
+    'Definitielijst',
+    'Tabel invoegen',
+    'Horizontale lijn',
+    'Sneltoetsen',
+    'Toon toegankelijkheidsmeldingen',
+  ];
 
-    for (const name of buttons) {
-      await expect(page.getByRole('button', { name })).toBeVisible();
-    }
+  buttons.forEach((button) => {
+    test(`toolbar button "${button}" is visible`, async ({ page }) => {
+      await expect(page.getByRole('button', { name: button })).toBeVisible();
+    });
+  });
 
+  test('all toolbar comboboxes are visible', async ({ page }) => {
     await expect(page.getByRole('combobox', { name: 'Selecteer tekstformaat' })).toBeVisible();
     await expect(page.getByRole('combobox', { name: 'Taal van het element' })).toBeVisible();
   });
@@ -68,9 +70,10 @@ test.describe('Text formatting', () => {
     const textNode = page.getByRole('textbox').getByText('testitalic');
     await textNode.click({ clickCount: 3 });
 
-    await page.getByRole('button', { name: 'Cursief' }).click();
+    const italicButton = page.getByRole('button', { name: 'Cursief' });
+    await italicButton.click();
 
-    await expect(page.getByRole('button', { name: 'Cursief' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(italicButton).toHaveAttribute('aria-pressed', 'true');
   });
 
   test('change text format to heading via combobox', async ({ page }) => {
@@ -121,6 +124,31 @@ test.describe('Undo / Redo', () => {
     await page.getByRole('button', { name: 'Opnieuw' }).click();
     await expect(editor.getByText('undoredo')).toBeVisible();
   });
+
+  test('undo button only enabled after action', async ({ page }) => {
+    const undoButton = page.getByRole('button', { name: 'Ongedaan maken' });
+    await expect(undoButton).toBeDisabled();
+
+    // Type text in editor
+    await page.getByRole('paragraph').filter({ hasText: /^$/ }).first().click();
+    await page.keyboard.type('test');
+
+    await expect(undoButton).toBeEnabled();
+  });
+
+  test('redo button only enabled after undoing an action', async ({ page }) => {
+    const redoButton = page.getByRole('button', { name: 'Opnieuw' });
+    await expect(redoButton).toBeDisabled();
+
+    // Type text and undo to create redo history
+    await page.getByRole('paragraph').filter({ hasText: /^$/ }).first().click();
+    await page.keyboard.type('test');
+    await expect(redoButton).toBeDisabled();
+
+    await page.getByRole('button', { name: 'Ongedaan maken' }).click();
+
+    await expect(redoButton).toBeEnabled();
+  });
 });
 
 test.describe('Table', () => {
@@ -147,7 +175,7 @@ test.describe('Keyboard shortcuts dialog', () => {
 
 test.describe('Accessibility notifications', () => {
   test('shows notification count badge', async ({ page }) => {
-    await expect(page.locator('.nl-number-badge__visible-label').first()).toBeVisible();
+    await expect(page.getByText('4 toegankelijkheidsmeldingen', { exact: true })).toBeVisible();
   });
 
   test('open drawer and list notifications', async ({ page }) => {
