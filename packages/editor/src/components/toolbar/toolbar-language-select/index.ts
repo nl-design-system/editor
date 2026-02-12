@@ -1,5 +1,6 @@
-import '@nl-design-system-community/clippy-components/clippy-lang-combobox';
 import type { Editor } from '@tiptap/core';
+import '@nl-design-system-community/clippy-components/clippy-lang-combobox';
+import { localized, msg } from '@lit/localize';
 import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 import { css, html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -24,6 +25,7 @@ declare global {
   }
 }
 
+@localized()
 @customElement(tag)
 export class FormatSelect extends LitElement {
   @property({ type: Boolean }) disabled = false;
@@ -93,7 +95,7 @@ export class FormatSelect extends LitElement {
     return html`
       <clippy-lang-combobox
         @change=${this.#handleValueChange}
-        hidden-label="Taal van het onderdeel"
+        hidden-label=${msg('Language of the element')}
         .options=${languageOptions.map(({ lang }) => lang)}
         value=${this.#getCurrentLanguage() || ''}
         format="both"
