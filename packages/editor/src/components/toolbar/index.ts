@@ -226,6 +226,7 @@ export class Toolbar extends LitElement {
         </clippy-button>
         <div class="clippy-toolbar__divider"></div>
         <clippy-button
+          toggle
           .pressed=${this.editor?.isActive('orderedList') ?? false}
           @click=${() => {
             this.editor?.chain().focus().toggleOrderedList().run();

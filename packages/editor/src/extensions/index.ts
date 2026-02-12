@@ -12,7 +12,7 @@ import HorizontalRule from '@tiptap/extension-horizontal-rule';
 import Image from '@tiptap/extension-image';
 import Italic from '@tiptap/extension-italic';
 import Link from '@tiptap/extension-link';
-import { BulletList, OrderedList } from '@tiptap/extension-list';
+import { BulletList, ListItem, OrderedList } from '@tiptap/extension-list';
 import Paragraph from '@tiptap/extension-paragraph';
 import Subscript from '@tiptap/extension-subscript';
 import Superscript from '@tiptap/extension-superscript';
@@ -26,7 +26,6 @@ import type { ValidationResult } from '@/types/validation.ts';
 import { CustomFileHandler } from '@/extensions/CustomFileHandler.ts';
 import { DefinitionList } from '@/extensions/DefinitionList.ts';
 import KeyboardShortcuts from '@/extensions/KeyboardShortcuts.ts';
-import { CustomListItem } from '@/extensions/ListItem.ts';
 import { Table, TableBody, TableCaption, TableFoot, TableHead } from '@/extensions/Table';
 import Validation from '@/extensions/Validation.ts';
 
@@ -116,7 +115,7 @@ export const editorExtensions = (
       class: 'utrecht-ordered-list utrecht-ordered-list--html-content',
     },
   }),
-  CustomListItem.extend({
+  ListItem.extend({
     addAttributes() {
       return {
         dir: {},
