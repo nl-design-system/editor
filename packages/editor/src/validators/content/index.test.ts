@@ -126,7 +126,6 @@ describe('Content validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      console.log(mapArg);
       expect(mapArg.get('node-should-not-be-empty_5').tipPayload.nodeType).toBe('paragraph');
       expect(mapArg.get('node-should-not-be-empty_15').tipPayload.nodeType).toBe('listItem');
       expect(mapArg.get('node-should-not-be-empty_42').tipPayload.nodeType).toBe('definitionTerm');
