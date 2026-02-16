@@ -21,7 +21,7 @@ describe('<clippy-editor>', () => {
     expect(boldButton).toBeInTheDocument();
     await user.click(boldButton);
 
-    const text = page.getByText('Start met kopniveau 1').element();
+    const text = page.getByText('Start met kopniveau 1').first().element();
     expect(text).toBeInTheDocument();
 
     // Select the text by simulating mouse selection

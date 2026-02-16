@@ -14,11 +14,11 @@ export const runValidation = (
   callback: (resultMap: Map<string, ValidationResult>) => void,
 ) => {
   const documentValidationSettings = {
-    disableRules: settings.disableRules.filter((x) => x === '*' || isKeyOf(documentValidatorObject)(x)),
+    disableRules: settings.disableRules?.filter((x) => x === '*' || isKeyOf(documentValidatorObject)(x)),
     enableRules: settings.enableRules.filter((x) => x === '*' || isKeyOf(documentValidatorObject)(x)),
   };
   const contentValidationSettings = {
-    disableRules: settings.disableRules.filter((x) => x === '*' || isKeyOf(contentValidatorMap)(x)),
+    disableRules: settings.disableRules?.filter((x) => x === '*' || isKeyOf(contentValidatorMap)(x)),
     enableRules: settings.enableRules.filter((x) => x === '*' || isKeyOf(contentValidatorMap)(x)),
   };
   let validationResultMap = new Map<string, ValidationResult>();
@@ -36,8 +36,8 @@ export const runValidation = (
   );
   for (const [key, validator] of documentValidators) {
     try {
-      const result = validator(editor, settings);
-      if (result.length > 0) {
+      const result = validator?.(editor, settings);
+      if (result?.length && result.length > 0) {
         for (const res of result) {
           validationResultMap.set(`${key}_${res.pos}`, res);
         }

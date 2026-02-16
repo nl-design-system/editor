@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import { editorExtensions } from '../src/extensions';
 import { EditorSettings } from '../src/types/settings';
 
-const DEFAULT_EDITOR_SETTINGS: EditorSettings = { topHeadingLevel: 1 };
+const DEFAULT_EDITOR_SETTINGS: EditorSettings = { disableRules: [], enableRules: ['*'], topHeadingLevel: 1 };
 
 export async function createTestEditor(
   content: string,

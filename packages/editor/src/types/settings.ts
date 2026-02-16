@@ -1,5 +1,5 @@
 export type EditorSettings = {
   topHeadingLevel: number;
-  disableRules: string[];
+  disableRules?: string[];
   enableRules: string[];
 };

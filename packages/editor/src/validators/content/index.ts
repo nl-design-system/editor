@@ -105,7 +105,12 @@ const headingMustNotBeEmpty = (editor: Editor, node: Node, pos: number): Validat
 };
 
 const headingShouldNotContainBoldOrItalic = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
-  if (node.type.name === 'heading' && (node.marks.some(isBold) || node.marks.some(isItalic))) {
+  if (
+    node.type.name === 'heading' &&
+    node.content.content.some(
+      (node) => node.type.name === 'text' && (node.marks.some(isBold) || node.marks.some(isItalic)),
+    )
+  ) {
     return {
       boundingBox: getNodeBoundingBox(editor, pos),
       pos,
