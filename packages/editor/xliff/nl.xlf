@@ -4,7 +4,7 @@
     <body>
       <trans-unit id="s3643189d1abbb7f4">
         <source>Code</source>
-        <target state="translated">Code</target>
+        <target>Code</target>
       </trans-unit>
       <trans-unit id="sdf946172dfa0328f">
         <source>Superscript</source>
@@ -109,10 +109,6 @@
       <trans-unit id="s35c3125c7750681e">
         <source>Blockquote</source>
         <target>Citaatblok</target>
-      </trans-unit>
-      <trans-unit id="s435e32524ae7b922">
-        <source>(unknown)</source>
-        <target>(onbekend)</target>
       </trans-unit>
       <trans-unit id="s83545917a8791873">
         <source>Select text format</source>
@@ -271,7 +267,7 @@
         <target>Link mag niet leeg zijn</target>
       </trans-unit>
       <trans-unit id="h86b1666bdb695a40">
-        <source>Fill the <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations[nodeType]}&lt;/strong&gt;"/> with text or remove the empty link.</source>
+        <source>Fill the <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations()[nodeType]}&lt;/strong&gt;"/> with text or remove the empty link.</source>
         <target>Vul de <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations[nodeType]}&lt;/strong&gt;"/> met tekst of verwijder de lege link.</target>
       </trans-unit>
       <trans-unit id="s274e78669e453ed4">
@@ -279,7 +275,7 @@
         <target>Vermijd lege elementen</target>
       </trans-unit>
       <trans-unit id="h8fb14075251fbc85">
-        <source>Remove the empty <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations[nodeType]}&lt;/strong&gt;"/> or add text.</source>
+        <source>Remove the empty <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations()[nodeType]}&lt;/strong&gt;"/> or add text.</source>
         <target>Verwijder de lege <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations[nodeType]}&lt;/strong&gt;"/> of voeg tekst toe.</target>
       </trans-unit>
       <trans-unit id="s3e81ea8dc02d8a2c">
@@ -341,16 +337,48 @@
       <trans-unit id="h3a4689bd2e1e317d">
         <source><x id="0" equiv-text="&lt;strong&gt;"/>Heading level <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> exceeds the highest allowed heading level
           (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in this document.</source>
-          <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> overschrijdt het hoogste toegestane kopniveau
-            (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in dit document.</target>
+        <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> overschrijdt het hoogste toegestane kopniveau
+          (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in dit document.</target>
       </trans-unit>
       <trans-unit id="h5f5c9257c67862ea">
         <source><x id="0" equiv-text="&lt;strong&gt;"/>Heading level <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> must not directly follow a
           <x id="2" equiv-text="&lt;strong&gt;"/>heading level <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Use a heading at level <x id="4" equiv-text="${precedingHeadingLevel + 1}"/>
           or lower.</source>
-          <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> mag niet direct volgen op een
-            <x id="2" equiv-text="&lt;strong&gt;"/>kopniveau <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Gebruik een kop op niveau <x id="4" equiv-text="${precedingHeadingLevel + 1}"/>
-            of lager.</target>
+        <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> mag niet direct volgen op een
+          <x id="2" equiv-text="&lt;strong&gt;"/>kopniveau <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Gebruik een kop op niveau <x id="4" equiv-text="${precedingHeadingLevel + 1}"/>
+          of lager.</target>
+      </trans-unit>
+      <trans-unit id="s6167abecb9d05d51">
+        <source>Image alignment options</source>
+        <target>Opties voor uitlijning van afbeelding</target>
+      </trans-unit>
+      <trans-unit id="sb10cd9325092a878">
+        <source>Edit image</source>
+        <target>Afbeelding bewerken</target>
+      </trans-unit>
+      <trans-unit id="s59984fd194764227">
+        <source>Filter validations by severity</source>
+        <target>Valideringen filteren op ernst</target>
+      </trans-unit>
+      <trans-unit id="s125a86b2f45bbb25">
+        <source><x id="0" equiv-text="${count}"/> items</source>
+        <target><x id="0" equiv-text="${count}"/> items</target>
+      </trans-unit>
+      <trans-unit id="s078a19b8dc74d589">
+        <source><x id="0" equiv-text="${size}"/> accessibility notifications</source>
+        <target><x id="0" equiv-text="${size}"/> toegankelijkheidsmeldingen</target>
+      </trans-unit>
+      <trans-unit id="sae0518337f2a9a5f">
+        <source>Language of the element</source>
+        <target>Taal van het element</target>
+      </trans-unit>
+      <trans-unit id="sa4d58219ed66ed0f">
+        <source>Text alignment</source>
+        <target>Tekstuitlijning</target>
+      </trans-unit>
+      <trans-unit id="sd85b875fac3ec430">
+        <source>No accessibility notifications found.</source>
+        <target>Geen toegankelijkheidsmeldingen gevonden.</target>
       </trans-unit>
     </body>
   </file>

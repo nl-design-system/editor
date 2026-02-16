@@ -97,7 +97,7 @@ export class ToolbarTextAlign extends LitElement {
 
       ${this.open
         ? html`
-            <div role="menu" aria-label="Tekstuitlijning" class="clippy-toolbar-text-align__menu">
+            <div role="menu" aria-label=${msg('Text alignment')} class="clippy-toolbar-text-align__menu">
               ${alignments.map(
                 (alignment) => html`
                   <clippy-button

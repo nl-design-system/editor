@@ -335,7 +335,7 @@ export class Toolbar extends LitElement {
           ${size > 0
             ? html`<data value=${size} class="nl-number-badge nl-number-badge--clippy">
                 <span hidden aria-hidden="true" class="nl-number-badge__visible-label">${size}</span>
-                <span class="nl-number-badge__hidden-label">${size} accessibility notifications</span>
+                <span class="nl-number-badge__hidden-label">${msg(str`${size} accessibility notifications`)}</span>
               </data>`
             : nothing}
         </span>

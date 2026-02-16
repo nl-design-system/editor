@@ -1,6 +1,6 @@
 import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
-import { localized } from '@lit/localize';
+import { localized, msg } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import X from '@tabler/icons/outline/x.svg?raw';
@@ -117,7 +117,7 @@ export class ValidationsDialog extends LitElement {
         ${ref(this.#dialogRef)}
         data-testid="clippy-validations-drawer"
         class="clippy-dialog__content"
-        aria-label="Toegankelijkheidsmeldingen"
+        aria-label=${msg('Accessibility notifications')}
       >
         <clippy-button
           class="clippy-dialog__close-button"
@@ -126,7 +126,7 @@ export class ValidationsDialog extends LitElement {
           @click=${() => this.#toggleOpen()}
         >
           <clippy-icon slot="iconStart">${unsafeSVG(X)}</clippy-icon>
-          Sluiten
+          ${msg('Close')}
         </clippy-button>
         <clippy-tabs></clippy-tabs>
         <ul class="clippy-dialog__list" data-testid="clippy-validations-list">
@@ -147,7 +147,7 @@ export class ValidationsDialog extends LitElement {
                   </clippy-validation-item>
                 `;
               })
-            : html`<li class="clippy-dialog__list-item">Geen toegankelijkheidsmeldingen gevonden.</li>`}
+            : html`<li class="clippy-dialog__list-item">${msg('No accessibility notifications found.')}</li>`}
         </ul>
       </dialog>
     `;
