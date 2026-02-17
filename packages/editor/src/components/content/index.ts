@@ -55,6 +55,7 @@ export class Content extends LitElement {
   override connectedCallback(): void {
     super.connectedCallback();
     this.style.position = 'relative';
+    this.style.display = 'block';
   }
 
   override disconnectedCallback() {
