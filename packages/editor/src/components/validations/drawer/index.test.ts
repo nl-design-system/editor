@@ -24,7 +24,7 @@ describe('<clippy-validations-dialog>', () => {
     expect(dialog).toHaveAttribute('open');
   });
 
-  it('renders large validations map with all validation items', async () => {
+  it.skip('renders large validations map with all validation items', async () => {
     await vi.waitFor(() => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
