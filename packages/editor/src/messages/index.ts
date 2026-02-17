@@ -15,13 +15,18 @@ type ValidationMessages = {
 export type { ValidationMessages };
 
 export const nodeTypesTranslations = (): Record<string, string> => ({
+  bold: msg('bold'),
   definitionDescription: msg('definition description'),
   definitionTerm: msg('definition term'),
+  highlight: msg('highlight'),
+  italic: msg('italic text'),
   link: msg('link text'),
   listItem: msg('list item'),
   paragraph: msg('paragraph'),
+  strike: msg('strike'),
   tableCell: msg('table cell'),
   tableHeader: msg('table header'),
+  underline: msg('underline'),
 });
 
 export const validationMessages = (): ValidationMessages =>
@@ -47,7 +52,7 @@ export const validationMessages = (): ValidationMessages =>
       href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/linkteksten/',
     },
     [contentValidations.MARK_SHOULD_NOT_BE_EMPTY]: {
-      description: msg('Link must not be empty'),
+      description: msg('Element must not be empty'),
       tip: (params) => {
         const { nodeType } = params || {};
         if (!nodeType || typeof nodeType !== 'string') {

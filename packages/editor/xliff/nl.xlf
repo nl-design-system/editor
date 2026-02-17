@@ -262,10 +262,6 @@
         <source>Link text should not be too generic</source>
         <target>Linktekst mag niet te algemeen zijn</target>
       </trans-unit>
-      <trans-unit id="s7f93cf6586c12e55">
-        <source>Link must not be empty</source>
-        <target>Link mag niet leeg zijn</target>
-      </trans-unit>
       <trans-unit id="h86b1666bdb695a40">
         <source>Fill the <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations()[nodeType]}&lt;/strong&gt;"/> with text or remove the empty link.</source>
         <target>Vul de <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations[nodeType]}&lt;/strong&gt;"/> met tekst of verwijder de lege link.</target>
@@ -379,6 +375,34 @@
       <trans-unit id="sd85b875fac3ec430">
         <source>No accessibility notifications found.</source>
         <target>Geen toegankelijkheidsmeldingen gevonden.</target>
+      </trans-unit>
+      <trans-unit id="scd32ea9bc6b26ff6">
+        <source>bold</source>
+        <target>vetgedrukt</target>
+      </trans-unit>
+      <trans-unit id="s4c5803d8a5526c67">
+        <source>highlight</source>
+        <target>markering</target>
+      </trans-unit>
+      <trans-unit id="s9821d1807f5dbe10">
+        <source>italic text</source>
+        <target>cursief</target>
+      </trans-unit>
+      <trans-unit id="sb6372d0575d2999f">
+        <source>underline</source>
+        <target>onderstreept</target>
+      </trans-unit>
+      <trans-unit id="sbb9a89ec42048453">
+        <source>Element must not be empty</source>
+        <target>Element mag niet leeg zijn</target>
+      </trans-unit>
+      <trans-unit id="s703aeed8faa1a0ef">
+        <source>strike</source>
+        <target>doorhalen</target>
+      </trans-unit>
+      <trans-unit id="s58a3c1ecd4dd06cf">
+        <source>Strike</source>
+        <target>Doorhalen</target>
       </trans-unit>
     </body>
   </file>

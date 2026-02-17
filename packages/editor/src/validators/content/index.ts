@@ -51,14 +51,14 @@ const nodeShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): Validati
 };
 
 const markShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
-  if (node.type.name === 'text' && node.marks?.filter((mark) => mark.type.name === 'link').length) {
+  if (node.type.name === 'text' && node.marks?.length) {
     if (!node.text || isEmptyOrWhitespaceString(node.text)) {
       return {
         boundingBox: getNodeBoundingBox(editor, pos),
         pos,
         severity: validationSeverity.INFO,
         tipPayload: {
-          nodeType: 'link',
+          nodeType: node.marks[0].type.name,
         },
       };
     }

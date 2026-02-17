@@ -29,12 +29,12 @@ export default css`
     pointer-events: none;
   }
 
-  .clippy-editor-content {
+  .clippy-content {
     padding-block: var(--basis-space-inline-lg);
     padding-inline: var(--basis-space-inline-lg);
   }
 
-  .clippy-editor-content:focus-visible {
+  .clippy-content:focus-visible {
     outline-style: dashed;
     outline-color: var(--ma-color-paars-8);
     outline-offset: -1px;
