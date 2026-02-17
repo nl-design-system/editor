@@ -32,7 +32,7 @@
     "build:vite": "vite build",
     "preview": "vite preview",
     "pretest": "pnpm exec playwright install --with-deps",
-    "test": "pnpm run --recursive '/^test:.+$/'",
+    "test": "pnpm run '/^test:.+$/'",
     "test:vitest": "vitest --run",
     "test-coverage": "vitest run --coverage",
     "localize:extract": "lit-localize extract",
