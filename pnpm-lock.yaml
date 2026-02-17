@@ -250,9 +250,6 @@ importers:
       '@nl-design-system/tsconfig':
         specifier: 1.0.5
         version: 1.0.5(typescript@5.9.3)
-      '@playwright/test':
-        specifier: 1.58.2
-        version: 1.58.2
       '@testing-library/dom':
         specifier: 10.4.1
         version: 10.4.1
