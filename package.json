@@ -73,6 +73,7 @@
     "changeset:status": "changeset status --since origin/main",
     "start": "http-server packages/storybook/dist/",
     "storybook": "pnpm run '/^watch:.+$/'",
+    "pretest": "pnpm exec playwright install --with-deps",
     "test": "pnpm run --recursive test",
     "test-update": "pnpm run --sequential '/^test-update:.+$/'",
     "test-update:clean": "pnpm run clean",

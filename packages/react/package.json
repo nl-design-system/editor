@@ -26,7 +26,6 @@
     "build:ts": "tsc --build",
     "build:vite": "vite build",
     "preview": "vite preview",
-    "pretest": "pnpm exec playwright install --with-deps",
     "test": "pnpm run '/^test:.+$/'",
     "test:playwright": "playwright test"
   },
