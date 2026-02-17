@@ -1,30 +1,19 @@
 import './index.ts';
-import type { Editor } from '@tiptap/core';
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import '../../context';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { page } from 'vitest/browser';
-import { createTestEditor } from '../../../../test/createTestEditor';
 import { CustomEvents } from '../../../events';
 import { ValidationResult } from '../../../types/validation';
 import { contentValidations, documentValidations } from '../../../validators/constants';
 
 describe('<clippy-validations-dialog>', () => {
-  let container: HTMLElement;
-  let editor: Editor;
-
   beforeEach(async () => {
-    container = document.createElement('div');
-    document.body.appendChild(container);
-    editor = await createTestEditor('');
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
-    editor.destroy();
+    document.documentElement.lang = 'nl';
+    document.body.innerHTML = `<clippy-context><clippy-validations-dialog></clippy-validations-dialog></clippy-context>`;
   });
 
   it('opens dialog when OPEN_VALIDATIONS_DIALOG event is dispatched', async () => {
-    container.innerHTML = '<clippy-validations-dialog></clippy-validations-dialog>';
-    const element = container.querySelector('clippy-validations-dialog');
+    const element = document.querySelector('clippy-validations-dialog');
 
     await vi.waitFor(() => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
@@ -40,8 +29,7 @@ describe('<clippy-validations-dialog>', () => {
   });
 
   it('renders large validations map with all validation items', async () => {
-    container.innerHTML = '<clippy-validations-dialog></clippy-validations-dialog>';
-    const element = container.querySelector('clippy-validations-dialog');
+    const contextElement = document.querySelector('clippy-context');
 
     const validationsMap: Map<string, Omit<ValidationResult, 'tipPayload'>> = new Map([
       [
@@ -86,23 +74,26 @@ describe('<clippy-validations-dialog>', () => {
       ],
     ]);
 
-    if (element) {
-      element.editor = editor;
-      element.validationsContext = validationsMap;
-      await element.updateComplete;
+    // Set validationsContext on the context provider, which will provide it to children
+    if (contextElement) {
+      contextElement.validationsContext = validationsMap;
     }
 
+    const listSelector = page.getByTestId('clippy-validations-list');
     await vi.waitFor(() => {
-      expect(page.getByTestId('clippy-validations-list')).toBeInTheDocument();
+      expect(listSelector).toBeInTheDocument();
     });
 
-    const validationList = page.getByTestId('clippy-validations-list').element();
+    const validationItems = listSelector.element()?.querySelectorAll('clippy-validation-item');
 
-    const validationItems = validationList?.querySelectorAll('clippy-validation-item');
-    expect(validationItems?.length).toBe(10);
+    await vi.waitFor(() => {
+      expect(validationItems?.length).toBe(10);
+    });
 
-    // Verify first validation item has correct attributes
-    const firstItem = validationItems?.[0];
-    expect(firstItem?.shadowRoot?.querySelector('h4')?.innerText).toBe('Koptekst mag niet leeg zijn');
+    const shadowRoot = validationItems?.[0]?.shadowRoot;
+    expect(shadowRoot).toBeTruthy();
+
+    const heading = shadowRoot?.querySelector('h4');
+    expect(heading?.textContent?.trim()).toBe('Koptekst mag niet leeg zijn');
   });
 });

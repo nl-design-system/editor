@@ -1,32 +1,31 @@
 import './index.ts';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import './../context';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
-import { cleanupTestEditor, EditorTestSetup, setupTestEditor } from '../../../test/setupTestEditor';
 
 const tag = 'clippy-toolbar';
 
 describe('<clippy-toolbar>', () => {
-  let testSetup: EditorTestSetup;
   let user: ReturnType<typeof userEvent.setup>;
 
   beforeEach(async () => {
     user = userEvent.setup();
-    testSetup = setupTestEditor(`<${tag}></{tag}>`);
-  });
 
-  afterEach(() => {
-    cleanupTestEditor(testSetup.container);
+    document.documentElement.lang = 'nl';
+    document.body.innerHTML = `<clippy-context></clippy-context><${tag}></{tag}></clippy-context>`;
   });
 
   it('renders correctly with required toolbar elements', async () => {
-    expect(page.getByLabelText('Text editor toolbar')).toBeInTheDocument();
-    expect(page.getByRole('button', { name: 'Bold' })).toBeInTheDocument();
-    expect(page.getByRole('button', { name: 'Italic' })).toBeInTheDocument();
-    expect(page.getByRole('button', { name: 'Link' }, { exact: true })).toBeInTheDocument();
+    expect(page.getByLabelText('Werkbalk tekstbewerker')).toBeInTheDocument();
+    expect(page.getByRole('button', { name: 'Vet' })).toBeInTheDocument();
+    expect(page.getByRole('button', { name: 'Cursief' })).toBeInTheDocument();
+    expect(page.getByRole('button', { name: 'Link', exact: true })).toBeInTheDocument();
   });
 
   it('updates all toolbar buttons when editor content changes', async () => {
-    expect(page.getByRole('button', { name: 'Vet' })).toHaveAttribute('aria-pressed', 'false');
+    const btn = page.getByRole('button', { name: 'Vet' });
+    expect(btn).toBeVisible();
+    expect(btn).toHaveAttribute('aria-pressed', 'false');
   });
 
   it('opens shortcuts dialog when keyboard shortcuts button is clicked', async () => {

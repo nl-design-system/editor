@@ -10,12 +10,14 @@ describe('<clippy-editor>', () => {
 
   beforeEach(() => {
     user = userEvent.setup();
+    document.documentElement.lang = 'nl';
     document.body.innerHTML =
       '<clippy-editor><div slot="content" hidden><h1>Start met kopniveau 1</h1></div></clippy-editor>';
   });
 
   it('should change selected text to heading level 3', async () => {
     await expect(page.getByRole('heading', { name: 'Start met kopniveau 1' })).toBeInTheDocument();
+    expect(page.getByRole('button', { name: 'Vet' })).toBeVisible();
     const boldButton = page.getByRole('button', { name: 'Vet' }).element();
 
     expect(boldButton).toBeInTheDocument();
