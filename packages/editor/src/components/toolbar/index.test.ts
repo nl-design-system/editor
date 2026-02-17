@@ -1,6 +1,6 @@
 import './index.ts';
-import './../context';
-import { describe, it, expect, beforeEach } from 'vitest';
+import './../context/index.ts';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 
 const tag = 'clippy-toolbar';
@@ -16,7 +16,9 @@ describe('<clippy-toolbar>', () => {
   });
 
   it('renders correctly with required toolbar elements', async () => {
-    expect(page.getByLabelText('Werkbalk tekstbewerker')).toBeInTheDocument();
+    await vi.waitFor(() => {
+      expect(page.getByLabelText('Werkbalk tekstbewerker')).toBeInTheDocument();
+    });
     expect(page.getByRole('button', { name: 'Vet' })).toBeInTheDocument();
     expect(page.getByRole('button', { name: 'Cursief' })).toBeInTheDocument();
     expect(page.getByRole('button', { name: 'Link', exact: true })).toBeInTheDocument();

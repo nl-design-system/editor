@@ -1,18 +1,18 @@
-import './index.ts';
-// import '../../context';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { page } from 'vitest/browser';
 import type { ValidationResult } from '../../../types/validation';
 import { CustomEvents } from '../../../events';
 import { contentValidations, documentValidations } from '../../../validators/constants';
+import './index.ts';
+import '../../context/index.ts';
 
 describe('<clippy-validations-dialog>', () => {
-  // beforeEach(() => {
-  //   document.documentElement.lang = 'nl';
-  //   document.body.innerHTML = `<clippy-context><clippy-validations-dialog></clippy-validations-dialog></clippy-context>`;
-  // });
+  beforeEach(() => {
+    document.documentElement.lang = 'nl';
+    document.body.innerHTML = `<clippy-context><clippy-validations-dialog></clippy-validations-dialog></clippy-context>`;
+  });
 
-  it.skip('opens dialog when OPEN_VALIDATIONS_DIALOG event is dispatched', async () => {
+  it('opens dialog when OPEN_VALIDATIONS_DIALOG event is dispatched', async () => {
     await vi.waitFor(() => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
@@ -24,7 +24,7 @@ describe('<clippy-validations-dialog>', () => {
     expect(dialog).toHaveAttribute('open');
   });
 
-  it.skip('renders large validations map with all validation items', async () => {
+  it('renders large validations map with all validation items', async () => {
     await vi.waitFor(() => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
