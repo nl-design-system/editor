@@ -1,9 +1,9 @@
 import './index.ts';
-import '../../context';
+// import '../../context';
 import { describe, it, expect, vi } from 'vitest';
 import { page } from 'vitest/browser';
+import type { ValidationResult } from '../../../types/validation';
 import { CustomEvents } from '../../../events';
-import { ValidationResult } from '../../../types/validation';
 import { contentValidations, documentValidations } from '../../../validators/constants';
 
 describe('<clippy-validations-dialog>', () => {
