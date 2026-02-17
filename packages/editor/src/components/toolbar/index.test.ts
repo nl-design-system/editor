@@ -1,5 +1,4 @@
 import './index.ts';
-import './../context/index.ts';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 
@@ -8,11 +7,11 @@ const tag = 'clippy-toolbar';
 describe('<clippy-toolbar>', () => {
   let user: ReturnType<typeof userEvent.setup>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     user = userEvent.setup();
 
     document.documentElement.lang = 'nl';
-    document.body.innerHTML = `<clippy-context></clippy-context><${tag}></{tag}></clippy-context>`;
+    document.body.innerHTML = `<${tag}></{tag}>`;
   });
 
   it('renders correctly with required toolbar elements', async () => {

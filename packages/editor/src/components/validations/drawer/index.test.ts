@@ -4,12 +4,11 @@ import type { ValidationResult } from '../../../types/validation';
 import { CustomEvents } from '../../../events';
 import { contentValidations, documentValidations } from '../../../validators/constants';
 import './index.ts';
-import '../../context/index.ts';
 
 describe('<clippy-validations-dialog>', () => {
   beforeEach(() => {
     document.documentElement.lang = 'nl';
-    document.body.innerHTML = `<clippy-context><clippy-validations-dialog></clippy-validations-dialog></clippy-context>`;
+    document.body.innerHTML = `<clippy-validations-dialog></clippy-validations-dialog>`;
   });
 
   it('opens dialog when OPEN_VALIDATIONS_DIALOG event is dispatched', async () => {
