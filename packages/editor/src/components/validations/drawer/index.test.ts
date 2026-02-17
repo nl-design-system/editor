@@ -7,28 +7,27 @@ import { ValidationResult } from '../../../types/validation';
 import { contentValidations, documentValidations } from '../../../validators/constants';
 
 describe('<clippy-validations-dialog>', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     document.documentElement.lang = 'nl';
     document.body.innerHTML = `<clippy-context><clippy-validations-dialog></clippy-validations-dialog></clippy-context>`;
   });
 
   it('opens dialog when OPEN_VALIDATIONS_DIALOG event is dispatched', async () => {
-    const element = document.querySelector('clippy-validations-dialog');
-
     await vi.waitFor(() => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
 
     const dialog = page.getByTestId('clippy-validations-drawer');
     expect(dialog).not.toHaveAttribute('open');
-
+    expect(dialog.element()).not.toHaveAttribute('open');
     globalThis.dispatchEvent(new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG));
-    await element?.updateComplete;
-
     expect(dialog).toHaveAttribute('open');
   });
 
   it('renders large validations map with all validation items', async () => {
+    await vi.waitFor(() => {
+      expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
+    });
     const contextElement = document.querySelector('clippy-context');
 
     const validationsMap: Map<string, Omit<ValidationResult, 'tipPayload'>> = new Map([

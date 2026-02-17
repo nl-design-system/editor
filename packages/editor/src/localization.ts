@@ -7,7 +7,6 @@ const localizedTemplates = new Map(targetLocales.map((locale) => [locale, import
 
 export function getDocumentLang() {
   const lang = document.documentElement.lang.split('-')[0];
-  console.log(lang);
   return allLocales.find((locale) => lang === locale) ?? sourceLocale;
 }
 
