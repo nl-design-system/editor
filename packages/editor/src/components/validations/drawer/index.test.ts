@@ -1,14 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { page } from 'vitest/browser';
 import type { ValidationResult } from '../../../types/validation';
+import type { Context } from '../../context';
 import { CustomEvents } from '../../../events';
 import { contentValidations, documentValidations } from '../../../validators/constants';
+import '../../context/index.ts';
 import './index.ts';
 
 describe('<clippy-validations-dialog>', () => {
   beforeEach(() => {
     document.documentElement.lang = 'nl';
-    document.body.innerHTML = `<clippy-validations-dialog></clippy-validations-dialog>`;
+    document.body.innerHTML = `
+      <clippy-context>
+        <clippy-validations-dialog></clippy-validations-dialog>
+      </clippy-context>
+    `;
   });
 
   it('opens dialog when OPEN_VALIDATIONS_DIALOG event is dispatched', async () => {
@@ -24,10 +30,11 @@ describe('<clippy-validations-dialog>', () => {
   });
 
   it('renders large validations map with all validation items', async () => {
+    const contextElement = document.querySelector('clippy-context') as Context | null;
+
     await vi.waitFor(() => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
-    const contextElement = document.querySelector('clippy-context');
 
     const validationsMap: Map<string, Omit<ValidationResult, 'tipPayload'>> = new Map([
       [
@@ -74,7 +81,8 @@ describe('<clippy-validations-dialog>', () => {
 
     // Set validationsContext on the context provider, which will provide it to children
     if (contextElement) {
-      contextElement.validationsContext = validationsMap;
+      contextElement.updateValidationsContext(validationsMap);
+      await contextElement.updateComplete;
     }
 
     const listSelector = page.getByTestId('clippy-validations-list');

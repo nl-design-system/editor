@@ -1,16 +1,18 @@
 import './index.ts';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
+import { initializeLocale } from '../../localization';
 
 const tag = 'clippy-toolbar';
 
 describe('<clippy-toolbar>', () => {
   let user: ReturnType<typeof userEvent.setup>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     user = userEvent.setup();
 
     document.documentElement.lang = 'nl';
+    await initializeLocale();
     document.body.innerHTML = `<${tag}></{tag}>`;
   });
 
