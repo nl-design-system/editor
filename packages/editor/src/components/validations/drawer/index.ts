@@ -44,29 +44,16 @@ export class ValidationsDialog extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    globalThis.addEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpenAndFocus);
+    globalThis.addEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpen);
     globalThis.addEventListener(CustomEvents.TAB_CHANGE, this.#handleTabChange);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
   }
 
   override disconnectedCallback() {
-    globalThis.removeEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpenAndFocus);
+    globalThis.removeEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpen);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
     super.disconnectedCallback();
   }
-
-  readonly #toggleOpenAndFocus = (event: CustomEventInit<{ key: string }>) => {
-    if (event.detail?.key) {
-      if (!this.open) {
-        this.#toggleOpen();
-      }
-      // TODO: fix after rebase
-      // console.log('drawer focusKey', event.detail?.key);
-      // this.shadowRoot?.querySelector('clippy-validations-list')?.focusKey(event.detail?.key);
-    } else {
-      this.#toggleOpen();
-    }
-  };
 
   readonly #toggleOpen = () => {
     const { value } = this.#dialogRef;
