@@ -27,7 +27,8 @@
     "@fontsource/source-sans-pro": "5.2.5",
     "@nl-design-system-community/editor": "workspace:*",
     "@nl-design-system-community/ma-design-tokens": "3.0.0",
-    "@utrecht/component-library-css": "8.2.1"
+    "@utrecht/component-library-css": "8.2.1",
+    "@utrecht/design-tokens": "5.0.1"
   },
   "devDependencies": {
     "@nl-design-system/tsconfig": "1.0.5",

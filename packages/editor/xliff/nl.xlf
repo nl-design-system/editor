@@ -130,10 +130,6 @@
         <source>Add link</source>
         <target>Link toevoegen</target>
       </trans-unit>
-      <trans-unit id="s64666f3c1e287e34">
-        <source>Link to:</source>
-        <target>Link naar:</target>
-      </trans-unit>
       <trans-unit id="s5e8250fb85d64c23">
         <source>Close</source>
         <target>Sluiten</target>
@@ -332,14 +328,14 @@
       </trans-unit>
       <trans-unit id="h3a4689bd2e1e317d">
         <source><x id="0" equiv-text="&lt;strong&gt;"/>Heading level <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> exceeds the highest allowed heading level
-          (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in this document.</source>
+              (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in this document.</source>
         <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> overschrijdt het hoogste toegestane kopniveau
           (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in dit document.</target>
       </trans-unit>
       <trans-unit id="h5f5c9257c67862ea">
         <source><x id="0" equiv-text="&lt;strong&gt;"/>Heading level <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> must not directly follow a
-          <x id="2" equiv-text="&lt;strong&gt;"/>heading level <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Use a heading at level <x id="4" equiv-text="${precedingHeadingLevel + 1}"/>
-          or lower.</source>
+            <x id="2" equiv-text="&lt;strong&gt;"/>heading level <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Use a heading at level <x id="4" equiv-text="${precedingHeadingLevel + 1}"/>
+            or lower.</source>
         <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> mag niet direct volgen op een
           <x id="2" equiv-text="&lt;strong&gt;"/>kopniveau <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Gebruik een kop op niveau <x id="4" equiv-text="${precedingHeadingLevel + 1}"/>
           of lager.</target>
@@ -403,6 +399,49 @@
       <trans-unit id="s58a3c1ecd4dd06cf">
         <source>Strike</source>
         <target>Doorhalen</target>
+      </trans-unit>
+      <trans-unit id="s669b18c6d2d9c95b">
+        <source>None</source>
+        <target>Geen</target>
+      </trans-unit>
+      <trans-unit id="sd4de7e5f58aa9a72">
+        <source>Current window</source>
+        <target>Huidig venster</target>
+      </trans-unit>
+      <trans-unit id="s9f55d0ed608bdd3b">
+        <source>New window</source>
+        <target>Nieuw venster</target>
+      </trans-unit>
+      <trans-unit id="s94914694fc9dfbc7">
+        <source>Insert/Edit Link</source>
+        <target>Link invoegen/bewerken</target>
+      </trans-unit>
+      <trans-unit id="sa337be4053fe8d6a">
+        <source>Link text example</source>
+        <target>Voorbeeld linktekst</target>
+      </trans-unit>
+      <trans-unit id="s61eacb19db252f5e">
+        <source>URL</source>
+        <target>URL</target>
+      </trans-unit>
+      <trans-unit id="s99f110d27e30b289">
+        <source>Title</source>
+          <target>Titel</target>
+      </trans-unit>
+      <trans-unit id="s02b2259c7f570ae7">
+        <source>Tooltip text</source>
+        <target>Tooltip-tekst</target>
+      </trans-unit>
+      <trans-unit id="sff5bb7742c2896c8">
+        <source>Target</source>
+      </trans-unit>
+      <trans-unit id="s3e89edd997093044">
+        <source>Select link target</source>
+        <target>Selecteer linkdoel</target>
+      </trans-unit>
+      <trans-unit id="s8b0432eecbd8b034">
+        <source>Update</source>
+        <target>Bijwerken</target>
       </trans-unit>
     </body>
   </file>

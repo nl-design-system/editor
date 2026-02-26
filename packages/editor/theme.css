@@ -7,6 +7,10 @@
   --clippy-button-small-min-inline-size: 32px;
   --clippy-button-small-min-block-size: 32px;
   --clippy-button-small-icon: 18px;
+  --utrecht-space-around: 1;
+  --utrecht-form-field-margin-block-end: 10px;
+  --utrecht-form-field-label-margin-block-end: 18px;
+
 
   font-family: "Source Sans Pro", "Helvetica", "Arial", sans-serif;
 }

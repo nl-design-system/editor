@@ -31,7 +31,8 @@
   },
   "dependencies": {
     "@nl-design-system-community/editor": "workspace:*",
-    "@utrecht/component-library-css": "8.2.1"
+    "@utrecht/component-library-css": "8.2.1",
+    "@utrecht/design-tokens": "5.0.1"
   },
   "devDependencies": {
     "@fontsource/fira-sans": "5.2.7",
