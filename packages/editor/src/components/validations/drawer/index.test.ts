@@ -96,10 +96,16 @@ describe('<clippy-validations-dialog>', () => {
       expect(validationItems?.length).toBe(10);
     });
 
-    const shadowRoot = validationItems?.[0]?.shadowRoot;
-    expect(shadowRoot).toBeTruthy();
+    if (validationItems?.[0]?.updateComplete) {
+      await validationItems[0].updateComplete;
+    }
 
-    const heading = shadowRoot?.querySelector('h4');
+    // Use page.getByText() which pierces shadow DOM, instead of page.getByRole()
+    await vi.waitFor(() => {
+      expect(page.getByText('Koptekst mag niet leeg zijn')).toBeInTheDocument();
+    });
+
+    const heading = validationItems?.[0]?.shadowRoot?.querySelector('h4');
     expect(heading?.textContent?.trim()).toBe('Koptekst mag niet leeg zijn');
   });
 });
