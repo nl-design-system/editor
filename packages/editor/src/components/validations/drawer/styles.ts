@@ -12,6 +12,7 @@ export default css`
     pointer-events: none;
     background: #fff;
     border-inline-start: 1px solid var(--clippy-validations-dialog-border-color);
+    z-index: 1;
   }
   :host > * {
     pointer-events: auto;
