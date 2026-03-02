@@ -1,7 +1,7 @@
+import '../../components/context/index.ts';
 import './index.ts';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
-import { initializeLocale } from '../../localization';
 
 const tag = 'clippy-toolbar';
 
@@ -12,14 +12,20 @@ describe('<clippy-toolbar>', () => {
     user = userEvent.setup();
 
     document.documentElement.lang = 'nl';
-    await initializeLocale();
-    document.body.innerHTML = `<${tag}></{tag}>`;
-  });
+    document.body.innerHTML = `
+      <clippy-context>
+        <${tag}></${tag}>
+      </clippy-context>
+    `;
 
-  it('renders correctly with required toolbar elements', async () => {
+    // Wait for the toolbar to be rendered inside the context
     await vi.waitFor(() => {
       expect(page.getByLabelText('Werkbalk tekstbewerker')).toBeInTheDocument();
     });
+  });
+
+  it('renders correctly with required toolbar elements', async () => {
+    expect(page.getByLabelText('Werkbalk tekstbewerker')).toBeInTheDocument();
     expect(page.getByRole('button', { name: 'Vet' })).toBeInTheDocument();
     expect(page.getByRole('button', { name: 'Cursief' })).toBeInTheDocument();
     expect(page.getByRole('button', { name: 'Link', exact: true })).toBeInTheDocument();
