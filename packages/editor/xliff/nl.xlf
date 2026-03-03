@@ -428,12 +428,9 @@
         <source>Title</source>
         <target>Titel</target>
       </trans-unit>
-      <trans-unit id="s02b2259c7f570ae7">
-        <source>Tooltip text</source>
-        <target>Tooltip-tekst</target>
-      </trans-unit>
       <trans-unit id="sff5bb7742c2896c8">
         <source>Target</source>
+        <target>Linkdoel</target>
       </trans-unit>
       <trans-unit id="s3e89edd997093044">
         <source>Select link target</source>
@@ -442,6 +439,14 @@
       <trans-unit id="s8b0432eecbd8b034">
         <source>Update</source>
         <target>Bijwerken</target>
+      </trans-unit>
+      <trans-unit id="s64666f3c1e287e34">
+        <source>Link to:</source>
+        <target>Link naar:</target>
+      </trans-unit>
+      <trans-unit id="s9cd89b6df498ce8c">
+        <source>URL title</source>
+        <target>URL titel</target>
       </trans-unit>
     </body>
   </file>

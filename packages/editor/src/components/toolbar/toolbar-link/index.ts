@@ -243,7 +243,7 @@ export class ToolbarLink extends LitElement {
                   @input=${(e: Event) => {
                     this.linkTitle = (e.target as HTMLInputElement).value;
                   }}
-                  placeholder=${msg('Tooltip text')}
+                  placeholder=${msg('URL title')}
                   aria-describedby="link-title-help"
                 />
               </div>

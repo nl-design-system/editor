@@ -219,6 +219,91 @@ test.describe('Keyboard shortcuts dialog', () => {
   });
 });
 
+test.describe('Link dialog', () => {
+  test('Link button is visible', async ({ page }) => {
+    await expect(page.getByRole('button', { name: 'Link', exact: true })).toBeVisible();
+  });
+
+  test('opens and closes the link dialog', async ({ page }) => {
+    await page.getByRole('button', { name: 'Link', exact: true }).click();
+
+    const dialog = page.getByRole('dialog', { name: 'Link invoegen/bewerken' });
+    await expect(dialog).toBeVisible();
+
+    await page.getByRole('button', { name: 'Sluiten' }).nth(1).click();
+    await expect(dialog).not.toBeVisible();
+  });
+
+  test('adds a link to selected text', async ({ page }) => {
+    const clippyEditor = page.locator('clippy-editor[identifier="clippy-editor-localhost"]');
+    const editor = clippyEditor.getByRole('textbox');
+
+    // Type text in the empty paragraph so triple-click selects only our text
+    await editor.getByRole('paragraph').filter({ hasText: /^$/ }).first().click();
+    await page.keyboard.type('linktest');
+    await editor.getByText('linktest').click({ clickCount: 3 });
+
+    // Open link dialog and add a URL
+    await page.getByRole('button', { name: 'Link', exact: true }).click();
+    await page.getByPlaceholder('https://example.com').fill('https://example.com');
+    await page.getByRole('button', { name: 'Link toevoegen' }).click();
+
+    await expect(editor.getByRole('link', { name: 'linktest' })).toBeVisible();
+  });
+
+  test('shows link properties when editing an existing link', async ({ page }) => {
+    const clippyEditor = page.locator('clippy-editor[identifier="clippy-editor-localhost"]');
+    const editor = clippyEditor.getByRole('textbox');
+
+    // Create a link in the empty paragraph
+    await editor.getByRole('paragraph').filter({ hasText: /^$/ }).first().click();
+    await page.keyboard.type('editlink');
+    await editor.getByText('editlink').click({ clickCount: 3 });
+    await page.getByRole('button', { name: 'Link', exact: true }).click();
+    await page.getByPlaceholder('https://example.com').fill('https://example.com');
+    await page.getByRole('button', { name: 'Link toevoegen' }).click();
+
+    // Click the link to position cursor in it
+    await editor.getByRole('link', { name: 'editlink' }).click();
+
+    // Re-open the link dialog
+    await page.getByRole('button', { name: 'Link', exact: true }).click();
+    const dialog = page.getByRole('dialog', { name: 'Link invoegen/bewerken' });
+    await expect(dialog).toBeVisible();
+
+    // Verify the dialog is populated with link properties
+    await expect(page.getByPlaceholder('https://example.com')).toHaveValue('https://example.com');
+    await expect(page.getByRole('textbox', { name: 'Voorbeeld linktekst' })).toHaveValue('editlink');
+    await expect(page.getByRole('button', { name: 'Bijwerken' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Link verwijderen' })).toBeVisible();
+  });
+
+  test('removes a link while preserving its text', async ({ page }) => {
+    const clippyEditor = page.locator('clippy-editor[identifier="clippy-editor-localhost"]');
+    const editor = clippyEditor.getByRole('textbox');
+
+    // Create a link in the empty paragraph
+    await editor.getByRole('paragraph').filter({ hasText: /^$/ }).first().click();
+    await page.keyboard.type('removelink');
+    await editor.getByText('removelink').click({ clickCount: 3 });
+    await page.getByRole('button', { name: 'Link', exact: true }).click();
+    await expect(page.getByRole('dialog', { name: 'Link invoegen/bewerken' })).toBeVisible();
+    await page.getByPlaceholder('https://example.com').fill('https://example.com');
+    await page.getByRole('button', { name: 'Link toevoegen' }).click();
+    await expect(editor.getByRole('link', { name: 'removelink' })).toBeVisible();
+
+    // Click the link and remove it via the dialog
+    await editor.getByRole('link', { name: 'removelink' }).click();
+    await page.getByRole('button', { name: 'Link', exact: true }).click();
+    await page.getByRole('button', { name: 'Link verwijderen' }).click();
+
+    // Dialog closes, link is gone, but text remains
+    await expect(page.getByRole('dialog', { name: 'Link invoegen/bewerken' })).not.toBeVisible();
+    await expect(editor.getByRole('link', { name: 'removelink' })).not.toBeVisible();
+    await expect(editor.getByText('removelink')).toBeVisible();
+  });
+});
+
 test.describe('Accessibility notifications', () => {
   test('shows notification count badge', async ({ page }) => {
     await expect(page.getByText('4 toegankelijkheidsmeldingen', { exact: true })).toBeVisible();

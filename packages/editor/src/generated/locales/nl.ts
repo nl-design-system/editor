@@ -18,7 +18,6 @@
           of lager.`,
 'h86b1666bdb695a40': html`Vul de <strong>${0}</strong> met tekst of verwijder de lege link.`,
 'h8fb14075251fbc85': html`Verwijder de lege <strong>${0}</strong> of voeg tekst toe.`,
-'s02b2259c7f570ae7': `Tooltip-tekst`,
 's05e9759cfd99c48f': `Uitvullen`,
 's0628c840adfd38af': `Links naar rechts`,
 's078a19b8dc74d589': str`${0} toegankelijkheidsmeldingen`,
@@ -66,8 +65,8 @@
 's620c25bb9799375e': `Geordende lijst`,
 's626daf42b1ab7df7': `Links uitlijnen`,
 's64666f3c1e287e34': `Link naar:`,
-'s703aeed8faa1a0ef': `doorhalen`,
 's669b18c6d2d9c95b': `Geen`,
+'s703aeed8faa1a0ef': `doorhalen`,
 's71080533c3b54c62': `Verwijder de onderstreping van de tekst.`,
 's7417792bbe720149': `Opnieuw`,
 's77958f74fde3c368': `Definitielijst`,
@@ -83,6 +82,7 @@
 's9821d1807f5dbe10': `cursief`,
 's99f110d27e30b289': `Titel`,
 's9c35c2ac811b2484': `Document moet beginnen met kopniveau 1`,
+'s9cd89b6df498ce8c': `URL titel`,
 's9f55d0ed608bdd3b': `Nieuw venster`,
 'sa080b7c76b63f1bc': `linktekst`,
 'sa1cc184ce2a00abb': `Genummerde lijst`,
@@ -121,5 +121,6 @@
 'sf7c0eba7c822e3d6': `Vetgedrukt`,
 'sf8da2c9b6d4f8618': `Linktekst mag niet te algemeen zijn`,
 'sf993bb199fefbe04': `Alle`,
-'sff5bb7742c2896c8': `Target`,
+'sff5bb7742c2896c8': `Linkdoel`,
     };
+  
