@@ -14,6 +14,7 @@ import Italic from '@tiptap/extension-italic';
 import Link from '@tiptap/extension-link';
 import { BulletList, ListItem, OrderedList } from '@tiptap/extension-list';
 import Paragraph from '@tiptap/extension-paragraph';
+import Strike from '@tiptap/extension-strike';
 import Subscript from '@tiptap/extension-subscript';
 import Superscript from '@tiptap/extension-superscript';
 import { TableKit } from '@tiptap/extension-table';
@@ -134,6 +135,7 @@ export const editorExtensions = (
       class: 'utrecht-superscript',
     },
   }),
+  Strike,
   Subscript.configure({
     HTMLAttributes: {
       class: 'utrecht-subscript',

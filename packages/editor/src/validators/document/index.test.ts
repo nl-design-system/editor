@@ -61,6 +61,7 @@ describe('Document validations', () => {
     });
 
     it('returns error for invalid heading order with top level heading 2', async () => {
+      const settings = { disableRules: [], enableRules: ['*'], topHeadingLevel: 2 };
       const editor = await createTestEditor(
         `
       <h1>Title</h1>
@@ -68,10 +69,10 @@ describe('Document validations', () => {
       <h4>Subtitle</h4>
     `,
         undefined,
-        { topHeadingLevel: 2 },
+        settings,
       );
 
-      const result = documentMustHaveCorrectHeadingOrder(editor, { topHeadingLevel: 2 });
+      const result = documentMustHaveCorrectHeadingOrder(editor, settings);
       expect(result).toEqual([
         {
           boundingBox: expect.any(Object),

@@ -49,12 +49,19 @@ test.describe('Toolbar visibility', () => {
 
 test.describe('Text formatting', () => {
   test('toggle bold on selected text', async ({ page }) => {
+    const clippyEditor = page.locator('clippy-editor[identifier="clippy-editor-localhost"]');
+    const editor = clippyEditor.getByRole('textbox');
+
     // Click the empty paragraph and type text
-    await page.getByRole('paragraph').filter({ hasText: /^$/ }).first().click();
+    await editor
+      .getByRole('paragraph')
+      .filter({ hasText: /^Onder die steden/ })
+      .first()
+      .click();
     await page.keyboard.type('testbold');
 
     // Triple-click to select all text in the paragraph
-    const textNode = page.getByRole('textbox').getByText('testbold');
+    const textNode = editor.getByText('testbold');
     await textNode.click({ clickCount: 3 });
 
     // Click bold button — the editor internally refocuses and applies bold
@@ -64,10 +71,17 @@ test.describe('Text formatting', () => {
   });
 
   test('toggle italic on selected text', async ({ page }) => {
-    await page.getByRole('paragraph').filter({ hasText: /^$/ }).first().click();
+    const clippyEditor = page.locator('clippy-editor[identifier="clippy-editor-localhost"]');
+    const editor = clippyEditor.getByRole('textbox');
+
+    await editor
+      .getByRole('paragraph')
+      .filter({ hasText: /^Onder die steden/ })
+      .first()
+      .click();
     await page.keyboard.type('testitalic');
 
-    const textNode = page.getByRole('textbox').getByText('testitalic');
+    const textNode = editor.getByText('testitalic');
     await textNode.click({ clickCount: 3 });
 
     const italicButton = page.getByRole('button', { name: 'Cursief' });
@@ -77,8 +91,14 @@ test.describe('Text formatting', () => {
   });
 
   test('change text format to heading via combobox', async ({ page }) => {
-    const editor = page.getByRole('textbox');
-    await page.getByRole('paragraph').filter({ hasText: /^$/ }).first().click();
+    const clippyEditor = page.locator('clippy-editor[identifier="clippy-editor-localhost"]');
+    const editor = clippyEditor.getByRole('textbox');
+
+    await editor
+      .getByRole('paragraph')
+      .filter({ hasText: /^Onder die steden/ })
+      .first()
+      .click();
     await page.keyboard.type('test heading');
 
     await page.getByRole('combobox', { name: 'Selecteer tekstformaat' }).clear();
@@ -90,9 +110,11 @@ test.describe('Text formatting', () => {
 
 test.describe('Lists', () => {
   test('insert ordered list', async ({ page }) => {
-    const editor = page.getByRole('textbox');
+    const clippyEditor = page.locator('clippy-editor[identifier="clippy-editor-localhost"]');
+    const editor = clippyEditor.getByRole('textbox');
+
     // Fill text in the empty paragraph
-    await page.getByRole('paragraph').filter({ hasText: /^$/ }).first().fill('ordered item');
+    await editor.getByRole('paragraph').filter({ hasText: /^$/ }).first().fill('ordered item');
 
     // Click the numbered list button
     await page.getByRole('button', { name: 'Genummerde lijst' }).click();
@@ -101,8 +123,10 @@ test.describe('Lists', () => {
   });
 
   test('insert unordered list', async ({ page }) => {
-    const editor = page.getByRole('textbox');
-    await page.getByRole('paragraph').filter({ hasText: /^$/ }).first().fill('unordered item');
+    const clippyEditor = page.locator('clippy-editor[identifier="clippy-editor-localhost"]');
+    const editor = clippyEditor.getByRole('textbox');
+
+    await editor.getByRole('paragraph').filter({ hasText: /^$/ }).first().fill('unordered item');
 
     await page.getByRole('button', { name: 'Ongeordende lijst' }).click();
 
@@ -112,8 +136,14 @@ test.describe('Lists', () => {
 
 test.describe('Undo / Redo', () => {
   test('undo and redo text input', async ({ page }) => {
-    const editor = page.getByRole('textbox');
-    await page.getByRole('paragraph').filter({ hasText: /^$/ }).first().click();
+    const clippyEditor = page.locator('clippy-editor[identifier="clippy-editor-localhost"]');
+    const editor = clippyEditor.getByRole('textbox');
+
+    await editor
+      .getByRole('paragraph')
+      .filter({ hasText: /^Onder die steden/ })
+      .first()
+      .click();
     await page.keyboard.type('undoredo');
 
     await expect(editor.getByText('undoredo')).toBeVisible();
@@ -126,22 +156,36 @@ test.describe('Undo / Redo', () => {
   });
 
   test('undo button only enabled after action', async ({ page }) => {
+    const clippyEditor = page.locator('clippy-editor[identifier="clippy-editor-localhost"]');
+    const editor = clippyEditor.getByRole('textbox');
     const undoButton = page.getByRole('button', { name: 'Ongedaan maken' });
+
     await expect(undoButton).toBeDisabled();
 
     // Type text in editor
-    await page.getByRole('paragraph').filter({ hasText: /^$/ }).first().click();
+    await editor
+      .getByRole('paragraph')
+      .filter({ hasText: /^Onder die steden/ })
+      .first()
+      .click();
     await page.keyboard.type('test');
 
     await expect(undoButton).toBeEnabled();
   });
 
   test('redo button only enabled after undoing an action', async ({ page }) => {
+    const clippyEditor = page.locator('clippy-editor[identifier="clippy-editor-localhost"]');
+    const editor = clippyEditor.getByRole('textbox');
     const redoButton = page.getByRole('button', { name: 'Opnieuw' });
+
     await expect(redoButton).toBeDisabled();
 
     // Type text and undo to create redo history
-    await page.getByRole('paragraph').filter({ hasText: /^$/ }).first().click();
+    await editor
+      .getByRole('paragraph')
+      .filter({ hasText: /^Onder die steden/ })
+      .first()
+      .click();
     await page.keyboard.type('test');
     await expect(redoButton).toBeDisabled();
 
@@ -153,7 +197,9 @@ test.describe('Undo / Redo', () => {
 
 test.describe('Table', () => {
   test('insert a table', async ({ page }) => {
-    const editor = page.getByRole('textbox');
+    const clippyEditor = page.locator('clippy-editor[identifier="clippy-editor-localhost"]');
+    const editor = clippyEditor.getByRole('textbox');
+
     const initialTableCount = await editor.getByRole('table').count();
 
     await page.getByRole('button', { name: 'Tabel invoegen' }).click();
@@ -195,7 +241,9 @@ test.describe('Accessibility notifications', () => {
     await page.getByRole('button', { name: 'Aanpassen' }).first().click();
     await expect(drawer).not.toBeVisible();
 
-    const editor = page.getByRole('textbox');
+    const clippyEditor = page.locator('clippy-editor[identifier="clippy-editor-localhost"]');
+    const editor = clippyEditor.getByRole('textbox');
+
     await expect(editor).toBeFocused();
   });
 });

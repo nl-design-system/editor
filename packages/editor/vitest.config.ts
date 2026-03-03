@@ -3,6 +3,9 @@ import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 import alias from './vite.alias';
 
 export default defineConfig({
+  optimizeDeps: {
+    include: ['@tiptap/pm/state', '@nl-design-system-community/clippy-components/clippy-modal'],
+  },
   resolve: {
     ...alias,
   },

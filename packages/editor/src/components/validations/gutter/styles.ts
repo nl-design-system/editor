@@ -9,6 +9,7 @@ export default css`
     align-items: flex-end;
     display: flex;
     inline-size: 1rem;
+    z-index: 1;
   }
 
   .clippy-validations-gutter__list {
@@ -62,15 +63,19 @@ export default css`
     margin-inline-start: 0;
     inline-size: 100%;
   }
-
   .clippy-validation-gutter__tooltip {
     display: none;
     position: absolute;
     inset-inline-end: 100%;
     inset-block-start: 0;
   }
-
   .clippy-validation-gutter__tooltip--active {
     display: block;
+  }
+  @media (forced-colors: active) {
+    .clippy-validations-gutter__indicator::before {
+      background-color: CanvasText !important;
+      color: Canvas !important;
+    }
   }
 `;

@@ -6,16 +6,15 @@ import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.
 import X from '@tabler/icons/outline/x.svg?raw';
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { queryAll } from 'lit/decorators/query-all.js';
 import { map } from 'lit/directives/map.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import '../validation-item';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationEntry, ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
-import { tiptapContext } from '@/context/tiptapContext.ts';
 import '@/components/tabs';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
+import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { CustomEvents } from '@/events';
 import { validationMessages, type ValidationKey } from '@/messages';
@@ -33,9 +32,6 @@ export class ValidationsDialog extends LitElement {
   @state()
   private selectedSeverity: ValidationSeverity | null = null;
 
-  @queryAll('clippy-validation-item')
-  private readonly validationListItems: HTMLUListElement[] | undefined;
-
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
   public editor?: Editor;
@@ -48,30 +44,16 @@ export class ValidationsDialog extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    globalThis.addEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpenAndFocus);
+    globalThis.addEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpen);
     globalThis.addEventListener(CustomEvents.TAB_CHANGE, this.#handleTabChange);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
   }
 
   override disconnectedCallback() {
-    globalThis.removeEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpenAndFocus);
+    globalThis.removeEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpen);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
     super.disconnectedCallback();
   }
-
-  readonly #toggleOpenAndFocus = (event: CustomEventInit<{ key: string }>) => {
-    if (event.detail?.key) {
-      if (!this.open) {
-        this.#toggleOpen();
-      }
-      this.validationListItems?.forEach((el) => {
-        const listItem = el.shadowRoot?.querySelector(`[data-validation-key="${event.detail?.key}"]`);
-        if (listItem instanceof HTMLElement) listItem.focus();
-      });
-    } else {
-      this.#toggleOpen();
-    }
-  };
 
   readonly #toggleOpen = () => {
     const { value } = this.#dialogRef;

@@ -15,6 +15,7 @@ import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
 import OrderedListIcon from '@tabler/icons/outline/list-numbers.svg?raw';
 import BulletListIcon from '@tabler/icons/outline/list.svg?raw';
 import SeparatorIcon from '@tabler/icons/outline/separator.svg?raw';
+import StrikethroughIcon from '@tabler/icons/outline/strikethrough.svg?raw';
 import SubscriptIcon from '@tabler/icons/outline/subscript.svg?raw';
 import SuperscriptIcon from '@tabler/icons/outline/superscript.svg?raw';
 import TableIcon from '@tabler/icons/outline/table.svg?raw';
@@ -159,6 +160,17 @@ export class Toolbar extends LitElement {
         >
           <clippy-icon slot="iconStart">${unsafeSVG(UnderlineIcon)}</clippy-icon>
           ${msg('Underline')}
+        </clippy-button>
+        <clippy-button
+          toggle
+          .pressed=${this.editor?.isActive('strike') ?? false}
+          @click=${() => this.editor?.chain().focus().toggleStrike().run()}
+          icon-only
+          size="small"
+          purpose="secondary"
+        >
+          <clippy-icon slot="iconStart">${unsafeSVG(StrikethroughIcon)}</clippy-icon>
+          ${msg('Strike')}
         </clippy-button>
         <clippy-button
           toggle

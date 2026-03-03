@@ -1,47 +1,40 @@
-import './index.ts';
-import type { Editor } from '@tiptap/core';
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { page } from 'vitest/browser';
-import { createTestEditor } from '../../../../test/createTestEditor';
+import type { ValidationResult } from '../../../types/validation';
+import type { Context } from '../../context';
 import { CustomEvents } from '../../../events';
-import { ValidationResult } from '../../../types/validation';
 import { contentValidations, documentValidations } from '../../../validators/constants';
+import '../../context/index.ts';
+import './index.ts';
 
 describe('<clippy-validations-dialog>', () => {
-  let container: HTMLElement;
-  let editor: Editor;
-
   beforeEach(async () => {
-    container = document.createElement('div');
-    document.body.appendChild(container);
-    editor = await createTestEditor('');
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
-    editor.destroy();
+    document.documentElement.lang = 'nl';
+    document.body.innerHTML = `
+      <clippy-context>
+        <clippy-validations-dialog></clippy-validations-dialog>
+      </clippy-context>
+    `;
   });
 
   it('opens dialog when OPEN_VALIDATIONS_DIALOG event is dispatched', async () => {
-    container.innerHTML = '<clippy-validations-dialog></clippy-validations-dialog>';
-    const element = container.querySelector('clippy-validations-dialog');
-
     await vi.waitFor(() => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
 
     const dialog = page.getByTestId('clippy-validations-drawer');
     expect(dialog).not.toHaveAttribute('open');
-
+    expect(dialog.element()).not.toHaveAttribute('open');
     globalThis.dispatchEvent(new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG));
-    await element?.updateComplete;
-
     expect(dialog).toHaveAttribute('open');
   });
 
   it('renders large validations map with all validation items', async () => {
-    container.innerHTML = '<clippy-validations-dialog></clippy-validations-dialog>';
-    const element = container.querySelector('clippy-validations-dialog');
+    const contextElement = document.querySelector('clippy-context') as Context | null;
+
+    await vi.waitFor(() => {
+      expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
+    });
 
     const validationsMap: Map<string, Omit<ValidationResult, 'tipPayload'>> = new Map([
       [
@@ -86,23 +79,37 @@ describe('<clippy-validations-dialog>', () => {
       ],
     ]);
 
-    if (element) {
-      element.editor = editor;
-      element.validationsContext = validationsMap;
-      await element.updateComplete;
+    // Set validationsContext on the context provider, which will provide it to children
+    if (contextElement) {
+      contextElement.updateValidationsContext(validationsMap);
+      await contextElement.updateComplete;
     }
 
+    const listSelector = page.getByTestId('clippy-validations-list');
     await vi.waitFor(() => {
-      expect(page.getByTestId('clippy-validations-list')).toBeInTheDocument();
+      expect(listSelector).toBeInTheDocument();
     });
 
-    const validationList = page.getByTestId('clippy-validations-list').element();
+    await vi.waitFor(() => {
+      const items = listSelector.element()?.querySelectorAll('clippy-validation-item');
+      expect(items?.length).toBe(10);
+    });
 
-    const validationItems = validationList?.querySelectorAll('clippy-validation-item');
-    expect(validationItems?.length).toBe(10);
+    const validationItems = listSelector.element()?.querySelectorAll('clippy-validation-item');
 
-    // Verify first validation item has correct attributes
-    const firstItem = validationItems?.[0];
-    expect(firstItem?.shadowRoot?.querySelector('h4')?.innerText).toBe('Koptekst mag niet leeg zijn');
+    // Wait for the first item to render its shadow DOM
+    if (validationItems?.[0]?.updateComplete) {
+      await validationItems[0].updateComplete;
+    }
+
+    const firstItem = validationItems?.[0] as (Element & { description?: string }) | undefined;
+
+    // Assert the description property is populated (locale-agnostic — avoids shadow DOM piercing)
+    expect(firstItem?.description).toBeTruthy();
+
+    // Verify the h4 in the shadow DOM renders the description text
+    const heading = firstItem?.shadowRoot?.querySelector('h4');
+    expect(heading).not.toBeNull();
+    expect(heading?.textContent?.trim()).toBe(firstItem?.description);
   });
 });

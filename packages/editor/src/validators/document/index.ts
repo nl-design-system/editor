@@ -264,7 +264,7 @@ export const documentMustHaveTableWithMultipleRows = (editor: Editor): Validatio
 
 type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentValidations];
 
-const documentValidatorMap: { [K in DocumentValidationKey]: DocumentValidator } = {
+export const documentValidatorObject: { [K in DocumentValidationKey]: DocumentValidator } = {
   [documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: documentMustHaveCorrectHeadingOrder,
   [documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS]: documentMustHaveSemanticLists,
   [documentValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE]: documentMustHaveSingleHeadingOne,
@@ -275,7 +275,7 @@ const documentValidatorMap: { [K in DocumentValidationKey]: DocumentValidator } 
     documentShouldNotHaveHeadingResemblingParagraphs,
 };
 
-for (const [key, validator] of Object.entries(documentValidatorMap)) {
+for (const [key, validator] of Object.entries(documentValidatorObject)) {
   documentValidators.set(key, validator);
 }
 

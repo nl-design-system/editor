@@ -12,6 +12,7 @@ export default css`
     pointer-events: none;
     background: #fff;
     border-inline-start: 1px solid var(--clippy-validations-dialog-border-color);
+    z-index: 1;
   }
   :host > * {
     pointer-events: auto;
@@ -45,5 +46,12 @@ export default css`
     margin-block: var(--basis-space-inline-xl) 0;
     padding-block: 0;
     padding-inline: 0;
+  }
+
+  @media (forced-colors: active) {
+    .clippy-dialog__list-item::after {
+      background-color: CanvasText;
+      color: Canvas;
+    }
   }
 `;

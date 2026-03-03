@@ -25,10 +25,13 @@
     "build:analyze": "cross-env ANALYZE_BUNDLE=true vite build",
     "build:ts": "tsc --build",
     "build:vite": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "pnpm run '/^test:.+$/'",
+    "test:playwright": "playwright test"
   },
   "dependencies": {
-    "@nl-design-system-community/editor": "workspace:*"
+    "@nl-design-system-community/editor": "workspace:*",
+    "@utrecht/component-library-css": "8.2.1"
   },
   "devDependencies": {
     "@fontsource/fira-sans": "5.2.7",

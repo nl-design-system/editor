@@ -1,9 +1,8 @@
-import { configureLocalization } from '@lit/localize';
+import { configureLocalization, type LocaleModule } from '@lit/localize';
+import * as templates_nl from './../src/generated/locales/nl.ts';
 import { allLocales, sourceLocale, targetLocales } from './generated/locale-codes.js';
 
-export type Locale = (typeof allLocales)[number];
-
-const localizedTemplates = new Map(targetLocales.map((locale) => [locale, import(`./generated/locales/${locale}.ts`)]));
+const localizedTemplates = new Map([['nl', templates_nl]]);
 
 export function getDocumentLang() {
   const lang = document.documentElement.lang.split('-')[0];
@@ -11,7 +10,7 @@ export function getDocumentLang() {
 }
 
 export const { setLocale } = configureLocalization({
-  loadLocale: async (locale) => localizedTemplates.get(locale as 'nl'),
+  loadLocale: async (locale) => localizedTemplates.get(locale) as LocaleModule,
   sourceLocale,
   targetLocales,
 });

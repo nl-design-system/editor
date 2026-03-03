@@ -10,6 +10,78 @@
         margin-inline: auto;
         margin-block-start: 50px;
       }
+
+      .clippy-guideline {
+        --utrecht-space-around: 0;
+        --utrecht-code-font-size: 16px;
+        border: 1px solid var(--basis-color-default-border-default);
+        margin-block-end: 40px;
+        margin-block-start: 0;
+        margin-inline-start: 0;
+        margin-inline-end: 0;
+      }
+      .clippy-guideline:first-of-type {
+        margin-block-start: var(--basis-space-block-3xl);
+      }
+      p + .clippy-guideline {
+        margin-block-start: var(--basis-space-block-3xl);
+      }
+      .clippy-guideline + .clippy-guideline {
+        margin-block-start: var(--basis-space-block-3xl);
+      }
+      .clippy-guideline__description {
+        padding: 24px;
+      }
+      .clippy-guideline__example {
+        border-block-end-width: 0;
+        border-block-start-width: 1px;
+        border-inline-width: 0;
+        padding-inline: var(--basis-space-inline-xl);
+        padding-block: var(--basis-space-block-xl);
+        border-style: solid;
+        border-color: var(--basis-color-default-border-default);
+      }
+      .clippy-guideline select {
+        display: block;
+        margin-bottom: 0.5em;
+      }
+      .clippy-guideline__icon {
+        height: 20px;
+        margin-inline-end: 8px;
+        vertical-align: middle;
+        width: 20px;
+      }
+      .clippy-guideline__title {
+        vertical-align: middle;
+      }
+      .clippy-guideline__badge {
+        margin-block-start: 0;
+        margin-block-end: var(--basis-space-block-xl);
+        --utrecht-paragraph-font-weight: bold;
+        font-size: var(--basis-text-font-size-lg);
+      }
+      .clippy-guideline__badge--negative {
+        --utrecht-paragraph-color: currentColor;
+        color: var(--basis-color-negative-color-default);
+      }
+      .clippy-guideline__badge--positive {
+        --utrecht-paragraph-color: currentColor;
+        color: var(--basis-color-positive-color-default);
+      }
+      .clippy-guideline--negative {
+        --nlds-canvas-toolbar-copy-display: none;
+        --nlds-canvas-code-block-cursor: not-allowed;
+        --nlds-canvas-code-block-user-select: none;
+      }
+      .clippy-guideline__subtitle {
+        display: none;
+      }
+      .clippy-guideline__example [contenteditable] {
+        border-block-start: 1px solid transparent;
+        border-block-end: 1px solid transparent;
+        padding-inline-start: var(--basis-space-inline-md);
+        padding-inline-end: var(--basis-space-inline-md);
+      }
     </style>
   </head>
   <body class="utrecht-body">
@@ -29,10 +101,11 @@
           <p>
             Aan den over eener rivier gebouwd, waarvan zij zich als van
             <a href="https://example.com">twee armen bedienen</a> kon, om, aan de eene zijde, het Haarlemmermeer en de
-            daarom gelegen landen, aan de andere hij IJ, en door het IJ, de Zuiderzee te bereiken, had zij van deze
-            gunstige ligging reeds vroeg partij getrokken,<a href="https://example.com"> </a>om een handel te drijven,
-            die, schoon zich zelden verder uitstrekkende dan de gewesten, welke om die binnenzeeën gelegen waren, haar
-            niettemin gelegenheid gaf. <a href="https://example.com">Klik hier</a> om meer te lezen.
+            daarom gelegen landen,<i>&nbsp;</i>aan de andere hij IJ, en door het IJ, de<em>&nbsp;</em>Zuiderzee te
+            bereiken, had zij van deze gunstige ligging reeds vroeg partij getrokken,<a href="https://example.com"> </a
+            >om een handel te drijven, die, schoon zich zelden verder uitstrekkende dan de gewesten, welke om die
+            binnenzeeën gelegen waren, haar niettemin gelegenheid gaf. <a href="https://example.com">Klik hier</a> om
+            meer te lezen.
           </p>
           <blockquote>Dit is een <code>blokcitaat</code> element</blockquote>
           <hr />
@@ -43,7 +116,7 @@
           <p lang="fr" dir="rtl">Ce paragraphe est en français.</p>
           <h3>Mixed language content</h3>
           <p>
-            Dit is een Nederlandse zin met een <span lang="en">English phrase</span> erin. En hier is
+            Dit <s>&nbsp;</s>is een Nederlandse zin met een <span lang="en">English phrase</span> erin. En hier is
             <span lang="de">ein deutscher Satz</span> in dezelfde paragraaf.
           </p>
           <table>

@@ -10,18 +10,22 @@ describe('<clippy-editor>', () => {
 
   beforeEach(() => {
     user = userEvent.setup();
+    document.documentElement.lang = 'nl';
     document.body.innerHTML =
       '<clippy-editor><div slot="content" hidden><h1>Start met kopniveau 1</h1></div></clippy-editor>';
   });
 
   it('should change selected text to heading level 3', async () => {
     await expect(page.getByRole('heading', { name: 'Start met kopniveau 1' })).toBeInTheDocument();
-    const boldButton = page.getByRole('button', { name: 'Vet' }).element();
+    const btnSelector = page.getByRole('button', { name: 'Vet' });
+    await vi.waitFor(() => {
+      expect(btnSelector).toBeVisible();
+    });
 
-    expect(boldButton).toBeInTheDocument();
-    await user.click(boldButton);
+    expect(btnSelector).toBeInTheDocument();
+    await user.click(btnSelector.element());
 
-    const text = page.getByText('Start met kopniveau 1').element();
+    const text = page.getByText('Start met kopniveau 1').first().element();
     expect(text).toBeInTheDocument();
 
     // Select the text by simulating mouse selection
