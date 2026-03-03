@@ -240,15 +240,15 @@ test.describe('Link dialog', () => {
 
     // Type text in the empty paragraph so triple-click selects only our text
     await editor.getByRole('paragraph').filter({ hasText: /^$/ }).first().click();
-    await page.keyboard.type('linktest');
-    await editor.getByText('linktest').click({ clickCount: 3 });
+    await page.keyboard.type('anchortext');
+    await editor.getByText('anchortext').click({ clickCount: 3 });
 
     // Open link dialog and add a URL
     await page.getByRole('button', { name: 'Link', exact: true }).click();
-    await page.getByPlaceholder('https://example.com').fill('https://example.com');
+    await page.getByPlaceholder('https://example.com').fill('https://test.com');
     await page.getByRole('button', { name: 'Link toevoegen' }).click();
 
-    await expect(editor.getByRole('link', { name: 'linktest' })).toBeVisible();
+    await expect(editor.getByRole('link', { name: 'anchortext' })).toBeVisible();
   });
 
   test('shows link properties when editing an existing link', async ({ page }) => {
@@ -257,14 +257,14 @@ test.describe('Link dialog', () => {
 
     // Create a link in the empty paragraph
     await editor.getByRole('paragraph').filter({ hasText: /^$/ }).first().click();
-    await page.keyboard.type('editlink');
-    await editor.getByText('editlink').click({ clickCount: 3 });
+    await page.keyboard.type('editanchor');
+    await editor.getByText('editanchor').click({ clickCount: 3 });
     await page.getByRole('button', { name: 'Link', exact: true }).click();
     await page.getByPlaceholder('https://example.com').fill('https://example.com');
     await page.getByRole('button', { name: 'Link toevoegen' }).click();
 
     // Click the link to position cursor in it
-    await editor.getByRole('link', { name: 'editlink' }).click();
+    await editor.getByRole('link', { name: 'editanchor' }).click();
 
     // Re-open the link dialog
     await page.getByRole('button', { name: 'Link', exact: true }).click();
@@ -273,7 +273,7 @@ test.describe('Link dialog', () => {
 
     // Verify the dialog is populated with link properties
     await expect(page.getByPlaceholder('https://example.com')).toHaveValue('https://example.com');
-    await expect(page.getByRole('textbox', { name: 'Voorbeeld linktekst' })).toHaveValue('editlink');
+    await expect(page.getByRole('textbox', { name: 'Voorbeeld linktekst' })).toHaveValue('editanchor');
     await expect(page.getByRole('button', { name: 'Bijwerken' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Link verwijderen' })).toBeVisible();
   });
