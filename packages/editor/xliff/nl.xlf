@@ -328,14 +328,14 @@
       </trans-unit>
       <trans-unit id="h3a4689bd2e1e317d">
         <source><x id="0" equiv-text="&lt;strong&gt;"/>Heading level <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> exceeds the highest allowed heading level
-              (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in this document.</source>
+          (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in this document.</source>
         <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> overschrijdt het hoogste toegestane kopniveau
           (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in dit document.</target>
       </trans-unit>
       <trans-unit id="h5f5c9257c67862ea">
         <source><x id="0" equiv-text="&lt;strong&gt;"/>Heading level <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> must not directly follow a
-            <x id="2" equiv-text="&lt;strong&gt;"/>heading level <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Use a heading at level <x id="4" equiv-text="${precedingHeadingLevel + 1}"/>
-            or lower.</source>
+          <x id="2" equiv-text="&lt;strong&gt;"/>heading level <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Use a heading at level <x id="4" equiv-text="${precedingHeadingLevel + 1}"/>
+          or lower.</source>
         <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> mag niet direct volgen op een
           <x id="2" equiv-text="&lt;strong&gt;"/>kopniveau <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Gebruik een kop op niveau <x id="4" equiv-text="${precedingHeadingLevel + 1}"/>
           of lager.</target>
@@ -426,7 +426,7 @@
       </trans-unit>
       <trans-unit id="s99f110d27e30b289">
         <source>Title</source>
-          <target>Titel</target>
+        <target>Titel</target>
       </trans-unit>
       <trans-unit id="s02b2259c7f570ae7">
         <source>Tooltip text</source>

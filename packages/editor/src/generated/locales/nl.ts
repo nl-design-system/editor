@@ -65,8 +65,9 @@
 's61eacb19db252f5e': `URL`,
 's620c25bb9799375e': `Geordende lijst`,
 's626daf42b1ab7df7': `Links uitlijnen`,
-'s669b18c6d2d9c95b': `Geen`,
+'s64666f3c1e287e34': `Link naar:`,
 's703aeed8faa1a0ef': `doorhalen`,
+'s669b18c6d2d9c95b': `Geen`,
 's71080533c3b54c62': `Verwijder de onderstreping van de tekst.`,
 's7417792bbe720149': `Opnieuw`,
 's77958f74fde3c368': `Definitielijst`,
@@ -122,4 +123,3 @@
 'sf993bb199fefbe04': `Alle`,
 'sff5bb7742c2896c8': `Target`,
     };
-  
