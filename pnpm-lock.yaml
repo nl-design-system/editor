@@ -204,6 +204,9 @@ importers:
       '@utrecht/ordered-list-css':
         specifier: 3.0.1
         version: 3.0.1
+      '@utrecht/separator-css':
+        specifier: 2.0.1
+        version: 2.0.1
       '@utrecht/subscript-css':
         specifier: 2.0.1
         version: 2.0.1
