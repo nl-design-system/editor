@@ -152,12 +152,13 @@ export class ToolbarLink extends LitElement {
     this.linkTitle = attrs?.['title'] || '';
     this.target = attrs?.['target'] || '';
 
-    // Get selected text or link content
-    this.editor.chain().focus().extendMarkRange('link');
-
-    const { from } = this.editor.state.selection;
-    const linkNode = this.editor.state.doc.nodeAt(from);
-    this.text = linkNode?.textContent || '';
+    if (this.editor.isActive('link')) {
+      this.editor.chain().focus().extendMarkRange('link').run();
+      const { from, to } = this.editor.state.selection;
+      this.text = this.editor.state.doc.textBetween(from, to, ' ');
+    } else {
+      this.text = '';
+    }
 
     this.modalDialog.open();
   };
@@ -189,18 +190,24 @@ export class ToolbarLink extends LitElement {
               this.#updateLink();
             }}
           >
-            <div class="utrecht-form-field utrecht-form-field--text">
-              <div class="utrecht-form-field__input">
-                <input
-                  readonly
-                  aria-label=${msg('Link text example')}
-                  ${ref(this.#textRef)}
-                  type="text"
-                  .value=${this.text}
-                  class="utrecht-textbox utrecht-textbox--html-input"
-                />
-              </div>
-            </div>
+            ${
+              this.text.length > 0
+                ? html`
+                    <div class="utrecht-form-field utrecht-form-field--text">
+                      <div class="utrecht-form-field__input">
+                        <input
+                          readonly
+                          aria-label=${msg('Link text example')}
+                          ${ref(this.#textRef)}
+                          type="text"
+                          .value=${this.text}
+                          class="utrecht-textbox utrecht-textbox--html-input"
+                        />
+                      </div>
+                    </div>
+                  `
+                : nothing
+            }
 
             <div class="utrecht-form-field utrecht-form-field--text">
               <div class="utrecht-form-field__label">
