@@ -54,7 +54,7 @@ describe('<clippy-toolbar-link>', () => {
     });
 
     it('Title input accepts typed value', async () => {
-      const titleInput = page.getByPlaceholder('Tooltip-tekst');
+      const titleInput = page.getByPlaceholder('URL titel');
       await user.type(titleInput, 'My tooltip');
       expect(titleInput).toHaveValue('My tooltip');
     });
