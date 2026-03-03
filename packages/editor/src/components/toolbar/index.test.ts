@@ -46,13 +46,12 @@ describe('<clippy-toolbar>', () => {
   });
 
   it('changes link URL when link is edited', async () => {
-    const linkButton = page.getByRole('button', { name: 'Link', exact: true }).nth(1);
+    const linkButton = page.getByRole('button', { name: 'Link', exact: true });
     await user.click(linkButton);
     expect(page.getByRole('dialog')).toHaveAttribute('open');
     const urlInput = page.getByLabelText('Link naar:');
     await user.type(urlInput, 'https://example.com');
 
-    await user.keyboard('{Enter}');
     expect(page.getByLabelText('Link naar:')).toHaveValue('https://example.com');
     await user.click(page.getByRole('button', { name: 'Link toevoegen' }));
     expect(page.getByRole('dialog')).not.toBeInTheDocument();

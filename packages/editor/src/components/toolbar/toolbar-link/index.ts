@@ -216,6 +216,7 @@ export class ToolbarLink extends LitElement {
                     this.url = (e.target as HTMLInputElement).value;
                   }}
                   placeholder="https://example.com"
+                  aria-label=${msg('Link to:')}
                   required
                   aria-required="true"
                 />
