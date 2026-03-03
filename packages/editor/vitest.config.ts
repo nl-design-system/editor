@@ -4,7 +4,7 @@ import alias from './vite.alias';
 
 export default defineConfig({
   optimizeDeps: {
-    include: ['@tiptap/pm/state', '@nl-design-system-community/clippy-components/clippy-modal'],
+    include: ['@tiptap/pm/state', '@nl-design-system-community/clippy-components'],
   },
   resolve: {
     ...alias,
