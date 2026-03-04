@@ -1,14 +1,16 @@
 import type { Editor } from '@tiptap/core';
 import { localized, msg } from '@lit/localize';
 import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
+import linkCss from '@nl-design-system-candidate/link-css/link.css?inline';
 import { ClippyModal } from '@nl-design-system-community/clippy-components/clippy-modal';
+import ExternalLinkIcon from '@tabler/icons/outline/external-link.svg?raw';
 import LinkIcon from '@tabler/icons/outline/link.svg?raw';
 import formFieldStyles from '@utrecht/form-field-css/dist/index.css?inline';
 import formLabelStyles from '@utrecht/form-label-css/dist/index.css?inline';
-import textBoxStyles from '@utrecht/textbox-css/dist/index.css?inline';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import '@nl-design-system-community/clippy-components/clippy-combobox';
+import textBoxStyles from '@utrecht/textbox-css/dist/index.css?inline';
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { customElement, query, state } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
@@ -40,13 +42,13 @@ export class ToolbarLink extends LitElement {
     unsafeCSS(formFieldStyles),
     unsafeCSS(formLabelStyles),
     unsafeCSS(textBoxStyles),
+    unsafeCSS(linkCss),
   ];
 
   @query('clippy-modal')
   private readonly modalDialog!: ClippyModal;
 
   readonly #urlRef: Ref<HTMLInputElement> = createRef();
-  readonly #textRef: Ref<HTMLInputElement> = createRef();
   readonly #titleRef: Ref<HTMLInputElement> = createRef();
   readonly #relRef: Ref<HTMLInputElement> = createRef();
 
@@ -91,7 +93,7 @@ export class ToolbarLink extends LitElement {
 
   readonly #updateLink = () => {
     const url = this.#urlRef.value?.value || '';
-    const text = this.#textRef.value?.value || '';
+    const text = this.text;
     const title = this.#titleRef.value?.value || '';
     const target = this.target;
     const rel = this.#relRef.value?.value || '';
@@ -194,15 +196,16 @@ export class ToolbarLink extends LitElement {
               this.text.length > 0
                 ? html`
                     <div class="utrecht-form-field utrecht-form-field--text">
-                      <div class="utrecht-form-field__input">
-                        <input
-                          readonly
-                          aria-label=${msg('Link text example')}
-                          ${ref(this.#textRef)}
-                          type="text"
-                          .value=${this.text}
-                          class="utrecht-textbox utrecht-textbox--html-input"
-                        />
+                      <div class="utrecht-form-field__label">
+                        <label class="utrecht-form-label">${msg('Preview')}</label>
+                      </div>
+                      <div class="toolbar-link__preview" aria-label=${msg('Link text example')}>
+                        <a class="nl-link" href=${this.url} title=${this.linkTitle} target=${this.target}
+                          >${this.text}</a
+                        >
+                        <a class="nl-link" href=${this.url} target="_blank">
+                          <clippy-icon class="toolbar-link__preview-icon">${unsafeSVG(ExternalLinkIcon)}</clippy-icon>
+                        </a>
                       </div>
                     </div>
                   `

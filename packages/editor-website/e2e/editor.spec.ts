@@ -273,7 +273,7 @@ test.describe('Link dialog', () => {
 
     // Verify the dialog is populated with link properties
     await expect(page.getByPlaceholder('https://example.com')).toHaveValue('https://example.com');
-    await expect(page.getByRole('textbox', { name: 'Voorbeeld linktekst' })).toHaveValue('editanchor');
+    await expect(page.getByLabel('Voorbeeld linktekst')).toHaveText('editanchor');
     await expect(page.getByRole('button', { name: 'Bijwerken' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Link verwijderen' })).toBeVisible();
   });

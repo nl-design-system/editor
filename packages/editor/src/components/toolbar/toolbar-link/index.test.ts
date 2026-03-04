@@ -129,10 +129,10 @@ describe('<clippy-toolbar-link>', () => {
       expect(page.getByLabelText('Link naar:')).toHaveValue('https://example.com');
     });
 
-    it('renders text preview as readonly with link content', () => {
+    it('renders link text preview with link content', () => {
       const textPreview = page.getByLabelText('Voorbeeld linktekst');
-      expect(textPreview).toHaveAttribute('readonly');
-      expect(textPreview).toHaveValue('world');
+      expect(textPreview).toBeInTheDocument();
+      expect(textPreview).toHaveTextContent('world');
     });
 
     it('shows "Bijwerken" submit button', () => {
