@@ -28,6 +28,7 @@
 's13b294079af53394': `Focus werkbalk`,
 's18a0d9f5f5cadfb4': `lijstitem`,
 's20d2d5a6ee857cf2': `Vermijd alinea's die op koppen lijken`,
+'s241b38e32644d4bd': `Open in zijpaneel`,
 's274e78669e453ed4': `Vermijd lege elementen`,
 's2dd973ed898d0cf5': `Horizontale lijn`,
 's33c26204494fd8c0': `Toon toegankelijkheidsmeldingen`,

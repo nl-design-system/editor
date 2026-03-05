@@ -8,16 +8,17 @@ import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
-import '../validation-item';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import '../validation-item';
 import type { ValidationEntry, ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
+import { tiptapContext } from '@/context/tiptapContext.ts';
 import '@/components/tabs';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
-import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { CustomEvents } from '@/events';
 import { validationMessages, type ValidationKey } from '@/messages';
+import type { ValidationItem } from '../validation-item';
 import dialogStyles from './styles.ts';
 
 const sortByPos = (a: ValidationEntry, b: ValidationEntry) => a[1].pos - b[1].pos;
@@ -47,11 +48,13 @@ export class ValidationsDialog extends LitElement {
     globalThis.addEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpen);
     globalThis.addEventListener(CustomEvents.TAB_CHANGE, this.#handleTabChange);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
+    globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#focusValidationItem);
   }
 
   override disconnectedCallback() {
     globalThis.removeEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpen);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
+    globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#focusValidationItem);
     super.disconnectedCallback();
   }
 
@@ -79,6 +82,24 @@ export class ValidationsDialog extends LitElement {
       this.#toggleOpen();
     } catch (err) {
       console.error('Cannot scroll to and focus node', err);
+    }
+  };
+
+  readonly #focusValidationItem = async (event: CustomEventInit<{ key: string }>) => {
+    const { key } = event.detail || {};
+    if (!key) return;
+
+    if (!this.open) {
+      this.#toggleOpen();
+    }
+
+    await this.updateComplete;
+
+    const items = this.shadowRoot?.querySelectorAll('clippy-validation-item');
+    const match = [...(items ?? [])].find((el) => (el as ValidationItem).key === key);
+    if (match instanceof HTMLElement) {
+      match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      match.shadowRoot?.querySelector<HTMLElement>('[data-validation-key]')?.focus();
     }
   };
 

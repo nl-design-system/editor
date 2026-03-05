@@ -5,6 +5,7 @@ import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.
 import AlertCircleIcon from '@tabler/icons/outline/alert-circle.svg?raw';
 import AlertTriangleIcon from '@tabler/icons/outline/alert-triangle.svg?raw';
 import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
+import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
 import { LitElement, html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
@@ -46,6 +47,13 @@ export class ValidationItem extends LitElement {
     );
   };
 
+  #handleValidationItemClick(event: Event, key: string) {
+    event.stopPropagation();
+    this.dispatchEvent(
+      new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, { bubbles: true, composed: true, detail: { key } }),
+    );
+  }
+
   readonly #getAlertIcon = () => {
     switch (this.severity) {
       case 'error':
@@ -81,6 +89,14 @@ export class ValidationItem extends LitElement {
             `
           : null}
         <div class="clippy-dialog__list-item-actions">
+          <clippy-button
+            @click=${(event: Event) => this.#handleValidationItemClick(event, this.key)}
+            icon-only
+            purpose="subtle"
+          >
+            <clippy-icon slot="iconStart">${unsafeSVG(ListDetailsIcon)}</clippy-icon>
+            ${msg('Open in drawer')}
+          </clippy-button>
           <clippy-button disabled>${msg('Ignore')}</clippy-button>
           <clippy-button purpose="secondary" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
             ${msg('Adjust')}

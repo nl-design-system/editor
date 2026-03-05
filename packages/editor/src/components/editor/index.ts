@@ -3,6 +3,7 @@ import { customElement } from 'lit/decorators.js';
 import '../toolbar';
 import '../validations/gutter';
 import '../validations/drawer';
+import '../validations/list';
 import '../bubble-menu';
 import { Context } from '../context';
 import '../content';

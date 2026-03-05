@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Vetgedrukt' }).waitFor();
+  await page.getByRole('button', { name: 'Vetgedrukt', exact: true }).waitFor();
 });
 
 test.describe('Page basics', () => {
@@ -37,7 +37,7 @@ test.describe('Toolbar visibility', () => {
 
   buttons.forEach((button) => {
     test(`toolbar button "${button}" is visible`, async ({ page }) => {
-      await expect(page.getByRole('button', { name: button })).toBeVisible();
+      await expect(page.getByRole('button', { name: button, exact: true })).toBeVisible();
     });
   });
 
@@ -65,9 +65,9 @@ test.describe('Text formatting', () => {
     await textNode.click({ clickCount: 3 });
 
     // Click bold button — the editor internally refocuses and applies bold
-    await page.getByRole('button', { name: 'Vetgedrukt' }).click();
+    await page.getByRole('button', { name: 'Vetgedrukt', exact: true }).click();
 
-    await expect(page.getByRole('button', { name: 'Vetgedrukt' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByRole('button', { name: 'Vetgedrukt', exact: true })).toHaveAttribute('aria-pressed', 'true');
   });
 
   test('toggle italic on selected text', async ({ page }) => {
