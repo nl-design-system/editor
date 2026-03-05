@@ -44,14 +44,6 @@ export class Gutter extends LitElement {
     }
   }
 
-  #handleValidationItemClick(event: Event, key: string) {
-    event.stopPropagation();
-    this.activeTooltipKey = null;
-    this.dispatchEvent(
-      new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, { bubbles: true, composed: true, detail: { key } }),
-    );
-  }
-
   override render() {
     if (!this.validationsContext || this.validationsContext.size === 0) {
       return nothing;
@@ -67,10 +59,19 @@ export class Gutter extends LitElement {
           return (
             boundingBox &&
             html`<li
-              class="clippy-validations-gutter__indicator  clippy-validations-gutter__indicator--${severity}"
-              @click=${() => this.#handleIndicatorClick(key)}
+              class="clippy-validations-gutter__indicator"
               style="inset-block-start: ${boundingBox.top}px; block-size: ${boundingBox.height}px"
             >
+              <button
+                class="${classMap({
+                  [`clippy-validations-gutter__toggle--${severity}`]: true,
+                  'clippy-validations-gutter__toggle': true,
+                  'clippy-validations-gutter__toggle--active': isActive,
+                })}"
+                aria-expanded=${isActive ? 'true' : 'false'}
+                aria-label=${description}
+                @click=${() => this.#handleIndicatorClick(key)}
+              ></button>
               <div
                 class="${classMap({
                   'clippy-validation-gutter__tooltip': true,
@@ -83,7 +84,6 @@ export class Gutter extends LitElement {
                   .severity=${severity}
                   .description=${description}
                   .href=${href}
-                  @click=${(e: Event) => this.#handleValidationItemClick(e, key)}
                 >
                   ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
                 </clippy-validation-item>

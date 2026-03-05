@@ -452,6 +452,10 @@
         <source>Preview</source>
         <target>Voorbeeld</target>
       </trans-unit>
+      <trans-unit id="s241b38e32644d4bd">
+        <source>Open in drawer</source>
+        <target>Open in zijpaneel</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -20,12 +20,19 @@ export default css`
 
   .clippy-validations-gutter__indicator {
     block-size: 30px;
-    display: block;
-    cursor: pointer;
     inline-size: 100%;
     inset-inline-end: 0;
     position: absolute;
-    mask-repeat: repeat;
+  }
+  .clippy-validations-gutter__toggle {
+    background: none;
+    border: none;
+    block-size: 100%;
+    inline-size: 100%;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    padding: 0;
+    position: absolute;
     transition: filter 0.5s 0s;
 
     &::before {
@@ -44,24 +51,39 @@ export default css`
       mask-composite: subtract;
       mask-size: 10px;
     }
-    &.clippy-validations-gutter__indicator--info::before {
+    &.clippy-validations-gutter__toggle--info::before {
       mask-position: -1px;
     }
-    &.clippy-validations-gutter__indicator--warning::before {
+    &.clippy-validations-gutter__toggle--warning::before {
       margin-inline-start: calc(1rem / 3);
       background-color: var(--ma-color-signal-warning-700);
       mask-image: var(--clippy-background-texture-warning);
     }
-    &.clippy-validations-gutter__indicator--error::before {
+    &.clippy-validations-gutter__toggle--error::before {
       margin-inline-start: calc(1rem * 2 / 3);
       background-color: var(--ma-color-signal-rood-500);
       mask-image: var(--clippy-background-texture-error);
     }
+    &:hover::before,
+    &:focus-visible::before,
+    &.clippy-validations-gutter__toggle--active::before {
+      transition: all 0.1s 0s;
+      margin-inline-start: 0;
+      inline-size: 100%;
+    }
   }
-  .clippy-validations-gutter__indicator:hover::before {
-    transition: all 0.1s 0s;
-    margin-inline-start: 0;
-    inline-size: 100%;
+  .clippy-validations-gutter__toggle:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 1px;
+  }
+  @media (forced-colors: active) {
+    .clippy-validations-gutter__toggle:focus-visible {
+      outline-color: Highlight;
+    }
+    .clippy-validations-gutter__toggle::before {
+      background-color: CanvasText !important;
+      color: Canvas !important;
+    }
   }
   .clippy-validation-gutter__tooltip {
     display: none;
@@ -71,11 +93,5 @@ export default css`
   }
   .clippy-validation-gutter__tooltip--active {
     display: block;
-  }
-  @media (forced-colors: active) {
-    .clippy-validations-gutter__indicator::before {
-      background-color: CanvasText !important;
-      color: Canvas !important;
-    }
   }
 `;
