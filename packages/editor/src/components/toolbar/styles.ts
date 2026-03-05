@@ -13,6 +13,10 @@ export default css`
     padding-inline: var(--basis-space-inline-md);
   }
 
+  [role='group'] {
+    display: contents;
+  }
+
   .clippy-toolbar__divider {
     inline-size: 2px;
     margin-inline: var(--basis-space-inline-sm);

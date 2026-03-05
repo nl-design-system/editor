@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import '../toolbar';
 import '../validations/gutter';
 import '../validations/drawer';
@@ -7,6 +7,7 @@ import '../validations/list';
 import '../bubble-menu';
 import { Context } from '../context';
 import '../content';
+import { type ToolbarConfig, defaultToolbarConfig } from '../toolbar/toolbar-config.ts';
 
 const EDITOR_ID = 'editor';
 
@@ -20,9 +21,12 @@ declare global {
 
 @customElement(tag)
 export class Editor extends Context {
+  @property({ attribute: 'toolbar-config', type: Array })
+  toolbarConfig: ToolbarConfig = defaultToolbarConfig;
+
   override render() {
     return html`
-      <clippy-toolbar></clippy-toolbar>
+      <clippy-toolbar .config=${this.toolbarConfig}></clippy-toolbar>
       <div class="clippy-editor-container" id=${EDITOR_ID}>
         <slot name="content" hidden></slot>
         <clippy-validations-gutter></clippy-validations-gutter>
