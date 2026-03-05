@@ -6,6 +6,7 @@ import '@fontsource/source-sans-pro/400.css';
 import '@fontsource/source-sans-pro/700.css';
 import '@nl-design-system-community/ma-design-tokens/dist/theme.css';
 import '@utrecht/component-library-css/dist/index.css';
+import '@utrecht/design-tokens/dist/theme.css';
 import '@nl-design-system-community/editor/theme.css';
 import { ClippyContent } from './components/Content.tsx';
 import { ClippyContext } from './components/Context.tsx';

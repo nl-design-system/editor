@@ -146,7 +146,22 @@ export const editorExtensions = (
       class: 'utrecht-blockquote utrecht-blockquote--html-blockquote',
     },
   }),
-  Link.configure({
+  Link.extend({
+    addAttributes() {
+      return {
+        ...this.parent?.(),
+        rel: {
+          default: null,
+        },
+        target: {
+          default: null,
+        },
+        title: {
+          default: null,
+        },
+      };
+    },
+  }).configure({
     defaultProtocol: 'https',
     HTMLAttributes: {
       class: 'nl-link',

@@ -8,7 +8,7 @@ import '../../context/index.ts';
 import './index.ts';
 
 describe('<clippy-validations-dialog>', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     document.documentElement.lang = 'nl';
     document.body.innerHTML = `
       <clippy-context>

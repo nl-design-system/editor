@@ -192,6 +192,12 @@ importers:
       '@utrecht/blockquote-css':
         specifier: 2.0.1
         version: 2.0.1
+      '@utrecht/form-field-css':
+        specifier: 2.0.1
+        version: 2.0.1
+      '@utrecht/form-label-css':
+        specifier: 2.0.1
+        version: 2.0.1
       '@utrecht/img-css':
         specifier: 2.0.1
         version: 2.0.1
@@ -210,6 +216,9 @@ importers:
       '@utrecht/table-css':
         specifier: 2.0.1
         version: 2.0.1
+      '@utrecht/textbox-css':
+        specifier: 3.1.0
+        version: 3.1.0
       '@utrecht/unordered-list-css':
         specifier: 2.0.1
         version: 2.0.1
@@ -262,6 +271,9 @@ importers:
       '@types/query-selector-shadow-dom':
         specifier: 1.0.4
         version: 1.0.4
+      '@utrecht/design-tokens':
+        specifier: 5.0.1
+        version: 5.0.1
       '@vitest/browser-playwright':
         specifier: 4.0.18
         version: 4.0.18(playwright@1.58.2)(vite@7.3.1(@types/node@22.19.10)(yaml@2.8.1))(vitest@4.0.18)
@@ -310,6 +322,9 @@ importers:
       '@utrecht/component-library-css':
         specifier: 9.0.1
         version: 9.0.1
+      '@utrecht/design-tokens':
+        specifier: 5.0.1
+        version: 5.0.1
     devDependencies:
       '@nl-design-system/tsconfig':
         specifier: 1.0.5
@@ -335,6 +350,9 @@ importers:
       '@utrecht/component-library-css':
         specifier: 9.0.1
         version: 9.0.1
+      '@utrecht/design-tokens':
+        specifier: 5.0.1
+        version: 5.0.1
     devDependencies:
       '@fontsource/fira-sans':
         specifier: 5.2.7
@@ -785,6 +803,9 @@ packages:
 
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
+
+  '@fontsource-variable/noto-sans@5.2.10':
+    resolution: {integrity: sha512-wyFgKkFu7jki5kEL8qv7avjQ8rxHX0J/nhLWvbR9T0hOH1HRKZEvb9EW9lMjZfWHHfEzKkYf5J+NadwgCS7TXA==}
 
   '@fontsource/fira-sans@5.2.7':
     resolution: {integrity: sha512-5DE4AealD/VnbwdzMgnpWfCttMQBbteNiK9DCJE7cVwZEbDTPLUoFDMMvxNQ498nZc5in7Mta9c/s+3Ehh0BAg==}
@@ -1654,6 +1675,9 @@ packages:
 
   '@utrecht/data-placeholder-css@2.0.1':
     resolution: {integrity: sha512-eM81866Pcnpdi+6B6AvCffJjfrsrmpNIZpGScrS4qTGJwePtsnd76bT6NB1eP3NFkA/Ptnfvs4UjFAO3KAK4Zg==}
+
+  '@utrecht/design-tokens@5.0.1':
+    resolution: {integrity: sha512-53LuK23GxgnYL06MtLAeNGazXtskV0OEWYDKuwBHNKyosXivzVZZzL5E7ulbA6Pt1WNTFRbUkhi4za7oEapmeg==}
 
   '@utrecht/digid-button-css@1.4.2':
     resolution: {integrity: sha512-lE0/KipLVHaxb7YeZC3YPqSiSaDVyCkzSWmxLjs8k5ghzId8WI4vG8P42716gDBh9tsfdX0kRcVFdh5KerSiyw==}
@@ -5183,6 +5207,8 @@ snapshots:
 
   '@floating-ui/utils@0.2.10': {}
 
+  '@fontsource-variable/noto-sans@5.2.10': {}
+
   '@fontsource/fira-sans@5.2.7': {}
 
   '@fontsource/source-sans-pro@5.2.5': {}
@@ -6180,6 +6206,10 @@ snapshots:
   '@utrecht/data-list-css@2.0.1': {}
 
   '@utrecht/data-placeholder-css@2.0.1': {}
+
+  '@utrecht/design-tokens@5.0.1':
+    dependencies:
+      '@fontsource-variable/noto-sans': 5.2.10
 
   '@utrecht/digid-button-css@1.4.2': {}
 
