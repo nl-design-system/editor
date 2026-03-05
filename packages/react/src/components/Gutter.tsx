@@ -5,5 +5,5 @@ import * as React from 'react';
 export const ClippyGutter = createComponent({
   elementClass: Gutter,
   react: React,
-  tagName: 'clippy-gutter',
+  tagName: 'clippy-validations-gutter',
 });

@@ -80,6 +80,7 @@ export class Gutter extends LitElement {
               >
                 <clippy-validation-item
                   .key=${key}
+                  .mode=${this.mode}
                   .pos=${pos}
                   .severity=${severity}
                   .description=${description}
