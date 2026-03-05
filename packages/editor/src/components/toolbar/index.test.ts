@@ -1,5 +1,7 @@
 import '../../components/context/index.ts';
 import './index.ts';
+import type { ToolbarConfig } from './toolbar-config.ts';
+import type { Toolbar } from './index.ts';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 
@@ -66,5 +68,166 @@ describe('<clippy-toolbar>', () => {
     await userEvent.upload(fileInput, new File(['(⌐□_□)'], 'clippy.png', { type: 'image/png' }));
 
     expect(page.getByRole('listitem').getByRole('img')).toHaveAttribute('alt', 'clippy.png');
+  });
+
+  describe('group semantics', () => {
+    it('renders groups with role="group" and aria-label', async () => {
+      const toolbar = document.querySelector(tag)!;
+      const groups = toolbar.shadowRoot!.querySelectorAll('[role="group"]');
+
+      expect(groups.length).toBeGreaterThan(0);
+
+      // Check that each group has an aria-label
+      for (const group of groups) {
+        expect(group.getAttribute('aria-label')).toBeTruthy();
+      }
+    });
+
+    it('renders the toolbar wrapper with role="toolbar"', async () => {
+      const toolbar = document.querySelector(tag)!;
+      const wrapper = toolbar.shadowRoot!.querySelector('[role="toolbar"]');
+
+      expect(wrapper).not.toBeNull();
+      expect(wrapper!.getAttribute('aria-label')).toBe('Werkbalk tekstbewerker');
+    });
+
+    it('renders all expected groups from default config', async () => {
+      const toolbar = document.querySelector(tag)!;
+      const groups = toolbar.shadowRoot!.querySelectorAll('[role="group"]');
+      const groupIds = Array.from(groups).map((g) => g.getAttribute('data-group-id'));
+
+      expect(groupIds).toContain('text-styling');
+      expect(groupIds).toContain('history');
+      expect(groupIds).toContain('lists');
+      expect(groupIds).toContain('insert');
+      expect(groupIds).toContain('tools');
+    });
+
+    it('renders dividers between groups', async () => {
+      const toolbar = document.querySelector(tag)!;
+      const dividers = toolbar.shadowRoot!.querySelectorAll('.clippy-toolbar__divider');
+
+      // There should be one fewer divider than groups (dividers between groups, not before first)
+      const groups = toolbar.shadowRoot!.querySelectorAll('[role="group"]');
+      expect(dividers.length).toBe(groups.length - 1);
+    });
+  });
+
+  describe('custom config', () => {
+    it('renders only configured items', async () => {
+      const toolbar = document.querySelector(tag) as Toolbar;
+      const customConfig: ToolbarConfig = [{ id: 'minimal', items: ['bold', 'italic'] }];
+      toolbar.config = customConfig;
+      await vi.waitFor(() => {
+        const groups = toolbar.shadowRoot!.querySelectorAll('[role="group"]');
+        expect(groups.length).toBe(1);
+      });
+
+      expect(page.getByRole('button', { name: 'Vet' })).toBeInTheDocument();
+      expect(page.getByRole('button', { name: 'Cursief' })).toBeInTheDocument();
+
+      // Buttons not in the config should not render
+      const undoButtons = toolbar.shadowRoot!.querySelectorAll('[data-toolbar-item="undo"]');
+      expect(undoButtons.length).toBe(0);
+    });
+
+    it('supports custom group labels', async () => {
+      const toolbar = document.querySelector(tag) as Toolbar;
+      const customConfig: ToolbarConfig = [{ id: 'my-group', label: 'Mijn groep', items: ['bold'] }];
+      toolbar.config = customConfig;
+      await vi.waitFor(() => {
+        const group = toolbar.shadowRoot!.querySelector('[role="group"]');
+        expect(group!.getAttribute('aria-label')).toBe('Mijn groep');
+      });
+    });
+  });
+
+  describe('keyboard navigation', () => {
+    /**
+     * Helper to focus a toolbar item's inner button directly (bypassing the editor .focus() call
+     * that toolbar button click handlers trigger).
+     */
+    function focusToolbarItem(toolbar: Element, itemId: string): void {
+      const item = toolbar.shadowRoot!.querySelector(`[data-toolbar-item="${itemId}"]`) as HTMLElement;
+      const innerButton = item?.shadowRoot?.querySelector('button') as HTMLElement | null;
+      (innerButton ?? item)?.focus();
+    }
+
+    function getActiveToolbarItemId(toolbar: Element): string | null {
+      const activeEl = toolbar.shadowRoot!.activeElement;
+      return activeEl?.getAttribute('data-toolbar-item') ?? null;
+    }
+
+    it('moves focus with ArrowRight within a group', async () => {
+      const toolbar = document.querySelector(tag)!;
+      focusToolbarItem(toolbar, 'bold');
+
+      await user.keyboard('{ArrowRight}');
+
+      expect(getActiveToolbarItemId(toolbar)).toBe('italic');
+    });
+
+    it('moves focus with ArrowLeft within a group', async () => {
+      const toolbar = document.querySelector(tag)!;
+      focusToolbarItem(toolbar, 'italic');
+
+      await user.keyboard('{ArrowLeft}');
+
+      expect(getActiveToolbarItemId(toolbar)).toBe('bold');
+    });
+
+    it('wraps focus with ArrowRight at the end of a group', async () => {
+      const toolbar = document.querySelector(tag) as Toolbar;
+      toolbar.config = [{ id: 'wrap-test', items: ['bold', 'italic'] }];
+      await vi.waitFor(() => {
+        expect(toolbar.shadowRoot!.querySelectorAll('[role="group"]').length).toBe(1);
+      });
+
+      focusToolbarItem(toolbar, 'italic');
+      await user.keyboard('{ArrowRight}');
+
+      expect(getActiveToolbarItemId(toolbar)).toBe('bold');
+    });
+
+    it('moves focus to first item with Home', async () => {
+      const toolbar = document.querySelector(tag)!;
+      focusToolbarItem(toolbar, 'code');
+
+      await user.keyboard('{Home}');
+
+      expect(getActiveToolbarItemId(toolbar)).toBe('bold');
+    });
+
+    it('moves focus to last item with End', async () => {
+      const toolbar = document.querySelector(tag)!;
+      focusToolbarItem(toolbar, 'bold');
+
+      await user.keyboard('{End}');
+
+      expect(getActiveToolbarItemId(toolbar)).toBe('subscript');
+    });
+
+    it('moves focus between groups with Tab, skipping groups with all disabled items', async () => {
+      const toolbar = document.querySelector(tag)!;
+      focusToolbarItem(toolbar, 'bold');
+
+      // Tab should skip the history group (undo/redo are disabled with no editor history)
+      // and land on the next group with enabled items (lists → ordered-list)
+      await user.keyboard('{Tab}');
+
+      expect(getActiveToolbarItemId(toolbar)).toBe('ordered-list');
+    });
+
+    it('moves focus back between groups with Shift+Tab', async () => {
+      const toolbar = document.querySelector(tag)!;
+      focusToolbarItem(toolbar, 'undo');
+
+      await user.keyboard('{Shift>}{Tab}{/Shift}');
+
+      // Should focus the first item in text-styling (default active)
+      const activeEl = toolbar.shadowRoot!.activeElement;
+      const textStylingGroup = toolbar.shadowRoot!.querySelector('[data-group-id="text-styling"]');
+      expect(textStylingGroup!.contains(activeEl)).toBe(true);
+    });
   });
 });

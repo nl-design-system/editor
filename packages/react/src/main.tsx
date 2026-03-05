@@ -12,6 +12,7 @@ import { ClippyContent } from './components/Content.tsx';
 import { ClippyContext } from './components/Context.tsx';
 import { ClippyEditor } from './components/Editor.tsx';
 import { ClippyGutter } from './components/Gutter.tsx';
+import { ClippyToolbar } from './components/Toolbar.tsx';
 import { ClippyValidationsList } from './components/ValidationList.tsx';
 
 const root = createRoot(document.getElementById('app')!);
@@ -39,6 +40,12 @@ root.render(
         </p>
       </div>
       <ClippyContent>
+        <ClippyToolbar
+          config={[
+            { id: 'opmaak', items: ['bold', 'italic', 'code'], label: 'Tekstopmaak' },
+            { id: 'invoegen', items: ['link', 'image-upload', 'insert-table'], label: 'Invoegen' },
+          ]}
+        />
         <ClippyGutter mode="list"></ClippyGutter>
       </ClippyContent>
       <ClippyValidationsList />

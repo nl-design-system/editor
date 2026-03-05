@@ -260,6 +260,64 @@
           </div>
         </clippy-editor>
 
+        <h2 class="utrecht-heading-2">Toolbar configuratie</h2>
+        <p class="utrecht-paragraph">
+          De toolbar kan geconfigureerd worden via het <code>toolbar-config</code> attribuut. Dit attribuut accepteert
+          een JSON-array van groepen, waarbij elke groep een <code>id</code> en een lijst van <code>items</code> heeft.
+          Optioneel kan een <code>label</code> worden meegegeven als aria-label voor de groep.
+        </p>
+
+        <h3 class="utrecht-heading-3">Beschikbare items</h3>
+        <p class="utrecht-paragraph">
+          <code>format-select</code>, <code>language-select</code>, <code>bold</code>, <code>italic</code>,
+          <code>underline</code>, <code>strike</code>, <code>code</code>, <code>highlight</code>,
+          <code>superscript</code>, <code>subscript</code>, <code>undo</code>, <code>redo</code>,
+          <code>ordered-list</code>, <code>bullet-list</code>, <code>definition-list</code>, <code>insert-table</code>,
+          <code>text-align</code>, <code>link</code>, <code>image-upload</code>, <code>horizontal-rule</code>,
+          <code>text-direction-ltr</code>, <code>text-direction-rtl</code>, <code>keyboard-shortcuts</code>,
+          <code>accessibility-notifications</code>
+        </p>
+
+        <h3 class="utrecht-heading-3">Voorbeeld: minimale toolbar</h3>
+        <p class="utrecht-paragraph">
+          Hieronder staat een editor met een minimale toolbar configuratie: alleen tekststijlen en een link-knop.
+        </p>
+
+        <clippy-editor
+          identifier="clippy-editor-minimal-toolbar"
+          toolbar-config='[{"id":"text-styling","items":["bold","italic","underline"]},{"id":"history","items":["undo","redo"]},{"id":"insert","items":["link"]}]'
+        >
+          <div slot="content">
+            <p>Deze editor heeft een minimale toolbar.</p>
+          </div>
+        </clippy-editor>
+
+        <h3 class="utrecht-heading-3">Voorbeeld HTML</h3>
+        <pre class="utrecht-code-block"><code>&lt;clippy-editor
+  toolbar-config='[
+    { "id": "text-styling", "items": ["bold", "italic", "underline"] },
+    { "id": "history", "items": ["undo", "redo"] },
+    { "id": "insert", "items": ["link"] }
+  ]'
+&gt;
+  &lt;div slot="content"&gt;
+    &lt;p&gt;Inhoud hier...&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/clippy-editor&gt;</code></pre>
+
+        <h3 class="utrecht-heading-3">Voorbeeld: groepen met aangepaste labels</h3>
+        <p class="utrecht-paragraph">
+          Gebruik het <code>label</code> veld om een eigen <code>aria-label</code> voor een groep in te stellen.
+        </p>
+        <pre class="utrecht-code-block"><code>&lt;clippy-editor
+  toolbar-config='[
+    { "id": "opmaak", "label": "Tekstopmaak", "items": ["bold", "italic", "code"] },
+    { "id": "invoegen", "label": "Invoegen", "items": ["link", "image-upload", "insert-table"] }
+  ]'
+&gt;
+  ...
+&lt;/clippy-editor&gt;</code></pre>
+
         <clippy-context enable-rules="node-should-not-be-empty">
           <div slot="content">
             <p>Hoi,</p>
@@ -358,6 +416,12 @@
               <div class="clippy-canvas">
                 <div class="clippy-canvas__example">
                   <clippy-content>
+                    <clippy-toolbar
+                      config='[
+    { "id": "opmaak", "label": "Tekstopmaak", "items": ["bold", "italic", "code"] },
+    { "id": "invoegen", "label": "Invoegen", "items": ["link", "image-upload", "insert-table"] }
+  ]'
+                    ></clippy-toolbar>
                     <clippy-validations-gutter mode="list"></clippy-validations-gutter>
                   </clippy-content>
                 </div>
