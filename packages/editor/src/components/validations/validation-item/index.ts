@@ -6,7 +6,7 @@ import AlertCircleIcon from '@tabler/icons/outline/alert-circle.svg?raw';
 import AlertTriangleIcon from '@tabler/icons/outline/alert-triangle.svg?raw';
 import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
 import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
-import { LitElement, html, unsafeCSS } from 'lit';
+import { LitElement, html, nothing, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationSeverity } from '@/types/validation.ts';
@@ -36,6 +36,7 @@ export class ValidationItem extends LitElement {
   ];
 
   @property({ type: String }) key: string = '';
+  @property({ type: String }) mode: 'tooltip' | 'list' = 'list';
   @property({ type: Number }) pos: number = 0;
   @property({ type: String }) severity!: ValidationSeverity;
   @property({ type: String }) description!: string;
@@ -89,14 +90,16 @@ export class ValidationItem extends LitElement {
             `
           : null}
         <div class="clippy-dialog__list-item-actions">
-          <clippy-button
-            @click=${(event: Event) => this.#handleValidationItemClick(event, this.key)}
-            icon-only
-            purpose="subtle"
-          >
-            <clippy-icon slot="iconStart">${unsafeSVG(ListDetailsIcon)}</clippy-icon>
-            ${msg('Open in drawer')}
-          </clippy-button>
+          ${this.mode === 'tooltip'
+            ? html`<clippy-button
+                @click=${(event: Event) => this.#handleValidationItemClick(event, this.key)}
+                icon-only
+                purpose="subtle"
+              >
+                <clippy-icon slot="iconStart">${unsafeSVG(ListDetailsIcon)}</clippy-icon>
+                ${msg('Open in drawer')}
+              </clippy-button>`
+            : nothing}
           <clippy-button disabled>${msg('Ignore')}</clippy-button>
           <clippy-button purpose="secondary" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
             ${msg('Adjust')}

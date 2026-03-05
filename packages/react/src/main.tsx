@@ -12,6 +12,7 @@ import { ClippyContent } from './components/Content.tsx';
 import { ClippyContext } from './components/Context.tsx';
 import { ClippyEditor } from './components/Editor.tsx';
 import { ClippyGutter } from './components/Gutter.tsx';
+import { ClippyValidationsList } from './components/ValidationList.tsx';
 
 const root = createRoot(document.getElementById('app')!);
 
@@ -38,8 +39,9 @@ root.render(
         </p>
       </div>
       <ClippyContent>
-        <ClippyGutter />
+        <ClippyGutter mode="list"></ClippyGutter>
       </ClippyContent>
+      <ClippyValidationsList />
     </ClippyContext>
   </>,
 );
