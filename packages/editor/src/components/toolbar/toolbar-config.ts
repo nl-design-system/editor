@@ -1,72 +1,58 @@
-export type ToolbarItemId =
-  | 'format-select'
-  | 'language-select'
-  | 'bold'
-  | 'italic'
-  | 'underline'
-  | 'strike'
-  | 'code'
-  | 'highlight'
-  | 'superscript'
-  | 'subscript'
-  | 'undo'
-  | 'redo'
-  | 'ordered-list'
-  | 'bullet-list'
-  | 'definition-list'
-  | 'insert-table'
-  | 'text-align'
-  | 'link'
-  | 'image-upload'
-  | 'horizontal-rule'
-  | 'text-direction-ltr'
-  | 'text-direction-rtl'
-  | 'keyboard-shortcuts'
-  | 'accessibility-notifications';
+import { GROUP, ITEM } from './constants.ts';
+
+export type Item = (typeof ITEM)[keyof typeof ITEM];
 
 export interface ToolbarGroupConfig {
-  id: string;
-  label?: string;
-  items: ToolbarItemId[];
+  group: string;
+  items: Item[];
 }
 
 export type ToolbarConfig = ToolbarGroupConfig[];
 
 export const defaultToolbarConfig: ToolbarConfig = [
   {
-    id: 'selects',
-    items: ['format-select', 'language-select'],
+    group: GROUP.SELECTS,
+    items: [ITEM.FORMAT_SELECT, ITEM.LANGUAGE_SELECT],
   },
   {
-    id: 'text-styling',
-    items: ['bold', 'italic', 'underline', 'strike', 'code', 'highlight', 'superscript', 'subscript'],
+    group: GROUP.TEXT_STYLING,
+    items: [
+      ITEM.BOLD,
+      ITEM.ITALIC,
+      ITEM.UNDERLINE,
+      ITEM.STRIKE,
+      ITEM.CODE,
+      ITEM.HIGHLIGHT,
+      ITEM.SUPERSCRIPT,
+      ITEM.SUBSCRIPT,
+    ],
   },
   {
-    id: 'history',
-    items: ['undo', 'redo'],
+    group: GROUP.HISTORY,
+    items: [ITEM.UNDO, ITEM.REDO],
   },
   {
-    id: 'lists',
-    items: ['ordered-list', 'bullet-list', 'definition-list'],
+    group: GROUP.LISTS,
+    items: [ITEM.ORDERED_LIST, ITEM.BULLET_LIST, ITEM.DEFINITION_LIST],
   },
   {
-    id: 'table',
-    items: ['insert-table'],
+    group: GROUP.TABLE,
+    items: [ITEM.INSERT_TABLE],
   },
   {
-    id: 'alignment',
-    items: ['text-align'],
+    group: GROUP.ALIGNMENT,
+    items: [ITEM.TEXT_ALIGN],
   },
   {
-    id: 'insert',
-    items: ['link', 'image-upload', 'horizontal-rule'],
+    group: GROUP.INSERT,
+    items: [ITEM.LINK, ITEM.IMAGE_UPLOAD, ITEM.HORIZONTAL_RULE],
   },
   {
-    id: 'text-direction',
-    items: ['text-direction-ltr', 'text-direction-rtl'],
+    group: GROUP.TEXT_DIRECTION,
+    items: [ITEM.TEXT_DIRECTION_LTR, ITEM.TEXT_DIRECTION_RTL],
   },
   {
-    id: 'tools',
-    items: ['keyboard-shortcuts', 'accessibility-notifications'],
+    group: GROUP.TOOLS,
+    items: [ITEM.KEYBOARD_SHORTCUTS, ITEM.ACCESSIBILITY_NOTIFICATIONS],
   },
 ];

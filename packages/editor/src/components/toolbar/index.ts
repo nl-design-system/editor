@@ -39,15 +39,22 @@ import { CustomEvents } from '@/events';
 import './toolbar-image-upload';
 import './toolbar-link';
 import toolbarStyles from './styles.ts';
-import { type ToolbarConfig, type ToolbarItemId, defaultToolbarConfig } from './toolbar-config.ts';
-import { ToolbarKeyboardNavigationController } from './toolbar-keyboard-navigation.ts';
+import { type ToolbarConfig, type Item, defaultToolbarConfig } from './toolbar-config.ts';
 import { isDefaultDir } from './toolbar-language-select/languages.ts';
+
+const tag = 'clippy-toolbar';
+
+declare global {
+  interface HTMLElementTagNameMap {
+    [tag]: Toolbar;
+  }
+}
 
 @localized()
 @customElement('clippy-toolbar')
 export class Toolbar extends LitElement {
   readonly #dialogRef: Ref<HTMLDialogElement> = createRef();
-  readonly #keyboardNav = new ToolbarKeyboardNavigationController(this);
+  readonly #focusNode: Ref<HTMLButtonElement> = createRef();
 
   @property({ type: Array })
   config: ToolbarConfig = defaultToolbarConfig;
@@ -69,7 +76,8 @@ export class Toolbar extends LitElement {
   };
 
   readonly #onToolbarFocus = () => {
-    this.#keyboardNav.focusActiveItem();
+    const { value } = this.#focusNode;
+    value?.shadowRoot?.querySelector('button')?.focus();
   };
 
   readonly #toggleOpenValidationsDialog = () => {
@@ -121,9 +129,7 @@ export class Toolbar extends LitElement {
     return !isDefaultDir(lang ?? '', dir ?? '');
   };
 
-  #getGroupLabel(groupId: string, customLabel?: string): string {
-    if (customLabel) return customLabel;
-
+  #getGroupLabel(groupId: string): string {
     const labels: Record<string, () => string> = {
       alignment: () => msg('Alignment'),
       history: () => msg('History'),
@@ -139,10 +145,10 @@ export class Toolbar extends LitElement {
     return labels[groupId]?.() ?? groupId;
   }
 
-  get #itemRenderers(): Map<ToolbarItemId, () => TemplateResult | typeof nothing> {
+  get #itemRenderers(): Map<Item, () => TemplateResult | typeof nothing> {
     const { size = 0 } = this.validationsContext || {};
 
-    return new Map<ToolbarItemId, () => TemplateResult | typeof nothing>([
+    return new Map<Item, () => TemplateResult | typeof nothing>([
       ['format-select', () => html`<clippy-format-select data-toolbar-item="format-select"></clippy-format-select>`],
       [
         'language-select',
@@ -495,14 +501,13 @@ export class Toolbar extends LitElement {
   override render() {
     const { size = 0 } = this.validationsContext || {};
     const renderers = this.#itemRenderers;
-    console.log(this.config);
     const visibleGroups = this.config.filter((group) => group.items.some((id) => renderers.has(id)));
     return html`
       <div class="clippy-toolbar__wrapper" role="toolbar" aria-label=${msg('Text editor toolbar')}>
         ${visibleGroups.map(
           (group, index) => html`
             ${index > 0 ? html`<div class="clippy-toolbar__divider"></div>` : nothing}
-            <div role="group" aria-label=${this.#getGroupLabel(group.id, group.label)} data-group-id=${group.id}>
+            <div role="group" aria-label=${this.#getGroupLabel(group.group)} data-group-id=${group.group}>
               ${group.items.map((itemId) => {
                 const renderer = renderers.get(itemId);
                 return renderer ? renderer() : nothing;
@@ -516,11 +521,5 @@ export class Toolbar extends LitElement {
         ${msg(str`Total ${size} accessibility notifications found.`)}
       </div>
     `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'clippy-toolbar': Toolbar;
   }
 }
