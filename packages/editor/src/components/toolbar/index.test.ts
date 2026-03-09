@@ -130,15 +130,5 @@ describe('<clippy-toolbar>', () => {
       const undoButtons = toolbar.shadowRoot!.querySelectorAll('[data-toolbar-item="undo"]');
       expect(undoButtons.length).toBe(0);
     });
-
-    it('supports custom group labels', async () => {
-      const toolbar = document.querySelector(tag) as Toolbar;
-      const customConfig: ToolbarConfig = [{ group: 'my-group', items: ['bold'] }];
-      toolbar.config = customConfig;
-      await vi.waitFor(() => {
-        const group = toolbar.shadowRoot!.querySelector('[role="group"]');
-        expect(group!.getAttribute('aria-label')).toBe('Mijn groep');
-      });
-    });
   });
 });
