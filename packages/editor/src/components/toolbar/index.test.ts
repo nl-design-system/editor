@@ -71,16 +71,11 @@ describe('<clippy-toolbar>', () => {
   });
 
   describe('group semantics', () => {
-    it('renders groups with role="group" and aria-label', async () => {
+    it('renders groups with role="group"', async () => {
       const toolbar = document.querySelector(tag)!;
       const groups = toolbar.shadowRoot!.querySelectorAll('[role="group"]');
 
       expect(groups.length).toBeGreaterThan(0);
-
-      // Check that each group has an aria-label
-      for (const group of groups) {
-        expect(group.getAttribute('aria-label')).toBeTruthy();
-      }
     });
 
     it('renders the toolbar wrapper with role="toolbar"', async () => {
@@ -94,13 +89,9 @@ describe('<clippy-toolbar>', () => {
     it('renders all expected groups from default config', async () => {
       const toolbar = document.querySelector(tag)!;
       const groups = toolbar.shadowRoot!.querySelectorAll('[role="group"]');
-      const groupIds = Array.from(groups).map((g) => g.getAttribute('data-group-id'));
 
-      expect(groupIds).toContain('text-styling');
-      expect(groupIds).toContain('history');
-      expect(groupIds).toContain('lists');
-      expect(groupIds).toContain('insert');
-      expect(groupIds).toContain('tools');
+      // defaultToolbarConfig has 9 groups
+      expect(groups.length).toBe(9);
     });
 
     it('renders dividers between groups', async () => {
@@ -116,7 +107,7 @@ describe('<clippy-toolbar>', () => {
   describe('custom config', () => {
     it('renders only configured items', async () => {
       const toolbar = document.querySelector(tag) as Toolbar;
-      const customConfig: ToolbarConfig = [{ group: 'minimal', items: ['bold', 'italic'] }];
+      const customConfig: ToolbarConfig = [['bold', 'italic']];
       toolbar.config = customConfig;
       await vi.waitFor(() => {
         const groups = toolbar.shadowRoot!.querySelectorAll('[role="group"]');

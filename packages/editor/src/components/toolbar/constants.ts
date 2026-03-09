@@ -1,4 +1,4 @@
-export const ITEM = {
+export const TOOLBAR_ITEM = {
   ACCESSIBILITY_NOTIFICATIONS: 'accessibility-notifications',
   BOLD: 'bold',
   BULLET_LIST: 'bullet-list',
@@ -23,16 +23,4 @@ export const ITEM = {
   TEXT_DIRECTION_RTL: 'text-direction-rtl',
   UNDERLINE: 'underline',
   UNDO: 'undo',
-} as const;
-
-export const GROUP = {
-  ALIGNMENT: 'alignment',
-  HISTORY: 'history',
-  INSERT: 'insert',
-  LISTS: 'lists',
-  SELECTS: 'selects',
-  TABLE: 'table',
-  TEXT_DIRECTION: 'text-direction',
-  TEXT_STYLING: 'text-styling',
-  TOOLS: 'tools',
 } as const;

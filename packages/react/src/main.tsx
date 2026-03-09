@@ -42,8 +42,8 @@ root.render(
       <ClippyContent>
         <ClippyToolbar
           config={[
-            { group: 'opmaak', items: ['bold', 'italic', 'code'] },
-            { group: 'invoegen', items: ['link', 'image-upload', 'insert-table'] },
+            ['bold', 'italic', 'code'],
+            ['link', 'image-upload', 'insert-table'],
           ]}
         />
         <ClippyGutter mode="list"></ClippyGutter>

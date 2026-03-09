@@ -39,7 +39,7 @@ import { CustomEvents } from '@/events';
 import './toolbar-image-upload';
 import './toolbar-link';
 import toolbarStyles from './styles.ts';
-import { type ToolbarConfig, type Item, defaultToolbarConfig } from './toolbar-config.ts';
+import { type ToolbarConfig, type ToolbarItem, defaultToolbarConfig } from './toolbar-config.ts';
 import { isDefaultDir } from './toolbar-language-select/languages.ts';
 
 const tag = 'clippy-toolbar';
@@ -129,26 +129,10 @@ export class Toolbar extends LitElement {
     return !isDefaultDir(lang ?? '', dir ?? '');
   };
 
-  #getGroupLabel(groupId: string): string {
-    const labels: Record<string, () => string> = {
-      alignment: () => msg('Alignment'),
-      history: () => msg('History'),
-      insert: () => msg('Insert'),
-      lists: () => msg('Lists'),
-      selects: () => msg('Format and language'),
-      table: () => msg('Table'),
-      'text-direction': () => msg('Text direction'),
-      'text-styling': () => msg('Text styling'),
-      tools: () => msg('Tools'),
-    };
-
-    return labels[groupId]?.() ?? groupId;
-  }
-
-  get #itemRenderers(): Map<Item, () => TemplateResult | typeof nothing> {
+  get #itemRenderers(): Map<ToolbarItem, () => TemplateResult | typeof nothing> {
     const { size = 0 } = this.validationsContext || {};
 
-    return new Map<Item, () => TemplateResult | typeof nothing>([
+    return new Map<ToolbarItem, () => TemplateResult | typeof nothing>([
       ['format-select', () => html`<clippy-format-select data-toolbar-item="format-select"></clippy-format-select>`],
       [
         'language-select',
@@ -501,14 +485,14 @@ export class Toolbar extends LitElement {
   override render() {
     const { size = 0 } = this.validationsContext || {};
     const renderers = this.#itemRenderers;
-    const visibleGroups = this.config.filter((group) => group.items.some((id) => renderers.has(id)));
+    const visibleGroups = this.config.filter((group) => group.some((id) => renderers.has(id)));
     return html`
       <div class="clippy-toolbar__wrapper" role="toolbar" aria-label=${msg('Text editor toolbar')}>
         ${visibleGroups.map(
           (group, index) => html`
             ${index > 0 ? html`<div class="clippy-toolbar__divider"></div>` : nothing}
-            <div role="group" aria-label=${this.#getGroupLabel(group.group)} data-group-id=${group.group}>
-              ${group.items.map((itemId) => {
+            <div role="group">
+              ${group.map((itemId) => {
                 const renderer = renderers.get(itemId);
                 return renderer ? renderer() : nothing;
               })}

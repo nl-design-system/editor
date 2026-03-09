@@ -285,7 +285,7 @@
 
         <clippy-editor
           identifier="clippy-editor-minimal-toolbar"
-          toolbar-config='[{"id":"text-styling","items":["bold","italic","underline"]},{"id":"history","items":["undo","redo"]},{"id":"insert","items":["link"]}]'
+          toolbar-config='[["bold","italic","underline"],["undo","redo"],["link"]]'
         >
           <div slot="content">
             <p>Deze editor heeft een minimale toolbar.</p>
@@ -295,9 +295,9 @@
         <h3 class="utrecht-heading-3">Voorbeeld HTML</h3>
         <pre class="utrecht-code-block"><code>&lt;clippy-editor
   toolbar-config='[
-    { "id": "text-styling", "items": ["bold", "italic", "underline"] },
-    { "id": "history", "items": ["undo", "redo"] },
-    { "id": "insert", "items": ["link"] }
+    ["bold", "italic", "underline"],
+    ["undo", "redo"],
+    ["link"]
   ]'
 &gt;
   &lt;div slot="content"&gt;
@@ -306,17 +306,92 @@
 &lt;/clippy-editor&gt;</code></pre>
 
         <h3 class="utrecht-heading-3">Voorbeeld: groepen met aangepaste labels</h3>
-        <p class="utrecht-paragraph">
-          Gebruik het <code>label</code> veld om een eigen <code>aria-label</code> voor een groep in te stellen.
-        </p>
+        <p class="utrecht-paragraph">Gebruik meerdere arrays om items te groeperen in de toolbar.</p>
         <pre class="utrecht-code-block"><code>&lt;clippy-editor
   toolbar-config='[
-    { "id": "opmaak", "label": "Tekstopmaak", "items": ["bold", "italic", "code"] },
-    { "id": "invoegen", "label": "Invoegen", "items": ["link", "image-upload", "insert-table"] }
+    ["bold", "italic", "code"],
+    ["link", "image-upload", "insert-table"]
   ]'
 &gt;
   ...
 &lt;/clippy-editor&gt;</code></pre>
+
+        <h3 class="utrecht-heading-3">Live configuratie demo</h3>
+        <p class="utrecht-paragraph">Pas de JSON hieronder aan en zie de toolbar direct veranderen.</p>
+        <div class="clippy-toolbar-config-demo">
+          <label class="utrecht-form-label" for="toolbar-config-input">Toolbar configuratie (JSON)</label>
+          <textarea
+            id="toolbar-config-input"
+            class="utrecht-textarea"
+            rows="14"
+            spellcheck="false"
+            autocomplete="off"
+            aria-describedby="toolbar-config-error"
+          ></textarea>
+          <p id="toolbar-config-error" class="utrecht-form-field-error-message" hidden aria-live="polite"></p>
+        </div>
+        <clippy-editor id="clippy-editor-live-config">
+          <div slot="content">
+            <p>Pas de JSON aan om de toolbar live te wijzigen.</p>
+          </div>
+        </clippy-editor>
+        <style>
+          .clippy-toolbar-config-demo {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-block-end: 1rem;
+          }
+          .clippy-toolbar-config-demo .utrecht-textarea {
+            font-family: monospace;
+            font-size: 0.875rem;
+            resize: vertical;
+          }
+          .utrecht-form-field-error-message {
+            color: var(--ma-color-signal-rood-500, #d52b1e);
+            font-size: 0.875rem;
+          }
+        </style>
+        <script>
+          (function () {
+            var defaultConfig = [
+              ['bold', 'italic', 'underline', 'strike', 'code'],
+              ['undo', 'redo'],
+              ['ordered-list', 'bullet-list'],
+              ['link', 'horizontal-rule'],
+              ['keyboard-shortcuts', 'accessibility-notifications'],
+            ];
+
+            var textarea = document.getElementById('toolbar-config-input');
+            var errorEl = document.getElementById('toolbar-config-error');
+            var editor = document.getElementById('clippy-editor-live-config');
+
+            textarea.value = JSON.stringify(defaultConfig, null, 2);
+
+            function applyConfig(value) {
+              try {
+                var parsed = JSON.parse(value);
+                editor.setAttribute('toolbar-config', JSON.stringify(parsed));
+                errorEl.textContent = '';
+                errorEl.hidden = true;
+                textarea.removeAttribute('aria-invalid');
+              } catch (e) {
+                errorEl.textContent = 'Ongeldige JSON: ' + e.message;
+                errorEl.hidden = false;
+                textarea.setAttribute('aria-invalid', 'true');
+              }
+            }
+
+            // Apply the default config once the element is defined
+            customElements.whenDefined('clippy-editor').then(function () {
+              applyConfig(textarea.value);
+            });
+
+            textarea.addEventListener('input', function () {
+              applyConfig(textarea.value);
+            });
+          })();
+        </script>
 
         <clippy-context enable-rules="node-should-not-be-empty">
           <div slot="content">
