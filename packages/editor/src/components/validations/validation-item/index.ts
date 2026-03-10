@@ -1,3 +1,4 @@
+import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
 import linkCss from '@nl-design-system-candidate/link-css/link.css?inline';
@@ -9,9 +10,10 @@ import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
 import { LitElement, html, nothing, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import type { ValidationSeverity } from '@/types/validation.ts';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
+import type { ValidationSeverity } from '@/types/validation.ts';
+import { identifierContext } from '@/context/identifierContext.ts';
 import { CustomEvents } from '@/events';
 import validationListItemStyles from './styles.ts';
 
@@ -42,16 +44,28 @@ export class ValidationItem extends LitElement {
   @property({ type: String }) description!: string;
   @property({ type: String }) href?: string;
 
+  @consume({ context: identifierContext, subscribe: true })
+  @property({ attribute: false })
+  private readonly identifier?: string;
+
   readonly #focusNode = () => {
     this.dispatchEvent(
-      new CustomEvent(CustomEvents.FOCUS_NODE, { bubbles: true, composed: true, detail: { pos: this.pos } }),
+      new CustomEvent(CustomEvents.FOCUS_NODE, {
+        bubbles: true,
+        composed: true,
+        detail: { pos: this.pos },
+      }),
     );
   };
 
   #handleValidationItemClick(event: Event, key: string) {
     event.stopPropagation();
     this.dispatchEvent(
-      new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, { bubbles: true, composed: true, detail: { key } }),
+      new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, {
+        bubbles: true,
+        composed: true,
+        detail: { identifier: this.identifier, key },
+      }),
     );
   }
 

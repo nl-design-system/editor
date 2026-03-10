@@ -95,11 +95,11 @@ export class ValidationsDialog extends LitElement {
     }
   };
 
-  readonly #focusValidationItem = async (event: CustomEventInit<{ key: string }>) => {
-    const { key } = event.detail || {};
+  readonly #focusValidationItem = async (event: CustomEventInit<{ key: string; identifier: string }>) => {
+    const { identifier, key } = event.detail || {};
     if (!key) return;
 
-    if (!this.open) {
+    if (!this.open && identifier === this.identifier) {
       this.#toggleOpen();
     }
 
