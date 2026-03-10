@@ -210,14 +210,6 @@
         <source>Extensive explanation</source>
         <target>Uitgebreide uitleg</target>
       </trans-unit>
-      <trans-unit id="sdab2b4d8533bd75e">
-        <source>Adjust</source>
-        <target>Aanpassen</target>
-      </trans-unit>
-      <trans-unit id="s917734d83f35efa3">
-        <source>Ignore</source>
-        <target>Negeren</target>
-      </trans-unit>
       <trans-unit id="s503a57cce1fec059">
         <source>Document must have correct heading order</source>
         <target>Document moet correcte kopvolgorde hebben</target>
@@ -455,6 +447,14 @@
       <trans-unit id="s241b38e32644d4bd">
         <source>Open in drawer</source>
         <target>Open in zijpaneel</target>
+      </trans-unit>
+      <trans-unit id="s21905715d95b4173">
+        <source>Focus</source>
+        <target>Focus</target>
+      </trans-unit>
+      <trans-unit id="sb8f855b49234b81b">
+        <source>Apply</source>
+        <target>Pas toe</target>
       </trans-unit>
     </body>
   </file>

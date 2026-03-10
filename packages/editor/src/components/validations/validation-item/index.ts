@@ -1,3 +1,4 @@
+import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
@@ -15,6 +16,7 @@ import '@nl-design-system-community/clippy-components/clippy-icon';
 import type { ValidationSeverity } from '@/types/validation.ts';
 import { identifierContext } from '@/context/identifierContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
+import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
 import validationListItemStyles from './styles.ts';
 
@@ -49,6 +51,9 @@ export class ValidationItem extends LitElement {
   @property({ attribute: false })
   private readonly identifier?: string;
 
+  @editor()
+  private readonly editor: Editor | undefined;
+
   readonly #focusNode = () => {
     this.dispatchEvent(
       new CustomEvent(CustomEvents.FOCUS_NODE, {
@@ -57,6 +62,18 @@ export class ValidationItem extends LitElement {
         detail: { pos: this.pos },
       }),
     );
+  };
+
+  readonly #applyFix = () => {
+    if (!this.editor) return;
+    const { state } = this.editor;
+    const { doc } = state;
+    const resolvedPos = doc.resolve(this.pos);
+    const node = resolvedPos.nodeAfter ?? resolvedPos.node();
+    if (!node) return;
+    const from = resolvedPos.nodeAfter ? this.pos : resolvedPos.before();
+    const to = from + node.nodeSize;
+    this.editor.chain().focus().deleteRange({ from, to }).run();
   };
 
   #handleValidationItemClick(event: Event, key: string) {
@@ -121,9 +138,11 @@ export class ValidationItem extends LitElement {
                 ${msg('Open in drawer')}
               </clippy-button>`
             : nothing}
-          <clippy-button disabled>${msg('Ignore')}</clippy-button>
           <clippy-button purpose="secondary" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
-            ${msg('Adjust')}
+            ${msg('Focus')}
+          </clippy-button>
+          <clippy-button purpose="primary" @click=${this.#applyFix} aria-describedby=${ariaDescribedBy}>
+            ${msg('Apply')}
           </clippy-button>
         </div>
       </li>

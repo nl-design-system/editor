@@ -90,7 +90,6 @@ export class ValidationsDialog extends LitElement {
 
       // Set a text selection at the position and focus the view
       this.editor?.commands.focus(pos);
-      this.#toggleOpen();
     } catch (err) {
       console.error('Cannot scroll to and focus node', err);
     }
