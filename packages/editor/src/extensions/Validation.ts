@@ -11,6 +11,7 @@ export default Extension.create({
         const event = new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, {
           bubbles: true,
           composed: true,
+          detail: { identifier: this.options.identifier },
         });
         globalThis.dispatchEvent(event);
         return true;

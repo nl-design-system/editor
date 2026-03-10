@@ -3,6 +3,7 @@ import { Editor as TiptapEditor } from '@tiptap/core';
 import { LitElement, html } from 'lit';
 import { customElement, property, queryAssignedElements } from 'lit/decorators.js';
 import type { ValidationResult } from '@/types/validation.ts';
+import { identifierContext } from '@/context/identifierContext.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { editorExtensions } from '@/extensions';
@@ -11,6 +12,9 @@ import { sanitizeTopHeadingLevel } from '@/utils/sanitize.ts';
 import { editorContextStyles } from './styles.ts';
 
 const tag = 'clippy-context';
+
+/** Tracks all active identifier values to enforce uniqueness across instances. */
+const registeredIdentifiers = new Set<string>();
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -36,6 +40,7 @@ declare global {
 export class Context extends LitElement {
   static override readonly styles = editorContextStyles;
 
+  @provide({ context: identifierContext })
   @property({ type: String })
   identifier = 'clippy-editor-id';
 
@@ -106,6 +111,7 @@ export class Context extends LitElement {
       extensions: editorExtensions(
         { disableRules: this.disableRules, enableRules: this.enableRules, topHeadingLevel: sanitizedTopHeadingLevel },
         this.updateValidationsContext,
+        this.identifier,
       ),
     });
   }
@@ -118,6 +124,12 @@ export class Context extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
+    if (registeredIdentifiers.has(this.identifier)) {
+      throw new Error(
+        `[clippy-context] Duplicate identifier detected: "${this.identifier}". Each <clippy-context> must have a unique identifier.`,
+      );
+    }
+    registeredIdentifiers.add(this.identifier);
     this.lightValidationsContext.hostConnected();
     if (!this.isLocaleInitialized) {
       this.isLocaleInitialized = true;
@@ -140,6 +152,7 @@ export class Context extends LitElement {
   }
 
   override disconnectedCallback() {
+    registeredIdentifiers.delete(this.identifier);
     this.editor?.destroy();
     super.disconnectedCallback();
   }

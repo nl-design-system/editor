@@ -22,27 +22,26 @@ root.render(
     <h1>Clippy Editor (React)</h1>
     <hr />
     <h2>React editor example</h2>
-    <ClippyEditor>
-      <div slot="content" hidden>
+    <ClippyEditor identifier="react-editor-1">
+      <div slot="content">
         <h1>Kopniveau 1 in React editor</h1>
-        <p>
-          Dit is een voorbeeld <em>&nbsp;</em>van de Clippy Editor met een Lit React wrapper
-        </p>
+        <p>Dit is een voorbeeld van de Clippy Editor met een Lit React wrapper</p>
       </div>
     </ClippyEditor>
     <hr />
     <h2>React context, content and gutter example</h2>
-    <ClippyContext>
+    <ClippyContext identifier="react-editor-2">
       <div slot="content">
         <h1>Kopniveau 1 in React editor</h1>
         <p>
-          Dit is een voorbeeld van de Clippy Editor <a href="#">&nbsp;</a>met een Lit React wrapper
+          Dit is een voorbeeld van de Clippy Editor <a href="#">met een Lit React wrapper</a>
         </p>
       </div>
       <ClippyContent>
         <ClippyToolbar
           config={[
-            ['bold', 'italic', 'code'],
+            ['format-select', 'language-select'],
+            ['bold', 'italic', 'underline', 'code'],
             ['link', 'image-upload', 'insert-table'],
           ]}
         />

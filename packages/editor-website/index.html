@@ -263,8 +263,7 @@
         <h2 class="utrecht-heading-2">Toolbar configuratie</h2>
         <p class="utrecht-paragraph">
           De toolbar kan geconfigureerd worden via het <code>toolbar-config</code> attribuut. Dit attribuut accepteert
-          een JSON-array van groepen, waarbij elke groep een <code>id</code> en een lijst van <code>items</code> heeft.
-          Optioneel kan een <code>label</code> worden meegegeven als aria-label voor de groep.
+          een JSON-array van groepen, waarbij elke groep een array van <code>items</code> is.
         </p>
 
         <h3 class="utrecht-heading-3">Beschikbare items</h3>
@@ -330,7 +329,7 @@
           ></textarea>
           <p id="toolbar-config-error" class="utrecht-form-field-error-message" hidden aria-live="polite"></p>
         </div>
-        <clippy-editor id="clippy-editor-live-config">
+        <clippy-editor id="clippy-editor-live-config" identifier="clippy-editor-live-config">
           <div slot="content">
             <p>Pas de JSON aan om de toolbar live te wijzigen.</p>
           </div>
@@ -359,7 +358,6 @@
               ['undo', 'redo'],
               ['ordered-list', 'bullet-list'],
               ['link', 'horizontal-rule'],
-              ['keyboard-shortcuts', 'accessibility-notifications'],
             ];
 
             var textarea = document.getElementById('toolbar-config-input');
@@ -393,7 +391,7 @@
           })();
         </script>
 
-        <clippy-context enable-rules="node-should-not-be-empty">
+        <clippy-context identifier="editor-1" enable-rules="node-should-not-be-empty">
           <div slot="content">
             <p>Hoi,</p>
             <p>&nbsp;</p>
@@ -435,7 +433,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="mark-should-not-be-empty">
+        <clippy-context identifier="editor-2" enable-rules="mark-should-not-be-empty">
           <div slot="content">
             <h2>Bold</h2>
             <p>Empty Bold: <b>&nbsp;</b></p>
@@ -492,10 +490,7 @@
                 <div class="clippy-canvas__example">
                   <clippy-content>
                     <clippy-toolbar
-                      config='[
-    { "id": "opmaak", "label": "Tekstopmaak", "items": ["bold", "italic", "code"] },
-    { "id": "invoegen", "label": "Invoegen", "items": ["link", "image-upload", "insert-table"] }
-  ]'
+                      config='[["bold","italic","code"],["link","image-upload","insert-table"]]'
                     ></clippy-toolbar>
                     <clippy-validations-gutter mode="list"></clippy-validations-gutter>
                   </clippy-content>
@@ -508,7 +503,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="mark-should-not-be-underlined">
+        <clippy-context identifier="editor-3" enable-rules="mark-should-not-be-underlined">
           <div slot="content">
             <p>Er is onvoldoende verschil tussen de onderstreping van een <u>underline</u> en <a href="#">link</a>.</p>
           </div>
@@ -552,7 +547,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="node-should-not-be-empty">
+        <clippy-context identifier="editor-4" enable-rules="node-should-not-be-empty">
           <div slot="content">
             <ul>
               <li>Optie 1</li>
@@ -601,7 +596,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="node-should-not-be-empty">
+        <clippy-context identifier="editor-5" enable-rules="node-should-not-be-empty">
           <div slot="content">
             <ol>
               <li>Optie 1</li>
@@ -650,7 +645,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="document-must-have-semantic-lists">
+        <clippy-context identifier="editor-6" enable-rules="document-must-have-semantic-lists">
           <div slot="content">
             <p>1. Optie 1<br />2. Optie 2<br />3. Optie 3</p>
           </div>
@@ -694,7 +689,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="document-must-have-semantic-lists">
+        <clippy-context identifier="editor-7" enable-rules="document-must-have-semantic-lists">
           <div slot="content">
             <p>- Optie 1<br />- Optie 2<br />- Optie 3</p>
           </div>
@@ -738,7 +733,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="node-should-not-be-empty">
+        <clippy-context identifier="editor-8" enable-rules="node-should-not-be-empty">
           <div slot="content">
             <dl>
               <div>
@@ -791,7 +786,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="node-should-not-be-empty">
+        <clippy-context identifier="editor-9" enable-rules="node-should-not-be-empty">
           <div slot="content">
             <table>
               <tbody>
@@ -853,7 +848,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="image-must-have-alt-text">
+        <clippy-context identifier="editor-10" enable-rules="image-must-have-alt-text">
           <div slot="content">
             <p><img src="https://placehold.co/320x240" /></p>
           </div>
@@ -897,7 +892,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="document-should-not-have-heading-resembling-paragraph">
+        <clippy-context identifier="editor-11" enable-rules="document-should-not-have-heading-resembling-paragraph">
           <div slot="content">
             <p><strong>Als het eruit ziet als een header, dan is het een header</strong></p>
             <p>Foo</p>
@@ -942,7 +937,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="document-must-have-correct-heading-order">
+        <clippy-context identifier="editor-12" enable-rules="document-must-have-correct-heading-order">
           <div slot="content">
             <h1>Kopniveau 1</h1>
             <h3>Kopniveau 3</h3>
@@ -988,7 +983,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="document-must-have-table-with-headings">
+        <clippy-context identifier="editor-13" enable-rules="document-must-have-table-with-headings">
           <div slot="content">
             <table>
               <thead>
@@ -1046,7 +1041,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="document-must-have-table-with-multiple-rows">
+        <clippy-context identifier="editor-14" enable-rules="document-must-have-table-with-multiple-rows">
           <div slot="content">
             <table>
               <tbody>
@@ -1103,7 +1098,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="document-must-have-single-heading-one">
+        <clippy-context identifier="editor-15" enable-rules="document-must-have-single-heading-one">
           <div slot="content">
             <h1>Kopniveau 1</h1>
             <h1>Kopniveau 2</h1>
@@ -1148,7 +1143,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="document-must-have-top-level-heading">
+        <clippy-context identifier="editor-16" enable-rules="document-must-have-top-level-heading">
           <div slot="content">
             <p>Tekst zonder hoofdkop</p>
           </div>
@@ -1192,7 +1187,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="definition-description-must-follow-term">
+        <clippy-context identifier="editor-17" enable-rules="definition-description-must-follow-term">
           <div slot="content">
             <dl>
               <div>
@@ -1241,7 +1236,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="description-list-must-contain-term">
+        <clippy-context identifier="editor-18" enable-rules="description-list-must-contain-term">
           <div slot="content">
             <dl>
               <div>
@@ -1289,7 +1284,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="heading-should-contain-bold-or-italic">
+        <clippy-context identifier="editor-19" enable-rules="heading-should-contain-bold-or-italic">
           <div slot="content">
             <h1>Heading met <strong>bold</strong></h1>
             <p>...</p>
@@ -1334,7 +1329,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="heading-should-contain-bold-or-italic">
+        <clippy-context identifier="editor-20" enable-rules="heading-should-contain-bold-or-italic">
           <div slot="content">
             <h1>Heading met <em>italic</em></h1>
             <p>...</p>
@@ -1379,7 +1374,7 @@
           </div>
         </clippy-context>
 
-        <clippy-context enable-rules="link-should-not-be-too-generic">
+        <clippy-context identifier="editor-21" enable-rules="link-should-not-be-too-generic">
           <div slot="content">
             <p>
               Lees meer waarom een linktekst zo belangrijk is, in de blogpost "<a

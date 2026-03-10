@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Vetgedrukt' }).waitFor();
+  await page.locator('clippy-editor').first().getByRole('button', { name: 'Vetgedrukt' }).waitFor();
 });
 
 test.describe('Page basics', () => {
@@ -17,23 +17,25 @@ test.describe('Page basics', () => {
 
 test.describe('Clippy Editor rendering', () => {
   test('editor component is visible', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor');
+    const clippyEditor = page.locator('clippy-editor').first();
     await expect(clippyEditor).toBeVisible();
   });
 
   test('toolbar buttons are visible', async ({ page }) => {
-    await expect(page.getByRole('button', { name: 'Vetgedrukt' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Cursief' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Onderstrepen' })).toBeVisible();
+    const clippyEditor = page.locator('clippy-editor').first();
+    await expect(clippyEditor.getByRole('button', { name: 'Vetgedrukt' })).toBeVisible();
+    await expect(clippyEditor.getByRole('button', { name: 'Cursief' })).toBeVisible();
+    await expect(clippyEditor.getByRole('button', { name: 'Onderstrepen' })).toBeVisible();
   });
 
   test('toolbar comboboxes are visible', async ({ page }) => {
-    await expect(page.getByRole('combobox', { name: 'Selecteer tekstformaat' })).toBeVisible();
-    await expect(page.getByRole('combobox', { name: 'Taal van het element' })).toBeVisible();
+    const clippyEditor = page.locator('clippy-editor').first();
+    await expect(clippyEditor.getByRole('combobox', { name: 'Selecteer tekstformaat' })).toBeVisible();
+    await expect(clippyEditor.getByRole('combobox', { name: 'Taal van het element' })).toBeVisible();
   });
 
   test('initial content is rendered correctly', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor');
+    const clippyEditor = page.locator('clippy-editor').first();
     const editor = clippyEditor.getByRole('textbox');
 
     // Check for the initial heading from main.tsx
@@ -46,7 +48,7 @@ test.describe('Clippy Editor rendering', () => {
 
 test.describe('Basic text editing', () => {
   test('can type text in editor', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor');
+    const clippyEditor = page.locator('clippy-editor').first();
     const editor = clippyEditor.getByRole('textbox');
 
     // Click into an existing paragraph
@@ -60,7 +62,7 @@ test.describe('Basic text editing', () => {
   });
 
   test('can toggle bold formatting', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor');
+    const clippyEditor = page.locator('clippy-editor').first();
     const editor = clippyEditor.getByRole('textbox');
 
     // Click into paragraph and type
@@ -72,7 +74,7 @@ test.describe('Basic text editing', () => {
     await textNode.click({ clickCount: 3 });
 
     // Click bold button
-    const boldButton = page.getByRole('button', { name: 'Vetgedrukt' });
+    const boldButton = clippyEditor.getByRole('button', { name: 'Vetgedrukt' });
     await boldButton.click();
 
     // Verify bold is active

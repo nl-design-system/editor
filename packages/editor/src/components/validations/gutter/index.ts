@@ -36,6 +36,7 @@ export class Gutter extends LitElement {
 
   #handleIndicatorClick(key: string) {
     if (this.mode === 'list') {
+      console.log(this.mode);
       this.dispatchEvent(
         new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST, { bubbles: true, composed: true, detail: { key } }),
       );

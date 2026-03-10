@@ -33,6 +33,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { createRef, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationsMap } from '@/types/validation.ts';
+import { identifierContext } from '@/context/identifierContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
@@ -58,6 +59,10 @@ export class Toolbar extends LitElement {
 
   @property({ type: Array })
   config: ToolbarConfig = defaultToolbarConfig;
+
+  @consume({ context: identifierContext, subscribe: true })
+  @property({ attribute: false })
+  private readonly identifier?: string;
 
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
@@ -85,6 +90,7 @@ export class Toolbar extends LitElement {
       new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, {
         bubbles: true,
         composed: true,
+        detail: { identifier: this.identifier },
       }),
     );
   };

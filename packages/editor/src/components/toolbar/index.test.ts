@@ -1,6 +1,6 @@
 import '../../components/context/index.ts';
 import './index.ts';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import type { Toolbar } from './index.ts';
 import type { ToolbarConfig } from './toolbar-config.ts';
@@ -15,7 +15,7 @@ describe('<clippy-toolbar>', () => {
 
     document.documentElement.lang = 'nl';
     document.body.innerHTML = `
-      <clippy-context>
+      <clippy-context identifier="toolbar-test-editor">
         <${tag}></${tag}>
       </clippy-context>
     `;
@@ -24,6 +24,10 @@ describe('<clippy-toolbar>', () => {
     await vi.waitFor(() => {
       expect(page.getByLabelText('Werkbalk tekstbewerker')).toBeInTheDocument();
     });
+  });
+
+  afterEach(() => {
+    document.body.innerHTML = '';
   });
 
   it('renders correctly with required toolbar elements', async () => {
