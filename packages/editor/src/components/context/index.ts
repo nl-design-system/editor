@@ -8,13 +8,16 @@ import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { editorExtensions } from '@/extensions';
 import { initializeLocale } from '@/localization.ts';
+import {
+  addIdentifier,
+  hasIdentifier,
+  removeIdentifier,
+  generateUniqueIdentifier,
+} from '@/utils/registeredIdentifiers.ts';
 import { sanitizeTopHeadingLevel } from '@/utils/sanitize.ts';
 import { editorContextStyles } from './styles.ts';
 
 const tag = 'clippy-context';
-
-/** Tracks all active identifier values to enforce uniqueness across instances. */
-const registeredIdentifiers = new Set<string>();
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -41,7 +44,7 @@ export class Context extends LitElement {
   static override readonly styles = editorContextStyles;
 
   @provide({ context: identifierContext })
-  @property({ type: String })
+  @property({ reflect: true, type: String })
   identifier = 'clippy-editor-id';
 
   @property({ attribute: 'top-heading-level', reflect: true, type: Number })
@@ -116,20 +119,37 @@ export class Context extends LitElement {
     });
   }
 
-  override firstUpdated(): void {
-    this.createEditor();
-  }
-
   private isLocaleInitialized = false;
+  private isIdentifierRegistered = false;
+  private isEditorCreated = false;
+
+  override updated(changedProperties: Map<string, unknown>): void {
+    if (!changedProperties.has('identifier')) return;
+
+    const previousIdentifier = changedProperties.get('identifier') as string | undefined;
+
+    // Only remove the previous identifier if it was actually registered
+    if (previousIdentifier !== undefined && this.isIdentifierRegistered) {
+      removeIdentifier(previousIdentifier);
+      this.isIdentifierRegistered = false;
+    }
+
+    if (hasIdentifier(this.identifier)) {
+      this.identifier = generateUniqueIdentifier(this.identifier);
+      return; // setting identifier triggers another updated() call
+    }
+
+    addIdentifier(this.identifier);
+    this.isIdentifierRegistered = true;
+
+    if (!this.isEditorCreated) {
+      this.isEditorCreated = true;
+      this.createEditor();
+    }
+  }
 
   override connectedCallback() {
     super.connectedCallback();
-    if (registeredIdentifiers.has(this.identifier)) {
-      throw new Error(
-        `[clippy-context] Duplicate identifier detected: "${this.identifier}". Each <clippy-context> must have a unique identifier.`,
-      );
-    }
-    registeredIdentifiers.add(this.identifier);
     this.lightValidationsContext.hostConnected();
     if (!this.isLocaleInitialized) {
       this.isLocaleInitialized = true;
@@ -152,7 +172,7 @@ export class Context extends LitElement {
   }
 
   override disconnectedCallback() {
-    registeredIdentifiers.delete(this.identifier);
+    removeIdentifier(this.identifier);
     this.editor?.destroy();
     super.disconnectedCallback();
   }

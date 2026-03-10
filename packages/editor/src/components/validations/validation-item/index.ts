@@ -1,4 +1,3 @@
-import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
 import linkCss from '@nl-design-system-candidate/link-css/link.css?inline';
@@ -13,7 +12,6 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import type { ValidationSeverity } from '@/types/validation.ts';
-import { identifierContext } from '@/context/identifierContext.ts';
 import { CustomEvents } from '@/events';
 import validationListItemStyles from './styles.ts';
 
@@ -43,10 +41,7 @@ export class ValidationItem extends LitElement {
   @property({ type: String }) severity!: ValidationSeverity;
   @property({ type: String }) description!: string;
   @property({ type: String }) href?: string;
-
-  @consume({ context: identifierContext, subscribe: true })
-  @property({ attribute: false })
-  private readonly identifier?: string;
+  @property({ type: String }) identifier?: string;
 
   readonly #focusNode = () => {
     this.dispatchEvent(
