@@ -1,3 +1,4 @@
+import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
 import linkCss from '@nl-design-system-candidate/link-css/link.css?inline';
@@ -8,10 +9,11 @@ import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
 import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
 import { LitElement, html, nothing, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
+import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationSeverity } from '@/types/validation.ts';
+import { identifierContext } from '@/context/identifierContext.ts';
 import { CustomEvents } from '@/events';
 import validationListItemStyles from './styles.ts';
 
@@ -41,7 +43,10 @@ export class ValidationItem extends LitElement {
   @property({ type: String }) severity!: ValidationSeverity;
   @property({ type: String }) description!: string;
   @property({ type: String }) href?: string;
-  @property({ type: String }) identifier?: string;
+
+  @consume({ context: identifierContext, subscribe: true })
+  @property({ type: String })
+  identifier?: string;
 
   readonly #focusNode = () => {
     this.dispatchEvent(

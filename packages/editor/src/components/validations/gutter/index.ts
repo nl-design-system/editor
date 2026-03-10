@@ -27,8 +27,6 @@ export class Gutter extends LitElement {
   @property({ type: String })
   mode: 'tooltip' | 'list' = 'tooltip';
 
-  @property({ type: String }) identifier?: string;
-
   @state()
   private activeTooltipKey: string | null = null;
 
@@ -88,7 +86,6 @@ export class Gutter extends LitElement {
                   .severity=${severity}
                   .description=${description}
                   .href=${href}
-                  .identifier=${this.identifier}
                 >
                   ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
                 </clippy-validation-item>
