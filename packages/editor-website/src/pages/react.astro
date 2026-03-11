@@ -1,0 +1,91 @@
+---
+import Document from '../layouts/document.astro';
+import { ReactContextExample, ReactEditorExample } from '../components/ReactExamples';
+---
+
+<Document title="React integratie - Rich-text Editor - NL Design System">
+  <main>
+    <section class="ma-banner ma-banner--hero">
+      <div class="ma-banner__content">
+        <header class="ma-banner__header">
+          <h1 class="utrecht-heading-1">React integratie</h1>
+        </header>
+        <div class="ma-banner__copy">
+          <p class="utrecht-paragraph">
+            De Clippy Editor biedt React wrappers via <code>@lit/react</code>, waarmee de Web Components naadloos in een
+            React-applicatie gebruikt kunnen worden. Hieronder staan twee voorbeelden: een eenvoudige editor en een
+            samengestelde editor met context, toolbar, gutter en validatielijst.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="ma-page-section ma-page-section--with-space">
+      <h2 class="utrecht-heading-2">Voorbeeld 1: eenvoudige editor</h2>
+      <p class="utrecht-paragraph">
+        Dit voorbeeld toont de <code>ClippyEditor</code> component — de meest eenvoudige manier om de editor in React te
+        gebruiken.
+      </p>
+
+      <ReactEditorExample client:load />
+
+      <h3 class="utrecht-heading-3">Voorbeeld code</h3>
+      <pre class="utrecht-code-block"><code>import &#123; ClippyEditor &#125; from '@nl-design-system-community/editor-react';
+
+export function ReactEditorExample() &#123;
+  return (
+    &lt;ClippyEditor id="react-editor-1"&gt;
+      &lt;div slot="content"&gt;
+        &lt;h1&gt;Kopniveau 1 in React editor&lt;/h1&gt;
+        &lt;p&gt;Dit is een voorbeeld van de Clippy Editor met een Lit React wrapper&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/ClippyEditor&gt;
+  );
+&#125;</code></pre>
+    </section>
+
+    <section class="ma-page-section ma-page-section--with-space">
+      <h2 class="utrecht-heading-2">Voorbeeld 2: context, content, gutter en validaties</h2>
+      <p class="utrecht-paragraph">
+        Dit voorbeeld toont hoe <code>ClippyContext</code>, <code>ClippyContent</code>, <code>ClippyToolbar</code>,
+        <code>ClippyGutter</code> en <code>ClippyValidationsList</code> samen gebruikt kunnen worden voor een volledig
+        geconfigureerde editor.
+      </p>
+
+      <ReactContextExample client:load />
+
+      <h3 class="utrecht-heading-3">Voorbeeld code</h3>
+      <pre class="utrecht-code-block"><code>import &#123; ClippyContent &#125; from '@nl-design-system-community/editor-react';
+import &#123; ClippyContext &#125; from '@nl-design-system-community/editor-react';
+import &#123; ClippyGutter &#125; from '@nl-design-system-community/editor-react';
+import &#123; ClippyToolbar &#125; from '@nl-design-system-community/editor-react';
+import &#123; ClippyValidationsList &#125; from '@nl-design-system-community/editor-react';
+
+export function ReactContextExample() &#123;
+  return (
+    &lt;ClippyContext id="react-editor-2"&gt;
+      &lt;div slot="content"&gt;
+        &lt;h1&gt;Kopniveau 1 in React editor&lt;/h1&gt;
+        &lt;p&gt;
+          Dit is een voorbeeld van de Clippy Editor &lt;a href="#"&gt;met een Lit React wrapper&lt;/a&gt;
+        &lt;/p&gt;
+      &lt;/div&gt;
+      &lt;ClippyContent&gt;
+        &lt;ClippyToolbar
+          config=&#123;[
+            ['format-select', 'language-select'],
+            ['bold', 'italic', 'underline', 'code'],
+            ['link', 'image-upload', 'insert-table'],
+          ]&#125;
+        /&gt;
+        &lt;ClippyGutter mode="list" /&gt;
+      &lt;/ClippyContent&gt;
+      &lt;ClippyValidationsList /&gt;
+    &lt;/ClippyContext&gt;
+  );
+&#125;</code></pre>
+    </section>
+  </main>
+</Document>
+
+

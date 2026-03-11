@@ -1,0 +1,86 @@
+---
+import Document from '../layouts/document.astro';
+---
+
+<Document title="Rich-text Editor - NL Design System">
+  <main>
+    <section class="ma-banner ma-banner--hero">
+      <div class="ma-banner__content">
+        <header class="ma-banner__header">
+          <h1 class="utrecht-heading-1">NL Design System - Rich-text editor</h1>
+        </header>
+        <div class="ma-banner__copy">
+          <p class="utrecht-paragraph">
+            In dit project wordt een customized versie van de Tiptap rich text editor gebruikt, een flexibele en
+            uitbreidbare editor gebaseerd op ProseMirror.
+          </p>
+        </div>
+        <footer class="ma-banner__footer">
+          <div class="utrecht-action-group">
+            <a
+              class="utrecht-button-link utrecht-button-link--html-a utrecht-button-link--primary-action"
+              href="https://github.com/nl-design-system/editor"
+              target="_blank"
+            >
+              Clippy editor op GitHub
+            </a>
+          </div>
+        </footer>
+      </div>
+    </section>
+
+    <section class="ma-page-section ma-page-section--with-space">
+      <clippy-editor id="clippy-editor-localhost">
+        <div slot="content">
+          <h1>NL Design System Editor kop 1</h1>
+          <p>
+            Onder die steden, <strong>welke</strong> <i>vanouds</i> aan de <strong><i>grafelijke</i></strong> kroon
+            van Holland gelijk zoovele edelgesteenten flonkerden, en wier macht en rijkdom tot een hechten steun
+            verstrekten aan des Landsheer gezag, was Haarlem, gelijk genoeg bekend is, een der voornaamste.
+          </p>
+          <h2>NL Design System Editor kop 2</h2>
+          <p></p>
+          <h4>Dat mag niet, he</h4>
+          <p>
+            Aan den over eener rivier gebouwd, waarvan zij zich als van
+            <a href="https://example.com">twee armen bedienen</a> kon, om, aan de eene zijde, het Haarlemmermeer en de
+            daarom gelegen landen, aan de andere hij IJ, en door het IJ, de Zuiderzee te bereiken, had zij van deze
+            gunstige ligging reeds vroeg partij getrokken, om een<a href="https://example.com"> </a>handel te drijven,
+            die, schoon zich zelden verder uitstrekkende dan de gewesten, welke om die binnenzeeën gelegen waren, haar
+            niettemin gelegenheid gaf.
+          </p>
+          <table>
+            <tbody>
+              <tr>
+                <th>Naam</th>
+                <th colspan="3">Beschrijving</th>
+              </tr>
+              <tr>
+                <td>Rij 1, cel 1</td>
+                <td>Rij 1, cel 2</td>
+                <td>Rij 1, cel 3</td>
+                <td>Rij 1, cel 4</td>
+              </tr>
+            </tbody>
+          </table>
+          <dl>
+            <dt>Foo</dt>
+            <dd>The meaning of foo</dd>
+            <dt>Bar</dt>
+            <dd>The meaning of bar</dd>
+          </dl>
+          <h2>Afbeeldingen</h2>
+          <img alt="Test size 800x400" src="https://placehold.co/800x400" />
+          <h3>Correct lijst</h3>
+          <ul>
+            <li>Test</li>
+            <li>Test</li>
+            <li>Test</li>
+          </ul>
+          <h3>Incorrect genummerde lijst</h3>
+          <p>1 - Test<br />2 - Test<br />3 - Test</p>
+        </div>
+      </clippy-editor>
+    </section>
+  </main>
+</Document>
