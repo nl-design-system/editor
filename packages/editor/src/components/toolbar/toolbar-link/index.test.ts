@@ -1,6 +1,6 @@
 import '../../context/index.ts';
 import './index.ts';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 
 describe('<clippy-toolbar-link>', () => {
@@ -11,7 +11,7 @@ describe('<clippy-toolbar-link>', () => {
     document.documentElement.lang = 'nl';
     document.documentElement.classList = 'ma-theme clippy-theme utrecht-root';
     document.body.innerHTML = `
-      <clippy-context>
+      <clippy-context id="toolbar-link-test-editor">
         <clippy-toolbar-link></clippy-toolbar-link>
       </clippy-context>
     `;
@@ -19,6 +19,10 @@ describe('<clippy-toolbar-link>', () => {
     await vi.waitFor(() => {
       expect(page.getByRole('button', { name: 'Link', exact: true })).toBeInTheDocument();
     });
+  });
+
+  afterEach(() => {
+    document.body.innerHTML = '';
   });
 
   it('renders the link toggle button', () => {
@@ -105,7 +109,7 @@ describe('<clippy-toolbar-link>', () => {
   describe('dialog with active link', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
-        <clippy-context>
+        <clippy-context id="toolbar-link-active-test-editor">
           <div slot="content"><p>Hello <a href="https://example.com">world</a> text</p></div>
           <clippy-toolbar-link></clippy-toolbar-link>
         </clippy-context>
@@ -123,6 +127,10 @@ describe('<clippy-toolbar-link>', () => {
       await vi.waitFor(() => {
         expect(page.getByRole('dialog')).toHaveAttribute('open');
       });
+    });
+
+    afterEach(() => {
+      document.body.innerHTML = '';
     });
 
     it('populates URL from active link', () => {

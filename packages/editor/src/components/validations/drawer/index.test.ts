@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { page } from 'vitest/browser';
 import type { ValidationResult } from '../../../types/validation';
 import type { Context } from '../../context';
@@ -7,17 +7,23 @@ import { contentValidations, documentValidations } from '../../../validators/con
 import '../../context/index.ts';
 import './index.ts';
 
+const TEST_IDENTIFIER = 'test-editor-id';
+
 describe('<clippy-validations-dialog>', () => {
   beforeEach(() => {
     document.documentElement.lang = 'nl';
     document.body.innerHTML = `
-      <clippy-context>
+      <clippy-context id="${TEST_IDENTIFIER}">
         <clippy-validations-dialog></clippy-validations-dialog>
       </clippy-context>
     `;
   });
 
-  it('opens dialog when OPEN_VALIDATIONS_DIALOG event is dispatched', async () => {
+  afterEach(() => {
+    document.body.innerHTML = '';
+  });
+
+  it('opens dialog when OPEN_VALIDATIONS_DIALOG event is dispatched with matching identifier', async () => {
     await vi.waitFor(() => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
@@ -25,8 +31,23 @@ describe('<clippy-validations-dialog>', () => {
     const dialog = page.getByTestId('clippy-validations-drawer');
     expect(dialog).not.toHaveAttribute('open');
     expect(dialog.element()).not.toHaveAttribute('open');
-    globalThis.dispatchEvent(new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG));
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, { detail: { identifier: TEST_IDENTIFIER } }),
+    );
     expect(dialog).toHaveAttribute('open');
+  });
+
+  it('does not open dialog when OPEN_VALIDATIONS_DIALOG event has a different identifier', async () => {
+    await vi.waitFor(() => {
+      expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
+    });
+
+    const dialog = page.getByTestId('clippy-validations-drawer');
+    expect(dialog.element()).not.toHaveAttribute('open');
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, { detail: { identifier: 'other-editor-id' } }),
+    );
+    expect(dialog.element()).not.toHaveAttribute('open');
   });
 
   it('renders large validations map with all validation items', async () => {

@@ -5,6 +5,7 @@ export default css`
     /* Wrap the toolbar to make a toolbar with many items fit on small screens. */
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: var(--basis-space-inline-sm);
     background-color: var(--ma-color-white);
     border: 1px solid var(--ma-color-paars-8);
@@ -13,9 +14,25 @@ export default css`
     padding-inline: var(--basis-space-inline-md);
   }
 
-  .clippy-toolbar__divider {
+  .clippy-toolbar__group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--basis-space-inline-sm);
+    align-items: center;
+    align-self: stretch;
+  }
+
+  /* Hide the group itself when all its children are hidden */
+  .clippy-toolbar__group:not(:has(> :not([hidden]))) {
+    display: none;
+  }
+
+  /* Draw a divider after every visible group, except the last */
+  .clippy-toolbar__group:not(:last-of-type):has(> :not([hidden]))::after {
+    content: '';
+    display: block;
     inline-size: 2px;
-    margin-inline: var(--basis-space-inline-sm);
+    height: 100%;
     background: var(--ma-color-paars-8);
   }
 

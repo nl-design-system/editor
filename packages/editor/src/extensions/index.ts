@@ -33,6 +33,7 @@ import Validation from '@/extensions/Validation.ts';
 export const editorExtensions = (
   settings: EditorSettings,
   callback: (resultMap: Map<string, ValidationResult>) => void,
+  identifier?: string,
 ) => [
   Document,
   Placeholder.configure({
@@ -215,6 +216,7 @@ export const editorExtensions = (
   }),
   KeyboardShortcuts,
   Validation.configure({
+    identifier,
     settings,
     updateValidationsContext: callback,
   }),

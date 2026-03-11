@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import './index.ts';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { page } from 'vitest/browser';
 import { isMacOS } from '@/utils/isMacOS.ts';
 import './index';
@@ -12,7 +12,11 @@ describe('<clippy-editor>', () => {
     user = userEvent.setup();
     document.documentElement.lang = 'nl';
     document.body.innerHTML =
-      '<clippy-editor><div slot="content" hidden><h1>Start met kopniveau 1</h1></div></clippy-editor>';
+      '<clippy-editor id="index-test-editor"><div slot="content" hidden><h1>Start met kopniveau 1</h1></div></clippy-editor>';
+  });
+
+  afterEach(() => {
+    document.body.innerHTML = '';
   });
 
   it('should change selected text to heading level 3', async () => {

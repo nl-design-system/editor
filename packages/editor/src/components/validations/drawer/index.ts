@@ -11,6 +11,7 @@ import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '../validation-item';
 import type { ValidationEntry, ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
+import { identifierContext } from '@/context/identifierContext.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import '@/components/tabs';
 import '@nl-design-system-community/clippy-components/clippy-button';
@@ -32,6 +33,10 @@ export class ValidationsDialog extends LitElement {
 
   @state()
   private selectedSeverity: ValidationSeverity | null = null;
+
+  @consume({ context: identifierContext, subscribe: true })
+  @property({ attribute: false })
+  private readonly identifier?: string;
 
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
@@ -58,7 +63,12 @@ export class ValidationsDialog extends LitElement {
     super.disconnectedCallback();
   }
 
-  readonly #toggleOpen = () => {
+  readonly #toggleOpen = (event?: Event) => {
+    // When triggered from a global event, only respond if the identifier matches this instance
+    if (event instanceof CustomEvent) {
+      const eventIdentifier = (event as CustomEvent<{ identifier?: string }>).detail?.identifier;
+      if (eventIdentifier !== this.identifier) return;
+    }
     const { value } = this.#dialogRef;
     if (this.open) {
       value?.close();
@@ -85,11 +95,11 @@ export class ValidationsDialog extends LitElement {
     }
   };
 
-  readonly #focusValidationItem = async (event: CustomEventInit<{ key: string }>) => {
-    const { key } = event.detail || {};
+  readonly #focusValidationItem = async (event: CustomEventInit<{ key: string; identifier: string }>) => {
+    const { identifier, key } = event.detail || {};
     if (!key) return;
 
-    if (!this.open) {
+    if (!this.open && identifier === this.identifier) {
       this.#toggleOpen();
     }
 
