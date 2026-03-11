@@ -13,7 +13,7 @@ describe('<clippy-validations-dialog>', () => {
   beforeEach(() => {
     document.documentElement.lang = 'nl';
     document.body.innerHTML = `
-      <clippy-context identifier="${TEST_IDENTIFIER}">
+      <clippy-context id="${TEST_IDENTIFIER}">
         <clippy-validations-dialog></clippy-validations-dialog>
       </clippy-context>
     `;

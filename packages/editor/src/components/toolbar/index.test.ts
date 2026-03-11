@@ -15,7 +15,7 @@ describe('<clippy-toolbar>', () => {
 
     document.documentElement.lang = 'nl';
     document.body.innerHTML = `
-      <clippy-context identifier="toolbar-test-editor">
+      <clippy-context id="toolbar-test-editor">
         <${tag}></${tag}>
       </clippy-context>
     `;

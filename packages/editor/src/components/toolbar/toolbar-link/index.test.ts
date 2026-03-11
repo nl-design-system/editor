@@ -11,7 +11,7 @@ describe('<clippy-toolbar-link>', () => {
     document.documentElement.lang = 'nl';
     document.documentElement.classList = 'ma-theme clippy-theme utrecht-root';
     document.body.innerHTML = `
-      <clippy-context identifier="toolbar-link-test-editor">
+      <clippy-context id="toolbar-link-test-editor">
         <clippy-toolbar-link></clippy-toolbar-link>
       </clippy-context>
     `;
@@ -109,7 +109,7 @@ describe('<clippy-toolbar-link>', () => {
   describe('dialog with active link', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
-        <clippy-context identifier="toolbar-link-active-test-editor">
+        <clippy-context id="toolbar-link-active-test-editor">
           <div slot="content"><p>Hello <a href="https://example.com">world</a> text</p></div>
           <clippy-toolbar-link></clippy-toolbar-link>
         </clippy-context>

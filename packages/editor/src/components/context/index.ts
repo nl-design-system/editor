@@ -41,7 +41,7 @@ export class Context extends LitElement {
   static override readonly styles = editorContextStyles;
 
   @provide({ context: identifierContext })
-  @property({ type: String })
+  @property({ attribute: 'id', type: String })
   identifier = 'clippy-editor-id';
 
   @property({ attribute: 'top-heading-level', reflect: true, type: Number })

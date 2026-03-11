@@ -12,7 +12,7 @@ describe('<clippy-editor>', () => {
     user = userEvent.setup();
     document.documentElement.lang = 'nl';
     document.body.innerHTML =
-      '<clippy-editor identifier="index-test-editor"><div slot="content" hidden><h1>Start met kopniveau 1</h1></div></clippy-editor>';
+      '<clippy-editor id="index-test-editor"><div slot="content" hidden><h1>Start met kopniveau 1</h1></div></clippy-editor>';
   });
 
   afterEach(() => {
