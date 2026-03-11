@@ -495,8 +495,7 @@ export class Toolbar extends LitElement {
     return html`
       <div class="clippy-toolbar__wrapper" role="toolbar" aria-label=${msg('Text editor toolbar')}>
         ${visibleGroups.map(
-          (group, index) => html`
-            ${index > 0 ? html`<div class="clippy-toolbar__divider"></div>` : nothing}
+          (group) => html`
             <div class="clippy-toolbar__group" role="group">
               ${group.map((itemId) => {
                 const renderer = renderers.get(itemId);

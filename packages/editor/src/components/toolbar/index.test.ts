@@ -98,13 +98,12 @@ describe('<clippy-toolbar>', () => {
       expect(groups.length).toBe(9);
     });
 
-    it('renders dividers between groups', async () => {
+    it('renders no divider elements (dividers are CSS pseudo-elements)', async () => {
       const toolbar = document.querySelector(tag)!;
       const dividers = toolbar.shadowRoot!.querySelectorAll('.clippy-toolbar__divider');
 
-      // There should be one fewer divider than groups (dividers between groups, not before first)
-      const groups = toolbar.shadowRoot!.querySelectorAll('[role="group"]');
-      expect(dividers.length).toBe(groups.length - 1);
+      // Dividers are now rendered via ::before pseudo-elements, not DOM nodes
+      expect(dividers.length).toBe(0);
     });
   });
 
