@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
-  const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+  const clippyEditor = page.locator('#clippy-editor-localhost');
   await clippyEditor.getByRole('button', { name: 'Vetgedrukt', exact: true }).waitFor();
 });
 
@@ -38,13 +38,13 @@ test.describe('Toolbar visibility', () => {
 
   buttons.forEach((button) => {
     test(`toolbar button "${button}" is visible`, async ({ page }) => {
-      const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+      const clippyEditor = page.locator('#clippy-editor-localhost');
       await expect(clippyEditor.getByRole('button', { name: button, exact: true })).toBeVisible();
     });
   });
 
   test('all toolbar comboboxes are visible', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     await expect(clippyEditor.getByRole('combobox', { name: 'Selecteer tekstformaat' })).toBeVisible();
     await expect(clippyEditor.getByRole('combobox', { name: 'Taal van het element' })).toBeVisible();
   });
@@ -52,7 +52,7 @@ test.describe('Toolbar visibility', () => {
 
 test.describe('Text formatting', () => {
   test('toggle bold on selected text', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     const editor = clippyEditor.getByRole('textbox');
 
     await editor
@@ -74,7 +74,7 @@ test.describe('Text formatting', () => {
   });
 
   test('toggle italic on selected text', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     const editor = clippyEditor.getByRole('textbox');
 
     await editor
@@ -94,7 +94,7 @@ test.describe('Text formatting', () => {
   });
 
   test('change text format to heading via combobox', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     const editor = clippyEditor.getByRole('textbox');
 
     await editor
@@ -113,7 +113,7 @@ test.describe('Text formatting', () => {
 
 test.describe('Lists', () => {
   test('insert ordered list', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     const editor = clippyEditor.getByRole('textbox');
 
     await editor.getByRole('paragraph').filter({ hasText: /^$/ }).first().fill('ordered item');
@@ -124,7 +124,7 @@ test.describe('Lists', () => {
   });
 
   test('insert unordered list', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     const editor = clippyEditor.getByRole('textbox');
 
     await editor.getByRole('paragraph').filter({ hasText: /^$/ }).first().fill('unordered item');
@@ -137,7 +137,7 @@ test.describe('Lists', () => {
 
 test.describe('Undo / Redo', () => {
   test('undo and redo text input', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     const editor = clippyEditor.getByRole('textbox');
 
     await editor
@@ -157,7 +157,7 @@ test.describe('Undo / Redo', () => {
   });
 
   test('undo button only enabled after action', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     const editor = clippyEditor.getByRole('textbox');
     const undoButton = clippyEditor.getByRole('button', { name: 'Ongedaan maken' });
 
@@ -174,7 +174,7 @@ test.describe('Undo / Redo', () => {
   });
 
   test('redo button only enabled after undoing an action', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     const editor = clippyEditor.getByRole('textbox');
     const redoButton = clippyEditor.getByRole('button', { name: 'Opnieuw' });
 
@@ -196,7 +196,7 @@ test.describe('Undo / Redo', () => {
 
 test.describe('Table', () => {
   test('insert a table', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     const editor = clippyEditor.getByRole('textbox');
 
     const initialTableCount = await editor.getByRole('table').count();
@@ -208,7 +208,7 @@ test.describe('Table', () => {
 
 test.describe('Keyboard shortcuts dialog', () => {
   test('open and close shortcuts dialog', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     await clippyEditor.getByRole('button', { name: 'Sneltoetsen' }).click();
 
     const dialog = clippyEditor.getByTestId('clippy-shortcuts-dialog').first();
@@ -221,12 +221,12 @@ test.describe('Keyboard shortcuts dialog', () => {
 
 test.describe('Link dialog', () => {
   test('Link button is visible', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     await expect(clippyEditor.getByRole('button', { name: 'Link', exact: true })).toBeVisible();
   });
 
   test('opens and closes the link dialog', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     await clippyEditor.getByRole('button', { name: 'Link', exact: true }).click();
 
     const dialog = clippyEditor.getByRole('dialog', { name: 'Link invoegen/bewerken' });
@@ -237,7 +237,7 @@ test.describe('Link dialog', () => {
   });
 
   test('adds a link to selected text', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     const editor = clippyEditor.getByRole('textbox');
 
     await editor.getByRole('paragraph').filter({ hasText: /^$/ }).first().click();
@@ -252,7 +252,7 @@ test.describe('Link dialog', () => {
   });
 
   test('shows link properties when editing an existing link', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     const editor = clippyEditor.getByRole('textbox');
 
     await editor.getByRole('paragraph').filter({ hasText: /^$/ }).first().click();
@@ -275,7 +275,7 @@ test.describe('Link dialog', () => {
   });
 
   test('removes a link while preserving its text', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     const editor = clippyEditor.getByRole('textbox');
 
     await editor.getByRole('paragraph').filter({ hasText: /^$/ }).first().click();
@@ -299,12 +299,12 @@ test.describe('Link dialog', () => {
 
 test.describe('Accessibility notifications', () => {
   test('shows notification count badge', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     await expect(clippyEditor.getByText('4 toegankelijkheidsmeldingen', { exact: true })).toBeVisible();
   });
 
   test('open drawer and list notifications', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     await clippyEditor.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
 
     const drawer = clippyEditor.getByTestId('clippy-validations-drawer');
@@ -313,7 +313,7 @@ test.describe('Accessibility notifications', () => {
   });
 
   test('navigate to node via Aanpassen button', async ({ page }) => {
-    const clippyEditor = page.locator('clippy-editor[id="clippy-editor-localhost"]');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
     await clippyEditor.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
 
     const drawer = clippyEditor.getByTestId('clippy-validations-drawer');
