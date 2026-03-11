@@ -13,7 +13,7 @@ export default css`
     padding-inline: var(--basis-space-inline-md);
   }
 
-  [role='group'] {
+  .clippy-toolbar__group {
     display: contents;
   }
 

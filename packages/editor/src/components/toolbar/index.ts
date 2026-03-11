@@ -497,7 +497,7 @@ export class Toolbar extends LitElement {
         ${visibleGroups.map(
           (group, index) => html`
             ${index > 0 ? html`<div class="clippy-toolbar__divider"></div>` : nothing}
-            <div role="group">
+            <div class="clippy-toolbar__group" role="group">
               ${group.map((itemId) => {
                 const renderer = renderers.get(itemId);
                 return renderer ? renderer() : nothing;
