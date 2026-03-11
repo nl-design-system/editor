@@ -7,14 +7,11 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <style>
       .ma-banner {
-        --ma-banner-copy-max-inline-size: 39rem;
-
         container-name: ma-banner;
         container-type: inline-size;
       }
 
       .ma-banner__content {
-        column-gap: var(--ma-banner-content-column-gap);
         display: grid;
         grid-template-areas:
           'header'
@@ -23,12 +20,10 @@
         grid-template-columns: auto;
         grid-template-rows: repeat(3, auto);
         margin-inline: auto;
-        max-inline-size: var(--ma-banner-content-max-inline-size);
-        padding-block-end: var(--ma-banner-content-padding-block-end);
-        padding-block-start: var(--ma-banner-content-padding-block-start);
-        padding-inline-end: var(--ma-banner-content-padding-inline-end);
-        padding-inline-start: var(--ma-banner-content-padding-inline-start);
-        row-gap: var(--ma-banner-content-row-gap);
+        max-inline-size: 1024px;
+        padding-block: var(--basis-space-block-4xl);
+        padding-inline: var(--basis-space-inline-xl);
+        row-gap: var(--basis-space-row-xl);
 
         & .ma-banner__header {
           grid-area: header;
@@ -45,46 +40,31 @@
         }
 
         @container ma-banner (min-width: 44rem) {
-          padding-block-end: var(--ma-banner-content-large-vw-padding-block-end);
-          padding-block-start: var(--ma-banner-content-large-vw-padding-block-start);
-          padding-inline-end: var(--ma-banner-content-large-vw-padding-inline-end);
-          padding-inline-start: var(--ma-banner-content-large-vw-padding-inline-start);
+          padding-block: var(--basis-space-block-6xl);
+          padding-inline: var(--basis-space-inline-xl);
         }
       }
 
       .ma-banner--hero {
-        background-color: var(--ma-banner-hero-background-color);
+        background-color: var(--basis-color-accent-1-bg-default);
       }
 
       .ma-page-section {
-        --ma-page-section-max-inline-size: 1024px;
-        --ma-page-section-margin-block-end: 0;
-        --ma-page-section-margin-block-start: 0;
-        --ma-page-section-padding-inline-end: 0;
-        --ma-page-section-padding-inline-start: 0;
-        --ma-page-section-row-gap: var(--basis-space-inline-lg);
-
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
         inline-size: 100%;
-        margin-block-end: var(--ma-page-section-margin-block-end, 0);
-        margin-block-start: var(--ma-page-section-margin-block-start, 0);
-        margin-inline-end: var(--ma-page-section-margin-inline-end, auto);
-        margin-inline-start: var(--ma-page-section-margin-inline-start, auto);
-        max-inline-size: var(--ma-page-section-max-inline-size);
-        padding-block-end: var(--ma-page-section-padding-block-end, 0);
-        padding-block-start: var(--ma-page-section-padding-block-start, 0);
-        padding-inline-end: var(--ma-page-section-padding-inline-end, 0);
-        padding-inline-start: var(--ma-page-section-padding-inline-start, 0);
-        row-gap: var(--ma-page-section-row-gap);
+        margin-block: 0;
+        margin-inline: auto;
+        max-inline-size: 1024px;
+        padding-block: 0;
+        padding-inline: 0;
+        row-gap: var(--basis-space-inline-lg);
       }
 
       .ma-page-section--with-space {
-        --ma-page-section-margin-block-end: var(--basis-space-inline-6xl);
-        --ma-page-section-margin-block-start: var(--basis-space-inline-6xl);
-        --ma-page-section-padding-inline-end: var(--basis-space-inline-xl);
-        --ma-page-section-padding-inline-start: var(--basis-space-inline-xl);
+        margin-block: var(--basis-space-block-6xl);
+        padding-inline: var(--basis-space-inline-xl);
       }
 
       /** Taken from https://kittygiraudel.com/snippets/sr-only-class/ */
@@ -179,6 +159,23 @@
         padding-inline: var(--basis-space-inline-md);
         padding-block: var(--basis-space-inline-md);
       }
+
+      .clippy-toolbar-config-demo {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-block-end: 1rem;
+      }
+      .clippy-toolbar-config-demo .clippy-json-textarea {
+        font-family: monospace;
+        font-size: var(--basis-text-font-size-sm);
+        resize: vertical;
+      }
+      .clippy-json-error-message {
+        color: var(--basis-color-negative-color-default);
+        font-size: var(--basis-text-font-size-md);
+      }
+
     </style>
   </head>
   <body class="utrecht-body">
@@ -321,36 +318,19 @@
           <label class="utrecht-form-label" for="toolbar-config-input">Toolbar configuratie (JSON)</label>
           <textarea
             id="toolbar-config-input"
-            class="utrecht-textarea"
+            class="clippy-json-textarea"
             rows="14"
             spellcheck="false"
             autocomplete="off"
             aria-describedby="toolbar-config-error"
           ></textarea>
-          <p id="toolbar-config-error" class="utrecht-form-field-error-message" hidden aria-live="polite"></p>
+          <p id="toolbar-config-error" class="clippy-json-error-message" hidden aria-live="polite"></p>
         </div>
         <clippy-editor id="clippy-editor-live-config">
           <div slot="content">
             <p>Pas de JSON aan om de toolbar live te wijzigen.</p>
           </div>
         </clippy-editor>
-        <style>
-          .clippy-toolbar-config-demo {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-block-end: 1rem;
-          }
-          .clippy-toolbar-config-demo .utrecht-textarea {
-            font-family: monospace;
-            font-size: 0.875rem;
-            resize: vertical;
-          }
-          .utrecht-form-field-error-message {
-            color: var(--ma-color-signal-rood-500, #d52b1e);
-            font-size: 0.875rem;
-          }
-        </style>
         <script>
           (function () {
             var defaultConfig = [
