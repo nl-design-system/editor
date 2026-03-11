@@ -87,7 +87,7 @@ describe('<clippy-toolbar>', () => {
       const wrapper = toolbar.shadowRoot!.querySelector('[role="toolbar"]');
 
       expect(wrapper).not.toBeNull();
-      expect(wrapper!.getAttribute('aria-label')).toBe('Werkbalk tekstbewerker');
+      expect(wrapper).toHaveAccessibleName('Werkbalk tekstbewerker');
     });
 
     it('renders all expected groups from default config', async () => {
