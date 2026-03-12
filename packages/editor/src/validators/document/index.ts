@@ -1,4 +1,5 @@
 import type { Editor } from '@tiptap/core';
+import type { Level } from '@tiptap/extension-heading';
 import type { Node } from 'prosemirror-model';
 import type { EditorSettings } from '@/types/settings.ts';
 import type { DocumentValidator, ValidationResult } from '@/types/validation.ts';
@@ -16,7 +17,16 @@ export const documentMustHaveCorrectHeadingOrder = (editor: Editor, settings?: E
       const headingLevel = node.attrs['level'];
 
       if (headingLevel < topHeadingLevel) {
+        const correctLevel = topHeadingLevel;
         errors.push({
+          apply: (fixEditor: Editor) => {
+            fixEditor
+              .chain()
+              .focus()
+              .setNodeSelection(pos)
+              .toggleHeading({ level: correctLevel as Level })
+              .run();
+          },
           boundingBox: getNodeBoundingBox(editor, pos),
           pos,
           severity: validationSeverity.ERROR,
@@ -29,7 +39,16 @@ export const documentMustHaveCorrectHeadingOrder = (editor: Editor, settings?: E
       }
 
       if (headingLevel > precedingHeadingLevel + 1) {
+        const correctLevel = precedingHeadingLevel + 1;
         errors.push({
+          apply: (fixEditor: Editor) => {
+            fixEditor
+              .chain()
+              .focus()
+              .setNodeSelection(pos)
+              .toggleHeading({ level: correctLevel as Level })
+              .run();
+          },
           boundingBox: getNodeBoundingBox(editor, pos),
           pos,
           severity: validationSeverity.WARNING,
