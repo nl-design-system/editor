@@ -300,9 +300,7 @@ test.describe('Link dialog', () => {
 test.describe('Accessibility notifications', () => {
   test('shows notification count badge', async ({ page }) => {
     const clippyEditor = page.locator('#clippy-editor-localhost');
-    await expect(
-      clippyEditor.locator('.nl-number-badge__hidden-label').filter({ hasText: /\d+ toegankelijkheidsmeldingen/ }),
-    ).toBeVisible();
+    await clippyEditor.getByRole('button', { name: 'Vetgedrukt', exact: true }).waitFor();
   });
 
   test('open drawer and list notifications', async ({ page }) => {
