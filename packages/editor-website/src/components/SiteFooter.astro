@@ -46,7 +46,7 @@
     grid-template-columns: auto 1fr auto;
     margin-inline: auto;
     max-inline-size: 1024px;
-    padding-block: var(--basis-space-block-xl);
+    padding-block: var(--basis-space-block-3xl);
     padding-inline: var(--basis-space-inline-2xl);
   }
 
@@ -56,6 +56,7 @@
     display: flex;
     flex-shrink: 0;
     gap: var(--basis-space-inline-sm);
+    text-decoration: none;
   }
 
   .clippy-website-footer__logo-label {
@@ -67,6 +68,10 @@
     color: inherit;
   }
 
+  .clippy-website-footer__about p {
+    margin-block: 0;
+  }
+
   .clippy-website-footer__nav {
     display: flex;
     flex-direction: column;
@@ -76,11 +81,6 @@
   .clippy-website-footer__nav-link {
     color: inherit;
     font-size: var(--basis-text-font-size-md);
-    text-decoration: none;
-  }
-
-  .clippy-website-footer__nav-link:hover {
-    text-decoration: underline;
   }
 </style>
 
