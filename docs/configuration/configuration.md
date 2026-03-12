@@ -22,7 +22,3 @@ Hieronder staat een editor met een custom toolbar configuratie: alleen tekststij
   </div>
 </clippy-editor>
 ```
-
-## Live configuratie demo
-
-Pas de JSON aan en zie de toolbar direct veranderen.

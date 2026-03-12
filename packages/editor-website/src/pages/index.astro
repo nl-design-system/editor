@@ -1,7 +1,8 @@
 ---
 import Document from '../layouts/document.astro';
 import Hero from '../components/Hero.astro';
-import { Content as IndexContent, frontmatter as indexFrontmatter } from '../../../../docs/index.md';
+import Section from '../components/Section.astro';
+import { frontmatter as indexFrontmatter } from '../../../../docs/index.md';
 ---
 
 <Document title="Rich-text Editor - NL Design System">
@@ -23,7 +24,7 @@ import { Content as IndexContent, frontmatter as indexFrontmatter } from '../../
         </a>
     </Hero>
 
-    <section class="ma-page-section ma-page-section--with-space">
+    <Section>
       <clippy-editor id="clippy-editor-localhost">
         <div slot="content">
           <h1>NL Design System Editor kop 1</h1>
@@ -75,6 +76,6 @@ import { Content as IndexContent, frontmatter as indexFrontmatter } from '../../
           <p>1 - Test<br />2 - Test<br />3 - Test</p>
         </div>
       </clippy-editor>
-    </section>
+    </Section>
   </main>
 </Document>

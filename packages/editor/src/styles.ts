@@ -4,8 +4,6 @@ export default css`
   :host {
     background-color: #fff;
     display: block;
-    padding-block: var(--basis-space-inline-xl);
-    padding-inline: var(--basis-space-inline-xl);
   }
 
   .ProseMirror-selectednode {

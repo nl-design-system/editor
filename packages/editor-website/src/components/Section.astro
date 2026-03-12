@@ -1,0 +1,11 @@
+---
+import type { MarkdownInstance } from 'astro';
+interface Props {
+  content?: MarkdownInstance<Record<string, string>>['Content'];
+}
+const { content: Content } = Astro.props;
+---
+<section class="ma-page-section ma-page-section--with-space">
+  {Content && <Content />}
+  <slot />
+</section>

@@ -1,6 +1,7 @@
 ---
 import Document from '../layouts/document.astro';
 import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
 import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guidelines.md';
 ---
 
@@ -8,7 +9,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
   <main>
     <Hero title={guidelinesFrontmatter['title']} intro={guidelinesFrontmatter['intro']} />
 
-    <section class="ma-page-section ma-page-section--with-space">
+    <Section>
       <clippy-context id="editor-1" enable-rules="node-should-not-be-empty">
         <div slot="content">
           <p>Hoi,</p>
@@ -1059,7 +1060,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
           </div>
         </div>
       </clippy-context>
-    </section>
+    </Section>
   </main>
 </Document>
 
