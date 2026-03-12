@@ -1,29 +1,16 @@
 ---
 import Document from '../layouts/document.astro';
+import Hero from '../components/Hero.astro';
+import { Content as ConfigurationContent, frontmatter as configurationFrontmatter } from '../../../../docs/configuration.md';
 ---
 
 <Document title="Toolbar configuratie - Rich-text Editor - NL Design System">
 
   <main>
-    <section class="ma-banner ma-banner--hero">
-      <div class="ma-banner__content">
-        <header class="ma-banner__header">
-          <h1 class="utrecht-heading-1">Toolbar configuratie</h1>
-        </header>
-        <div class="ma-banner__copy">
-          <p class="utrecht-paragraph">
-            De toolbar kan geconfigureerd worden via het <code>toolbar-config</code> attribuut. Dit attribuut accepteert
-            een JSON-array van groepen, waarbij elke groep een array van <code>items</code> is.
-          </p>
-        </div>
-      </div>
-    </section>
+    <Hero title={configurationFrontmatter['title']} intro={configurationFrontmatter['intro']} />
 
     <section class="ma-page-section ma-page-section--with-space">
-      <h2 class="utrecht-heading-2">Custom toolbar configuratie</h2>
-      <p class="utrecht-paragraph">
-        Hieronder staat een editor met een custom toolbar configuratie: alleen tekststijlen en een link-knop.
-      </p>
+      <ConfigurationContent />
 
       <clippy-editor
         id="clippy-editor-minimal-toolbar"
@@ -34,18 +21,6 @@ import Document from '../layouts/document.astro';
         </div>
       </clippy-editor>
 
-      <h3 class="utrecht-heading-3">Voorbeeld HTML</h3>
-      <pre class="utrecht-code-block"><code>&lt;clippy-editor
-  toolbar-config='[
-    ["bold", "italic", "underline"],
-    ["undo", "redo"],
-    ["link"]
-  ]'
-&gt;
-  &lt;div slot="content"&gt;
-    &lt;p&gt;Inhoud hier...&lt;/p&gt;
-  &lt;/div&gt;
-&lt;/clippy-editor&gt;</code></pre>
 
       <h2 class="utrecht-heading-2">Live configuratie demo</h2>
       <p class="utrecht-paragraph">Pas de JSON hieronder aan en zie de toolbar direct veranderen.</p>

@@ -1,0 +1,26 @@
+---
+interface Props {
+  title: string;
+  intro?: string;
+}
+const { title, intro } = Astro.props;
+---
+<section class="ma-banner ma-banner--hero">
+  <div class="ma-banner__content">
+    <header class="ma-banner__header">
+      <h1 class="utrecht-heading-1">{title}</h1>
+    </header>
+    {(intro) && (
+      <div class="ma-banner__copy">
+        {intro && <p class="utrecht-paragraph">{intro}</p>}
+      </div>
+    )}
+    {Astro.slots.has('footer') && (
+      <footer class="ma-banner__footer">
+        <div slot="footer" class="utrecht-action-group">
+          <slot name="footer" />
+        </div>
+      </footer>
+    )}
+  </div>
+</section>

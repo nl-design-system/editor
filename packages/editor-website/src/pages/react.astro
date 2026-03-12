@@ -1,24 +1,15 @@
 ---
 import Document from '../layouts/document.astro';
+import Hero from '../components/Hero.astro';
+import { frontmatter as reactFrontmatter } from '../../../../docs/react.md';
 import { ReactContextExample, ReactEditorExample } from '../components/ReactExamples';
 ---
 
 <Document title="React integratie - Rich-text Editor - NL Design System">
   <main>
-    <section class="ma-banner ma-banner--hero">
-      <div class="ma-banner__content">
-        <header class="ma-banner__header">
-          <h1 class="utrecht-heading-1">React integratie</h1>
-        </header>
-        <div class="ma-banner__copy">
-          <p class="utrecht-paragraph">
-            De Clippy Editor biedt React wrappers via <code>@lit/react</code>, waarmee de Web Components naadloos in een
+    <Hero title={reactFrontmatter['title']} intro="De Clippy Editor biedt React wrappers via '@lit/react', waarmee de Web Components naadloos in een
             React-applicatie gebruikt kunnen worden. Hieronder staan twee voorbeelden: een eenvoudige editor en een
-            samengestelde editor met context, toolbar, gutter en validatielijst.
-          </p>
-        </div>
-      </div>
-    </section>
+            samengestelde editor met context, toolbar, gutter en validatielijst." />
 
     <section class="ma-page-section ma-page-section--with-space">
       <h2 class="utrecht-heading-2">Voorbeeld 1: eenvoudige editor</h2>
@@ -87,5 +78,4 @@ export function ReactContextExample() &#123;
     </section>
   </main>
 </Document>
-
 

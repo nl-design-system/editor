@@ -1,21 +1,12 @@
 ---
 import Document from '../layouts/document.astro';
+import Hero from '../components/Hero.astro';
+import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guidelines.md';
 ---
 
 <Document title="Toegankelijkheidsrichtlijnen - Rich-text Editor - NL Design System">
   <main>
-    <section class="ma-banner ma-banner--hero">
-      <div class="ma-banner__content">
-        <header class="ma-banner__header">
-          <h1 class="utrecht-heading-1">Toegankelijkheidsrichtlijnen</h1>
-        </header>
-        <div class="ma-banner__copy">
-          <p class="utrecht-paragraph">
-            Voorbeelden van correcte en incorrecte inhoud in de rich-text editor, gebaseerd op WCAG-richtlijnen.
-          </p>
-        </div>
-      </div>
-    </section>
+    <Hero title={guidelinesFrontmatter['title']} intro={guidelinesFrontmatter['intro']} />
 
     <section class="ma-page-section ma-page-section--with-space">
       <clippy-context id="editor-1" enable-rules="node-should-not-be-empty">

@@ -1,40 +1,27 @@
 ---
 import Document from '../layouts/document.astro';
+import Hero from '../components/Hero.astro';
+import { Content as IndexContent, frontmatter as indexFrontmatter } from '../../../../docs/index.md';
 ---
 
 <Document title="Rich-text Editor - NL Design System">
   <main>
-    <section class="ma-banner ma-banner--hero">
-      <div class="ma-banner__content">
-        <header class="ma-banner__header">
-          <h1 class="utrecht-heading-1">NL Design System - Rich-text editor</h1>
-        </header>
-        <div class="ma-banner__copy">
-          <p class="utrecht-paragraph">
-            In dit project wordt een customized versie van de Tiptap rich text editor gebruikt, een flexibele en
-            uitbreidbare editor gebaseerd op ProseMirror.
-          </p>
-        </div>
-        <footer class="ma-banner__footer">
-          <div class="utrecht-action-group">
-            <a
-              class="nl-button nl-button--primary"
-              href="https://github.com/nl-design-system/editor"
-              target="_blank"
-            >
-              Clippy Editor op GitHub
-            </a>
-            <a
-              class="nl-button nl-button--secondary"
-              href="https://github.com/orgs/nl-design-system/projects/70/views/27"
-              target="_blank"
-            >
-              Clippy Editor Roadmap
-            </a>
-          </div>
-        </footer>
-      </div>
-    </section>
+    <Hero title={indexFrontmatter['title']} intro={indexFrontmatter['intro']}>
+        <a
+          class="nl-button nl-button--primary"
+          href="https://github.com/nl-design-system/editor"
+          target="_blank"
+        >
+          Clippy Editor op GitHub
+        </a>
+        <a
+          class="nl-button nl-button--secondary"
+          href="https://github.com/orgs/nl-design-system/projects/70/views/27"
+          target="_blank"
+        >
+          Clippy Editor Roadmap
+        </a>
+    </Hero>
 
     <section class="ma-page-section ma-page-section--with-space">
       <clippy-editor id="clippy-editor-localhost">

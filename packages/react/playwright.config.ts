@@ -17,8 +17,7 @@ export default defineConfig({
   testDir: './e2e',
   use: {
     baseURL: 'http://localhost:5175',
-    // @ts-expect-error process.env.CI
-    headless: !!process.env.CI,
+    // headless: false,
     screenshot: 'only-on-failure',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
