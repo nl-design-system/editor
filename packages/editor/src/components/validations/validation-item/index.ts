@@ -11,9 +11,9 @@ import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
 import { LitElement, html, nothing, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import type { ApplyValidationFix, ValidationSeverity } from '@/types/validation.ts';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
-import type { ValidationSeverity } from '@/types/validation.ts';
 import { identifierContext } from '@/context/identifierContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
@@ -46,6 +46,7 @@ export class ValidationItem extends LitElement {
   @property({ type: String }) severity!: ValidationSeverity;
   @property({ type: String }) description!: string;
   @property({ type: String }) href?: string;
+  @property({ type: Function }) apply?: ApplyValidationFix;
 
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })
@@ -65,15 +66,9 @@ export class ValidationItem extends LitElement {
   };
 
   readonly #applyFix = () => {
-    if (!this.editor) return;
-    const { state } = this.editor;
-    const { doc } = state;
-    const resolvedPos = doc.resolve(this.pos);
-    const node = resolvedPos.nodeAfter ?? resolvedPos.node();
-    if (!node) return;
-    const from = resolvedPos.nodeAfter ? this.pos : resolvedPos.before();
-    const to = from + node.nodeSize;
-    this.editor.chain().focus().deleteRange({ from, to }).run();
+    if (this.editor && typeof this.apply === 'function') {
+      this.apply(this.editor);
+    }
   };
 
   #handleValidationItemClick(event: Event, key: string) {
@@ -141,9 +136,11 @@ export class ValidationItem extends LitElement {
           <clippy-button purpose="secondary" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
             ${msg('Focus')}
           </clippy-button>
-          <clippy-button purpose="primary" @click=${this.#applyFix} aria-describedby=${ariaDescribedBy}>
-            ${msg('Apply')}
-          </clippy-button>
+          ${typeof this.apply === 'function'
+            ? html`<clippy-button purpose="primary" @click=${this.#applyFix} aria-describedby=${ariaDescribedBy}>
+                ${msg('Apply')}
+              </clippy-button>`
+            : nothing}
         </div>
       </li>
     `;

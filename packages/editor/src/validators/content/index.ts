@@ -54,6 +54,15 @@ const markShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): Validati
   if (node.type.name === 'text' && node.marks?.length) {
     if (!node.text || isEmptyOrWhitespaceString(node.text)) {
       return {
+        apply: (editor: Editor) => {
+          const { doc } = editor.state;
+          const resolvedPos = doc.resolve(pos);
+          const targetNode = resolvedPos.nodeAfter ?? resolvedPos.node();
+          if (!targetNode) return;
+          const from = resolvedPos.nodeAfter ? pos : resolvedPos.before();
+          const to = from + targetNode.nodeSize;
+          editor.chain().focus().deleteRange({ from, to }).run();
+        },
         boundingBox: getNodeBoundingBox(editor, pos),
         pos,
         severity: validationSeverity.INFO,
