@@ -5,17 +5,18 @@ import AlignRightIcon from '@tabler/icons/outline/align-right.svg?raw';
 import EditIcon from '@tabler/icons/outline/edit.svg?raw';
 import { NodeSelection } from '@tiptap/pm/state';
 import { html, LitElement, nothing } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { state } from 'lit/decorators.js';
 import { createRef, type Ref, ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
-import bubbleMenuStyles from './styles.ts';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
+import bubbleMenuStyles from './styles.ts';
 
 @localized()
-@customElement('clippy-bubble-menu')
+@safeCustomElement('clippy-bubble-menu')
 export class ImageBubbleMenu extends LitElement {
   @editor()
   private readonly editor: Editor | undefined;

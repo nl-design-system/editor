@@ -2,11 +2,12 @@ import { consume } from '@lit/context';
 import { localized } from '@lit/localize';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { map } from 'lit/directives/map.js';
 import type { ValidationsMap } from '@/types/validation.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
+import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents } from '@/events';
 import { type ValidationKey, validationMessages } from '@/messages';
 import gutterStyles from './styles.ts';
@@ -20,7 +21,7 @@ declare global {
 }
 
 @localized()
-@customElement(tag)
+@safeCustomElement(tag)
 export class Gutter extends LitElement {
   static override readonly styles = [gutterStyles, unsafeCSS(paragraphStyle)];
 

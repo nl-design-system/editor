@@ -1,12 +1,13 @@
 import { html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import '../toolbar';
 import '../validations/gutter';
 import '../validations/drawer';
 import '../validations/list';
 import '../bubble-menu';
-import { Context } from '../context';
+import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import '../content';
+import { Context } from '../context';
 import { type ToolbarConfig, defaultToolbarConfig } from '../toolbar/toolbar-config.ts';
 
 const EDITOR_ID = 'editor';
@@ -19,7 +20,7 @@ declare global {
   }
 }
 
-@customElement(tag)
+@safeCustomElement(tag)
 export class Editor extends Context {
   @property({ attribute: 'toolbar-config', type: Array })
   toolbarConfig: ToolbarConfig = defaultToolbarConfig;

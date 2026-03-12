@@ -2,11 +2,12 @@ import { consume } from '@lit/context';
 import { localized } from '@lit/localize';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import type { ValidationsMap } from '@/types/validation.ts';
 import '../validation-item';
 import { validationsContext } from '@/context/validationsContext.ts';
+import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents } from '@/events';
 import { type ValidationKey, validationMessages } from '@/messages';
 import type { ValidationItem } from '../validation-item';
@@ -21,7 +22,7 @@ declare global {
 }
 
 @localized()
-@customElement(tag)
+@safeCustomElement(tag)
 export class ValidationsList extends LitElement {
   static override readonly styles = [listStyles, unsafeCSS(paragraphStyle)];
 

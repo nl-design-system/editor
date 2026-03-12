@@ -2,11 +2,12 @@ import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import { html, LitElement, unsafeCSS } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { map } from 'lit/directives/map.js';
 import type { ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
+import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents } from '@/events';
 import { validationSeverity } from '@/validators/constants.ts';
 import tabsStyles from './styles.ts';
@@ -27,7 +28,7 @@ declare global {
 }
 
 @localized()
-@customElement(tag)
+@safeCustomElement(tag)
 export class Tabs extends LitElement {
   static override readonly styles = [tabsStyles, unsafeCSS(numberBadgeStyles)];
 

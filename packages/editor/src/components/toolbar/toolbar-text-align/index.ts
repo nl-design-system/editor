@@ -7,9 +7,10 @@ import AlignLeftIcon from '@tabler/icons/outline/align-left.svg?raw';
 import AlignRightIcon from '@tabler/icons/outline/align-right.svg?raw';
 import ChevronDownIcon from '@tabler/icons/outline/chevron-down.svg?raw';
 import { html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { tiptapContext } from '@/context/tiptapContext.ts';
+import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import toolbarTextAlignStyles from './styles.ts';
 
 const tag = 'clippy-toolbar-text-align';
@@ -32,7 +33,7 @@ const iconMap: Record<Alignment, string> = {
 };
 
 @localized()
-@customElement(tag)
+@safeCustomElement(tag)
 export class ToolbarTextAlign extends LitElement {
   @consume({ context: tiptapContext, subscribe: true })
   editor?: Editor;

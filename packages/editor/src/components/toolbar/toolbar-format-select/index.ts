@@ -2,9 +2,10 @@ import type { Editor } from '@tiptap/core';
 import type { Level } from '@tiptap/extension-heading';
 import { localized, msg, str } from '@lit/localize';
 import { css, html, LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { editor } from '@/decorators/TipTapDecorator.ts';
+import { property, state } from 'lit/decorators.js';
+import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import '@nl-design-system-community/clippy-components/clippy-combobox';
+import { editor } from '@/decorators/TipTapDecorator.ts';
 
 const tag = 'clippy-format-select';
 
@@ -25,7 +26,7 @@ const getConfiguredHeadingLevels = (editor: Editor): Level[] => {
 };
 
 @localized()
-@customElement(tag)
+@safeCustomElement(tag)
 export class FormatSelect extends LitElement {
   @property({ type: Boolean }) disabled = false;
   @property({ type: Boolean }) readOnly = false;

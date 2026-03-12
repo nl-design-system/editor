@@ -3,18 +3,19 @@ import { consume } from '@lit/context';
 import { msg } from '@lit/localize';
 import PhotoIcon from '@tabler/icons/outline/photo.svg?raw';
 import { html, LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ImageUpload } from '@/types/image.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
-import { CustomEvents } from '@/events';
+import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
+import { CustomEvents } from '@/events';
 import imageUploadDialogStyles from './styles.ts';
 
-@customElement('clippy-toolbar-image-upload')
+@safeCustomElement('clippy-toolbar-image-upload')
 export class ToolbarImageUpload extends LitElement {
   static override readonly styles = [imageUploadDialogStyles];
 
