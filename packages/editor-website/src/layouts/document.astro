@@ -51,7 +51,7 @@ const { title = 'Rich-text Editor - NL Design System' } = Astro.props;
     grid-template-columns: auto;
     grid-template-rows: repeat(3, auto);
     margin-inline: auto;
-    max-inline-size: 1024px;
+    max-inline-size: var(--basis-page-max-inline-size);
     padding-block: var(--basis-space-block-4xl);
     padding-inline: var(--basis-space-inline-xl);
     row-gap: var(--basis-space-row-xl);
@@ -87,7 +87,7 @@ const { title = 'Rich-text Editor - NL Design System' } = Astro.props;
     inline-size: 100%;
     margin-block: 0;
     margin-inline: auto;
-    max-inline-size: 1024px;
+    max-inline-size: var(--basis-page-max-inline-size);
     padding-block: 0;
     padding-inline: 0;
     row-gap: var(--basis-space-inline-lg);
@@ -98,28 +98,11 @@ const { title = 'Rich-text Editor - NL Design System' } = Astro.props;
     padding-inline: var(--basis-space-inline-xl);
   }
 
-  /** Taken from https://kittygiraudel.com/snippets/sr-only-class/ */
-  .clippy-sr-only {
-    block-size: 1px !important;
-    border: 0 !important;
-    clip: rect(1px, 1px, 1px, 1px) !important;
-    -webkit-clip-path: inset(50%) !important;
-    clip-path: inset(50%) !important;
-    inline-size: 1px !important;
-    margin-block: -1px !important;
-    margin-inline: -1px !important;
-    overflow: hidden !important;
-    padding-block: 0 !important;
-    padding-inline: 0 !important;
-    position: absolute !important;
-    white-space: nowrap !important;
-  }
-
   .clippy-guideline {
     --utrecht-space-around: 0;
     --utrecht-code-font-size: var(--basis-text-font-size-md);
     border: 1px solid var(--basis-color-default-border-default);
-    margin-block-end: 40px;
+    margin-block-end: var(--basis-space-block-4xl);
     margin-block-start: 0;
     margin-inline-end: 0;
     margin-inline-start: 0;
