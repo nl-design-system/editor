@@ -1,13 +1,12 @@
 ---
-import { Image } from 'astro:assets';
-import logo from "../assets/logo.svg";
+import logo from "../assets/logo.svg?raw";
 ---
 
 <footer class="clippy-website-footer">
   <div class="clippy-website-footer__inner">
     <div class="clippy-website-footer__logo">
       <a class="clippy-website-footer__logo-link" href="/" aria-label="NL Design System Editor – home">
-        <Image src={logo} alt="" width="40" height="40" aria-hidden="true"/>
+        <Fragment set:html={logo} />
         <span class="clippy-website-footer__logo-label">Clippy Editor</span>
       </a>
     </div>
