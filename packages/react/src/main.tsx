@@ -13,7 +13,7 @@ import { ClippyContext } from './components/Context.tsx';
 import { ClippyEditor } from './components/Editor.tsx';
 import { ClippyGutter } from './components/Gutter.tsx';
 import { ClippyToolbar } from './components/Toolbar.tsx';
-import { ClippyValidationsList } from './components/ValidationList.tsx';
+import { ClippyValidationsList } from './components/ValidationsList.tsx';
 
 const root = createRoot(document.getElementById('app')!);
 

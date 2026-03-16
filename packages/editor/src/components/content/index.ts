@@ -1,10 +1,11 @@
 import { consume } from '@lit/context';
 import { Editor as TiptapEditor } from '@tiptap/core';
 import { LitElement, css, html, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import type { ValidationsMap } from '@/types/validation.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
+import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 
 const tag = 'clippy-content';
 
@@ -26,7 +27,7 @@ declare global {
  * The element requires to have the context of an editor instance, so it must always
  * be rendered somewhere inside a <clippy-editor> element.
  */
-@customElement(tag)
+@safeCustomElement(tag)
 export class Content extends LitElement {
   static override readonly styles = [
     css`

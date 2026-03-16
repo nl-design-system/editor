@@ -4,3 +4,7 @@ node_modules
 # Ignore generated files
 dist
 CHANGELOG.md
+
+# Ignore doc fragment files in examples directories (not standalone documents)
+docs/**/examples
+

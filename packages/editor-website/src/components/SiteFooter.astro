@@ -1,0 +1,80 @@
+---
+import logo from "../assets/logo.svg?raw";
+---
+
+<footer class="clippy-website-footer">
+  <div class="clippy-website-footer__inner">
+    <div class="clippy-website-footer__logo">
+      <a class="clippy-website-footer__logo-link" href="/" aria-label="NL Design System Editor – home">
+        <Fragment set:html={logo} />
+        <span class="clippy-website-footer__logo-label">Clippy Editor</span>
+      </a>
+    </div>
+
+    <div class="clippy-website-footer__about">
+      <p>
+        De Clippy Editor is ontwikkeld door het Expertteam Digitale Toegankelijkheid in opdracht van{' '}
+        <a href="https://nldesignsystem.nl">NL Design System</a>.
+      </p>
+    </div>
+
+    <nav class="clippy-website-footer__nav" aria-label="Voettekst navigatie">
+      <a class="clippy-website-footer__nav-link" href="https://nldesignsystem.nl/project/kernteam/">Contact</a>
+      <a class="clippy-website-footer__nav-link" href="https://nldesignsystem.nl/privacyverklaring/">Privacyverklaring</a>
+      <a class="clippy-website-footer__nav-link" href="https://nldesignsystem.nl/toegankelijkheidsverklaring/">Toegankelijkheid</a>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .clippy-website-footer {
+    background-color: var(--basis-color-accent-1-bg-default);
+    border-block-start: 1px solid var(--basis-color-accent-1-border-default, transparent);
+    color: var(--basis-color-accent-1-color-default);
+  }
+
+  .clippy-website-footer__inner {
+    align-items: start;
+    display: grid;
+    gap: var(--basis-space-inline-5xl);
+    grid-template-columns: auto 1fr auto;
+    margin-inline: auto;
+    max-inline-size: var(--basis-page-max-inline-size);
+    padding-block: var(--basis-space-block-3xl);
+    padding-inline: var(--basis-space-inline-2xl);
+  }
+
+  .clippy-website-footer__logo-link {
+    align-items: center;
+    color: inherit;
+    display: flex;
+    flex-shrink: 0;
+    gap: var(--basis-space-inline-sm);
+    text-decoration: none;
+  }
+
+  .clippy-website-footer__logo-label {
+    font-size: var(--basis-text-font-size-lg);
+    font-weight: 700;
+  }
+
+  .clippy-website-footer__about a {
+    color: inherit;
+  }
+
+  .clippy-website-footer__about p {
+    margin-block: 0;
+  }
+
+  .clippy-website-footer__nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--basis-space-block-sm);
+  }
+
+  .clippy-website-footer__nav-link {
+    color: inherit;
+    font-size: var(--basis-text-font-size-md);
+  }
+</style>
+

@@ -1,0 +1,24 @@
+---
+import Document from '../layouts/document.astro';
+import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import { frontmatter as reactFrontmatter } from '../../../../docs/react/react.md';
+import { Content as ReactSection1 } from '../../../../docs/react/examples/full-feature-example.md';
+import { Content as ReactSection2 } from '../../../../docs/react/examples/custom-configuration-example.md';
+import { ReactContextExample, ReactEditorExample } from '../components/ReactExamples';
+---
+
+<Document title="React integratie - Rich-text Editor - NL Design System">
+  <main>
+    <Hero title={reactFrontmatter['title']} intro={reactFrontmatter['intro']} />
+
+    <Section content={ReactSection1}>
+      <ReactEditorExample client:only="react" />
+    </Section>
+
+    <Section content={ReactSection2}>
+      <ReactContextExample client:only="react" />
+    </Section>
+  </main>
+</Document>
+

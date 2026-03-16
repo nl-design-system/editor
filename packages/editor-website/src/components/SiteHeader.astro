@@ -1,0 +1,106 @@
+---
+import logo from "../assets/logo.svg?raw";
+
+const navItems = [
+  { href: '/', label: 'Editor' },
+  { href: '/configuration', label: 'Configuratie' },
+  { href: '/guidelines', label: 'Richtlijnen' },
+  { href: '/react', label: 'React' },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<header class="ma-site-header">
+  <div class="ma-site-header__inner">
+    <a class="ma-site-header__logo" href="/" aria-label="NL Design System Editor – home">
+      <Fragment set:html={logo} />
+      <span class="ma-site-header__logo-label">Clippy Editor</span>
+    </a>
+    <nav class="ma-site-header__nav" aria-label="Hoofdnavigatie">
+      <ul class="ma-site-header__nav-list" role="list">
+        {
+          navItems.map(({ href, label }) => {
+            const isActive = href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+            return (
+              <li>
+                <a
+                  class={`ma-site-header__nav-link${isActive ? ' ma-site-header__nav-link--active' : ''}`}
+                  href={href}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  {label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .ma-site-header {
+    background-color: var(--basis-color-accent-1-bg-default);
+    border-block-end: 1px solid var(--basis-color-accent-1-border-default, transparent);
+    color: var(--basis-color-accent-1-color-default);
+  }
+
+  .ma-site-header__inner {
+    align-items: center;
+    display: flex;
+    gap: var(--basis-space-inline-xl);
+    margin-inline: auto;
+    max-inline-size: var(--basis-page-max-inline-size);
+    padding-block: var(--basis-space-block-md);
+    padding-inline: var(--basis-space-inline-xl);
+  }
+
+  .ma-site-header__logo {
+    align-items: center;
+    color: inherit;
+    display: flex;
+    flex-shrink: 0;
+    gap: var(--basis-space-inline-sm);
+    text-decoration: none;
+  }
+
+  .ma-site-header__logo:hover {
+    text-decoration: underline;
+  }
+
+  .ma-site-header__logo-label {
+    font-size: var(--basis-text-font-size-lg);
+    font-weight: 700;
+  }
+
+  .ma-site-header__nav {
+    flex: 1;
+  }
+
+  .ma-site-header__nav-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--basis-space-inline-lg);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ma-site-header__nav-link {
+    color: inherit;
+    font-size: var(--basis-text-font-size-md);
+    text-decoration: none;
+  }
+
+  .ma-site-header__nav-link:hover {
+    text-decoration: underline;
+  }
+
+  .ma-site-header__nav-link--active {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+</style>
+

@@ -1,11 +1,12 @@
 import { ContextProvider, provide } from '@lit/context';
 import { Editor as TiptapEditor } from '@tiptap/core';
 import { LitElement, html } from 'lit';
-import { customElement, property, queryAssignedElements } from 'lit/decorators.js';
+import { property, queryAssignedElements } from 'lit/decorators.js';
 import type { ValidationResult } from '@/types/validation.ts';
 import { identifierContext } from '@/context/identifierContext.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
+import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editorExtensions } from '@/extensions';
 import { initializeLocale } from '@/localization.ts';
 import { sanitizeTopHeadingLevel } from '@/utils/sanitize.ts';
@@ -36,7 +37,7 @@ declare global {
  *       <clippy-content></clippy-content>
  *     </clippy-editor>
  */
-@customElement(tag)
+@safeCustomElement(tag)
 export class Context extends LitElement {
   static override readonly styles = editorContextStyles;
 

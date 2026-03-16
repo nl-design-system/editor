@@ -1,0 +1,213 @@
+---
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props {
+  title?: string;
+}
+const { title = 'Rich-text Editor - NL Design System' } = Astro.props;
+---
+
+<html lang="nl" dir="ltr" class="ma-theme clippy-theme utrecht-root">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <script>
+      import '@fontsource/fira-sans/400.css';
+      import '@fontsource/fira-sans/700.css';
+      import '@fontsource/source-sans-pro/400.css';
+      import '@fontsource/source-sans-pro/700.css';
+      import '@nl-design-system-community/ma-design-tokens/dist/theme.css';
+      import '@utrecht/design-tokens/dist/theme.css';
+      import '@utrecht/component-library-css/dist/index.css';
+      import '@nl-design-system-community/editor';
+      import '@nl-design-system-community/editor/theme.css';
+      import '@nl-design-system-community/editor/theme.css';
+      import '@nl-design-system-candidate/button-css/button.css';
+    </script>
+  </head>
+  <SiteHeader />
+  <body class="utrecht-body">
+    <slot />
+  </body>
+  <SiteFooter />
+</html>
+
+<style is:global>
+  .ma-banner {
+    container-name: ma-banner;
+    container-type: inline-size;
+  }
+
+  .ma-banner__content {
+    display: grid;
+    grid-template-areas:
+      'header'
+      'copy'
+      'footer';
+    grid-template-columns: auto;
+    grid-template-rows: repeat(3, auto);
+    margin-inline: auto;
+    max-inline-size: var(--basis-page-max-inline-size);
+    padding-block: var(--basis-space-block-4xl);
+    padding-inline: var(--basis-space-inline-xl);
+    row-gap: var(--basis-space-row-xl);
+
+    & .ma-banner__header {
+      grid-area: header;
+      max-inline-size: 622px;
+    }
+
+    & .ma-banner__copy {
+      grid-area: copy;
+      max-inline-size: 622px;
+    }
+
+    & .ma-banner__footer {
+      grid-area: footer;
+    }
+
+    @container ma-banner (min-width: 44rem) {
+      padding-block: var(--basis-space-block-6xl);
+      padding-inline: var(--basis-space-inline-xl);
+    }
+  }
+
+  .ma-banner--hero {
+    background-color: var(--basis-color-accent-1-bg-subtle);
+  }
+
+  .ma-page-section {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    inline-size: 100%;
+    margin-block: 0;
+    margin-inline: auto;
+    max-inline-size: var(--basis-page-max-inline-size);
+    padding-block: 0;
+    padding-inline: 0;
+    row-gap: var(--basis-space-inline-lg);
+  }
+
+  .ma-page-section--with-space {
+    margin-block: var(--basis-space-block-6xl);
+    padding-inline: var(--basis-space-inline-xl);
+  }
+
+  .clippy-guideline {
+    --utrecht-space-around: 0;
+    --utrecht-code-font-size: var(--basis-text-font-size-md);
+    border: 1px solid var(--basis-color-default-border-default);
+    margin-block-end: var(--basis-space-block-4xl);
+    margin-block-start: 0;
+    margin-inline-end: 0;
+    margin-inline-start: 0;
+  }
+
+  .clippy-guideline:first-of-type {
+    margin-block-start: var(--basis-space-block-3xl);
+  }
+
+  p + .clippy-guideline {
+    margin-block-start: var(--basis-space-block-3xl);
+  }
+
+  .clippy-guideline + .clippy-guideline {
+    margin-block-start: var(--basis-space-block-3xl);
+  }
+
+  .clippy-guideline__description {
+    padding-block: var(--basis-space-block-3xl);
+    padding-inline: var(--basis-space-inline-3xl);
+  }
+
+  .clippy-guideline__example {
+    border-block-end-width: 0;
+    border-block-start-width: 1px;
+    border-color: var(--basis-color-default-border-default);
+    border-inline-width: 0;
+    border-style: solid;
+    padding-block: var(--basis-space-block-xl);
+    padding-inline: var(--basis-space-inline-xl);
+  }
+
+  .clippy-guideline select {
+    display: block;
+    margin-bottom: 0.5em;
+  }
+
+  .clippy-guideline__icon {
+    height: 20px;
+    margin-inline-end: 8px;
+    vertical-align: middle;
+    width: 20px;
+  }
+
+  .clippy-guideline__title {
+    vertical-align: middle;
+  }
+
+  .clippy-guideline__badge {
+    --utrecht-paragraph-font-weight: bold;
+    font-size: var(--basis-text-font-size-lg);
+    margin-block-end: var(--basis-space-block-xl);
+    margin-block-start: 0;
+    display: flex;
+    gap: var(--basis-space-block-md);
+    align-items: center;
+  }
+
+  .clippy-guideline__badge--negative {
+    --utrecht-paragraph-color: currentColor;
+    color: var(--basis-color-negative-color-default);
+  }
+
+  .clippy-guideline__badge--positive {
+    --utrecht-paragraph-color: currentColor;
+    color: var(--basis-color-positive-color-default);
+  }
+
+  .clippy-guideline--negative {
+    --nlds-canvas-code-block-cursor: not-allowed;
+    --nlds-canvas-code-block-user-select: none;
+    --nlds-canvas-toolbar-copy-display: none;
+  }
+
+  .clippy-guideline__subtitle {
+    display: none;
+  }
+
+  .clippy-guideline__example [contenteditable] {
+    border-block-end: 1px solid transparent;
+    border-block-start: 1px solid transparent;
+    padding-inline: var(--basis-space-inline-md);
+  }
+
+  .clippy-guideline__validations {
+    border-block-start: 1px solid var(--basis-color-default-border-default);
+    padding-block: var(--basis-space-inline-md);
+    padding-inline: var(--basis-space-inline-md);
+  }
+
+  .clippy-toolbar-config-demo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-block-end: 1rem;
+  }
+
+  .clippy-toolbar-config-demo .clippy-json-textarea {
+    font-family: monospace;
+    font-size: var(--basis-text-font-size-sm);
+    resize: vertical;
+  }
+
+  .clippy-json-error-message {
+    color: var(--basis-color-negative-color-default);
+    font-size: var(--basis-text-font-size-md);
+  }
+</style>

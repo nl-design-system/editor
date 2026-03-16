@@ -6,9 +6,10 @@ import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import tableStyle from '@utrecht/table-css/dist/index.css?inline';
 import { LitElement, html, unsafeCSS } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import { ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import shortcutsDialogStyles from './styles.ts';
 
 const tag = 'clippy-shortcuts';
@@ -20,7 +21,7 @@ declare global {
 }
 
 @localized()
-@customElement(tag)
+@safeCustomElement(tag)
 export class ShortcutsDialog extends LitElement {
   @property({ attribute: false })
   public dialogRef?: Ref<HTMLDialogElement>;

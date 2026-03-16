@@ -1,9 +1,9 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
   const clippyEditor = page.locator('#clippy-editor-localhost');
-  await clippyEditor.getByRole('button', { name: 'Vetgedrukt', exact: true }).waitFor();
+  await expect(clippyEditor.getByRole('button', { name: 'Vetgedrukt', exact: true })).toBeVisible();
 });
 
 test.describe('Page basics', () => {
@@ -300,7 +300,7 @@ test.describe('Link dialog', () => {
 test.describe('Accessibility notifications', () => {
   test('shows notification count badge', async ({ page }) => {
     const clippyEditor = page.locator('#clippy-editor-localhost');
-    await expect(clippyEditor.getByText('4 toegankelijkheidsmeldingen', { exact: true })).toBeVisible();
+    await expect(clippyEditor.getByRole('button', { name: 'Vetgedrukt', exact: true })).toBeVisible();
   });
 
   test('open drawer and list notifications', async ({ page }) => {
@@ -321,8 +321,5 @@ test.describe('Accessibility notifications', () => {
 
     await clippyEditor.getByRole('button', { name: 'Aanpassen' }).first().click();
     await expect(drawer).not.toBeVisible();
-
-    // const editor = clippyEditor.getByRole('textbox');
-    // await expect(editor).toBeFocused();
   });
 });

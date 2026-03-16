@@ -3,7 +3,8 @@ import '@nl-design-system-community/clippy-components/clippy-lang-combobox';
 import { localized, msg } from '@lit/localize';
 import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 import { css, html, LitElement, unsafeCSS } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import { sourceLocale } from '@/generated/locale-codes.ts';
 import { findNearestAncestorAttribute } from '@/utils/domTraverser.ts';
@@ -26,7 +27,7 @@ declare global {
 }
 
 @localized()
-@customElement(tag)
+@safeCustomElement(tag)
 export class FormatSelect extends LitElement {
   @property({ type: Boolean }) disabled = false;
   @property({ type: Boolean }) readOnly = false;

@@ -1,0 +1,90 @@
+---
+import Document from '../layouts/document.astro';
+import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import { Content as ConfigurationContent, frontmatter as configurationFrontmatter } from '../../../../docs/configuration/configuration.md';
+import { Content as ConfigurationSection } from '../../../../docs/configuration/examples/live-example.md';
+---
+
+<Document title="Toolbar configuratie - Rich-text Editor - NL Design System">
+  <main>
+    <Hero title={configurationFrontmatter['title']} intro={configurationFrontmatter['intro']} />
+
+    <Section content={ConfigurationContent}>
+      <clippy-editor
+        id="clippy-editor-minimal-toolbar"
+        toolbar-config='[["bold","italic","underline"],["undo","redo"],["link"]]'
+      >
+        <div slot="content">
+          <p>Inhoud hier...</p>
+        </div>
+      </clippy-editor>
+    </Section>
+
+    <Section content={ConfigurationSection}>
+      <div class="clippy-toolbar-config-demo">
+        <label class="utrecht-form-label" for="toolbar-config-input">Toolbar configuratie (JSON)</label>
+        <textarea
+          id="toolbar-config-input"
+          class="clippy-json-textarea"
+          rows="14"
+          spellcheck="false"
+          autocomplete="off"
+          aria-describedby="toolbar-config-error"
+        ></textarea>
+        <p id="toolbar-config-error" class="clippy-json-error-message" hidden aria-live="polite"></p>
+      </div>
+      <clippy-editor id="clippy-editor-live-config">
+        <div slot="content">
+          <p>Pas de JSON aan om de toolbar live te wijzigen.</p>
+        </div>
+      </clippy-editor>
+    </Section>
+  </main>
+</Document>
+
+<script type="module">
+    const defaultConfig = [
+      ['bold', 'italic', 'underline', 'strike', 'code'],
+      ['undo', 'redo'],
+      ['ordered-list', 'bullet-list'],
+      ['link', 'horizontal-rule'],
+    ];
+
+    const textAreaElement = document.getElementById('toolbar-config-input');
+    const errorElement = document.getElementById('toolbar-config-error');
+    const liveEditorElement = document.getElementById('clippy-editor-live-config');
+
+    function applyDefaultConfig() {
+      if (!textAreaElement || !liveEditorElement) return;
+
+      textAreaElement.value = JSON.stringify(defaultConfig, null, 2);
+      liveEditorElement.setAttribute('toolbar-config', JSON.stringify(defaultConfig));
+    }
+
+    function applyConfig() {
+      if (!textAreaElement || !errorElement || !liveEditorElement) return;
+
+      try {
+        console.log('Parsing JSON:', textAreaElement.value);
+        const parsed = JSON.parse(textAreaElement.value);
+        liveEditorElement.setAttribute('toolbar-config', JSON.stringify(parsed));
+        errorElement.textContent = '';
+        errorElement.hidden = true;
+        textAreaElement.removeAttribute('aria-invalid');
+      } catch (e) {
+        console.log('Error parsing JSON:', e);
+        errorElement.textContent = 'Ongeldige JSON: ' + e.message;
+        errorElement.hidden = false;
+        textAreaElement.setAttribute('aria-invalid', 'true');
+      }
+    }
+
+    customElements.whenDefined('clippy-editor').then(() => {
+      applyDefaultConfig();
+    });
+
+    textAreaElement.addEventListener('input', () => {
+      applyConfig();
+    });
+</script>

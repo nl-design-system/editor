@@ -12,9 +12,10 @@ import '@nl-design-system-community/clippy-components/clippy-icon';
 import '@nl-design-system-community/clippy-components/clippy-combobox';
 import textBoxStyles from '@utrecht/textbox-css/dist/index.css?inline';
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
-import { customElement, query, state } from 'lit/decorators.js';
+import { query, state } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import { linkDialogStyles } from './styles.ts';
 
@@ -34,7 +35,7 @@ declare global {
 }
 
 @localized()
-@customElement(tag)
+@safeCustomElement(tag)
 export class ToolbarLink extends LitElement {
   static override readonly styles = [
     linkDialogStyles,

@@ -29,16 +29,17 @@ import './toolbar-language-select';
 import './toolbar-text-align';
 import UnderlineIcon from '@tabler/icons/outline/underline.svg?raw';
 import { LitElement, html, unsafeCSS, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import { createRef, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationsMap } from '@/types/validation.ts';
 import { identifierContext } from '@/context/identifierContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
+import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
-import { CustomEvents } from '@/events';
 import './toolbar-image-upload';
 import './toolbar-link';
+import { CustomEvents } from '@/events';
 import toolbarStyles from './styles.ts';
 import { type ToolbarConfig, type ToolbarItem, defaultToolbarConfig } from './toolbar-config.ts';
 import { isDefaultDir } from './toolbar-language-select/languages.ts';
@@ -52,7 +53,7 @@ declare global {
 }
 
 @localized()
-@customElement('clippy-toolbar')
+@safeCustomElement('clippy-toolbar')
 export class Toolbar extends LitElement {
   readonly #dialogRef: Ref<HTMLDialogElement> = createRef();
   readonly #focusNode: Ref<HTMLButtonElement> = createRef();
