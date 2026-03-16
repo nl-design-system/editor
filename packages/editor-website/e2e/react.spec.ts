@@ -3,8 +3,10 @@ import { expect, test } from '@playwright/test';
 test.beforeEach(async ({ page }) => {
   await page.goto('/react');
   // Wait for the React components to hydrate (client:only) — scope to the custom element tag
-  await page.locator('clippy-editor#react-editor-1').waitFor();
-  await page.locator('clippy-editor#react-editor-1').getByRole('button', { name: 'Vetgedrukt', exact: true }).waitFor();
+  await expect(page.locator('clippy-editor#react-editor-1')).toBeVisible();
+  await expect(
+    page.locator('clippy-editor#react-editor-1').getByRole('button', { name: 'Vetgedrukt', exact: true }),
+  ).toBeVisible();
 });
 
 test.describe('Page basics', () => {
@@ -83,7 +85,6 @@ test.describe('Voorbeeld 1: ClippyEditor', () => {
 
 test.describe('Voorbeeld 2: ClippyContext', () => {
   test('context editor renders', async ({ page }) => {
-    await page.locator('clippy-context#react-editor-2').waitFor();
     await expect(page.locator('clippy-context#react-editor-2')).toBeVisible();
   });
 

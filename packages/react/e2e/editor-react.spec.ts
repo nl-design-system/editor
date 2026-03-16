@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
-  await page.locator('clippy-editor').first().getByRole('button', { name: 'Vetgedrukt' }).waitFor();
+  await expect(page.locator('clippy-editor').first().getByRole('button', { name: 'Vetgedrukt' })).toBeVisible();
 });
 
 test.describe('Page basics', () => {

@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 test.beforeEach(async ({ page }) => {
   await page.goto('/configuration');
   const minimalEditor = page.locator('#clippy-editor-minimal-toolbar');
-  await minimalEditor.getByRole('button', { name: 'Vetgedrukt', exact: true }).waitFor();
+  await expect(minimalEditor.getByRole('button', { name: 'Vetgedrukt', exact: true })).toBeVisible();
 });
 
 test.describe('Page basics', () => {
