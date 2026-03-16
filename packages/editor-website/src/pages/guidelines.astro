@@ -3,6 +3,7 @@ import Document from '../layouts/document.astro';
 import Hero from '../components/Hero.astro';
 import Section from '../components/Section.astro';
 import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guidelines.md';
+import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
 ---
 
 <Document title="Toegankelijkheidsrichtlijnen - Rich-text Editor - NL Design System">
@@ -20,25 +21,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: lege alinea</span>
             </h2>
             <p>Je moet geen alinea's leeg houden om ruimte te maken.</p>
@@ -83,25 +66,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: lege inline elementen</span>
             </h2>
             <p>Ruim lege elementen op.</p>
@@ -130,25 +95,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: tekst onderstrepen</span>
             </h2>
             <p>...</p>
@@ -180,25 +127,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: lege list items</span>
             </h2>
             <p>...</p>
@@ -230,25 +159,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: lege list items</span>
             </h2>
             <p>...</p>
@@ -275,25 +186,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: geordende lijst zonder opmaak</span>
             </h2>
             <p>...</p>
@@ -320,25 +213,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: lijst zonder opmaak</span>
             </h2>
             <p>...</p>
@@ -374,25 +249,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: Lege Definition List</span>
             </h2>
             <p>...</p>
@@ -437,25 +294,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: Lege rij in een tabel</span>
             </h2>
             <p>...</p>
@@ -482,25 +321,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: Afbeelding zonder alt-tekst</span>
             </h2>
             <p>...</p>
@@ -528,25 +349,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: Koptekst zonder opmaak</span>
             </h2>
             <p>...</p>
@@ -575,25 +378,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: Kopniveau overslaan</span>
             </h2>
             <p>...</p>
@@ -634,25 +419,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: Tabel zonder kopcellen</span>
             </h2>
             <p>...</p>
@@ -692,25 +459,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: Tabel zonder kopcellen</span>
             </h2>
             <p>...</p>
@@ -738,25 +487,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: Meer dan 1 hoofdkop</span>
             </h2>
             <p>...</p>
@@ -783,25 +514,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: Geen hoofdkop</span>
             </h2>
             <p>...</p>
@@ -833,25 +546,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: Definitie zonder term</span>
             </h2>
             <p>...</p>
@@ -882,25 +577,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: Definitie zonder term</span>
             </h2>
             <p>...</p>
@@ -928,25 +605,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: Heading met bold</span>
             </h2>
             <p>...</p>
@@ -974,25 +633,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: Heading met italic</span>
             </h2>
             <p>...</p>
@@ -1023,25 +664,7 @@ import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guideline
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad"
-                aria-hidden="true"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                <path d="M9 10l.01 0"></path>
-                <path d="M15 10l.01 0"></path>
-                <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
-              </svg>
+              <Fragment set:html={iconMoodSad} />
               <span class="clippy-guideline__title">Niet doen: Onduidelijke linktekst</span>
             </h2>
             <p>...</p>

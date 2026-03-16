@@ -98,7 +98,13 @@ export class ValidationItem extends LitElement {
         ${this.href
           ? html`
               <p class="clippy-dialog__list-item-link nl-paragraph">
-                <a class="nl-link" href="${this.href}" target="_blank" aria-describedby=${ariaDescribedBy}>
+                <a
+                  class="nl-link"
+                  href="${this.href}"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-describedby=${ariaDescribedBy}
+                >
                   ${msg('Extensive explanation')}
                 </a>
               </p>

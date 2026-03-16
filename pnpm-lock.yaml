@@ -337,6 +337,9 @@ importers:
       '@nl-design-system-community/ma-design-tokens':
         specifier: 3.0.0
         version: 3.0.0
+      '@tabler/icons':
+        specifier: 3.38.0
+        version: 3.38.0
       '@types/react':
         specifier: 18.3.28
         version: 18.3.28

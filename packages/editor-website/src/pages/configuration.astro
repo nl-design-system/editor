@@ -43,8 +43,7 @@ import { Content as ConfigurationSection } from '../../../../docs/configuration/
   </main>
 </Document>
 
-<script>
-  (function () {
+<script type="module">
     const defaultConfig = [
       ['bold', 'italic', 'underline', 'strike', 'code'],
       ['undo', 'redo'],
@@ -52,34 +51,40 @@ import { Content as ConfigurationSection } from '../../../../docs/configuration/
       ['link', 'horizontal-rule'],
     ];
 
-    const textarea = document.getElementById('toolbar-config-input') as HTMLTextAreaElement | null;
-    const errorEl = document.getElementById('toolbar-config-error');
-    const editor = document.getElementById('clippy-editor-live-config');
+    const textAreaElement = document.getElementById('toolbar-config-input');
+    const errorElement = document.getElementById('toolbar-config-error');
+    const liveEditorElement = document.getElementById('clippy-editor-live-config');
 
-    if (!textarea || !errorEl || !editor) return;
+    function applyDefaultConfig() {
+      if (!textAreaElement || !liveEditorElement) return;
 
-    textarea.value = JSON.stringify(defaultConfig, null, 2);
+      textAreaElement.value = JSON.stringify(defaultConfig, null, 2);
+      liveEditorElement.setAttribute('toolbar-config', JSON.stringify(defaultConfig));
+    }
 
-    function applyConfig(value: string) {
+    function applyConfig() {
+      if (!textAreaElement || !errorElement || !liveEditorElement) return;
+
       try {
-        const parsed = JSON.parse(value) as unknown;
-        editor!.setAttribute('toolbar-config', JSON.stringify(parsed));
-        errorEl!.textContent = '';
-        (errorEl as HTMLElement).hidden = true;
-        textarea!.removeAttribute('aria-invalid');
+        console.log('Parsing JSON:', textAreaElement.value);
+        const parsed = JSON.parse(textAreaElement.value);
+        liveEditorElement.setAttribute('toolbar-config', JSON.stringify(parsed));
+        errorElement.textContent = '';
+        errorElement.hidden = true;
+        textAreaElement.removeAttribute('aria-invalid');
       } catch (e) {
-        errorEl!.textContent = 'Ongeldige JSON: ' + (e as Error).message;
-        (errorEl as HTMLElement).hidden = false;
-        textarea!.setAttribute('aria-invalid', 'true');
+        console.log('Error parsing JSON:', e);
+        errorElement.textContent = 'Ongeldige JSON: ' + e.message;
+        errorElement.hidden = false;
+        textAreaElement.setAttribute('aria-invalid', 'true');
       }
     }
 
     customElements.whenDefined('clippy-editor').then(() => {
-      applyConfig(textarea!.value);
+      applyDefaultConfig();
     });
 
-    textarea.addEventListener('input', () => {
-      applyConfig(textarea!.value);
+    textAreaElement.addEventListener('input', () => {
+      applyConfig();
     });
-  })();
 </script>

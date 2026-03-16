@@ -117,7 +117,7 @@ const { title = 'Rich-text Editor - NL Design System' } = Astro.props;
 
   .clippy-guideline {
     --utrecht-space-around: 0;
-    --utrecht-code-font-size: 16px;
+    --utrecht-code-font-size: var(--basis-text-font-size-md);
     border: 1px solid var(--basis-color-default-border-default);
     margin-block-end: 40px;
     margin-block-start: 0;
@@ -138,7 +138,8 @@ const { title = 'Rich-text Editor - NL Design System' } = Astro.props;
   }
 
   .clippy-guideline__description {
-    padding: 24px;
+    padding-block: var(--basis-space-block-3xl);
+    padding-inline: var(--basis-space-inline-3xl);
   }
 
   .clippy-guideline__example {
@@ -172,6 +173,9 @@ const { title = 'Rich-text Editor - NL Design System' } = Astro.props;
     font-size: var(--basis-text-font-size-lg);
     margin-block-end: var(--basis-space-block-xl);
     margin-block-start: 0;
+    display: flex;
+    gap: var(--basis-space-block-md);
+    align-items: center;
   }
 
   .clippy-guideline__badge--negative {
