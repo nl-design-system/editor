@@ -4,9 +4,12 @@ import Hero from '../components/Hero.astro';
 import Section from '../components/Section.astro';
 import { Content as ConfigurationContent, frontmatter as configurationFrontmatter } from '../../../../docs/configuration/configuration.md';
 import { Content as ConfigurationSection } from '../../../../docs/configuration/examples/live-example.md';
+import { useTranslations } from '../i18n/translations.ts';
+
+const t = useTranslations('nl');
 ---
 
-<Document title="Toolbar configuratie - Rich-text Editor - NL Design System">
+<Document title={t('configuration.title')}>
   <main>
     <Hero title={configurationFrontmatter['title']} intro={configurationFrontmatter['intro']} />
 
@@ -23,7 +26,7 @@ import { Content as ConfigurationSection } from '../../../../docs/configuration/
 
     <Section content={ConfigurationSection}>
       <div class="clippy-toolbar-config-demo">
-        <label class="utrecht-form-label" for="toolbar-config-input">Toolbar configuratie (JSON)</label>
+        <label class="utrecht-form-label" for="toolbar-config-input">{t('configuration.json.label')}</label>
         <textarea
           id="toolbar-config-input"
           class="clippy-json-textarea"

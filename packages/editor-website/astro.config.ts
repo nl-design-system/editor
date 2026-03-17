@@ -15,6 +15,14 @@ export default defineConfig({
     enabled: false,
   },
 
+  i18n: {
+    defaultLocale: 'nl',
+    locales: ['nl', 'en'],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
+
   integrations: [
     mdx({
       remarkPlugins: [remarkCustomHeaderId],

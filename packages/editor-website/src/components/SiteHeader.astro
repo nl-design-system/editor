@@ -1,27 +1,38 @@
 ---
 import logo from "../assets/logo.svg?raw";
+import type { Locale } from '../i18n/translations.ts';
+import { useTranslations } from '../i18n/translations.ts';
+
+const locale = (Astro.currentLocale ?? 'nl') as Locale;
+const t = useTranslations(locale);
 
 const navItems = [
-  { href: '/', label: 'Editor' },
-  { href: '/configuration', label: 'Configuratie' },
-  { href: '/guidelines', label: 'Richtlijnen' },
-  { href: '/react', label: 'React' },
+  { href: t('nav.href.editor'), label: t('nav.editor') },
+  { href: t('nav.href.configuration'), label: t('nav.configuration') },
+  { href: t('nav.href.guidelines'), label: t('nav.guidelines') },
+  { href: t('nav.href.react'), label: t('nav.react') },
 ];
 
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+// Determine the root path for "active" check per locale
+const localeRoot = locale === 'en' ? '/en' : '/';
 ---
 
 <header class="ma-site-header">
   <div class="ma-site-header__inner">
-    <a class="ma-site-header__logo" href="/" aria-label="NL Design System Editor – home">
+    <a class="ma-site-header__logo" href={t('nav.href.editor')} aria-label={t('site.logo.label')}>
       <Fragment set:html={logo} />
-      <span class="ma-site-header__logo-label">Clippy Editor</span>
+      <span class="ma-site-header__logo-label">{t('site.logo.name')}</span>
     </a>
-    <nav class="ma-site-header__nav" aria-label="Hoofdnavigatie">
+    <nav class="ma-site-header__nav" aria-label={t('nav.label')}>
       <ul class="ma-site-header__nav-list" role="list">
         {
           navItems.map(({ href, label }) => {
-            const isActive = href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+            const isActive =
+              href === localeRoot
+                ? currentPath === localeRoot
+                : currentPath.startsWith(href);
             return (
               <li>
                 <a
@@ -36,6 +47,11 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
           })
         }
       </ul>
+    </nav>
+    <nav class="ma-site-header__lang-nav" aria-label={t('nav.language.label')}>
+      <a class="ma-site-header__lang-link" href={t('nav.href.language')} hreflang={locale === 'en' ? 'nl' : 'en'}>
+        {t('nav.language')}
+      </a>
     </nav>
   </div>
 </header>
@@ -100,6 +116,20 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 
   .ma-site-header__nav-link--active {
     font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .ma-site-header__lang-nav {
+    flex-shrink: 0;
+  }
+
+  .ma-site-header__lang-link {
+    color: inherit;
+    font-size: var(--basis-text-font-size-md);
+    text-decoration: none;
+  }
+
+  .ma-site-header__lang-link:hover {
     text-decoration: underline;
   }
 </style>

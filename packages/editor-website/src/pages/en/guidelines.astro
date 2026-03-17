@@ -1,30 +1,33 @@
 ---
-import Document from '../layouts/document.astro';
-import Hero from '../components/Hero.astro';
-import Section from '../components/Section.astro';
-import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guidelines.md';
+import Document from '../../layouts/document.astro';
+import Hero from '../../components/Hero.astro';
+import Section from '../../components/Section.astro';
+import { frontmatter as guidelinesFrontmatter } from '../../../../../docs/en/guidelines.md';
+import { useTranslations } from '../../i18n/translations.ts';
 import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
+
+const t = useTranslations('en');
 ---
 
-<Document title="Toegankelijkheidsrichtlijnen - Rich-text Editor - NL Design System">
+<Document title={t('guidelines.title')}>
   <main>
     <Hero title={guidelinesFrontmatter['title']} intro={guidelinesFrontmatter['intro']} />
 
     <Section>
       <clippy-context id="editor-1" enable-rules="node-should-not-be-empty">
         <div slot="content">
-          <p>Hoi,</p>
+          <p>Hi,</p>
           <p>&nbsp;</p>
-          <p>Groetjes,</p>
+          <p>Kind regards,</p>
           <p>Robbert</p>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: lege alinea</span>
+              <span class="clippy-guideline__title">Don't: empty paragraph</span>
             </h2>
-            <p>Je moet geen alinea's leeg houden om ruimte te maken.</p>
+            <p>Do not use empty paragraphs to create spacing.</p>
           </div>
           <div class="clippy-guideline__example">
             <div class="clippy-canvas">
@@ -67,9 +70,9 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: lege inline elementen</span>
+              <span class="clippy-guideline__title">Don't: empty inline elements</span>
             </h2>
-            <p>Ruim lege elementen op.</p>
+            <p>Clean up empty elements.</p>
           </div>
           <div class="clippy-guideline__example">
             <div class="clippy-canvas">
@@ -90,13 +93,13 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
 
       <clippy-context id="editor-3" enable-rules="mark-should-not-be-underlined">
         <div slot="content">
-          <p>Er is onvoldoende verschil tussen de onderstreping van een <u>underline</u> en <a href="#">link</a>.</p>
+          <p>There is insufficient difference between the underline of an <u>underline</u> and a <a href="#">link</a>.</p>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: tekst onderstrepen</span>
+              <span class="clippy-guideline__title">Don't: underline text</span>
             </h2>
             <p>...</p>
           </div>
@@ -118,9 +121,9 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
       <clippy-context id="editor-4" enable-rules="node-should-not-be-empty">
         <div slot="content">
           <ul>
-            <li>Optie 1</li>
-            <li>Optie 2</li>
-            <li>Optie 3</li>
+            <li>Option 1</li>
+            <li>Option 2</li>
+            <li>Option 3</li>
             <li></li>
           </ul>
         </div>
@@ -128,7 +131,7 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: lege list items</span>
+              <span class="clippy-guideline__title">Don't: empty list items</span>
             </h2>
             <p>...</p>
           </div>
@@ -150,9 +153,9 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
       <clippy-context id="editor-5" enable-rules="node-should-not-be-empty">
         <div slot="content">
           <ol>
-            <li>Optie 1</li>
-            <li>Optie 2</li>
-            <li>Optie 3</li>
+            <li>Option 1</li>
+            <li>Option 2</li>
+            <li>Option 3</li>
             <li></li>
           </ol>
         </div>
@@ -160,7 +163,7 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: lege list items</span>
+              <span class="clippy-guideline__title">Don't: empty list items</span>
             </h2>
             <p>...</p>
           </div>
@@ -181,13 +184,13 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
 
       <clippy-context id="editor-6" enable-rules="document-must-have-semantic-lists">
         <div slot="content">
-          <p>1. Optie 1<br />2. Optie 2<br />3. Optie 3</p>
+          <p>1. Option 1<br />2. Option 2<br />3. Option 3</p>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: geordende lijst zonder opmaak</span>
+              <span class="clippy-guideline__title">Don't: ordered list without markup</span>
             </h2>
             <p>...</p>
           </div>
@@ -208,13 +211,13 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
 
       <clippy-context id="editor-7" enable-rules="document-must-have-semantic-lists">
         <div slot="content">
-          <p>- Optie 1<br />- Optie 2<br />- Optie 3</p>
+          <p>- Option 1<br />- Option 2<br />- Option 3</p>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: lijst zonder opmaak</span>
+              <span class="clippy-guideline__title">Don't: list without markup</span>
             </h2>
             <p>...</p>
           </div>
@@ -250,7 +253,7 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Lege Definition List</span>
+              <span class="clippy-guideline__title">Don't: empty definition list</span>
             </h2>
             <p>...</p>
           </div>
@@ -295,7 +298,7 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Lege rij in een tabel</span>
+              <span class="clippy-guideline__title">Don't: empty row in a table</span>
             </h2>
             <p>...</p>
           </div>
@@ -322,7 +325,7 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Afbeelding zonder alt-tekst</span>
+              <span class="clippy-guideline__title">Don't: image without alt text</span>
             </h2>
             <p>...</p>
           </div>
@@ -343,14 +346,14 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
 
       <clippy-context id="editor-11" enable-rules="document-should-not-have-heading-resembling-paragraph">
         <div slot="content">
-          <p><strong>Als het eruit ziet als een header, dan is het een header</strong></p>
+          <p><strong>If it looks like a heading, it should be a heading</strong></p>
           <p>Foo</p>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Koptekst zonder opmaak</span>
+              <span class="clippy-guideline__title">Don't: heading without proper markup</span>
             </h2>
             <p>...</p>
           </div>
@@ -371,15 +374,15 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
 
       <clippy-context id="editor-12" enable-rules="document-must-have-correct-heading-order">
         <div slot="content">
-          <h1>Kopniveau 1</h1>
-          <h3>Kopniveau 3</h3>
-          <p>Een niveau overslaan is niet de bedoeling!</p>
+          <h1>Heading level 1</h1>
+          <h3>Heading level 3</h3>
+          <p>Skipping a level is not allowed!</p>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Kopniveau overslaan</span>
+              <span class="clippy-guideline__title">Don't: skip heading levels</span>
             </h2>
             <p>...</p>
           </div>
@@ -403,15 +406,15 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
           <table>
             <thead>
               <tr>
-                <td colspan="4">Tabelkop</td>
+                <td colspan="4">Table heading</td>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Rij 1, cel 1</td>
-                <td>Rij 1, cel 2</td>
-                <td>Rij 1, cel 3</td>
-                <td>Rij 1, cel 4</td>
+                <td>Row 1, cell 1</td>
+                <td>Row 1, cell 2</td>
+                <td>Row 1, cell 3</td>
+                <td>Row 1, cell 4</td>
               </tr>
             </tbody>
           </table>
@@ -420,7 +423,7 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Tabel zonder kopcellen</span>
+              <span class="clippy-guideline__title">Don't: table without header cells</span>
             </h2>
             <p>...</p>
           </div>
@@ -445,11 +448,11 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
             <tbody>
               <tr>
                 <td>
-                  <h2>Kolom 1</h2>
+                  <h2>Column 1</h2>
                   <p>...</p>
                 </td>
                 <td>
-                  <h2>Kolom 2</h2>
+                  <h2>Column 2</h2>
                   <p>...</p>
                 </td>
               </tr>
@@ -460,7 +463,7 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Tabel zonder kopcellen</span>
+              <span class="clippy-guideline__title">Don't: table without header cells</span>
             </h2>
             <p>...</p>
           </div>
@@ -481,14 +484,14 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
 
       <clippy-context id="editor-15" enable-rules="document-must-have-single-heading-one">
         <div slot="content">
-          <h1>Kopniveau 1</h1>
-          <h1>Kopniveau 2</h1>
+          <h1>Heading level 1</h1>
+          <h1>Heading level 1 again</h1>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Meer dan 1 hoofdkop</span>
+              <span class="clippy-guideline__title">Don't: more than 1 main heading</span>
             </h2>
             <p>...</p>
           </div>
@@ -509,13 +512,13 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
 
       <clippy-context id="editor-16" enable-rules="document-must-have-top-level-heading">
         <div slot="content">
-          <p>Tekst zonder hoofdkop</p>
+          <p>Text without a main heading</p>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Geen hoofdkop</span>
+              <span class="clippy-guideline__title">Don't: no main heading</span>
             </h2>
             <p>...</p>
           </div>
@@ -538,8 +541,8 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
         <div slot="content">
           <dl>
             <div>
-              <dd>Losse definitie</dd>
-              <dt>Met een term erna</dt>
+              <dd>Standalone definition</dd>
+              <dt>With a term after it</dt>
             </div>
           </dl>
         </div>
@@ -547,7 +550,7 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Definitie zonder term</span>
+              <span class="clippy-guideline__title">Don't: definition without a term</span>
             </h2>
             <p>...</p>
           </div>
@@ -570,7 +573,7 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
         <div slot="content">
           <dl>
             <div>
-              <dd>Losse definitie</dd>
+              <dd>Standalone definition</dd>
             </div>
           </dl>
         </div>
@@ -578,7 +581,7 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Definitie zonder term</span>
+              <span class="clippy-guideline__title">Don't: definition without a term</span>
             </h2>
             <p>...</p>
           </div>
@@ -599,14 +602,14 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
 
       <clippy-context id="editor-19" enable-rules="heading-should-contain-bold-or-italic">
         <div slot="content">
-          <h1>Heading met <strong>bold</strong></h1>
+          <h1>Heading with <strong>bold</strong></h1>
           <p>...</p>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Heading met bold</span>
+              <span class="clippy-guideline__title">Don't: heading with bold</span>
             </h2>
             <p>...</p>
           </div>
@@ -627,14 +630,14 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
 
       <clippy-context id="editor-20" enable-rules="heading-should-contain-bold-or-italic">
         <div slot="content">
-          <h1>Heading met <em>italic</em></h1>
+          <h1>Heading with <em>italic</em></h1>
           <p>...</p>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Heading met italic</span>
+              <span class="clippy-guideline__title">Don't: heading with italic</span>
             </h2>
             <p>...</p>
           </div>
@@ -656,8 +659,8 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
       <clippy-context id="editor-21" enable-rules="link-should-not-be-too-generic">
         <div slot="content">
           <p>
-            Lees meer waarom een linktekst zo belangrijk is, in de blogpost "<a
-              href="https://example.com/blog/klik-hier">klik hier</a
+            Read more about why link text matters, in the blog post "<a
+              href="https://example.com/blog/click-here">click here</a
             >".
           </p>
         </div>
@@ -665,7 +668,7 @@ import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Onduidelijke linktekst</span>
+              <span class="clippy-guideline__title">Don't: unclear link text</span>
             </h2>
             <p>...</p>
           </div>
