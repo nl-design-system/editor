@@ -1,0 +1,27 @@
+---
+import Document from '../../layouts/document.astro';
+import Hero from '../../components/Hero.astro';
+import Section from '../../components/Section.astro';
+import { frontmatter as reactFrontmatter } from '../../../../../docs/en/react/react.md';
+import { Content as ReactSection1 } from '../../../../../docs/en/react/examples/full-feature-example.md';
+import { Content as ReactSection2 } from '../../../../../docs/en/react/examples/custom-configuration-example.md';
+import { ReactContextExample, ReactEditorExample } from '../../components/ReactExamples';
+import { useTranslations } from '../../i18n/translations.ts';
+
+const t = useTranslations('en');
+---
+
+<Document title={t('react.title')}>
+  <main>
+    <Hero title={reactFrontmatter['title']} intro={reactFrontmatter['intro']} />
+
+    <Section content={ReactSection1}>
+      <ReactEditorExample client:only="react" />
+    </Section>
+
+    <Section content={ReactSection2}>
+      <ReactContextExample client:only="react" />
+    </Section>
+  </main>
+</Document>
+
