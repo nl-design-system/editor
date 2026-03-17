@@ -1,6 +1,8 @@
 import type { Editor } from '@tiptap/core';
 import type { Node } from 'prosemirror-model';
+import type { ImageUpload } from '@/types/image.ts';
 import type { ContentValidator, ValidationResult } from '@/types/validation.ts';
+import { CustomEvents } from '@/events';
 import { contentValidations, validationSeverity } from '@/validators/constants.ts';
 import { getNodeBoundingBox, isBold, isItalic } from '@/validators/helpers.ts';
 
@@ -18,6 +20,22 @@ const isEmpty = (node: Node): boolean => {
 const imageMustHaveAltText = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
   if (node.type.name === 'image' && (!node.attrs['alt'] || isEmptyOrWhitespaceString(node.attrs['alt']))) {
     return {
+      apply: (fixEditor: Editor) => {
+        // Select the image so that the replace action in the dialog targets the right node.
+        fixEditor.chain().focus().setNodeSelection(pos).run();
+
+        const imageUpload: ImageUpload = {
+          name: node.attrs['alt'] ?? '',
+          type: 'image/*',
+          url: node.attrs['src'] ?? '',
+        };
+
+        globalThis.dispatchEvent(
+          new CustomEvent(CustomEvents.OPEN_IMAGE_DIALOG, {
+            detail: { files: [imageUpload], position: pos, replace: true },
+          }),
+        );
+      },
       boundingBox: getNodeBoundingBox(editor, pos),
       pos,
       severity: validationSeverity.INFO,
@@ -39,6 +57,19 @@ const nodeTypesRequiringContent = new Set([
 const nodeShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
   if (nodeTypesRequiringContent.has(node.type.name) && isEmpty(node)) {
     return {
+      apply: (fixEditor: Editor) => {
+        if (node.type.name === 'tableCell' || node.type.name === 'tableHeader') {
+          // Table cells cannot be deleted without breaking the table structure;
+          // place the cursor inside so the user can add content.
+          fixEditor
+            .chain()
+            .focus()
+            .setTextSelection(pos + 1)
+            .run();
+        } else {
+          fixEditor.chain().focus().setNodeSelection(pos).deleteSelection().run();
+        }
+      },
       boundingBox: getNodeBoundingBox(editor, pos),
       pos,
       severity: validationSeverity.INFO,
@@ -82,6 +113,14 @@ const linkShouldNotBeTooGeneric = (editor: Editor, node: Node, pos: number): Val
     const text = (node.text ?? node.textContent ?? '').trim().toLowerCase();
     if (genericLinkTexts.has(text)) {
       return {
+        apply: (fixEditor: Editor) => {
+          // Select the generic link text so the user can replace it with something descriptive
+          fixEditor
+            .chain()
+            .focus()
+            .setTextSelection({ from: pos, to: pos + node.nodeSize })
+            .run();
+        },
         boundingBox: getNodeBoundingBox(editor, pos),
         pos,
         severity: validationSeverity.INFO,
@@ -94,6 +133,14 @@ const linkShouldNotBeTooGeneric = (editor: Editor, node: Node, pos: number): Val
 const markShouldNotBeUnderlined = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
   if (node.type.name === 'text' && node.marks?.some((mark) => mark.type.name === 'underline')) {
     return {
+      apply: (fixEditor: Editor) => {
+        fixEditor
+          .chain()
+          .focus()
+          .setTextSelection({ from: pos, to: pos + node.nodeSize })
+          .unsetMark('underline')
+          .run();
+      },
       boundingBox: getNodeBoundingBox(editor, pos),
       pos,
       severity: validationSeverity.INFO,
@@ -105,6 +152,9 @@ const markShouldNotBeUnderlined = (editor: Editor, node: Node, pos: number): Val
 const headingMustNotBeEmpty = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
   if (node.type.name === 'heading' && isEmpty(node)) {
     return {
+      apply: (fixEditor: Editor) => {
+        fixEditor.chain().focus().setNodeSelection(pos).deleteSelection().run();
+      },
       boundingBox: getNodeBoundingBox(editor, pos),
       pos,
       severity: validationSeverity.ERROR,
@@ -121,6 +171,15 @@ const headingShouldNotContainBoldOrItalic = (editor: Editor, node: Node, pos: nu
     )
   ) {
     return {
+      apply: (fixEditor: Editor) => {
+        fixEditor
+          .chain()
+          .focus()
+          .setTextSelection({ from: pos + 1, to: pos + node.nodeSize - 1 })
+          .unsetMark('bold')
+          .unsetMark('italic')
+          .run();
+      },
       boundingBox: getNodeBoundingBox(editor, pos),
       pos,
       severity: validationSeverity.INFO,
@@ -134,6 +193,16 @@ const descriptionListMustContainTerm = (editor: Editor, node: Node, pos: number)
     const hasDefinitionTerm = node.content?.content.some((child) => child.type.name === 'definitionTerm');
     if (!hasDefinitionTerm) {
       return {
+        apply: (fixEditor: Editor) => {
+          const { schema } = fixEditor.state;
+          const termType = schema.nodes['definitionTerm'];
+          if (!termType) return;
+          const term = termType.create(null, schema.text('Term'));
+          const { tr } = fixEditor.state;
+          // Insert the new term at the beginning of the definition list
+          tr.insert(pos + 1, term);
+          fixEditor.view.dispatch(tr);
+        },
         boundingBox: getNodeBoundingBox(editor, pos),
         pos,
         severity: validationSeverity.ERROR,
@@ -155,6 +224,16 @@ const definitionDescriptionMustFollowTerm = (editor: Editor, node: Node, pos: nu
       const nextSibling = children[currentIndex + 1];
       if (nextSibling?.type.name !== 'definitionDescription') {
         return {
+          apply: (fixEditor: Editor) => {
+            const { schema } = fixEditor.state;
+            const descType = schema.nodes['definitionDescription'];
+            if (!descType) return;
+            const desc = descType.create(null, schema.text('Beschrijving'));
+            const { tr } = fixEditor.state;
+            // Insert the description immediately after the term node
+            tr.insert(pos + node.nodeSize, desc);
+            fixEditor.view.dispatch(tr);
+          },
           boundingBox: getNodeBoundingBox(editor, pos),
           pos,
           severity: validationSeverity.ERROR,

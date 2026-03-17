@@ -29,11 +29,27 @@ export class Gutter extends LitElement {
   mode: 'tooltip' | 'list' = 'tooltip';
 
   @state()
-  private activeTooltipKey: string | null = null;
+  private activeValidationItemKey: string | null = null;
 
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
+
+  readonly #closeValidationItem = () => {
+    this.activeValidationItemKey = null;
+  };
+
+  override connectedCallback() {
+    super.connectedCallback();
+    globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
+    globalThis.addEventListener(CustomEvents.APPLY_FIX, this.#closeValidationItem);
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
+    globalThis.removeEventListener(CustomEvents.APPLY_FIX, this.#closeValidationItem);
+  }
 
   #handleIndicatorClick(key: string) {
     if (this.mode === 'list') {
@@ -41,7 +57,7 @@ export class Gutter extends LitElement {
         new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST, { bubbles: true, composed: true, detail: { key } }),
       );
     } else {
-      this.activeTooltipKey = this.activeTooltipKey === key ? null : key;
+      this.activeValidationItemKey = this.activeValidationItemKey === key ? null : key;
     }
   }
 
@@ -54,9 +70,9 @@ export class Gutter extends LitElement {
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
         ${map(this.validationsContext?.entries(), ([key, { apply, boundingBox, pos, severity, tipPayload }]) => {
           const validationKey = key.split('_')[0] as ValidationKey;
-          const { description, href, tip } = validationMessages()[validationKey];
+          const { applyLabel, description, href, tip } = validationMessages()[validationKey];
           const tipHtml = tip?.(tipPayload) ?? null;
-          const isActive = this.activeTooltipKey === key;
+          const isActive = this.activeValidationItemKey === key;
           return (
             boundingBox &&
             html`<li
@@ -86,6 +102,7 @@ export class Gutter extends LitElement {
                   .severity=${severity}
                   .description=${description}
                   .href=${href}
+                  .applyLabel=${applyLabel}
                   .apply=${apply}
                 >
                   ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}

@@ -51,6 +51,7 @@ export class ValidationsDialog extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
+    globalThis.addEventListener(CustomEvents.APPLY_FIX, this.#closeDialog);
     globalThis.addEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpen);
     globalThis.addEventListener(CustomEvents.TAB_CHANGE, this.#handleTabChange);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
@@ -58,11 +59,23 @@ export class ValidationsDialog extends LitElement {
   }
 
   override disconnectedCallback() {
+    globalThis.removeEventListener(CustomEvents.APPLY_FIX, this.#closeDialog);
     globalThis.removeEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpen);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
     globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#focusValidationItem);
     super.disconnectedCallback();
   }
+
+  readonly #closeDialog = (event: Event) => {
+    if (event instanceof CustomEvent) {
+      const eventIdentifier = (event as CustomEvent<{ identifier?: string }>).detail?.identifier;
+      if (eventIdentifier !== this.identifier) return;
+    }
+    if (this.open) {
+      this.#dialogRef.value?.close();
+      this.open = false;
+    }
+  };
 
   readonly #toggleOpen = (event?: Event) => {
     // When triggered from a global event, only respond if the identifier matches this instance
@@ -151,7 +164,7 @@ export class ValidationsDialog extends LitElement {
           ${size > 0
             ? map(filteredValidations, ([key, { apply, pos, severity, tipPayload }]) => {
                 const validationKey = key.split('_')[0] as ValidationKey;
-                const { description, href, tip } = validationMessages()[validationKey];
+                const { applyLabel, description, href, tip } = validationMessages()[validationKey];
                 const tipHtml = tip?.(tipPayload) ?? null;
                 return html`
                   <clippy-validation-item
@@ -160,6 +173,7 @@ export class ValidationsDialog extends LitElement {
                     .severity=${severity}
                     .description=${description}
                     .href=${href}
+                    .applyLabel=${applyLabel}
                     .apply=${apply}
                   >
                     ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${tipHtml}</p>` : nothing}

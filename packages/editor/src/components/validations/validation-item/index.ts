@@ -46,6 +46,7 @@ export class ValidationItem extends LitElement {
   @property({ type: String }) severity!: ValidationSeverity;
   @property({ type: String }) description!: string;
   @property({ type: String }) href?: string;
+  @property({ type: String }) applyLabel?: string;
   @property({ type: Function }) apply?: ApplyValidationFix;
 
   @consume({ context: identifierContext, subscribe: true })
@@ -66,6 +67,13 @@ export class ValidationItem extends LitElement {
   };
 
   readonly #applyFix = () => {
+    this.dispatchEvent(
+      new CustomEvent(CustomEvents.APPLY_FIX, {
+        bubbles: true,
+        composed: true,
+        detail: { identifier: this.identifier },
+      }),
+    );
     if (this.editor && typeof this.apply === 'function') {
       this.apply(this.editor);
     }
@@ -138,7 +146,7 @@ export class ValidationItem extends LitElement {
           </clippy-button>
           ${typeof this.apply === 'function'
             ? html`<clippy-button purpose="primary" @click=${this.#applyFix} aria-describedby=${ariaDescribedBy}>
-                ${msg('Apply')}
+                ${this.applyLabel ?? msg('Apply')}
               </clippy-button>`
             : nothing}
         </div>

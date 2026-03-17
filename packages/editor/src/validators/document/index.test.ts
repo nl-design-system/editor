@@ -49,6 +49,7 @@ describe('Document validations', () => {
       const result = documentMustHaveCorrectHeadingOrder(editor);
       expect(result).toEqual([
         {
+          apply: expect.any(Function),
           boundingBox: expect.any(Object),
           pos: 7,
           severity: 'warning',
@@ -75,6 +76,7 @@ describe('Document validations', () => {
       const result = documentMustHaveCorrectHeadingOrder(editor, settings);
       expect(result).toEqual([
         {
+          apply: expect.any(Function),
           boundingBox: expect.any(Object),
           pos: 0,
           severity: 'error',
@@ -85,6 +87,7 @@ describe('Document validations', () => {
           },
         },
         {
+          apply: expect.any(Function),
           boundingBox: expect.any(Object),
           pos: 17,
           severity: 'warning',
@@ -131,6 +134,7 @@ describe('Document validations', () => {
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
       expect(mapArg.get('document-must-have-top-level-heading_1')).toEqual({
+        apply: expect.any(Function),
         boundingBox: expect.any(Object),
         pos: 1,
         severity: 'info',
@@ -317,6 +321,7 @@ describe('Document validations', () => {
         const result = documentMustHaveTableWithHeadings(editor);
         expect(result).toEqual([
           {
+            apply: expect.any(Function),
             boundingBox: expect.any(Object),
             pos: 7,
             severity: 'warning',
@@ -369,6 +374,7 @@ describe('Document validations', () => {
         const result = documentMustHaveTableWithHeadings(editor);
         expect(result).toEqual([
           {
+            apply: expect.any(Function),
             boundingBox: expect.any(Object),
             pos: 7,
             severity: 'warning',

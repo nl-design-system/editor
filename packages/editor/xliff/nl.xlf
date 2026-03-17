@@ -456,6 +456,18 @@
         <source>Apply</source>
         <target>Pas toe</target>
       </trans-unit>
+      <trans-unit id="s64ef2a6c2dd1d3d1">
+        <source>Edit</source>
+        <target>Bewerken</target>
+      </trans-unit>
+      <trans-unit id="s6490655f25ad112c">
+        <source>Edit the image to supply an alt text</source>
+        <target>Bewerk de afbeelding om een alt-tekst toe te voegen</target>
+      </trans-unit>
+      <trans-unit id="s89abbb5af3504a53">
+        <source>Remove the bold or italic formatting from the text in the heading.</source>
+        <target>Verwijder vetgedrukte of cursieve tekst uit de tekst in de kop.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
