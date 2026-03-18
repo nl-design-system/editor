@@ -64,14 +64,23 @@ describe('<clippy-toolbar>', () => {
   });
 
   it('adds an image when image upload is completed', async () => {
-    const button = page.getByRole('button', { name: 'Afbeelding' });
-    await button.click();
-    expect(page.getByTestId('clippy-image-upload-dialog')).not.toHaveAttribute('open');
+    // Upload directly via the hidden file input – this triggers the modal to open
+    // without requiring the editor to be available first (no editor guard on this path)
     const fileInput = page.getByTestId('clippy-image-upload');
-
     await userEvent.upload(fileInput, new File(['(⌐□_□)'], 'clippy.png', { type: 'image/png' }));
 
-    expect(page.getByRole('listitem').getByRole('img')).toHaveAttribute('alt', 'clippy.png');
+    // clippy-modal calls showModal() on its inner <dialog> – check that element's open attribute
+    await vi.waitFor(() => {
+      expect(page.getByRole('dialog', { name: 'Afbeelding invoegen' })).toHaveAttribute('open');
+    });
+
+    // A preview <img> should appear with the filename as its alt text
+    await vi.waitFor(() => {
+      expect(page.getByRole('img')).toHaveAttribute('alt', 'clippy.png');
+    });
+
+    // The alt-text input should be pre-filled with the filename
+    expect(page.getByLabelText('Alt-tekst:')).toHaveValue('clippy.png');
   });
 
   describe('group semantics', () => {
