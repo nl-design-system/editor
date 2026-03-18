@@ -42,13 +42,13 @@ export class Gutter extends LitElement {
   override connectedCallback() {
     super.connectedCallback();
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
-    globalThis.addEventListener(CustomEvents.APPLY_FIX, this.#closeValidationItem);
+    globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
   }
 
   override disconnectedCallback() {
     super.disconnectedCallback();
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
-    globalThis.removeEventListener(CustomEvents.APPLY_FIX, this.#closeValidationItem);
+    globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
   }
 
   #handleIndicatorClick(key: string) {
@@ -70,7 +70,7 @@ export class Gutter extends LitElement {
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
         ${map(this.validationsContext?.entries(), ([key, { boundingBox, correct, pos, severity, tipPayload }]) => {
           const validationKey = key.split('_')[0] as ValidationKey;
-          const { applyLabel, description, href, tip } = validationMessages()[validationKey];
+          const { customCorrectLabel, description, href, tip } = validationMessages()[validationKey];
           const tipHtml = tip?.(tipPayload) ?? null;
           const isActive = this.activeValidationItemKey === key;
           return (
@@ -102,8 +102,8 @@ export class Gutter extends LitElement {
                   .severity=${severity}
                   .description=${description}
                   .href=${href}
-                  .applyLabel=${applyLabel}
-                  .apply=${correct}
+                  .customCorrectLabel=${customCorrectLabel}
+                  .correct=${correct}
                 >
                   ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
                 </clippy-validation-item>

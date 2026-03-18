@@ -312,14 +312,14 @@
       </trans-unit>
       <trans-unit id="h3a4689bd2e1e317d">
         <source><x id="0" equiv-text="&lt;strong&gt;"/>Heading level <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> exceeds the highest allowed heading level
-              (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in this document.</source>
+          (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in this document.</source>
         <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> overschrijdt het hoogste toegestane kopniveau
           (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in dit document.</target>
       </trans-unit>
       <trans-unit id="h5f5c9257c67862ea">
         <source><x id="0" equiv-text="&lt;strong&gt;"/>Heading level <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> must not directly follow a
-            <x id="2" equiv-text="&lt;strong&gt;"/>heading level <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Use a heading at level <x id="4" equiv-text="${precedingHeadingLevel + 1}"/>
-            or lower.</source>
+          <x id="2" equiv-text="&lt;strong&gt;"/>heading level <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Use a heading at level <x id="4" equiv-text="${precedingHeadingLevel + 1}"/>
+          or lower.</source>
         <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> mag niet direct volgen op een
           <x id="2" equiv-text="&lt;strong&gt;"/>kopniveau <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Gebruik een kop op niveau <x id="4" equiv-text="${precedingHeadingLevel + 1}"/>
           of lager.</target>
@@ -444,10 +444,6 @@
         <source>Focus</source>
         <target>Focus</target>
       </trans-unit>
-      <trans-unit id="sb8f855b49234b81b">
-        <source>Apply</source>
-        <target>Pas toe</target>
-      </trans-unit>
       <trans-unit id="s64ef2a6c2dd1d3d1">
         <source>Edit</source>
         <target>Bewerken</target>
@@ -511,6 +507,10 @@
       <trans-unit id="se750d38689a2c65b">
         <source>Alt text:</source>
         <target>Alt-tekst:</target>
+      </trans-unit>
+      <trans-unit id="s4158d5fc29a1f991">
+        <source>Correct</source>
+        <target>Corrigeer</target>
       </trans-unit>
     </body>
   </file>

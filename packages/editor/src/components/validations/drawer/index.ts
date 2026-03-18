@@ -51,7 +51,7 @@ export class ValidationsDialog extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    globalThis.addEventListener(CustomEvents.APPLY_FIX, this.#closeDialog);
+    globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
     globalThis.addEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpen);
     globalThis.addEventListener(CustomEvents.TAB_CHANGE, this.#handleTabChange);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
@@ -59,7 +59,7 @@ export class ValidationsDialog extends LitElement {
   }
 
   override disconnectedCallback() {
-    globalThis.removeEventListener(CustomEvents.APPLY_FIX, this.#closeDialog);
+    globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
     globalThis.removeEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpen);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
     globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#focusValidationItem);
@@ -164,7 +164,7 @@ export class ValidationsDialog extends LitElement {
           ${size > 0
             ? map(filteredValidations, ([key, { correct, pos, severity, tipPayload }]) => {
                 const validationKey = key.split('_')[0] as ValidationKey;
-                const { applyLabel, description, href, tip } = validationMessages()[validationKey];
+                const { customCorrectLabel, description, href, tip } = validationMessages()[validationKey];
                 const tipHtml = tip?.(tipPayload) ?? null;
                 return html`
                   <clippy-validation-item
@@ -173,8 +173,8 @@ export class ValidationsDialog extends LitElement {
                     .severity=${severity}
                     .description=${description}
                     .href=${href}
-                    .applyLabel=${applyLabel}
-                    .apply=${correct}
+                    .customCorrectLabel=${customCorrectLabel}
+                    .correct=${correct}
                   >
                     ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${tipHtml}</p>` : nothing}
                   </clippy-validation-item>

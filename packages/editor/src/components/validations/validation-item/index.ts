@@ -46,8 +46,8 @@ export class ValidationItem extends LitElement {
   @property({ type: String }) severity!: ValidationSeverity;
   @property({ type: String }) description!: string;
   @property({ type: String }) href?: string;
-  @property({ type: String }) applyLabel?: string;
-  @property({ type: Function }) apply?: CorrectValidationFunction;
+  @property({ type: String }) customCorrectLabel?: string;
+  @property({ type: Function }) correct?: CorrectValidationFunction;
 
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })
@@ -68,14 +68,14 @@ export class ValidationItem extends LitElement {
 
   readonly #applyFix = () => {
     this.dispatchEvent(
-      new CustomEvent(CustomEvents.APPLY_FIX, {
+      new CustomEvent(CustomEvents.CORRECT_VALIDATION_ISSUE, {
         bubbles: true,
         composed: true,
         detail: { identifier: this.identifier },
       }),
     );
-    if (this.editor && typeof this.apply === 'function') {
-      this.apply(this.editor);
+    if (this.editor && typeof this.correct === 'function') {
+      this.correct(this.editor);
     }
   };
 
@@ -144,9 +144,9 @@ export class ValidationItem extends LitElement {
           <clippy-button purpose="secondary" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
             ${msg('Focus')}
           </clippy-button>
-          ${typeof this.apply === 'function'
+          ${typeof this.correct === 'function'
             ? html`<clippy-button purpose="primary" @click=${this.#applyFix} aria-describedby=${ariaDescribedBy}>
-                ${this.applyLabel ?? msg('Apply')}
+                ${this.customCorrectLabel ?? msg('Correct')}
               </clippy-button>`
             : nothing}
         </div>

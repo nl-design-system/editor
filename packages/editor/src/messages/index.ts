@@ -9,7 +9,7 @@ type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentV
 export type ValidationKey = ContentValidationKey | DocumentValidationKey;
 
 type ValidationMessages = {
-  [K in ValidationKey]: { applyLabel?: string; description: string; href?: string; tip?: TipFn };
+  [K in ValidationKey]: { customCorrectLabel?: string; description: string; href?: string; tip?: TipFn };
 };
 
 export type { ValidationMessages };
@@ -46,7 +46,7 @@ export const validationMessages = (): ValidationMessages =>
       tip: () => msg('Remove the bold or italic formatting from the text in the heading.'),
     },
     [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: {
-      applyLabel: msg('Edit'),
+      customCorrectLabel: msg('Edit'),
       description: msg('Image must have alternative text'),
       tip: () => msg('Edit the image to supply an alt text'),
     },
