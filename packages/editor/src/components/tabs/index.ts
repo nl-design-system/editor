@@ -6,10 +6,10 @@ import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { map } from 'lit/directives/map.js';
 import type { ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
+import { validationSeverity } from '@/constants';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents } from '@/events';
-import { validationSeverity } from '@/validators/constants.ts';
 import tabsStyles from './styles.ts';
 
 type TabKey = ValidationSeverity | 'all';

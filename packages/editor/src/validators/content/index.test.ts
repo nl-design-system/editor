@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createTestEditor } from '../../../test/createTestEditor';
-import { contentValidations } from '../constants';
+import { contentValidations } from '../../constants';
 
 describe('Content validations', () => {
   describe('Headings', () => {

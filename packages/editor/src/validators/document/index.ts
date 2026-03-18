@@ -1,9 +1,11 @@
 import type { Editor } from '@tiptap/core';
 import type { Level } from '@tiptap/extension-heading';
-import type { Node, NodeType, Schema } from 'prosemirror-model';
+import type { Node } from 'prosemirror-model';
 import type { EditorSettings } from '@/types/settings.ts';
 import type { DocumentValidator, ValidationResult } from '@/types/validation.ts';
-import { documentValidations, validationSeverity } from '@/validators/constants.ts';
+import { documentValidations, validationSeverity } from '@/constants';
+import { documentCorrectorMap } from '@/correctors';
+import { getParagraphLines, orderedListIndicator, unorderedListIndicator } from '@/correctors/helpers.ts';
 import { getNodeBoundingBox, isBold } from '@/validators/helpers.ts';
 
 const documentValidators = new Map<string, DocumentValidator>();
@@ -12,22 +14,18 @@ export const documentMustHaveCorrectHeadingOrder = (editor: Editor, settings?: E
   const errors: ValidationResult[] = [];
   const { topHeadingLevel = 1 } = settings || {};
   let precedingHeadingLevel = topHeadingLevel;
+
   editor.$doc.node.descendants((node, pos) => {
     if (node.type.name === 'heading') {
       const headingLevel = node.attrs['level'];
 
       if (headingLevel < topHeadingLevel) {
-        const correctLevel = topHeadingLevel;
         errors.push({
-          apply: (editor: Editor) => {
-            editor
-              .chain()
-              .focus()
-              .setNodeSelection(pos)
-              .toggleHeading({ level: correctLevel as Level })
-              .run();
-          },
           boundingBox: getNodeBoundingBox(editor, pos),
+          correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER](
+            pos,
+            topHeadingLevel as Level,
+          ),
           pos,
           severity: validationSeverity.ERROR,
           tipPayload: {
@@ -39,185 +37,29 @@ export const documentMustHaveCorrectHeadingOrder = (editor: Editor, settings?: E
       }
 
       if (headingLevel > precedingHeadingLevel + 1) {
-        const correctLevel = precedingHeadingLevel + 1;
         errors.push({
-          apply: (editor: Editor) => {
-            editor
-              .chain()
-              .focus()
-              .setNodeSelection(pos)
-              .toggleHeading({ level: correctLevel as Level })
-              .run();
-          },
           boundingBox: getNodeBoundingBox(editor, pos),
+          correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER](
+            pos,
+            (precedingHeadingLevel + 1) as Level,
+          ),
           pos,
           severity: validationSeverity.WARNING,
           tipPayload: { headingLevel: headingLevel, precedingHeadingLevel: precedingHeadingLevel },
         });
       }
+
       precedingHeadingLevel = headingLevel;
     }
   });
+
   return errors;
-};
-
-const getParagraphLines = (node: Node): string[] => {
-  const lines: string[] = [];
-  let buffer = '';
-  node.content.forEach((child) => {
-    if (child.type.name === 'hardBreak') {
-      if (buffer.trim().length) {
-        lines.push(buffer);
-      }
-      buffer = '';
-    } else {
-      buffer += child.textContent;
-    }
-  });
-  if (buffer.trim().length) {
-    lines.push(buffer);
-  }
-  return lines;
-};
-
-const orderedListIndicator = new RegExp(/^\d+[.)\]/ ]$/);
-const unorderedListIndicator = new RegExp(/^\s*([•\-*+])\s+/);
-const orderedPrefixPattern = /^\d+[.)\]/ ]\s*/;
-const unorderedPrefixPattern = /^\s*[•\-*+]\s+/;
-
-const getPrefixLength = (text: string, isOrdered: boolean): number => {
-  const match = isOrdered ? orderedPrefixPattern.exec(text) : unorderedPrefixPattern.exec(text);
-  return match ? match[0].length : 0;
-};
-
-/**
- * Find the absolute position of the first cell inside a table node.
- * Returns a position inside the cell's content (suitable for table commands).
- */
-const findFirstCellPositionInTable = (editor: Editor, tablePos: number, tableNode: Node): number | null => {
-  const { doc } = editor.state;
-  let cellPos: number | null = null;
-  doc.nodesBetween(tablePos + 1, tablePos + tableNode.nodeSize - 1, (node, nodePos) => {
-    if (cellPos !== null) return false;
-    if (node.type.name === 'tableCell' || node.type.name === 'tableHeader') {
-      cellPos = nodePos + 1;
-      return false;
-    }
-    return true;
-  });
-  return cellPos;
-};
-
-/**
- * Converts a single hard-break line of text into a list item node.
- * The list marker prefix is stripped; inline marks are lost because the line
- * has already been extracted as a plain string by `getParagraphLines`.
- */
-const createListItemFromLine = (
-  line: string,
-  isOrdered: boolean,
-  listItemType: NodeType,
-  paragraphType: NodeType,
-  schema: Schema,
-): Node => {
-  const prefixLength = getPrefixLength(line, isOrdered);
-  const textWithoutPrefix = line.slice(prefixLength);
-  const paragraph = paragraphType.create(null, textWithoutPrefix.length > 0 ? [schema.text(textWithoutPrefix)] : []);
-  return listItemType.create(null, [paragraph]);
-};
-
-/**
- * Converts a single-line paragraph node into a list item node.
- * Uses `Fragment.cut` to strip the list marker prefix while preserving
- * all inline marks (bold, italic, links, etc.) on the remaining content.
- */
-const createListItemFromParagraph = (
-  paragraphNode: Node,
-  isOrdered: boolean,
-  listItemType: NodeType,
-  paragraphType: NodeType,
-): Node => {
-  const prefixLength = getPrefixLength(paragraphNode.textContent, isOrdered);
-  const contentWithoutPrefix = paragraphNode.content.cut(prefixLength);
-  const paragraph = paragraphType.create(null, contentWithoutPrefix);
-  return listItemType.create(null, [paragraph]);
-};
-
-/**
- * Converts a paragraph node into one or more list item nodes.
- *
- * - Multi-line paragraphs (separated by hard breaks) produce one list item per
- *   line via `createListItemFromLine`.
- * - Single-line paragraphs produce one list item with inline marks preserved
- *   via `createListItemFromParagraph`.
- */
-const buildListItemsFromParagraph = (
-  paragraphNode: Node,
-  isOrdered: boolean,
-  listItemType: NodeType,
-  paragraphType: NodeType,
-  schema: Schema,
-): Node[] => {
-  const lines = getParagraphLines(paragraphNode);
-
-  if (lines.length > 1) {
-    return lines.map((line) => createListItemFromLine(line, isOrdered, listItemType, paragraphType, schema));
-  }
-
-  return [createListItemFromParagraph(paragraphNode, isOrdered, listItemType, paragraphType)];
-};
-
-const isParagraphListLike = (paragraphNode: Node, isOrdered: boolean): boolean =>
-  isOrdered
-    ? orderedListIndicator.test(paragraphNode.textContent.substring(0, 2))
-    : unorderedListIndicator.test(paragraphNode.textContent.substring(0, 2));
-
-const collectConsecutiveListParagraphs = (
-  doc: Node,
-  startPos: number,
-  isOrdered: boolean,
-): { endPos: number; paragraphs: Node[] } => {
-  const paragraphs: Node[] = [];
-  let currentPos = startPos;
-  let endPos = startPos;
-
-  while (currentPos < doc.content.size) {
-    const node = doc.nodeAt(currentPos);
-    if (node?.type.name !== 'paragraph' || !isParagraphListLike(node, isOrdered)) break;
-
-    paragraphs.push(node);
-    endPos = currentPos + node.nodeSize;
-    currentPos = endPos;
-  }
-
-  return { endPos, paragraphs };
-};
-
-const buildApply = (applyPos: number, isOrdered: boolean) => (editor: Editor) => {
-  const { doc, schema } = editor.state;
-
-  const listType = isOrdered ? schema.nodes['orderedList'] : schema.nodes['bulletList'];
-  const listItemType = schema.nodes['listItem'];
-  const paragraphType = schema.nodes['paragraph'];
-
-  if (!listType || !listItemType || !paragraphType) return;
-
-  const { endPos, paragraphs } = collectConsecutiveListParagraphs(doc, applyPos, isOrdered);
-
-  if (paragraphs.length === 0) return;
-
-  const listItems = paragraphs.flatMap((paragraph) =>
-    buildListItemsFromParagraph(paragraph, isOrdered, listItemType, paragraphType, schema),
-  );
-
-  const { tr } = editor.state;
-  tr.replaceWith(applyPos, endPos, listType.create(null, listItems));
-  editor.view.dispatch(tr);
 };
 
 export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult[] => {
   const errors: ValidationResult[] = [];
   const $blocks: { node: Node; pos: number }[] = [];
+
   editor.$doc.node.descendants((node: Node, pos: number) => {
     if (node.type.isBlock) {
       $blocks.push({ node, pos });
@@ -230,8 +72,8 @@ export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult[
     if (node.type.name !== 'paragraph') {
       continue;
     }
-    const firstPrefix = node.textContent.substring(0, 2);
 
+    const firstPrefix = node.textContent.substring(0, 2);
     const isOrdered = orderedListIndicator.test(firstPrefix);
     const isUnordered = unorderedListIndicator.test(firstPrefix);
 
@@ -245,8 +87,8 @@ export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult[
       const decrementedSecondPrefix = decrement(secondPrefix);
       if (decrementedSecondPrefix === firstPrefix) {
         errors.push({
-          apply: buildApply(pos, isOrdered),
           boundingBox: getNodeBoundingBox(editor, pos),
+          correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS](pos, isOrdered),
           pos,
           severity: validationSeverity.INFO,
           tipPayload: { prefix: firstPrefix.trim() },
@@ -257,19 +99,21 @@ export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult[
     const lines = getParagraphLines(node);
     if (lines.length > 1 && firstPrefix === decrement(lines[1].substring(0, 2))) {
       errors.push({
-        apply: buildApply(pos, isOrdered),
         boundingBox: getNodeBoundingBox(editor, pos),
+        correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS](pos, isOrdered),
         pos,
         severity: validationSeverity.INFO,
         tipPayload: { prefix: firstPrefix.trim() },
       });
     }
   }
+
   return errors;
 };
 
 export const documentMustHaveSingleHeadingOne = (editor: Editor): ValidationResult[] => {
   const headingOneNodes: { pos: number; node: Node }[] = [];
+
   editor.$doc.node.descendants((node, pos) => {
     if (node.type.name === 'heading' && node.attrs['level'] === 1) {
       headingOneNodes.push({ node, pos });
@@ -280,33 +124,32 @@ export const documentMustHaveSingleHeadingOne = (editor: Editor): ValidationResu
     const incorrectHeadingOneNodes = [...headingOneNodes];
     incorrectHeadingOneNodes.shift();
 
-    return incorrectHeadingOneNodes?.map(({ pos }) => ({
-      apply: (editor: Editor) => {
-        editor.chain().focus().setNodeSelection(pos).setHeading({ level: 2 }).run();
-      },
+    return incorrectHeadingOneNodes.map(({ pos }) => ({
       boundingBox: getNodeBoundingBox(editor, pos),
+      correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE](pos),
       pos,
       severity: validationSeverity.ERROR,
     }));
   }
+
   return [];
 };
 
 export const documentMustHaveTopLevelHeadingOne = (editor: Editor, settings?: EditorSettings): ValidationResult[] => {
   const { firstChild } = editor.$doc.node;
   const topHeadingLevel = settings?.topHeadingLevel ?? 1;
+
   if (topHeadingLevel === 1 && firstChild?.attrs['level'] !== topHeadingLevel) {
     return [
       {
-        apply: (editor: Editor) => {
-          editor.chain().focus().setNodeSelection(0).setHeading({ level: 1 }).run();
-        },
         boundingBox: getNodeBoundingBox(editor, 1),
+        correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE](),
         pos: 1,
         severity: validationSeverity.INFO,
       },
     ];
   }
+
   return [];
 };
 
@@ -328,29 +171,11 @@ const documentShouldNotHaveHeadingResemblingParagraphs = (editor: Editor): Valid
       textContent.trim().length <= 60
     ) {
       errors.push({
-        apply: (editor: Editor) => {
-          // Find the last heading before this paragraph to determine the correct level
-          let precedingHeadingLevel = 1;
-          editor.state.doc.nodesBetween(0, pos, (node) => {
-            if (node.type.name === 'heading') {
-              precedingHeadingLevel = node.attrs['level'] as number;
-            }
-            return true;
-          });
-
-          const targetLevel = Math.min(precedingHeadingLevel + 1, 6) as Level;
-
-          editor
-            .chain()
-            .focus()
-            .setNodeSelection(pos)
-            .setHeading({ level: targetLevel })
-            .setTextSelection({ from: pos + 1, to: pos + node.nodeSize - 1 })
-            .unsetMark('bold')
-            .unsetMark('italic')
-            .run();
-        },
         boundingBox: getNodeBoundingBox(editor, pos),
+        correct: documentCorrectorMap[documentValidations.DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS](
+          pos,
+          node.nodeSize,
+        ),
         pos,
         severity: validationSeverity.INFO,
       });
@@ -371,7 +196,6 @@ export const documentMustHaveTableWithHeadings = (editor: Editor): ValidationRes
     let hasHeaderRow = false;
     let hasHeaderColumn = false;
 
-    // Find first row with explicit type
     let firstRow: Node | undefined;
     node.descendants((child: Node) => {
       if (!firstRow && child.type.name === 'tableRow') {
@@ -381,12 +205,10 @@ export const documentMustHaveTableWithHeadings = (editor: Editor): ValidationRes
       return true;
     });
 
-    // Check if first row has header cells
     if (firstRow) {
       hasHeaderRow = firstRow.content.content.every((cell: Node) => cell.type.name === 'tableHeader');
     }
 
-    // Check first cell of each row for header cells
     if (!hasHeaderRow) {
       const firstCells: Node[] = [];
       node.descendants((row: Node) => {
@@ -395,27 +217,18 @@ export const documentMustHaveTableWithHeadings = (editor: Editor): ValidationRes
         }
       });
 
-      hasHeaderColumn =
-        firstCells.length > 0 &&
-        firstCells.every((cell: Node) => {
-          return cell.type.name === 'tableHeader';
-        });
+      hasHeaderColumn = firstCells.length > 0 && firstCells.every((cell: Node) => cell.type.name === 'tableHeader');
     }
 
     if (!hasHeaderRow && !hasHeaderColumn) {
       errors.push({
-        apply: (editor: Editor) => {
-          const tableNode = editor.state.doc.nodeAt(pos);
-          if (!tableNode) return;
-          const cellPos = findFirstCellPositionInTable(editor, pos, tableNode);
-          if (cellPos === null) return;
-          editor.chain().focus().setTextSelection(cellPos).toggleHeaderRow().run();
-        },
         boundingBox: getNodeBoundingBox(editor, pos),
+        correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_HEADINGS](pos),
         pos,
         severity: validationSeverity.WARNING,
       });
     }
+
     return true;
   });
 
@@ -439,14 +252,8 @@ export const documentMustHaveTableWithMultipleRows = (editor: Editor): Validatio
 
     if (rowCount < 2) {
       errors.push({
-        apply: (editor: Editor) => {
-          const tableNode = editor.state.doc.nodeAt(pos);
-          if (!tableNode) return;
-          const cellPos = findFirstCellPositionInTable(editor, pos, tableNode);
-          if (cellPos === null) return;
-          editor.chain().focus().setTextSelection(cellPos).addRowAfter().run();
-        },
         boundingBox: getNodeBoundingBox(editor, pos),
+        correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_MULTIPLE_ROWS](pos),
         pos,
         severity: validationSeverity.WARNING,
       });

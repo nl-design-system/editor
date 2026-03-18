@@ -58,7 +58,7 @@ export class ValidationsList extends LitElement {
 
     return html`
       <ul class="clippy-validations-list" role="list">
-        ${map(this.validationsContext.entries(), ([key, { apply, pos, severity, tipPayload }]) => {
+        ${map(this.validationsContext.entries(), ([key, { correct, pos, severity, tipPayload }]) => {
           const validationKey = key.split('_')[0] as ValidationKey;
           const { applyLabel, description, href, tip } = validationMessages()[validationKey];
           const tipHtml = tip?.(tipPayload) ?? null;
@@ -70,7 +70,7 @@ export class ValidationsList extends LitElement {
               .description=${description}
               .href=${href}
               .applyLabel=${applyLabel}
-              .apply=${apply}
+              .apply=${correct}
             >
               ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${tipHtml}</p>` : nothing}
             </clippy-validation-item>

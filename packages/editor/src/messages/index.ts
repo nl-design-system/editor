@@ -1,6 +1,6 @@
 import { msg, str } from '@lit/localize';
 import { html, type TemplateResult } from 'lit';
-import { contentValidations, documentValidations } from '@/validators/constants.ts';
+import { contentValidations, documentValidations } from '@/constants';
 
 type TipFn = (args?: Record<string, number | string | boolean>) => string | TemplateResult | null;
 

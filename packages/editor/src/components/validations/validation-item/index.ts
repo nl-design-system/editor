@@ -11,7 +11,7 @@ import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
 import { LitElement, html, nothing, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import type { ApplyValidationFix, ValidationSeverity } from '@/types/validation.ts';
+import type { CorrectValidationFunction, ValidationSeverity } from '@/types/validation.ts';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { identifierContext } from '@/context/identifierContext.ts';
@@ -47,7 +47,7 @@ export class ValidationItem extends LitElement {
   @property({ type: String }) description!: string;
   @property({ type: String }) href?: string;
   @property({ type: String }) applyLabel?: string;
-  @property({ type: Function }) apply?: ApplyValidationFix;
+  @property({ type: Function }) apply?: CorrectValidationFunction;
 
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })

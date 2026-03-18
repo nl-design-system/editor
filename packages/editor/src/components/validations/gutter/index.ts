@@ -68,7 +68,7 @@ export class Gutter extends LitElement {
 
     return html`
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
-        ${map(this.validationsContext?.entries(), ([key, { apply, boundingBox, pos, severity, tipPayload }]) => {
+        ${map(this.validationsContext?.entries(), ([key, { boundingBox, correct, pos, severity, tipPayload }]) => {
           const validationKey = key.split('_')[0] as ValidationKey;
           const { applyLabel, description, href, tip } = validationMessages()[validationKey];
           const tipHtml = tip?.(tipPayload) ?? null;
@@ -103,7 +103,7 @@ export class Gutter extends LitElement {
                   .description=${description}
                   .href=${href}
                   .applyLabel=${applyLabel}
-                  .apply=${apply}
+                  .apply=${correct}
                 >
                   ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
                 </clippy-validation-item>
