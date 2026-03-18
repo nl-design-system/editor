@@ -109,9 +109,47 @@ const findFirstCellPositionInTable = (editor: Editor, tablePos: number, tableNod
 };
 
 /**
- * Converts a single paragraph node into one or more list item nodes.
- * Hard-break lines are split into individual items; inline marks are preserved
- * for single-paragraph items via `Fragment.cut`.
+ * Converts a single hard-break line of text into a list item node.
+ * The list marker prefix is stripped; inline marks are lost because the line
+ * has already been extracted as a plain string by `getParagraphLines`.
+ */
+const createListItemFromLine = (
+  line: string,
+  isOrdered: boolean,
+  listItemType: NodeType,
+  paragraphType: NodeType,
+  schema: Schema,
+): Node => {
+  const prefixLength = getPrefixLength(line, isOrdered);
+  const textWithoutPrefix = line.slice(prefixLength);
+  const paragraph = paragraphType.create(null, textWithoutPrefix.length > 0 ? [schema.text(textWithoutPrefix)] : []);
+  return listItemType.create(null, [paragraph]);
+};
+
+/**
+ * Converts a single-line paragraph node into a list item node.
+ * Uses `Fragment.cut` to strip the list marker prefix while preserving
+ * all inline marks (bold, italic, links, etc.) on the remaining content.
+ */
+const createListItemFromParagraph = (
+  paragraphNode: Node,
+  isOrdered: boolean,
+  listItemType: NodeType,
+  paragraphType: NodeType,
+): Node => {
+  const prefixLength = getPrefixLength(paragraphNode.textContent, isOrdered);
+  const contentWithoutPrefix = paragraphNode.content.cut(prefixLength);
+  const paragraph = paragraphType.create(null, contentWithoutPrefix);
+  return listItemType.create(null, [paragraph]);
+};
+
+/**
+ * Converts a paragraph node into one or more list item nodes.
+ *
+ * - Multi-line paragraphs (separated by hard breaks) produce one list item per
+ *   line via `createListItemFromLine`.
+ * - Single-line paragraphs produce one list item with inline marks preserved
+ *   via `createListItemFromParagraph`.
  */
 const buildListItemsFromParagraph = (
   paragraphNode: Node,
@@ -123,18 +161,58 @@ const buildListItemsFromParagraph = (
   const lines = getParagraphLines(paragraphNode);
 
   if (lines.length > 1) {
-    return lines.map((line) => {
-      const prefixLen = getPrefixLength(line, isOrdered);
-      const cleanedText = line.slice(prefixLen);
-      const para = paragraphType.create(null, cleanedText.length > 0 ? [schema.text(cleanedText)] : []);
-      return listItemType.create(null, [para]);
-    });
+    return lines.map((line) => createListItemFromLine(line, isOrdered, listItemType, paragraphType, schema));
   }
 
-  const prefixLen = getPrefixLength(paragraphNode.textContent, isOrdered);
-  const cleanedContent = paragraphNode.content.cut(prefixLen);
-  const para = paragraphType.create(null, cleanedContent);
-  return [listItemType.create(null, [para])];
+  return [createListItemFromParagraph(paragraphNode, isOrdered, listItemType, paragraphType)];
+};
+
+const isParagraphListLike = (paragraphNode: Node, isOrdered: boolean): boolean =>
+  isOrdered
+    ? orderedListIndicator.test(paragraphNode.textContent.substring(0, 2))
+    : unorderedListIndicator.test(paragraphNode.textContent.substring(0, 2));
+
+const collectConsecutiveListParagraphs = (
+  doc: Node,
+  startPos: number,
+  isOrdered: boolean,
+): { endPos: number; paragraphs: Node[] } => {
+  const paragraphs: Node[] = [];
+  let currentPos = startPos;
+  let endPos = startPos;
+
+  while (currentPos < doc.content.size) {
+    const node = doc.nodeAt(currentPos);
+    if (node?.type.name !== 'paragraph' || !isParagraphListLike(node, isOrdered)) break;
+
+    paragraphs.push(node);
+    endPos = currentPos + node.nodeSize;
+    currentPos = endPos;
+  }
+
+  return { endPos, paragraphs };
+};
+
+const buildApply = (applyPos: number, isOrdered: boolean) => (editor: Editor) => {
+  const { doc, schema } = editor.state;
+
+  const listType = isOrdered ? schema.nodes['orderedList'] : schema.nodes['bulletList'];
+  const listItemType = schema.nodes['listItem'];
+  const paragraphType = schema.nodes['paragraph'];
+
+  if (!listType || !listItemType || !paragraphType) return;
+
+  const { endPos, paragraphs } = collectConsecutiveListParagraphs(doc, applyPos, isOrdered);
+
+  if (paragraphs.length === 0) return;
+
+  const listItems = paragraphs.flatMap((paragraph) =>
+    buildListItemsFromParagraph(paragraph, isOrdered, listItemType, paragraphType, schema),
+  );
+
+  const { tr } = editor.state;
+  tr.replaceWith(applyPos, endPos, listType.create(null, listItems));
+  editor.view.dispatch(tr);
 };
 
 export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult[] => {
@@ -161,43 +239,6 @@ export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult[
       // Not a potential list
       continue;
     }
-
-    const buildApply = (applyPos: number, applyIsOrdered: boolean) => (editor: Editor) => {
-      const { doc, schema } = editor.state;
-
-      const listType = applyIsOrdered ? schema.nodes['orderedList'] : schema.nodes['bulletList'];
-      const listItemType = schema.nodes['listItem'];
-      const paragraphType = schema.nodes['paragraph'];
-
-      if (!listType || !listItemType || !paragraphType) return;
-
-      const listItems: Node[] = [];
-      let endPos = applyPos;
-      let currentPos = applyPos;
-
-      while (currentPos < doc.content.size) {
-        const paragraphNode = doc.nodeAt(currentPos);
-        if (paragraphNode?.type.name !== 'paragraph') break;
-
-        const isListLike = applyIsOrdered
-          ? orderedListIndicator.test(paragraphNode.textContent.substring(0, 2))
-          : unorderedListIndicator.test(paragraphNode.textContent.substring(0, 2));
-
-        if (!isListLike) break;
-
-        endPos = currentPos + paragraphNode.nodeSize;
-        listItems.push(
-          ...buildListItemsFromParagraph(paragraphNode, applyIsOrdered, listItemType, paragraphType, schema),
-        );
-        currentPos = endPos;
-      }
-
-      if (listItems.length === 0) return;
-
-      const { tr } = editor.state;
-      tr.replaceWith(applyPos, endPos, listType.create(null, listItems));
-      editor.view.dispatch(tr);
-    };
 
     if ($blocks[index + 1]?.node.type.name === 'paragraph') {
       const secondPrefix = $blocks[index + 1].node.textContent.substring(0, 2);
