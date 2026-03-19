@@ -3,9 +3,12 @@ import Document from '../layouts/document.astro';
 import Hero from '../components/Hero.astro';
 import Section from '../components/Section.astro';
 import { frontmatter as indexFrontmatter } from '../../../../docs/index.md';
+import { useTranslations } from '../i18n/translations.ts';
+
+const t = useTranslations('nl');
 ---
 
-<Document title="Rich-text Editor - NL Design System">
+<Document title={t('index.title')}>
   <main>
     <Hero title={indexFrontmatter['title']} intro={indexFrontmatter['intro']}>
         <a
@@ -14,7 +17,7 @@ import { frontmatter as indexFrontmatter } from '../../../../docs/index.md';
           target="_blank"
           rel="noreferrer"
         >
-          Clippy Editor op GitHub
+          {t('index.cta.github')}
         </a>
         <a
           class="nl-button nl-button--secondary"
@@ -22,7 +25,7 @@ import { frontmatter as indexFrontmatter } from '../../../../docs/index.md';
           target="_blank"
           rel="noreferrer"
         >
-          Clippy Editor Roadmap
+          {t('index.cta.roadmap')}
         </a>
     </Hero>
 

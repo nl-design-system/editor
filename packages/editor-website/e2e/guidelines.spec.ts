@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/guidelines');
+  await page.goto('/richtlijnen');
   // Wait for the clippy-context custom element (not the inner textbox that gets the same id)
   await expect(page.locator('clippy-context#editor-1')).toBeVisible();
 });
