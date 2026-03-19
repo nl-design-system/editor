@@ -39,7 +39,7 @@ export class ValidationItem extends LitElement {
   ];
 
   @property({ type: String }) key: string = '';
-  @property({ type: String }) mode: 'tooltip' | 'list' = 'list';
+  @property({ type: String }) mode: 'tooltip' | 'list' | 'readonly' = 'list';
   @property({ type: Number }) pos: number = 0;
   @property({ type: String }) severity!: ValidationSeverity;
   @property({ type: String }) description!: string;
@@ -81,6 +81,31 @@ export class ValidationItem extends LitElement {
     }
   };
 
+  #renderActions() {
+    if (this.mode === 'readonly') {
+      return nothing;
+    }
+
+    return html`
+      <div class="clippy-dialog__list-item-actions">
+        ${this.mode === 'tooltip'
+          ? html`<clippy-button
+              @click=${(event: Event) => this.#handleValidationItemClick(event, this.key)}
+              icon-only
+              purpose="subtle"
+            >
+              <clippy-icon slot="iconStart">${unsafeSVG(ListDetailsIcon)}</clippy-icon>
+              ${msg('Open in drawer')}
+            </clippy-button>`
+          : nothing}
+        <clippy-button disabled>${msg('Ignore')}</clippy-button>
+        <clippy-button purpose="secondary" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
+          ${msg('Adjust')}
+        </clippy-button>
+      </div>
+    `;
+  }
+
   override render() {
     return html`
       <li
@@ -110,22 +135,7 @@ export class ValidationItem extends LitElement {
               </p>
             `
           : null}
-        <div class="clippy-dialog__list-item-actions">
-          ${this.mode === 'tooltip'
-            ? html`<clippy-button
-                @click=${(event: Event) => this.#handleValidationItemClick(event, this.key)}
-                icon-only
-                purpose="subtle"
-              >
-                <clippy-icon slot="iconStart">${unsafeSVG(ListDetailsIcon)}</clippy-icon>
-                ${msg('Open in drawer')}
-              </clippy-button>`
-            : nothing}
-          <clippy-button disabled>${msg('Ignore')}</clippy-button>
-          <clippy-button purpose="secondary" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
-            ${msg('Adjust')}
-          </clippy-button>
-        </div>
+        ${this.#renderActions()}
       </li>
     `;
   }

@@ -1,6 +1,8 @@
 export { Context } from './components/context';
 export { Editor } from './components/editor';
 export { Content } from './components/content';
+export { ContentView } from './components/content-view';
+export { HeadingStructure } from './components/heading-structure';
 export { Gutter } from './components/validations/gutter';
 export { ValidationsList } from './components/validations/list';
 export { Toolbar } from './components/toolbar';

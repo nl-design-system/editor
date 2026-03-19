@@ -8,6 +8,7 @@ import { frontmatter as indexFrontmatter } from '../../../../docs/index.md';
 <Document title="Rich-text Editor - NL Design System">
   <main>
     <Hero title={indexFrontmatter['title']} intro={indexFrontmatter['intro']}>
+      <Fragment slot="footer">
         <a
           class="nl-button nl-button--primary"
           href="https://github.com/nl-design-system/editor"
@@ -24,9 +25,13 @@ import { frontmatter as indexFrontmatter } from '../../../../docs/index.md';
         >
           Clippy Editor Roadmap
         </a>
+      </Fragment>
     </Hero>
 
     <Section>
+      <div class="clippy-index__preview-bar">
+        <a class="nl-link nl-button nl-button--secondary" href="/preview">Voorbeeld</a>
+      </div>
       <clippy-editor id="clippy-editor-localhost">
         <div slot="content">
           <h1>NL Design System Editor kop 1</h1>
@@ -81,3 +86,12 @@ import { frontmatter as indexFrontmatter } from '../../../../docs/index.md';
     </Section>
   </main>
 </Document>
+
+<style>
+  .clippy-index__preview-bar {
+    display: flex;
+    justify-content: flex-end;
+    padding-block-end: var(--basis-space-block-sm);
+  }
+</style>
+

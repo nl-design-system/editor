@@ -1,0 +1,101 @@
+---
+---
+
+<html lang="nl" dir="ltr" class="ma-theme clippy-theme utrecht-root">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voorbeeld – NL Design System Editor</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script>
+      import '@fontsource/fira-sans/400.css';
+      import '@fontsource/fira-sans/700.css';
+      import '@fontsource/source-sans-pro/400.css';
+      import '@fontsource/source-sans-pro/700.css';
+      import '@nl-design-system-community/ma-design-tokens/dist/theme.css';
+      import '@utrecht/design-tokens/dist/theme.css';
+      import '@utrecht/component-library-css/dist/index.css';
+      import '@nl-design-system-community/editor';
+      import '@nl-design-system-community/editor/theme.css';
+      import '@nl-design-system-candidate/button-css/button.css';
+    </script>
+  </head>
+  <body class="utrecht-body">
+    <clippy-content-view id="clippy-preview">
+      <div slot="content">
+        <h1>NL Design System Editor — voorbeeld</h1>
+        <p>
+          Onder die steden, <strong>welke</strong> <em>vanouds</em> aan de
+          <strong><em>grafelijke</em></strong> kroon van Holland gelijk zoovele edelgesteenten
+          flonkerden, en wier macht en rijkdom tot een hechten steun verstrekten aan des Landsheer
+          gezag, was Haarlem, gelijk genoeg bekend is, een der voornaamste.
+        </p>
+
+        <h3>Ligging en handel</h3>
+        <p>
+          Aan den over eener rivier gebouwd, waarvan zij zich als van twee armen bedienen kon, om,
+          aan de eene zijde, het Haarlemmermeer en de daarom gelegen landen, aan de andere zij IJ,
+          en door het IJ, de Zuiderzee te bereiken, had zij van deze gunstige ligging reeds vroeg
+          partij getrokken, om een
+          <a href="https://example.com">handel te drijven</a>.
+        </p>
+
+        <h3>Koopvaardij</h3>
+        <p>
+          De koopvaardij bloeide en vele schepen voeren uit naar verre kusten. De stad groeide en
+          haar inwoners werden welvarend.
+        </p>
+
+        <h4>Dat mag niet, hè</h4>
+        <p>
+          Dit is een voorbeeld van een onjuiste koppenstructuur: na kop 3 volgt hier een kop 4,
+          terwijl kop 3 nog niet is afgesloten. Dit geeft een validatiefout in de kantlijn.
+        </p>
+
+        <h2>Afbeeldingen</h2>
+        <img alt="Voorbeeldafbeelding 800×400 pixels" src="https://placehold.co/800x400" />
+
+        <h2>Lijsten</h2>
+
+        <h3>Correcte lijst</h3>
+        <ul>
+          <li>Eerste item</li>
+          <li>Tweede item</li>
+          <li>Derde item</li>
+        </ul>
+
+        <h3>Incorrecte genummerde lijst</h3>
+        <p>1 - Eerste item<br />2 - Tweede item<br />3 - Derde item</p>
+
+        <h2></h2>
+
+        <h2>Tabel</h2>
+        <table>
+          <tbody>
+            <tr>
+              <th>Naam</th>
+              <th colspan="3">Beschrijving</th>
+            </tr>
+            <tr>
+              <td>Rij 1, cel 1</td>
+              <td>Rij 1, cel 2</td>
+              <td>Rij 1, cel 3</td>
+              <td>Rij 1, cel 4</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Definitielijst</h2>
+        <dl>
+          <dt>Toegankelijkheid</dt>
+          <dd>
+            Het ontwerpen en ontwikkelen van producten zodat mensen met een beperking ze kunnen
+            gebruiken.
+          </dd>
+          <dt>WCAG</dt>
+          <dd>Web Content Accessibility Guidelines — internationale richtlijnen voor toegankelijke webcontent.</dd>
+        </dl>
+      </div>
+    </clippy-content-view>
+  </body>
+</html>

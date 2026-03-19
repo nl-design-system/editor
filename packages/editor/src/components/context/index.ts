@@ -1,6 +1,6 @@
 import { ContextProvider, provide } from '@lit/context';
 import { Editor as TiptapEditor } from '@tiptap/core';
-import { LitElement, html } from 'lit';
+import { LitElement, html, type PropertyValues } from 'lit';
 import { property, queryAssignedElements } from 'lit/decorators.js';
 import type { ValidationResult } from '@/types/validation.ts';
 import { identifierContext } from '@/context/identifierContext.ts';
@@ -76,6 +76,9 @@ export class Context extends LitElement {
   })
   disableRules: string[] = [];
 
+  @property({ attribute: 'readonly', reflect: true, type: Boolean })
+  readonly = false;
+
   @queryAssignedElements({ flatten: true, slot: 'content' })
   contentSlot!: HTMLElement[];
 
@@ -103,6 +106,7 @@ export class Context extends LitElement {
     const content = this.contentSlot.find((el) => el instanceof HTMLDivElement)?.innerHTML || '';
     this.editor = new TiptapEditor({
       content,
+      editable: !this.readonly,
       editorProps: {
         attributes: {
           id: this.identifier,
@@ -110,7 +114,12 @@ export class Context extends LitElement {
         },
       },
       extensions: editorExtensions(
-        { disableRules: this.disableRules, enableRules: this.enableRules, topHeadingLevel: sanitizedTopHeadingLevel },
+        {
+          disableRules: this.disableRules,
+          enableRules: this.enableRules,
+          readonly: this.readonly,
+          topHeadingLevel: sanitizedTopHeadingLevel,
+        },
         this.updateValidationsContext,
         this.identifier,
       ),
@@ -119,6 +128,13 @@ export class Context extends LitElement {
 
   override firstUpdated(): void {
     this.createEditor();
+  }
+
+  override updated(changedProperties: PropertyValues): void {
+    super.updated(changedProperties);
+    if (changedProperties.has('readonly') && this.editor) {
+      this.editor.setEditable(!this.readonly);
+    }
   }
 
   private isLocaleInitialized = false;
