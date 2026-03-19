@@ -309,17 +309,17 @@ test.describe('Accessibility notifications', () => {
 
     const drawer = clippyEditor.getByTestId('clippy-validations-drawer');
     await expect(drawer).toBeVisible();
-    await expect(clippyEditor.getByRole('button', { name: 'Aanpassen' }).first()).toBeVisible();
+    await expect(clippyEditor.getByRole('button', { name: 'Corrigeren' }).first()).toBeVisible();
   });
 
-  test('navigate to node via Aanpassen button', async ({ page }) => {
+  test('navigate to node via Focus button', async ({ page }) => {
     const clippyEditor = page.locator('#clippy-editor-localhost');
     await clippyEditor.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
 
     const drawer = clippyEditor.getByTestId('clippy-validations-drawer');
     await expect(drawer).toBeVisible();
 
-    await clippyEditor.getByRole('button', { name: 'Aanpassen' }).first().click();
+    await clippyEditor.getByRole('button', { name: 'Focus' }).first().click();
     await expect(drawer).not.toBeVisible();
   });
 });
