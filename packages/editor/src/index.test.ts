@@ -84,7 +84,7 @@ describe('<clippy-editor>', () => {
     expect(page.getByRole('button', { name: 'Tabel invoegen' })).toBeVisible();
     const toolbar = await page.getByLabelText('Werkbalk tekstbewerker').element();
     await toolbar.querySelector('clippy-toolbar-link').updateComplete;
-    await toolbar.querySelector('clippy-toolbar-image-upload').updateComplete;
+    await toolbar.querySelector('clippy-toolbar-image').updateComplete;
     await expect(page.getByRole('button', { name: 'Link', exact: true })).toBeVisible();
     expect(page.getByRole('button', { name: 'Afbeelding' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Sneltoetsen' })).toBeVisible();

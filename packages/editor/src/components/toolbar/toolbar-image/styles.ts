@@ -8,13 +8,13 @@ export const imageDialogStyles = css`
     padding: var(--basis-space-block-md);
     border: 2px solid var(--ma-color-paars-8);
     margin-block-end: var(--basis-space-block-sm);
-    background-color: var(--basis-color-default-background-subtle, #f5f5f5);
-    min-block-size: 80px;
+    background-color: var(--basis-color-default-background-subtle);
+    min-block-size: var(--basis-size-xl);
   }
 
   .toolbar-image__preview-img {
     max-inline-size: 100%;
-    max-block-size: 200px;
+    max-block-size: var(--basis-size-3xl);
     object-fit: contain;
   }
 
@@ -29,7 +29,7 @@ export const imageDialogStyles = css`
   }
 
   .toolbar-image__dimensions-fieldset {
-    border: 1px solid var(--basis-color-default-border-default);
+    border: var(--basis-border-width-sm) solid var(--basis-color-default-border-default);
     padding: var(--basis-space-block-md) var(--basis-space-inline-lg);
     margin-block-start: var(--basis-space-block-lg);
   }
@@ -56,5 +56,13 @@ export const imageDialogStyles = css`
     margin-block-start: var(--basis-space-block-xl);
     padding-block-start: var(--basis-space-block-xl);
     border-top: 1px solid var(--basis-color-default-border-default);
+  }
+
+  .toolbar-image__lock-button {
+    margin-block-end: var(--basis-space-block-lg);
+  }
+
+  .toolbar-image__remove-button {
+    margin-inline-end: auto;
   }
 `;

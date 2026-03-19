@@ -21,7 +21,7 @@ import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
 import { imageDialogStyles } from './styles.ts';
 
-const tag = 'clippy-toolbar-image-upload';
+const tag = 'clippy-toolbar-image';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -241,7 +241,6 @@ export class ToolbarImageUpload extends LitElement {
     return html`
       <clippy-button
         @click=${this.#openForEdit}
-        aria-controls="clippy-image-dialog"
         .pressed=${isEditing}
         icon-only
         toggle
@@ -348,7 +347,6 @@ export class ToolbarImageUpload extends LitElement {
                       class="utrecht-textbox utrecht-textbox--html-input"
                       @input=${this.#handleWidthInput}
                       min="1"
-                      placeholder="px"
                     />
                   </div>
                 </div>
@@ -361,7 +359,7 @@ export class ToolbarImageUpload extends LitElement {
                     this.constrainProportions = !this.constrainProportions;
                   }}
                   .pressed=${String(this.constrainProportions)}
-                  style="margin-block-end: var(--basis-space-block-lg);"
+                  class="toolbar-image__lock-button"
                 >
                   <clippy-icon slot="iconStart">
                     ${this.constrainProportions ? unsafeSVG(LockIcon) : unsafeSVG(LockOpenIcon)}
@@ -396,7 +394,7 @@ export class ToolbarImageUpload extends LitElement {
                       purpose="secondary"
                       hint="negative"
                       @click=${this.#removeImage}
-                      style="margin-inline-end: auto"
+                      class="toolbar-image__remove-button"
                     >
                       ${msg('Remove image')}
                     </clippy-button>
