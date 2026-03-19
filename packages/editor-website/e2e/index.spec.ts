@@ -245,7 +245,7 @@ test.describe('Link dialog', () => {
     await editor.getByText('anchortext').click({ clickCount: 3 });
 
     await clippyEditor.getByRole('button', { name: 'Link', exact: true }).click();
-    await clippyEditor.getByPlaceholder('https://example.com').fill('https://test.com');
+    await clippyEditor.getByRole('textbox', { name: 'Link naar:' }).fill('https://test.com');
     await clippyEditor.getByRole('button', { name: 'Link toevoegen' }).click();
 
     await expect(editor.getByRole('link', { name: 'anchortext' })).toBeVisible();
@@ -259,7 +259,7 @@ test.describe('Link dialog', () => {
     await page.keyboard.type('editanchor');
     await editor.getByText('editanchor').click({ clickCount: 3 });
     await clippyEditor.getByRole('button', { name: 'Link', exact: true }).click();
-    await clippyEditor.getByPlaceholder('https://example.com').fill('https://example.com');
+    await clippyEditor.getByRole('textbox', { name: 'Link naar:' }).fill('https://example.com');
     await clippyEditor.getByRole('button', { name: 'Link toevoegen' }).click();
 
     await editor.getByRole('link', { name: 'editanchor' }).click();
@@ -268,7 +268,7 @@ test.describe('Link dialog', () => {
     const dialog = clippyEditor.getByRole('dialog', { name: 'Link invoegen/bewerken' });
     await expect(dialog).toBeVisible();
 
-    await expect(clippyEditor.getByPlaceholder('https://example.com')).toHaveValue('https://example.com');
+    await expect(clippyEditor.getByRole('textbox', { name: 'Link naar:' })).toHaveValue('https://example.com');
     await expect(clippyEditor.getByLabel('Voorbeeld linktekst')).toHaveText('editanchor');
     await expect(clippyEditor.getByRole('button', { name: 'Bijwerken' })).toBeVisible();
     await expect(clippyEditor.getByRole('button', { name: 'Link verwijderen' })).toBeVisible();
@@ -283,7 +283,7 @@ test.describe('Link dialog', () => {
     await editor.getByText('removelink').click({ clickCount: 3 });
     await clippyEditor.getByRole('button', { name: 'Link', exact: true }).click();
     await expect(clippyEditor.getByRole('dialog', { name: 'Link invoegen/bewerken' })).toBeVisible();
-    await clippyEditor.getByPlaceholder('https://example.com').fill('https://example.com');
+    await clippyEditor.getByRole('textbox', { name: 'Link naar:' }).fill('https://example.com');
     await clippyEditor.getByRole('button', { name: 'Link toevoegen' }).click();
     await expect(editor.getByRole('link', { name: 'removelink' })).toBeVisible();
 

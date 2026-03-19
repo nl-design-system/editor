@@ -44,7 +44,7 @@
 's3d93f9ea0c5a13fa': `Afbeelding`,
 's3e81ea8dc02d8a2c': `Lijst moet een semantische lijst zijn`,
 's3e89edd997093044': `Selecteer linkdoel`,
-'s4158d5fc29a1f991': `Corrigeer`,
+'s4158d5fc29a1f991': `Corrigeren`,
 's417b90913e05bc17': `Voorbeeld`,
 's460bf77c46d93bb4': `Sneltoetsen dialoog sluiten`,
 's47fcbdbeb22c1210': `Afmetingen`,
