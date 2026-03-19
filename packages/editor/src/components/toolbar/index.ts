@@ -37,7 +37,7 @@ import { identifierContext } from '@/context/identifierContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
-import './toolbar-image-upload';
+import './toolbar-image';
 import './toolbar-link';
 import { CustomEvents } from '@/events';
 import toolbarStyles from './styles.ts';
@@ -388,10 +388,7 @@ export class Toolbar extends LitElement {
         () => html`<clippy-toolbar-text-align data-toolbar-item="text-align"></clippy-toolbar-text-align>`,
       ],
       ['link', () => html`<clippy-toolbar-link data-toolbar-item="link"></clippy-toolbar-link>`],
-      [
-        'image-upload',
-        () => html`<clippy-toolbar-image-upload data-toolbar-item="image-upload"></clippy-toolbar-image-upload>`,
-      ],
+      ['image-upload', () => html`<clippy-toolbar-image data-toolbar-item="image-upload"></clippy-toolbar-image>`],
       [
         'horizontal-rule',
         () => html`

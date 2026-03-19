@@ -10,11 +10,14 @@ export type ContentValidator = (editor: Editor, node: Node, pos: number) => Vali
 
 export type ValidationEntry = readonly [key: string, value: ValidationResult];
 
+export type CorrectValidationFunction = (editor: Editor) => void;
+
 export type ValidationResult = {
   boundingBox: BoundingBox | null;
   severity: ValidationSeverity;
   pos: number;
   tipPayload?: Record<string, number | string | boolean>;
+  correct?: CorrectValidationFunction;
 };
 
 export type ValidationSeverity = 'info' | 'warning' | 'error';

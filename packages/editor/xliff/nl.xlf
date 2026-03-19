@@ -94,10 +94,6 @@
         <source>Text editor toolbar</source>
         <target>Werkbalk tekstbewerker</target>
       </trans-unit>
-      <trans-unit id="se750d38689a2c65b">
-        <source>Alt text:</source>
-        <target>Alt-tekst:</target>
-      </trans-unit>
       <trans-unit id="s599dcd2472c75c19">
         <source>Paragraph</source>
         <target>Paragraaf</target>
@@ -113,10 +109,6 @@
       <trans-unit id="s83545917a8791873">
         <source>Select text format</source>
         <target>Selecteer tekstformaat</target>
-      </trans-unit>
-      <trans-unit id="s5ada999b33ccc808">
-        <source>Insert</source>
-        <target>Invoegen</target>
       </trans-unit>
       <trans-unit id="s3d93f9ea0c5a13fa">
         <source>Image</source>
@@ -209,14 +201,6 @@
       <trans-unit id="s5fc9e5ed7b80e521">
         <source>Extensive explanation</source>
         <target>Uitgebreide uitleg</target>
-      </trans-unit>
-      <trans-unit id="sdab2b4d8533bd75e">
-        <source>Adjust</source>
-        <target>Aanpassen</target>
-      </trans-unit>
-      <trans-unit id="s917734d83f35efa3">
-        <source>Ignore</source>
-        <target>Negeren</target>
       </trans-unit>
       <trans-unit id="s503a57cce1fec059">
         <source>Document must have correct heading order</source>
@@ -455,6 +439,78 @@
       <trans-unit id="s241b38e32644d4bd">
         <source>Open in drawer</source>
         <target>Open in zijpaneel</target>
+      </trans-unit>
+      <trans-unit id="s21905715d95b4173">
+        <source>Focus</source>
+        <target>Focus</target>
+      </trans-unit>
+      <trans-unit id="s64ef2a6c2dd1d3d1">
+        <source>Edit</source>
+        <target>Bewerken</target>
+      </trans-unit>
+      <trans-unit id="s6490655f25ad112c">
+        <source>Edit the image to supply an alt text</source>
+        <target>Bewerk de afbeelding om een alt-tekst toe te voegen</target>
+      </trans-unit>
+      <trans-unit id="s89abbb5af3504a53">
+        <source>Remove the bold or italic formatting from the text in the heading.</source>
+        <target>Verwijder vetgedrukte of cursieve tekst uit de tekst in de kop.</target>
+      </trans-unit>
+      <trans-unit id="s9ac7f1d0c67c0118">
+        <source>Edit Image</source>
+        <target>Afbeelding bewerken</target>
+      </trans-unit>
+      <trans-unit id="sd3bb6f0d2e810165">
+        <source>Insert Image</source>
+        <target>Afbeelding invoegen</target>
+      </trans-unit>
+      <trans-unit id="s5f43af3669b1e098">
+        <source>Source</source>
+        <target>Bron</target>
+      </trans-unit>
+      <trans-unit id="sfc63e31ac7c956ed">
+        <source>Select</source>
+        <target>Selecteer</target>
+      </trans-unit>
+      <trans-unit id="s086f8585af43643f">
+        <source>Describe the image for screen readers</source>
+        <target>Beschrijf de afbeelding voor schermlezers</target>
+      </trans-unit>
+      <trans-unit id="s47fcbdbeb22c1210">
+        <source>Dimensions</source>
+        <target>Afmetingen</target>
+      </trans-unit>
+      <trans-unit id="sf21fb4f4b9e8911f">
+        <source>Width</source>
+        <target>Breedte</target>
+      </trans-unit>
+      <trans-unit id="sbc2807a81d10a828">
+        <source>Unlock aspect ratio</source>
+        <target>Aspect ratio ontgrendelen</target>
+      </trans-unit>
+      <trans-unit id="sb4c530df28af9c49">
+        <source>Lock aspect ratio</source>
+        <target>Aspect ratio vergrendelen</target>
+      </trans-unit>
+      <trans-unit id="sffdadf0a576fd802">
+        <source>Height</source>
+        <target>Hoogte</target>
+      </trans-unit>
+      <trans-unit id="sb9ebdd08bb1dbe7c">
+        <source>Remove image</source>
+        <target>Afbeelding verwijderen</target>
+      </trans-unit>
+      <trans-unit id="s176287a6bf508b05">
+        <source>Insert image</source>
+        <target>Afbeelding invoegen</target>
+      </trans-unit>
+      <trans-unit id="se750d38689a2c65b">
+        <source>Alt text:</source>
+        <target>Alt-tekst:</target>
+      </trans-unit>
+      <trans-unit id="s4158d5fc29a1f991">
+        <source>Correct</source>
+        <target>Corrigeren</target>
       </trans-unit>
     </body>
   </file>

@@ -1,6 +1,6 @@
 import { msg, str } from '@lit/localize';
 import { html, type TemplateResult } from 'lit';
-import { contentValidations, documentValidations } from '@/validators/constants.ts';
+import { contentValidations, documentValidations } from '@/constants';
 
 type TipFn = (args?: Record<string, number | string | boolean>) => string | TemplateResult | null;
 
@@ -9,7 +9,7 @@ type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentV
 export type ValidationKey = ContentValidationKey | DocumentValidationKey;
 
 type ValidationMessages = {
-  [K in ValidationKey]: { description: string; href?: string; tip?: TipFn };
+  [K in ValidationKey]: { customCorrectLabel?: string; description: string; href?: string; tip?: TipFn };
 };
 
 export type { ValidationMessages };
@@ -43,9 +43,12 @@ export const validationMessages = (): ValidationMessages =>
     },
     [contentValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: {
       description: msg('Heading should not contain bold or italic text'),
+      tip: () => msg('Remove the bold or italic formatting from the text in the heading.'),
     },
     [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: {
+      customCorrectLabel: msg('Edit'),
       description: msg('Image must have alternative text'),
+      tip: () => msg('Edit the image to supply an alt text'),
     },
     [contentValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC]: {
       description: msg('Link text should not be too generic'),

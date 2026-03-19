@@ -1,7 +1,8 @@
 import type { Editor } from '@tiptap/core';
 import type { Node } from 'prosemirror-model';
 import type { ContentValidator, ValidationResult } from '@/types/validation.ts';
-import { contentValidations, validationSeverity } from '@/validators/constants.ts';
+import { contentValidations, validationSeverity } from '@/constants';
+import { contentCorrectorMap } from '@/correctors';
 import { getNodeBoundingBox, isBold, isItalic } from '@/validators/helpers.ts';
 
 const isEmptyOrWhitespaceString = (str: string): boolean => /^\s*$/.test(str);
@@ -19,6 +20,11 @@ const imageMustHaveAltText = (editor: Editor, node: Node, pos: number): Validati
   if (node.type.name === 'image' && (!node.attrs['alt'] || isEmptyOrWhitespaceString(node.attrs['alt']))) {
     return {
       boundingBox: getNodeBoundingBox(editor, pos),
+      correct: contentCorrectorMap[contentValidations.IMAGE_MUST_HAVE_ALT_TEXT](
+        pos,
+        node.attrs['alt'] ?? '',
+        node.attrs['src'] ?? '',
+      ),
       pos,
       severity: validationSeverity.INFO,
     };
@@ -40,11 +46,10 @@ const nodeShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): Validati
   if (nodeTypesRequiringContent.has(node.type.name) && isEmpty(node)) {
     return {
       boundingBox: getNodeBoundingBox(editor, pos),
+      correct: contentCorrectorMap[contentValidations.NODE_SHOULD_NOT_BE_EMPTY](pos, node.type.name),
       pos,
       severity: validationSeverity.INFO,
-      tipPayload: {
-        nodeType: node.type.name,
-      },
+      tipPayload: { nodeType: node.type.name },
     };
   }
   return null;
@@ -55,11 +60,10 @@ const markShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): Validati
     if (!node.text || isEmptyOrWhitespaceString(node.text)) {
       return {
         boundingBox: getNodeBoundingBox(editor, pos),
+        correct: contentCorrectorMap[contentValidations.MARK_SHOULD_NOT_BE_EMPTY](pos),
         pos,
         severity: validationSeverity.INFO,
-        tipPayload: {
-          nodeType: node.marks[0].type.name,
-        },
+        tipPayload: { nodeType: node.marks[0].type.name },
       };
     }
   }
@@ -74,6 +78,7 @@ const linkShouldNotBeTooGeneric = (editor: Editor, node: Node, pos: number): Val
     if (genericLinkTexts.has(text)) {
       return {
         boundingBox: getNodeBoundingBox(editor, pos),
+        correct: contentCorrectorMap[contentValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC](pos, node.nodeSize),
         pos,
         severity: validationSeverity.INFO,
       };
@@ -86,6 +91,7 @@ const markShouldNotBeUnderlined = (editor: Editor, node: Node, pos: number): Val
   if (node.type.name === 'text' && node.marks?.some((mark) => mark.type.name === 'underline')) {
     return {
       boundingBox: getNodeBoundingBox(editor, pos),
+      correct: contentCorrectorMap[contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED](pos, node.nodeSize),
       pos,
       severity: validationSeverity.INFO,
     };
@@ -97,6 +103,7 @@ const headingMustNotBeEmpty = (editor: Editor, node: Node, pos: number): Validat
   if (node.type.name === 'heading' && isEmpty(node)) {
     return {
       boundingBox: getNodeBoundingBox(editor, pos),
+      correct: contentCorrectorMap[contentValidations.HEADING_MUST_NOT_BE_EMPTY](pos),
       pos,
       severity: validationSeverity.ERROR,
     };
@@ -113,6 +120,7 @@ const headingShouldNotContainBoldOrItalic = (editor: Editor, node: Node, pos: nu
   ) {
     return {
       boundingBox: getNodeBoundingBox(editor, pos),
+      correct: contentCorrectorMap[contentValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC](pos, node.nodeSize),
       pos,
       severity: validationSeverity.INFO,
     };
@@ -126,6 +134,7 @@ const descriptionListMustContainTerm = (editor: Editor, node: Node, pos: number)
     if (!hasDefinitionTerm) {
       return {
         boundingBox: getNodeBoundingBox(editor, pos),
+        correct: contentCorrectorMap[contentValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM](pos),
         pos,
         severity: validationSeverity.ERROR,
       };
@@ -147,6 +156,7 @@ const definitionDescriptionMustFollowTerm = (editor: Editor, node: Node, pos: nu
       if (nextSibling?.type.name !== 'definitionDescription') {
         return {
           boundingBox: getNodeBoundingBox(editor, pos),
+          correct: contentCorrectorMap[contentValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM](pos, node.nodeSize),
           pos,
           severity: validationSeverity.ERROR,
         };

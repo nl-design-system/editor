@@ -1,3 +1,4 @@
+import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
@@ -10,11 +11,12 @@ import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
 import { LitElement, html, nothing, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import type { CorrectValidationFunction, ValidationSeverity } from '@/types/validation.ts';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
-import type { ValidationSeverity } from '@/types/validation.ts';
 import { identifierContext } from '@/context/identifierContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
+import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
 import validationListItemStyles from './styles.ts';
 
@@ -44,10 +46,15 @@ export class ValidationItem extends LitElement {
   @property({ type: String }) severity!: ValidationSeverity;
   @property({ type: String }) description!: string;
   @property({ type: String }) href?: string;
+  @property({ type: String }) customCorrectLabel?: string;
+  @property({ type: Function }) correct?: CorrectValidationFunction;
 
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })
   private readonly identifier?: string;
+
+  @editor()
+  private readonly editor: Editor | undefined;
 
   readonly #focusNode = () => {
     this.dispatchEvent(
@@ -57,6 +64,19 @@ export class ValidationItem extends LitElement {
         detail: { pos: this.pos },
       }),
     );
+  };
+
+  readonly #applyFix = () => {
+    this.dispatchEvent(
+      new CustomEvent(CustomEvents.CORRECT_VALIDATION_ISSUE, {
+        bubbles: true,
+        composed: true,
+        detail: { identifier: this.identifier },
+      }),
+    );
+    if (this.editor && typeof this.correct === 'function') {
+      this.correct(this.editor);
+    }
   };
 
   #handleValidationItemClick(event: Event, key: string) {
@@ -121,10 +141,14 @@ export class ValidationItem extends LitElement {
                 ${msg('Open in drawer')}
               </clippy-button>`
             : nothing}
-          <clippy-button disabled>${msg('Ignore')}</clippy-button>
           <clippy-button purpose="secondary" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
-            ${msg('Adjust')}
+            ${msg('Focus')}
           </clippy-button>
+          ${typeof this.correct === 'function'
+            ? html`<clippy-button purpose="primary" @click=${this.#applyFix} aria-describedby=${ariaDescribedBy}>
+                ${this.customCorrectLabel ?? msg('Correct')}
+              </clippy-button>`
+            : nothing}
         </div>
       </li>
     `;

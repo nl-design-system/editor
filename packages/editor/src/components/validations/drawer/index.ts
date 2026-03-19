@@ -51,6 +51,7 @@ export class ValidationsDialog extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
+    globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
     globalThis.addEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpen);
     globalThis.addEventListener(CustomEvents.TAB_CHANGE, this.#handleTabChange);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
@@ -58,11 +59,23 @@ export class ValidationsDialog extends LitElement {
   }
 
   override disconnectedCallback() {
+    globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
     globalThis.removeEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpen);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
     globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#focusValidationItem);
     super.disconnectedCallback();
   }
+
+  readonly #closeDialog = (event: Event) => {
+    if (event instanceof CustomEvent) {
+      const eventIdentifier = (event as CustomEvent<{ identifier?: string }>).detail?.identifier;
+      if (eventIdentifier !== this.identifier) return;
+    }
+    if (this.open) {
+      this.#dialogRef.value?.close();
+      this.open = false;
+    }
+  };
 
   readonly #toggleOpen = (event?: Event) => {
     // When triggered from a global event, only respond if the identifier matches this instance
@@ -90,9 +103,14 @@ export class ValidationsDialog extends LitElement {
 
       // Set a text selection at the position and focus the view
       this.editor?.commands.focus(pos);
-      this.#toggleOpen();
     } catch (err) {
       console.error('Cannot scroll to and focus node', err);
+    }
+
+    // Close the drawer after navigating to the node
+    if (this.open) {
+      this.#dialogRef.value?.close();
+      this.open = false;
     }
   };
 
@@ -150,9 +168,9 @@ export class ValidationsDialog extends LitElement {
         <clippy-tabs></clippy-tabs>
         <ul class="clippy-dialog__list" data-testid="clippy-validations-list">
           ${size > 0
-            ? map(filteredValidations, ([key, { pos, severity, tipPayload }]) => {
+            ? map(filteredValidations, ([key, { correct, pos, severity, tipPayload }]) => {
                 const validationKey = key.split('_')[0] as ValidationKey;
-                const { description, href, tip } = validationMessages()[validationKey];
+                const { customCorrectLabel, description, href, tip } = validationMessages()[validationKey];
                 const tipHtml = tip?.(tipPayload) ?? null;
                 return html`
                   <clippy-validation-item
@@ -161,6 +179,8 @@ export class ValidationsDialog extends LitElement {
                     .severity=${severity}
                     .description=${description}
                     .href=${href}
+                    .customCorrectLabel=${customCorrectLabel}
+                    .correct=${correct}
                   >
                     ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${tipHtml}</p>` : nothing}
                   </clippy-validation-item>

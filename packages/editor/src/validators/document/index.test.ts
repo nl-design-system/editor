@@ -50,6 +50,7 @@ describe('Document validations', () => {
       expect(result).toEqual([
         {
           boundingBox: expect.any(Object),
+          correct: expect.any(Function),
           pos: 7,
           severity: 'warning',
           tipPayload: {
@@ -76,6 +77,7 @@ describe('Document validations', () => {
       expect(result).toEqual([
         {
           boundingBox: expect.any(Object),
+          correct: expect.any(Function),
           pos: 0,
           severity: 'error',
           tipPayload: {
@@ -86,6 +88,7 @@ describe('Document validations', () => {
         },
         {
           boundingBox: expect.any(Object),
+          correct: expect.any(Function),
           pos: 17,
           severity: 'warning',
           tipPayload: {
@@ -132,6 +135,7 @@ describe('Document validations', () => {
       expect(mapArg).toBeInstanceOf(Map);
       expect(mapArg.get('document-must-have-top-level-heading_1')).toEqual({
         boundingBox: expect.any(Object),
+        correct: expect.any(Function),
         pos: 1,
         severity: 'info',
       });
@@ -318,6 +322,7 @@ describe('Document validations', () => {
         expect(result).toEqual([
           {
             boundingBox: expect.any(Object),
+            correct: expect.any(Function),
             pos: 7,
             severity: 'warning',
           },
@@ -370,6 +375,7 @@ describe('Document validations', () => {
         expect(result).toEqual([
           {
             boundingBox: expect.any(Object),
+            correct: expect.any(Function),
             pos: 7,
             severity: 'warning',
           },
