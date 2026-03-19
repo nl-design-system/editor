@@ -179,7 +179,7 @@ export const editorExtensions = (
     resize: {
       alwaysPreserveAspectRatio: true,
       directions: ['top', 'bottom', 'left', 'right', 'top-right', 'top-left', 'bottom-right', 'bottom-left'],
-      enabled: true,
+      enabled: !settings.readonly,
       minHeight: 50,
       minWidth: 50,
     },
