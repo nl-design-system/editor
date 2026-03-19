@@ -106,6 +106,12 @@ export class ValidationsDialog extends LitElement {
     } catch (err) {
       console.error('Cannot scroll to and focus node', err);
     }
+
+    // Close the drawer after navigating to the node
+    if (this.open) {
+      this.#dialogRef.value?.close();
+      this.open = false;
+    }
   };
 
   readonly #focusValidationItem = async (event: CustomEventInit<{ key: string; identifier: string }>) => {
