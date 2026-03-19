@@ -47,9 +47,14 @@ export default css`
     }
   }
 
+  .clippy-content[contenteditable='false'] img.ProseMirror-selectednode {
+    outline: none;
+  }
+
   [data-resizer] {
     background-color: transparent;
   }
+
   .ProseMirror-selectednode {
     [data-resize-handle] {
       position: absolute;
