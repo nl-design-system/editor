@@ -39,18 +39,6 @@ export class Gutter extends LitElement {
     this.activeValidationItemKey = null;
   };
 
-  override connectedCallback() {
-    super.connectedCallback();
-    globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
-    globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
-  }
-
-  override disconnectedCallback() {
-    super.disconnectedCallback();
-    globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
-    globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
-  }
-
   #handleIndicatorClick(key: string) {
     if (this.mode === 'list') {
       this.dispatchEvent(
@@ -63,12 +51,14 @@ export class Gutter extends LitElement {
 
   readonly #handleFocusValidationItemInGutter = (event: Event) => {
     const { key } = (event as CustomEvent<{ key: string }>).detail;
-    this.activeTooltipKey = this.activeTooltipKey === key ? null : key;
+    this.activeValidationItemKey = this.activeValidationItemKey === key ? null : key;
   };
 
   override connectedCallback() {
     super.connectedCallback();
     globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, this.#handleFocusValidationItemInGutter);
+    globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
+    globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
   }
 
   override disconnectedCallback() {
@@ -77,6 +67,8 @@ export class Gutter extends LitElement {
       CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER,
       this.#handleFocusValidationItemInGutter,
     );
+    globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
+    globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
   }
 
   override render() {
