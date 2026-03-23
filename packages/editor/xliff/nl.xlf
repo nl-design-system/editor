@@ -206,10 +206,6 @@
         <source>Document must have correct heading order</source>
         <target>Document moet correcte kopvolgorde hebben</target>
       </trans-unit>
-      <trans-unit id="h2078919f121dea29">
-        <source><x id="0" equiv-text="&lt;strong&gt;"/>Heading level <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> must not be the first heading level in the document.</source>
-        <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> mag niet het eerste kopniveau in het document zijn.</target>
-      </trans-unit>
       <trans-unit id="s71080533c3b54c62">
         <source>Remove the underline from the text.</source>
         <target>Verwijder de onderstreping van de tekst.</target>
@@ -241,10 +237,6 @@
       <trans-unit id="sf8da2c9b6d4f8618">
         <source>Link text should not be too generic</source>
         <target>Linktekst mag niet te algemeen zijn</target>
-      </trans-unit>
-      <trans-unit id="h86b1666bdb695a40">
-        <source>Fill the <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations()[nodeType]}&lt;/strong&gt;"/> with text or remove the empty link.</source>
-        <target>Vul de <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations[nodeType]}&lt;/strong&gt;"/> met tekst of verwijder de lege link.</target>
       </trans-unit>
       <trans-unit id="s274e78669e453ed4">
         <source>Avoid empty elements</source>
@@ -315,14 +307,6 @@
           (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in this document.</source>
         <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> overschrijdt het hoogste toegestane kopniveau
           (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in dit document.</target>
-      </trans-unit>
-      <trans-unit id="h5f5c9257c67862ea">
-        <source><x id="0" equiv-text="&lt;strong&gt;"/>Heading level <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> must not directly follow a
-          <x id="2" equiv-text="&lt;strong&gt;"/>heading level <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Use a heading at level <x id="4" equiv-text="${precedingHeadingLevel + 1}"/>
-          or lower.</source>
-        <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> mag niet direct volgen op een
-          <x id="2" equiv-text="&lt;strong&gt;"/>kopniveau <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Gebruik een kop op niveau <x id="4" equiv-text="${precedingHeadingLevel + 1}"/>
-          of lager.</target>
       </trans-unit>
       <trans-unit id="s6167abecb9d05d51">
         <source>Image alignment options</source>
@@ -511,6 +495,20 @@
       <trans-unit id="s4158d5fc29a1f991">
         <source>Correct</source>
         <target>Corrigeren</target>
+      </trans-unit>
+      <trans-unit id="h3575b7026a38964e">
+        <source>Remove the empty <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations()[nodeType]}&lt;/strong&gt;"/>.</source>
+        <target>Verwijder de lege <x id="0" equiv-text="&lt;strong&gt;${nodeTypesTranslations[nodeType]}&lt;/strong&gt;"/>.</target>
+      </trans-unit>
+      <trans-unit id="s08b05407b5565ca4">
+        <source>or</source>
+        <target>of</target>
+      </trans-unit>
+      <trans-unit id="h61200cf48b93f338">
+        <source><x id="0" equiv-text="&lt;strong&gt;"/>Heading level <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> must not directly follow a
+          <x id="2" equiv-text="&lt;strong&gt;"/>heading level <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Use heading level <x id="4" equiv-text="${levelsTemplate}"/>.</source>
+        <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> mag niet direct volgen op een
+          <x id="2" equiv-text="&lt;strong&gt;"/>kopniveau <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Gebruik kopniveau <x id="4" equiv-text="${levelsTemplate}"/>.</target>
       </trans-unit>
     </body>
   </file>

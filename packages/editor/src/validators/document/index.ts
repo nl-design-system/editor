@@ -29,9 +29,9 @@ export const documentMustHaveCorrectHeadingOrder = (editor: Editor, settings?: E
           pos,
           severity: validationSeverity.ERROR,
           tipPayload: {
-            exceedsTopLevel: true,
             headingLevel: headingLevel,
             precedingHeadingLevel: precedingHeadingLevel,
+            topHeadingLevel: topHeadingLevel,
           },
         });
       }
@@ -45,7 +45,11 @@ export const documentMustHaveCorrectHeadingOrder = (editor: Editor, settings?: E
           ),
           pos,
           severity: validationSeverity.WARNING,
-          tipPayload: { headingLevel: headingLevel, precedingHeadingLevel: precedingHeadingLevel },
+          tipPayload: {
+            headingLevel: headingLevel,
+            precedingHeadingLevel: precedingHeadingLevel,
+            topHeadingLevel: topHeadingLevel,
+          },
         });
       }
 

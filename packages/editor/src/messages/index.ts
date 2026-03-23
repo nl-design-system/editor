@@ -61,9 +61,7 @@ export const validationMessages = (): ValidationMessages =>
         if (!nodeType || typeof nodeType !== 'string') {
           return null;
         }
-        return msg(
-          html`Fill the <strong>${nodeTypesTranslations()[nodeType]}</strong> with text or remove the empty link.`,
-        );
+        return msg(html`Remove the empty <strong>${nodeTypesTranslations()[nodeType]}</strong>.`);
       },
     },
     [contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED]: {
@@ -85,29 +83,39 @@ export const validationMessages = (): ValidationMessages =>
       description: msg(str`Document must have correct heading order`),
       href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#kopniveaus',
       tip: (params) => {
-        const { exceedsTopLevel, headingLevel, precedingHeadingLevel } = params || {};
+        const { headingLevel, precedingHeadingLevel, topHeadingLevel } = params || {};
 
-        if (exceedsTopLevel) {
+        if (headingLevel < topHeadingLevel) {
           return msg(
             html`<strong>Heading level ${headingLevel}</strong> exceeds the highest allowed heading level
               (${precedingHeadingLevel}) in this document.`,
           );
         }
 
-        if (typeof precedingHeadingLevel !== 'number' || !headingLevel) {
+        if (typeof precedingHeadingLevel !== 'number' || typeof topHeadingLevel !== 'number' || !headingLevel) {
           return null;
         }
 
-        if (precedingHeadingLevel === 0) {
-          return msg(
-            html`<strong>Heading level ${headingLevel}</strong> must not be the first heading level in the document.`,
-          );
+        const min = topHeadingLevel === 1 ? 2 : topHeadingLevel;
+        const max = precedingHeadingLevel + 1;
+        const levels = Array.from({ length: max - min + 1 }, (_, i) => min + i);
+
+        let levelsTemplate: TemplateResult;
+        if (levels.length === 1) {
+          levelsTemplate = html`<strong>${levels[0]}</strong>`;
+        } else if (levels.length === 2) {
+          levelsTemplate = html`<strong>${levels[0]}</strong> ${msg('or')} <strong>${levels[1]}</strong>`;
+        } else {
+          const head = levels.slice(0, -1);
+          const last = levels[levels.length - 1];
+          levelsTemplate = html`${head.map(
+              (l, i) => html`<strong>${l}</strong>${i < head.length - 1 ? ', ' : ' '}`,
+            )}${msg('or')} <strong>${last}</strong>`;
         }
 
         return msg(
           html`<strong>Heading level ${headingLevel}</strong> must not directly follow a
-            <strong>heading level ${precedingHeadingLevel}</strong>. Use a heading at level ${precedingHeadingLevel + 1}
-            or lower.`,
+            <strong>heading level ${precedingHeadingLevel}</strong>. Use heading level ${levelsTemplate}.`,
         );
       },
     },
