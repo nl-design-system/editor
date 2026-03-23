@@ -15,7 +15,7 @@ import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
-import type { ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
+import type { ValidationsMap, ValidationResult, ValidationSeverity } from '@/types/validation.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
@@ -77,32 +77,14 @@ export class HeadingStructure extends LitElement {
 
   readonly #severityOrder: ValidationSeverity[] = ['error', 'warning', 'info'];
 
-  #getWorstSeverityForPos(pos: number): ValidationSeverity | null {
+  #getValidationItemsByPosition(pos: number): [string, ValidationResult] | null {
     if (!this.validationsMap?.size) return null;
-    let worst: ValidationSeverity | null = null;
-    for (const [, result] of this.validationsMap) {
-      if (result.pos !== pos) continue;
-      const index = this.#severityOrder.indexOf(result.severity);
-      if (worst === null || index < this.#severityOrder.indexOf(worst)) {
-        worst = result.severity;
-      }
-    }
-    return worst;
-  }
-
-  #getWorstSeverityKeyForPos(pos: number): string | null {
-    if (!this.validationsMap?.size) return null;
-    let worstKey: string | null = null;
-    let worstIndex = Infinity;
-    for (const [key, result] of this.validationsMap) {
-      if (result.pos !== pos) continue;
-      const index = this.#severityOrder.indexOf(result.severity);
-      if (index < worstIndex) {
-        worstIndex = index;
-        worstKey = key;
-      }
-    }
-    return worstKey;
+    return (
+      [...this.validationsMap.entries()]
+        .filter(([, result]) => result.pos === pos)
+        .sort(([, a], [, b]) => this.#severityOrder.indexOf(a.severity) - this.#severityOrder.indexOf(b.severity))[0] ??
+      null
+    );
   }
 
   get #headings(): HeadingEntry[] {
@@ -142,7 +124,7 @@ export class HeadingStructure extends LitElement {
       console.error('[clippy-heading-structure] Cannot scroll to heading', err);
     }
 
-    const validationKey = this.#getWorstSeverityKeyForPos(pos);
+    const validationKey = this.#getValidationItemsByPosition(pos)?.[0] ?? null;
     if (validationKey) {
       globalThis.dispatchEvent(
         new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, {
@@ -188,7 +170,7 @@ export class HeadingStructure extends LitElement {
             ? html`
                 <ol class="clippy-heading-structure__list" role="list">
                   ${map(headings, ({ level, pos, text }) => {
-                    const severity = this.#getWorstSeverityForPos(pos);
+                    const severity = this.#getValidationItemsByPosition(pos)?.[1].severity ?? null;
                     return html`
                       <li class="clippy-heading-structure__item" data-level="${level}">
                         <span
