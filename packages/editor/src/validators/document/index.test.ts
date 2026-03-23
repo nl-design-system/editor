@@ -56,6 +56,7 @@ describe('Document validations', () => {
           tipPayload: {
             headingLevel: 3,
             precedingHeadingLevel: 1,
+            topHeadingLevel: 1,
           },
         },
       ]);
@@ -81,9 +82,9 @@ describe('Document validations', () => {
           pos: 0,
           severity: 'error',
           tipPayload: {
-            exceedsTopLevel: true,
             headingLevel: 1,
             precedingHeadingLevel: 2,
+            topHeadingLevel: 2,
           },
         },
         {
@@ -94,6 +95,7 @@ describe('Document validations', () => {
           tipPayload: {
             headingLevel: 4,
             precedingHeadingLevel: 2,
+            topHeadingLevel: 2,
           },
         },
       ]);

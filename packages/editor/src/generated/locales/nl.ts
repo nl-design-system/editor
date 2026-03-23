@@ -9,19 +9,18 @@
     /* eslint-disable @typescript-eslint/no-explicit-any */
 
     export const templates = {
-      'h2078919f121dea29': html`<strong>Kopniveau ${0}</strong> mag niet het eerste kopniveau in het document zijn.`,
+      'h3575b7026a38964e': html`Verwijder de lege <strong>${0}</strong>.`,
 'h3a4689bd2e1e317d': html`<strong>Kopniveau ${0}</strong> overschrijdt het hoogste toegestane kopniveau
           (${1}) in dit document.`,
 'h5353ca323af02848': html`Gebruik een semantische lijst in plaats van regels die beginnen met "<strong>${0}</strong>"`,
-'h5f5c9257c67862ea': html`<strong>Kopniveau ${0}</strong> mag niet direct volgen op een
-          <strong>kopniveau ${1}</strong>. Gebruik een kop op niveau ${2}
-          of lager.`,
-'h86b1666bdb695a40': html`Vul de <strong>${0}</strong> met tekst of verwijder de lege link.`,
+'h61200cf48b93f338': html`<strong>Kopniveau ${0}</strong> mag niet direct volgen op een
+          <strong>kopniveau ${1}</strong>. Gebruik kopniveau ${2}.`,
 'h8fb14075251fbc85': html`Verwijder de lege <strong>${0}</strong> of voeg tekst toe.`,
 's05e9759cfd99c48f': `Uitvullen`,
 's0628c840adfd38af': `Links naar rechts`,
 's078a19b8dc74d589': str`${0} toegankelijkheidsmeldingen`,
 's086f8585af43643f': `Beschrijf de afbeelding voor schermlezers`,
+'s08b05407b5565ca4': `of`,
 's0bdca49248ba4820': `Sneltoetsen`,
 's0c33193c5b0c8726': `Structuur`,
 's11fdceabe7befeff': `Toegankelijkheid`,
