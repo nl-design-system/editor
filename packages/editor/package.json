@@ -44,7 +44,7 @@
     "@nl-design-system-candidate/data-badge-css": "1.0.5",
     "@nl-design-system-candidate/link-css": "2.0.3",
     "@nl-design-system-candidate/number-badge-css": "1.1.5",
-    "@nl-design-system-community/clippy-components": "1.2.0",
+    "@nl-design-system-community/clippy-components": "2.0.0",
     "@tabler/icons": "3.40.0",
     "@tiptap/core": "3.20.0",
     "@tiptap/extension-blockquote": "3.20.0",

@@ -183,7 +183,7 @@ export class HeadingStructure extends LitElement {
           </clippy-button>
         </div>
 
-        <nav aria-label=${msg('Document headings')}>
+        <nav aria-label=${msg('Heading structure')}>
           ${headings.length > 0
             ? html`
                 <ol class="clippy-heading-structure__list" role="list">

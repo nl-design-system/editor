@@ -3,6 +3,7 @@ import { css } from 'lit';
 export default css`
   :host {
     display: contents;
+    --nl-data-badge-min-inline-size: initial;
   }
 
   .clippy-heading-structure__dialog {
@@ -54,21 +55,21 @@ export default css`
   }
 
   .clippy-heading-structure__badge--error {
-    --nl-data-badge-background-color: var(--ma-color-signal-rood-500);
-    --nl-data-badge-border-color: var(--ma-color-signal-rood-500);
-    --nl-data-badge-color: var(--ma-color-white);
+    --nl-data-badge-background-color: var(--basis-color-negative-bg-default);
+    --nl-data-badge-border-color: var(--basis-color-negative-border-default);
+    --nl-data-badge-color: var(--basis-color-negative-color-default);
   }
 
   .clippy-heading-structure__badge--warning {
-    --nl-data-badge-background-color: var(--ma-color-signal-warning-700);
-    --nl-data-badge-border-color: var(--ma-color-signal-warning-700);
-    --nl-data-badge-color: var(--ma-color-white);
+    --nl-data-badge-background-color: var(--basis-color-warning-bg-default);
+    --nl-data-badge-border-color: var(--basis-color-warning-border-default);
+    --nl-data-badge-color: var(--basis-color-warning-color-default);
   }
 
   .clippy-heading-structure__badge--info {
-    --nl-data-badge-background-color: var(--ma-color-neutral-8);
-    --nl-data-badge-border-color: var(--ma-color-neutral-8);
-    --nl-data-badge-color: var(--ma-color-white);
+    --nl-data-badge-background-color: var(--basis-color-default-bg-default);
+    --nl-data-badge-border-color: var(--basis-color-default-border-default);
+    --nl-data-badge-color: var(--basis-color-default-color-default);
   }
 
   .clippy-heading-structure__empty {
