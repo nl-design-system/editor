@@ -2,14 +2,14 @@ import { css } from 'lit';
 
 export default css`
   :host {
-    background-color: #fff;
+    background-color: var(--basis-color-default-bg-document);
     display: block;
   }
 
   .clippy-content-view__topbar {
     align-items: center;
     background-color: var(--basis-color-neutral-bg-subtle, #f5f5f5);
-    border-block-end: 1px solid var(--basis-color-default-border-default, #e0e0e0);
+    border-block-end: var(--basis-border-width-sm) solid var(--basis-color-default-border-default, #e0e0e0);
     display: flex;
     gap: var(--basis-space-inline-md, 0.5rem);
     padding-block: var(--basis-space-block-sm, 0.25rem);

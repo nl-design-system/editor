@@ -2,7 +2,7 @@ import { css } from 'lit';
 
 export default css`
   .clippy-shortcuts__dialog {
-    background-color: #fff;
+    background-color: var(--basis-color-default-bg-document);
     border: 1px solid var(--basis-color-action-1-color-active);
     color: var(--basis-color-text);
     padding-block: var(--basis-space-block-xl);

@@ -2,7 +2,7 @@ import { css } from 'lit';
 
 export default css`
   :host {
-    background-color: #fff;
+    background-color: var(--basis-color-default-bg-document);
     display: block;
   }
 
