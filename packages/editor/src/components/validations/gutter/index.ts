@@ -73,7 +73,10 @@ export class Gutter extends LitElement {
 
   override disconnectedCallback() {
     super.disconnectedCallback();
-    globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, this.#handleFocusValidationItemInGutter);
+    globalThis.removeEventListener(
+      CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER,
+      this.#handleFocusValidationItemInGutter,
+    );
   }
 
   override render() {
