@@ -123,8 +123,8 @@ export class ValidationItem extends LitElement {
         </clippy-button>
         ${typeof this.correct === 'function'
           ? html`<clippy-button purpose="primary" @click=${this.#applyFix} aria-describedby=${ariaDescribedBy}>
-                ${this.customCorrectLabel ?? msg('Correct')}
-              </clippy-button>`
+              ${this.customCorrectLabel ?? msg('Correct')}
+            </clippy-button>`
           : nothing}
       </div>
     `;
