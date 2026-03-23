@@ -42,6 +42,8 @@ describe('<clippy-editor>', () => {
     const combobox = page.getByRole('combobox', { name: 'Selecteer tekstformaat' });
     expect(combobox).toBeInTheDocument();
     await user.click(combobox.element());
+    await user.keyboard('{Control>}a{/Control}{Delete}');
+    await vi.waitFor(() => expect(page.getByRole('option', { name: 'Kopniveau 3' })).toBeInTheDocument());
     const option = page.getByRole('option', { name: 'Kopniveau 3' });
     await user.click(option.element());
 
