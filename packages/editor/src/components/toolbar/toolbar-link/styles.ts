@@ -29,7 +29,7 @@ export const linkDialogStyles = css`
     justify-content: flex-end;
     margin-block-start: var(--basis-space-block-xl);
     padding-block-start: var(--basis-space-block-xl);
-    border-top: 1px solid var(--basis-color-default-border-default);
+    border-top: var(--basis-border-width-sm) solid var(--basis-color-default-border-default);
   }
 
   .ams-dialog__footer {

@@ -71,12 +71,14 @@ describe('<clippy-toolbar-link>', () => {
       it('renders with "Geen" selected by default', () => {
         const combobox = page.getByRole('combobox', { name: 'Selecteer linkdoel' });
         expect(combobox).toBeInTheDocument();
-        expect(combobox).toHaveValue('');
+        expect(combobox).toHaveValue('Geen');
       });
 
       it('selects "Nieuw venster"', async () => {
         const combobox = page.getByRole('combobox', { name: 'Selecteer linkdoel' });
         await user.click(combobox.element());
+        await user.clear(combobox.element());
+        await vi.waitFor(() => expect(page.getByRole('option', { name: 'Nieuw venster' })).toBeInTheDocument());
         await user.click(page.getByRole('option', { name: 'Nieuw venster' }).element());
         expect(combobox).toHaveValue('Nieuw venster');
       });
@@ -84,6 +86,8 @@ describe('<clippy-toolbar-link>', () => {
       it('selects "Huidig venster"', async () => {
         const combobox = page.getByRole('combobox', { name: 'Selecteer linkdoel' });
         await user.click(combobox.element());
+        await user.clear(combobox.element());
+        await vi.waitFor(() => expect(page.getByRole('option', { name: 'Huidig venster' })).toBeInTheDocument());
         await user.click(page.getByRole('option', { name: 'Huidig venster' }).element());
         expect(combobox).toHaveValue('Huidig venster');
       });

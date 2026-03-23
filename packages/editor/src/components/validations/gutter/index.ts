@@ -26,7 +26,7 @@ export class Gutter extends LitElement {
   static override readonly styles = [gutterStyles, unsafeCSS(paragraphStyle)];
 
   @property({ type: String })
-  mode: 'tooltip' | 'list' = 'tooltip';
+  mode: 'tooltip' | 'list' | 'readonly' = 'tooltip';
 
   @state()
   private activeValidationItemKey: string | null = null;
@@ -39,18 +39,6 @@ export class Gutter extends LitElement {
     this.activeValidationItemKey = null;
   };
 
-  override connectedCallback() {
-    super.connectedCallback();
-    globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
-    globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
-  }
-
-  override disconnectedCallback() {
-    super.disconnectedCallback();
-    globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
-    globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
-  }
-
   #handleIndicatorClick(key: string) {
     if (this.mode === 'list') {
       this.dispatchEvent(
@@ -59,6 +47,28 @@ export class Gutter extends LitElement {
     } else {
       this.activeValidationItemKey = this.activeValidationItemKey === key ? null : key;
     }
+  }
+
+  readonly #handleFocusValidationItemInGutter = (event: Event) => {
+    const { key } = (event as CustomEvent<{ key: string }>).detail;
+    this.activeValidationItemKey = this.activeValidationItemKey === key ? null : key;
+  };
+
+  override connectedCallback() {
+    super.connectedCallback();
+    globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, this.#handleFocusValidationItemInGutter);
+    globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
+    globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    globalThis.removeEventListener(
+      CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER,
+      this.#handleFocusValidationItemInGutter,
+    );
+    globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
+    globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
   }
 
   override render() {

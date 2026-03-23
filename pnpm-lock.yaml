@@ -93,6 +93,9 @@ importers:
       '@nl-design-system-candidate/button-css':
         specifier: 1.1.0
         version: 1.1.0
+      '@nl-design-system-candidate/data-badge-css':
+        specifier: 1.0.5
+        version: 1.0.5
       '@nl-design-system-candidate/link-css':
         specifier: 2.0.3
         version: 2.0.3
@@ -100,8 +103,8 @@ importers:
         specifier: 1.1.5
         version: 1.1.5
       '@nl-design-system-community/clippy-components':
-        specifier: 1.2.0
-        version: 1.2.0
+        specifier: 2.0.0
+        version: 2.0.0
       '@tabler/icons':
         specifier: 3.40.0
         version: 3.40.0
@@ -190,6 +193,9 @@ importers:
         specifier: 3.20.0
         version: 3.20.0
       '@utrecht/blockquote-css':
+        specifier: 2.0.1
+        version: 2.0.1
+      '@utrecht/drawer-css':
         specifier: 2.0.1
         version: 2.0.1
       '@utrecht/form-field-css':
@@ -1351,23 +1357,20 @@ packages:
   '@napi-rs/wasm-runtime@1.1.1':
     resolution: {integrity: sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A==}
 
-  '@nl-design-system-candidate/button-css@1.0.0':
-    resolution: {integrity: sha512-TjXFCCeCrSfxBRwcdKWFO/gLAZDfeBAnxC3DuCNvu53JwYIA30++GOivFgeRmDyXDhJysoG19/SVq1r1jfUP5Q==}
-
   '@nl-design-system-candidate/button-css@1.1.0':
     resolution: {integrity: sha512-w0JLQyiPL9UrfRwzu3Mq2EWbYvAJbolepeFH4ggyBFXoYm9RMWX6vWb/8Oj999GzAF6N77LlES5jUnaR3BJ7Yw==}
 
   '@nl-design-system-candidate/code-block-css@1.1.5':
     resolution: {integrity: sha512-8NdWxqzNvShKOwRi+SwRHQ/BfdzQh6q4M7sui9t6GGiwgsgnmsltuVLujkkIxQIV2pG/ZXaueYq/u7i7X8ygdg==}
 
-  '@nl-design-system-candidate/code-css@2.0.3':
-    resolution: {integrity: sha512-7cuwem+GDRBGT4/4h4QFZesr6l2ruRG4AAULhvPuyvmvftTMzb7Q8G5O2cmNzBt/VuQKO789Qe3w79UcXRjxNw==}
-
   '@nl-design-system-candidate/code-css@2.0.5':
     resolution: {integrity: sha512-KYRoiv389rTyGEb1xK1jFkzmQ4v3H6B82OOMafVqm3L5+ntr2f3tbJNYBkep3XYjAEq8VmNLkkJQYJZHiEo2ng==}
 
-  '@nl-design-system-candidate/color-sample-css@1.0.4':
-    resolution: {integrity: sha512-zDQKBqdWnxKg+y08WMOc2FKTCbKYM+IVLgzWd044sAo2U+q3XKREP+VZDUKAmSDEPcaDn2hia1QFO6eJkhMFAQ==}
+  '@nl-design-system-candidate/color-sample-css@1.0.5':
+    resolution: {integrity: sha512-ork71HMKs0Maiqd6bhYB1YNxFcHpxKUWp6Pi2GoEQZuo9zobSI750ja8Qi8g1NIExVIlCAm3rSjdiIHZXNeolg==}
+
+  '@nl-design-system-candidate/data-badge-css@1.0.5':
+    resolution: {integrity: sha512-CDcXpGQDonWIw9omDL5O/rn1IaS0y8s4WprVDCZRwYKOgpIE6N3T4MwiuESzijldhT4lnYIxK1q3jdp2G8enFQ==}
 
   '@nl-design-system-candidate/heading-css@1.1.3':
     resolution: {integrity: sha512-s4ERGrHcsBkZlCc+qz8+XDB5rCpxvkxwxI2bg4OB2GDS0DU5LzjNMWhsV1I8IPOboTvWMabvrsscxVuj5Bijuw==}
@@ -1384,8 +1387,8 @@ packages:
   '@nl-design-system-candidate/paragraph-css@2.1.3':
     resolution: {integrity: sha512-f3GHiSpisUZAcn4gSNpSX2C3Mhl7y9dg1TfTe+jGMtHAqau/tztrtE3H27FlwrZeVEtsUtvssRCYUA3UO/GDpQ==}
 
-  '@nl-design-system-community/clippy-components@1.2.0':
-    resolution: {integrity: sha512-+LXUFqr3mRS3qG3gSejxdgRku3ILbCuH3nD/C49G3Ea3u3zgvgaqZ91XDuwfgDQTIJDUTxejmBTlQqZugtfYzA==}
+  '@nl-design-system-community/clippy-components@2.0.0':
+    resolution: {integrity: sha512-HIYkRZYPyQ+eI2mSjqtymXCLQQ5FcHQAWF1ItKAx8RGqphONteGAojq4ED7j7oJ+HV90ulJ6MpRHR1JJ85AOGQ==}
 
   '@nl-design-system-community/ma-design-tokens@3.0.0':
     resolution: {integrity: sha512-95uF6BODj/RldOGIdB0i4L8ISoJ4CauQVzZb6sgD8GBA4btEdX3Cdc6VOKncKbknads5WePeNFap7lo7YrlRGg==}
@@ -1747,9 +1750,6 @@ packages:
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
-
-  '@tabler/icons@3.36.0':
-    resolution: {integrity: sha512-z9OfTEG6QbaQWM9KBOxxUdpgvMUn0atageXyiaSc2gmYm51ORO8Ua7eUcjlks+Dc0YMK4rrodAFdK9SfjJ4ZcA==}
 
   '@tabler/icons@3.40.0':
     resolution: {integrity: sha512-V/Q4VgNPKubRTiLdmWjV/zscYcj5IIk+euicUtaVVqF6luSC9rDngYWgST5/yh3Mrg/mYUwRv1YVTk71Jp0twQ==}
@@ -2259,9 +2259,6 @@ packages:
   '@utrecht/breadcrumb-nav-css@2.1.0':
     resolution: {integrity: sha512-BOYqFSnrR5rVzU1mb4eDb4BbpuE9TSEPN5FTlJJduYDvsJr5DLDaxADmFp1p05di7GWV1qTaPBMxw0gEuMAbaQ==}
 
-  '@utrecht/button-css@3.0.1':
-    resolution: {integrity: sha512-yHJazkFSA99H4IKCaKLvq9pptZ9oZBeAzx1l01JQwt3x12aoZ21M5pRRaTP6V7otjfjcvz/A4sRRrROZJJ3wZw==}
-
   '@utrecht/button-css@3.1.0':
     resolution: {integrity: sha512-4iUf9AG12XR+LkZ8679RJwFY+5RMtoJUuj1iYUohc7BEE2hS28hxQuycZ5g28QQST2M6DGBSjyi5QiG3skAVVw==}
 
@@ -2403,9 +2400,6 @@ packages:
   '@utrecht/list-social-css@2.0.1':
     resolution: {integrity: sha512-VQiJRl00582GpBfoDV3UkURUUuo3tvdL0K9k8IXCA6tOuLIntf3n8zMB+fV2UciEPkDt0J/1qlXiyhtYz6hs4g==}
 
-  '@utrecht/listbox-css@2.0.1':
-    resolution: {integrity: sha512-oBn1E2EGeQWkFHFryJx+NPLyiwlUP2qJ8CslQsmYMbiBjo7c9W9lx+e9OZn7ZJ/f5kviimZ9mkbwpJ6EjHPvcw==}
-
   '@utrecht/listbox-css@2.1.0':
     resolution: {integrity: sha512-3m5BRchEAtjzm0W2fJ9qU4ms45jp1J86rerdFDOSP+Zu0LEN0GCONIhkGM+dfiiq8h0YUl03WRemu2NUjcH8UA==}
 
@@ -2519,9 +2513,6 @@ packages:
 
   '@utrecht/textarea-css@3.0.1':
     resolution: {integrity: sha512-byy2EpNx6g9ORxTZyeGxWclsvzJxbkmi1uqLSCS7286nw3t7PkwiWSKBPBJ568153nKgBD7FgiZrjR0Oe7TDnA==}
-
-  '@utrecht/textbox-css@3.0.1':
-    resolution: {integrity: sha512-SP3CFpTd/6CffvSBcpBQ+uKzYusgDB/ri0vmEA/uYfWnRyen1ETQkeCoDJeSUR/D8g24NMdFu7xmOniiwGpRQg==}
 
   '@utrecht/textbox-css@3.1.0':
     resolution: {integrity: sha512-KT2r6v1yTcdQPFZhswo/7+dMPL7x8aulBLeYO9SmrlVkpY47owJcB0KrkmMbF51/VvTLh4kW0qbaQ+vKnjwUsg==}
@@ -3000,8 +2991,8 @@ packages:
   colorjs.io@0.5.2:
     resolution: {integrity: sha512-twmVoizEW7ylZSN32OgKdXRmo1qg+wT5/6C3xu5b9QsWzSFAhHLn2xd8ro0diCsKfCj1RdaTP/nrcW+vAoQPIw==}
 
-  colorjs.io@0.6.0-beta.3:
-    resolution: {integrity: sha512-LuZuWmlCc3oeGnZ9IdH6Uo0OOf1wBfLCedZEoaNsO8VYqTbsqkFp9QHcd9Yt2KilpCHJArOM3kHmG43arZ7OHw==}
+  colorjs.io@0.6.1:
+    resolution: {integrity: sha512-8lyR2wHzuIykCpqHKgluGsqQi5iDm3/a2IgP2GBZrasn2sBRkE4NOGsglZxWLs/jZQoNkmA/KM/8NV16rLUdBg==}
 
   comma-separated-tokens@2.0.3:
     resolution: {integrity: sha512-Fu4hJdvzeylCfQPp9SGWidpzrMs7tTrlu6Vb8XGaRGck8QSNZJJp538Wrb60Lax4fPwR64ViY468OIUTbRlGZg==}
@@ -3145,6 +3136,10 @@ packages:
 
   de-indent@1.0.2:
     resolution: {integrity: sha512-e/1zu3xH5MQryN2zdVaF0OrdNLUbvWxzMbi+iNA6Bky7l1RoP8a2fIbRocyHclXt/arDrrR6lL3TqFD9pMQTsg==}
+
+  debounce@3.0.0:
+    resolution: {integrity: sha512-64byRbF0/AirwbuHqB3/ZpMG9/nckDa6ZA0yd6UnaQNwbbemCOwvz2sL5sjXLHhZHADyiwLm0M5qMhltUUx+TA==}
+    engines: {node: '>=20'}
 
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -7340,17 +7335,15 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
-  '@nl-design-system-candidate/button-css@1.0.0': {}
-
   '@nl-design-system-candidate/button-css@1.1.0': {}
 
   '@nl-design-system-candidate/code-block-css@1.1.5': {}
 
-  '@nl-design-system-candidate/code-css@2.0.3': {}
-
   '@nl-design-system-candidate/code-css@2.0.5': {}
 
-  '@nl-design-system-candidate/color-sample-css@1.0.4': {}
+  '@nl-design-system-candidate/color-sample-css@1.0.5': {}
+
+  '@nl-design-system-candidate/data-badge-css@1.0.5': {}
 
   '@nl-design-system-candidate/heading-css@1.1.3': {}
 
@@ -7362,19 +7355,21 @@ snapshots:
 
   '@nl-design-system-candidate/paragraph-css@2.1.3': {}
 
-  '@nl-design-system-community/clippy-components@1.2.0':
+  '@nl-design-system-community/clippy-components@2.0.0':
     dependencies:
       '@amsterdam/design-system-css': 2.2.0
-      '@nl-design-system-candidate/button-css': 1.0.0
-      '@nl-design-system-candidate/code-css': 2.0.3
-      '@nl-design-system-candidate/color-sample-css': 1.0.4
+      '@nl-design-system-candidate/button-css': 1.1.0
+      '@nl-design-system-candidate/code-css': 2.0.5
+      '@nl-design-system-candidate/color-sample-css': 1.0.5
       '@nl-design-system-candidate/heading-css': 1.1.3
-      '@tabler/icons': 3.36.0
-      '@utrecht/button-css': 3.0.1
+      '@tabler/icons': 3.40.0
+      '@utrecht/button-css': 3.1.0
       '@utrecht/combobox-css': 2.0.1
-      '@utrecht/listbox-css': 2.0.1
-      '@utrecht/textbox-css': 3.0.1
-      colorjs.io: 0.6.0-beta.3
+      '@utrecht/listbox-css': 2.1.0
+      '@utrecht/textbox-css': 3.1.0
+      colorjs.io: 0.6.1
+      debounce: 3.0.0
+      dequal: 2.0.3
       lit: 3.3.2
       memoize: 10.2.0
     transitivePeerDependencies:
@@ -7645,8 +7640,6 @@ snapshots:
   '@shikijs/vscode-textmate@10.0.2': {}
 
   '@standard-schema/spec@1.1.0': {}
-
-  '@tabler/icons@3.36.0': {}
 
   '@tabler/icons@3.40.0': {}
 
@@ -8240,8 +8233,6 @@ snapshots:
 
   '@utrecht/breadcrumb-nav-css@2.1.0': {}
 
-  '@utrecht/button-css@3.0.1': {}
-
   '@utrecht/button-css@3.1.0': {}
 
   '@utrecht/button-group-css@2.0.1': {}
@@ -8439,8 +8430,6 @@ snapshots:
 
   '@utrecht/list-social-css@2.0.1': {}
 
-  '@utrecht/listbox-css@2.0.1': {}
-
   '@utrecht/listbox-css@2.1.0': {}
 
   '@utrecht/logo-button-css@1.4.2': {}
@@ -8516,8 +8505,6 @@ snapshots:
   '@utrecht/table-of-contents-css@1.0.1': {}
 
   '@utrecht/textarea-css@3.0.1': {}
-
-  '@utrecht/textbox-css@3.0.1': {}
 
   '@utrecht/textbox-css@3.1.0': {}
 
@@ -9153,7 +9140,7 @@ snapshots:
 
   colorjs.io@0.5.2: {}
 
-  colorjs.io@0.6.0-beta.3: {}
+  colorjs.io@0.6.1: {}
 
   comma-separated-tokens@2.0.3: {}
 
@@ -9284,6 +9271,8 @@ snapshots:
       is-data-view: 1.0.2
 
   de-indent@1.0.2: {}
+
+  debounce@3.0.0: {}
 
   debug@3.2.7:
     dependencies:

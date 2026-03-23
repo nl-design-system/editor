@@ -2,7 +2,7 @@ import { css } from 'lit';
 
 export default css`
   :host {
-    background-color: #fff;
+    background-color: var(--basis-color-default-bg-document);
     display: block;
   }
 
@@ -47,9 +47,14 @@ export default css`
     }
   }
 
+  .clippy-content[contenteditable='false'] img.ProseMirror-selectednode {
+    outline: none;
+  }
+
   [data-resizer] {
     background-color: transparent;
   }
+
   .ProseMirror-selectednode {
     [data-resize-handle] {
       position: absolute;
