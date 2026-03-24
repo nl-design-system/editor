@@ -105,6 +105,9 @@ importers:
       '@nl-design-system-community/clippy-components':
         specifier: 2.0.0
         version: 2.0.0
+      '@nl-design-system-unstable/documentation':
+        specifier: 1.9.0
+        version: 1.9.0
       '@tabler/icons':
         specifier: 3.40.0
         version: 3.40.0
@@ -228,6 +231,9 @@ importers:
       '@utrecht/unordered-list-css':
         specifier: 2.0.1
         version: 2.0.1
+      '@vanillawc/wc-markdown':
+        specifier: 1.6.11
+        version: 1.6.11
       lit:
         specifier: 3.3.2
         version: 3.3.2
@@ -304,6 +310,9 @@ importers:
       vite:
         specifier: 8.0.0
         version: 8.0.0(@types/node@22.19.15)(esbuild@0.27.4)(yaml@2.8.2)
+      vite-bundle-analyzer:
+        specifier: 1.3.6
+        version: 1.3.6
       vite-plugin-dts:
         specifier: 4.5.4
         version: 4.5.4(@types/node@22.19.15)(rollup@4.59.0)(typescript@5.9.3)(vite@8.0.0(@types/node@22.19.15)(esbuild@0.27.4)(yaml@2.8.2))
@@ -1392,6 +1401,9 @@ packages:
 
   '@nl-design-system-community/ma-design-tokens@3.0.0':
     resolution: {integrity: sha512-95uF6BODj/RldOGIdB0i4L8ISoJ4CauQVzZb6sgD8GBA4btEdX3Cdc6VOKncKbknads5WePeNFap7lo7YrlRGg==}
+
+  '@nl-design-system-unstable/documentation@1.9.0':
+    resolution: {integrity: sha512-acE07cKgCESCmFzroyK+qDPtOQjcLtpfZq/lWwD2zxbkKFMCEbqjXG3eDjaPxCa4ho+7azigHSQVvRrqlPuUkg==}
 
   '@nl-design-system/eslint-config@2.2.0':
     resolution: {integrity: sha512-vZVbEkOQviJoiOdQT5zOi0GuSCaFrcz9/Awg/iXsmaNoXLkD5WOPVXR7RNlqeP4fPRmrHUvnVPsTDKLeIwbn2w==}
@@ -2534,6 +2546,9 @@ packages:
 
   '@utrecht/youtube-video-css@2.0.1':
     resolution: {integrity: sha512-h4wGXrIDLUevryoUvPsAj8C6dSo23KkN7M0BgQxAhlOy6KB59aUOGBlmY+xhZtsIgL/XrHPctjwlZKw8crd3IA==}
+
+  '@vanillawc/wc-markdown@1.6.11':
+    resolution: {integrity: sha512-Ssw03l0l1oIHSlbuB/99XJ7PEcyYDjpKES+oA4czZ4IbQO1/2tSKxzHfmYfer0WdZFk4PZEIbppSpM+2k9KXmw==}
 
   '@vitejs/plugin-react@5.1.4':
     resolution: {integrity: sha512-VIcFLdRi/VYRU8OL/puL7QXMYafHmqOnwTZY50U1JPlCNj30PxCMx65c494b1K9be9hX83KVt0+gTEwTWLqToA==}
@@ -6025,6 +6040,10 @@ packages:
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
 
+  vite-bundle-analyzer@1.3.6:
+    resolution: {integrity: sha512-elFXkF9oGy4CJEeOdP1DSEHRDKWfmaEDfT9/GuF4jmyfmUF6nC//iN+ythqMEVvrtchOEHGKLumZwnu1NjoI0w==}
+    hasBin: true
+
   vite-plugin-dts@4.5.4:
     resolution: {integrity: sha512-d4sOM8M/8z7vRXHHq/ebbblfaxENjogAAekcfcDCCwAyvGqnPrc7f4NZbvItS+g4WTgerW0xDwSz5qz11JT3vg==}
     peerDependencies:
@@ -7378,6 +7397,8 @@ snapshots:
 
   '@nl-design-system-community/ma-design-tokens@3.0.0': {}
 
+  '@nl-design-system-unstable/documentation@1.9.0': {}
+
   '@nl-design-system/eslint-config@2.2.0(eslint@9.39.2)(typescript@5.9.3)':
     dependencies:
       '@eslint/js': 9.39.0
@@ -8519,6 +8540,8 @@ snapshots:
   '@utrecht/url-data-css@2.0.1': {}
 
   '@utrecht/youtube-video-css@2.0.1': {}
+
+  '@vanillawc/wc-markdown@1.6.11': {}
 
   '@vitejs/plugin-react@5.1.4(vite@7.3.1(@types/node@22.19.15)(lightningcss@1.32.0)(yaml@2.8.2))':
     dependencies:
@@ -12887,6 +12910,8 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
+
+  vite-bundle-analyzer@1.3.6: {}
 
   vite-plugin-dts@4.5.4(@types/node@22.19.15)(rollup@4.59.0)(typescript@5.9.3)(vite@8.0.0(@types/node@22.19.15)(esbuild@0.27.4)(yaml@2.8.2)):
     dependencies:
