@@ -19,6 +19,7 @@ import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
 import validationListItemStyles from './styles.ts';
+import '@vanillawc/wc-markdown';
 
 const tag = 'clippy-validation-item';
 
@@ -46,6 +47,7 @@ export class ValidationItem extends LitElement {
   @property({ type: String }) severity!: ValidationSeverity;
   @property({ type: String }) description!: string;
   @property({ type: String }) href?: string;
+  @property({ type: String }) docs?: string;
   @property({ type: String }) customCorrectLabel?: string;
   @property({ type: Function }) correct?: CorrectValidationFunction;
 
@@ -144,6 +146,7 @@ export class ValidationItem extends LitElement {
           </span>
         </div>
         <slot name="tip-html" class="clippy-dialog__list-item-tip"></slot>
+        ${this.docs ? html`<wc-markdown .textContent=${this.docs}></wc-markdown>` : nothing}
         ${this.href
           ? html`
               <p class="clippy-dialog__list-item-link nl-paragraph">
