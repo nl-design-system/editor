@@ -109,7 +109,6 @@ export class Context extends LitElement {
       editable: !this.readonly,
       editorProps: {
         attributes: {
-          id: this.id,
           class: 'clippy-content',
         },
       },
