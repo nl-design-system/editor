@@ -5,8 +5,10 @@ import alias from './vite.alias';
 export default defineConfig({
   build: {
     lib: {
-      entry: 'src/index.ts',
-      fileName: 'index',
+      entry: {
+        index: 'src/index.ts',
+        toolbar: 'src/toolbar.ts',
+      },
       formats: ['es'],
     },
   },
