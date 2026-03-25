@@ -114,7 +114,7 @@ describe('<clippy-toolbar-link>', () => {
     beforeEach(async () => {
       document.body.innerHTML = `
         <clippy-context id="toolbar-link-active-test-editor">
-          <div slot="content"><p>Hello <a href="https://example.com">world</a> text</p></div>
+          <div slot="value"><p>Hello <a href="https://example.com">world</a> text</p></div>
           <clippy-toolbar-link></clippy-toolbar-link>
         </clippy-context>
       `;

@@ -22,8 +22,15 @@ root.render(
     <h1>Clippy Editor (React)</h1>
     <hr />
     <h2>React editor example</h2>
-    <ClippyEditor id="react-editor-1">
-      <div slot="content">
+    <ClippyEditor
+      id="react-editor-1"
+      toolbar-config={[
+        ['format-select', 'language-select'],
+        ['bold', 'italic', 'underline', 'code'],
+        ['link', 'image-upload', 'insert-table'],
+      ]}
+    >
+      <div slot="value">
         <h1>Kopniveau 1 in React editor</h1>
         <p>Dit is een voorbeeld van de Clippy Editor met een Lit React wrapper</p>
       </div>
@@ -31,20 +38,20 @@ root.render(
     <hr />
     <h2>React context, content and gutter example</h2>
     <ClippyContext id="react-editor-2">
-      <div slot="content">
+      <div slot="value">
         <h1>Kopniveau 1 in React editor</h1>
         <p>
           Dit is een voorbeeld van de Clippy Editor <a href="#">met een Lit React wrapper</a>
         </p>
       </div>
+      <ClippyToolbar
+        config={[
+          ['format-select', 'language-select'],
+          ['bold', 'italic', 'underline', 'code'],
+          ['link', 'image-upload', 'insert-table'],
+        ]}
+      />
       <ClippyContent>
-        <ClippyToolbar
-          config={[
-            ['format-select', 'language-select'],
-            ['bold', 'italic', 'underline', 'code'],
-            ['link', 'image-upload', 'insert-table'],
-          ]}
-        />
         <ClippyGutter mode="list"></ClippyGutter>
       </ClippyContent>
       <ClippyValidationsList />

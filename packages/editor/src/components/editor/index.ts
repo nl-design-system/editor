@@ -29,7 +29,7 @@ export class Editor extends Context {
     return html`
       <clippy-toolbar .config=${this.toolbarConfig}></clippy-toolbar>
       <div class="clippy-editor-container" id=${EDITOR_ID}>
-        <slot name="content" hidden></slot>
+        <slot name="value" hidden></slot>
         <clippy-validations-gutter></clippy-validations-gutter>
         <clippy-content></clippy-content>
         <clippy-bubble-menu class="clippy-bubble-menu"></clippy-bubble-menu>
