@@ -1,5 +1,17 @@
 # @nl-design-system-community/editor-react
 
+## 1.3.1
+
+### Patch Changes
+
+- fd91384: Fixes:
+  - slot attribute from "content" to "value"
+  - duplicate editor id fix
+  - Component hierarchy
+  - Update of examples
+- Updated dependencies [fd91384]
+  - @nl-design-system-community/editor@1.4.1
+
 ## 1.3.0
 
 ### Minor Changes
