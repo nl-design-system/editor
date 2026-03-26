@@ -24,7 +24,7 @@
 }
 
 .clippy-toolbar-group__label {
-  font-weight: var(--basis-font-weight-bold);
+  font-weight: var(--basis-text-font-weight-bold);
   white-space: nowrap;
 }
 
@@ -63,7 +63,7 @@
   color: var(--basis-color-default-color-subtle);
   font-family: monospace;
   font-size: var(--basis-text-font-size-sm);
-  font-weight: var(--basis-font-weight-bold);
+  font-weight: var(--basis-text-font-weight-bold);
 }
 
 .clippy-config-snippet__pre {
