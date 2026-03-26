@@ -59,9 +59,16 @@ export function ToolbarConfigurator() {
     setGroups((prev) => prev.filter((_, index) => index !== groupIndex));
   }
 
-  function handleOnChange(groupIndex: number, e: React.ChangeEvent<HTMLSelectElement>) {
-    const selected = Array.from(e.currentTarget.selectedOptions).map(({ value }) => value);
-    setGroups((prev) => prev.map((group, index) => (index === groupIndex ? selected : group)));
+  function handleOnChange(e: React.ChangeEvent<HTMLSelectElement>, groupIndex: number) {
+    const selected = [...e.currentTarget.selectedOptions].map(({ value }) => value);
+    setGroups((prev) =>
+      prev.map((group, index) => {
+        if (index === groupIndex) {
+          return selected;
+        }
+        return group;
+      }),
+    );
   }
 
   async function copyToClipboard() {
@@ -92,7 +99,7 @@ export function ToolbarConfigurator() {
                     multiple
                     size={1}
                     value={group}
-                    onChange={(e) => handleOnChange(index, e)}
+                    onChange={(event) => handleOnChange(event, index)}
                   >
                     {ALL_ITEMS.map((item) => (
                       <option key={item} value={item}>
@@ -137,10 +144,11 @@ export function ToolbarConfigurator() {
               Kopiëren
             </clippy-button>
           </div>
-
-          <pre className="clippy-config-snippet__pre">
-            <code>{configJson}</code>
-          </pre>
+          <output>
+            <pre className="clippy-config-snippet__pre">
+              <code>{configJson}</code>
+            </pre>
+          </output>
         </div>
       </div>
       <ClippyEditor toolbarConfig={config}>

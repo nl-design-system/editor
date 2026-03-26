@@ -16,7 +16,7 @@
 .clippy-toolbar-group__field {
   align-items: center;
   border: var(--basis-border-width-sm) solid var(--basis-color-default-border-default);
-  border-radius: 4px;
+  border-radius: var(--basis-border-radius-sm);
   display: flex;
   gap: var(--basis-space-inline-sm);
   padding-block: var(--basis-space-block-sm);
@@ -24,7 +24,7 @@
 }
 
 .clippy-toolbar-group__label {
-  font-weight: 700;
+  font-weight: var(--basis-font-weight-bold);
   white-space: nowrap;
 }
 
@@ -34,7 +34,7 @@
 
 .clippy-toolbar-group__select {
   border: var(--basis-border-width-sm) solid var(--basis-color-default-border-default);
-  border-radius: 4px;
+  border-radius: var(--basis-border-radius-sm);
   flex: 1;
   font: inherit;
   padding-block: var(--basis-space-block-xs);
@@ -63,13 +63,13 @@
   color: var(--basis-color-default-color-subtle);
   font-family: monospace;
   font-size: var(--basis-text-font-size-sm);
-  font-weight: 700;
+  font-weight: var(--basis-font-weight-bold);
 }
 
 .clippy-config-snippet__pre {
   background-color: var(--basis-color-default-bg-subtle);
   border: var(--basis-border-width-sm) solid var(--basis-color-default-border-default);
-  border-radius: 4px;
+  border-radius: var(--basis-border-radius-sm);
   flex: 1;
   font-family: monospace;
   font-size: var(--basis-text-font-size-sm);
