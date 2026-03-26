@@ -1,5 +1,13 @@
 # @nl-design-system-community/editor-website
 
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [fd91384]
+  - @nl-design-system-community/editor@1.4.1
+  - @nl-design-system-community/editor-react@1.3.1
+
 ## 0.0.7
 
 ### Patch Changes

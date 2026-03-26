@@ -1,5 +1,15 @@
 # @nl-design-system-community/editor
 
+## 1.4.1
+
+### Patch Changes
+
+- fd91384: Fixes:
+  - slot attribute from "content" to "value"
+  - duplicate editor id fix
+  - Component hierarchy
+  - Update of examples
+
 ## 1.4.0
 
 ### Minor Changes
