@@ -144,7 +144,7 @@ export function ToolbarConfigurator() {
         </div>
       </div>
       <ClippyEditor toolbarConfig={config}>
-        <div slot="content">
+        <div slot="value">
           <h1>Live configuratie demo</h1>
           <p>Pas de opties aan om de toolbar live te wijzigen.</p>
         </div>
