@@ -1,0 +1,81 @@
+.clippy-toolbar-config-layout {
+  align-items: start;
+  display: grid;
+  gap: var(--basis-space-inline-xl);
+  grid-template-columns: 1fr 1fr;
+  margin-block-end: var(--basis-space-block-xl);
+}
+
+.clippy-toolbar-groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--basis-space-inline-sm);
+}
+
+/* bordered form field */
+.clippy-toolbar-group__field {
+  align-items: center;
+  border: var(--basis-border-width-sm) solid var(--basis-color-default-border-default);
+  border-radius: var(--basis-border-radius-sm);
+  display: flex;
+  gap: var(--basis-space-inline-sm);
+  padding-block: var(--basis-space-block-sm);
+  padding-inline: var(--basis-space-inline-md);
+}
+
+.clippy-toolbar-group__label {
+  font-weight: var(--basis-text-font-weight-bold);
+  white-space: nowrap;
+}
+
+.clippy-toolbar-group__remove {
+  flex-shrink: 0;
+}
+
+.clippy-toolbar-group__select {
+  border: var(--basis-border-width-sm) solid var(--basis-color-default-border-default);
+  border-radius: var(--basis-border-radius-sm);
+  flex: 1;
+  font: inherit;
+  padding-block: var(--basis-space-block-xs);
+  padding-inline: var(--basis-space-inline-xs);
+}
+
+.clippy-toolbar-group__select:focus {
+  border-color: var(--basis-color-accent-1-bg-default);
+  outline: 2px solid var(--basis-color-accent-1-bg-default);
+  outline-offset: 1px;
+}
+
+.clippy-config-snippet {
+  display: flex;
+  flex-direction: column;
+}
+
+.clippy-config-snippet__header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding-block-end: var(--basis-space-block-sm);
+}
+
+.clippy-config-snippet__label {
+  color: var(--basis-color-default-color-subtle);
+  font-family: monospace;
+  font-size: var(--basis-text-font-size-sm);
+  font-weight: var(--basis-text-font-weight-bold);
+}
+
+.clippy-config-snippet__pre {
+  background-color: var(--basis-color-default-bg-subtle);
+  border: var(--basis-border-width-sm) solid var(--basis-color-default-border-default);
+  border-radius: var(--basis-border-radius-sm);
+  flex: 1;
+  font-family: monospace;
+  font-size: var(--basis-text-font-size-sm);
+  margin-block: 0;
+  margin-inline: 0;
+  overflow: auto;
+  padding-block: var(--basis-space-block-lg);
+  padding-inline: var(--basis-space-inline-xl);
+}

@@ -17,7 +17,7 @@ Hieronder staat een editor met een custom toolbar configuratie: alleen tekststij
     ["link"]
   ]'
 >
-  <div slot="content">
+  <div slot="value">
     <p>Inhoud hier...</p>
   </div>
 </clippy-editor>

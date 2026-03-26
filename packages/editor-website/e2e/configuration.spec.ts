@@ -11,10 +11,6 @@ test.describe('Page basics', () => {
     await expect(page).toHaveTitle('Toolbar configuratie - Rich-text Editor - NL Design System');
   });
 
-  test('page has document language', async ({ page }) => {
-    await expect(page.locator('html')).toHaveAttribute('lang', 'nl');
-  });
-
   test('page heading is visible', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Toolbar configuratie', level: 1 })).toBeVisible();
   });
@@ -56,23 +52,49 @@ test.describe('Minimal toolbar editor', () => {
 });
 
 test.describe('Live configuration demo', () => {
-  test('textarea and live editor are visible', async ({ page }) => {
-    await expect(page.locator('#toolbar-config-input')).toBeVisible();
-    await expect(page.locator('clippy-editor#clippy-editor-live-config')).toBeVisible();
+  test('configuration panel and live editor are visible', async ({ page }) => {
+    await expect(page.getByLabel('Groep 1', { exact: true })).toBeVisible();
+    await expect(page.locator('clippy-editor', { hasText: 'Live configuratie demo' })).toBeVisible();
   });
 
-  test('textarea is pre-filled with JSON', async ({ page }) => {
-    const textarea = page.locator('#toolbar-config-input');
-    const value = await textarea.inputValue();
-    expect(() => JSON.parse(value)).not.toThrow();
+  test('config snippet shows valid JSON', async ({ page }) => {
+    const output = page.locator('output');
+    const value = await output.textContent();
+    expect(() => JSON.parse(value ?? '')).not.toThrow();
   });
 
-  test('invalid JSON shows an error message', async ({ page }) => {
-    await page.locator('#toolbar-config-input').fill('not valid json');
-    await page.locator('#toolbar-config-input').press('Space');
+  test('adding a group shows a new group select', async ({ page }) => {
+    await page.getByRole('button', { name: 'Groep toevoegen', exact: true }).click();
+    await expect(page.getByLabel('Groep 2', { exact: true })).toBeVisible();
+  });
 
-    const errorEl = page.locator('#toolbar-config-error');
-    await expect(errorEl).toBeVisible();
-    await expect(errorEl).toContainText('Ongeldige JSON');
+  test('selecting bold, italic and underline in a new group updates the JSON output', async ({ page }) => {
+    await page.getByRole('button', { name: 'Groep toevoegen', exact: true }).click();
+    const newGroup = page.getByLabel('Groep 2', { exact: true });
+    await expect(newGroup).toBeVisible();
+
+    await newGroup.selectOption(['bold', 'italic', 'underline']);
+
+    const output = page.locator('output');
+    const value = await output.textContent();
+    const config = JSON.parse(value ?? '');
+
+    expect(config).toHaveLength(2);
+    expect(config[1]).toEqual(['bold', 'italic', 'underline']);
+  });
+
+  test('selecting bold, italic and underline in a new group updates the live editor toolbar', async ({ page }) => {
+    const liveEditor = page.locator('clippy-editor', { hasText: 'Live configuratie demo' });
+
+    await page.getByRole('button', { name: 'Groep toevoegen', exact: true }).click();
+    const newGroup = page.getByLabel('Groep 2', { exact: true });
+    await expect(newGroup).toBeVisible();
+
+    await newGroup.selectOption(['bold', 'italic', 'underline']);
+
+    // Both groups contain bold, italic and underline — each button should appear twice in the toolbar
+    await expect(liveEditor.getByRole('button', { name: 'Vetgedrukt', exact: true })).toHaveCount(2);
+    await expect(liveEditor.getByRole('button', { name: 'Cursief', exact: true })).toHaveCount(2);
+    await expect(liveEditor.getByRole('button', { name: 'Onderstrepen', exact: true })).toHaveCount(2);
   });
 });

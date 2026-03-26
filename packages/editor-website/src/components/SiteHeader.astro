@@ -72,7 +72,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 
   .ma-site-header__logo-label {
     font-size: var(--basis-text-font-size-lg);
-    font-weight: 700;
+    font-weight: var(--basis-text-font-weight-bold);
   }
 
   .ma-site-header__nav {
@@ -99,7 +99,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
   }
 
   .ma-site-header__nav-link--active {
-    font-weight: 700;
+    font-weight: var(--basis-text-font-weight-bold);
     text-decoration: underline;
   }
 </style>

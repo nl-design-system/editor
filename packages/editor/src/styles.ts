@@ -60,7 +60,7 @@ export default css`
       position: absolute;
       background: var(--ma-color-paars-8);
       border: 1px solid rgba(255, 255, 255, 0.8);
-      border-radius: 4px;
+      border-radius: var(--basis-border-radius-sm);
       z-index: 10;
 
       &:hover {
