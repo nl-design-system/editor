@@ -42,8 +42,8 @@ export class Context extends LitElement {
   static override readonly styles = editorContextStyles;
 
   @provide({ context: identifierContext })
-  @property({ attribute: 'id', type: String })
-  identifier = 'clippy-editor-id';
+  @property({ reflect: true, type: String })
+  override id = 'clippy-editor-id';
 
   @property({ attribute: 'top-heading-level', reflect: true, type: Number })
   topHeadingLevel = 1;
@@ -79,7 +79,7 @@ export class Context extends LitElement {
   @property({ attribute: 'readonly', reflect: true, type: Boolean })
   readonly = false;
 
-  @queryAssignedElements({ flatten: true, slot: 'content' })
+  @queryAssignedElements({ flatten: true, slot: 'value' })
   contentSlot!: HTMLElement[];
 
   @provide({ context: validationsContext })
@@ -109,7 +109,6 @@ export class Context extends LitElement {
       editable: !this.readonly,
       editorProps: {
         attributes: {
-          id: this.identifier,
           class: 'clippy-content',
         },
       },
@@ -121,12 +120,18 @@ export class Context extends LitElement {
           topHeadingLevel: sanitizedTopHeadingLevel,
         },
         this.updateValidationsContext,
-        this.identifier,
+        this.id,
       ),
     });
   }
 
   override firstUpdated(): void {
+    if (registeredIdentifiers.has(this.id)) {
+      throw new Error(
+        `[clippy-context] Duplicate identifier detected: "${this.id}". Each <clippy-context> must have a unique identifier.`,
+      );
+    }
+    registeredIdentifiers.add(this.id);
     this.createEditor();
   }
 
@@ -141,12 +146,6 @@ export class Context extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    if (registeredIdentifiers.has(this.identifier)) {
-      throw new Error(
-        `[clippy-context] Duplicate identifier detected: "${this.identifier}". Each <clippy-context> must have a unique identifier.`,
-      );
-    }
-    registeredIdentifiers.add(this.identifier);
     this.lightValidationsContext.hostConnected();
     if (!this.isLocaleInitialized) {
       this.isLocaleInitialized = true;
@@ -169,12 +168,12 @@ export class Context extends LitElement {
   }
 
   override disconnectedCallback() {
-    registeredIdentifiers.delete(this.identifier);
+    registeredIdentifiers.delete(this.id);
     this.editor?.destroy();
     super.disconnectedCallback();
   }
 
   override render() {
-    return html` <slot name="content" hidden></slot><slot></slot>`;
+    return html` <slot name="value" hidden></slot><slot></slot>`;
   }
 }

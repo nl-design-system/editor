@@ -64,7 +64,7 @@ test.describe('Validation messages shown for bad content', () => {
   });
 
   test('editor-10 (afbeelding zonder alt) has an image in its content', async ({ page }) => {
-    const slot = page.locator('clippy-context#editor-10 [slot="content"]');
+    const slot = page.locator('clippy-context#editor-10 [slot="value"]');
     await expect(slot.locator('img')).toBeAttached();
   });
 

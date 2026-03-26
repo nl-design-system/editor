@@ -23,7 +23,7 @@ export class ContentView extends Context {
 
   override render() {
     return html`
-      <slot name="content" hidden></slot>
+      <slot name="value" hidden></slot>
       <div class="clippy-content-view__topbar">
         <clippy-heading-structure></clippy-heading-structure>
       </div>
