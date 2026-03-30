@@ -1,6 +1,11 @@
 import { msg, str } from '@lit/localize';
+import headingsDocs from '@nl-design-system-unstable/documentation/richtlijnen/content/tekstopmaak/headings.md?raw';
 import { html, type TemplateResult } from 'lit';
 import { contentValidations, documentValidations } from '@/constants';
+
+export const contentDocs: Record<string, string> = {
+  headings: headingsDocs,
+};
 
 type TipFn = (args?: Record<string, number | string | boolean>) => string | TemplateResult | null;
 
@@ -9,7 +14,7 @@ type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentV
 export type ValidationKey = ContentValidationKey | DocumentValidationKey;
 
 type ValidationMessages = {
-  [K in ValidationKey]: { customCorrectLabel?: string; description: string; href?: string; tip?: TipFn };
+  [K in ValidationKey]: { customCorrectLabel?: string; description: string; href?: string; tip?: TipFn; docs?: string };
 };
 
 export type { ValidationMessages };
@@ -39,6 +44,7 @@ export const validationMessages = (): ValidationMessages =>
     },
     [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: {
       description: msg('Heading must not be empty'),
+      docs: contentDocs['headings'],
       href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#voor-wie-zijn-toegankelijke-koppen-belangrijk',
     },
     [contentValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: {
