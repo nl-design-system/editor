@@ -4,7 +4,6 @@ import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { map } from 'lit/directives/map.js';
 import type { ValidationsMap } from '@/types/validation.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
@@ -76,50 +75,50 @@ export class Gutter extends LitElement {
       return nothing;
     }
 
+    const sortedValidations = [...this.validationsContext.entries()].sort(([, a], [, b]) => a.pos - b.pos);
+
     return html`
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
-        ${map(this.validationsContext?.entries(), ([key, { boundingBox, correct, pos, severity, tipPayload }]) => {
+        ${sortedValidations.map(([key, { boundingBox, correct, pos, severity, tipPayload }]) => {
+          if (!boundingBox) return nothing;
           const validationKey = key.split('_')[0] as ValidationKey;
           const { customCorrectLabel, description, href, tip } = validationMessages()[validationKey];
           const tipHtml = tip?.(tipPayload) ?? null;
           const isActive = this.activeValidationItemKey === key;
-          return (
-            boundingBox &&
-            html`<li
-              class="clippy-validations-gutter__indicator"
-              style="inset-block-start: ${boundingBox.top}px; block-size: ${boundingBox.height}px"
+          return html`<li
+            class="clippy-validations-gutter__indicator"
+            style="inset-block-start: ${boundingBox.top}px; block-size: ${boundingBox.height}px"
+          >
+            <button
+              class="${classMap({
+                [`clippy-validations-gutter__toggle--${severity}`]: true,
+                'clippy-validations-gutter__toggle': true,
+                'clippy-validations-gutter__toggle--active': isActive,
+              })}"
+              aria-expanded=${isActive ? 'true' : 'false'}
+              aria-label=${description}
+              @click=${() => this.#handleIndicatorClick(key)}
+            ></button>
+            <div
+              class="${classMap({
+                'clippy-validation-gutter__tooltip': true,
+                'clippy-validation-gutter__tooltip--active': isActive,
+              })}"
             >
-              <button
-                class="${classMap({
-                  [`clippy-validations-gutter__toggle--${severity}`]: true,
-                  'clippy-validations-gutter__toggle': true,
-                  'clippy-validations-gutter__toggle--active': isActive,
-                })}"
-                aria-expanded=${isActive ? 'true' : 'false'}
-                aria-label=${description}
-                @click=${() => this.#handleIndicatorClick(key)}
-              ></button>
-              <div
-                class="${classMap({
-                  'clippy-validation-gutter__tooltip': true,
-                  'clippy-validation-gutter__tooltip--active': isActive,
-                })}"
+              <clippy-validation-item
+                .key=${key}
+                .mode=${this.mode}
+                .pos=${pos}
+                .severity=${severity}
+                .description=${description}
+                .href=${href}
+                .customCorrectLabel=${customCorrectLabel}
+                .correct=${correct}
               >
-                <clippy-validation-item
-                  .key=${key}
-                  .mode=${this.mode}
-                  .pos=${pos}
-                  .severity=${severity}
-                  .description=${description}
-                  .href=${href}
-                  .customCorrectLabel=${customCorrectLabel}
-                  .correct=${correct}
-                >
-                  ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
-                </clippy-validation-item>
-              </div>
-            </li> `
-          );
+                ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
+              </clippy-validation-item>
+            </div>
+          </li>`;
         })}
       </ol>
     `;
