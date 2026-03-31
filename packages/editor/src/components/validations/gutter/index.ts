@@ -79,47 +79,49 @@ export class Gutter extends LitElement {
 
     return html`
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
-        ${sortedValidations.map(([key, { boundingBox, correct, pos, severity, tipPayload }]) => {
-          if (!boundingBox) return nothing;
-          const validationKey = key.split('_')[0] as ValidationKey;
-          const { customCorrectLabel, description, href, tip } = validationMessages()[validationKey];
-          const tipHtml = tip?.(tipPayload) ?? null;
-          const isActive = this.activeValidationItemKey === key;
-          return html`<li
-            class="clippy-validations-gutter__indicator"
-            style="inset-block-start: ${boundingBox.top}px; block-size: ${boundingBox.height}px"
-          >
-            <button
-              class="${classMap({
-                [`clippy-validations-gutter__toggle--${severity}`]: true,
-                'clippy-validations-gutter__toggle': true,
-                'clippy-validations-gutter__toggle--active': isActive,
-              })}"
-              aria-expanded=${isActive ? 'true' : 'false'}
-              aria-label=${description}
-              @click=${() => this.#handleIndicatorClick(key)}
-            ></button>
-            <div
-              class="${classMap({
-                'clippy-validation-gutter__tooltip': true,
-                'clippy-validation-gutter__tooltip--active': isActive,
-              })}"
+        ${sortedValidations
+          .filter(([, { boundingBox }]) => boundingBox !== undefined)
+          .map(([key, { boundingBox, correct, pos, severity, tipPayload }]) => {
+            if (!boundingBox) return nothing;
+            const validationKey = key.split('_')[0] as ValidationKey;
+            const { customCorrectLabel, description, href, tip } = validationMessages()[validationKey];
+            const tipHtml = tip?.(tipPayload) ?? null;
+            const isActive = this.activeValidationItemKey === key;
+            return html`<li
+              class="clippy-validations-gutter__indicator"
+              style="inset-block-start: ${boundingBox.top}px; block-size: ${boundingBox.height}px"
             >
-              <clippy-validation-item
-                .key=${key}
-                .mode=${this.mode}
-                .pos=${pos}
-                .severity=${severity}
-                .description=${description}
-                .href=${href}
-                .customCorrectLabel=${customCorrectLabel}
-                .correct=${correct}
+              <button
+                class="${classMap({
+                  [`clippy-validations-gutter__toggle--${severity}`]: true,
+                  'clippy-validations-gutter__toggle': true,
+                  'clippy-validations-gutter__toggle--active': isActive,
+                })}"
+                aria-expanded=${isActive ? 'true' : 'false'}
+                aria-label=${description}
+                @click=${() => this.#handleIndicatorClick(key)}
+              ></button>
+              <div
+                class="${classMap({
+                  'clippy-validation-gutter__tooltip': true,
+                  'clippy-validation-gutter__tooltip--active': isActive,
+                })}"
               >
-                ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
-              </clippy-validation-item>
-            </div>
-          </li>`;
-        })}
+                <clippy-validation-item
+                  .key=${key}
+                  .mode=${this.mode}
+                  .pos=${pos}
+                  .severity=${severity}
+                  .description=${description}
+                  .href=${href}
+                  .customCorrectLabel=${customCorrectLabel}
+                  .correct=${correct}
+                >
+                  ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
+                </clippy-validation-item>
+              </div>
+            </li>`;
+          })}
       </ol>
     `;
   }
