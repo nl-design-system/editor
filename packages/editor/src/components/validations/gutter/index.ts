@@ -4,7 +4,6 @@ import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { map } from 'lit/directives/map.js';
 import type { ValidationsMap } from '@/types/validation.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
@@ -76,16 +75,19 @@ export class Gutter extends LitElement {
       return nothing;
     }
 
+    const sortedValidations = [...this.validationsContext.entries()].sort(([, a], [, b]) => a.pos - b.pos);
+
     return html`
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
-        ${map(this.validationsContext?.entries(), ([key, { boundingBox, correct, pos, severity, tipPayload }]) => {
-          const validationKey = key.split('_')[0] as ValidationKey;
-          const { customCorrectLabel, description, href, tip } = validationMessages()[validationKey];
-          const tipHtml = tip?.(tipPayload) ?? null;
-          const isActive = this.activeValidationItemKey === key;
-          return (
-            boundingBox &&
-            html`<li
+        ${sortedValidations
+          .filter(([, { boundingBox }]) => boundingBox !== undefined)
+          .map(([key, { boundingBox, correct, pos, severity, tipPayload }]) => {
+            if (!boundingBox) return nothing;
+            const validationKey = key.split('_')[0] as ValidationKey;
+            const { customCorrectLabel, description, href, tip } = validationMessages()[validationKey];
+            const tipHtml = tip?.(tipPayload) ?? null;
+            const isActive = this.activeValidationItemKey === key;
+            return html`<li
               class="clippy-validations-gutter__indicator"
               style="inset-block-start: ${boundingBox.top}px; block-size: ${boundingBox.height}px"
             >
@@ -118,9 +120,8 @@ export class Gutter extends LitElement {
                   ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
                 </clippy-validation-item>
               </div>
-            </li> `
-          );
-        })}
+            </li>`;
+          })}
       </ol>
     `;
   }

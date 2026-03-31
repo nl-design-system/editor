@@ -2,21 +2,9 @@ import { css } from 'lit';
 
 export default css`
   :host {
-    block-size: 100%;
-    inset-block-start: 0;
-    inset-inline-end: 0;
-    position: fixed;
-    align-items: flex-start;
-    display: flex;
-    inline-size: fit-content;
-    pointer-events: none;
-    background: #fff;
-    border-inline-start: 1px solid var(--clippy-validations-dialog-border-color);
-    z-index: 1;
+    display: contents;
   }
-  :host > * {
-    pointer-events: auto;
-  }
+
   .clippy-dialog__close-button {
     border: none;
     background: none;
@@ -24,26 +12,48 @@ export default css`
   }
 
   .clippy-dialog__content {
-    padding-inline-end: var(--basis-space-inline-xl);
-    padding-block-end: calc(var(--basis-space-inline-xl) * 2);
-    position: relative;
-    margin-block: unset;
-    margin-inline: unset;
-    background: transparent;
-    border: 0;
-    overflow: auto;
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    block-size: 100%;
+    inline-size: fit-content;
     max-inline-size: 500px;
-    max-block-size: calc(100% - var(--basis-space-inline-xl) * 2);
+    max-block-size: 100%;
+    border: 0;
+    margin-inline-end: 0;
+    padding-inline: 0;
+    padding-block: 0;
+    overflow: hidden;
+
+    &[open] {
+      display: flex;
+      flex-direction: column;
+    }
+
     &:focus-visible {
       outline: none;
     }
+  }
+
+  .clippy-dialog__header {
+    flex-shrink: 0;
+    padding-block: var(--basis-space-block-xl);
+    padding-inline: var(--basis-space-inline-xl);
+  }
+
+  .clippy-dialog__body {
+    flex: 1;
+    min-block-size: 0;
+    overflow-y: auto;
+    padding-inline: var(--basis-space-inline-xl);
+    padding-block-end: var(--basis-space-block-xl);
   }
 
   .clippy-dialog__list {
     display: grid;
     gap: var(--basis-space-inline-xl);
     list-style: none;
-    margin-block: var(--basis-space-inline-xl) 0;
+    margin-block: 0;
     padding-block: 0;
     padding-inline: 0;
   }

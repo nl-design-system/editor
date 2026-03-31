@@ -87,7 +87,7 @@ export class ValidationsDialog extends LitElement {
     if (this.open) {
       value?.close();
     } else {
-      value?.show();
+      value?.showModal();
     }
     this.open = !this.open;
   };
@@ -156,38 +156,42 @@ export class ValidationsDialog extends LitElement {
         class="clippy-dialog__content"
         aria-label=${msg('Accessibility notifications')}
       >
-        <clippy-button
-          class="clippy-dialog__close-button"
-          icon-only
-          purpose="subtle"
-          @click=${() => this.#toggleOpen()}
-        >
-          <clippy-icon slot="iconStart">${unsafeSVG(X)}</clippy-icon>
-          ${msg('Close')}
-        </clippy-button>
-        <clippy-tabs></clippy-tabs>
-        <ul class="clippy-dialog__list" data-testid="clippy-validations-list">
-          ${size > 0
-            ? map(filteredValidations, ([key, { correct, pos, severity, tipPayload }]) => {
-                const validationKey = key.split('_')[0] as ValidationKey;
-                const { customCorrectLabel, description, href, tip } = validationMessages()[validationKey];
-                const tipHtml = tip?.(tipPayload) ?? null;
-                return html`
-                  <clippy-validation-item
-                    .key=${key}
-                    .pos=${pos}
-                    .severity=${severity}
-                    .description=${description}
-                    .href=${href}
-                    .customCorrectLabel=${customCorrectLabel}
-                    .correct=${correct}
-                  >
-                    ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${tipHtml}</p>` : nothing}
-                  </clippy-validation-item>
-                `;
-              })
-            : html`<li class="clippy-dialog__list-item">${msg('No accessibility notifications found.')}</li>`}
-        </ul>
+        <div class="clippy-dialog__header">
+          <clippy-button
+            class="clippy-dialog__close-button"
+            icon-only
+            purpose="subtle"
+            @click=${() => this.#toggleOpen()}
+          >
+            <clippy-icon slot="iconStart">${unsafeSVG(X)}</clippy-icon>
+            ${msg('Close')}
+          </clippy-button>
+          <clippy-tabs></clippy-tabs>
+        </div>
+        <div class="clippy-dialog__body">
+          <ul class="clippy-dialog__list" data-testid="clippy-validations-list">
+            ${size > 0
+              ? map(filteredValidations, ([key, { correct, pos, severity, tipPayload }]) => {
+                  const validationKey = key.split('_')[0] as ValidationKey;
+                  const { customCorrectLabel, description, href, tip } = validationMessages()[validationKey];
+                  const tipHtml = tip?.(tipPayload) ?? null;
+                  return html`
+                    <clippy-validation-item
+                      .key=${key}
+                      .pos=${pos}
+                      .severity=${severity}
+                      .description=${description}
+                      .href=${href}
+                      .customCorrectLabel=${customCorrectLabel}
+                      .correct=${correct}
+                    >
+                      ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${tipHtml}</p>` : nothing}
+                    </clippy-validation-item>
+                  `;
+                })
+              : html`<li class="clippy-dialog__list-item">${msg('No accessibility notifications found.')}</li>`}
+          </ul>
+        </div>
       </dialog>
     `;
   }
