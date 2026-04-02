@@ -5,12 +5,12 @@ export default css`
     display: contents;
   }
 
-  .clippy-content-view-dialog__dialog {
+  .clippy-content-views-dialog__dialog {
     --utrecht-drawer-z-index: 10;
   }
 
   /* ── Topbar (lives inside the dialog) ── */
-  .clippy-content-view-dialog__topbar {
+  .clippy-content-views-dialog__topbar {
     align-items: center;
     background-color: var(--basis-color-neutral-bg-subtle, #f5f5f5);
     border-block-end: var(--basis-border-width-sm, 1px) solid var(--basis-color-default-border-default, #e0e0e0);
@@ -24,9 +24,8 @@ export default css`
     z-index: 1;
   }
 
-  .clippy-content-view-dialog__modes {
+  .clippy-content-views-dialog__modes {
     display: flex;
     gap: var(--basis-space-inline-sm, 0.25rem);
   }
 `;
-

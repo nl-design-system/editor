@@ -9,12 +9,12 @@ import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents } from '@/events';
 import '../validations/gutter';
 import '../content';
-import '../content-view-dialog';
+import './dialog';
 import { Context } from '../context';
 import { editorContextStyles } from '../context/styles.ts';
 import contentViewStyles from './styles.ts';
 
-const tag = 'clippy-content-view';
+const tag = 'clippy-content-views';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -56,7 +56,7 @@ export class ContentView extends Context {
         <clippy-validations-gutter mode="readonly"></clippy-validations-gutter>
         <clippy-content></clippy-content>
       </div>
-      <clippy-content-view-dialog></clippy-content-view-dialog>
+      <clippy-content-views-dialog></clippy-content-views-dialog>
     `;
   }
 }

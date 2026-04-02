@@ -8,17 +8,19 @@ import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
-import type { ValidationsMap, ValidationResult, ValidationSeverity } from '@/types/validation.ts';
+import type { ValidationsMap, ValidationResult } from '@/types/validation.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents } from '@/events';
+import { getHighestSeverityEntryByPosition } from '@/utils/validations.ts';
 import headingStructureStyles from './styles.ts';
 
 interface HeadingEntry {
   level: number;
   pos: number;
   text: string;
+  validationEntry: [string, ValidationResult] | null;
 }
 
 const tag = 'clippy-heading-structure';
@@ -29,19 +31,6 @@ declare global {
   }
 }
 
-/**
- * Panel that renders the heading structure (table of contents) of the TipTap document.
- * Intended to be hosted inside `<clippy-content-view-dialog>`.
- *
- * Clicking a heading entry scrolls the content to that heading in the editor.
- *
- * @consumes tiptapContext
- * @consumes validationsContext
- *
- * WCAG 2.2 considerations:
- * - 2.1.1 Keyboard: all links are keyboard-focusable
- * - 2.4.1 Bypass Blocks: provides document navigation
- */
 @localized()
 @safeCustomElement(tag)
 export class HeadingStructure extends LitElement {
@@ -60,24 +49,17 @@ export class HeadingStructure extends LitElement {
   @property({ attribute: false })
   validationsMap?: ValidationsMap;
 
-  readonly #severityOrder: ValidationSeverity[] = ['error', 'warning', 'info'];
-
-  #getValidationItemsByPosition(pos: number): [string, ValidationResult] | null {
-    if (!this.validationsMap?.size) return null;
-    return (
-      [...this.validationsMap.entries()]
-        .filter(([, result]) => result.pos === pos)
-        .sort(([, a], [, b]) => this.#severityOrder.indexOf(a.severity) - this.#severityOrder.indexOf(b.severity))
-        .at(0) ?? null
-    );
-  }
-
   get #headings(): HeadingEntry[] {
     if (!this.editor) return [];
     const headings: HeadingEntry[] = [];
     this.editor.state.doc.descendants((node, pos) => {
       if (node.type.name === 'heading') {
-        headings.push({ level: node.attrs['level'] as number, pos, text: node.textContent });
+        headings.push({
+          level: node.attrs['level'] as number,
+          pos,
+          text: node.textContent,
+          validationEntry: getHighestSeverityEntryByPosition(this.validationsMap, pos),
+        });
       }
     });
     return headings;
@@ -95,7 +77,7 @@ export class HeadingStructure extends LitElement {
       console.error('[clippy-heading-structure] Cannot scroll to heading', err);
     }
 
-    const validationKey = this.#getValidationItemsByPosition(pos)?.[0] ?? null;
+    const validationKey = getHighestSeverityEntryByPosition(this.validationsMap, pos)?.[0] ?? null;
     if (validationKey) {
       globalThis.dispatchEvent(
         new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, {
@@ -115,8 +97,8 @@ export class HeadingStructure extends LitElement {
         ${headings.length > 0
           ? html`
               <ol class="clippy-heading-structure__list" role="list">
-                ${map(headings, ({ level, pos, text }) => {
-                  const severity = this.#getValidationItemsByPosition(pos)?.[1].severity ?? null;
+                ${map(headings, ({ level, pos, text, validationEntry }) => {
+                  const severity = validationEntry?.[1].severity;
                   return html`
                     <li class="clippy-heading-structure__item" data-level="${level}">
                       <span
@@ -140,9 +122,7 @@ export class HeadingStructure extends LitElement {
               </ol>
             `
           : html`
-              <p class="nl-paragraph clippy-heading-structure__empty">
-                ${msg('No headings found in this document.')}
-              </p>
+              <p class="nl-paragraph clippy-heading-structure__empty">${msg('No headings found in this document.')}</p>
             `}
       </nav>
     `;

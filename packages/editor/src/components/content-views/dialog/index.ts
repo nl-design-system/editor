@@ -13,9 +13,9 @@ import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents, type DocumentOverviewMode, type OpenDocumentOverviewDetail } from '@/events';
 import '../heading-structure';
 import '../link-list';
-import contentViewDialogStyles from './styles.ts';
+import contentViewsDialogStyles from './styles.ts';
 
-const tag = 'clippy-content-view-dialog';
+const tag = 'clippy-content-views-dialog';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -26,7 +26,7 @@ declare global {
 @localized()
 @safeCustomElement(tag)
 export class ContentViewDialog extends LitElement {
-  static override readonly styles = [contentViewDialogStyles, unsafeCSS(drawerStyle)];
+  static override readonly styles = [contentViewsDialogStyles, unsafeCSS(drawerStyle)];
 
   @state()
   private open = false;
@@ -70,13 +70,13 @@ export class ContentViewDialog extends LitElement {
     return html`
       <dialog
         ${ref(this.#dialogRef)}
-        id="clippy-content-view-dialog"
-        class="utrecht-drawer utrecht-drawer--inline-start clippy-content-view-dialog__dialog"
+        id="clippy-content-views-dialog"
+        class="utrecht-drawer utrecht-drawer--inline-start clippy-content-views-dialog__dialog"
         aria-label=${msg('Document overview')}
       >
         <!-- Topbar with mode-switching lives inside the dialog -->
-        <div class="clippy-content-view-dialog__topbar">
-          <div class="clippy-content-view-dialog__modes" role="tablist" aria-label=${msg('Document overview')}>
+        <div class="clippy-content-views-dialog__topbar">
+          <div class="clippy-content-views-dialog__modes" role="tablist" aria-label=${msg('Document overview')}>
             <clippy-button
               purpose="subtle"
               @click=${() => {
