@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="nl" dir="ltr" class="ma-theme clippy-theme utrecht-root">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rich-text Editor (SSR) - NL Design System</title>
+    <style>
+      main {
+        max-inline-size: 800px;
+        margin-inline: auto;
+      }
+
+      clippy-editor:not(:defined),
+      clippy-context:not(:defined) {
+        border: 1px dashed;
+        display: block;
+        padding-block: 1rem;
+        padding-inline: 1rem;
+      }
+
+      clippy-editor:not(:defined)::before,
+      clippy-context:not(:defined)::before {
+        content: 'Loading...';
+        display: block;
+      }
+    </style>
+  </head>
+  <body class="utrecht-body">
+    <main id="app"><!--ssr-outlet--></main>
+    <script type="module" src="/src/entry-client.ts"></script>
+  </body>
+</html>
