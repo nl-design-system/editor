@@ -260,8 +260,8 @@ importers:
         specifier: 2.1.3
         version: 2.1.3
       '@nl-design-system-community/ma-design-tokens':
-        specifier: 4.1.0
-        version: 4.1.0
+        specifier: 3.0.0
+        version: 3.0.0
       '@nl-design-system/tsconfig':
         specifier: 1.0.5
         version: 1.0.5(typescript@5.9.3)
@@ -341,8 +341,8 @@ importers:
         specifier: workspace:*
         version: link:../react
       '@nl-design-system-community/ma-design-tokens':
-        specifier: 4.1.0
-        version: 4.1.0
+        specifier: 3.0.0
+        version: 3.0.0
       '@tabler/icons':
         specifier: 3.41.1
         version: 3.41.1
@@ -406,8 +406,8 @@ importers:
         specifier: 1.0.8
         version: 1.0.8(@types/react@19.2.2)
       '@nl-design-system-community/ma-design-tokens':
-        specifier: 4.1.0
-        version: 4.1.0
+        specifier: 3.0.0
+        version: 3.0.0
       '@nl-design-system/tsconfig':
         specifier: 1.0.5
         version: 1.0.5(typescript@5.9.3)
@@ -1394,8 +1394,8 @@ packages:
   '@nl-design-system-community/clippy-components@2.0.0':
     resolution: {integrity: sha512-HIYkRZYPyQ+eI2mSjqtymXCLQQ5FcHQAWF1ItKAx8RGqphONteGAojq4ED7j7oJ+HV90ulJ6MpRHR1JJ85AOGQ==}
 
-  '@nl-design-system-community/ma-design-tokens@4.1.0':
-    resolution: {integrity: sha512-HW/SbCkt6Sxfnn8odMy+c0p4fE4ehFcIcQzWvdd7Ed6PgBDDb1d6DJc0lr1FX0/rKCp3YSAKDuTB4nqlCbrKcw==}
+  '@nl-design-system-community/ma-design-tokens@3.0.0':
+    resolution: {integrity: sha512-95uF6BODj/RldOGIdB0i4L8ISoJ4CauQVzZb6sgD8GBA4btEdX3Cdc6VOKncKbknads5WePeNFap7lo7YrlRGg==}
 
   '@nl-design-system/eslint-config@2.2.0':
     resolution: {integrity: sha512-vZVbEkOQviJoiOdQT5zOi0GuSCaFrcz9/Awg/iXsmaNoXLkD5WOPVXR7RNlqeP4fPRmrHUvnVPsTDKLeIwbn2w==}
@@ -7407,7 +7407,7 @@ snapshots:
       - '@amsterdam/design-system-assets'
       - '@amsterdam/design-system-tokens'
 
-  '@nl-design-system-community/ma-design-tokens@4.1.0': {}
+  '@nl-design-system-community/ma-design-tokens@3.0.0': {}
 
   '@nl-design-system/eslint-config@2.2.0(eslint@9.39.2)(typescript@5.9.3)':
     dependencies:
