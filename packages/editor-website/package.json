@@ -29,7 +29,7 @@
     "@nl-design-system-candidate/button-css": "1.1.0",
     "@nl-design-system-community/editor": "workspace:*",
     "@nl-design-system-community/editor-react": "workspace:*",
-    "@nl-design-system-community/ma-design-tokens": "3.0.0",
+    "@nl-design-system-community/ma-design-tokens": "4.1.0",
     "@tabler/icons": "3.40.0",
     "@types/react": "18.3.28",
     "@types/react-dom": "18.3.7",
