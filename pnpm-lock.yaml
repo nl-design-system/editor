@@ -52,8 +52,8 @@ importers:
         specifier: 0.48.0
         version: 0.48.0
       npm-check-updates:
-        specifier: 19.6.5
-        version: 19.6.5
+        specifier: 20.0.0
+        version: 20.0.0
       npm-package-json-lint:
         specifier: 10.0.0
         version: 10.0.0(typescript@5.9.3)
@@ -4695,8 +4695,8 @@ packages:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
 
-  npm-check-updates@19.6.5:
-    resolution: {integrity: sha512-XlBUMC30relXfEerrnX239W9iB30U6Woz0Hj42Sv6iSF4EGOvj2mS2r45sZ3RglH0VPBxXOWooMxObZ/SMZhrw==}
+  npm-check-updates@20.0.0:
+    resolution: {integrity: sha512-qCs02x51irGf0okCttwv8lHEO2NxT903IJ2bKpG82kIzkm6pfT3CoWB5YIvqY/wi/DdnYRfI7eVfCYYymQgvCg==}
     engines: {node: '>=20.0.0', npm: '>=8.12.1'}
     hasBin: true
 
@@ -11287,7 +11287,7 @@ snapshots:
 
   normalize-path@3.0.0: {}
 
-  npm-check-updates@19.6.5: {}
+  npm-check-updates@20.0.0: {}
 
   npm-package-json-lint@10.0.0(typescript@5.9.3):
     dependencies:
