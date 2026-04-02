@@ -1,0 +1,135 @@
+import type { Editor as TiptapEditor } from '@tiptap/core';
+import { consume } from '@lit/context';
+import { localized, msg } from '@lit/localize';
+import dataBadgeStyle from '@nl-design-system-candidate/data-badge-css/data-badge.css?inline';
+import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
+import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
+import { LitElement, html, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
+import { map } from 'lit/directives/map.js';
+import type { ValidationsMap, ValidationResult } from '@/types/validation.ts';
+import { tiptapContext } from '@/context/tiptapContext.ts';
+import { validationsContext } from '@/context/validationsContext.ts';
+import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
+import { CustomEvents } from '@/events';
+import { getHighestSeverityEntryByPosition } from '@/utils/validations.ts';
+import linkListStyles from './styles.ts';
+
+interface LinkEntry {
+  href: string;
+  pos: number;
+  text: string;
+  validationEntry: [string, ValidationResult] | null;
+}
+
+const tag = 'clippy-link-list';
+
+declare global {
+  interface HTMLElementTagNameMap {
+    [tag]: LinkList;
+  }
+}
+
+@localized()
+@safeCustomElement(tag)
+export class LinkList extends LitElement {
+  static override readonly styles = [
+    linkListStyles,
+    unsafeCSS(dataBadgeStyle),
+    unsafeCSS(linkStyle),
+    unsafeCSS(paragraphStyle),
+  ];
+
+  @consume({ context: tiptapContext, subscribe: true })
+  @property({ attribute: false })
+  editor?: TiptapEditor;
+
+  @consume({ context: validationsContext, subscribe: true })
+  @property({ attribute: false })
+  validationsMap?: ValidationsMap;
+
+  get #links(): LinkEntry[] {
+    if (!this.editor) return [];
+    const links: LinkEntry[] = [];
+    this.editor.state.doc.descendants((node, pos) => {
+      if (!node.isText) return;
+      const linkMark = node.marks.find((mark) => mark.type.name === 'link');
+      if (!linkMark) return;
+      const href = (linkMark.attrs['href'] as string) ?? '';
+      const text = node.text ?? '';
+      const last = links.at(-1);
+      // Merge consecutive text nodes that belong to the same link
+      if (last?.href === href && last.pos + last.text.length === pos) {
+        last.text += text;
+      } else {
+        links.push({ href, pos, text, validationEntry: getHighestSeverityEntryByPosition(this.validationsMap, pos) });
+      }
+    });
+    return links;
+  }
+
+  #scrollToLink(key: string | undefined, pos: number) {
+    if (!this.editor) return;
+    try {
+      const { view } = this.editor;
+      const nodeDom = view.nodeDOM?.(pos) ?? view.domAtPos(pos).node;
+      const target = nodeDom instanceof HTMLElement ? nodeDom : (nodeDom as Node)?.parentElement;
+      if (target instanceof HTMLElement) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    } catch (err) {
+      console.error('[clippy-link-list] Cannot scroll to link', err);
+    }
+
+    if (key) {
+      globalThis.dispatchEvent(
+        new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, {
+          bubbles: true,
+          composed: true,
+          detail: { key },
+        }),
+      );
+    }
+  }
+
+  override render() {
+    const links = this.#links;
+
+    return html`
+      <nav aria-label=${msg('Links')}>
+        ${links.length > 0
+          ? html`
+              <ol class="clippy-link-list__list" role="list">
+                ${map(links, ({ href, pos, text, validationEntry }) => {
+                  const severity = validationEntry?.[1].severity ?? null;
+                  return html`
+                    <li class="clippy-link-list__item">
+                      <div class="clippy-link-list__item-header">
+                        ${severity
+                          ? html`<span
+                              class="nl-data-badge clippy-link-list__badge--${severity}"
+                              aria-label=${severity}
+                            ></span>`
+                          : ''}
+                        <a
+                          class="nl-link"
+                          href="#"
+                          @click=${(e: Event) => {
+                            e.preventDefault();
+                            this.#scrollToLink(validationEntry?.[0], pos);
+                          }}
+                        >
+                          ${text || msg('(empty)')}
+                        </a>
+                      </div>
+                      ${href ? html`<span class="clippy-link-list__href" title=${href}>${href}</span>` : ''}
+                    </li>
+                  `;
+                })}
+              </ol>
+            `
+          : html` <p class="nl-paragraph clippy-link-list__empty">${msg('No links found in this document.')}</p> `}
+      </nav>
+    `;
+  }
+}

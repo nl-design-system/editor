@@ -2,25 +2,8 @@ import { css } from 'lit';
 
 export default css`
   :host {
-    display: contents;
     --nl-data-badge-min-inline-size: initial;
-  }
-
-  .clippy-heading-structure__dialog {
-    --utrecht-drawer-z-index: 10;
-  }
-
-  .clippy-heading-structure__header {
-    align-items: center;
-    border-block-end: 1px solid var(--basis-color-default-border-default);
-    display: flex;
-    gap: var(--basis-space-inline-md);
-    inset-block-start: 0;
-    justify-content: space-between;
-    padding-block: var(--basis-space-block-lg);
-    padding-inline: var(--basis-space-inline-xl);
-    position: sticky;
-    z-index: 1;
+    display: block;
   }
 
   .clippy-heading-structure__list {
