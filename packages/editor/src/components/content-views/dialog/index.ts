@@ -1,4 +1,5 @@
 import { localized, msg } from '@lit/localize';
+import LanguageIcon from '@tabler/icons/outline/language.svg?raw';
 import LinkIcon from '@tabler/icons/outline/link.svg?raw';
 import ListIcon from '@tabler/icons/outline/list.svg?raw';
 import X from '@tabler/icons/outline/x.svg?raw';
@@ -12,6 +13,7 @@ import '@nl-design-system-community/clippy-components/clippy-icon';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents, type DocumentOverviewMode, type OpenDocumentOverviewDetail } from '@/events';
 import '../heading-structure';
+import '../language-changes';
 import '../link-list';
 import contentViewsDialogStyles from './styles.ts';
 
@@ -72,11 +74,10 @@ export class ContentViewDialog extends LitElement {
         ${ref(this.#dialogRef)}
         id="clippy-content-views-dialog"
         class="utrecht-drawer utrecht-drawer--inline-start clippy-content-views-dialog__dialog"
-        aria-label=${msg('Document overview')}
       >
         <!-- Topbar with mode-switching lives inside the dialog -->
         <div class="clippy-content-views-dialog__topbar">
-          <div class="clippy-content-views-dialog__modes" role="tablist" aria-label=${msg('Document overview')}>
+          <div class="clippy-content-views-dialog__modes" role="tablist">
             <clippy-button
               purpose="subtle"
               @click=${() => {
@@ -96,6 +97,16 @@ export class ContentViewDialog extends LitElement {
               <clippy-icon slot="iconStart">${unsafeSVG(LinkIcon)}</clippy-icon>
               ${msg('Links')}
             </clippy-button>
+
+            <clippy-button
+              purpose="subtle"
+              @click=${() => {
+                this.mode = 'language-changes';
+              }}
+            >
+              <clippy-icon slot="iconStart">${unsafeSVG(LanguageIcon)}</clippy-icon>
+              ${msg('Language changes')}
+            </clippy-button>
           </div>
 
           <clippy-button icon-only purpose="subtle" @click=${() => this.#close()}>
@@ -112,6 +123,11 @@ export class ContentViewDialog extends LitElement {
         <!-- Link list panel -->
         <div role="tabpanel" aria-label=${msg('Links')} ?hidden=${this.mode !== 'link-list'}>
           <clippy-link-list></clippy-link-list>
+        </div>
+
+        <!-- Language changes panel -->
+        <div role="tabpanel" aria-label=${msg('Language changes')} ?hidden=${this.mode !== 'language-changes'}>
+          <clippy-language-changes></clippy-language-changes>
         </div>
       </dialog>
     `;
