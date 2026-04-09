@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "nl-design-system-community/editor-clippy-gutter",
+  "version": "0.1.0",
+  "title": "NL Design System – Clippy Accessibility Gutter",
+  "category": "other",
+  "description": "Renders real-time WCAG accessibility validation indicators alongside the block editor canvas. Not a content block — registers editor UI only.",
+  "textdomain": "nl-design-system-community-editor-wp-plugin",
+  "editorScript": "file:./dist/index.js",
+  "editorStyle": "file:./dist/index.css",
+  "supports": {
+    "inserter": false,
+    "html": false
+  }
+}
+
