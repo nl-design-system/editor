@@ -278,8 +278,8 @@ importers:
         specifier: 1.0.4
         version: 1.0.4
       '@utrecht/design-tokens':
-        specifier: 5.0.2
-        version: 5.0.2
+        specifier: 5.1.0
+        version: 5.1.0
       '@vitest/browser-playwright':
         specifier: 4.1.2
         version: 4.1.2(playwright@1.58.2)(vite@8.0.3(@emnapi/runtime@1.9.0)(@types/node@22.19.15)(esbuild@0.27.4)(yaml@2.8.2))(vitest@4.1.2)
@@ -356,8 +356,8 @@ importers:
         specifier: 9.0.2
         version: 9.0.2
       '@utrecht/design-tokens':
-        specifier: 5.0.2
-        version: 5.0.2
+        specifier: 5.1.0
+        version: 5.1.0
       astro:
         specifier: 6.0.5
         version: 6.0.5(@types/node@22.19.15)(lightningcss@1.32.0)(rollup@4.60.1)(typescript@5.9.3)(yaml@2.8.2)
@@ -393,8 +393,8 @@ importers:
         specifier: 9.0.2
         version: 9.0.2
       '@utrecht/design-tokens':
-        specifier: 5.0.2
-        version: 5.0.2
+        specifier: 5.1.0
+        version: 5.1.0
     devDependencies:
       '@fontsource/fira-sans':
         specifier: 5.2.7
@@ -2310,8 +2310,8 @@ packages:
   '@utrecht/data-placeholder-css@2.0.1':
     resolution: {integrity: sha512-eM81866Pcnpdi+6B6AvCffJjfrsrmpNIZpGScrS4qTGJwePtsnd76bT6NB1eP3NFkA/Ptnfvs4UjFAO3KAK4Zg==}
 
-  '@utrecht/design-tokens@5.0.2':
-    resolution: {integrity: sha512-1kNzEa6Ek19U7uV5eQBMuS4wmg+Pwe8S+PSzKxGxMgmz4DYgUcBdURoR5R0jUFnIE25bs9Rb54z/LrZ1LCp1Tg==}
+  '@utrecht/design-tokens@5.1.0':
+    resolution: {integrity: sha512-8Ix5q/V5kWgD572M91xNdkz1Mrl3G82TPD/iqIF4rAdhyo+5MmkKyVS2EO9uuNT3zWW93jMmhRj5lqRqNR1jOw==}
 
   '@utrecht/digid-button-css@1.4.2':
     resolution: {integrity: sha512-lE0/KipLVHaxb7YeZC3YPqSiSaDVyCkzSWmxLjs8k5ghzId8WI4vG8P42716gDBh9tsfdX0kRcVFdh5KerSiyw==}
@@ -8400,7 +8400,7 @@ snapshots:
 
   '@utrecht/data-placeholder-css@2.0.1': {}
 
-  '@utrecht/design-tokens@5.0.2':
+  '@utrecht/design-tokens@5.1.0':
     dependencies:
       '@fontsource-variable/noto-sans': 5.2.10
 
