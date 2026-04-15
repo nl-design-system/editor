@@ -112,6 +112,8 @@ export class Context extends LitElement {
           class: 'clippy-content',
         },
       },
+      // Prevent auto-mounting during SSR; Content component calls mount() client-side
+      element: null,
       extensions: editorExtensions(
         {
           disableRules: this.disableRules,
