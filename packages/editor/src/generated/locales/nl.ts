@@ -83,6 +83,7 @@
 's77958f74fde3c368': `Definitielijst`,
 's7859e0b546108aae': `Links`,
 's7d22b9e3bdf46607': `Tabel moet koppen bevatten`,
+'s81ee2fcab3f1742b': `Start typing...`,
 's83545917a8791873': `Selecteer tekstformaat`,
 's89abbb5af3504a53': `Verwijder vetgedrukte of cursieve tekst uit de tekst in de kop.`,
 's8a7f6fa052132a14': `Waarschuwingen`,

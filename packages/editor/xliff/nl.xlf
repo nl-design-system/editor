@@ -546,6 +546,10 @@
         <source>No links found in this document.</source>
         <target>Geen links gevonden in dit document.</target>
       </trans-unit>
+      <trans-unit id="s81ee2fcab3f1742b">
+        <source>Start met typen...</source>
+        <target>Start typing...</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
