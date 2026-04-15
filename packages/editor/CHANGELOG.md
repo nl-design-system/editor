@@ -1,5 +1,11 @@
 # @nl-design-system-community/editor
 
+## 1.4.2
+
+### Patch Changes
+
+- cae22af: Fix: prevent editor from rendering server side
+
 ## 1.4.1
 
 ### Patch Changes

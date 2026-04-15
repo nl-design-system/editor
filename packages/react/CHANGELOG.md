@@ -1,5 +1,13 @@
 # @nl-design-system-community/editor-react
 
+## 1.3.2
+
+### Patch Changes
+
+- cae22af: Fix: prevent editor from rendering server side
+- Updated dependencies [cae22af]
+  - @nl-design-system-community/editor@1.4.2
+
 ## 1.3.1
 
 ### Patch Changes
