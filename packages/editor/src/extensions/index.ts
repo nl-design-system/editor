@@ -1,3 +1,4 @@
+import { msg } from '@lit/localize';
 import { mergeAttributes } from '@tiptap/core';
 import Blockquote from '@tiptap/extension-blockquote';
 import Bold from '@tiptap/extension-bold';
@@ -37,7 +38,7 @@ export const editorExtensions = (
 ) => [
   Document,
   Placeholder.configure({
-    placeholder: 'Start met typen...',
+    placeholder: msg('Start met typen...'),
   }),
   Paragraph.extend({
     addAttributes() {

@@ -1,27 +1,32 @@
 ---
 import logo from "../assets/logo.svg?raw";
+import type { Locale } from '../i18n/translations.ts';
+import { useTranslations } from '../i18n/translations.ts';
+
+const locale = (Astro.currentLocale ?? 'nl') as Locale;
+const t = useTranslations(locale);
 ---
 
 <footer class="clippy-website-footer">
   <div class="clippy-website-footer__inner">
     <div class="clippy-website-footer__logo">
-      <a class="clippy-website-footer__logo-link" href="/" aria-label="NL Design System Editor – home">
+      <a class="clippy-website-footer__logo-link" href={t('nav.href.editor')} aria-label={t('site.logo.label')}>
         <Fragment set:html={logo} />
-        <span class="clippy-website-footer__logo-label">Clippy Editor</span>
+        <span class="clippy-website-footer__logo-label">{t('site.logo.name')}</span>
       </a>
     </div>
 
     <div class="clippy-website-footer__about">
       <p>
-        De Clippy Editor is ontwikkeld door het Expertteam Digitale Toegankelijkheid in opdracht van{' '}
+        {t('footer.about')}{' '}
         <a href="https://nldesignsystem.nl">NL Design System</a>.
       </p>
     </div>
 
-    <nav class="clippy-website-footer__nav" aria-label="Voettekst navigatie">
-      <a class="clippy-website-footer__nav-link" href="https://nldesignsystem.nl/project/kernteam/">Contact</a>
-      <a class="clippy-website-footer__nav-link" href="https://nldesignsystem.nl/privacyverklaring/">Privacyverklaring</a>
-      <a class="clippy-website-footer__nav-link" href="https://nldesignsystem.nl/toegankelijkheidsverklaring/">Toegankelijkheid</a>
+    <nav class="clippy-website-footer__nav" aria-label={t('footer.nav.label')}>
+      <a class="clippy-website-footer__nav-link" href={t('footer.contact.href')}>{t('footer.contact')}</a>
+      <a class="clippy-website-footer__nav-link" href={t('footer.privacy.href')}>{t('footer.privacy')}</a>
+      <a class="clippy-website-footer__nav-link" href={t('footer.accessibility.href')}>{t('footer.accessibility')}</a>
     </nav>
   </div>
 </footer>
