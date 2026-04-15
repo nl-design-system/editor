@@ -95,14 +95,7 @@ export class ValidationsDialog extends LitElement {
   readonly #focusNode = (event: CustomEventInit<{ pos: number }>) => {
     const { pos = 0 } = event.detail || {};
     try {
-      const { view } = this.editor || {};
-      const nodeDom = view?.nodeDOM?.(pos) ?? view?.domAtPos(pos).node;
-      if (nodeDom instanceof HTMLElement) {
-        nodeDom.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-
-      // Set a text selection at the position and focus the view
-      this.editor?.commands.focus(pos);
+      this.editor?.commands.focus(pos, { scrollIntoView: true });
     } catch (err) {
       console.error('Cannot scroll to and focus node', err);
     }

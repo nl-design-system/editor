@@ -119,7 +119,7 @@ export class LinkList extends LitElement {
                             this.#scrollToLink(validationEntry?.[0], pos);
                           }}
                         >
-                          ${text || msg('(empty)')}
+                          ${text.trim() || msg('(empty)')}
                         </a>
                       </div>
                       ${href ? html`<span class="clippy-link-list__href" title=${href}>${href}</span>` : ''}
