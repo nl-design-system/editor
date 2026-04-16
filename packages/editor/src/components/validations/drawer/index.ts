@@ -94,24 +94,14 @@ export class ValidationsDialog extends LitElement {
 
   readonly #focusNode = (event: CustomEventInit<{ pos: number }>) => {
     const { pos = 0 } = event.detail || {};
-    try {
-      const { view } = this.editor || {};
-      const nodeDom = view?.nodeDOM?.(pos) ?? view?.domAtPos(pos).node;
-      if (nodeDom instanceof HTMLElement) {
-        nodeDom.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
 
-      // Set a text selection at the position and focus the view
-      this.editor?.commands.focus(pos);
-    } catch (err) {
-      console.error('Cannot scroll to and focus node', err);
-    }
-
-    // Close the drawer after navigating to the node
     if (this.open) {
       this.#dialogRef.value?.close();
       this.open = false;
     }
+    // Set a text selection inside the node content (pos + 1 moves past the node's opening
+    // token) so that isNodeActive correctly identifies the active format in toolbar-format-select.
+    this.editor?.commands.focus(pos + 1, { scrollIntoView: true });
   };
 
   readonly #focusValidationItem = async (event: CustomEventInit<{ key: string; identifier: string }>) => {
