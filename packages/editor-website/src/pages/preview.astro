@@ -21,7 +21,7 @@
     </script>
   </head>
   <body class="utrecht-body">
-    <clippy-content-view id="clippy-preview">
+    <clippy-content-views id="clippy-preview">
       <div slot="value">
         <h1>NL Design System Editor — voorbeeld</h1>
         <p>
@@ -42,7 +42,7 @@
 
         <h3>Koopvaardij</h3>
         <p>
-          De koopvaardij bloeide en vele schepen voeren uit naar verre kusten. De stad groeide en
+          De koopvaardij bloeide en vele schepen voeren uit naar <a href="https://example.com">verre kusten</a>. De stad groeide en
           haar inwoners werden welvarend.
         </p>
 
@@ -95,7 +95,25 @@
           <dt>WCAG</dt>
           <dd>Web Content Accessibility Guidelines — internationale richtlijnen voor toegankelijke webcontent.</dd>
         </dl>
+        <p><a href="https://example.com">Linkje</a> helemaal onderaan</p>
+
+        <h2>Taalkeuzes</h2>
+        <p>
+          Dit document bevat ook fragmenten in andere talen. Gebruik het overzicht "Taalkeuzes" om snel naar een
+          specifiek taalgefragment te navigeren.
+        </p>
+        <p lang="de">
+          Dieser Absatz ist auf Deutsch geschrieben und zeigt, wie ein Sprachwechsel im Dokument dargestellt wird.
+        </p>
+        <p>Weer terug naar document taal Nederlands.</p>
+        <p lang="fr">
+          Ce paragraphe est rédigé en français et illustre comment un changement de langue apparaît dans le document.
+        </p>
+        <p>
+          Dit alinea heeft geen taalkenmerk en valt daardoor terug op de documenttaal (Nederlands).
+        </p>
+        <p lang="ar" dir="rtl">هذه الفقرة باللغة العربية وتتدفق من اليمين إلى اليسار.</p>
       </div>
-    </clippy-content-view>
+    </clippy-content-views>
   </body>
 </html>
