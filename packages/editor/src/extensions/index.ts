@@ -146,11 +146,20 @@ export const editorExtensions = (
     HTMLAttributes: {
       class: 'utrecht-blockquote utrecht-blockquote--html-blockquote',
     },
+  }).extend({
+    addAttributes() {
+      return {
+        dir: {},
+        lang: {},
+      };
+    },
   }),
   Link.extend({
     addAttributes() {
       return {
         ...this.parent?.(),
+        dir: {},
+        lang: {},
         rel: {
           default: null,
         },

@@ -284,6 +284,11 @@ describe('Allowed HTML in Clippy Editor', () => {
       editor = await createTestEditor('<img src="https://example.com/img.png" alt="Accessible description">');
       expect(editor.getHTML()).toContain('alt="Accessible description"');
     });
+
+    it('preserves the width and height attribute', async () => {
+      editor = await createTestEditor('<img src="https://example.com/img.png" width="100" height="100">');
+      expect(editor.getHTML()).toContain('width="100" height="100"');
+    });
   });
 
   describe('Hard break (<br>)', () => {
@@ -381,6 +386,11 @@ describe('Allowed HTML in Clippy Editor', () => {
       editor = await createTestEditor('<p><a href="https://example.com">Visit our website</a></p>');
       expect(editor.getHTML()).toContain('Visit our website');
     });
+
+    it('preserves the lang attribute', async () => {
+      editor = await createTestEditor('<p><a href="https://example.com" lang="nl">Visit our website</a></p>');
+      expect(editor.getHTML()).toContain('lang="nl"');
+    });
   });
 
   describe('Highlight (<mark>)', () => {
@@ -435,14 +445,14 @@ describe('Allowed HTML in Clippy Editor', () => {
     it('renders a nested unordered list', async () => {
       editor = await createTestEditor('<ul><li>Parent<ul><li>Child</li></ul></li></ul>');
       const html = editor.getHTML();
-      expect(html.split('utrecht-unordered-list').length - 1).toBeGreaterThanOrEqual(2);
+      expect(html.split('<ul').length - 1).toBe(2);
       expect(html).toContain('Child');
     });
 
     it('renders a nested ordered list', async () => {
       editor = await createTestEditor('<ol><li>Parent<ol><li>Child</li></ol></li></ol>');
       const html = editor.getHTML();
-      expect(html.split('utrecht-ordered-list').length - 1).toBeGreaterThanOrEqual(2);
+      expect(html.split('<ol').length - 1).toBe(2);
       expect(html).toContain('Child');
     });
   });
