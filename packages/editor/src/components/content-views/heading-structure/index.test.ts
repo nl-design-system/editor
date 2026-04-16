@@ -21,7 +21,7 @@ async function setupWithContent(
   const headingStructure = document.querySelector('clippy-heading-structure') as unknown as HeadingStructure;
   const contextEl = document.querySelector('clippy-context') as unknown as Context;
 
-  await expect.poll(() => headingStructure.shadowRoot?.querySelector('nav')).not.toBeNull();
+  await headingStructure.updateComplete;
 
   return { contextEl, headingStructure };
 }
@@ -40,9 +40,9 @@ describe('<clippy-heading-structure>', () => {
     it('renders a <nav> with the accessible label "Kopstructuur"', async () => {
       const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
 
-      await expect
-        .poll(() => headingStructure.shadowRoot?.querySelector('nav')?.getAttribute('aria-label'))
-        .toBe('Kopstructuur');
+      const nav = headingStructure.shadowRoot?.querySelector('nav');
+      expect(nav).toBeVisible();
+      expect(nav).toHaveAttribute('aria-label', 'Kopstructuur');
     });
   });
 
@@ -50,20 +50,15 @@ describe('<clippy-heading-structure>', () => {
     it('shows the empty-state message when the document contains no headings', async () => {
       const { headingStructure } = await setupWithContent('<p>Paragraaf zonder kop.</p>');
 
-      await expect
-        .poll(() => headingStructure.shadowRoot?.querySelector('.clippy-heading-structure__empty'))
-        .not.toBeNull();
-      expect(
-        headingStructure.shadowRoot?.querySelector('.clippy-heading-structure__empty')?.textContent?.trim(),
-      ).toContain('Geen koppen gevonden in dit document.');
+      const emptyState = headingStructure.shadowRoot?.querySelector('p');
+      expect(emptyState).toBeVisible();
+      expect(emptyState?.textContent?.trim()).toContain('Geen koppen gevonden in dit document.');
     });
 
     it('does not render any list items in the empty state', async () => {
       const { headingStructure } = await setupWithContent('<p>Geen koppen hier.</p>');
 
-      await expect
-        .poll(() => headingStructure.shadowRoot?.querySelectorAll('.clippy-heading-structure__item').length)
-        .toBe(0);
+      expect(headingStructure.shadowRoot?.querySelectorAll('li').length).toBe(0);
     });
   });
 
@@ -71,81 +66,57 @@ describe('<clippy-heading-structure>', () => {
     it('renders one list item for a single heading', async () => {
       const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
 
-      await expect
-        .poll(() => headingStructure.shadowRoot?.querySelectorAll('.clippy-heading-structure__item').length)
-        .toBe(1);
+      expect(headingStructure.shadowRoot?.querySelectorAll('li').length).toBe(1);
     });
 
     it('renders one list item per heading when multiple headings are present', async () => {
       const { headingStructure } = await setupWithContent('<h1>Titel</h1><h2>Sectie</h2><h3>Subsectie</h3>');
 
-      await expect
-        .poll(() => headingStructure.shadowRoot?.querySelectorAll('.clippy-heading-structure__item').length)
-        .toBe(3);
+      expect(headingStructure.shadowRoot?.querySelectorAll('li').length).toBe(3);
     });
 
     it('sets the data-level attribute to the heading level on each list item', async () => {
       const { headingStructure } = await setupWithContent('<h1>Titel</h1><h2>Sectie</h2>');
 
-      await expect
-        .poll(() => headingStructure.shadowRoot?.querySelectorAll('.clippy-heading-structure__item').length)
-        .toBe(2);
-
-      const items = headingStructure.shadowRoot?.querySelectorAll('.clippy-heading-structure__item');
-      expect(items?.[0]?.getAttribute('data-level')).toBe('1');
-      expect(items?.[1]?.getAttribute('data-level')).toBe('2');
+      const items = headingStructure.shadowRoot?.querySelectorAll('li');
+      expect(items?.length).toBe(2);
+      expect(items?.[0]).toHaveAttribute('data-level', '1');
+      expect(items?.[1]).toHaveAttribute('data-level', '2');
     });
 
     it('renders the heading level badge with the correct text (H1, H2, …)', async () => {
       const { headingStructure } = await setupWithContent('<h1>Titel</h1><h2>Sectie</h2>');
 
-      await expect
-        .poll(() =>
-          Array.from(headingStructure.shadowRoot?.querySelectorAll('.nl-data-badge') ?? []).map((b) =>
-            b.textContent?.trim(),
-          ),
-        )
-        .toEqual(['H1', 'H2']);
+      const badges = Array.from(headingStructure.shadowRoot?.querySelectorAll('[aria-label^="Heading level"]') ?? []);
+      expect(badges.map((b) => b.textContent?.trim())).toEqual(['H1', 'H2']);
     });
 
     it('gives each badge an accessible aria-label with the heading level', async () => {
       const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
 
-      await expect
-        .poll(() => headingStructure.shadowRoot?.querySelector('.nl-data-badge')?.getAttribute('aria-label'))
-        .toBe('Heading level 1');
+      const badge = headingStructure.shadowRoot?.querySelector('[aria-label^="Heading level"]');
+      expect(badge).toHaveAttribute('aria-label', 'Heading level 1');
     });
 
     it('renders the heading text in the link', async () => {
       const { headingStructure } = await setupWithContent('<h1>Mijn paginatitel</h1>');
 
-      await expect
-        .poll(() =>
-          headingStructure.shadowRoot?.querySelector('.clippy-heading-structure__item .nl-link')?.textContent?.trim(),
-        )
-        .toBe('Mijn paginatitel');
+      const link = headingStructure.shadowRoot?.querySelector('a');
+      expect(link?.textContent?.trim()).toBe('Mijn paginatitel');
     });
 
     it('shows "(leeg)" when the heading is empty', async () => {
       const { headingStructure } = await setupWithContent('<h1></h1>');
 
-      await expect
-        .poll(() =>
-          headingStructure.shadowRoot?.querySelector('.clippy-heading-structure__item .nl-link')?.textContent?.trim(),
-        )
-        .toContain('(leeg)');
+      const link = headingStructure.shadowRoot?.querySelector('a');
+      expect(link?.textContent?.trim()).toContain('(leeg)');
     });
 
     it('renders headings in document order', async () => {
       const { headingStructure } = await setupWithContent('<h1>Eerste</h1><h2>Tweede</h2><h3>Derde</h3>');
 
-      await expect
-        .poll(() =>
-          Array.from(
-            headingStructure.shadowRoot?.querySelectorAll('.clippy-heading-structure__item .nl-link') ?? [],
-          ).map((a) => a.textContent?.trim()),
-        )
-        .toEqual(['Eerste', 'Tweede', 'Derde']);
+      const links = Array.from(headingStructure.shadowRoot?.querySelectorAll('a') ?? []);
+      expect(links.map((a) => a.textContent?.trim())).toEqual(['Eerste', 'Tweede', 'Derde']);
     });
   });
 
@@ -163,10 +134,10 @@ describe('<clippy-heading-structure>', () => {
       contextEl.updateValidationsContext(validationsMap);
       await contextEl.updateComplete;
       headingStructure.requestUpdate();
+      await headingStructure.updateComplete;
 
-      await expect
-        .poll(() => headingStructure.shadowRoot?.querySelector('.clippy-heading-structure__item .nl-link'))
-        .not.toBeNull();
+      const anchor = headingStructure.shadowRoot!.querySelector('a') as HTMLAnchorElement;
+      expect(anchor).toBeVisible();
 
       let receivedKey: string | undefined;
       const handler = (e: Event) => {
@@ -174,9 +145,6 @@ describe('<clippy-heading-structure>', () => {
       };
       globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
 
-      const anchor = headingStructure.shadowRoot!.querySelector(
-        '.clippy-heading-structure__item .nl-link',
-      ) as HTMLAnchorElement;
       anchor.click();
 
       expect(receivedKey).toBe(validationKey);
@@ -187,9 +155,8 @@ describe('<clippy-heading-structure>', () => {
     it('does not dispatch FOCUS_VALIDATION_ITEM_IN_GUTTER when the clicked heading has no validation entry', async () => {
       const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
 
-      await expect
-        .poll(() => headingStructure.shadowRoot?.querySelector('.clippy-heading-structure__item .nl-link'))
-        .not.toBeNull();
+      const anchor = headingStructure.shadowRoot!.querySelector('a') as HTMLAnchorElement;
+      expect(anchor).toBeVisible();
 
       let eventFired = false;
       const handler = () => {
@@ -197,9 +164,6 @@ describe('<clippy-heading-structure>', () => {
       };
       globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
 
-      const anchor = headingStructure.shadowRoot!.querySelector(
-        '.clippy-heading-structure__item .nl-link',
-      ) as HTMLAnchorElement;
       anchor.click();
 
       expect(eventFired).toBe(false);
