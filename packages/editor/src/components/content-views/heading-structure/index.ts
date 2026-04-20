@@ -1,6 +1,6 @@
 import type { Editor as TiptapEditor } from '@tiptap/core';
 import { consume } from '@lit/context';
-import { localized, msg } from '@lit/localize';
+import { localized, msg, str } from '@lit/localize';
 import dataBadgeStyle from '@nl-design-system-candidate/data-badge-css/data-badge.css?inline';
 import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
@@ -103,7 +103,7 @@ export class HeadingStructure extends LitElement {
                     <li class="clippy-heading-structure__item" data-level="${level}">
                       <span
                         class="nl-data-badge${severity ? ` clippy-heading-structure__badge--${severity}` : ''}"
-                        aria-label=${`Heading level ${level}`}
+                        aria-label=${msg(str`Heading level ${level}`)}
                         >H${level}</span
                       >
                       <a
