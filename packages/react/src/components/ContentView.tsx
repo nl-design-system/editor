@@ -5,5 +5,5 @@ import * as React from 'react';
 export const ClippyContentView = createComponent({
   elementClass: ContentView,
   react: React,
-  tagName: 'clippy-content-view',
+  tagName: 'clippy-content-views',
 });

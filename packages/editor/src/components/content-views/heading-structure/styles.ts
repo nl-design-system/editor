@@ -2,27 +2,20 @@ import { css } from 'lit';
 
 export default css`
   :host {
-    display: contents;
     --nl-data-badge-min-inline-size: initial;
+    --utrecht-button-icon-gap: var(--basis-space-block-sm);
+    --utrecht-button-padding-block-start: var(--basis-space-block-sm);
+    --utrecht-button-padding-block-end: var(--basis-space-block-sm);
+    --utrecht-button-padding-inline-start: var(--basis-space-block-sm);
+    --utrecht-button-padding-inline-end: var(--basis-space-block-sm);
+    --utrecht-button-min-block-size: initial;
+    display: block;
   }
-
-  .clippy-heading-structure__dialog {
-    --utrecht-drawer-z-index: 10;
+  @media (prefers-reduced-motion: no-preference) {
+    :host {
+      scroll-behavior: smooth;
+    }
   }
-
-  .clippy-heading-structure__header {
-    align-items: center;
-    border-block-end: 1px solid var(--basis-color-default-border-default);
-    display: flex;
-    gap: var(--basis-space-inline-md);
-    inset-block-start: 0;
-    justify-content: space-between;
-    padding-block: var(--basis-space-block-lg);
-    padding-inline: var(--basis-space-inline-xl);
-    position: sticky;
-    z-index: 1;
-  }
-
   .clippy-heading-structure__list {
     display: flex;
     flex-direction: column;
