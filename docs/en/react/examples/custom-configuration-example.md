@@ -14,7 +14,7 @@ import { ClippyValidationsList } from '@nl-design-system-community/editor-react'
 export function ReactContextExample() {
   return (
     <ClippyContext id="react-editor-2">
-      <div slot="content">
+      <div slot="value">
         <h1>Heading level 1 in React editor</h1>
         <p>
           This is an example of the Clippy Editor <a href="#">with a Lit React wrapper</a>

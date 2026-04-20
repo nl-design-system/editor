@@ -17,7 +17,7 @@ Below is an editor with a custom toolbar configuration: only text styles and a l
     ["link"]
   ]'
 >
-  <div slot="content">
+  <div slot="value">
     <p>Content here...</p>
   </div>
 </clippy-editor>

@@ -15,7 +15,7 @@ const t = useTranslations('nl');
 
     <Section>
       <clippy-context id="editor-1" enable-rules="node-should-not-be-empty">
-        <div slot="content">
+        <div slot="value">
           <p>Hoi,</p>
           <p>&nbsp;</p>
           <p>Groetjes,</p>
@@ -40,7 +40,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-2" enable-rules="mark-should-not-be-empty">
-        <div slot="content">
+        <div slot="value">
           <h2>Bold</h2>
           <p>Empty Bold: <b>&nbsp;</b></p>
           <p>Bold with text: <b>text</b></p>
@@ -92,7 +92,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-3" enable-rules="mark-should-not-be-underlined">
-        <div slot="content">
+        <div slot="value">
           <p>Er is onvoldoende verschil tussen de onderstreping van een <u>underline</u> en <a href="#">link</a>.</p>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
@@ -119,7 +119,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-4" enable-rules="node-should-not-be-empty">
-        <div slot="content">
+        <div slot="value">
           <ul>
             <li>Optie 1</li>
             <li>Optie 2</li>
@@ -151,7 +151,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-5" enable-rules="node-should-not-be-empty">
-        <div slot="content">
+        <div slot="value">
           <ol>
             <li>Optie 1</li>
             <li>Optie 2</li>
@@ -183,7 +183,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-6" enable-rules="document-must-have-semantic-lists">
-        <div slot="content">
+        <div slot="value">
           <p>1. Optie 1<br />2. Optie 2<br />3. Optie 3</p>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
@@ -210,7 +210,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-7" enable-rules="document-must-have-semantic-lists">
-        <div slot="content">
+        <div slot="value">
           <p>- Optie 1<br />- Optie 2<br />- Optie 3</p>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
@@ -237,7 +237,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-8" enable-rules="node-should-not-be-empty">
-        <div slot="content">
+        <div slot="value">
           <dl>
             <div>
               <dt></dt>
@@ -273,7 +273,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-9" enable-rules="node-should-not-be-empty">
-        <div slot="content">
+        <div slot="value">
           <table>
             <tbody>
               <tr>
@@ -318,7 +318,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-10" enable-rules="image-must-have-alt-text">
-        <div slot="content">
+        <div slot="value">
           <p><img src="https://placehold.co/320x240" /></p>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
@@ -345,7 +345,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-11" enable-rules="document-should-not-have-heading-resembling-paragraph">
-        <div slot="content">
+        <div slot="value">
           <p><strong>Als het eruit ziet als een header, dan is het een header</strong></p>
           <p>Foo</p>
         </div>
@@ -373,7 +373,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-12" enable-rules="document-must-have-correct-heading-order">
-        <div slot="content">
+        <div slot="value">
           <h1>Kopniveau 1</h1>
           <h3>Kopniveau 3</h3>
           <p>Een niveau overslaan is niet de bedoeling!</p>
@@ -402,7 +402,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-13" enable-rules="document-must-have-table-with-headings">
-        <div slot="content">
+        <div slot="value">
           <table>
             <thead>
               <tr>
@@ -443,7 +443,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-14" enable-rules="document-must-have-table-with-multiple-rows">
-        <div slot="content">
+        <div slot="value">
           <table>
             <tbody>
               <tr>
@@ -483,7 +483,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-15" enable-rules="document-must-have-single-heading-one">
-        <div slot="content">
+        <div slot="value">
           <h1>Kopniveau 1</h1>
           <h1>Kopniveau 2</h1>
         </div>
@@ -511,7 +511,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-16" enable-rules="document-must-have-top-level-heading">
-        <div slot="content">
+        <div slot="value">
           <p>Tekst zonder hoofdkop</p>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
@@ -538,7 +538,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-17" enable-rules="definition-description-must-follow-term">
-        <div slot="content">
+        <div slot="value">
           <dl>
             <div>
               <dd>Losse definitie</dd>
@@ -570,7 +570,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-18" enable-rules="description-list-must-contain-term">
-        <div slot="content">
+        <div slot="value">
           <dl>
             <div>
               <dd>Losse definitie</dd>
@@ -601,7 +601,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-19" enable-rules="heading-should-contain-bold-or-italic">
-        <div slot="content">
+        <div slot="value">
           <h1>Heading met <strong>bold</strong></h1>
           <p>...</p>
         </div>
@@ -629,7 +629,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-20" enable-rules="heading-should-contain-bold-or-italic">
-        <div slot="content">
+        <div slot="value">
           <h1>Heading met <em>italic</em></h1>
           <p>...</p>
         </div>
@@ -657,7 +657,7 @@ const t = useTranslations('nl');
       </clippy-context>
 
       <clippy-context id="editor-21" enable-rules="link-should-not-be-too-generic">
-        <div slot="content">
+        <div slot="value">
           <p>
             Lees meer waarom een linktekst zo belangrijk is, in de blogpost "<a
               href="https://example.com/blog/klik-hier">klik hier</a
