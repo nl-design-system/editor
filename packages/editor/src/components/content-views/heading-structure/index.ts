@@ -73,7 +73,7 @@ export class HeadingStructure extends LitElement {
       const { view } = this.editor;
       const nodeDom = view.nodeDOM?.(pos) ?? view.domAtPos(pos).node;
       if (nodeDom instanceof HTMLElement) {
-        nodeDom.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        nodeDom.scrollIntoView({ block: 'start' });
       }
     } catch (err) {
       console.error('[clippy-heading-structure] Cannot scroll to heading', err);
