@@ -3,6 +3,12 @@ import { css } from 'lit';
 export default css`
   :host {
     --nl-data-badge-min-inline-size: initial;
+    --utrecht-button-icon-gap: var(--basis-space-block-sm);
+    --utrecht-button-padding-block-start: var(--basis-space-block-sm);
+    --utrecht-button-padding-block-end: var(--basis-space-block-sm);
+    --utrecht-button-padding-inline-start: var(--basis-space-block-sm);
+    --utrecht-button-padding-inline-end: var(--basis-space-block-sm);
+    --utrecht-button-min-block-size: initial;
     display: block;
   }
 

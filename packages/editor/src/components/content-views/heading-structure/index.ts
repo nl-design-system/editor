@@ -4,6 +4,7 @@ import { localized, msg, str } from '@lit/localize';
 import dataBadgeStyle from '@nl-design-system-candidate/data-badge-css/data-badge.css?inline';
 import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
+import linkButtonStyle from '@utrecht/link-button-css/dist/index.css?inline';
 import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
@@ -39,6 +40,7 @@ export class HeadingStructure extends LitElement {
     unsafeCSS(dataBadgeStyle),
     unsafeCSS(linkStyle),
     unsafeCSS(paragraphStyle),
+    unsafeCSS(linkButtonStyle),
   ];
 
   @consume({ context: tiptapContext, subscribe: true })
@@ -101,21 +103,20 @@ export class HeadingStructure extends LitElement {
                   const severity = validationEntry?.[1].severity;
                   return html`
                     <li class="clippy-heading-structure__item" data-level="${level}">
-                      <span
-                        class="nl-data-badge${severity ? ` clippy-heading-structure__badge--${severity}` : ''}"
-                        aria-label=${msg(str`Heading level ${level}`)}
-                        >H${level}</span
-                      >
-                      <a
-                        class="nl-link"
-                        href="#"
+                      <button
+                        class="utrecht-link-button utrecht-link-button--html-button"
                         @click=${(e: Event) => {
                           e.preventDefault();
                           this.#scrollToHeading(pos);
                         }}
                       >
+                        <span
+                          class="nl-data-badge${severity ? ` clippy-heading-structure__badge--${severity}` : ''}"
+                          aria-label=${msg(str`Heading level ${level}`)}
+                          >H${level}</span
+                        >
                         ${text || msg('(empty)')}
-                      </a>
+                      </button>
                     </li>
                   `;
                 })}
