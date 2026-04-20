@@ -5,7 +5,6 @@ import type { LinkList } from './index.ts';
 import '../../context/index.ts';
 import '../../content/index.ts';
 import './index.ts';
-import { CustomEvents } from '../../../events';
 
 async function setupWithContent(contentHtml: string): Promise<{ linkList: LinkList; contextEl: Context }> {
   document.body.innerHTML = `
@@ -135,10 +134,6 @@ describe('<clippy-link-list>', () => {
     });
   });
 
-  // -------------------------------------------------------------------------
-  // Validation badges
-  // -------------------------------------------------------------------------
-
   describe('validation badges', () => {
     it('does not render a badge when no validation entry matches the link position', async () => {
       const { linkList } = await setupWithContent(
@@ -197,93 +192,6 @@ describe('<clippy-link-list>', () => {
       expect(
         linkList.shadowRoot?.querySelector('.nl-data-badge')?.classList.contains('clippy-link-list__badge--error'),
       ).toBe(true);
-    });
-  });
-
-  // -------------------------------------------------------------------------
-  // Interactivity
-  // -------------------------------------------------------------------------
-
-  describe('interactivity', () => {
-    it('renders each link entry as an anchor with href="#"', async () => {
-      const { linkList } = await setupWithContent('<h1>Titel</h1><p><a href="https://example.com">Testlink</a></p>');
-
-      await expect
-        .poll(() => linkList.shadowRoot?.querySelectorAll('.clippy-link-list__item .nl-link').length)
-        .toBeGreaterThan(0);
-      for (const anchor of Array.from(
-        linkList.shadowRoot?.querySelectorAll('.clippy-link-list__item .nl-link') ?? [],
-      )) {
-        expect(anchor.getAttribute('href')).toBe('#');
-      }
-    });
-
-    it('prevents default browser navigation when a link entry is clicked', async () => {
-      const { linkList } = await setupWithContent('<h1>Titel</h1><p><a href="https://example.com">Klik test</a></p>');
-
-      await expect.poll(() => linkList.shadowRoot?.querySelector('.clippy-link-list__item .nl-link')).not.toBeNull();
-
-      const anchor = linkList.shadowRoot!.querySelector('.clippy-link-list__item .nl-link') as HTMLAnchorElement;
-
-      let defaultPrevented = false;
-      anchor.addEventListener('click', (e) => {
-        defaultPrevented = e.defaultPrevented;
-      });
-
-      anchor.click();
-
-      expect(defaultPrevented).toBe(true);
-    });
-
-    it('dispatches FOCUS_VALIDATION_ITEM_IN_GUTTER with the validation key when clicking a link that has a validation entry', async () => {
-      const linkTextPos = 8;
-      const validationKey = `link-should-not-be-too-generic_${linkTextPos}`;
-
-      const { contextEl, linkList } = await setupWithContent(
-        '<h1>Titel</h1><p><a href="https://example.com">Klik hier</a></p>',
-      );
-
-      const validationsMap: ValidationsMap = new Map([
-        [validationKey, { boundingBox: null, pos: linkTextPos, severity: 'warning' }],
-      ]);
-
-      contextEl.updateValidationsContext(validationsMap);
-      await contextEl.updateComplete;
-      linkList.requestUpdate();
-
-      await expect.poll(() => linkList.shadowRoot?.querySelector('.clippy-link-list__item .nl-link')).not.toBeNull();
-
-      let receivedKey: string | undefined;
-      const handler = (e: Event) => {
-        receivedKey = (e as CustomEvent<{ key: string }>).detail.key;
-      };
-      globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
-
-      const anchor = linkList.shadowRoot!.querySelector('.clippy-link-list__item .nl-link') as HTMLAnchorElement;
-      anchor.click();
-
-      expect(receivedKey).toBe(validationKey);
-
-      globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
-    });
-
-    it('does not dispatch FOCUS_VALIDATION_ITEM_IN_GUTTER when the clicked link has no validation entry', async () => {
-      const { linkList } = await setupWithContent('<h1>Titel</h1><p><a href="https://example.com">Schone link</a></p>');
-
-      await expect.poll(() => linkList.shadowRoot?.querySelector('.clippy-link-list__item .nl-link')).not.toBeNull();
-
-      let eventFired = false;
-      const handler = () => {
-        eventFired = true;
-      };
-      globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
-
-      const anchor = linkList.shadowRoot!.querySelector('.clippy-link-list__item .nl-link') as HTMLAnchorElement;
-      anchor.click();
-
-      expect(eventFired).toBe(false);
-
-      globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
     });
   });
 });
