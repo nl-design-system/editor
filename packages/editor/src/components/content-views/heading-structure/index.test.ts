@@ -87,36 +87,40 @@ describe('<clippy-heading-structure>', () => {
     it('renders the heading level badge with the correct text (H1, H2, …)', async () => {
       const { headingStructure } = await setupWithContent('<h1>Titel</h1><h2>Sectie</h2>');
 
-      const badges = Array.from(headingStructure.shadowRoot?.querySelectorAll('[aria-label^="Heading level"]') ?? []);
+      const badges = Array.from(headingStructure.shadowRoot?.querySelectorAll('.nl-data-badge') ?? []);
       expect(badges.map((b) => b.textContent?.trim())).toEqual(['H1', 'H2']);
     });
 
     it('gives each badge an accessible aria-label with the heading level', async () => {
       const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
 
-      const badge = headingStructure.shadowRoot?.querySelector('[aria-label^="Heading level"]');
-      expect(badge).toHaveAttribute('aria-label', 'Heading level 1');
+      const badge = headingStructure.shadowRoot?.querySelector('.nl-data-badge');
+      expect(badge).toHaveAttribute('aria-label', 'Kopniveau 1');
     });
 
     it('renders the heading text in the link', async () => {
       const { headingStructure } = await setupWithContent('<h1>Mijn paginatitel</h1>');
 
-      const link = headingStructure.shadowRoot?.querySelector('a');
-      expect(link?.textContent?.trim()).toBe('Mijn paginatitel');
+      const button = headingStructure.shadowRoot?.querySelector('button');
+      expect(button?.textContent?.replace(/\s+/g, ' ').trim()).toBe('H1 Mijn paginatitel');
     });
 
     it('shows "(leeg)" when the heading is empty', async () => {
       const { headingStructure } = await setupWithContent('<h1></h1>');
 
-      const link = headingStructure.shadowRoot?.querySelector('a');
-      expect(link?.textContent?.trim()).toContain('(leeg)');
+      const button = headingStructure.shadowRoot?.querySelector('button');
+      expect(button?.textContent?.trim()).toContain('(leeg)');
     });
 
     it('renders headings in document order', async () => {
       const { headingStructure } = await setupWithContent('<h1>Eerste</h1><h2>Tweede</h2><h3>Derde</h3>');
 
-      const links = Array.from(headingStructure.shadowRoot?.querySelectorAll('a') ?? []);
-      expect(links.map((a) => a.textContent?.trim())).toEqual(['Eerste', 'Tweede', 'Derde']);
+      const buttons = Array.from(headingStructure.shadowRoot?.querySelectorAll('button') ?? []);
+      expect(buttons.map((b) => b.textContent?.replace(/\s+/g, ' ').trim())).toEqual([
+        'H1 Eerste',
+        'H2 Tweede',
+        'H3 Derde',
+      ]);
     });
   });
 
@@ -136,8 +140,8 @@ describe('<clippy-heading-structure>', () => {
       headingStructure.requestUpdate();
       await headingStructure.updateComplete;
 
-      const anchor = headingStructure.shadowRoot!.querySelector('a') as HTMLAnchorElement;
-      expect(anchor).toBeVisible();
+      const button = headingStructure.shadowRoot!.querySelector('button') as HTMLButtonElement;
+      expect(button).toBeVisible();
 
       let receivedKey: string | undefined;
       const handler = (e: Event) => {
@@ -145,7 +149,7 @@ describe('<clippy-heading-structure>', () => {
       };
       globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
 
-      anchor.click();
+      button.click();
 
       expect(receivedKey).toBe(validationKey);
 
@@ -155,8 +159,8 @@ describe('<clippy-heading-structure>', () => {
     it('does not dispatch FOCUS_VALIDATION_ITEM_IN_GUTTER when the clicked heading has no validation entry', async () => {
       const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
 
-      const anchor = headingStructure.shadowRoot!.querySelector('a') as HTMLAnchorElement;
-      expect(anchor).toBeVisible();
+      const button = headingStructure.shadowRoot!.querySelector('button') as HTMLButtonElement;
+      expect(button).toBeVisible();
 
       let eventFired = false;
       const handler = () => {
@@ -164,7 +168,7 @@ describe('<clippy-heading-structure>', () => {
       };
       globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
 
-      anchor.click();
+      button.click();
 
       expect(eventFired).toBe(false);
 
