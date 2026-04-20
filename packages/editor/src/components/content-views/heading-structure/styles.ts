@@ -2,16 +2,6 @@ import { css } from 'lit';
 
 export default css`
   :host {
-    scroll-behavior: smooth;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    :host {
-      scroll-behavior: auto;
-    }
-  }
-
-  :host {
     --nl-data-badge-min-inline-size: initial;
     --utrecht-button-icon-gap: var(--basis-space-block-sm);
     --utrecht-button-padding-block-start: var(--basis-space-block-sm);
@@ -21,7 +11,11 @@ export default css`
     --utrecht-button-min-block-size: initial;
     display: block;
   }
-
+  @media (prefers-reduced-motion: no-preference) {
+    :host {
+      scroll-behavior: smooth;
+    }
+  }
   .clippy-heading-structure__list {
     display: flex;
     flex-direction: column;
