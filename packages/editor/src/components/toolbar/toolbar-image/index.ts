@@ -48,6 +48,8 @@ export class ToolbarImageUpload extends LitElement {
 
   @state() private src = '';
   @state() private alt = '';
+  @state() private href = '';
+  @state() private linkTarget = '';
   @state() private width = '';
   @state() private height = '';
   @state() private constrainProportions = true;
@@ -67,6 +69,8 @@ export class ToolbarImageUpload extends LitElement {
       const attrs = this.editor.getAttributes('image');
       this.src = attrs['src'] ?? '';
       this.alt = attrs['alt'] ?? '';
+      this.href = attrs['href'] ?? '';
+      this.linkTarget = attrs['target'] ?? '';
       this.width = attrs['width'] ? String(attrs['width']) : '';
       this.height = attrs['height'] ? String(attrs['height']) : '';
       this.#extractAspectRatio(this.src);
@@ -93,6 +97,12 @@ export class ToolbarImageUpload extends LitElement {
 
     if (files.length === 1) {
       this.#prefillFromFile(files[0]);
+      // When editing an existing image node, restore link attributes from the node
+      if (replace && this.editor?.isActive('image')) {
+        const attrs = this.editor.getAttributes('image');
+        this.href = (attrs['href'] as string) ?? '';
+        this.linkTarget = (attrs['target'] as string) ?? '';
+      }
       this.modalDialog.open();
     } else {
       this.#commitPendingFiles();
@@ -125,6 +135,8 @@ export class ToolbarImageUpload extends LitElement {
   #resetFields() {
     this.src = '';
     this.alt = '';
+    this.href = '';
+    this.linkTarget = '';
     this.width = '';
     this.height = '';
     this.#aspectRatio = null;
@@ -133,6 +145,8 @@ export class ToolbarImageUpload extends LitElement {
   #prefillFromFile(file: ImageUpload) {
     this.src = file.url;
     this.alt = file.name;
+    this.href = '';
+    this.linkTarget = '';
     this.width = '';
     this.height = '';
     this.#extractAspectRatio(file.url);
@@ -175,10 +189,17 @@ export class ToolbarImageUpload extends LitElement {
       return;
     }
 
-    const attrs: Record<string, string> = { src };
+    const attrs: Record<string, string | null> = { src };
     if (this.alt) attrs['alt'] = this.alt;
     if (this.width) attrs['width'] = this.width;
     if (this.height) attrs['height'] = this.height;
+    if (this.href.trim()) {
+      attrs['href'] = this.href.trim();
+      attrs['target'] = this.linkTarget.trim() || null;
+    } else {
+      attrs['href'] = null;
+      attrs['target'] = null;
+    }
 
     try {
       if (this.editor?.isActive('image')) {
@@ -192,11 +213,7 @@ export class ToolbarImageUpload extends LitElement {
         this.#pendingFiles = [];
       } else {
         // Inserting a URL image
-        this.editor
-          ?.chain()
-          .focus()
-          .setImage({ alt: this.alt || undefined, src })
-          .run();
+        this.editor?.chain().focus().insertContent({ attrs, type: 'image' }).run();
       }
     } catch (error) {
       console.error(error);
@@ -331,6 +348,47 @@ export class ToolbarImageUpload extends LitElement {
                 />
               </div>
             </div>
+
+            <div class="utrecht-form-field utrecht-form-field--text">
+              <div class="utrecht-form-field__label">
+                <label class="utrecht-form-label" for="clippy-image-href">${msg('Link URL (optional):')}</label>
+              </div>
+              <div class="utrecht-form-field__input">
+                <input
+                  id="clippy-image-href"
+                  type="url"
+                  .value=${this.href}
+                  class="utrecht-textbox utrecht-textbox--html-input"
+                  @input=${(e: Event) => {
+                    this.href = (e.target as HTMLInputElement).value;
+                  }}
+                  placeholder="https://example.com"
+                />
+              </div>
+            </div>
+
+            ${this.href.trim()
+              ? html`
+                  <div class="utrecht-form-field utrecht-form-field--text">
+                    <div class="utrecht-form-field__label">
+                      <label class="utrecht-form-label" for="clippy-image-target">${msg('Open link in:')}</label>
+                    </div>
+                    <div class="utrecht-form-field__input">
+                      <select
+                        id="clippy-image-target"
+                        class="utrecht-textbox utrecht-textbox--html-input"
+                        .value=${this.linkTarget}
+                        @change=${(e: Event) => {
+                          this.linkTarget = (e.target as HTMLSelectElement).value;
+                        }}
+                      >
+                        <option value="">${msg('Same tab (default)')}</option>
+                        <option value="_blank">${msg('New tab / window')}</option>
+                      </select>
+                    </div>
+                  </div>
+                `
+              : nothing}
 
             <fieldset class="toolbar-image__dimensions-fieldset">
               <legend class="toolbar-image__dimensions-legend utrecht-form-label">${msg('Dimensions')}</legend>

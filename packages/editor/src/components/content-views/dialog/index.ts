@@ -2,6 +2,7 @@ import { localized, msg } from '@lit/localize';
 import LanguageIcon from '@tabler/icons/outline/language.svg?raw';
 import LinkIcon from '@tabler/icons/outline/link.svg?raw';
 import ListIcon from '@tabler/icons/outline/list.svg?raw';
+import PhotoIcon from '@tabler/icons/outline/photo.svg?raw';
 import X from '@tabler/icons/outline/x.svg?raw';
 import drawerStyle from '@utrecht/drawer-css/dist/index.css?inline';
 import { LitElement, html, unsafeCSS } from 'lit';
@@ -13,6 +14,7 @@ import '@nl-design-system-community/clippy-components/clippy-icon';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents, type DocumentOverviewMode, type OpenDocumentOverviewDetail } from '@/events';
 import '../heading-structure';
+import '../image-list';
 import '../language-changes';
 import '../link-list';
 import contentViewsDialogStyles from './styles.ts';
@@ -107,6 +109,16 @@ export class ContentViewDialog extends LitElement {
               <clippy-icon slot="iconStart">${unsafeSVG(LanguageIcon)}</clippy-icon>
               ${msg('Language changes')}
             </clippy-button>
+
+            <clippy-button
+              purpose="subtle"
+              @click=${() => {
+                this.mode = 'image-list';
+              }}
+            >
+              <clippy-icon slot="iconStart">${unsafeSVG(PhotoIcon)}</clippy-icon>
+              ${msg('Images')}
+            </clippy-button>
           </div>
 
           <clippy-button icon-only purpose="subtle" @click=${() => this.#close()}>
@@ -128,6 +140,11 @@ export class ContentViewDialog extends LitElement {
         <!-- Language changes panel -->
         <div role="tabpanel" aria-label=${msg('Language changes')} ?hidden=${this.mode !== 'language-changes'}>
           <clippy-language-changes></clippy-language-changes>
+        </div>
+
+        <!-- Image list panel -->
+        <div role="tabpanel" aria-label=${msg('Images')} ?hidden=${this.mode !== 'image-list'}>
+          <clippy-image-list></clippy-image-list>
         </div>
       </dialog>
     `;

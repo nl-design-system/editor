@@ -2,6 +2,7 @@ import { localized, msg } from '@lit/localize';
 import LanguageIcon from '@tabler/icons/outline/language.svg?raw';
 import LinkIcon from '@tabler/icons/outline/link.svg?raw';
 import ListIcon from '@tabler/icons/outline/list.svg?raw';
+import PhotoIcon from '@tabler/icons/outline/photo.svg?raw';
 import { html } from 'lit';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
@@ -55,6 +56,10 @@ export class ContentView extends Context {
         <clippy-button purpose="subtle" @click=${() => this.#handleClick('language-changes')}>
           <clippy-icon slot="iconStart">${unsafeSVG(LanguageIcon)}</clippy-icon>
           ${msg('Language changes')}
+        </clippy-button>
+        <clippy-button purpose="subtle" @click=${() => this.#handleClick('image-list')}>
+          <clippy-icon slot="iconStart">${unsafeSVG(PhotoIcon)}</clippy-icon>
+          ${msg('Images')}
         </clippy-button>
       </div>
       <div class="clippy-content-view__container">

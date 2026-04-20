@@ -182,10 +182,35 @@ export const editorExtensions = (
   TextAlign.configure({
     types: ['heading', 'paragraph'],
   }),
-  Image.configure({
-    HTMLAttributes: {
-      class: 'utrecht-image',
+  Image.extend({
+    addAttributes() {
+      return {
+        ...this.parent?.(),
+        href: {
+          default: null,
+        },
+        rel: {
+          default: null,
+        },
+        target: {
+          default: null,
+        },
+      };
     },
+    renderHTML({ HTMLAttributes }) {
+      const { href, rel, target, ...imgAttrs } = HTMLAttributes as {
+        href: string | null;
+        rel: string | null;
+        target: string | null;
+        [key: string]: unknown;
+      };
+      const imgEl: [string, Record<string, unknown>] = ['img', mergeAttributes({ class: 'utrecht-image' }, imgAttrs)];
+      if (href) {
+        return ['a', mergeAttributes({ href, ...(rel ? { rel } : {}), ...(target ? { target } : {}) }), imgEl];
+      }
+      return imgEl;
+    },
+  }).configure({
     resize: {
       alwaysPreserveAspectRatio: true,
       directions: ['top', 'bottom', 'left', 'right', 'top-right', 'top-left', 'bottom-right', 'bottom-left'],
