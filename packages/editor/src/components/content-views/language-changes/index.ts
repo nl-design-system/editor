@@ -46,23 +46,21 @@ export class LanguageChanges extends LitElement {
   @property({ attribute: false })
   editor?: TiptapEditor;
 
+  /** Returns the ambient document language by walking up the DOM from the
+   * editor view (if mounted) or from this element as a fallback. */
+  #resolveDocLang(): string | null {
+    try {
+      return findNearestAncestorAttribute(this.editor!.view.dom as Element, 'lang');
+    } catch {
+      return findNearestAncestorAttribute(this, 'lang');
+    }
+  }
+
   get #languageChanges(): LanguageChangeEntry[] {
     if (!this.editor) return [];
     const entries: LanguageChangeEntry[] = [];
 
-    const docLang = findNearestAncestorAttribute(this.editor.view.dom as Element, 'lang');
-
-    // First entry: the ambient document language.
-    if (docLang) {
-      const docText = this.editor.state.doc.textContent;
-      entries.push({
-        isDocumentLanguage: true,
-        lang: docLang,
-        pos: null,
-        preview: docText.slice(0, PREVIEW_LENGTH),
-        truncated: docText.length > PREVIEW_LENGTH,
-      });
-    }
+    const docLang = this.#resolveDocLang();
 
     // Walk all block nodes. Whenever the effective language changes (including
     // a revert to docLang on a node without an explicit lang), emit an entry.
@@ -95,16 +93,16 @@ export class LanguageChanges extends LitElement {
   #scrollToNode(pos: number | null) {
     if (!this.editor) return;
 
-    if (pos === null) {
-      // Document-language entry: scroll to the top of the editor.
-      const dom = this.editor.view.dom;
-      if (dom instanceof HTMLElement) {
-        dom.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-      return;
-    }
-
     try {
+      if (pos === null) {
+        // Document-language entry: scroll to the top of the editor.
+        const dom = this.editor.view.dom;
+        if (dom instanceof HTMLElement) {
+          dom.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        return;
+      }
+
       const { view } = this.editor;
       const nodeDom = view.nodeDOM?.(pos) ?? view.domAtPos(pos).node;
       const target = nodeDom instanceof HTMLElement ? nodeDom : (nodeDom as Node)?.parentElement;
