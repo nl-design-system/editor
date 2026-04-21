@@ -1,14 +1,16 @@
 ---
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import type { Locale } from '../i18n/translations.ts';
 
 interface Props {
   title?: string;
 }
 const { title = 'Rich-text Editor - NL Design System' } = Astro.props;
+const locale = (Astro.currentLocale ?? 'nl') as Locale;
 ---
 
-<html lang="nl" dir="ltr" class="ma-theme clippy-theme utrecht-root">
+<html lang={locale} dir="ltr" class="ma-theme clippy-theme utrecht-root">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

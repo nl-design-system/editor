@@ -3,10 +3,13 @@ import Document from '../layouts/document.astro';
 import Hero from '../components/Hero.astro';
 import Section from '../components/Section.astro';
 import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guidelines.md';
+import { useTranslations } from '../i18n/translations.ts';
 import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
+
+const t = useTranslations('nl');
 ---
 
-<Document title="Toegankelijkheidsrichtlijnen - Rich-text Editor - NL Design System">
+<Document title={t('guidelines.title')}>
   <main>
     <Hero title={guidelinesFrontmatter['title']} intro={guidelinesFrontmatter['intro']} />
 

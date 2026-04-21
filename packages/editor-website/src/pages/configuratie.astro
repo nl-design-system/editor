@@ -4,10 +4,13 @@ import Hero from '../components/Hero.astro';
 import Section from '../components/Section.astro';
 import { Content as ConfigurationContent, frontmatter as configurationFrontmatter } from '../../../../docs/configuration/configuration.md';
 import { Content as ConfigurationSection } from '../../../../docs/configuration/examples/live-example.md';
+import { useTranslations } from '../i18n/translations.ts';
 import { ToolbarConfigurator } from '../components/ToolbarConfigurator';
+
+const t = useTranslations('nl');
 ---
 
-<Document title="Toolbar configuratie - Rich-text Editor - NL Design System">
+<Document title={t('configuration.title')}>
   <main>
     <Hero title={configurationFrontmatter['title']} intro={configurationFrontmatter['intro']} />
 
@@ -27,4 +30,3 @@ import { ToolbarConfigurator } from '../components/ToolbarConfigurator';
     </Section>
   </main>
 </Document>
-

@@ -1,0 +1,692 @@
+---
+import Document from '../../layouts/document.astro';
+import Hero from '../../components/Hero.astro';
+import Section from '../../components/Section.astro';
+import { frontmatter as guidelinesFrontmatter } from '../../../../../docs/en/guidelines.md';
+import { useTranslations } from '../../i18n/translations.ts';
+import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
+
+const t = useTranslations('en');
+---
+
+<Document title={t('guidelines.title')}>
+  <main>
+    <Hero title={guidelinesFrontmatter['title']} intro={guidelinesFrontmatter['intro']} />
+
+    <Section>
+      <clippy-context id="editor-1" enable-rules="node-should-not-be-empty">
+        <div slot="value">
+          <p>Hi,</p>
+          <p>&nbsp;</p>
+          <p>Kind regards,</p>
+          <p>Robbert</p>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: empty paragraph</span>
+            </h2>
+            <p>Do not use empty paragraphs to create spacing.</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content></clippy-content>
+              </div>
+            </div>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-2" enable-rules="mark-should-not-be-empty">
+        <div slot="value">
+          <h2>Bold</h2>
+          <p>Empty Bold: <b>&nbsp;</b></p>
+          <p>Bold with text: <b>text</b></p>
+          <h2>Link</h2>
+          <p>Empty Link: <a href="#">&nbsp;</a></p>
+          <p>Link with text: <a href="#">text</a></p>
+          <h2>Underline</h2>
+          <p>Empty Underline: <u>&nbsp;</u></p>
+          <p>Underline with text: <u>text</u></p>
+          <h2>Strong</h2>
+          <p>Empty Strong: <strong>&nbsp;</strong></p>
+          <p>Strong with text: <strong>text</strong></p>
+          <h2>Mark</h2>
+          <p>Empty Mark: <mark>&nbsp;</mark></p>
+          <p>Mark with text: <mark>text</mark></p>
+          <h2>Emphasis</h2>
+          <p>Empty Emphasis: <em>&nbsp;</em></p>
+          <p>Emphasis with text: <em>text</em></p>
+          <h2>Strikethrough</h2>
+          <p>Empty Strikethrough: <s>&nbsp;</s></p>
+          <p>Strikethrough with text: <s>text</s></p>
+          <h2>Italic</h2>
+          <p>Empty Italic: <i>&nbsp;</i></p>
+          <p>Italic with text: <i>text</i></p>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: empty inline elements</span>
+            </h2>
+            <p>Clean up empty elements.</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-toolbar config='[["bold","italic","code"],["link","image-upload","insert-table"]]'
+                  ></clippy-toolbar>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-3" enable-rules="mark-should-not-be-underlined">
+        <div slot="value">
+          <p>There is insufficient difference between the underline of an <u>underline</u> and a <a href="#">link</a>.</p>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: underline text</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-4" enable-rules="node-should-not-be-empty">
+        <div slot="value">
+          <ul>
+            <li>Option 1</li>
+            <li>Option 2</li>
+            <li>Option 3</li>
+            <li></li>
+          </ul>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: empty list items</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-5" enable-rules="node-should-not-be-empty">
+        <div slot="value">
+          <ol>
+            <li>Option 1</li>
+            <li>Option 2</li>
+            <li>Option 3</li>
+            <li></li>
+          </ol>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: empty list items</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-6" enable-rules="document-must-have-semantic-lists">
+        <div slot="value">
+          <p>1. Option 1<br />2. Option 2<br />3. Option 3</p>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: ordered list without markup</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-7" enable-rules="document-must-have-semantic-lists">
+        <div slot="value">
+          <p>- Option 1<br />- Option 2<br />- Option 3</p>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: list without markup</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-8" enable-rules="node-should-not-be-empty">
+        <div slot="value">
+          <dl>
+            <div>
+              <dt></dt>
+              <dd></dd>
+            </div>
+            <div>
+              <dt>text</dt>
+              <dd>text</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: empty definition list</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-9" enable-rules="node-should-not-be-empty">
+        <div slot="value">
+          <table>
+            <tbody>
+              <tr>
+                <td>text</td>
+                <td>text</td>
+                <td>text</td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td>text</td>
+                <td>text</td>
+                <td>text</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: empty row in a table</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-10" enable-rules="image-must-have-alt-text">
+        <div slot="value">
+          <p><img src="https://placehold.co/320x240" /></p>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: image without alt text</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-11" enable-rules="document-should-not-have-heading-resembling-paragraph">
+        <div slot="value">
+          <p><strong>If it looks like a heading, it should be a heading</strong></p>
+          <p>Foo</p>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: heading without proper markup</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-12" enable-rules="document-must-have-correct-heading-order">
+        <div slot="value">
+          <h1>Heading level 1</h1>
+          <h3>Heading level 3</h3>
+          <p>Skipping a level is not allowed!</p>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: skip heading levels</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-13" enable-rules="document-must-have-table-with-headings">
+        <div slot="value">
+          <table>
+            <thead>
+              <tr>
+                <td colspan="4">Table heading</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Row 1, cell 1</td>
+                <td>Row 1, cell 2</td>
+                <td>Row 1, cell 3</td>
+                <td>Row 1, cell 4</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: table without header cells</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-14" enable-rules="document-must-have-table-with-multiple-rows">
+        <div slot="value">
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <h2>Column 1</h2>
+                  <p>...</p>
+                </td>
+                <td>
+                  <h2>Column 2</h2>
+                  <p>...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: table without header cells</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-15" enable-rules="document-must-have-single-heading-one">
+        <div slot="value">
+          <h1>Heading level 1</h1>
+          <h1>Heading level 1 again</h1>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: more than 1 main heading</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-16" enable-rules="document-must-have-top-level-heading">
+        <div slot="value">
+          <p>Text without a main heading</p>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: no main heading</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-17" enable-rules="definition-description-must-follow-term">
+        <div slot="value">
+          <dl>
+            <div>
+              <dd>Standalone definition</dd>
+              <dt>With a term after it</dt>
+            </div>
+          </dl>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: definition without a term</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-18" enable-rules="description-list-must-contain-term">
+        <div slot="value">
+          <dl>
+            <div>
+              <dd>Standalone definition</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: definition without a term</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-19" enable-rules="heading-should-contain-bold-or-italic">
+        <div slot="value">
+          <h1>Heading with <strong>bold</strong></h1>
+          <p>...</p>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: heading with bold</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-20" enable-rules="heading-should-contain-bold-or-italic">
+        <div slot="value">
+          <h1>Heading with <em>italic</em></h1>
+          <p>...</p>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: heading with italic</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+
+      <clippy-context id="editor-21" enable-rules="link-should-not-be-too-generic">
+        <div slot="value">
+          <p>
+            Read more about why link text matters, in the blog post "<a
+              href="https://example.com/blog/click-here">click here</a
+            >".
+          </p>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: unclear link text</span>
+            </h2>
+            <p>...</p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+    </Section>
+  </main>
+</Document>
+
