@@ -220,8 +220,8 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@utrecht/superscript-css':
-        specifier: 2.0.1
-        version: 2.0.1
+        specifier: 3.0.0
+        version: 3.0.0
       '@utrecht/table-css':
         specifier: 2.0.2
         version: 2.0.2
@@ -2474,8 +2474,8 @@ packages:
   '@utrecht/subscript-css@2.0.1':
     resolution: {integrity: sha512-Wg/lQA+vzQXVTEG88nMGzY2wi0WAYv++mBqd2P1mn6O0bgd4L6YxMppuOJs0J+RpMwHj65pUAbn/k6Ykh5i+iw==}
 
-  '@utrecht/superscript-css@2.0.1':
-    resolution: {integrity: sha512-9drVAc0r2BA+634AT2tsmYAQ415lh5Y0mSEfZVQELQ10PR6acxLQkPwDVpjVUy9LRHPhWHyA+JVesjHPDrv8bQ==}
+  '@utrecht/superscript-css@3.0.0':
+    resolution: {integrity: sha512-5zVJpDzbO8EUbLN+5OdE/BVRmeB5kTRQRKzXmdUb34+kRXkSJqPR/2Tl1TGGYKsgkdprhii+gP/z1rC+AHzmtw==}
 
   '@utrecht/surface-css@2.0.1':
     resolution: {integrity: sha512-CVFH5D41ePrS7Lqw7Tlxl4/Wy06yiP7pEjp+ZJkuPuaXLrmHO+S0L78t01xNzoVm8ASUyFjz3VTT3NdvZFDXyw==}
@@ -8414,7 +8414,7 @@ snapshots:
 
   '@utrecht/subscript-css@2.0.1': {}
 
-  '@utrecht/superscript-css@2.0.1': {}
+  '@utrecht/superscript-css@3.0.0': {}
 
   '@utrecht/surface-css@2.0.1': {}
 
