@@ -245,8 +245,8 @@ importers:
         specifier: 5.2.5
         version: 5.2.5
       '@hono/node-server':
-        specifier: 1.14.4
-        version: 1.14.4(hono@4.12.16)
+        specifier: 2.0.2
+        version: 2.0.2(hono@4.12.16)
       '@lit/localize-tools':
         specifier: 0.8.1
         version: 0.8.1
@@ -987,9 +987,9 @@ packages:
   '@fontsource/source-sans-pro@5.2.5':
     resolution: {integrity: sha512-ypendqc4pYUc+EgF7qqPY9iVYEz1t/Qr03VojKxG/2g3dnpHa1B6DOlDxWQjQXDj5QrG6inEqGT0g+edjALZyg==}
 
-  '@hono/node-server@1.14.4':
-    resolution: {integrity: sha512-DnxpshhYewr2q9ZN8ez/M5mmc3sucr8CT1sIgIy1bkeUXut9XWDkqHoFHRhWIQgkYnKpVRxunyhK7WzpJeJ6qQ==}
-    engines: {node: '>=18.14.1'}
+  '@hono/node-server@2.0.2':
+    resolution: {integrity: sha512-tXlTi1h/4V7sDe7i97IVP+9re9ZU7wXZZggnR5ucCRclf1+AX6YhGStrR5w8bLj+3Mlyl0pKfBh9gqTqqnGKfQ==}
+    engines: {node: '>=20'}
     peerDependencies:
       hono: ^4
 
@@ -6901,7 +6901,7 @@ snapshots:
 
   '@fontsource/source-sans-pro@5.2.5': {}
 
-  '@hono/node-server@1.14.4(hono@4.12.16)':
+  '@hono/node-server@2.0.2(hono@4.12.16)':
     dependencies:
       hono: 4.12.16
 
