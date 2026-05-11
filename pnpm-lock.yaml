@@ -211,8 +211,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@utrecht/ordered-list-css':
-        specifier: 3.0.1
-        version: 3.0.1
+        specifier: 4.0.0
+        version: 4.0.0
       '@utrecht/separator-css':
         specifier: 2.0.1
         version: 2.0.1
@@ -2415,9 +2415,6 @@ packages:
 
   '@utrecht/number-data-css@3.0.0':
     resolution: {integrity: sha512-35xhMKootr2bo2XA0V8hXp37i+6ekmK2DLuEuoe2WOSHgRQ6MWUjZTdNJUs8fXHZ3DaVy4gY41llJ8o7y5WVaQ==}
-
-  '@utrecht/ordered-list-css@3.0.1':
-    resolution: {integrity: sha512-FTLzofVJlkl4ypJz2QoWTwepXN+yX3Y3exL+69SpiwjAXSkRYkJ1agd0W6BZVH+JQ60u8+uApOKQpgx2Bh3ImQ==}
 
   '@utrecht/ordered-list-css@4.0.0':
     resolution: {integrity: sha512-1Q3m1f4CEGR+BCqz1iZ6ii3/n5H+JzfSPuriEVMi5sKCiZxo7MoBbw1EPf9sUIS+L5VyFmxljiq5GLwfiLNmWA==}
@@ -8358,8 +8355,6 @@ snapshots:
   '@utrecht/number-badge-css@4.0.0': {}
 
   '@utrecht/number-data-css@3.0.0': {}
-
-  '@utrecht/ordered-list-css@3.0.1': {}
 
   '@utrecht/ordered-list-css@4.0.0': {}
 
