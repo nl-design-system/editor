@@ -196,8 +196,8 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@utrecht/drawer-css':
-        specifier: 2.0.1
-        version: 2.0.1
+        specifier: 3.0.0
+        version: 3.0.0
       '@utrecht/form-field-css':
         specifier: 2.0.1
         version: 2.0.1
@@ -2280,9 +2280,6 @@ packages:
 
   '@utrecht/document-css@3.0.0':
     resolution: {integrity: sha512-CMOuUNMW9BJoi8XpZyT2FnyWW6MlanykyN2vfi0f/s6GRpWHWc4Qe5vO+eNnEpY1XaXOcfjAbfQO3EDo93N8+A==}
-
-  '@utrecht/drawer-css@2.0.1':
-    resolution: {integrity: sha512-4YysV31TmYGK8mLIF0ZLnUsc7j+02TylXJVZrMDQzisasEUbh8FXhHNbGTyZxlmGaFfjMtblCldp/UnsLkFH2Q==}
 
   '@utrecht/drawer-css@3.0.0':
     resolution: {integrity: sha512-29ot5ioWLq0/Se8fishj6b+PWQoiPXKHJ3xUJnVSHsj0cuGVA+tqt96ElOEloS39acuyvMt2SsqRtcR7yLmtXA==}
@@ -8268,8 +8265,6 @@ snapshots:
   '@utrecht/digid-button-css@2.0.0': {}
 
   '@utrecht/document-css@3.0.0': {}
-
-  '@utrecht/drawer-css@2.0.1': {}
 
   '@utrecht/drawer-css@3.0.0': {}
 

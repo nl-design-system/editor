@@ -90,7 +90,7 @@
     "@tiptap/extensions": "3.22.5",
     "@tiptap/pm": "3.22.5",
     "@utrecht/blockquote-css": "2.0.1",
-    "@utrecht/drawer-css": "2.0.1",
+    "@utrecht/drawer-css": "3.0.0",
     "@utrecht/form-field-css": "2.0.1",
     "@utrecht/form-label-css": "2.0.1",
     "@utrecht/img-css": "2.0.1",
