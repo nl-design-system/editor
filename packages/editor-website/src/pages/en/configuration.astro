@@ -14,16 +14,15 @@ const t = useTranslations('en');
   <main>
     <Hero title={configurationFrontmatter['title']} intro={configurationFrontmatter['intro']} />
 
-    <Section content={ConfigurationContent}>
-      <clippy-editor
-        id="clippy-editor-minimal-toolbar"
-        toolbar-config='[["bold","italic","underline"],["undo","redo"],["link"]]'
-      >
-        <div slot="value">
-          <p>{t('configuration.editor.content')}</p>
-        </div>
-      </clippy-editor>
-    </Section>
+    <Section content={ConfigurationContent}></Section>
+    <clippy-editor
+      id="clippy-editor-minimal-toolbar"
+      toolbar-config='[["bold","italic","underline"],["undo","redo"],["link"]]'
+    >
+      <div slot="value">
+        <p>{t('configuration.editor.content')}</p>
+      </div>
+    </clippy-editor>
 
     <Section content={ConfigurationSection}>
       <ToolbarConfigurator client:only="react" />

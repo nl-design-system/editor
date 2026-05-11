@@ -6,7 +6,7 @@ import type { DocumentValidator, ValidationResult } from '@/types/validation.ts'
 import { documentValidations, validationSeverity } from '@/constants';
 import { documentCorrectorMap } from '@/correctors';
 import { getParagraphLines, orderedListIndicator, unorderedListIndicator } from '@/correctors/helpers.ts';
-import { getNodeBoundingBox, isBold } from '@/validators/helpers.ts';
+import { getNodeBoundingBox, getNodeRange, isBold } from '@/validators/helpers.ts';
 
 const documentValidators = new Map<string, DocumentValidator>();
 
@@ -27,6 +27,8 @@ export const documentMustHaveCorrectHeadingOrder = (editor: Editor, settings?: E
             topHeadingLevel as Level,
           ),
           pos,
+          range: getNodeRange(editor, pos) ?? undefined,
+          scope: 'element' as const,
           severity: validationSeverity.ERROR,
           tipPayload: {
             headingLevel: headingLevel,
@@ -44,6 +46,8 @@ export const documentMustHaveCorrectHeadingOrder = (editor: Editor, settings?: E
             (precedingHeadingLevel + 1) as Level,
           ),
           pos,
+          range: getNodeRange(editor, pos) ?? undefined,
+          scope: 'element' as const,
           severity: validationSeverity.WARNING,
           tipPayload: {
             headingLevel: headingLevel,
@@ -94,6 +98,8 @@ export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult[
           boundingBox: getNodeBoundingBox(editor, pos),
           correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS](pos, isOrdered),
           pos,
+          range: getNodeRange(editor, pos) ?? undefined,
+          scope: 'element' as const,
           severity: validationSeverity.INFO,
           tipPayload: { prefix: firstPrefix.trim() },
         });
@@ -106,6 +112,8 @@ export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult[
         boundingBox: getNodeBoundingBox(editor, pos),
         correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS](pos, isOrdered),
         pos,
+        range: getNodeRange(editor, pos) ?? undefined,
+          scope: 'element' as const,
         severity: validationSeverity.INFO,
         tipPayload: { prefix: firstPrefix.trim() },
       });
@@ -132,6 +140,8 @@ export const documentMustHaveSingleHeadingOne = (editor: Editor): ValidationResu
       boundingBox: getNodeBoundingBox(editor, pos),
       correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE](pos),
       pos,
+      range: getNodeRange(editor, pos) ?? undefined,
+          scope: 'element' as const,
       severity: validationSeverity.ERROR,
     }));
   }
@@ -149,6 +159,8 @@ export const documentMustHaveTopLevelHeadingOne = (editor: Editor, settings?: Ed
         boundingBox: getNodeBoundingBox(editor, 1),
         correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE](),
         pos: 1,
+        range: getNodeRange(editor, 1) ?? undefined,
+        scope: 'element' as const,
         severity: validationSeverity.INFO,
       },
     ];
@@ -181,6 +193,8 @@ const documentShouldNotHaveHeadingResemblingParagraphs = (editor: Editor): Valid
           node.nodeSize,
         ),
         pos,
+        range: getNodeRange(editor, pos) ?? undefined,
+          scope: 'element' as const,
         severity: validationSeverity.INFO,
       });
     }
@@ -229,6 +243,8 @@ export const documentMustHaveTableWithHeadings = (editor: Editor): ValidationRes
         boundingBox: getNodeBoundingBox(editor, pos),
         correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_HEADINGS](pos),
         pos,
+        range: getNodeRange(editor, pos) ?? undefined,
+          scope: 'element' as const,
         severity: validationSeverity.WARNING,
       });
     }
@@ -259,6 +275,8 @@ export const documentMustHaveTableWithMultipleRows = (editor: Editor): Validatio
         boundingBox: getNodeBoundingBox(editor, pos),
         correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_MULTIPLE_ROWS](pos),
         pos,
+        range: getNodeRange(editor, pos) ?? undefined,
+          scope: 'element' as const,
         severity: validationSeverity.WARNING,
       });
     }

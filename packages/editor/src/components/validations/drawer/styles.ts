@@ -2,7 +2,30 @@ import { css } from 'lit';
 
 export default css`
   :host {
-    display: contents;
+    block-size: 0;
+    border-inline-start: 1px solid var(--basis-color-default-border-default, #e5e7eb);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    inline-size: 0;
+    overflow: hidden;
+    transition:
+      inline-size 0.25s ease,
+      block-size 0.25s ease;
+  }
+
+  :host([open]) {
+    block-size: calc(
+      100dvh
+      - var(--clippy-validations-dialog-inset-block-start, 0px)
+      - var(--clippy-validations-dialog-inset-block-end, 0px)
+    );
+    inline-size: clamp(280px, 30vw, 480px);
+    inset-block-end: var(--clippy-validations-dialog-inset-block-end, 0px);
+    inset-block-start: var(--clippy-validations-dialog-inset-block-start, 0px);
+    inset-inline-end: 0;
+    position: fixed;
+    z-index: var(--clippy-validations-dialog-z-index, 100);
   }
 
   .clippy-dialog__close-button {
@@ -12,27 +35,11 @@ export default css`
   }
 
   .clippy-dialog__content {
-    position: fixed;
-    inset-block-start: 0;
-    inset-inline-end: 0;
     block-size: 100%;
-    inline-size: fit-content;
-    max-inline-size: 500px;
-    max-block-size: 100%;
-    border: 0;
-    margin-inline-end: 0;
-    padding-inline: 0;
-    padding-block: 0;
+    display: flex;
+    flex-direction: column;
+    inline-size: clamp(280px, 30vw, 480px);
     overflow: hidden;
-
-    &[open] {
-      display: flex;
-      flex-direction: column;
-    }
-
-    &:focus-visible {
-      outline: none;
-    }
   }
 
   .clippy-dialog__header {

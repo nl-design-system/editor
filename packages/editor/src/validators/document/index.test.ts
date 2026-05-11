@@ -52,6 +52,8 @@ describe('Document validations', () => {
           boundingBox: expect.any(Object),
           correct: expect.any(Function),
           pos: 7,
+          range: expect.anything(),
+          scope: 'element',
           severity: 'warning',
           tipPayload: {
             headingLevel: 3,
@@ -80,6 +82,8 @@ describe('Document validations', () => {
           boundingBox: expect.any(Object),
           correct: expect.any(Function),
           pos: 0,
+          range: expect.anything(),
+          scope: 'element',
           severity: 'error',
           tipPayload: {
             headingLevel: 1,
@@ -91,6 +95,8 @@ describe('Document validations', () => {
           boundingBox: expect.any(Object),
           correct: expect.any(Function),
           pos: 17,
+          range: expect.anything(),
+          scope: 'element',
           severity: 'warning',
           tipPayload: {
             headingLevel: 4,
@@ -139,6 +145,8 @@ describe('Document validations', () => {
         boundingBox: expect.any(Object),
         correct: expect.any(Function),
         pos: 1,
+        range: expect.anything(),
+        scope: 'element',
         severity: 'info',
       });
     });
@@ -326,6 +334,8 @@ describe('Document validations', () => {
             boundingBox: expect.any(Object),
             correct: expect.any(Function),
             pos: 7,
+            range: expect.anything(),
+            scope: 'element',
             severity: 'warning',
           },
         ]);
@@ -379,6 +389,8 @@ describe('Document validations', () => {
             boundingBox: expect.any(Object),
             correct: expect.any(Function),
             pos: 7,
+            range: expect.anything(),
+            scope: 'element',
             severity: 'warning',
           },
         ]);

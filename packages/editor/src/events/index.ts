@@ -12,6 +12,7 @@ export const CustomEvents = {
   TAB_CHANGE: 'TAB_CHANGE',
   TEXT_FORMAT_CHANGE: 'TEXT_FORMAT_CHANGE',
   VALIDATION_ERROR: 'VALIDATION_ERROR',
+  VALIDATIONS_UPDATED: 'VALIDATIONS_UPDATED',
 } as const;
 
 export type DocumentOverviewMode = 'heading-structure' | 'language-changes' | 'link-list';

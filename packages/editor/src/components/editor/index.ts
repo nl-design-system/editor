@@ -28,11 +28,13 @@ export class Editor extends Context {
   override render() {
     return html`
       <clippy-toolbar .config=${this.toolbarConfig}></clippy-toolbar>
-      <div class="clippy-editor-container" id=${EDITOR_ID}>
-        <slot name="value" hidden></slot>
-        <clippy-validations-gutter></clippy-validations-gutter>
-        <clippy-content></clippy-content>
-        <clippy-bubble-menu class="clippy-bubble-menu"></clippy-bubble-menu>
+      <div class="clippy-editor-body">
+        <div class="clippy-editor-container" id=${EDITOR_ID}>
+          <slot name="value" hidden></slot>
+          <clippy-validations-gutter></clippy-validations-gutter>
+          <clippy-content></clippy-content>
+          <clippy-bubble-menu class="clippy-bubble-menu"></clippy-bubble-menu>
+        </div>
       </div>
       <clippy-validations-dialog></clippy-validations-dialog>
     `;

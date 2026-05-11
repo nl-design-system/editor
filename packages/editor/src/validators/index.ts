@@ -4,6 +4,7 @@ import type { ValidationResult } from '@/types/validation.ts';
 import contentValidator, { contentValidatorMap } from '@/validators/content';
 import { documentValidatorObject } from '@/validators/document';
 import { debounce } from '../utils/debounce.ts';
+import { applyValidationHighlights } from '../utils/highlights.ts';
 import { getEntries, isKeyOf } from './helpers.ts';
 
 const VALIDATION_TIMEOUT = 500;
@@ -57,6 +58,7 @@ export const runValidation = (
   }
 
   callback(validationResultMap);
+  applyValidationHighlights(validationResultMap);
 };
 
 export const debouncedValidate = debounce(runValidation, VALIDATION_TIMEOUT);

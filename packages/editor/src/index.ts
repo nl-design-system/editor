@@ -1,11 +1,13 @@
 export { Context } from './components/context';
 export { Editor } from './components/editor';
+export { EditorWrapper } from './components/editor-wrapper';
 export { Content } from './components/content';
 export { ContentView } from './components/content-views';
 export { ContentViewDialog } from './components/content-views/dialog';
 export { HeadingStructure } from './components/content-views/heading-structure';
 export { LinkList } from './components/content-views/link-list';
 export { Gutter } from './components/validations/gutter';
+export { ValidationsDialog } from './components/validations/drawer';
 export { ValidationsList } from './components/validations/list';
 export { Toolbar } from './components/toolbar';
 export { defaultToolbarConfig } from './components/toolbar/toolbar-config.ts';

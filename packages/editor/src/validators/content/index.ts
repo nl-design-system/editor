@@ -3,7 +3,7 @@ import type { Node } from 'prosemirror-model';
 import type { ContentValidator, ValidationResult } from '@/types/validation.ts';
 import { contentValidations, validationSeverity } from '@/constants';
 import { contentCorrectorMap } from '@/correctors';
-import { getNodeBoundingBox, isBold, isItalic } from '@/validators/helpers.ts';
+import { getNodeBoundingBox, getNodeRange, isBold, isItalic } from '@/validators/helpers.ts';
 
 const isEmptyOrWhitespaceString = (str: string): boolean => /^\s*$/.test(str);
 
@@ -20,12 +20,10 @@ const imageMustHaveAltText = (editor: Editor, node: Node, pos: number): Validati
   if (node.type.name === 'image' && (!node.attrs['alt'] || isEmptyOrWhitespaceString(node.attrs['alt']))) {
     return {
       boundingBox: getNodeBoundingBox(editor, pos),
-      correct: contentCorrectorMap[contentValidations.IMAGE_MUST_HAVE_ALT_TEXT](
-        pos,
-        node.attrs['alt'] ?? '',
-        node.attrs['src'] ?? '',
-      ),
+      correct: contentCorrectorMap[contentValidations.IMAGE_MUST_HAVE_ALT_TEXT](pos, node.attrs['alt'] ?? '', node.attrs['src'] ?? ''),
       pos,
+      range: getNodeRange(editor, pos) ?? undefined,
+      scope: 'element',
       severity: validationSeverity.INFO,
     };
   }
@@ -48,6 +46,8 @@ const nodeShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): Validati
       boundingBox: getNodeBoundingBox(editor, pos),
       correct: contentCorrectorMap[contentValidations.NODE_SHOULD_NOT_BE_EMPTY](pos, node.type.name),
       pos,
+      range: getNodeRange(editor, pos) ?? undefined,
+      scope: 'element',
       severity: validationSeverity.INFO,
       tipPayload: { nodeType: node.type.name },
     };
@@ -62,6 +62,8 @@ const markShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): Validati
         boundingBox: getNodeBoundingBox(editor, pos),
         correct: contentCorrectorMap[contentValidations.MARK_SHOULD_NOT_BE_EMPTY](pos),
         pos,
+        range: getNodeRange(editor, pos) ?? undefined,
+        scope: 'inline',
         severity: validationSeverity.INFO,
         tipPayload: { nodeType: node.marks[0].type.name },
       };
@@ -80,6 +82,8 @@ const linkShouldNotBeTooGeneric = (editor: Editor, node: Node, pos: number): Val
         boundingBox: getNodeBoundingBox(editor, pos),
         correct: contentCorrectorMap[contentValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC](pos, node.nodeSize),
         pos,
+        range: getNodeRange(editor, pos) ?? undefined,
+        scope: 'inline',
         severity: validationSeverity.INFO,
       };
     }
@@ -93,6 +97,8 @@ const markShouldNotBeUnderlined = (editor: Editor, node: Node, pos: number): Val
       boundingBox: getNodeBoundingBox(editor, pos),
       correct: contentCorrectorMap[contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED](pos, node.nodeSize),
       pos,
+      range: getNodeRange(editor, pos) ?? undefined,
+      scope: 'inline',
       severity: validationSeverity.INFO,
     };
   }
@@ -105,6 +111,8 @@ const headingMustNotBeEmpty = (editor: Editor, node: Node, pos: number): Validat
       boundingBox: getNodeBoundingBox(editor, pos),
       correct: contentCorrectorMap[contentValidations.HEADING_MUST_NOT_BE_EMPTY](pos),
       pos,
+      range: getNodeRange(editor, pos) ?? undefined,
+      scope: 'element',
       severity: validationSeverity.ERROR,
     };
   }
@@ -122,6 +130,8 @@ const headingShouldNotContainBoldOrItalic = (editor: Editor, node: Node, pos: nu
       boundingBox: getNodeBoundingBox(editor, pos),
       correct: contentCorrectorMap[contentValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC](pos, node.nodeSize),
       pos,
+      range: getNodeRange(editor, pos) ?? undefined,
+      scope: 'element',
       severity: validationSeverity.INFO,
     };
   }
@@ -136,6 +146,8 @@ const descriptionListMustContainTerm = (editor: Editor, node: Node, pos: number)
         boundingBox: getNodeBoundingBox(editor, pos),
         correct: contentCorrectorMap[contentValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM](pos),
         pos,
+        range: getNodeRange(editor, pos) ?? undefined,
+        scope: 'element',
         severity: validationSeverity.ERROR,
       };
     }
@@ -158,6 +170,8 @@ const definitionDescriptionMustFollowTerm = (editor: Editor, node: Node, pos: nu
           boundingBox: getNodeBoundingBox(editor, pos),
           correct: contentCorrectorMap[contentValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM](pos, node.nodeSize),
           pos,
+          range: getNodeRange(editor, pos) ?? undefined,
+          scope: 'element',
           severity: validationSeverity.ERROR,
         };
       }
@@ -198,3 +212,4 @@ const contentValidator = (
 };
 
 export default contentValidator;
+

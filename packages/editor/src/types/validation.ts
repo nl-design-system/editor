@@ -14,6 +14,8 @@ export type CorrectValidationFunction = (editor: Editor) => void;
 
 export type ValidationResult = {
   boundingBox: BoundingBox | null;
+  range?: Range;
+  scope: 'element' | 'inline';
   severity: ValidationSeverity;
   pos: number;
   tipPayload?: Record<string, number | string | boolean>;

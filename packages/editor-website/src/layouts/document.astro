@@ -38,6 +38,36 @@ const locale = (Astro.currentLocale ?? 'nl') as Locale;
   <SiteFooter />
 </html>
 
+<script>
+  // Keep --clippy-validations-dialog-inset-block-start/end in sync with the
+  // actual header and footer heights so the dialog always fits between them.
+  function updateDialogInsets() {
+    const header = document.querySelector('.ma-site-header');
+    const footer = document.querySelector('.clippy-website-footer, footer');
+    const root = document.documentElement;
+    if (header) {
+      root.style.setProperty(
+        '--clippy-validations-dialog-inset-block-start',
+        `${header.getBoundingClientRect().height}px`,
+      );
+    }
+    if (footer) {
+      root.style.setProperty(
+        '--clippy-validations-dialog-inset-block-end',
+        `${(window.innerHeight - footer.getBoundingClientRect().top)}px`,
+      );
+    }
+  }
+
+  const ro = new ResizeObserver(updateDialogInsets);
+  const header = document.querySelector('.ma-site-header');
+  const footer = document.querySelector('.clippy-website-footer, footer');
+  if (header) ro.observe(header);
+  if (footer) ro.observe(footer);
+  window.addEventListener('resize', updateDialogInsets);
+  updateDialogInsets();
+</script>
+
 <style is:global>
   .ma-banner {
     container-name: ma-banner;

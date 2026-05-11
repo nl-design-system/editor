@@ -8,9 +8,46 @@ import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editorExtensions } from '@/extensions';
+import { CustomEvents } from '@/events';
 import { initializeLocale } from '@/localization.ts';
 import { sanitizeTopHeadingLevel } from '@/utils/sanitize.ts';
+import { clearValidationHighlights, VALIDATION_HIGHLIGHT_NAMES } from '@/utils/highlights.ts';
 import { editorContextStyles } from './styles.ts';
+
+const HIGHLIGHT_STYLE_ID = 'clippy-validation-highlights';
+
+const injectHighlightStyles = (): void => {
+  if (document.getElementById(HIGHLIGHT_STYLE_ID)) return;
+  const style = document.createElement('style');
+  style.id = HIGHLIGHT_STYLE_ID;
+  style.textContent = `
+    ::highlight(${VALIDATION_HIGHLIGHT_NAMES.error}) {
+      color: inherit;
+      background-color: rgba(220, 38, 38, 0.2);
+    }
+    ::highlight(${VALIDATION_HIGHLIGHT_NAMES.warning}) {
+      color: inherit;
+      background-color: rgba(234, 179, 8, 0.2);
+    }
+    ::highlight(${VALIDATION_HIGHLIGHT_NAMES.info}) {
+      color: inherit;
+      background-color: rgba(59, 130, 246, 0.2);
+    }
+    ::highlight(${VALIDATION_HIGHLIGHT_NAMES['hover-error']}) {
+      color: inherit;
+      background-color: rgba(220, 38, 38, 0.55);
+    }
+    ::highlight(${VALIDATION_HIGHLIGHT_NAMES['hover-warning']}) {
+      color: inherit;
+      background-color: rgba(234, 179, 8, 0.55);
+    }
+    ::highlight(${VALIDATION_HIGHLIGHT_NAMES['hover-info']}) {
+      color: inherit;
+      background-color: rgba(59, 130, 246, 0.55);
+    }
+  `;
+  document.head.appendChild(style);
+};
 
 const tag = 'clippy-context';
 
@@ -93,9 +130,24 @@ export class Context extends LitElement {
     initialValue: new Map(),
   });
 
+  lightIdentifierContext = new ContextProvider(document.body, {
+    context: identifierContext,
+    initialValue: this.id,
+  });
+
+  lightTiptapContext = new ContextProvider(document.body, {
+    context: tiptapContext,
+    initialValue: undefined,
+  });
+
   updateValidationsContext = (resultMap: Map<string, ValidationResult>): void => {
     this.validationsContext = resultMap;
     this.lightValidationsContext.setValue(this.validationsContext);
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.VALIDATIONS_UPDATED, {
+        detail: { identifier: this.id, validations: resultMap },
+      }),
+    );
   };
 
   @provide({ context: tiptapContext })
@@ -125,6 +177,8 @@ export class Context extends LitElement {
         this.id,
       ),
     });
+    this.lightTiptapContext.setValue(this.editor);
+    this.lightIdentifierContext.setValue(this.id);
   }
 
   override firstUpdated(): void {
@@ -148,7 +202,10 @@ export class Context extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
+    injectHighlightStyles();
     this.lightValidationsContext.hostConnected();
+    this.lightIdentifierContext.hostConnected();
+    this.lightTiptapContext.hostConnected();
     if (!this.isLocaleInitialized) {
       this.isLocaleInitialized = true;
       initializeLocale().then(() => {
@@ -172,6 +229,7 @@ export class Context extends LitElement {
   override disconnectedCallback() {
     registeredIdentifiers.delete(this.id);
     this.editor?.destroy();
+    clearValidationHighlights();
     super.disconnectedCallback();
   }
 
