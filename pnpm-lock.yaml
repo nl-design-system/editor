@@ -202,8 +202,8 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@utrecht/form-label-css':
-        specifier: 2.0.1
-        version: 2.0.1
+        specifier: 3.0.0
+        version: 3.0.0
       '@utrecht/img-css':
         specifier: 2.0.1
         version: 2.0.1
@@ -2310,9 +2310,6 @@ packages:
 
   '@utrecht/form-fieldset-css@3.0.0':
     resolution: {integrity: sha512-ozmBMq89z/tNzqRB/jgVBLjjUBOeYswBReLT6TpUtkci6aZcAmni+McTnEE512pV9mvSIptrgsTxeTxySRorug==}
-
-  '@utrecht/form-label-css@2.0.1':
-    resolution: {integrity: sha512-ghkVY1auCGoKaaFzAIPGetXjJE1H1ZXPYnW39xZfhIQjKiUh4NW0uvLHj9sZC24YHGwuuiJmtKGJwTER0X45EA==}
 
   '@utrecht/form-label-css@3.0.0':
     resolution: {integrity: sha512-m3cpyWSXbRIKvI1Ij2/0TJf04J83Ke8nGWxiRgakyIV7Pk2PkB61DDchnqlcr9HK/MzBu69/NSuvT68ZNu68XA==}
@@ -8288,8 +8285,6 @@ snapshots:
   '@utrecht/form-field-error-message-css@3.0.0': {}
 
   '@utrecht/form-fieldset-css@3.0.0': {}
-
-  '@utrecht/form-label-css@2.0.1': {}
 
   '@utrecht/form-label-css@3.0.0': {}
 
