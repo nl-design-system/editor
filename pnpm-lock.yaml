@@ -193,8 +193,8 @@ importers:
         specifier: 3.22.5
         version: 3.22.5
       '@utrecht/blockquote-css':
-        specifier: 2.0.1
-        version: 2.0.1
+        specifier: 3.0.0
+        version: 3.0.0
       '@utrecht/drawer-css':
         specifier: 2.0.1
         version: 2.0.1
@@ -2205,9 +2205,6 @@ packages:
 
   '@utrecht/badge-list-css@4.0.0':
     resolution: {integrity: sha512-NdPuXWV71i/cG5obVgtLTGYSuhG+klfd2eNagAXArpyWzKsUCBIiaGsd4mOdJgWd3sgQrVp2trrxfMRL6pBEBg==}
-
-  '@utrecht/blockquote-css@2.0.1':
-    resolution: {integrity: sha512-uiGEhc77nM8OFEsuAR5viABV2NiRGZi3Mve2wUxtvrctPirLV/kQJWn3/pt2NCKSeuFqSnpVvCzgPe46F8PteQ==}
 
   '@utrecht/blockquote-css@3.0.0':
     resolution: {integrity: sha512-JPu+ibAe5T2Zr4zzNMFMDgQfquWBR7kqNukT5iqKICySz6At040bwD1y5P0u07mmlERkH644Gsgm3R6vTRB/JA==}
@@ -8115,8 +8112,6 @@ snapshots:
   '@utrecht/badge-counter-css@3.0.0': {}
 
   '@utrecht/badge-list-css@4.0.0': {}
-
-  '@utrecht/blockquote-css@2.0.1': {}
 
   '@utrecht/blockquote-css@3.0.0': {}
 
