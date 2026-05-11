@@ -205,8 +205,8 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@utrecht/img-css':
-        specifier: 2.0.1
-        version: 2.0.1
+        specifier: 3.0.0
+        version: 3.0.0
       '@utrecht/link-button-css':
         specifier: 3.0.0
         version: 3.0.0
@@ -2352,9 +2352,6 @@ packages:
 
   '@utrecht/icon-css@4.0.0':
     resolution: {integrity: sha512-PR/Ass0xlXu67BjYp1Qi5VzCgVLHk93U2lmYfYq6xzOG+21beoIv8w7Y1nHV4XKWk82aJ/hwG4GrjbAsifReqw==}
-
-  '@utrecht/img-css@2.0.1':
-    resolution: {integrity: sha512-G5D1Nc7SlQeUgKic14s7VdsMcXxSquyS0INNmq79ejf73l6GNXY7E+Gag3JwyOopHUAKqW1u5fKZG00bySPabA==}
 
   '@utrecht/img-css@3.0.0':
     resolution: {integrity: sha512-nGnawGURYB03J20BWrG6ILri6KW5wdK1vevpJ76bMMZFSFFd+CDjmZXeaBBLLz0EgcYkQj3gAEgXr28gBiawyw==}
@@ -8316,8 +8313,6 @@ snapshots:
   '@utrecht/iban-data-css@3.0.0': {}
 
   '@utrecht/icon-css@4.0.0': {}
-
-  '@utrecht/img-css@2.0.1': {}
 
   '@utrecht/img-css@3.0.0': {}
 
