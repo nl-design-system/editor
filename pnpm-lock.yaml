@@ -223,8 +223,8 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@utrecht/table-css':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 3.0.0
+        version: 3.0.0
       '@utrecht/textbox-css':
         specifier: 3.1.0
         version: 3.1.0
@@ -2490,9 +2490,6 @@ packages:
 
   '@utrecht/surface-css@3.0.0':
     resolution: {integrity: sha512-gPB4rmhAXOWU2Q02Vt8gddu+FSXV+5Bg1zPfvqCUiMxdAFzLumU1MCf35OIJNL1SICTU1rrJMFj1qcpChfVZ1A==}
-
-  '@utrecht/table-css@2.0.2':
-    resolution: {integrity: sha512-dwdox/v3ZrEDWe0wf9LOFYzehy9xTCKsA9KVCTEJ2uBW1OBcERuXt42oarDHMTiP9y8slxq+/PvHHFa1+JcRUg==}
 
   '@utrecht/table-css@3.0.0':
     resolution: {integrity: sha512-1rnKuUk4ScwsP7Svet2zETEoIwRrU/0rsyB2K5trKNwg8BJu+US3RPp01emXzqdJ+OfICAFcyjnZN1jxcnkV2g==}
@@ -8408,8 +8405,6 @@ snapshots:
   '@utrecht/superscript-css@2.0.1': {}
 
   '@utrecht/surface-css@3.0.0': {}
-
-  '@utrecht/table-css@2.0.2': {}
 
   '@utrecht/table-css@3.0.0': {}
 

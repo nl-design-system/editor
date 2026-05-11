@@ -99,7 +99,7 @@
     "@utrecht/separator-css": "2.0.1",
     "@utrecht/subscript-css": "2.0.1",
     "@utrecht/superscript-css": "2.0.1",
-    "@utrecht/table-css": "2.0.2",
+    "@utrecht/table-css": "3.0.0",
     "@utrecht/textbox-css": "3.1.0",
     "@utrecht/unordered-list-css": "2.0.1",
     "lit": "3.3.2",
