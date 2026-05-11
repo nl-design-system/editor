@@ -214,8 +214,8 @@ importers:
         specifier: 3.0.1
         version: 3.0.1
       '@utrecht/separator-css':
-        specifier: 2.0.1
-        version: 2.0.1
+        specifier: 3.0.0
+        version: 3.0.0
       '@utrecht/subscript-css':
         specifier: 2.0.1
         version: 2.0.1
@@ -2466,9 +2466,6 @@ packages:
 
   '@utrecht/select-css@3.0.0':
     resolution: {integrity: sha512-zyjkPUBAC7Xy/XDpz4lNxHCF01vLiiXTIlLcpEN40Nf6bf0M6jMTWYvmp6NireuxLEb21NLK6Nq/XrpZEIXKhA==}
-
-  '@utrecht/separator-css@2.0.1':
-    resolution: {integrity: sha512-TpD/3w8N14XJD3hRKqpgftLFlmNveheNN9KUjBD3MEJF96i9e7S/4+YIasWicCHxrsQpicc28ERJLlGCRow+UA==}
 
   '@utrecht/separator-css@3.0.0':
     resolution: {integrity: sha512-NmqHbJlPHeIomXjup1QRonrn73DeStRPxRwsHGM1mrMlTtDy3r/+FtWgiGr4UJti9V/SM+/fkKYbM89u88V1yA==}
@@ -8392,8 +8389,6 @@ snapshots:
   '@utrecht/search-bar-css@4.0.0': {}
 
   '@utrecht/select-css@3.0.0': {}
-
-  '@utrecht/separator-css@2.0.1': {}
 
   '@utrecht/separator-css@3.0.0': {}
 
