@@ -31,13 +31,13 @@
     "@nl-design-system-community/editor-react": "workspace:*",
     "@nl-design-system-community/ma-design-tokens": "3.0.0",
     "@tabler/icons": "3.41.1",
-    "@types/react": "18.3.28",
-    "@types/react-dom": "18.3.7",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
     "@utrecht/component-library-css": "9.0.2",
     "@utrecht/design-tokens": "5.1.0",
     "astro": "6.2.1",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "remark-custom-header-id": "1.0.0"
   },
   "devDependencies": {
