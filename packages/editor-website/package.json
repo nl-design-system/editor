@@ -35,7 +35,7 @@
     "@types/react-dom": "19.2.3",
     "@utrecht/component-library-css": "9.0.2",
     "@utrecht/design-tokens": "5.1.0",
-    "astro": "6.0.5",
+    "astro": "6.2.1",
     "react": "19.2.5",
     "react-dom": "19.2.5",
     "remark-custom-header-id": "1.0.0"
