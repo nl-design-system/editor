@@ -7,7 +7,7 @@ export const linkDialogStyles = css`
     gap: var(--basis-space-inline-lg);
     padding-inline: var(--basis-space-inline-lg);
     padding-block: var(--basis-space-block-md);
-    border: 2px solid var(--ma-color-paars-8);
+    border: 2px solid var(--basis-color-accent-1-border-default);
     margin-block-end: var(--basis-space-block-sm);
   }
 

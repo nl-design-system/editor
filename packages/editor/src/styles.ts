@@ -20,7 +20,7 @@ export default css`
   }
 
   p.is-editor-empty:first-child::before {
-    color: var(--ma-color-neutral-8);
+    color: var(--basis-color-default-color-subtle);
     content: attr(data-placeholder);
     float: left;
     height: 0;
@@ -34,7 +34,7 @@ export default css`
 
   .clippy-content:focus-visible {
     outline-style: dashed;
-    outline-color: var(--ma-color-paars-8);
+    outline-color: var(--basis-color-accent-1-border-default);
     outline-offset: -1px;
   }
 
@@ -43,7 +43,7 @@ export default css`
     max-width: 100%;
 
     &.ProseMirror-selectednode {
-      outline: 3px solid var(--ma-color-paars-8);
+      outline: 3px solid var(--basis-color-accent-1-border-default);
     }
   }
 
@@ -58,7 +58,7 @@ export default css`
   .ProseMirror-selectednode {
     [data-resize-handle] {
       position: absolute;
-      background: var(--ma-color-paars-8);
+      background: var(--basis-color-accent-1-border-default);
       border: 1px solid rgba(255, 255, 255, 0.8);
       border-radius: var(--basis-border-radius-sm);
       z-index: 10;

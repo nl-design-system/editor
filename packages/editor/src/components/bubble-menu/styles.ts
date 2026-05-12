@@ -10,7 +10,7 @@ export default css`
     display: flex;
     gap: 0.25rem;
     padding: 0.5rem;
-    background: var(--ma-color-background, #fff);
+    background: var(--basis-color-default-bg-document);
     border-radius: 0.25rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 
@@ -22,7 +22,7 @@ export default css`
       margin-left: -5px;
       border-width: 5px;
       border-style: solid;
-      border-color: var(--ma-color-background, #fff) transparent transparent transparent;
+      border-color: var(--basis-color-default-bg-document) transparent transparent transparent;
     }
   }
 `;
