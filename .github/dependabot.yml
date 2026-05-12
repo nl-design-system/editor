@@ -15,39 +15,33 @@ updates:
     schedule:
       interval: "monthly"
     groups:
+      nl-design-system:
+        applies-to: "version-updates"
+        patterns:
+          - "@nl-design-system-candidate/*"
+          - "@utrecht/*"
       tiptap:
         applies-to: "version-updates"
         patterns:
           - "@tiptap/*"
           - "prosemirror-model"
-        update-types:
-          - "patch"
-          - "minor"
       storybook:
         applies-to: "version-updates"
         patterns:
           - "@storybook/*"
           - "storybook"
-        update-types:
-          - "patch"
-          - "minor"
       vite:
         applies-to: "version-updates"
         patterns:
           - "@vitest/*"
           - "vite"
+          - "vite-plugin-dts"
           - "vitest"
-        update-types:
-          - "patch"
-          - "minor"
       astro:
         applies-to: "version-updates"
         patterns:
           - "astro"
           - "@astrojs/*"
-        update-types:
-          - "patch"
-          - "minor"
       patch-and-minor-dependencies:
         applies-to: "version-updates"
         update-types:
