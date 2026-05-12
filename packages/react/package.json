@@ -32,7 +32,7 @@
   "dependencies": {
     "@nl-design-system-community/editor": "workspace:*",
     "@utrecht/component-library-css": "9.0.11",
-    "@utrecht/design-tokens": "5.1.0"
+    "@utrecht/design-tokens": "6.2.0"
   },
   "devDependencies": {
     "@fontsource/fira-sans": "5.2.7",
