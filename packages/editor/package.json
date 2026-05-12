@@ -101,7 +101,7 @@
     "@utrecht/superscript-css": "2.0.1",
     "@utrecht/table-css": "2.0.2",
     "@utrecht/textbox-css": "3.1.0",
-    "@utrecht/unordered-list-css": "2.0.1",
+    "@utrecht/unordered-list-css": "3.1.0",
     "lit": "3.3.2",
     "prosemirror-model": "1.25.4"
   },
