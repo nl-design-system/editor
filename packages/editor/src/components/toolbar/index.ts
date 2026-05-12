@@ -289,7 +289,7 @@ export class Toolbar extends LitElement {
         () => html`
           <clippy-button
             data-toolbar-item="undo"
-            ?disabled=${!(this.editor?.can().undo() ?? false)}
+            ?disabled=${!((!this.editor?.isDestroyed && this.editor?.can().undo()) ?? false)}
             @click=${() => this.editor?.commands.undo()}
             icon-only
             size="small"
@@ -305,7 +305,7 @@ export class Toolbar extends LitElement {
         () => html`
           <clippy-button
             data-toolbar-item="redo"
-            ?disabled=${!(this.editor?.can().redo() ?? false)}
+            ?disabled=${!((!this.editor?.isDestroyed && this.editor?.can().redo()) ?? false)}
             @click=${() => this.editor?.commands.redo()}
             icon-only
             size="small"

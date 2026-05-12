@@ -21,6 +21,9 @@ export interface SelectOption {
 }
 
 const getConfiguredHeadingLevels = (editor: Editor): Level[] => {
+  if (editor.isDestroyed) {
+    return [];
+  }
   const headingExt = editor.extensionManager.extensions.find((ext) => ext.name === 'heading');
   return headingExt?.options.levels;
 };
