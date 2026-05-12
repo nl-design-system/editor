@@ -23,7 +23,7 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
 
       - name: Install pnpm package manager
-        uses: pnpm/action-setup@26f6d4f2c533a43e6b5da0b4a5dd983f98f7b49a # v6.0.4
+        uses: pnpm/action-setup@739bfe42ca9233c5e6aca07c1a25a9d34aca49b0 # v6.0.7
         with:
           registry-url: "https://registry.npmjs.org"
 
@@ -51,7 +51,7 @@ jobs:
         run: pnpm run build
 
       - name: Publish to the npm Registry
-        uses: changesets/action@6a0a831ff30acef54f2c6aa1cbbc1096b066edaf # v1.7.0
+        uses: changesets/action@63a615b9cd06ba9a3e6d13796c7fbcb080a60a0b # v1.8.0
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           GIT_AUTHOR_EMAIL: ${{ secrets.GIT_AUTHOR_EMAIL }}
