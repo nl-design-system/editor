@@ -9,7 +9,6 @@ export default css`
     position: absolute;
     display: block;
     pointer-events: none;
-    z-index: 1;
   }
 
   .clippy-validations-gutter__list {
@@ -34,17 +33,17 @@ export default css`
       block-size: 100%;
       inline-size: 100%;
       pointer-events: none;
-      z-index: -1;
+      z-index: 0;
     }
 
     &[data-severity='error']::before {
-      background-color: rgba(220, 38, 38, 0.06);
+      background-color: color-mix(in srgb, var(--basis-color-negative-bg-default), transparent 50%);
     }
     &[data-severity='warning']::before {
-      background-color: rgba(234, 179, 8, 0.06);
+      background-color: color-mix(in srgb, var(--basis-color-warning-bg-default), transparent 50%);
     }
     &[data-severity='info']::before {
-      background-color: rgba(59, 130, 246, 0.06);
+      background-color: color-mix(in srgb, var(--basis-color-info-bg-default), transparent 50%);
     }
   }
 
@@ -59,6 +58,7 @@ export default css`
     inset-inline-start: 0;
     block-size: 100%;
     inline-size: 1rem;
+    z-index: 1;
 
     /* 2px vertical line, aligned to the left edge */
     &::before {
@@ -150,6 +150,7 @@ export default css`
     line-height: 1;
     padding: 0.125rem;
     border-radius: 0.25rem;
+    z-index: 1;
 
     &:hover,
     &:focus-visible {
@@ -171,13 +172,13 @@ export default css`
   }
 
   .clippy-validations-gutter__meta--error .clippy-validations-gutter__icon {
-    color: var(--ma-color-signal-rood-500, rgb(220, 38, 38));
+    color: var(--basis-color-negative-color-default);
   }
   .clippy-validations-gutter__meta--warning .clippy-validations-gutter__icon {
-    color: var(--ma-color-signal-warning-700, rgb(234, 179, 8));
+    color: var(--basis-color-warning-color-default);
   }
   .clippy-validations-gutter__meta--info .clippy-validations-gutter__icon {
-    color: var(--ma-color-neutral-8, rgb(59, 130, 246));
+    color: var(--basis-color-info-color-default);
   }
 
   /* Override nl-number-badge colors per severity */
