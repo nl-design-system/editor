@@ -2,8 +2,6 @@ import type { Editor } from '@tiptap/core';
 import type { Node } from 'prosemirror-model';
 import type { EditorSettings } from '@/types/settings.ts';
 
-export type BoundingBox = { top: number; height: number };
-
 export type DocumentValidator = (editor: Editor, settings: EditorSettings) => ValidationResult[];
 
 export type ContentValidator = (editor: Editor, node: Node, pos: number) => ValidationResult | null;
@@ -13,11 +11,9 @@ export type ValidationEntry = readonly [key: string, value: ValidationResult];
 export type CorrectValidationFunction = (editor: Editor) => void;
 
 export type ValidationResult = {
-  boundingBox: BoundingBox | null;
   range?: Range;
   scope: 'element' | 'inline';
   severity: ValidationSeverity;
-  pos: number;
   tipPayload?: Record<string, number | string | boolean>;
   correct?: CorrectValidationFunction;
 };

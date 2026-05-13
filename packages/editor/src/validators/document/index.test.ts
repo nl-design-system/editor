@@ -24,7 +24,7 @@ describe('Document validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      expect(mapArg.has('document-must-have-correct-heading-order_7')).toBeTruthy();
+      expect(mapArg.has('document-must-have-correct-heading-order_0')).toBeTruthy();
     });
 
     it('returns null for correct heading order', async () => {
@@ -49,9 +49,7 @@ describe('Document validations', () => {
       const result = documentMustHaveCorrectHeadingOrder(editor);
       expect(result).toEqual([
         {
-          boundingBox: expect.any(Object),
           correct: expect.any(Function),
-          pos: 7,
           range: expect.anything(),
           scope: 'element',
           severity: 'warning',
@@ -79,9 +77,7 @@ describe('Document validations', () => {
       const result = documentMustHaveCorrectHeadingOrder(editor, settings);
       expect(result).toEqual([
         {
-          boundingBox: expect.any(Object),
           correct: expect.any(Function),
-          pos: 0,
           range: expect.anything(),
           scope: 'element',
           severity: 'error',
@@ -92,9 +88,7 @@ describe('Document validations', () => {
           },
         },
         {
-          boundingBox: expect.any(Object),
           correct: expect.any(Function),
-          pos: 17,
           range: expect.anything(),
           scope: 'element',
           severity: 'warning',
@@ -123,7 +117,7 @@ describe('Document validations', () => {
         expect(callback).toHaveBeenCalledTimes(1);
       });
       const mapArg = callback.mock.calls[0][0];
-      expect(mapArg.get('document-must-have-single-heading-one_23').pos).toBe(23);
+      expect(mapArg.has('document-must-have-single-heading-one_0')).toBeTruthy();
     });
 
     it('returns error for invalid top level heading', async () => {
@@ -141,10 +135,8 @@ describe('Document validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      expect(mapArg.get('document-must-have-top-level-heading_1')).toEqual({
-        boundingBox: expect.any(Object),
+      expect(mapArg.get('document-must-have-top-level-heading_0')).toEqual({
         correct: expect.any(Function),
-        pos: 1,
         range: expect.anything(),
         scope: 'element',
         severity: 'info',
@@ -168,7 +160,7 @@ describe('Document validations', () => {
         });
         const mapArg = callback.mock.calls[0][0];
         expect(mapArg).toBeInstanceOf(Map);
-        expect(mapArg.has('document-must-have-semantic-lists_6')).toBeTruthy();
+        expect(mapArg.has('document-must-have-semantic-lists_0')).toBeTruthy();
       });
 
       it('returns errors for potential lists', async () => {
@@ -331,9 +323,7 @@ describe('Document validations', () => {
         const result = documentMustHaveTableWithHeadings(editor);
         expect(result).toEqual([
           {
-            boundingBox: expect.any(Object),
             correct: expect.any(Function),
-            pos: 7,
             range: expect.anything(),
             scope: 'element',
             severity: 'warning',
@@ -386,9 +376,7 @@ describe('Document validations', () => {
         const result = documentMustHaveTableWithHeadings(editor);
         expect(result).toEqual([
           {
-            boundingBox: expect.any(Object),
             correct: expect.any(Function),
-            pos: 7,
             range: expect.anything(),
             scope: 'element',
             severity: 'warning',

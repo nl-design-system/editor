@@ -2,11 +2,11 @@ import type { ValidationSeverity, ValidationsMap } from '@/types/validation.ts';
 
 export const VALIDATION_HIGHLIGHT_NAMES = {
   error: 'clippy-validation-error',
-  info: 'clippy-validation-info',
-  warning: 'clippy-validation-warning',
   'hover-error': 'clippy-validation-hover-error',
   'hover-info': 'clippy-validation-hover-info',
   'hover-warning': 'clippy-validation-hover-warning',
+  info: 'clippy-validation-info',
+  warning: 'clippy-validation-warning',
 } as const;
 
 const HIGHLIGHT_PRIORITY: Record<ValidationSeverity, number> = {

@@ -7,11 +7,11 @@ import { identifierContext } from '@/context/identifierContext.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
-import { editorExtensions } from '@/extensions';
 import { CustomEvents } from '@/events';
+import { editorExtensions } from '@/extensions';
 import { initializeLocale } from '@/localization.ts';
-import { sanitizeTopHeadingLevel } from '@/utils/sanitize.ts';
 import { clearValidationHighlights, VALIDATION_HIGHLIGHT_NAMES } from '@/utils/highlights.ts';
+import { sanitizeTopHeadingLevel } from '@/utils/sanitize.ts';
 import { editorContextStyles } from './styles.ts';
 
 const HIGHLIGHT_STYLE_ID = 'clippy-validation-highlights';

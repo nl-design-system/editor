@@ -16,9 +16,10 @@ export default css`
 
   :host([open]) {
     block-size: calc(
-      100dvh
-      - var(--clippy-validations-dialog-inset-block-start, 0px)
-      - var(--clippy-validations-dialog-inset-block-end, 0px)
+      100dvh - var(--clippy-validations-dialog-inset-block-start, 0px) - var(
+          --clippy-validations-dialog-inset-block-end,
+          0px
+        )
     );
     inline-size: clamp(280px, 30vw, 480px);
     inset-block-end: var(--clippy-validations-dialog-inset-block-end, 0px);

@@ -157,8 +157,14 @@ describe('<clippy-link-list>', () => {
         '<h1>Titel</h1><p><a href="https://example.com">Klik hier</a></p>',
       );
 
+      // Build a Range pointing to the link text node so getHighestSeverityEntryByNode can match it.
+      const domNode = linkList.editor?.view.nodeDOM(linkTextPos) ?? null;
+      const range = domNode ? document.createRange() : undefined;
+      if (range && domNode instanceof Text) range.selectNodeContents(domNode);
+      else if (range && domNode instanceof HTMLElement) range.selectNode(domNode);
+
       const validationsMap: ValidationsMap = new Map([
-        [`link-should-not-be-too-generic_${linkTextPos}`, { boundingBox: null, pos: linkTextPos, severity: 'warning' }],
+        [`link-should-not-be-too-generic_${linkTextPos}`, { range, scope: 'inline' as const, severity: 'warning' }],
       ]);
 
       contextEl.updateValidationsContext(validationsMap);
@@ -178,10 +184,16 @@ describe('<clippy-link-list>', () => {
         '<h1>Titel</h1><p><a href="https://example.com">Klik hier</a></p>',
       );
 
+      // Build a Range pointing to the link text node so getHighestSeverityEntryByNode can match it.
+      const domNode = linkList.editor?.view.nodeDOM(linkTextPos) ?? null;
+      const range = domNode ? document.createRange() : undefined;
+      if (range && domNode instanceof Text) range.selectNodeContents(domNode);
+      else if (range && domNode instanceof HTMLElement) range.selectNode(domNode);
+
       // Two entries at the same position: error takes precedence over warning.
       const validationsMap: ValidationsMap = new Map([
-        [`link-should-not-be-too-generic_${linkTextPos}`, { boundingBox: null, pos: linkTextPos, severity: 'warning' }],
-        [`mark-should-not-be-empty_${linkTextPos}`, { boundingBox: null, pos: linkTextPos, severity: 'error' }],
+        [`link-should-not-be-too-generic_${linkTextPos}`, { range, scope: 'inline' as const, severity: 'warning' }],
+        [`mark-should-not-be-empty_${linkTextPos}`, { range, scope: 'inline' as const, severity: 'error' }],
       ]);
 
       contextEl.updateValidationsContext(validationsMap);

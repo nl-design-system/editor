@@ -131,8 +131,14 @@ describe('<clippy-heading-structure>', () => {
 
       const { contextEl, headingStructure } = await setupWithContent('<h1>Titel</h1>');
 
+      // Build a Range that points to the heading DOM node so getHighestSeverityEntryByNode can match it.
+      const domNode = headingStructure.editor?.view.nodeDOM(headingPos) ?? null;
+      const range = domNode ? document.createRange() : undefined;
+      if (range && domNode instanceof HTMLElement) range.selectNode(domNode);
+      else if (range && domNode instanceof Text) range.selectNodeContents(domNode);
+
       const validationsMap: ValidationsMap = new Map([
-        [validationKey, { boundingBox: null, pos: headingPos, severity: 'warning' }],
+        [validationKey, { range, scope: 'element' as const, severity: 'warning' }],
       ]);
 
       contextEl.updateValidationsContext(validationsMap);

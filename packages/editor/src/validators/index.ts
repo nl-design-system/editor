@@ -39,8 +39,8 @@ export const runValidation = (
     try {
       const result = validator?.(editor, settings);
       if (result?.length && result.length > 0) {
-        for (const res of result) {
-          validationResultMap.set(`${key}_${res.pos}`, res);
+        for (const [index, res] of result.entries()) {
+          validationResultMap.set(`${key}_${index}`, res);
         }
       }
     } catch (err) {

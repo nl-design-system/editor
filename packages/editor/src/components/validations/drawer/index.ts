@@ -22,7 +22,18 @@ import { validationMessages, type ValidationKey } from '@/messages';
 import type { ValidationItem } from '../validation-item';
 import dialogStyles from './styles.ts';
 
-const sortByPos = (a: ValidationEntry, b: ValidationEntry) => a[1].pos - b[1].pos;
+const sortByRange = (a: ValidationEntry, b: ValidationEntry): number => {
+  const ra = a[1].range;
+  const rb = b[1].range;
+  if (!ra && !rb) return 0;
+  if (!ra) return 1;
+  if (!rb) return -1;
+  try {
+    return ra.compareBoundaryPoints(Range.START_TO_START, rb);
+  } catch {
+    return 0;
+  }
+};
 
 const BODY_PUSH_STYLE_ID = 'clippy-validations-dialog-body-push';
 
@@ -40,7 +51,6 @@ const injectBodyPushStyles = (): void => {
   `;
   document.head.appendChild(style);
 };
-
 
 @localized()
 @safeCustomElement('clippy-validations-dialog')
@@ -113,10 +123,19 @@ export class ValidationsDialog extends LitElement {
     this.open = !this.open;
   };
 
-  readonly #focusNode = (event: CustomEventInit<{ pos: number }>) => {
-    const { pos = 0 } = event.detail || {};
+  readonly #focusNode = (event: CustomEventInit<{ range?: Range }>) => {
+    const { range } = event.detail || {};
     this.open = false;
-    this.editor?.commands.focus(pos + 1, { scrollIntoView: true });
+    if (!(range instanceof Range)) return;
+    // Scroll the relevant DOM element into view
+    const startNode = range.startContainer;
+    const element = startNode instanceof Element ? startNode : startNode.parentElement;
+    element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Place the native selection at the range so ProseMirror updates its cursor position
+    this.editor?.view.dom.focus();
+    const selection = window.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range.cloneRange());
   };
 
   readonly #focusValidationItem = async (event: CustomEventInit<{ key: string; identifier: string }>) => {
@@ -136,7 +155,8 @@ export class ValidationsDialog extends LitElement {
 
   readonly #handleValidationsUpdated = (event: Event) => {
     if (event instanceof CustomEvent) {
-      const { identifier, validations } = (event as CustomEvent<{ identifier: string; validations: ValidationsMap }>).detail;
+      const { identifier, validations } = (event as CustomEvent<{ identifier: string; validations: ValidationsMap }>)
+        .detail;
       if (this.identifier && identifier !== this.identifier) return;
       this._validationsMap = validations;
     }
@@ -148,8 +168,8 @@ export class ValidationsDialog extends LitElement {
 
   #getFilteredValidations(): ValidationEntry[] {
     const validations = [...(this.#resolvedValidations?.entries() ?? [])];
-    if (!this.selectedSeverity) return validations.sort(sortByPos);
-    return validations.filter(([, validation]) => validation.severity === this.selectedSeverity).sort(sortByPos);
+    if (!this.selectedSeverity) return validations.sort(sortByRange);
+    return validations.filter(([, validation]) => validation.severity === this.selectedSeverity).sort(sortByRange);
   }
 
   override render() {
@@ -178,14 +198,14 @@ export class ValidationsDialog extends LitElement {
         <div class="clippy-dialog__body">
           <ul class="clippy-dialog__list" data-testid="clippy-validations-list">
             ${size > 0
-              ? map(filteredValidations, ([key, { correct, pos, severity, tipPayload }]) => {
+              ? map(filteredValidations, ([key, { correct, range, severity, tipPayload }]) => {
                   const validationKey = key.split('_')[0] as ValidationKey;
                   const { customCorrectLabel, description, href, tip } = validationMessages()[validationKey];
                   const tipHtml = tip?.(tipPayload) ?? null;
                   return html`
                     <clippy-validation-item
                       .key=${key}
-                      .pos=${pos}
+                      .range=${range}
                       .severity=${severity}
                       .description=${description}
                       .href=${href}

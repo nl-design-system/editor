@@ -12,7 +12,7 @@ import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents } from '@/events';
-import { getHighestSeverityEntryByPosition } from '@/utils/validations.ts';
+import { getHighestSeverityEntryByNode } from '@/utils/validations.ts';
 import linkListStyles from './styles.ts';
 
 interface LinkEntry {
@@ -51,7 +51,8 @@ export class LinkList extends LitElement {
   get #links(): LinkEntry[] {
     if (!this.editor) return [];
     const links: LinkEntry[] = [];
-    this.editor.state.doc.descendants((node, pos) => {
+    const { editor } = this;
+    editor.state.doc.descendants((node, pos) => {
       if (!node.isText) return;
       const linkMark = node.marks.find((mark) => mark.type.name === 'link');
       if (!linkMark) return;
@@ -62,7 +63,8 @@ export class LinkList extends LitElement {
       if (last?.href === href && last.pos + last.text.length === pos) {
         last.text += text;
       } else {
-        links.push({ href, pos, text, validationEntry: getHighestSeverityEntryByPosition(this.validationsMap, pos) });
+        const domNode = editor.view.nodeDOM(pos) ?? null;
+        links.push({ href, pos, text, validationEntry: getHighestSeverityEntryByNode(this.validationsMap, domNode) });
       }
     });
     return links;

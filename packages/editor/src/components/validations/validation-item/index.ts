@@ -42,7 +42,7 @@ export class ValidationItem extends LitElement {
 
   @property({ type: String }) key: string = '';
   @property({ type: String }) mode: 'tooltip' | 'list' | 'readonly' = 'list';
-  @property({ type: Number }) pos: number = 0;
+  @property({ attribute: false }) range?: Range;
   @property({ type: String }) severity!: ValidationSeverity;
   @property({ type: String }) description!: string;
   @property({ type: String }) href?: string;
@@ -61,7 +61,7 @@ export class ValidationItem extends LitElement {
       new CustomEvent(CustomEvents.FOCUS_NODE, {
         bubbles: true,
         composed: true,
-        detail: { pos: this.pos },
+        detail: { range: this.range },
       }),
     );
   };

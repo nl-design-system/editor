@@ -58,45 +58,37 @@ describe('<clippy-validations-dialog>', () => {
     });
 
     const validationsMap: Map<string, Omit<ValidationResult, 'tipPayload'>> = new Map([
-      [
-        `${contentValidations.HEADING_MUST_NOT_BE_EMPTY}_1`,
-        {
-          boundingBox: null,
-          pos: 1,
-          severity: 'error' as const,
-        },
-      ],
-      [`${contentValidations.IMAGE_MUST_HAVE_ALT_TEXT}_5`, { boundingBox: null, pos: 5, severity: 'error' }],
-      [`${contentValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC}_10`, { boundingBox: null, pos: 10, severity: 'warning' }],
+      [`${contentValidations.HEADING_MUST_NOT_BE_EMPTY}_1`, { scope: 'element' as const, severity: 'error' as const }],
+      [`${contentValidations.IMAGE_MUST_HAVE_ALT_TEXT}_5`, { scope: 'element' as const, severity: 'error' }],
+      [`${contentValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC}_10`, { scope: 'inline' as const, severity: 'warning' }],
       [
         `${contentValidations.NODE_SHOULD_NOT_BE_EMPTY}_15`,
-        { boundingBox: null, pos: 15, severity: 'warning', tipPayload: { nodeType: 'paragraph' } },
+        { scope: 'element' as const, severity: 'warning', tipPayload: { nodeType: 'paragraph' } },
       ],
       [
         `${contentValidations.MARK_SHOULD_NOT_BE_EMPTY}_20`,
-        { boundingBox: null, pos: 20, severity: 'error', tipPayload: { nodeType: 'link' } },
+        { scope: 'inline' as const, severity: 'error', tipPayload: { nodeType: 'link' } },
       ],
       [
         `${documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER}_25`,
         {
-          boundingBox: null,
-          pos: 25,
+          scope: 'element' as const,
           severity: 'error',
           tipPayload: { headingLevel: 3, precedingHeadingLevel: 1 },
         },
       ],
       [
         `${documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS}_30`,
-        { boundingBox: null, pos: 30, severity: 'warning', tipPayload: { prefix: '-' } },
+        { scope: 'element' as const, severity: 'warning', tipPayload: { prefix: '-' } },
       ],
       [
         `${contentValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC}_35`,
-        { boundingBox: null, pos: 35, severity: 'warning' },
+        { scope: 'element' as const, severity: 'warning' },
       ],
-      [`${contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED}_40`, { boundingBox: null, pos: 40, severity: 'warning' }],
+      [`${contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED}_40`, { scope: 'inline' as const, severity: 'warning' }],
       [
         `${documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE}_45`,
-        { boundingBox: null, pos: 45, severity: 'error', tipPayload: { topHeadingLevel: 1 } },
+        { scope: 'element' as const, severity: 'error', tipPayload: { topHeadingLevel: 1 } },
       ],
     ]);
 

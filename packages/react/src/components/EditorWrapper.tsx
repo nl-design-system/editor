@@ -7,4 +7,3 @@ export const ClippyEditorWrapper = createComponent({
   react: React,
   tagName: 'clippy-editor-wrapper',
 });
-

@@ -6,7 +6,7 @@ import type { DocumentValidator, ValidationResult } from '@/types/validation.ts'
 import { documentValidations, validationSeverity } from '@/constants';
 import { documentCorrectorMap } from '@/correctors';
 import { getParagraphLines, orderedListIndicator, unorderedListIndicator } from '@/correctors/helpers.ts';
-import { getNodeBoundingBox, getNodeRange, isBold } from '@/validators/helpers.ts';
+import { getNodeRange, isBold } from '@/validators/helpers.ts';
 
 const documentValidators = new Map<string, DocumentValidator>();
 
@@ -21,12 +21,10 @@ export const documentMustHaveCorrectHeadingOrder = (editor: Editor, settings?: E
 
       if (headingLevel < topHeadingLevel) {
         errors.push({
-          boundingBox: getNodeBoundingBox(editor, pos),
           correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER](
             pos,
             topHeadingLevel as Level,
           ),
-          pos,
           range: getNodeRange(editor, pos) ?? undefined,
           scope: 'element' as const,
           severity: validationSeverity.ERROR,
@@ -40,12 +38,10 @@ export const documentMustHaveCorrectHeadingOrder = (editor: Editor, settings?: E
 
       if (headingLevel > precedingHeadingLevel + 1) {
         errors.push({
-          boundingBox: getNodeBoundingBox(editor, pos),
           correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER](
             pos,
             (precedingHeadingLevel + 1) as Level,
           ),
-          pos,
           range: getNodeRange(editor, pos) ?? undefined,
           scope: 'element' as const,
           severity: validationSeverity.WARNING,
@@ -86,7 +82,6 @@ export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult[
     const isUnordered = unorderedListIndicator.test(firstPrefix);
 
     if (!isOrdered && !isUnordered) {
-      // Not a potential list
       continue;
     }
 
@@ -95,9 +90,7 @@ export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult[
       const decrementedSecondPrefix = decrement(secondPrefix);
       if (decrementedSecondPrefix === firstPrefix) {
         errors.push({
-          boundingBox: getNodeBoundingBox(editor, pos),
           correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS](pos, isOrdered),
-          pos,
           range: getNodeRange(editor, pos) ?? undefined,
           scope: 'element' as const,
           severity: validationSeverity.INFO,
@@ -109,11 +102,9 @@ export const documentMustHaveSemanticLists = (editor: Editor): ValidationResult[
     const lines = getParagraphLines(node);
     if (lines.length > 1 && firstPrefix === decrement(lines[1].substring(0, 2))) {
       errors.push({
-        boundingBox: getNodeBoundingBox(editor, pos),
         correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS](pos, isOrdered),
-        pos,
         range: getNodeRange(editor, pos) ?? undefined,
-          scope: 'element' as const,
+        scope: 'element' as const,
         severity: validationSeverity.INFO,
         tipPayload: { prefix: firstPrefix.trim() },
       });
@@ -137,11 +128,9 @@ export const documentMustHaveSingleHeadingOne = (editor: Editor): ValidationResu
     incorrectHeadingOneNodes.shift();
 
     return incorrectHeadingOneNodes.map(({ pos }) => ({
-      boundingBox: getNodeBoundingBox(editor, pos),
       correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE](pos),
-      pos,
       range: getNodeRange(editor, pos) ?? undefined,
-          scope: 'element' as const,
+      scope: 'element' as const,
       severity: validationSeverity.ERROR,
     }));
   }
@@ -156,9 +145,7 @@ export const documentMustHaveTopLevelHeadingOne = (editor: Editor, settings?: Ed
   if (topHeadingLevel === 1 && firstChild?.attrs['level'] !== topHeadingLevel) {
     return [
       {
-        boundingBox: getNodeBoundingBox(editor, 1),
         correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE](),
-        pos: 1,
         range: getNodeRange(editor, 1) ?? undefined,
         scope: 'element' as const,
         severity: validationSeverity.INFO,
@@ -187,14 +174,12 @@ const documentShouldNotHaveHeadingResemblingParagraphs = (editor: Editor): Valid
       textContent.trim().length <= 60
     ) {
       errors.push({
-        boundingBox: getNodeBoundingBox(editor, pos),
         correct: documentCorrectorMap[documentValidations.DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS](
           pos,
           node.nodeSize,
         ),
-        pos,
         range: getNodeRange(editor, pos) ?? undefined,
-          scope: 'element' as const,
+        scope: 'element' as const,
         severity: validationSeverity.INFO,
       });
     }
@@ -240,11 +225,9 @@ export const documentMustHaveTableWithHeadings = (editor: Editor): ValidationRes
 
     if (!hasHeaderRow && !hasHeaderColumn) {
       errors.push({
-        boundingBox: getNodeBoundingBox(editor, pos),
         correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_HEADINGS](pos),
-        pos,
         range: getNodeRange(editor, pos) ?? undefined,
-          scope: 'element' as const,
+        scope: 'element' as const,
         severity: validationSeverity.WARNING,
       });
     }
@@ -272,11 +255,9 @@ export const documentMustHaveTableWithMultipleRows = (editor: Editor): Validatio
 
     if (rowCount < 2) {
       errors.push({
-        boundingBox: getNodeBoundingBox(editor, pos),
         correct: documentCorrectorMap[documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_MULTIPLE_ROWS](pos),
-        pos,
         range: getNodeRange(editor, pos) ?? undefined,
-          scope: 'element' as const,
+        scope: 'element' as const,
         severity: validationSeverity.WARNING,
       });
     }

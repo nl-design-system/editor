@@ -15,6 +15,7 @@ import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents } from '@/events';
 import { type ValidationKey, validationMessages } from '@/messages';
 import { applyHoverHighlight, clearHoverHighlight } from '@/utils/highlights.ts';
+import { MIN_GUTTER_ITEM_HEIGHT } from '@/validators/helpers.ts';
 import gutterStyles from './styles.ts';
 
 const tag = 'clippy-validations-gutter';
@@ -25,34 +26,39 @@ declare global {
   }
 }
 
-const SEVERITY_ORDER: Record<ValidationSeverity, number> = { error: 2, warning: 1, info: 0 };
+const SEVERITY_ORDER: Record<ValidationSeverity, number> = { error: 2, info: 0, warning: 1 };
 
 const severityIcon = (severity: ValidationSeverity) => {
   switch (severity) {
-    case 'error': return AlertTriangleIcon;
-    case 'warning': return AlertCircleIcon;
-    default: return InfoCircleIcon;
+    case 'error':
+      return AlertTriangleIcon;
+    case 'warning':
+      return AlertCircleIcon;
+    default:
+      return InfoCircleIcon;
   }
 };
 
-/** Group validation entries by their vertical position (boundingBox.top). */
-const groupByTop = (
-  entries: [string, ValidationResult][],
-): Map<number, [string, ValidationResult][]> => {
-  const groups = new Map<number, [string, ValidationResult][]>();
-  for (const entry of entries) {
-    const top = entry[1].boundingBox?.top ?? -1;
-    if (!groups.has(top)) groups.set(top, []);
-    groups.get(top)!.push(entry);
+type PositionedEntry = [key: string, result: ValidationResult, box: { top: number; height: number }];
+
+/**
+ * Compare two ValidationResults by their Range start position in the document.
+ * Results without a range sort to the end.
+ */
+const compareByRange = (a: ValidationResult, b: ValidationResult): number => {
+  if (!a.range && !b.range) return 0;
+  if (!a.range) return 1;
+  if (!b.range) return -1;
+  try {
+    return a.range.compareBoundaryPoints(Range.START_TO_START, b.range);
+  } catch {
+    return 0;
   }
-  return groups;
 };
 
 /** Pick the entry with the highest severity from a group. */
-const highestSeverityEntry = (group: [string, ValidationResult][]): [string, ValidationResult] =>
-  group.reduce((best, cur) =>
-    SEVERITY_ORDER[cur[1].severity] > SEVERITY_ORDER[best[1].severity] ? cur : best,
-  );
+const highestSeverityEntry = (group: PositionedEntry[]): PositionedEntry =>
+  group.reduce((best, cur) => (SEVERITY_ORDER[cur[1].severity] > SEVERITY_ORDER[best[1].severity] ? cur : best));
 
 @localized()
 @safeCustomElement(tag)
@@ -88,6 +94,22 @@ export class Gutter extends LitElement {
     this.activeValidationItemKey = this.activeValidationItemKey === key ? null : key;
   };
 
+  /**
+   * Compute the gutter-relative top offset and height for a Range.
+   * Uses `getBoundingClientRect()` on both the range and the gutter host element
+   * so positioning is derived purely from HTML layout — no TipTap node positions.
+   */
+  #getPositionFromRange(range: Range): { top: number; height: number } | null {
+    const rect = range.getBoundingClientRect();
+    // Guard against collapsed/detached ranges
+    if (rect.height === 0 && rect.width === 0) return null;
+    const gutterRect = this.getBoundingClientRect();
+    return {
+      height: Math.max(rect.height, MIN_GUTTER_ITEM_HEIGHT),
+      top: rect.top - gutterRect.top,
+    };
+  }
+
   override connectedCallback() {
     super.connectedCallback();
     globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, this.#handleFocusValidationItemInGutter);
@@ -110,17 +132,28 @@ export class Gutter extends LitElement {
       return nothing;
     }
 
+    // Sort by document order (pos) then compute gutter positions from ranges
     const sortedValidations = [...this.validationsContext.entries()]
-      .filter(([, { boundingBox }]) => boundingBox != null)
-      .sort(([, a], [, b]) => a.pos - b.pos);
+      .filter(([, { range }]) => range !== null)
+      .sort(([, a], [, b]) => compareByRange(a, b));
 
-    const groups = groupByTop(sortedValidations);
+    // Compute top/height for each entry using its Range, group by rounded top
+    type PositionedEntry = [key: string, result: ValidationResult, box: { top: number; height: number }];
+    const groups = new Map<number, PositionedEntry[]>();
+    for (const [key, result] of sortedValidations) {
+      if (!result.range) continue;
+      const box = this.#getPositionFromRange(result.range);
+      if (!box) continue;
+      const roundedTop = Math.round(box.top);
+      if (!groups.has(roundedTop)) groups.set(roundedTop, []);
+      groups.get(roundedTop)!.push([key, result, box]);
+    }
 
     return html`
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
         ${[...groups.entries()].map(([, group]) => {
-          const [key, { boundingBox, range, scope, severity }] = highestSeverityEntry(group);
-          if (!boundingBox) return nothing;
+          const [key, { scope, severity }, repBox] = highestSeverityEntry(group);
+          const repRange = group.find(([k]) => k === key)![1].range;
           const validationKey = key.split('_')[0] as ValidationKey;
           const { description } = validationMessages()[validationKey];
           const isActive = this.activeValidationItemKey === key;
@@ -129,7 +162,7 @@ export class Gutter extends LitElement {
           return html`<li
             class="clippy-validations-gutter__indicator"
             data-severity=${severity}
-            style="inset-block-start: ${boundingBox.top}px; block-size: ${boundingBox.height}px"
+            style="inset-block-start: ${repBox.top}px; block-size: ${repBox.height}px"
           >
             <button
               class="${classMap({
@@ -140,18 +173,26 @@ export class Gutter extends LitElement {
               aria-expanded=${isActive ? 'true' : 'false'}
               aria-label=${description}
               @click=${() => this.#handleIndicatorClick(key)}
-              @mouseenter=${() => { if (scope === 'inline' && range) applyHoverHighlight(severity, range); }}
+              @mouseenter=${() => {
+                if (scope === 'inline' && repRange) applyHoverHighlight(severity, repRange);
+              }}
               @mouseleave=${() => clearHoverHighlight()}
             ></button>
             <button
               class="clippy-validations-gutter__meta clippy-validations-gutter__meta--${severity}"
               aria-label=${msg(str`Open validation panel`)}
-              @click=${() => this.dispatchEvent(new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, { bubbles: true, composed: true }))}
+              @click=${() =>
+                this.dispatchEvent(
+                  new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, { bubbles: true, composed: true }),
+                )}
             >
-              ${count > 1 ? html`<span
-                class="nl-number-badge clippy-validations-gutter__badge--${severity}"
-                aria-label=${msg(str`${count} validation items`)}
-              >${count}</span>` : nothing}
+              ${count > 1
+                ? html`<span
+                    class="nl-number-badge clippy-validations-gutter__badge--${severity}"
+                    aria-label=${msg(str`${count} validation items`)}
+                    >${count}</span
+                  >`
+                : nothing}
               <span class="clippy-validations-gutter__icon" aria-hidden="true">
                 ${unsafeSVG(severityIcon(severity))}
               </span>

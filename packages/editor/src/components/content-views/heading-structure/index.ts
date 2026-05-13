@@ -14,7 +14,7 @@ import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents } from '@/events';
-import { getHighestSeverityEntryByPosition } from '@/utils/validations.ts';
+import { getHighestSeverityEntryByNode } from '@/utils/validations.ts';
 import headingStructureStyles from './styles.ts';
 
 interface HeadingEntry {
@@ -56,11 +56,12 @@ export class HeadingStructure extends LitElement {
     const headings: HeadingEntry[] = [];
     this.editor.state.doc.descendants((node, pos) => {
       if (node.type.name === 'heading') {
+        const domNode = this.editor?.view.nodeDOM(pos) ?? null;
         headings.push({
           level: node.attrs['level'] as number,
           pos,
           text: node.textContent,
-          validationEntry: getHighestSeverityEntryByPosition(this.validationsMap, pos),
+          validationEntry: getHighestSeverityEntryByNode(this.validationsMap, domNode),
         });
       }
     });
@@ -69,17 +70,17 @@ export class HeadingStructure extends LitElement {
 
   #scrollToHeading(pos: number) {
     if (!this.editor) return;
+    const { view } = this.editor;
+    const domNode = view.nodeDOM?.(pos) ?? null;
     try {
-      const { view } = this.editor;
-      const nodeDom = view.nodeDOM?.(pos) ?? view.domAtPos(pos).node;
-      if (nodeDom instanceof HTMLElement) {
-        nodeDom.scrollIntoView({ block: 'start' });
+      if (domNode instanceof HTMLElement) {
+        domNode.scrollIntoView({ block: 'start' });
       }
     } catch (err) {
       console.error('[clippy-heading-structure] Cannot scroll to heading', err);
     }
 
-    const validationKey = getHighestSeverityEntryByPosition(this.validationsMap, pos)?.[0] ?? null;
+    const validationKey = getHighestSeverityEntryByNode(this.validationsMap, domNode)?.[0] ?? null;
     if (validationKey) {
       globalThis.dispatchEvent(
         new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, {

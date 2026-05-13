@@ -7,4 +7,3 @@ export const ClippyValidationsDialog = createComponent({
   react: React,
   tagName: 'clippy-validations-dialog',
 });
-
