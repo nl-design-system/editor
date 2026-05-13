@@ -3,28 +3,7 @@ import { css } from 'lit';
 export default css`
   :host {
     background-color: var(--basis-color-default-bg-document);
-    display: flex;
-    flex-direction: column;
-    inline-size: 100%;
-    margin-inline: auto;
-    max-inline-size: var(--clippy-editor-max-inline-size, 900px);
-    min-block-size: 100%;
-  }
-
-  .clippy-editor-main {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    min-inline-size: 0;
-    overflow: hidden;
-  }
-
-  .clippy-editor-body {
-    display: flex;
-    flex: 1;
-    flex-direction: row;
-    min-block-size: 0;
-    overflow: hidden;
+    display: block;
   }
 
   .ProseMirror-selectednode {
@@ -36,10 +15,8 @@ export default css`
     position-area: top center;
   }
   .clippy-editor-container {
-    flex: 1;
-    min-inline-size: 0;
-    overflow-y: auto;
     position: relative;
+    padding-inline-end: 1rem;
   }
 
   p.is-editor-empty:first-child::before {

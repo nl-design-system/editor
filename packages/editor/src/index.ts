@@ -1,6 +1,5 @@
 export { Context } from './components/context';
 export { Editor } from './components/editor';
-export { EditorWrapper } from './components/editor-wrapper';
 export { Content } from './components/content';
 export { ContentView } from './components/content-views';
 export { ContentViewDialog } from './components/content-views/dialog';

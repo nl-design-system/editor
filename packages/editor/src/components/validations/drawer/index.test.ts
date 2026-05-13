@@ -28,13 +28,13 @@ describe('<clippy-validations-dialog>', () => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
 
-    const dialogHost = document.querySelector('clippy-validations-dialog');
-    expect(dialogHost).not.toHaveAttribute('open');
-
+    const dialog = page.getByTestId('clippy-validations-drawer');
+    expect(dialog).not.toHaveAttribute('open');
+    expect(dialog.element()).not.toHaveAttribute('open');
     globalThis.dispatchEvent(
       new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, { detail: { identifier: TEST_IDENTIFIER } }),
     );
-    await vi.waitFor(() => expect(dialogHost).toHaveAttribute('open'));
+    expect(dialog).toHaveAttribute('open');
   });
 
   it('does not open dialog when OPEN_VALIDATIONS_DIALOG event has a different identifier', async () => {
