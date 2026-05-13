@@ -5,15 +5,15 @@ export default css`
     display: grid;
     position: relative;
     gap: var(--basis-space-inline-md);
-    background-color: white;
-    border: 1px solid var(--ma-color-neutral-8);
+    background-color: var(--basis-color-default-bg-document);
+    border: 1px solid var(--basis-color-default-color-subtle);
     padding-block: 1rem;
     padding-inline: 2rem 1rem;
     min-inline-size: 320px;
     border-radius: 1rem;
 
     &:focus {
-      outline: oklch(from var(--ma-color-neutral-8) l c h) solid 1px;
+      outline: oklch(from var(--basis-color-default-color-subtle) l c h) solid 1px;
     }
   }
 
@@ -26,7 +26,7 @@ export default css`
     height: 100%;
     width: 1rem;
     border-radius: 1rem 0 0 1rem;
-    background-color: var(--ma-color-neutral-8);
+    background-color: var(--basis-color-default-color-subtle);
     mask-image: var(--clippy-background-texture-info);
     mask-repeat: repeat;
     mask-composite: subtract;
@@ -34,27 +34,27 @@ export default css`
   }
 
   .clippy-dialog__list-item--warning {
-    border: 1px solid var(--ma-color-signal-warning-700);
+    border: 1px solid var(--basis-color-warning-border-default);
 
     &:focus {
-      outline-color: oklch(from var(--ma-color-signal-warning-700) l c h);
+      outline-color: oklch(from var(--basis-color-warning-border-default) l c h);
     }
 
     &::after {
-      background-color: var(--ma-color-signal-warning-700);
+      background-color: var(--basis-color-warning-border-default);
       mask-image: var(--clippy-background-texture-warning);
     }
   }
 
   .clippy-dialog__list-item--error {
-    border: 1px solid var(--ma-color-signal-rood-500);
+    border: 1px solid var(--basis-color-negative-border-default);
 
     &:focus {
-      outline-color: oklch(from var(--ma-color-signal-rood-500) l c h);
+      outline-color: oklch(from var(--basis-color-negative-border-default) l c h);
     }
 
     &::after {
-      background-color: var(--ma-color-signal-rood-500);
+      background-color: var(--basis-color-negative-border-default);
       mask-image: var(--clippy-background-texture-error);
     }
   }
@@ -69,13 +69,13 @@ export default css`
   }
 
   .clippy-dialog__list-item-severity {
-    color: var(--ma-color-neutral-8);
+    color: var(--basis-color-default-color-subtle);
     &.clippy-dialog__list-item-severity--warning {
-      color: var(--ma-color-signal-warning-700);
+      color: var(--basis-color-warning-border-default);
     }
 
     &.clippy-dialog__list-item-severity--error {
-      color: var(--ma-color-signal-rood-500);
+      color: var(--basis-color-negative-border-default);
     }
   }
 

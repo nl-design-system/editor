@@ -28,7 +28,7 @@ export default css`
   }
 
   .clippy-tabs__tab--active {
-    border-block-end: 4px solid var(--ma-color-paars-8);
+    border-block-end: 4px solid var(--basis-color-accent-1-border-default);
   }
 
   .clippy-tabs__tab:disabled {

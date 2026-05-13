@@ -7,8 +7,8 @@ export default css`
     flex-wrap: wrap;
     align-items: center;
     gap: var(--basis-space-inline-sm);
-    background-color: var(--ma-color-white);
-    border: 1px solid var(--ma-color-paars-8);
+    background-color: var(--basis-color-default-bg-document);
+    border: 1px solid var(--basis-color-accent-1-border-default);
     border-radius: 3px;
     padding-block: var(--basis-space-inline-md);
     padding-inline: var(--basis-space-inline-md);
@@ -33,7 +33,7 @@ export default css`
     display: block;
     inline-size: 2px;
     height: 100%;
-    background: var(--ma-color-paars-8);
+    background: var(--basis-color-accent-1-border-default);
   }
 
   .clippy-screen-reader-text {

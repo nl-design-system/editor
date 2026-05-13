@@ -6,7 +6,7 @@ export const imageDialogStyles = css`
     align-items: center;
     justify-content: center;
     padding: var(--basis-space-block-md);
-    border: 2px solid var(--ma-color-paars-8);
+    border: 2px solid var(--basis-color-accent-1-border-default);
     margin-block-end: var(--basis-space-block-sm);
     background-color: var(--basis-color-default-background-subtle);
     min-block-size: var(--basis-size-xl);
