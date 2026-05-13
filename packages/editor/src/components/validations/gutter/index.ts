@@ -57,8 +57,14 @@ const compareByRange = (a: ValidationResult, b: ValidationResult): number => {
 };
 
 /** Pick the entry with the highest severity from a group. */
-const highestSeverityEntry = (group: PositionedEntry[]): PositionedEntry =>
-  group.reduce((best, cur) => (SEVERITY_ORDER[cur[1].severity] > SEVERITY_ORDER[best[1].severity] ? cur : best));
+const highestSeverityEntry = (group: PositionedEntry[]): PositionedEntry => {
+  return group.reduce((best, cur) => {
+    if (SEVERITY_ORDER[cur[1].severity] > SEVERITY_ORDER[best[1].severity]) {
+      return cur;
+    }
+    return best;
+  }, group[0]);
+};
 
 @localized()
 @safeCustomElement(tag)

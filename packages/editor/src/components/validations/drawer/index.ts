@@ -133,7 +133,7 @@ export class ValidationsDialog extends LitElement {
     element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     // Place the native selection at the range so ProseMirror updates its cursor position
     this.editor?.view.dom.focus();
-    const selection = window.getSelection();
+    const selection = globalThis.getSelection();
     selection?.removeAllRanges();
     selection?.addRange(range.cloneRange());
   };
