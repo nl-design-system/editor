@@ -35,9 +35,21 @@ export const runValidation = (
     contentValidationSettings.enableRules,
     contentValidationSettings.disableRules,
   );
+  // Pass the live editor DOM element so validators can build DOM Ranges and
+  // `correct` callbacks can resolve ProseMirror positions via posAtDOM.
+  // Guard against cases where the editor view is not yet mounted (e.g. SSR or
+  // editors that are constructed but not yet attached to the DOM).
+  let content: HTMLElement;
+  try {
+    content = editor.view.dom;
+  } catch (err) {
+    console.error('document validator error', err);
+    return;
+  }
+
   for (const [key, validator] of documentValidators) {
     try {
-      const result = validator?.(editor, settings);
+      const result = validator?.(content, settings);
       if (result?.length && result.length > 0) {
         for (const [index, res] of result.entries()) {
           validationResultMap.set(`${key}_${index}`, res);
@@ -49,7 +61,7 @@ export const runValidation = (
   }
 
   try {
-    const contentValidationResultMap = contentValidator(editor, contentValidators);
+    const contentValidationResultMap = contentValidator(content, contentValidators);
     if (contentValidationResultMap.size > 0) {
       validationResultMap = new Map<string, ValidationResult>([...validationResultMap, ...contentValidationResultMap]);
     }

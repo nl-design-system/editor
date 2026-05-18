@@ -36,7 +36,7 @@ describe('Document validations', () => {
       `,
       );
 
-      const result = documentMustHaveCorrectHeadingOrder(editor);
+      const result = documentMustHaveCorrectHeadingOrder(editor.view.dom);
       expect(result).toStrictEqual([]);
     });
 
@@ -46,7 +46,7 @@ describe('Document validations', () => {
         <h3>Subtitle</h3>
       `);
 
-      const result = documentMustHaveCorrectHeadingOrder(editor);
+      const result = documentMustHaveCorrectHeadingOrder(editor.view.dom);
       expect(result).toEqual([
         {
           correct: expect.any(Function),
@@ -74,7 +74,7 @@ describe('Document validations', () => {
         settings,
       );
 
-      const result = documentMustHaveCorrectHeadingOrder(editor, settings);
+      const result = documentMustHaveCorrectHeadingOrder(editor.view.dom, settings);
       expect(result).toEqual([
         {
           correct: expect.any(Function),
@@ -194,7 +194,7 @@ describe('Document validations', () => {
             <p>3 - Losse paragrafen test</p>
       `);
 
-        const results = documentMustHaveSemanticLists(editor);
+        const results = documentMustHaveSemanticLists(editor.view.dom);
 
         results.forEach((result) => {
           expect(result.severity).toEqual('info');
@@ -253,7 +253,7 @@ describe('Document validations', () => {
       </table>
     `);
 
-        const result = documentMustHaveTableWithHeadings(editor);
+        const result = documentMustHaveTableWithHeadings(editor.view.dom);
         expect(result).toStrictEqual([]);
       });
 
@@ -274,7 +274,7 @@ describe('Document validations', () => {
       </table>
     `);
 
-        const result = documentMustHaveTableWithHeadings(editor);
+        const result = documentMustHaveTableWithHeadings(editor.view.dom);
         expect(result).toStrictEqual([]);
       });
 
@@ -295,7 +295,7 @@ describe('Document validations', () => {
       </table>
     `);
 
-        const result = documentMustHaveTableWithHeadings(editor);
+        const result = documentMustHaveTableWithHeadings(editor.view.dom);
         expect(result).toStrictEqual([]);
       });
 
@@ -320,7 +320,7 @@ describe('Document validations', () => {
       </table>
     `);
 
-        const result = documentMustHaveTableWithHeadings(editor);
+        const result = documentMustHaveTableWithHeadings(editor.view.dom);
         expect(result).toEqual([
           {
             correct: expect.any(Function),
@@ -356,7 +356,7 @@ describe('Document validations', () => {
       </table>
     `);
 
-        const result = documentMustHaveTableWithHeadings(editor);
+        const result = documentMustHaveTableWithHeadings(editor.view.dom);
         expect(result).toEqual([]);
       });
 
@@ -373,7 +373,7 @@ describe('Document validations', () => {
         </table>
       `);
 
-        const result = documentMustHaveTableWithHeadings(editor);
+        const result = documentMustHaveTableWithHeadings(editor.view.dom);
         expect(result).toEqual([
           {
             correct: expect.any(Function),

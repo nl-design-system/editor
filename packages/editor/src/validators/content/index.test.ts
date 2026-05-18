@@ -52,9 +52,16 @@ describe('Content validations', () => {
       await vi.waitFor(() => {
         expect(callback).toHaveBeenCalledTimes(1);
       });
-      expect(callback.mock.calls[0][0].get('description-list-must-contain-term_5').severity).toBe('error');
-      expect(callback.mock.calls[0][0].get('definition-description-must-follow-term_8').severity).toBe('error');
-      expect(callback.mock.calls[0][0].get('description-list-must-contain-term_20').severity).toBe('error');
+      const validationMap = callback.mock.calls[0][0] as Map<string, { severity: string }>;
+      const descTermKeys = [...validationMap.keys()].filter((k) => k.startsWith('description-list-must-contain-term_'));
+      expect(descTermKeys).toHaveLength(2);
+      descTermKeys.forEach((k) => expect(validationMap.get(k)?.severity).toBe('error'));
+
+      const defDescKey = [...validationMap.keys()].find((k) =>
+        k.startsWith('definition-description-must-follow-term_'),
+      );
+      expect(defDescKey).toBeDefined();
+      expect(validationMap.get(defDescKey!)?.severity).toBe('error');
     });
   });
 
@@ -70,9 +77,12 @@ describe('Content validations', () => {
       await vi.waitFor(() => {
         expect(callback).toHaveBeenCalledTimes(1);
       });
-      const mapArg = callback.mock.calls[0][0];
-      expect(mapArg.get('node-should-not-be-empty_16').tipPayload.nodeType).toBe('tableHeader');
-      expect(mapArg.get('node-should-not-be-empty_22').tipPayload.nodeType).toBe('tableCell');
+      const mapArg = callback.mock.calls[0][0] as Map<string, { tipPayload: { nodeType: string } }>;
+      const emptyNodeEntries = [...mapArg.entries()].filter(([k]) => k.startsWith('node-should-not-be-empty_'));
+      const tableHeaderEntry = emptyNodeEntries.find(([, v]) => v.tipPayload?.nodeType === 'tableHeader');
+      const tableCellEntry = emptyNodeEntries.find(([, v]) => v.tipPayload?.nodeType === 'tableCell');
+      expect(tableHeaderEntry).toBeDefined();
+      expect(tableCellEntry).toBeDefined();
     });
 
     it('returns an empty caption warning', async () => {
@@ -97,7 +107,14 @@ describe('Content validations', () => {
         </table>`,
         callback,
       );
-      expect(callback.mock.calls[0][0].get('node-should-not-be-empty_8').tipPayload.nodeType).toBe('tableCaption');
+      const emptyNodeEntries2 = [...callback.mock.calls[0][0].entries()].filter(([k]: [string, unknown]) =>
+        k.startsWith('node-should-not-be-empty_'),
+      );
+      expect(
+        emptyNodeEntries2.some(
+          ([, v]: [string, { tipPayload?: { nodeType?: string } }]) => v.tipPayload?.nodeType === 'tableCaption',
+        ),
+      ).toBe(true);
     });
   });
 
@@ -473,9 +490,17 @@ describe('Content validations', () => {
       await vi.waitFor(() => {
         expect(callback).toHaveBeenCalledTimes(1);
       });
-      const mapArg = callback.mock.calls[0][0];
+      const mapArg = callback.mock.calls[0][0] as Map<string, { tipPayload: { nodeType: string } }>;
       expect(mapArg).toBeInstanceOf(Map);
-      expect(mapArg.get('mark-should-not-be-empty_24').tipPayload.nodeType).toBe('link');
+
+      // Find the validation error for this mark
+      const errorKey = Array.from(mapArg.keys()).find((key) =>
+        (key as string).startsWith(`${contentValidations.MARK_SHOULD_NOT_BE_EMPTY}_`),
+      );
+
+      expect(errorKey).toBeDefined();
+      const validation = mapArg.get(errorKey!);
+      expect(validation?.tipPayload?.nodeType).toBe('link');
     });
 
     it('should notify of empty link or generic link', async () => {
@@ -490,7 +515,11 @@ describe('Content validations', () => {
         expect(callback).toHaveBeenCalledTimes(1);
       });
 
-      expect(callback.mock.calls[0][0].get('link-should-not-be-too-generic_51').severity).toBe('info');
+      const genericLinkKey = [...callback.mock.calls[0][0].keys()].find((k: string) =>
+        k.startsWith('link-should-not-be-too-generic_'),
+      );
+      expect(genericLinkKey).toBeDefined();
+      expect(callback.mock.calls[0][0].get(genericLinkKey!)?.severity).toBe('info');
     });
   });
 
@@ -506,7 +535,11 @@ describe('Content validations', () => {
       await vi.waitFor(() => {
         expect(callback).toHaveBeenCalledTimes(1);
       });
-      expect(callback.mock.calls[0][0].get('mark-should-not-be-underlined_19').severity).toBe('info');
+      const underlineKey = [...callback.mock.calls[0][0].keys()].find((k: string) =>
+        k.startsWith('mark-should-not-be-underlined_'),
+      );
+      expect(underlineKey).toBeDefined();
+      expect(callback.mock.calls[0][0].get(underlineKey!)?.severity).toBe('info');
     });
   });
 });
