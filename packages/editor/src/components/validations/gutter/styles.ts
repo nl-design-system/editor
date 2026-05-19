@@ -9,6 +9,7 @@ export default css`
     position: absolute;
     display: block;
     pointer-events: none;
+    z-index: 1;
   }
 
   .clippy-validations-gutter__list {
@@ -127,11 +128,24 @@ export default css`
   .clippy-validation-gutter__tooltip {
     display: none;
     position: absolute;
-    inset-inline-start: 1rem;
     inset-block-start: 0;
+    inset-inline-end: 100%;
+    z-index: 10;
+    background-color: white;
+    pointer-events: auto;
   }
   .clippy-validation-gutter__tooltip--active {
     display: block;
+  }
+
+  /* Anchor element that positions both the icon button and the tooltip together */
+  .clippy-validations-gutter__meta-anchor {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: 0.5rem;
+    transform: translateY(-50%);
+    z-index: 1;
+    pointer-events: auto;
   }
 
   /* Icon + badge button on the right side of the indicator bar */
@@ -140,17 +154,12 @@ export default css`
     border: none;
     cursor: pointer;
     pointer-events: auto;
-    position: absolute;
-    inset-block-start: 50%;
-    inset-inline-end: 0.5rem;
-    transform: translateY(-50%);
     display: flex;
     align-items: center;
     gap: 0.25rem;
     line-height: 1;
     padding: 0.125rem;
     border-radius: 0.25rem;
-    z-index: 1;
 
     &:hover,
     &:focus-visible {

@@ -16,7 +16,7 @@ export default css`
   }
   .clippy-editor-container {
     position: relative;
-    padding-inline-end: 1rem;
+    padding-inline-end: 2.5rem;
   }
 
   p.is-editor-empty:first-child::before {

@@ -48,39 +48,6 @@ const correctBlock = (
   };
 };
 
-/** `correct` for a block element that also needs its node size. */
-const correctBlockWithSize = (
-  element: Element,
-  factory: (pos: number, nodeSize: number) => CorrectValidationFunction,
-): CorrectValidationFunction => {
-  return (editor) => {
-    try {
-      const contentStart = editor.view.posAtDOM(element, 0);
-      const contentEnd = editor.view.posAtDOM(element, element.childNodes.length);
-      const pos = contentStart - 1;
-      const nodeSize = contentEnd - contentStart + 2;
-      factory(pos, nodeSize)(editor);
-    } catch {
-      /* noop */
-    }
-  };
-};
-
-/** `correct` for an inline element (mark / link) — position points inside the element. */
-const correctInline = (
-  element: Element,
-  factory: (pos: number) => CorrectValidationFunction,
-): CorrectValidationFunction => {
-  return (editor) => {
-    try {
-      const pos = editor.view.posAtDOM(element, 0);
-      factory(pos)(editor);
-    } catch {
-      /* noop */
-    }
-  };
-};
-
 /** `correct` for an inline element that also needs its text size. */
 const correctInlineWithSize = (
   element: Element,
@@ -166,7 +133,7 @@ const markShouldNotBeEmpty: ContentValidator = (_content, node) => {
   if (!markType) return null;
   if (!isEmptyOrWhitespace(node.textContent ?? '')) return null;
   return {
-    correct: correctInline(node, (pos) => correctEmptyMark(pos)),
+    correct: correctEmptyMark(node),
     range: getElementRange(node),
     scope: 'inline',
     severity: validationSeverity.INFO,
@@ -213,7 +180,7 @@ const headingShouldNotContainBoldOrItalic: ContentValidator = (_content, node) =
   if (!/^H[1-6]$/.test(node.tagName)) return null;
   if (!node.querySelector('strong, b, em, i')) return null;
   return {
-    correct: correctBlockWithSize(node, (pos, nodeSize) => correctHeadingWithFormatting(pos, nodeSize)),
+    correct: correctHeadingWithFormatting(node),
     range: getElementRange(node),
     scope: 'element',
     severity: validationSeverity.INFO,
@@ -235,7 +202,7 @@ const definitionDescriptionMustFollowTerm: ContentValidator = (_content, node) =
   if (node.tagName !== 'DT') return null;
   if (node.nextElementSibling?.tagName === 'DD') return null;
   return {
-    correct: correctBlockWithSize(node, (pos, nodeSize) => correctDefinitionTermMissingDescription(pos, nodeSize)),
+    correct: correctDefinitionTermMissingDescription(node),
     range: getElementRange(node),
     scope: 'element',
     severity: validationSeverity.ERROR,

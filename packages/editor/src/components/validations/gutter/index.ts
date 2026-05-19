@@ -158,10 +158,11 @@ export class Gutter extends LitElement {
     return html`
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
         ${[...groups.entries()].map(([, group]) => {
-          const [key, { scope, severity }, repBox] = highestSeverityEntry(group);
+          const [key, { correct, range, scope, severity, tipPayload }, repBox] = highestSeverityEntry(group);
           const repRange = group.find(([k]) => k === key)![1].range;
           const validationKey = key.split('_')[0] as ValidationKey;
-          const { description } = validationMessages()[validationKey];
+          const { customCorrectLabel, description, href, tip } = validationMessages()[validationKey];
+          const tipHtml = tip?.(tipPayload) ?? null;
           const isActive = this.activeValidationItemKey === key;
           const count = group.length;
 
@@ -170,7 +171,7 @@ export class Gutter extends LitElement {
             data-severity=${severity}
             style="inset-block-start: ${repBox.top}px; block-size: ${repBox.height}px"
           >
-            <button
+            <div
               class="${classMap({
                 [`clippy-validations-gutter__toggle--${severity}`]: true,
                 'clippy-validations-gutter__toggle': true,
@@ -178,31 +179,48 @@ export class Gutter extends LitElement {
               })}"
               aria-expanded=${isActive ? 'true' : 'false'}
               aria-label=${description}
-              @click=${() => this.#handleIndicatorClick(key)}
               @mouseenter=${() => {
                 if (scope === 'inline' && repRange) applyHoverHighlight(severity, repRange);
               }}
               @mouseleave=${() => clearHoverHighlight()}
-            ></button>
-            <button
-              class="clippy-validations-gutter__meta clippy-validations-gutter__meta--${severity}"
-              aria-label=${msg(str`Open validation panel`)}
-              @click=${() =>
-                this.dispatchEvent(
-                  new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, { bubbles: true, composed: true }),
-                )}
-            >
-              ${count > 1
-                ? html`<span
-                    class="nl-number-badge clippy-validations-gutter__badge--${severity}"
-                    aria-label=${msg(str`${count} validation items`)}
-                    >${count}</span
-                  >`
-                : nothing}
-              <span class="clippy-validations-gutter__icon" aria-hidden="true">
-                ${unsafeSVG(severityIcon(severity))}
-              </span>
-            </button>
+            ></div>
+            <div class="clippy-validations-gutter__meta-anchor">
+              <button
+                class="clippy-validations-gutter__meta clippy-validations-gutter__meta--${severity}"
+                aria-label=${msg(str`Open validation panel`)}
+                @click=${() => this.#handleIndicatorClick(key)}
+              >
+                ${count > 1
+                  ? html`<span
+                      class="nl-number-badge clippy-validations-gutter__badge--${severity}"
+                      aria-label=${msg(str`${count} validation items`)}
+                      >${count}</span
+                    >`
+                  : nothing}
+                <span class="clippy-validations-gutter__icon" aria-hidden="true">
+                  ${unsafeSVG(severityIcon(severity))}
+                </span>
+              </button>
+              <div
+                class="${classMap({
+                  'clippy-validation-gutter__tooltip': true,
+                  'clippy-validation-gutter__tooltip--active': isActive,
+                })}"
+              >
+                <clippy-validation-item
+                  .key=${key}
+                  .mode=${this.mode}
+                  .range=${range}
+                  .severity=${severity}
+                  .description=${description}
+                  .href=${href}
+                  .customCorrectLabel=${customCorrectLabel}
+                  .correct=${correct}
+                >
+                  ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
+                </clippy-validation-item>
+              </div>
+            </div>
           </li>`;
         })}
       </ol>

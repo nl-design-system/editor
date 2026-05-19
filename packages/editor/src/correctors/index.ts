@@ -10,17 +10,57 @@ import {
   findFirstCellPositionInTable,
 } from './helpers.ts';
 
+// ── Shared HTML-content helper ────────────────────────────────────────────────
+
+/**
+ * Wraps an HTML-producing function into a `CorrectValidationFunction`.
+ * The producer returns the complete new editor HTML, or `null` to skip.
+ * `focus` and `setContent` are applied exactly once at this level so
+ * individual correctors do not need to call them directly.
+ */
+const withHtmlContent =
+  (produce: (editor: Editor) => string | null): CorrectValidationFunction =>
+  (editor) => {
+    try {
+      const html = produce(editor);
+      if (html !== null) {
+        editor.chain().focus().setContent(html).run();
+      }
+    } catch {
+      /* noop */
+    }
+  };
+
 // ── Document correctors ───────────────────────────────────────────────────────
 
 /**
- * Corrects a heading's level to `targetLevel`.
- * Used for both "exceeds top level" and "skipped heading level" violations.
+ * Corrects a heading's level to `targetLevel` using HTML manipulation.
+ * A temporary data attribute locates the element in the serialised HTML
+ * because the tag name cannot be changed in-place.
  */
 export const correctHeadingLevel =
-  (pos: number, targetLevel: Level): CorrectValidationFunction =>
-  (editor: Editor) => {
-    editor.chain().focus().setNodeSelection(pos).toggleHeading({ level: targetLevel }).run();
-  };
+  (element: Element, targetLevel: Level): CorrectValidationFunction =>
+  withHtmlContent((editor) => {
+    if (!editor.view.dom.contains(element)) return null;
+
+    const marker = 'data-clippy-retype';
+    element.setAttribute(marker, '');
+    const markedHtml = editor.view.dom.innerHTML;
+    element.removeAttribute(marker);
+
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = markedHtml;
+    const target = wrapper.querySelector(`[${marker}]`);
+    if (!target) return null;
+
+    const replacement = document.createElement(`h${targetLevel}`);
+    replacement.innerHTML = target.innerHTML;
+    for (const { name, value } of Array.from(target.attributes)) {
+      if (name !== marker) replacement.setAttribute(name, value);
+    }
+    target.replaceWith(replacement);
+    return wrapper.innerHTML;
+  });
 
 /**
  * Converts a sequence of list-like paragraphs starting at `applyPos`
@@ -168,21 +208,22 @@ export const correctEmptyNode =
   };
 
 /**
- * Removes an empty inline mark (and the empty text node it wraps) from the
- * document. The target range is resolved from the document at apply-time.
+ * Removes an empty inline mark from the document.
+ * The element is temporarily removed from the live DOM to snapshot the new
+ * HTML, then restored before `setContent` commits the change.
  */
 export const correctEmptyMark =
-  (pos: number): CorrectValidationFunction =>
-  (editor: Editor) => {
-    const { doc } = editor.state;
-    const resolvedPos = doc.resolve(pos);
-    const targetNode = resolvedPos.nodeAfter ?? resolvedPos.node();
-    if (!targetNode) return;
+  (element: Element): CorrectValidationFunction =>
+  withHtmlContent((editor) => {
+    if (!editor.view.dom.contains(element)) return null;
 
-    const from = resolvedPos.nodeAfter ? pos : resolvedPos.before();
-    const to = from + targetNode.nodeSize;
-    editor.chain().focus().deleteRange({ from, to }).run();
-  };
+    const parent = element.parentElement;
+    const nextSibling = element.nextSibling;
+    element.remove();
+    const html = editor.view.dom.innerHTML;
+    parent?.insertBefore(element, nextSibling ?? null);
+    return html;
+  });
 
 /**
  * Selects the generic link text so the user can replace it with something
@@ -222,19 +263,29 @@ export const correctEmptyHeading =
   };
 
 /**
- * Removes bold and italic marks from the content of a heading node.
+ * Removes bold and italic marks from a heading's content.
+ * A Range selects the heading's contents, extracts the plain text via
+ * `toString()`, then replaces everything inside via `deleteContents()` +
+ * `insertNode()`. The live DOM is restored after snapshotting so `setContent`
+ * can commit the change via the history plugin.
  */
 export const correctHeadingWithFormatting =
-  (pos: number, nodeSize: number): CorrectValidationFunction =>
-  (editor: Editor) => {
-    editor
-      .chain()
-      .focus()
-      .setTextSelection({ from: pos + 1, to: pos + nodeSize - 1 })
-      .unsetMark('bold')
-      .unsetMark('italic')
-      .run();
-  };
+  (element: Element): CorrectValidationFunction =>
+  withHtmlContent((editor) => {
+    if (!editor.view.dom.contains(element)) return null;
+
+    const originalInnerHtml = element.innerHTML;
+
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    const plainText = range.toString();
+    range.deleteContents();
+    range.insertNode(document.createTextNode(plainText));
+
+    const html = editor.view.dom.innerHTML;
+    element.innerHTML = originalInnerHtml;
+    return html;
+  });
 
 /**
  * Inserts a placeholder definition term at the start of a definition list
@@ -254,21 +305,22 @@ export const correctDefinitionListMissingTerm =
   };
 
 /**
- * Inserts a placeholder definition description immediately after a definition
- * term that is not followed by one.
+ * Inserts a placeholder <dd> immediately after a <dt> that has no description.
+ * A <dd> is temporarily inserted into the live DOM to snapshot the new HTML,
+ * then removed before `setContent` commits the change.
  */
 export const correctDefinitionTermMissingDescription =
-  (pos: number, nodeSize: number): CorrectValidationFunction =>
-  (editor: Editor) => {
-    const { schema } = editor.state;
-    const descType = schema.nodes['definitionDescription'];
-    if (!descType) return;
+  (element: Element): CorrectValidationFunction =>
+  withHtmlContent((editor) => {
+    if (!editor.view.dom.contains(element)) return null;
 
-    const desc = descType.create(null, schema.text('Beschrijving'));
-    const { tr } = editor.state;
-    tr.insert(pos + nodeSize, desc);
-    editor.view.dispatch(tr);
-  };
+    const dd = document.createElement('dd');
+    dd.textContent = 'Beschrijving';
+    element.insertAdjacentElement('afterend', dd);
+    const html = editor.view.dom.innerHTML;
+    dd.remove();
+    return html;
+  });
 
 // ── Corrector maps ────────────────────────────────────────────────────────────
 

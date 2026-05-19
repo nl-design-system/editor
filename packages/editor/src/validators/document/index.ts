@@ -118,7 +118,7 @@ export const documentMustHaveCorrectHeadingOrder = (
 
     if (headingLevel < topHeadingLevel) {
       errors.push({
-        correct: correctBlock(heading, (pos) => correctHeadingLevel(pos, topHeadingLevel as Level)),
+        correct: correctHeadingLevel(heading, topHeadingLevel as Level),
         range: getElementRange(heading),
         scope: 'element',
         severity: validationSeverity.ERROR,
@@ -128,7 +128,7 @@ export const documentMustHaveCorrectHeadingOrder = (
 
     if (headingLevel > precedingHeadingLevel + 1) {
       errors.push({
-        correct: correctBlock(heading, (pos) => correctHeadingLevel(pos, (precedingHeadingLevel + 1) as Level)),
+        correct: correctHeadingLevel(heading, (precedingHeadingLevel + 1) as Level),
         range: getElementRange(heading),
         scope: 'element',
         severity: validationSeverity.WARNING,
@@ -220,8 +220,15 @@ export const documentMustHaveTopLevelHeadingOne = (
     {
       correct: (editor) => {
         try {
-          const pos = editor.view.posAtDOM(firstChild ?? root, 0) - 1;
-          editor.chain().focus().setNodeSelection(pos).setHeading({ level: 1 }).run();
+          const wrapper = document.createElement('div');
+          wrapper.innerHTML = editor.getHTML();
+          const firstEl = wrapper.firstElementChild;
+          if (firstEl) {
+            const h1 = document.createElement('h1');
+            h1.innerHTML = firstEl.innerHTML;
+            firstEl.replaceWith(h1);
+          }
+          editor.chain().focus().setContent(wrapper.innerHTML).run();
         } catch {
           /* noop */
         }
