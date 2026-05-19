@@ -93,7 +93,7 @@ export class Context extends LitElement {
     initialValue: new Map(),
   });
 
-  updateValidationsContext = (resultMap: Map<string, ValidationResult>): void => {
+  updateValidationsContext = (resultMap: Map<Range, ValidationResult>): void => {
     this.validationsContext = resultMap;
     this.lightValidationsContext.setValue(this.validationsContext);
   };

@@ -1,4 +1,3 @@
-import { type Editor } from '@tiptap/core';
 import type { EditorSettings } from '@/types/settings.ts';
 import type { ValidationResult } from '@/types/validation.ts';
 import contentValidator, { contentValidatorMap } from '@/validators/content';
@@ -9,9 +8,9 @@ import { getEntries, isKeyOf } from './helpers.ts';
 const VALIDATION_TIMEOUT = 500;
 
 export const runValidation = (
-  editor: Editor,
+  dom: HTMLElement,
   settings: EditorSettings,
-  callback: (resultMap: Map<string, ValidationResult>) => void,
+  callback: (resultMap: Map<Range, ValidationResult>) => void,
 ) => {
   const documentValidationSettings = {
     disableRules: settings.disableRules?.filter((x) => x === '*' || isKeyOf(documentValidatorObject)(x)),
@@ -21,7 +20,7 @@ export const runValidation = (
     disableRules: settings.disableRules?.filter((x) => x === '*' || isKeyOf(contentValidatorMap)(x)),
     enableRules: settings.enableRules.filter((x) => x === '*' || isKeyOf(contentValidatorMap)(x)),
   };
-  let validationResultMap = new Map<string, ValidationResult>();
+  let validationResultMap = new Map<Range, ValidationResult>();
   const documentValidators = Object.entries(
     getEntries(
       documentValidatorObject,
@@ -36,10 +35,13 @@ export const runValidation = (
   );
   for (const [key, validator] of documentValidators) {
     try {
-      const result = validator?.(editor, settings);
-      if (result?.length && result.length > 0) {
-        for (const res of result) {
-          validationResultMap.set(`${key}_${res.pos}`, res);
+      const results = validator?.(dom, settings);
+      if (results?.length) {
+        for (const result of results) {
+          if (result.range) {
+            result.validatorKey = key;
+            validationResultMap.set(result.range, result);
+          }
         }
       }
     } catch (err) {
@@ -48,9 +50,9 @@ export const runValidation = (
   }
 
   try {
-    const contentValidationResultMap = contentValidator(editor, contentValidators);
+    const contentValidationResultMap = contentValidator(dom, contentValidators);
     if (contentValidationResultMap.size > 0) {
-      validationResultMap = new Map<string, ValidationResult>([...validationResultMap, ...contentValidationResultMap]);
+      validationResultMap = new Map<Range, ValidationResult>([...validationResultMap, ...contentValidationResultMap]);
     }
   } catch (err) {
     console.error('content validator error', err);

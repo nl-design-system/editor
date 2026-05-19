@@ -21,11 +21,16 @@ export default Extension.create({
 
   onCreate({ editor }) {
     const { settings, updateValidationsContext } = this.options;
-    runValidation(editor, settings, updateValidationsContext);
+    runValidation(editor.view.dom, settings, updateValidationsContext);
   },
 
   onUpdate({ editor }) {
     const { settings, updateValidationsContext } = this.options;
-    debouncedValidate(editor, settings, updateValidationsContext);
+    if (editor.isDestroyed || !editor.view) return;
+    try {
+      debouncedValidate(editor.view.dom, settings, updateValidationsContext);
+    } catch {
+      // view may not be available during editor lifecycle transitions
+    }
   },
 });

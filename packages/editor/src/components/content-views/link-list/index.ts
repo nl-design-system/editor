@@ -12,14 +12,14 @@ import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents } from '@/events';
-import { getHighestSeverityEntryByPosition } from '@/utils/validations.ts';
+import { getHighestSeverityEntryByElement } from '@/utils/validations.ts';
 import linkListStyles from './styles.ts';
 
 interface LinkEntry {
   href: string;
   pos: number;
   text: string;
-  validationEntry: [string, ValidationResult] | null;
+  validationEntry: [Range, ValidationResult] | null;
 }
 
 const tag = 'clippy-link-list';
@@ -49,9 +49,10 @@ export class LinkList extends LitElement {
   validationsMap?: ValidationsMap;
 
   get #links(): LinkEntry[] {
-    if (!this.editor) return [];
+    const { editor } = this;
+    if (!editor) return [];
     const links: LinkEntry[] = [];
-    this.editor.state.doc.descendants((node, pos) => {
+    editor.state.doc.descendants((node, pos) => {
       if (!node.isText) return;
       const linkMark = node.marks.find((mark) => mark.type.name === 'link');
       if (!linkMark) return;
@@ -62,13 +63,20 @@ export class LinkList extends LitElement {
       if (last?.href === href && last.pos + last.text.length === pos) {
         last.text += text;
       } else {
-        links.push({ href, pos, text, validationEntry: getHighestSeverityEntryByPosition(this.validationsMap, pos) });
+        const nodeDom = editor.view?.domAtPos(pos).node ?? null;
+        const linkElement = nodeDom instanceof Text ? nodeDom.parentElement : (nodeDom as Element | null);
+        links.push({
+          href,
+          pos,
+          text,
+          validationEntry: getHighestSeverityEntryByElement(this.validationsMap, linkElement),
+        });
       }
     });
     return links;
   }
 
-  #scrollToLink(key: string | undefined, pos: number) {
+  #scrollToLink(validationRange: Range | undefined, pos: number) {
     if (!this.editor) return;
     try {
       const { view } = this.editor;
@@ -81,12 +89,12 @@ export class LinkList extends LitElement {
       console.error('[clippy-link-list] Cannot scroll to link', err);
     }
 
-    if (key) {
+    if (validationRange) {
       globalThis.dispatchEvent(
         new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, {
           bubbles: true,
           composed: true,
-          detail: { key },
+          detail: { key: validationRange },
         }),
       );
     }

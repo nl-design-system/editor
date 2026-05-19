@@ -33,7 +33,7 @@ import Validation from '@/extensions/Validation.ts';
 
 export const editorExtensions = (
   settings: EditorSettings,
-  callback: (resultMap: Map<string, ValidationResult>) => void,
+  callback: (resultMap: Map<Range, ValidationResult>) => void,
   identifier?: string,
 ) => [
   Document,

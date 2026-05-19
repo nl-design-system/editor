@@ -10,7 +10,7 @@ import { map } from 'lit/directives/map.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '../validation-item';
-import type { ValidationEntry, ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
+import type { ValidationsMap, ValidationResult, ValidationSeverity } from '@/types/validation.ts';
 import { identifierContext } from '@/context/identifierContext.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import '@/components/tabs';
@@ -22,8 +22,6 @@ import { CustomEvents } from '@/events';
 import { validationMessages, type ValidationKey } from '@/messages';
 import type { ValidationItem } from '../validation-item';
 import dialogStyles from './styles.ts';
-
-const sortByPos = (a: ValidationEntry, b: ValidationEntry) => a[1].pos - b[1].pos;
 
 @localized()
 @safeCustomElement('clippy-validations-dialog')
@@ -104,7 +102,7 @@ export class ValidationsDialog extends LitElement {
     this.editor?.commands.focus(pos + 1, { scrollIntoView: true });
   };
 
-  readonly #focusValidationItem = async (event: CustomEventInit<{ key: string; identifier: string }>) => {
+  readonly #focusValidationItem = async (event: CustomEventInit<{ key: Range; identifier: string }>) => {
     const { identifier, key } = event.detail || {};
     if (!key) return;
 
@@ -115,7 +113,7 @@ export class ValidationsDialog extends LitElement {
     await this.updateComplete;
 
     const items = this.shadowRoot?.querySelectorAll('clippy-validation-item');
-    const match = [...(items ?? [])].find((el) => (el as ValidationItem).key === key);
+    const match = [...(items ?? [])].find((el) => (el as ValidationItem).range === key);
     if (match instanceof HTMLElement) {
       match.scrollIntoView({ behavior: 'smooth', block: 'center' });
       match.shadowRoot?.querySelector<HTMLElement>('[data-validation-key]')?.focus();
@@ -126,14 +124,14 @@ export class ValidationsDialog extends LitElement {
     this.selectedSeverity = event.detail?.severity || null;
   };
 
-  #getFilteredValidations(): ValidationEntry[] {
+  #getFilteredValidations(): [Range, ValidationResult][] {
     const validations = [...(this.validationsContext?.entries() ?? [])];
 
     if (!this.selectedSeverity) {
-      return validations.sort(sortByPos);
+      return validations;
     }
 
-    return validations.filter(([, validation]) => validation.severity === this.selectedSeverity).sort(sortByPos);
+    return validations.filter(([, validation]) => validation.severity === this.selectedSeverity);
   }
 
   override render() {
@@ -161,14 +159,13 @@ export class ValidationsDialog extends LitElement {
         <div class="clippy-dialog__body">
           <ul class="clippy-dialog__list" data-testid="clippy-validations-list">
             ${size > 0
-              ? map(filteredValidations, ([key, { correct, pos, severity, tipPayload }]) => {
-                  const validationKey = key.split('_')[0] as ValidationKey;
-                  const { customCorrectLabel, description, href, tip } = validationMessages()[validationKey];
+              ? map(filteredValidations, ([, { correct, range, severity, tipPayload, validatorKey }]) => {
+                  const valKey = validatorKey as ValidationKey;
+                  const { customCorrectLabel, description, href, tip } = validationMessages()[valKey];
                   const tipHtml = tip?.(tipPayload) ?? null;
                   return html`
                     <clippy-validation-item
-                      .key=${key}
-                      .pos=${pos}
+                      .range=${range}
                       .severity=${severity}
                       .description=${description}
                       .href=${href}

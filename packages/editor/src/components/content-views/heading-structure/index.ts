@@ -14,14 +14,14 @@ import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents } from '@/events';
-import { getHighestSeverityEntryByPosition } from '@/utils/validations.ts';
+import { getHighestSeverityEntryByElement } from '@/utils/validations.ts';
 import headingStructureStyles from './styles.ts';
 
 interface HeadingEntry {
   level: number;
   pos: number;
   text: string;
-  validationEntry: [string, ValidationResult] | null;
+  validationEntry: [Range, ValidationResult] | null;
 }
 
 const tag = 'clippy-heading-structure';
@@ -52,15 +52,17 @@ export class HeadingStructure extends LitElement {
   validationsMap?: ValidationsMap;
 
   get #headings(): HeadingEntry[] {
-    if (!this.editor) return [];
+    const { editor } = this;
+    if (!editor) return [];
     const headings: HeadingEntry[] = [];
-    this.editor.state.doc.descendants((node, pos) => {
+    editor.state.doc.descendants((node, pos) => {
       if (node.type.name === 'heading') {
+        const domNode = editor.view?.nodeDOM(pos) ?? editor.view?.domAtPos(pos).node ?? null;
         headings.push({
           level: node.attrs['level'] as number,
           pos,
           text: node.textContent,
-          validationEntry: getHighestSeverityEntryByPosition(this.validationsMap, pos),
+          validationEntry: getHighestSeverityEntryByElement(this.validationsMap, domNode),
         });
       }
     });
@@ -69,8 +71,9 @@ export class HeadingStructure extends LitElement {
 
   #scrollToHeading(pos: number) {
     if (!this.editor) return;
+    const { editor } = this;
     try {
-      const { view } = this.editor;
+      const { view } = editor;
       const nodeDom = view.nodeDOM?.(pos) ?? view.domAtPos(pos).node;
       if (nodeDom instanceof HTMLElement) {
         nodeDom.scrollIntoView({ block: 'start' });
@@ -79,13 +82,14 @@ export class HeadingStructure extends LitElement {
       console.error('[clippy-heading-structure] Cannot scroll to heading', err);
     }
 
-    const validationKey = getHighestSeverityEntryByPosition(this.validationsMap, pos)?.[0] ?? null;
-    if (validationKey) {
+    const domNode = editor.view?.nodeDOM(pos) ?? editor.view?.domAtPos(pos).node ?? null;
+    const validationRange = getHighestSeverityEntryByElement(this.validationsMap, domNode)?.[0] ?? null;
+    if (validationRange) {
       globalThis.dispatchEvent(
         new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, {
           bubbles: true,
           composed: true,
-          detail: { key: validationKey },
+          detail: { key: validationRange },
         }),
       );
     }
