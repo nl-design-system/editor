@@ -8,20 +8,29 @@ export const validationSeverityOrder: ValidationSeverity[] = [
 ];
 
 /**
- * Returns the highest-severity validation entry at a given document position,
- * or `null` when there are no matches.
+ * Returns the highest-severity validation entry whose range intersects the
+ * given DOM element/node, or `null` when there are no matches.
  *
  * @param validationsMap - The map of all current validation results.
- * @param pos - The ProseMirror document position to look up.
+ * @param element - The DOM element or node to look up.
  */
-export function getHighestSeverityEntryByPosition(
+export function getHighestSeverityEntryByElement(
   validationsMap: ValidationsMap | undefined,
-  pos: number,
-): [string, ValidationResult] | null {
-  if (!validationsMap?.size) return null;
+  element: Element | Node | null,
+): [Range, ValidationResult] | null {
+  if (!validationsMap?.size || !element) return null;
+  const target = element instanceof Element ? element : element.parentElement;
+  if (!target) return null;
   return (
     [...validationsMap.entries()]
-      .filter(([, result]) => result.pos === pos)
+      .filter(([, result]) => {
+        if (!result.range) return false;
+        try {
+          return result.range.intersectsNode(target);
+        } catch {
+          return false;
+        }
+      })
       .sort(([, a], [, b]) => validationSeverityOrder.indexOf(a.severity) - validationSeverityOrder.indexOf(b.severity))
       .at(0) ?? null
   );

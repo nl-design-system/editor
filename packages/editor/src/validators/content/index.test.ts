@@ -1,6 +1,15 @@
 import { describe, expect, it, vi } from 'vitest';
+import type { ValidationResult } from '../../types/validation.ts';
 import { createTestEditor } from '../../../test/createTestEditor';
 import { contentValidations } from '../../constants';
+
+/** Find the first ValidationResult with the given validatorKey in the map. */
+const byKey = (map: Map<Range, ValidationResult>, key: string): ValidationResult | undefined =>
+  [...map.values()].find((v) => v.validatorKey === key);
+
+/** Return all ValidationResults with the given validatorKey in the map. */
+const allByKey = (map: Map<Range, ValidationResult>, key: string): ValidationResult[] =>
+  [...map.values()].filter((v) => v.validatorKey === key);
 
 describe('Content validations', () => {
   describe('Headings', () => {
@@ -18,7 +27,7 @@ describe('Content validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      expect(mapArg.has('heading-must-not-be-empty_0')).toBeTruthy();
+      expect(byKey(mapArg, contentValidations.HEADING_MUST_NOT_BE_EMPTY)).toBeDefined();
     });
   });
 
@@ -36,7 +45,7 @@ describe('Content validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      expect(mapArg.has('document-must-have-semantic-lists_0')).toBeTruthy();
+      expect(byKey(mapArg, 'document-must-have-semantic-lists')).toBeDefined();
     });
   });
 
@@ -52,9 +61,11 @@ describe('Content validations', () => {
       await vi.waitFor(() => {
         expect(callback).toHaveBeenCalledTimes(1);
       });
-      expect(callback.mock.calls[0][0].get('description-list-must-contain-term_5').severity).toBe('error');
-      expect(callback.mock.calls[0][0].get('definition-description-must-follow-term_8').severity).toBe('error');
-      expect(callback.mock.calls[0][0].get('description-list-must-contain-term_20').severity).toBe('error');
+      expect(
+        allByKey(callback.mock.calls[0][0], 'description-list-must-contain-term').some((v) => v.severity === 'error'),
+      ).toBe(true);
+      expect(byKey(callback.mock.calls[0][0], 'definition-description-must-follow-term')?.severity).toBe('error');
+      expect(allByKey(callback.mock.calls[0][0], 'description-list-must-contain-term')).toHaveLength(2);
     });
   });
 
@@ -71,8 +82,17 @@ describe('Content validations', () => {
         expect(callback).toHaveBeenCalledTimes(1);
       });
       const mapArg = callback.mock.calls[0][0];
-      expect(mapArg.get('node-should-not-be-empty_16').tipPayload.nodeType).toBe('tableHeader');
-      expect(mapArg.get('node-should-not-be-empty_22').tipPayload.nodeType).toBe('tableCell');
+      const thEntry =
+        byKey(mapArg, contentValidations.NODE_SHOULD_NOT_BE_EMPTY + '') &&
+        [...mapArg.values()].find(
+          (v) =>
+            v.validatorKey === contentValidations.NODE_SHOULD_NOT_BE_EMPTY && v.tipPayload?.nodeType === 'tableHeader',
+        );
+      const tdEntry = [...mapArg.values()].find(
+        (v) => v.validatorKey === contentValidations.NODE_SHOULD_NOT_BE_EMPTY && v.tipPayload?.nodeType === 'tableCell',
+      );
+      expect(thEntry).toBeDefined();
+      expect(tdEntry).toBeDefined();
     });
 
     it('returns an empty caption warning', async () => {
@@ -97,7 +117,9 @@ describe('Content validations', () => {
         </table>`,
         callback,
       );
-      expect(callback.mock.calls[0][0].get('node-should-not-be-empty_8').tipPayload.nodeType).toBe('tableCaption');
+      expect(byKey(callback.mock.calls[0][0], contentValidations.NODE_SHOULD_NOT_BE_EMPTY)?.tipPayload?.nodeType).toBe(
+        'tableCaption',
+      );
     });
   });
 
@@ -185,14 +207,11 @@ describe('Content validations', () => {
       expect(validationMap).toBeInstanceOf(Map);
 
       // Find the validation error for this node type
-      const errorKey = Array.from(validationMap.keys()).find((key) =>
-        (key as string).startsWith(`${contentValidations.NODE_SHOULD_NOT_BE_EMPTY}_`),
-      );
+      const validation = byKey(validationMap, contentValidations.NODE_SHOULD_NOT_BE_EMPTY);
 
-      expect(errorKey).toBeDefined();
-      const validation = validationMap.get(errorKey!);
-      expect(validation.severity).toBe('info');
-      expect(validation.tipPayload.nodeType).toBe(nodeType);
+      expect(validation).toBeDefined();
+      expect(validation!.severity).toBe('info');
+      expect(validation!.tipPayload!.nodeType).toBe(nodeType);
     });
 
     it.each([
@@ -235,11 +254,7 @@ describe('Content validations', () => {
       const validationMap = callback.mock.calls[0][0];
 
       // Should not have empty node validation error
-      const errorKey = Array.from(validationMap.keys()).find((key) =>
-        (key as string).startsWith(`${contentValidations.NODE_SHOULD_NOT_BE_EMPTY}_`),
-      );
-
-      expect(errorKey).toBeUndefined();
+      expect(byKey(validationMap, contentValidations.NODE_SHOULD_NOT_BE_EMPTY)).toBeUndefined();
     });
 
     it('should detect multiple empty nodes in the same document', async () => {
@@ -270,9 +285,7 @@ describe('Content validations', () => {
       });
 
       const validationMap = callback.mock.calls[0][0];
-      const emptyNodeErrors = Array.from(validationMap.keys()).filter((key) =>
-        (key as string).startsWith(`${contentValidations.NODE_SHOULD_NOT_BE_EMPTY}_`),
-      );
+      const emptyNodeErrors = allByKey(validationMap, contentValidations.NODE_SHOULD_NOT_BE_EMPTY);
 
       // Should have multiple empty node errors
       expect(emptyNodeErrors.length).toBeGreaterThan(0);
@@ -338,14 +351,11 @@ describe('Content validations', () => {
         expect(validationMap).toBeInstanceOf(Map);
 
         // Find the validation error for this mark
-        const errorKey = Array.from(validationMap.keys()).find((key) =>
-          (key as string).startsWith(`${contentValidations.MARK_SHOULD_NOT_BE_EMPTY}_`),
-        );
+        const validation = byKey(validationMap, contentValidations.MARK_SHOULD_NOT_BE_EMPTY);
 
-        expect(errorKey).toBeDefined();
-        const validation = validationMap.get(errorKey!);
-        expect(validation.severity).toBe('info');
-        expect(validation.tipPayload.nodeType).toBe(nodeType);
+        expect(validation).toBeDefined();
+        expect(validation!.severity).toBe('info');
+        expect(validation!.tipPayload!.nodeType).toBe(nodeType);
       });
     });
 
@@ -411,11 +421,7 @@ describe('Content validations', () => {
       const validationMap = callback.mock.calls[0][0];
 
       // Should not have empty mark validation error
-      const errorKey = Array.from(validationMap.keys()).find((key) =>
-        (key as string).startsWith(`${contentValidations.MARK_SHOULD_NOT_BE_EMPTY}_`),
-      );
-
-      expect(errorKey).toBeUndefined();
+      expect(byKey(validationMap, contentValidations.MARK_SHOULD_NOT_BE_EMPTY)).toBeUndefined();
     });
 
     it('should detect multiple empty marks in the same document', async () => {
@@ -435,9 +441,7 @@ describe('Content validations', () => {
       });
 
       const validationMap = callback.mock.calls[0][0];
-      const emptyMarkErrors = Array.from(validationMap.keys()).filter((key) =>
-        (key as string).startsWith(`${contentValidations.MARK_SHOULD_NOT_BE_EMPTY}_`),
-      );
+      const emptyMarkErrors = allByKey(validationMap, contentValidations.MARK_SHOULD_NOT_BE_EMPTY);
 
       // Should have 4 empty mark errors
       expect(emptyMarkErrors).toHaveLength(4);
@@ -452,9 +456,7 @@ describe('Content validations', () => {
       });
 
       const validationMap = callback.mock.calls[0][0];
-      const emptyMarkErrors = Array.from(validationMap.keys()).filter((key) =>
-        (key as string).startsWith(`${contentValidations.MARK_SHOULD_NOT_BE_EMPTY}_`),
-      );
+      const emptyMarkErrors = allByKey(validationMap, contentValidations.MARK_SHOULD_NOT_BE_EMPTY);
 
       // Should detect the empty text node with marks
       expect(emptyMarkErrors.length).toBeGreaterThan(0);
@@ -475,7 +477,7 @@ describe('Content validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      expect(mapArg.get('mark-should-not-be-empty_24').tipPayload.nodeType).toBe('link');
+      expect(byKey(mapArg, contentValidations.MARK_SHOULD_NOT_BE_EMPTY)?.tipPayload?.nodeType).toBe('link');
     });
 
     it('should notify of empty link or generic link', async () => {
@@ -490,7 +492,9 @@ describe('Content validations', () => {
         expect(callback).toHaveBeenCalledTimes(1);
       });
 
-      expect(callback.mock.calls[0][0].get('link-should-not-be-too-generic_51').severity).toBe('info');
+      const genericLinkEntry = byKey(callback.mock.calls[0][0], contentValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC);
+      expect(genericLinkEntry).toBeDefined();
+      expect(genericLinkEntry?.severity).toBe('info');
     });
   });
 
@@ -506,7 +510,7 @@ describe('Content validations', () => {
       await vi.waitFor(() => {
         expect(callback).toHaveBeenCalledTimes(1);
       });
-      expect(callback.mock.calls[0][0].get('mark-should-not-be-underlined_19').severity).toBe('info');
+      expect(byKey(callback.mock.calls[0][0], contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED)?.severity).toBe('info');
     });
   });
 });

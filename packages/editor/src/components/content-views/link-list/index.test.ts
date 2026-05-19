@@ -146,19 +146,18 @@ describe('<clippy-link-list>', () => {
     });
 
     it('renders a severity badge when a validation entry exists at the link text position', async () => {
-      // Document: <h1>Titel</h1><p><a href="...">Klik hier</a></p>
-      //
-      // ProseMirror position calculation:
-      //   h1 opens at pos 0, "Titel" = 5 chars, h1.nodeSize = 7  -> next block at pos 7
-      //   p  opens at pos 7, link text starts at pos 8 (after the paragraph open token)
-      const linkTextPos = 8;
-
       const { contextEl, linkList } = await setupWithContent(
         '<h1>Titel</h1><p><a href="https://example.com">Klik hier</a></p>',
       );
 
+      // Build a range that intersects the <a> element in the editor DOM
+      await expect.poll(() => contextEl.editor?.view?.dom?.querySelector('a')).not.toBeNull();
+      const linkEl = contextEl.editor!.view.dom.querySelector('a')!;
+      const linkRange = document.createRange();
+      linkRange.selectNode(linkEl);
+
       const validationsMap: ValidationsMap = new Map([
-        [`link-should-not-be-too-generic_${linkTextPos}`, { boundingBox: null, pos: linkTextPos, severity: 'warning' }],
+        [`link-should-not-be-too-generic_0`, { range: linkRange, severity: 'warning' }],
       ]);
 
       contextEl.updateValidationsContext(validationsMap);
@@ -172,16 +171,20 @@ describe('<clippy-link-list>', () => {
     });
 
     it('renders a badge for the highest-severity validation when multiple entries share the same position', async () => {
-      const linkTextPos = 8;
-
       const { contextEl, linkList } = await setupWithContent(
         '<h1>Titel</h1><p><a href="https://example.com">Klik hier</a></p>',
       );
 
-      // Two entries at the same position: error takes precedence over warning.
+      // Build a range that intersects the <a> element in the editor DOM
+      await expect.poll(() => contextEl.editor?.view?.dom?.querySelector('a')).not.toBeNull();
+      const linkEl = contextEl.editor!.view.dom.querySelector('a')!;
+      const linkRange = document.createRange();
+      linkRange.selectNode(linkEl);
+
+      // Two entries for the same element: error takes precedence over warning.
       const validationsMap: ValidationsMap = new Map([
-        [`link-should-not-be-too-generic_${linkTextPos}`, { boundingBox: null, pos: linkTextPos, severity: 'warning' }],
-        [`mark-should-not-be-empty_${linkTextPos}`, { boundingBox: null, pos: linkTextPos, severity: 'error' }],
+        [`link-should-not-be-too-generic_0`, { range: linkRange, severity: 'warning' }],
+        [`mark-should-not-be-empty_0`, { range: linkRange, severity: 'error' }],
       ]);
 
       contextEl.updateValidationsContext(validationsMap);

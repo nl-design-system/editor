@@ -40,9 +40,8 @@ export class ValidationItem extends LitElement {
     unsafeCSS(linkCss),
   ];
 
-  @property({ type: String }) key: string = '';
   @property({ type: String }) mode: 'tooltip' | 'list' | 'readonly' = 'list';
-  @property({ type: Number }) pos: number = 0;
+  @property({ attribute: false }) range?: Range;
   @property({ type: String }) severity!: ValidationSeverity;
   @property({ type: String }) description!: string;
   @property({ type: String }) href?: string;
@@ -57,13 +56,26 @@ export class ValidationItem extends LitElement {
   private readonly editor: Editor | undefined;
 
   readonly #focusNode = () => {
-    this.dispatchEvent(
-      new CustomEvent(CustomEvents.FOCUS_NODE, {
-        bubbles: true,
-        composed: true,
-        detail: { pos: this.pos },
-      }),
-    );
+    if (!this.range) return;
+    const container = this.range.startContainer;
+    const node = container instanceof Text ? container.parentElement : (container as Element);
+    if (!node) return;
+    if (this.editor) {
+      try {
+        const pos = this.editor.view.posAtDOM(node, 0);
+        this.dispatchEvent(
+          new CustomEvent(CustomEvents.FOCUS_NODE, {
+            bubbles: true,
+            composed: true,
+            detail: { pos },
+          }),
+        );
+        return;
+      } catch {
+        // fall through to DOM scroll
+      }
+    }
+    node.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   readonly #applyFix = () => {
@@ -79,13 +91,13 @@ export class ValidationItem extends LitElement {
     }
   };
 
-  #handleValidationItemClick(event: Event, key: string) {
+  #handleValidationItemClick(event: Event) {
     event.stopPropagation();
     this.dispatchEvent(
       new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, {
         bubbles: true,
         composed: true,
-        detail: { identifier: this.identifier, key },
+        detail: { identifier: this.identifier, key: this.range },
       }),
     );
   }
@@ -110,7 +122,7 @@ export class ValidationItem extends LitElement {
       <div class="clippy-dialog__list-item-actions">
         ${this.mode === 'tooltip'
           ? html`<clippy-button
-              @click=${(event: Event) => this.#handleValidationItemClick(event, this.key)}
+              @click=${(event: Event) => this.#handleValidationItemClick(event)}
               icon-only
               purpose="subtle"
             >
@@ -132,11 +144,7 @@ export class ValidationItem extends LitElement {
 
   override render() {
     return html`
-      <li
-        class="clippy-dialog__list-item clippy-dialog__list-item--${this.severity}"
-        data-validation-key="${this.key}"
-        tabindex="-1"
-      >
+      <li class="clippy-dialog__list-item clippy-dialog__list-item--${this.severity}" data-validation-key tabindex="-1">
         <div class="clippy-dialog__list-item-message">
           <h4 class="nl-heading nl-heading--level-4" id=${ariaDescribedBy}>${this.description}</h4>
           <span class="clippy-dialog__list-item-severity clippy-dialog__list-item-severity--${this.severity}">

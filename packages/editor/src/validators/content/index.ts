@@ -1,170 +1,167 @@
-import type { Editor } from '@tiptap/core';
-import type { Node } from 'prosemirror-model';
 import type { ContentValidator, ValidationResult } from '@/types/validation.ts';
 import { contentValidations, validationSeverity } from '@/constants';
-import { contentCorrectorMap } from '@/correctors';
-import { getNodeBoundingBox, isBold, isItalic } from '@/validators/helpers.ts';
 
-const isEmptyOrWhitespaceString = (str: string): boolean => /^\s*$/.test(str);
+const isEmptyOrWhitespace = (text: string): boolean => /^\s*$/.test(text);
 
-const isEmpty = (node: Node): boolean => {
-  if (node.type.name === 'text') {
-    return !node.text || isEmptyOrWhitespaceString(node.text);
-  } else if (node.content?.content) {
-    return node.content?.content.every((node) => isEmpty(node));
+/** Parse an HTML string into a wrapper element, or return the element as-is. */
+const parseContent = (content: string | HTMLElement): HTMLElement => {
+  if (typeof content === 'string') {
+    const div = document.createElement('div');
+    div.innerHTML = content;
+    return div;
   }
-  return true;
+  return content;
 };
 
-const imageMustHaveAltText = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
-  if (node.type.name === 'image' && (!node.attrs['alt'] || isEmptyOrWhitespaceString(node.attrs['alt']))) {
-    return {
-      boundingBox: getNodeBoundingBox(editor, pos),
-      correct: contentCorrectorMap[contentValidations.IMAGE_MUST_HAVE_ALT_TEXT](
-        pos,
-        node.attrs['alt'] ?? '',
-        node.attrs['src'] ?? '',
-      ),
-      pos,
-      severity: validationSeverity.INFO,
-    };
+const getElementRange = (element: Element): Range | undefined => {
+  try {
+    const range = document.createRange();
+    range.selectNode(element);
+    return range;
+  } catch {
+    return undefined;
   }
-  return null;
 };
 
-const nodeTypesRequiringContent = new Set([
-  'definitionTerm',
-  'definitionDescription',
-  'paragraph',
-  'listItem',
-  'tableHeader',
-  'tableCell',
-  'tableCaption',
-]);
+// ── Tag → semantic-type mappings ──────────────────────────────────────────────
 
-const nodeShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
-  if (nodeTypesRequiringContent.has(node.type.name) && isEmpty(node)) {
-    return {
-      boundingBox: getNodeBoundingBox(editor, pos),
-      correct: contentCorrectorMap[contentValidations.NODE_SHOULD_NOT_BE_EMPTY](pos, node.type.name),
-      pos,
-      severity: validationSeverity.INFO,
-      tipPayload: { nodeType: node.type.name },
-    };
-  }
-  return null;
+/** Maps HTML tag names to the ProseMirror node-type name used in tipPayload. */
+const BLOCK_NODE_TYPES: Partial<Record<string, string>> = {
+  caption: 'tableCaption',
+  dd: 'definitionDescription',
+  dt: 'definitionTerm',
+  li: 'listItem',
+  p: 'paragraph',
+  td: 'tableCell',
+  th: 'tableHeader',
 };
 
-const markShouldNotBeEmpty = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
-  if (node.type.name === 'text' && node.marks?.length) {
-    if (!node.text || isEmptyOrWhitespaceString(node.text)) {
-      return {
-        boundingBox: getNodeBoundingBox(editor, pos),
-        correct: contentCorrectorMap[contentValidations.MARK_SHOULD_NOT_BE_EMPTY](pos),
-        pos,
-        severity: validationSeverity.INFO,
-        tipPayload: { nodeType: node.marks[0].type.name },
-      };
-    }
-  }
-  return null;
+/** Maps HTML tag names to the mark-type name used in tipPayload. */
+const MARK_TYPES: Partial<Record<string, string>> = {
+  a: 'link',
+  b: 'bold',
+  code: 'code',
+  del: 'strike',
+  em: 'italic',
+  i: 'italic',
+  mark: 'highlight',
+  s: 'strike',
+  strike: 'strike',
+  strong: 'bold',
+  u: 'underline',
+};
+
+// ── Content validators ────────────────────────────────────────────────────────
+
+const imageMustHaveAltText: ContentValidator = (_dom, node) => {
+  if (node.tagName !== 'IMG') return null;
+  const alt = (node as HTMLImageElement).alt;
+  if (alt && !isEmptyOrWhitespace(alt)) return null;
+  return {
+    correct: () => {},
+    range: getElementRange(node),
+    scope: 'element',
+    severity: validationSeverity.INFO,
+  };
+};
+
+const nodeShouldNotBeEmpty: ContentValidator = (_dom, node) => {
+  const tag = node.tagName.toLowerCase();
+  const nodeType = BLOCK_NODE_TYPES[tag];
+  if (!nodeType) return null;
+  if (!isEmptyOrWhitespace(node.textContent ?? '')) return null;
+  return {
+    correct: () => {},
+    range: getElementRange(node),
+    scope: 'element',
+    severity: validationSeverity.INFO,
+    tipPayload: { nodeType },
+  };
+};
+
+const markShouldNotBeEmpty: ContentValidator = (_dom, node) => {
+  const tag = node.tagName.toLowerCase();
+  const markType = MARK_TYPES[tag];
+  if (!markType) return null;
+  if (!isEmptyOrWhitespace(node.textContent ?? '')) return null;
+  return {
+    correct: () => {},
+    range: getElementRange(node),
+    scope: 'inline',
+    severity: validationSeverity.INFO,
+    tipPayload: { nodeType: markType },
+  };
 };
 
 const genericLinkTexts = new Set(['lees meer', 'klik hier']);
 
-const linkShouldNotBeTooGeneric = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
-  if (node.type.name === 'text' && node.marks?.filter((mark) => mark.type.name === 'link').length) {
-    const text = (node.text ?? node.textContent ?? '').trim().toLowerCase();
-    if (genericLinkTexts.has(text)) {
-      return {
-        boundingBox: getNodeBoundingBox(editor, pos),
-        correct: contentCorrectorMap[contentValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC](pos, node.nodeSize),
-        pos,
-        severity: validationSeverity.INFO,
-      };
-    }
-  }
-  return null;
+const linkShouldNotBeTooGeneric: ContentValidator = (_dom, node) => {
+  if (node.tagName !== 'A') return null;
+  const text = (node.textContent ?? '').trim().toLowerCase();
+  if (!genericLinkTexts.has(text)) return null;
+  return {
+    correct: () => {},
+    range: getElementRange(node),
+    scope: 'inline',
+    severity: validationSeverity.INFO,
+  };
 };
 
-const markShouldNotBeUnderlined = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
-  if (node.type.name === 'text' && node.marks?.some((mark) => mark.type.name === 'underline')) {
-    return {
-      boundingBox: getNodeBoundingBox(editor, pos),
-      correct: contentCorrectorMap[contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED](pos, node.nodeSize),
-      pos,
-      severity: validationSeverity.INFO,
-    };
-  }
-  return null;
+const markShouldNotBeUnderlined: ContentValidator = (_dom, node) => {
+  if (node.tagName !== 'U') return null;
+  return {
+    correct: () => {},
+    range: getElementRange(node),
+    scope: 'inline',
+    severity: validationSeverity.INFO,
+  };
 };
 
-const headingMustNotBeEmpty = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
-  if (node.type.name === 'heading' && isEmpty(node)) {
-    return {
-      boundingBox: getNodeBoundingBox(editor, pos),
-      correct: contentCorrectorMap[contentValidations.HEADING_MUST_NOT_BE_EMPTY](pos),
-      pos,
-      severity: validationSeverity.ERROR,
-    };
-  }
-  return null;
+const headingMustNotBeEmpty: ContentValidator = (_dom, node) => {
+  if (!/^H[1-6]$/.test(node.tagName)) return null;
+  if (!isEmptyOrWhitespace(node.textContent ?? '')) return null;
+  return {
+    correct: () => {},
+    range: getElementRange(node),
+    scope: 'element',
+    severity: validationSeverity.ERROR,
+  };
 };
 
-const headingShouldNotContainBoldOrItalic = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
-  if (
-    node.type.name === 'heading' &&
-    node.content.content.some(
-      (node) => node.type.name === 'text' && (node.marks.some(isBold) || node.marks.some(isItalic)),
-    )
-  ) {
-    return {
-      boundingBox: getNodeBoundingBox(editor, pos),
-      correct: contentCorrectorMap[contentValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC](pos, node.nodeSize),
-      pos,
-      severity: validationSeverity.INFO,
-    };
-  }
-  return null;
+const headingShouldNotContainBoldOrItalic: ContentValidator = (_dom, node) => {
+  if (!/^H[1-6]$/.test(node.tagName)) return null;
+  if (!node.querySelector('strong, b, em, i')) return null;
+  return {
+    correct: () => {},
+    range: getElementRange(node),
+    scope: 'element',
+    severity: validationSeverity.INFO,
+  };
 };
 
-const descriptionListMustContainTerm = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
-  if (node.type.name === 'definitionList') {
-    const hasDefinitionTerm = node.content?.content.some((child) => child.type.name === 'definitionTerm');
-    if (!hasDefinitionTerm) {
-      return {
-        boundingBox: getNodeBoundingBox(editor, pos),
-        correct: contentCorrectorMap[contentValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM](pos),
-        pos,
-        severity: validationSeverity.ERROR,
-      };
-    }
-  }
-  return null;
+const descriptionListMustContainTerm: ContentValidator = (_dom, node) => {
+  if (node.tagName !== 'DL') return null;
+  if (node.querySelector('dt')) return null;
+  return {
+    correct: () => {},
+    range: getElementRange(node),
+    scope: 'element',
+    severity: validationSeverity.ERROR,
+  };
 };
 
-const definitionDescriptionMustFollowTerm = (editor: Editor, node: Node, pos: number): ValidationResult | null => {
-  if (node.type.name === 'definitionTerm') {
-    const parent = editor.$doc.node.resolve(pos).parent;
-    if (parent.type.name === 'definitionList') {
-      const children = parent.content.content;
-      const currentIndex = children.findIndex((child) => {
-        return child.type.name === 'definitionTerm';
-      });
-
-      const nextSibling = children[currentIndex + 1];
-      if (nextSibling?.type.name !== 'definitionDescription') {
-        return {
-          boundingBox: getNodeBoundingBox(editor, pos),
-          correct: contentCorrectorMap[contentValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM](pos, node.nodeSize),
-          pos,
-          severity: validationSeverity.ERROR,
-        };
-      }
-    }
-  }
-  return null;
+const definitionDescriptionMustFollowTerm: ContentValidator = (_dom, node) => {
+  if (node.tagName !== 'DT') return null;
+  if (node.nextElementSibling?.tagName === 'DD') return null;
+  return {
+    correct: () => {},
+    range: getElementRange(node),
+    scope: 'element',
+    severity: validationSeverity.ERROR,
+  };
 };
+
+// ── Validator map & runner ────────────────────────────────────────────────────
 
 type ContentValidationKey = (typeof contentValidations)[keyof typeof contentValidations];
 
@@ -180,20 +177,34 @@ export const contentValidatorMap: { [K in ContentValidationKey]: ContentValidato
   [contentValidations.NODE_SHOULD_NOT_BE_EMPTY]: nodeShouldNotBeEmpty,
 };
 
+/**
+ * Walk the DOM tree of `content` in depth-first pre-order, invoking every
+ * validator in `validatorMap` for each Element node encountered.
+ */
 const contentValidator = (
-  editor: Editor,
+  content: string | HTMLElement,
   validatorMap: Partial<{ [K in ContentValidationKey]: ContentValidator }> = contentValidatorMap,
-): Map<string, ValidationResult> => {
-  const errors: Map<string, ValidationResult> = new Map();
+): Map<Range, ValidationResult> => {
+  const errors = new Map<Range, ValidationResult>();
+  const root = parseContent(content);
 
-  editor.$doc.node.descendants((node, pos) => {
+  const walk = (element: Element): void => {
     for (const [key, validator] of Object.entries(validatorMap)) {
-      const result = validator(editor, node, pos);
-      if (result) {
-        errors.set(`${key}_${pos}`, result);
+      const result = validator!(root, element);
+      if (result?.range) {
+        result.validatorKey = key;
+        errors.set(result.range, result);
       }
     }
-  });
+    for (const child of Array.from(element.children)) {
+      walk(child);
+    }
+  };
+
+  for (const child of Array.from(root.children)) {
+    walk(child);
+  }
+
   return errors;
 };
 

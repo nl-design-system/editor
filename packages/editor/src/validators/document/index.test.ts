@@ -1,10 +1,14 @@
 import { vi, describe, it, expect } from 'vitest';
+import type { ValidationResult } from '../../types/validation.ts';
 import { createTestEditor } from '../../../test/createTestEditor';
 import {
   documentMustHaveCorrectHeadingOrder,
   documentMustHaveSemanticLists,
   documentMustHaveTableWithHeadings,
 } from './index';
+
+const byKey = (map: Map<Range, ValidationResult>, key: string): ValidationResult | undefined =>
+  [...map.values()].find((v) => v.validatorKey === key);
 
 describe('Document validations', () => {
   describe('Headings', () => {
@@ -24,7 +28,7 @@ describe('Document validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      expect(mapArg.has('document-must-have-correct-heading-order_7')).toBeTruthy();
+      expect(byKey(mapArg, 'document-must-have-correct-heading-order')).toBeDefined();
     });
 
     it('returns null for correct heading order', async () => {
@@ -36,7 +40,7 @@ describe('Document validations', () => {
       `,
       );
 
-      const result = documentMustHaveCorrectHeadingOrder(editor);
+      const result = documentMustHaveCorrectHeadingOrder(editor.view.dom);
       expect(result).toStrictEqual([]);
     });
 
@@ -46,12 +50,12 @@ describe('Document validations', () => {
         <h3>Subtitle</h3>
       `);
 
-      const result = documentMustHaveCorrectHeadingOrder(editor);
+      const result = documentMustHaveCorrectHeadingOrder(editor.view.dom);
       expect(result).toEqual([
         {
-          boundingBox: expect.any(Object),
           correct: expect.any(Function),
-          pos: 7,
+          range: expect.any(Object),
+          scope: 'element',
           severity: 'warning',
           tipPayload: {
             headingLevel: 3,
@@ -74,12 +78,12 @@ describe('Document validations', () => {
         settings,
       );
 
-      const result = documentMustHaveCorrectHeadingOrder(editor, settings);
+      const result = documentMustHaveCorrectHeadingOrder(editor.view.dom, settings);
       expect(result).toEqual([
         {
-          boundingBox: expect.any(Object),
           correct: expect.any(Function),
-          pos: 0,
+          range: expect.any(Object),
+          scope: 'element',
           severity: 'error',
           tipPayload: {
             headingLevel: 1,
@@ -88,9 +92,9 @@ describe('Document validations', () => {
           },
         },
         {
-          boundingBox: expect.any(Object),
           correct: expect.any(Function),
-          pos: 17,
+          range: expect.any(Object),
+          scope: 'element',
           severity: 'warning',
           tipPayload: {
             headingLevel: 4,
@@ -117,7 +121,7 @@ describe('Document validations', () => {
         expect(callback).toHaveBeenCalledTimes(1);
       });
       const mapArg = callback.mock.calls[0][0];
-      expect(mapArg.get('document-must-have-single-heading-one_23').pos).toBe(23);
+      expect(byKey(mapArg, 'document-must-have-single-heading-one')?.severity).toBe('error');
     });
 
     it('returns error for invalid top level heading', async () => {
@@ -135,11 +139,12 @@ describe('Document validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      expect(mapArg.get('document-must-have-top-level-heading_1')).toEqual({
-        boundingBox: expect.any(Object),
+      expect(byKey(mapArg, 'document-must-have-top-level-heading')).toEqual({
         correct: expect.any(Function),
-        pos: 1,
+        range: expect.any(Object),
+        scope: 'element',
         severity: 'info',
+        validatorKey: 'document-must-have-top-level-heading',
       });
     });
 
@@ -160,7 +165,7 @@ describe('Document validations', () => {
         });
         const mapArg = callback.mock.calls[0][0];
         expect(mapArg).toBeInstanceOf(Map);
-        expect(mapArg.has('document-must-have-semantic-lists_6')).toBeTruthy();
+        expect(byKey(mapArg, 'document-must-have-semantic-lists')).toBeDefined();
       });
 
       it('returns errors for potential lists', async () => {
@@ -194,7 +199,7 @@ describe('Document validations', () => {
             <p>3 - Losse paragrafen test</p>
       `);
 
-        const results = documentMustHaveSemanticLists(editor);
+        const results = documentMustHaveSemanticLists(editor.view.dom);
 
         results.forEach((result) => {
           expect(result.severity).toEqual('info');
@@ -253,7 +258,7 @@ describe('Document validations', () => {
       </table>
     `);
 
-        const result = documentMustHaveTableWithHeadings(editor);
+        const result = documentMustHaveTableWithHeadings(editor.view.dom);
         expect(result).toStrictEqual([]);
       });
 
@@ -274,7 +279,7 @@ describe('Document validations', () => {
       </table>
     `);
 
-        const result = documentMustHaveTableWithHeadings(editor);
+        const result = documentMustHaveTableWithHeadings(editor.view.dom);
         expect(result).toStrictEqual([]);
       });
 
@@ -295,7 +300,7 @@ describe('Document validations', () => {
       </table>
     `);
 
-        const result = documentMustHaveTableWithHeadings(editor);
+        const result = documentMustHaveTableWithHeadings(editor.view.dom);
         expect(result).toStrictEqual([]);
       });
 
@@ -320,12 +325,12 @@ describe('Document validations', () => {
       </table>
     `);
 
-        const result = documentMustHaveTableWithHeadings(editor);
+        const result = documentMustHaveTableWithHeadings(editor.view.dom);
         expect(result).toEqual([
           {
-            boundingBox: expect.any(Object),
             correct: expect.any(Function),
-            pos: 7,
+            range: expect.any(Object),
+            scope: 'element',
             severity: 'warning',
           },
         ]);
@@ -356,7 +361,7 @@ describe('Document validations', () => {
       </table>
     `);
 
-        const result = documentMustHaveTableWithHeadings(editor);
+        const result = documentMustHaveTableWithHeadings(editor.view.dom);
         expect(result).toEqual([]);
       });
 
@@ -373,12 +378,12 @@ describe('Document validations', () => {
         </table>
       `);
 
-        const result = documentMustHaveTableWithHeadings(editor);
+        const result = documentMustHaveTableWithHeadings(editor.view.dom);
         expect(result).toEqual([
           {
-            boundingBox: expect.any(Object),
             correct: expect.any(Function),
-            pos: 7,
+            range: expect.any(Object),
+            scope: 'element',
             severity: 'warning',
           },
         ]);

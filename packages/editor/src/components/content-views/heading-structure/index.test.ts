@@ -126,14 +126,17 @@ describe('<clippy-heading-structure>', () => {
 
   describe('interactivity', () => {
     it('dispatches FOCUS_VALIDATION_ITEM_IN_GUTTER with the validation key when clicking a heading that has a validation entry', async () => {
-      const headingPos = 0;
       const validationKey = 'heading-should-not-be-empty_0';
 
       const { contextEl, headingStructure } = await setupWithContent('<h1>Titel</h1>');
 
-      const validationsMap: ValidationsMap = new Map([
-        [validationKey, { boundingBox: null, pos: headingPos, severity: 'warning' }],
-      ]);
+      // Build a range that intersects the heading element in the editor DOM
+      await expect.poll(() => contextEl.editor?.view?.dom?.querySelector('h1')).not.toBeNull();
+      const headingEl = contextEl.editor!.view.dom.querySelector('h1')!;
+      const headingRange = document.createRange();
+      headingRange.selectNode(headingEl);
+
+      const validationsMap: ValidationsMap = new Map([[validationKey, { range: headingRange, severity: 'warning' }]]);
 
       contextEl.updateValidationsContext(validationsMap);
       await contextEl.updateComplete;
