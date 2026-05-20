@@ -127,8 +127,6 @@ describe('<clippy-heading-structure>', () => {
 
   describe('interactivity', () => {
     it('dispatches FOCUS_VALIDATION_ITEM_IN_GUTTER with the validation key when clicking a heading that has a validation entry', async () => {
-      const validationKey = 'heading-should-not-be-empty_0';
-
       const { contextEl, headingStructure } = await setupWithContent('<h1>Titel</h1>');
 
       // Build a range that intersects the heading element in the editor DOM
@@ -137,7 +135,7 @@ describe('<clippy-heading-structure>', () => {
       const headingRange = document.createRange();
       headingRange.selectNode(headingEl);
 
-      const validationsMap: ValidationsMap = new Map([[validationKey, { range: headingRange, severity: 'warning' }]]);
+      const validationsMap: ValidationsMap = new Map([[headingRange, { range: headingRange, severity: 'warning' }]]);
 
       contextEl.updateValidationsContext(validationsMap);
       await contextEl.updateComplete;
@@ -147,15 +145,15 @@ describe('<clippy-heading-structure>', () => {
       const button = headingStructure.shadowRoot!.querySelector('button') as HTMLButtonElement;
       expect(button).toBeVisible();
 
-      let receivedKey: string | undefined;
+      let receivedKey: Range | undefined;
       const handler = (e: Event) => {
-        receivedKey = (e as CustomEvent<{ key: string }>).detail.key;
+        receivedKey = (e as CustomEvent<{ key: Range }>).detail.key;
       };
       globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
 
       button.click();
 
-      expect(receivedKey).toBe(validationKey);
+      expect(receivedKey).toBe(headingRange);
 
       globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
     });

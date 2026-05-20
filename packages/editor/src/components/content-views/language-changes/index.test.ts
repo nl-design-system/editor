@@ -42,7 +42,9 @@ describe('<clippy-language-changes>', () => {
     it('shows the empty-state message when the document contains no lang-annotated blocks', async () => {
       const { langChanges } = await setupWithContent('<h1>Titel</h1><p>Gewone paragraaf zonder taalkenmerk.</p>');
 
-      await waitFor(() => expect(langChanges.shadowRoot?.querySelector('.clippy-language-changes__empty')).not.toBeNull());
+      await waitFor(() =>
+        expect(langChanges.shadowRoot?.querySelector('.clippy-language-changes__empty')).not.toBeNull(),
+      );
       expect(langChanges.shadowRoot?.querySelector('.clippy-language-changes__empty')?.textContent?.trim()).toContain(
         'Geen taalwijzigingen gevonden in dit document.',
       );
@@ -115,7 +117,9 @@ describe('<clippy-language-changes>', () => {
       langChanges.requestUpdate();
 
       await waitFor(() =>
-        expect(langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__doc-label').length).toBeGreaterThan(0),
+        expect(langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__doc-label').length).toBeGreaterThan(
+          0,
+        ),
       );
       expect(
         langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__doc-label')[0]?.textContent?.trim(),
@@ -143,9 +147,9 @@ describe('<clippy-language-changes>', () => {
       const { langChanges } = await setupWithContent(`<h1>Titel</h1><p lang="en">${longText}</p>`);
 
       await waitFor(() =>
-        expect(
-          langChanges.shadowRoot?.querySelector('.clippy-language-changes__item .nl-link')?.textContent,
-        ).toContain('…'),
+        expect(langChanges.shadowRoot?.querySelector('.clippy-language-changes__item .nl-link')?.textContent).toContain(
+          '…',
+        ),
       );
 
       const content =

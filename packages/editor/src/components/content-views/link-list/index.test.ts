@@ -103,9 +103,9 @@ describe('<clippy-link-list>', () => {
       );
 
       await waitFor(() =>
-        expect(
-          linkList.shadowRoot?.querySelector('.clippy-link-list__item .nl-link')?.textContent?.trim(),
-        ).toContain('(leeg)'),
+        expect(linkList.shadowRoot?.querySelector('.clippy-link-list__item .nl-link')?.textContent?.trim()).toContain(
+          '(leeg)',
+        ),
       );
     });
   });
@@ -159,9 +159,7 @@ describe('<clippy-link-list>', () => {
       const linkRange = document.createRange();
       linkRange.selectNode(linkEl);
 
-      const validationsMap: ValidationsMap = new Map([
-        [`link-should-not-be-too-generic_0`, { range: linkRange, severity: 'warning' }],
-      ]);
+      const validationsMap: ValidationsMap = new Map([[linkRange, { range: linkRange, severity: 'warning' }]]);
 
       contextEl.updateValidationsContext(validationsMap);
       await contextEl.updateComplete;
@@ -180,13 +178,15 @@ describe('<clippy-link-list>', () => {
 
       await waitFor(() => expect(contextEl.editor?.view?.dom?.querySelector('a')).not.toBeNull());
       const linkEl = contextEl.editor!.view.dom.querySelector('a')!;
-      const linkRange = document.createRange();
-      linkRange.selectNode(linkEl);
+      const linkRange1 = document.createRange();
+      linkRange1.selectNode(linkEl);
+      const linkRange2 = document.createRange();
+      linkRange2.selectNode(linkEl);
 
       // Two entries for the same element: error takes precedence over warning.
       const validationsMap: ValidationsMap = new Map([
-        [`link-should-not-be-too-generic_0`, { range: linkRange, severity: 'warning' }],
-        [`mark-should-not-be-empty_0`, { range: linkRange, severity: 'error' }],
+        [linkRange1, { range: linkRange1, severity: 'warning' }],
+        [linkRange2, { range: linkRange2, severity: 'error' }],
       ]);
 
       contextEl.updateValidationsContext(validationsMap);
