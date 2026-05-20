@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import type { ValidationsMap } from '../../../types/validation.ts';
 import type { Context } from '../../context';
@@ -18,7 +19,7 @@ async function setupWithContent(contentHtml: string): Promise<{ linkList: LinkLi
   const linkList = document.querySelector('clippy-link-list') as unknown as LinkList;
   const contextEl = document.querySelector('clippy-context') as unknown as Context;
 
-  await expect.poll(() => linkList.shadowRoot?.querySelector('nav')).not.toBeNull();
+  await waitFor(() => expect(linkList.shadowRoot?.querySelector('nav')).not.toBeNull());
 
   return { contextEl, linkList };
 }
@@ -37,7 +38,7 @@ describe('<clippy-link-list>', () => {
     it('shows the empty-state message when the document contains no links', async () => {
       const { linkList } = await setupWithContent('<h1>Titel</h1><p>Paragraaf zonder link.</p>');
 
-      await expect.poll(() => linkList.shadowRoot?.querySelector('.clippy-link-list__empty')).not.toBeNull();
+      await waitFor(() => expect(linkList.shadowRoot?.querySelector('.clippy-link-list__empty')).not.toBeNull());
       expect(linkList.shadowRoot?.querySelector('.clippy-link-list__empty')?.textContent?.trim()).toContain(
         'Geen links gevonden in dit document.',
       );
@@ -46,7 +47,7 @@ describe('<clippy-link-list>', () => {
     it('does not render any list items in the empty state', async () => {
       const { linkList } = await setupWithContent('<h1>Titel</h1>');
 
-      await expect.poll(() => linkList.shadowRoot?.querySelectorAll('.clippy-link-list__item').length).toBe(0);
+      await waitFor(() => expect(linkList.shadowRoot?.querySelectorAll('.clippy-link-list__item').length).toBe(0));
     });
   });
 
@@ -54,7 +55,7 @@ describe('<clippy-link-list>', () => {
     it('renders one list item for a single link', async () => {
       const { linkList } = await setupWithContent('<h1>Titel</h1><p><a href="https://example.com">Bezoek ons</a></p>');
 
-      await expect.poll(() => linkList.shadowRoot?.querySelectorAll('.clippy-link-list__item').length).toBe(1);
+      await waitFor(() => expect(linkList.shadowRoot?.querySelectorAll('.clippy-link-list__item').length).toBe(1));
     });
 
     it('renders one list item per unique link when multiple links are present', async () => {
@@ -65,24 +66,26 @@ describe('<clippy-link-list>', () => {
           '</p>',
       );
 
-      await expect.poll(() => linkList.shadowRoot?.querySelectorAll('.clippy-link-list__item').length).toBe(2);
+      await waitFor(() => expect(linkList.shadowRoot?.querySelectorAll('.clippy-link-list__item').length).toBe(2));
     });
 
     it('renders the link text inside the anchor element', async () => {
       const { linkList } = await setupWithContent('<h1>Titel</h1><p><a href="https://example.com">Bezoek ons</a></p>');
 
-      await expect
-        .poll(() => linkList.shadowRoot?.querySelector('.clippy-link-list__item .nl-link')?.textContent?.trim())
-        .toBe('Bezoek ons');
+      await waitFor(() =>
+        expect(linkList.shadowRoot?.querySelector('.clippy-link-list__item .nl-link')?.textContent?.trim()).toBe(
+          'Bezoek ons',
+        ),
+      );
     });
 
     it('renders the href as visible text with a matching title attribute', async () => {
       const href = 'https://example.com';
       const { linkList } = await setupWithContent(`<h1>Titel</h1><p><a href="${href}">Lees meer</a></p>`);
 
-      await expect
-        .poll(() => linkList.shadowRoot?.querySelector('.clippy-link-list__href')?.textContent?.trim())
-        .toBe(href);
+      await waitFor(() =>
+        expect(linkList.shadowRoot?.querySelector('.clippy-link-list__href')?.textContent?.trim()).toBe(href),
+      );
       expect(linkList.shadowRoot?.querySelector('.clippy-link-list__href')?.getAttribute('title')).toBe(href);
     });
 
@@ -99,9 +102,11 @@ describe('<clippy-link-list>', () => {
         '<h1>Titel</h1><p>test with an empty<a href="https://example.com"> </a>link</p>',
       );
 
-      await expect
-        .poll(() => linkList.shadowRoot?.querySelector('.clippy-link-list__item .nl-link')?.textContent?.trim())
-        .toContain('(leeg)');
+      await waitFor(() =>
+        expect(
+          linkList.shadowRoot?.querySelector('.clippy-link-list__item .nl-link')?.textContent?.trim(),
+        ).toContain('(leeg)'),
+      );
     });
   });
 
@@ -117,7 +122,7 @@ describe('<clippy-link-list>', () => {
         '<h1>Titel</h1><p><a href="https://example.com"><strong>Vet</strong> en normaal</a></p>',
       );
 
-      await expect.poll(() => linkList.shadowRoot?.querySelectorAll('.clippy-link-list__item').length).toBe(1);
+      await waitFor(() => expect(linkList.shadowRoot?.querySelectorAll('.clippy-link-list__item').length).toBe(1));
     });
 
     it('renders the merged text of an inline-formatted link correctly', async () => {
@@ -125,9 +130,9 @@ describe('<clippy-link-list>', () => {
         '<h1>Titel</h1><p><a href="https://example.com"><strong>Vet</strong> en normaal</a></p>',
       );
 
-      await expect
-        .poll(() => linkList.shadowRoot?.querySelector('.clippy-link-list__item .nl-link')?.textContent)
-        .toContain('Vet');
+      await waitFor(() =>
+        expect(linkList.shadowRoot?.querySelector('.clippy-link-list__item .nl-link')?.textContent).toContain('Vet'),
+      );
       expect(linkList.shadowRoot?.querySelector('.clippy-link-list__item .nl-link')?.textContent).toContain(
         'en normaal',
       );
@@ -140,8 +145,7 @@ describe('<clippy-link-list>', () => {
         '<h1>Titel</h1><p><a href="https://example.com">Link zonder melding</a></p>',
       );
 
-      // Wait for the link item to appear, then confirm no badge is shown.
-      await expect.poll(() => linkList.shadowRoot?.querySelectorAll('.clippy-link-list__item').length).toBe(1);
+      await waitFor(() => expect(linkList.shadowRoot?.querySelectorAll('.clippy-link-list__item').length).toBe(1));
       expect(linkList.shadowRoot?.querySelector('.nl-data-badge')).toBeNull();
     });
 
@@ -150,8 +154,7 @@ describe('<clippy-link-list>', () => {
         '<h1>Titel</h1><p><a href="https://example.com">Klik hier</a></p>',
       );
 
-      // Build a range that intersects the <a> element in the editor DOM
-      await expect.poll(() => contextEl.editor?.view?.dom?.querySelector('a')).not.toBeNull();
+      await waitFor(() => expect(contextEl.editor?.view?.dom?.querySelector('a')).not.toBeNull());
       const linkEl = contextEl.editor!.view.dom.querySelector('a')!;
       const linkRange = document.createRange();
       linkRange.selectNode(linkEl);
@@ -164,7 +167,7 @@ describe('<clippy-link-list>', () => {
       await contextEl.updateComplete;
       linkList.requestUpdate();
 
-      await expect.poll(() => linkList.shadowRoot?.querySelector('.nl-data-badge')).not.toBeNull();
+      await waitFor(() => expect(linkList.shadowRoot?.querySelector('.nl-data-badge')).not.toBeNull());
       expect(
         linkList.shadowRoot?.querySelector('.nl-data-badge')?.classList.contains('clippy-link-list__badge--warning'),
       ).toBe(true);
@@ -175,8 +178,7 @@ describe('<clippy-link-list>', () => {
         '<h1>Titel</h1><p><a href="https://example.com">Klik hier</a></p>',
       );
 
-      // Build a range that intersects the <a> element in the editor DOM
-      await expect.poll(() => contextEl.editor?.view?.dom?.querySelector('a')).not.toBeNull();
+      await waitFor(() => expect(contextEl.editor?.view?.dom?.querySelector('a')).not.toBeNull());
       const linkEl = contextEl.editor!.view.dom.querySelector('a')!;
       const linkRange = document.createRange();
       linkRange.selectNode(linkEl);
@@ -191,7 +193,7 @@ describe('<clippy-link-list>', () => {
       await contextEl.updateComplete;
       linkList.requestUpdate();
 
-      await expect.poll(() => linkList.shadowRoot?.querySelector('.nl-data-badge')).not.toBeNull();
+      await waitFor(() => expect(linkList.shadowRoot?.querySelector('.nl-data-badge')).not.toBeNull());
       expect(
         linkList.shadowRoot?.querySelector('.nl-data-badge')?.classList.contains('clippy-link-list__badge--error'),
       ).toBe(true);
