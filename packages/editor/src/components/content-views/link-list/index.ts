@@ -94,7 +94,7 @@ export class LinkList extends LitElement {
         new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, {
           bubbles: true,
           composed: true,
-          detail: { key: validationRange },
+          detail: { range: validationRange },
         }),
       );
     }
