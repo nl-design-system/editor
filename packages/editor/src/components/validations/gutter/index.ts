@@ -8,6 +8,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import type { ValidationsMap } from '@/types/validation.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
+import { ResizeController } from '@/controllers/ResizeController.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents } from '@/events';
 import { type ValidationKey, validationMessages } from '@/messages';
@@ -35,7 +36,7 @@ export class Gutter extends LitElement {
 
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
-  private editor?: Editor;
+  private readonly editor?: Editor;
 
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
@@ -44,6 +45,8 @@ export class Gutter extends LitElement {
   readonly #closeValidationItem = () => {
     this.activeValidationItemKey = null;
   };
+
+  readonly #resizeController = new ResizeController(this);
 
   #handleIndicatorClick(key: Range) {
     if (this.mode === 'list') {
@@ -67,6 +70,10 @@ export class Gutter extends LitElement {
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
   }
 
+  override firstUpdated() {
+    this.editor?.on('create', this.#attachResizeObserver);
+  }
+
   override disconnectedCallback() {
     super.disconnectedCallback();
     globalThis.removeEventListener(
@@ -76,6 +83,12 @@ export class Gutter extends LitElement {
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
     globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
   }
+
+  readonly #attachResizeObserver = () => {
+    const dom = this.editor?.view?.dom;
+    if (!dom) return;
+    this.#resizeController.observe(dom);
+  };
 
   #getIndicatorPosition(range: Range): { top: number; height: number } | null {
     try {
