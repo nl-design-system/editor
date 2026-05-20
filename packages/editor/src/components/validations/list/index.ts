@@ -41,13 +41,13 @@ export class ValidationsList extends LitElement {
   }
 
   readonly #handleFocusValidationItem = (event: Event) => {
-    const { key } = (event as CustomEvent<{ key: Range }>).detail;
+    const { range } = (event as CustomEvent<{ range: Range }>).detail;
 
     const items = this.shadowRoot?.querySelectorAll('clippy-validation-item');
-    const match = [...(items ?? [])].find((el) => (el as ValidationItem).range === key);
+    const match = [...(items ?? [])].find((el) => (el as ValidationItem).range === range);
     if (match instanceof HTMLElement) {
       match.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      match.shadowRoot?.querySelector<HTMLElement>('[data-validation-key]')?.focus();
+      (match as ValidationItem).focus();
     }
   };
 

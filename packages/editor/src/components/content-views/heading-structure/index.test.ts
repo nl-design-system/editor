@@ -145,15 +145,15 @@ describe('<clippy-heading-structure>', () => {
       const button = headingStructure.shadowRoot!.querySelector('button') as HTMLButtonElement;
       expect(button).toBeVisible();
 
-      let receivedKey: Range | undefined;
+      let receivedRange: Range | undefined;
       const handler = (e: Event) => {
-        receivedKey = (e as CustomEvent<{ key: Range }>).detail.key;
+        receivedRange = (e as CustomEvent<{ range: Range }>).detail.range;
       };
       globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
 
       button.click();
 
-      expect(receivedKey).toBe(headingRange);
+      expect(receivedRange).toBe(headingRange);
 
       globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
     });

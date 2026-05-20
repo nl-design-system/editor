@@ -102,9 +102,9 @@ export class ValidationsDialog extends LitElement {
     this.editor?.commands.focus(pos + 1, { scrollIntoView: true });
   };
 
-  readonly #focusValidationItem = async (event: CustomEventInit<{ key: Range; identifier: string }>) => {
-    const { identifier, key } = event.detail || {};
-    if (!key) return;
+  readonly #focusValidationItem = async (event: CustomEventInit<{ range: Range; identifier: string }>) => {
+    const { identifier, range } = event.detail || {};
+    if (!range) return;
 
     if (!this.open && identifier === this.identifier) {
       this.#toggleOpen();
@@ -113,7 +113,7 @@ export class ValidationsDialog extends LitElement {
     await this.updateComplete;
 
     const items = this.shadowRoot?.querySelectorAll('clippy-validation-item');
-    const match = [...(items ?? [])].find((el) => (el as ValidationItem).range === key);
+    const match = [...(items ?? [])].find((el) => (el as ValidationItem).range === range);
     if (match instanceof HTMLElement) {
       match.scrollIntoView({ behavior: 'smooth', block: 'center' });
       (match as ValidationItem).focus();

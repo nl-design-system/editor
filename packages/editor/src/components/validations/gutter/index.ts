@@ -32,7 +32,7 @@ export class Gutter extends LitElement {
   mode: 'tooltip' | 'list' | 'readonly' = 'tooltip';
 
   @state()
-  private activeValidationItemKey: Range | null = null;
+  private activeRange: Range | null = null;
 
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
@@ -43,24 +43,28 @@ export class Gutter extends LitElement {
   validationsContext?: ValidationsMap;
 
   readonly #closeValidationItem = () => {
-    this.activeValidationItemKey = null;
+    this.activeRange = null;
   };
 
   readonly #resizeController = new ResizeController(this);
 
-  #handleIndicatorClick(key: Range) {
+  #handleIndicatorClick(range: Range) {
     if (this.mode === 'list') {
       this.dispatchEvent(
-        new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST, { bubbles: true, composed: true, detail: { key } }),
+        new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST, {
+          bubbles: true,
+          composed: true,
+          detail: { range },
+        }),
       );
     } else {
-      this.activeValidationItemKey = this.activeValidationItemKey === key ? null : key;
+      this.activeRange = this.activeRange === range ? null : range;
     }
   }
 
   readonly #handleFocusValidationItemInGutter = (event: Event) => {
-    const { key } = (event as CustomEvent<{ key: Range }>).detail;
-    this.activeValidationItemKey = this.activeValidationItemKey === key ? null : key;
+    const { range } = (event as CustomEvent<{ range: Range }>).detail;
+    this.activeRange = this.activeRange === range ? null : range;
   };
 
   override connectedCallback() {
@@ -114,15 +118,14 @@ export class Gutter extends LitElement {
     return html`
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
         ${[...this.validationsContext.entries()]
-          .filter(([, { range }]) => range !== undefined)
-          .map(([key, { correct, range, severity, tipPayload, validatorKey }]) => {
-            if (!range) return nothing;
+          .filter(([range]) => range !== undefined)
+          .map(([range, { correct, severity, tipPayload, validatorKey }]) => {
             const position = this.#getIndicatorPosition(range);
             if (!position) return nothing;
             const valKey = validatorKey as ValidationKey;
             const { customCorrectLabel, description, href, tip } = validationMessages()[valKey];
             const tipHtml = tip?.(tipPayload) ?? null;
-            const isActive = this.activeValidationItemKey === key;
+            const isActive = this.activeRange === range;
             return html`<li
               class="clippy-validations-gutter__indicator"
               style="inset-block-start: ${position.top}px; block-size: ${position.height}px"
@@ -135,7 +138,7 @@ export class Gutter extends LitElement {
                 })}"
                 aria-expanded=${isActive ? 'true' : 'false'}
                 aria-label=${description}
-                @click=${() => this.#handleIndicatorClick(key)}
+                @click=${() => this.#handleIndicatorClick(range)}
               ></button>
               <div
                 class="${classMap({

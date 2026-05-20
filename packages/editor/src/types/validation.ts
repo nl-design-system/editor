@@ -5,7 +5,7 @@ export type DocumentValidator = (dom: HTMLElement, settings: EditorSettings) => 
 
 export type ContentValidator = (dom: HTMLElement, element: Element) => ValidationResult | null;
 
-export type ValidationEntry = readonly [key: Range, value: ValidationResult];
+export type ValidationEntry = readonly [range: Range, value: ValidationResult];
 
 export type CorrectValidationFunction = (editor: Editor) => void;
 
