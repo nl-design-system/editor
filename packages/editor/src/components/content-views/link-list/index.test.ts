@@ -159,9 +159,7 @@ describe('<clippy-link-list>', () => {
       const linkRange = document.createRange();
       linkRange.selectNode(linkEl);
 
-      const validationsMap: ValidationsMap = new Map([
-        [linkRange, { range: linkRange, severity: 'warning' }],
-      ]);
+      const validationsMap: ValidationsMap = new Map([[linkRange, { range: linkRange, severity: 'warning' }]]);
 
       contextEl.updateValidationsContext(validationsMap);
       await contextEl.updateComplete;
