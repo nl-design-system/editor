@@ -10,6 +10,7 @@ import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
 import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
 import { LitElement, html, nothing, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
+import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { CorrectValidationFunction, ValidationSeverity } from '@/types/validation.ts';
 import '@nl-design-system-community/clippy-components/clippy-button';
@@ -54,6 +55,12 @@ export class ValidationItem extends LitElement {
 
   @editor()
   private readonly editor: Editor | undefined;
+
+  readonly #listItemRef: Ref<HTMLLIElement> = createRef();
+
+  override focus(): void {
+    this.#listItemRef.value?.focus();
+  }
 
   readonly #focusNode = () => {
     if (!this.range) return;
@@ -144,7 +151,11 @@ export class ValidationItem extends LitElement {
 
   override render() {
     return html`
-      <li class="clippy-dialog__list-item clippy-dialog__list-item--${this.severity}" data-validation-key tabindex="-1">
+      <li
+        ${ref(this.#listItemRef)}
+        class="clippy-dialog__list-item clippy-dialog__list-item--${this.severity}"
+        tabindex="-1"
+      >
         <div class="clippy-dialog__list-item-message">
           <h4 class="nl-heading nl-heading--level-4" id=${ariaDescribedBy}>${this.description}</h4>
           <span class="clippy-dialog__list-item-severity clippy-dialog__list-item-severity--${this.severity}">
