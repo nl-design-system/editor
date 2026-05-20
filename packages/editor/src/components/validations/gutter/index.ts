@@ -51,7 +51,11 @@ export class Gutter extends LitElement {
   #handleIndicatorClick(range: Range) {
     if (this.mode === 'list') {
       this.dispatchEvent(
-        new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST, { bubbles: true, composed: true, detail: { range } }),
+        new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST, {
+          bubbles: true,
+          composed: true,
+          detail: { range },
+        }),
       );
     } else {
       this.activeRange = this.activeRange === range ? null : range;
