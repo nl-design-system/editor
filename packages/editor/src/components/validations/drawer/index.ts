@@ -116,7 +116,7 @@ export class ValidationsDialog extends LitElement {
     const match = [...(items ?? [])].find((el) => (el as ValidationItem).range === key);
     if (match instanceof HTMLElement) {
       match.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      match.shadowRoot?.querySelector<HTMLElement>('[data-validation-key]')?.focus();
+      (match as ValidationItem).focus();
     }
   };
 
