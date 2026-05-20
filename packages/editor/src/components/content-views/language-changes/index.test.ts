@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import type { Context } from '../../context';
 import type { LanguageChanges } from './index.ts';
@@ -22,7 +23,7 @@ async function setupWithContent(
 
   // Wait until Lit has performed at least one render cycle and the shadow root
   // contains the <nav> element.
-  await expect.poll(() => langChanges.shadowRoot?.querySelector('nav')).not.toBeNull();
+  await waitFor(() => expect(langChanges.shadowRoot?.querySelector('nav')).not.toBeNull());
 
   return { contextEl, langChanges };
 }
@@ -41,7 +42,7 @@ describe('<clippy-language-changes>', () => {
     it('shows the empty-state message when the document contains no lang-annotated blocks', async () => {
       const { langChanges } = await setupWithContent('<h1>Titel</h1><p>Gewone paragraaf zonder taalkenmerk.</p>');
 
-      await expect.poll(() => langChanges.shadowRoot?.querySelector('.clippy-language-changes__empty')).not.toBeNull();
+      await waitFor(() => expect(langChanges.shadowRoot?.querySelector('.clippy-language-changes__empty')).not.toBeNull());
       expect(langChanges.shadowRoot?.querySelector('.clippy-language-changes__empty')?.textContent?.trim()).toContain(
         'Geen taalwijzigingen gevonden in dit document.',
       );
@@ -50,9 +51,9 @@ describe('<clippy-language-changes>', () => {
     it('does not render any list items in the empty state', async () => {
       const { langChanges } = await setupWithContent('<h1>Titel</h1>');
 
-      await expect
-        .poll(() => langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__item').length)
-        .toBe(0);
+      await waitFor(() =>
+        expect(langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__item').length).toBe(0),
+      );
     });
   });
 
@@ -60,9 +61,9 @@ describe('<clippy-language-changes>', () => {
     it('renders one list item for a single language change', async () => {
       const { langChanges } = await setupWithContent('<h1>Titel</h1><p lang="en">English paragraph.</p>');
 
-      await expect
-        .poll(() => langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__item').length)
-        .toBe(1);
+      await waitFor(() =>
+        expect(langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__item').length).toBe(1),
+      );
     });
 
     it('renders one list item per language change when multiple blocks have different langs', async () => {
@@ -70,9 +71,9 @@ describe('<clippy-language-changes>', () => {
         '<h1>Titel</h1><p lang="en">English.</p><p lang="fr">Français.</p>',
       );
 
-      await expect
-        .poll(() => langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__item').length)
-        .toBe(2);
+      await waitFor(() =>
+        expect(langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__item').length).toBe(2),
+      );
     });
 
     it('renders list items in document order', async () => {
@@ -80,13 +81,13 @@ describe('<clippy-language-changes>', () => {
         '<h1>Titel</h1><p lang="en">English.</p><p lang="de">Deutsch.</p><p lang="fr">Français.</p>',
       );
 
-      await expect
-        .poll(() =>
+      await waitFor(() =>
+        expect(
           Array.from(
             langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__item .nl-data-badge') ?? [],
           ).map((b) => b.textContent?.trim()),
-        )
-        .toEqual(['en', 'de', 'fr']);
+        ).toEqual(['en', 'de', 'fr']),
+      );
     });
 
     it('does not emit a duplicate entry when consecutive blocks share the same language', async () => {
@@ -95,9 +96,9 @@ describe('<clippy-language-changes>', () => {
       );
 
       // Only one change: ambient lang → 'en'. The second 'en' block is skipped.
-      await expect
-        .poll(() => langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__item').length)
-        .toBe(1);
+      await waitFor(() =>
+        expect(langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__item').length).toBe(1),
+      );
     });
   });
 
@@ -113,9 +114,9 @@ describe('<clippy-language-changes>', () => {
       await contextEl.updateComplete;
       langChanges.requestUpdate();
 
-      await expect
-        .poll(() => langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__doc-label').length)
-        .toBeGreaterThan(0);
+      await waitFor(() =>
+        expect(langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__doc-label').length).toBeGreaterThan(0),
+      );
       expect(
         langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__doc-label')[0]?.textContent?.trim(),
       ).toContain('(documenttaal)');
@@ -127,11 +128,11 @@ describe('<clippy-language-changes>', () => {
       const shortText = 'Short text';
       const { langChanges } = await setupWithContent(`<h1>Titel</h1><p lang="en">${shortText}</p>`);
 
-      await expect
-        .poll(() =>
+      await waitFor(() =>
+        expect(
           langChanges.shadowRoot?.querySelector('.clippy-language-changes__item .nl-link')?.textContent?.trim(),
-        )
-        .toBe(shortText);
+        ).toBe(shortText),
+      );
       expect(
         langChanges.shadowRoot?.querySelector('.clippy-language-changes__item .nl-link')?.textContent,
       ).not.toContain('…');
@@ -141,9 +142,11 @@ describe('<clippy-language-changes>', () => {
       const longText = 'This text is definitely longer than twenty characters.';
       const { langChanges } = await setupWithContent(`<h1>Titel</h1><p lang="en">${longText}</p>`);
 
-      await expect
-        .poll(() => langChanges.shadowRoot?.querySelector('.clippy-language-changes__item .nl-link')?.textContent)
-        .toContain('…');
+      await waitFor(() =>
+        expect(
+          langChanges.shadowRoot?.querySelector('.clippy-language-changes__item .nl-link')?.textContent,
+        ).toContain('…'),
+      );
 
       const content =
         langChanges.shadowRoot?.querySelector('.clippy-language-changes__item .nl-link')?.textContent ?? '';
@@ -154,11 +157,11 @@ describe('<clippy-language-changes>', () => {
     it('shows "(leeg)" when the language-annotated block is empty', async () => {
       const { langChanges } = await setupWithContent('<h1>Titel</h1><p lang="en"></p>');
 
-      await expect
-        .poll(() =>
+      await waitFor(() =>
+        expect(
           langChanges.shadowRoot?.querySelector('.clippy-language-changes__item .nl-link')?.textContent?.trim(),
-        )
-        .toContain('(leeg)');
+        ).toContain('(leeg)'),
+      );
     });
   });
 });

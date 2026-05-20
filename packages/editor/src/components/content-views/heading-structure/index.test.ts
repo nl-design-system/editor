@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import type { ValidationsMap } from '../../../types/validation.ts';
 import type { Context } from '../../context';
@@ -131,7 +132,7 @@ describe('<clippy-heading-structure>', () => {
       const { contextEl, headingStructure } = await setupWithContent('<h1>Titel</h1>');
 
       // Build a range that intersects the heading element in the editor DOM
-      await expect.poll(() => contextEl.editor?.view?.dom?.querySelector('h1')).not.toBeNull();
+      await waitFor(() => expect(contextEl.editor?.view?.dom?.querySelector('h1')).not.toBeNull());
       const headingEl = contextEl.editor!.view.dom.querySelector('h1')!;
       const headingRange = document.createRange();
       headingRange.selectNode(headingEl);
