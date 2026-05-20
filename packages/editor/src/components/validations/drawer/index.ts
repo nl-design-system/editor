@@ -90,16 +90,20 @@ export class ValidationsDialog extends LitElement {
     this.open = !this.open;
   };
 
-  readonly #focusNode = (event: CustomEventInit<{ pos: number }>) => {
-    const { pos = 0 } = event.detail || {};
+  readonly #focusNode = (event: CustomEventInit<{ range: Range }>) => {
+    const { range } = event.detail || {};
 
     if (this.open) {
       this.#dialogRef.value?.close();
       this.open = false;
     }
-    // Set a text selection inside the node content (pos + 1 moves past the node's opening
-    // token) so that isNodeActive correctly identifies the active format in toolbar-format-select.
-    this.editor?.commands.focus(pos + 1, { scrollIntoView: true });
+
+    if (!range) return;
+
+    const selection = globalThis.getSelection();
+    if (selection) {
+      selection.collapse(range.startContainer, range.startOffset);
+    }
   };
 
   readonly #focusValidationItem = async (event: CustomEventInit<{ range: Range; identifier: string }>) => {
