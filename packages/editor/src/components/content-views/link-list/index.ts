@@ -49,10 +49,10 @@ export class LinkList extends LitElement {
   validationsMap?: ValidationsMap;
 
   get #links(): LinkEntry[] {
-    const { editor } = this;
-    if (!editor) return [];
+    if (!this.editor) return [];
     const links: LinkEntry[] = [];
-    editor.state.doc.descendants((node, pos) => {
+    const { view } = this.editor;
+    this.editor.state.doc.descendants((node, pos) => {
       if (!node.isText) return;
       const linkMark = node.marks.find((mark) => mark.type.name === 'link');
       if (!linkMark) return;
@@ -63,7 +63,7 @@ export class LinkList extends LitElement {
       if (last?.href === href && last.pos + last.text.length === pos) {
         last.text += text;
       } else {
-        const nodeDom = editor.view?.domAtPos(pos).node ?? null;
+        const nodeDom = view?.domAtPos(pos).node ?? null;
         const linkElement = nodeDom instanceof Text ? nodeDom.parentElement : (nodeDom as Element | null);
         links.push({
           href,
