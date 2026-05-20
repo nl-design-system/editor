@@ -64,25 +64,13 @@ export class ValidationItem extends LitElement {
 
   readonly #focusNode = () => {
     if (!this.range) return;
-    const container = this.range.startContainer;
-    const node = container instanceof Text ? container.parentElement : (container as Element);
-    if (!node) return;
-    if (this.editor) {
-      try {
-        const pos = this.editor.view.posAtDOM(node, 0);
-        this.dispatchEvent(
-          new CustomEvent(CustomEvents.FOCUS_NODE, {
-            bubbles: true,
-            composed: true,
-            detail: { pos },
-          }),
-        );
-        return;
-      } catch {
-        // fall through to DOM scroll
-      }
-    }
-    node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    this.dispatchEvent(
+      new CustomEvent(CustomEvents.FOCUS_NODE, {
+        bubbles: true,
+        composed: true,
+        detail: { range: this.range },
+      }),
+    );
   };
 
   readonly #applyFix = () => {
