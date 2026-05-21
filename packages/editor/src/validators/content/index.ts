@@ -196,12 +196,12 @@ const contentValidator = (
         errors.set(result.range, result);
       }
     }
-    for (const child of Array.from(element.children)) {
+    for (const child of element.children) {
       walk(child);
     }
   };
 
-  for (const child of Array.from(root.children)) {
+  for (const child of root.children) {
     walk(child);
   }
 

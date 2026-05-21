@@ -20,7 +20,7 @@ const getElementRange = (element: Element): Range | undefined => {
 const getParagraphLinesFromDOM = (paragraph: Element): string[] => {
   const lines: string[] = [];
   let current = '';
-  for (const node of Array.from(paragraph.childNodes)) {
+  for (const node of paragraph.childNodes) {
     if (node instanceof Element && node.tagName === 'BR') {
       if (current.trim().length > 0) lines.push(current);
       current = '';
@@ -148,7 +148,7 @@ export const documentMustHaveTopLevelHeadingOne = (dom: HTMLElement, settings?: 
 const documentShouldNotHaveHeadingResemblingParagraphs = (dom: HTMLElement): ValidationResult[] => {
   const errors: ValidationResult[] = [];
 
-  for (const child of Array.from(dom.children)) {
+  for (const child of dom.children) {
     if (child.tagName !== 'P') continue;
     const text = child.textContent?.trim() ?? '';
     if (text.length === 0 || text.length > 60) continue;
