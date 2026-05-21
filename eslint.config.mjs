@@ -4,6 +4,7 @@ import nlDesignSystemConfig from '@nl-design-system/eslint-config/configs/nl-des
 import prettier from 'eslint-config-prettier';
 import perfectionist from 'eslint-plugin-perfectionist';
 import react from 'eslint-plugin-react';
+import sonarjs from 'eslint-plugin-sonarjs';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 
@@ -71,6 +72,14 @@ export default defineConfig([
     plugins: { react },
     ...react.configs.flat.recommended,
     ...react.configs.flat['jsx-runtime'],
+  },
+  {
+    name: 'eslint-plugin-sonarjs',
+    files: ['**/*.{js,cjs,mjs,jsx,ts,tsx}'],
+    ...sonarjs.configs.recommended,
+    rules: {
+      'sonarjs/todo-tag': 0,
+    },
   },
   {
     // Minor override for Stencil files that import `h` but do not use it so allow this
