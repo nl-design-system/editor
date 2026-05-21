@@ -132,7 +132,30 @@ const headingShouldNotContainBoldOrItalic: ContentValidator = (_dom, node) => {
   if (!/^H[1-6]$/.test(node.tagName)) return null;
   if (!node.querySelector('strong, b, em, i')) return null;
   return {
-    correct: () => {},
+    correct: () => {
+      // Select the heading's inner content via a Range
+      const contentRange = document.createRange();
+      contentRange.selectNodeContents(node);
+
+      // Clone into a fragment and strip bold/italic (innermost first)
+      const fragment = contentRange.cloneContents();
+      const elements = Array.from(fragment.querySelectorAll('strong, b, em, i')).reverse();
+      for (const el of elements) {
+        el.replaceWith(...Array.from(el.childNodes));
+      }
+
+      // Swap out the live content with the stripped fragment
+      contentRange.deleteContents();
+      contentRange.insertNode(fragment);
+
+      // Place the cursor at the beginning of the updated range
+      contentRange.collapse(true);
+      const selection = globalThis.getSelection();
+      if (selection) {
+        selection.removeAllRanges();
+        selection.addRange(contentRange);
+      }
+    },
     range: getElementRange(node),
     scope: 'element',
     severity: validationSeverity.INFO,
