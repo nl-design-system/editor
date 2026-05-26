@@ -34,6 +34,8 @@ const getParagraphLinesFromDOM = (paragraph: Element): string[] => {
 
 const decrement = (prefix: string): string => (prefix.startsWith('2') ? prefix.replace('2', '1') : prefix);
 
+const getPrefix = (text: string): string => text.substring(0, 2);
+
 // ── Document validators ───────────────────────────────────────────────────────
 
 export const documentMustHaveCorrectHeadingOrder = (
@@ -79,7 +81,7 @@ export const documentMustHaveSemanticLists = (dom: HTMLElement): ValidationResul
 
   for (const [index, paragraph] of paragraphs.entries()) {
     const text = paragraph.textContent ?? '';
-    const firstPrefix = text.substring(0, 2);
+    const firstPrefix = getPrefix(text);
     const isOrdered = orderedListIndicator.test(firstPrefix);
     const isUnordered = unorderedListIndicator.test(firstPrefix);
 
@@ -87,7 +89,7 @@ export const documentMustHaveSemanticLists = (dom: HTMLElement): ValidationResul
 
     const nextParagraph = paragraphs[index + 1];
     if (nextParagraph) {
-      const secondPrefix = (nextParagraph.textContent ?? '').substring(0, 2);
+      const secondPrefix = getPrefix(nextParagraph.textContent ?? '');
       if (decrement(secondPrefix) === firstPrefix) {
         errors.push({
           correct: () => {},
@@ -101,7 +103,7 @@ export const documentMustHaveSemanticLists = (dom: HTMLElement): ValidationResul
     }
 
     const lines = getParagraphLinesFromDOM(paragraph);
-    if (lines.length > 1 && firstPrefix === decrement(lines[1]?.substring(0, 2) ?? '')) {
+    if (lines.length > 1 && firstPrefix === decrement(getPrefix(lines[1] ?? ''))) {
       errors.push({
         correct: () => {},
         range: getElementRange(paragraph),
