@@ -86,6 +86,7 @@ export class Gutter extends LitElement {
     );
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
     globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
+    this.editor?.off('create', this.#attachResizeObserver);
   }
 
   readonly #attachResizeObserver = () => {
