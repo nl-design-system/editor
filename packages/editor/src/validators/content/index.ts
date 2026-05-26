@@ -1,8 +1,6 @@
 import type { ContentValidator, ValidationResult } from '@/types/validation.ts';
 import { contentValidations, validationSeverity } from '@/constants';
-
-const EMPTY_STR_REGEX = /^\s*$/;
-const isEmptyOrWhitespace = (text: string): boolean => EMPTY_STR_REGEX.test(text);
+import { isEmptyOrWhitespace } from '@/validators/helpers.ts';
 
 /** Parse an HTML string into a wrapper element, or return the element as-is. */
 const parseContent = (content: string | HTMLElement): HTMLElement => {

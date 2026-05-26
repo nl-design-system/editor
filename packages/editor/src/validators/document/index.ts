@@ -3,6 +3,7 @@ import type { EditorSettings } from '@/types/settings.ts';
 import type { DocumentValidator, ValidationResult } from '@/types/validation.ts';
 import { documentValidations, validationSeverity } from '@/constants';
 import { orderedListIndicator, unorderedListIndicator } from '@/correctors/helpers.ts';
+import { isEmptyOrWhitespace } from '@/validators/helpers.ts';
 
 // ── DOM utilities ─────────────────────────────────────────────────────────────
 
@@ -47,7 +48,7 @@ export const documentMustHaveCorrectHeadingOrder = (
   let precedingHeadingLevel = topHeadingLevel;
 
   dom.querySelectorAll<HTMLHeadingElement>('h1, h2, h3, h4, h5, h6').forEach((heading) => {
-    const headingLevel = parseInt(heading.tagName.slice(1), 10) as Level;
+    const headingLevel = Number.parseInt(heading.tagName.slice(1), 10) as Level;
 
     if (headingLevel < topHeadingLevel) {
       errors.push({
@@ -153,7 +154,7 @@ const documentShouldNotHaveHeadingResemblingParagraphs = (dom: HTMLElement): Val
   for (const child of dom.children) {
     if (child.tagName !== 'P') continue;
     const text = child.textContent?.trim() ?? '';
-    if (text.length === 0 || text.length > 60) continue;
+    if (isEmptyOrWhitespace(text) || text.length > 60) continue;
 
     const nonEmptyChildren = Array.from(child.childNodes).filter(
       (n) => n.nodeType !== Node.TEXT_NODE || (n.textContent?.trim().length ?? 0) > 0,

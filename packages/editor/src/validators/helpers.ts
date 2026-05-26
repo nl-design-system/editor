@@ -3,6 +3,9 @@ import type { Mark } from 'prosemirror-model';
 
 const MIN_GUTTER_ITEM_HEIGHT = 8;
 
+const EMPTY_STR_REGEX = /^\s*$/;
+export const isEmptyOrWhitespace = (text: string): boolean => EMPTY_STR_REGEX.test(text);
+
 export const getNodeBoundingBox = (editor: Editor, pos: number): { top: number; height: number } | null => {
   const domNode = editor.view.nodeDOM(pos);
   if (domNode instanceof HTMLElement) {
