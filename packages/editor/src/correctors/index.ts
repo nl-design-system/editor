@@ -2,7 +2,7 @@ import type { Editor } from '@tiptap/core';
 import type { Level } from '@tiptap/extension-heading';
 import type { ImageUpload } from '@/types/image.ts';
 import type { CorrectValidationFunction } from '@/types/validation.ts';
-import { contentValidations, documentValidations } from '@/constants';
+import { elementValidations, inlineValidations, documentValidations } from '@/constants';
 import { CustomEvents } from '@/events';
 import {
   buildListItemsFromParagraph,
@@ -274,22 +274,25 @@ export const correctDefinitionTermMissingDescription =
 
 export const documentCorrectorMap = {
   [documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: correctHeadingLevel,
-  [documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS]: correctConvertToList,
   [documentValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE]: correctDuplicateHeadingOne,
-  [documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_HEADINGS]: correctTableMissingHeadings,
-  [documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_MULTIPLE_ROWS]: correctTableMissingRows,
   [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE]: correctMissingTopLevelHeading,
-  [documentValidations.DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS]: correctHeadingResemblingParagraph,
 } as const;
 
-export const contentCorrectorMap = {
-  [contentValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM]: correctDefinitionTermMissingDescription,
-  [contentValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM]: correctDefinitionListMissingTerm,
-  [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: correctEmptyHeading,
-  [contentValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: correctHeadingWithFormatting,
-  [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: correctImageMissingAltText,
-  [contentValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC]: correctGenericLinkText,
-  [contentValidations.MARK_SHOULD_NOT_BE_EMPTY]: correctEmptyMark,
-  [contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED]: correctUnderlinedMark,
-  [contentValidations.NODE_SHOULD_NOT_BE_EMPTY]: correctEmptyNode,
+export const elementCorrectorMap = {
+  [elementValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM]: correctDefinitionTermMissingDescription,
+  [elementValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM]: correctDefinitionListMissingTerm,
+  [elementValidations.HEADING_MUST_NOT_BE_EMPTY]: correctEmptyHeading,
+  [elementValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: correctHeadingWithFormatting,
+  [elementValidations.IMAGE_MUST_HAVE_ALT_TEXT]: correctImageMissingAltText,
+  [elementValidations.NODE_SHOULD_NOT_BE_EMPTY]: correctEmptyNode,
+  [elementValidations.PARAGRAPH_MUST_USE_SEMANTIC_LIST]: correctConvertToList,
+  [elementValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING]: correctHeadingResemblingParagraph,
+  [elementValidations.TABLE_MUST_HAVE_HEADINGS]: correctTableMissingHeadings,
+  [elementValidations.TABLE_MUST_HAVE_MULTIPLE_ROWS]: correctTableMissingRows,
+} as const;
+
+export const inlineCorrectorMap = {
+  [inlineValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC]: correctGenericLinkText,
+  [inlineValidations.MARK_SHOULD_NOT_BE_EMPTY]: correctEmptyMark,
+  [inlineValidations.MARK_SHOULD_NOT_BE_UNDERLINED]: correctUnderlinedMark,
 } as const;
