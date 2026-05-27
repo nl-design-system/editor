@@ -10,7 +10,7 @@ const allByKey = (map: Map<Range, ValidationResult>, key: string): ValidationRes
   [...map.values()].filter((v) => v.validatorKey === key);
 
 describe('Inline validations', () => {
-  describe('Empty marks', () => {
+  describe('Empty elements', () => {
     describe.each([
       { html: '<b>&nbsp;</b>', nodeType: 'bold' },
       { html: '<strong>&nbsp;</strong>', nodeType: 'bold' },
@@ -44,16 +44,16 @@ describe('Inline validations', () => {
     });
 
     it.each([
-      { description: 'bold mark with text', html: '<b>text</b>', markName: 'bold' },
-      { description: 'strong element with text', html: '<strong>text</strong>', markName: 'bold' },
-      { description: 'italic mark with text', html: '<i>text</i>', markName: 'italic' },
-      { description: 'emphasis element with text', html: '<em>text</em>', markName: 'italic' },
-      { description: 'strikethrough mark with text', html: '<s>text</s>', markName: 'strike' },
-      { description: 'del element with text', html: '<del>text</del>', markName: 'strike' },
-      { description: 'underline mark with text', html: '<u>text</u>', markName: 'underline' },
-      { description: 'highlight mark with text', html: '<mark>text</mark>', markName: 'highlight' },
-      { description: 'link with text', html: '<a href="https://example.com">Link text</a>', markName: 'link' },
-      { description: 'code mark with text', html: '<code>code text</code>', markName: 'code' },
+      { description: 'bold element with text', html: '<b>text</b>' },
+      { description: 'strong element with text', html: '<strong>text</strong>' },
+      { description: 'italic element with text', html: '<i>text</i>' },
+      { description: 'emphasis element with text', html: '<em>text</em>' },
+      { description: 'strikethrough element with text', html: '<s>text</s>' },
+      { description: 'del element with text', html: '<del>text</del>' },
+      { description: 'underline element with text', html: '<u>text</u>' },
+      { description: 'mark element with text', html: '<mark>text</mark>' },
+      { description: 'link with text', html: '<a href="https://example.com">Link text</a>' },
+      { description: 'code element with text', html: '<code>code text</code>' },
     ])('should not flag non-empty $description', async ({ html }) => {
       const callback = vi.fn();
       await createTestEditor(`<h1>Title</h1><p>Text with ${html} here</p>`, callback);
@@ -66,7 +66,7 @@ describe('Inline validations', () => {
       expect(byKey(validationMap, inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY)).toBeUndefined();
     });
 
-    it('should detect multiple empty marks in the same document', async () => {
+    it('should detect multiple empty elements in the same document', async () => {
       const callback = vi.fn();
       await createTestEditor(
         `<h1>Title</h1>
@@ -87,7 +87,7 @@ describe('Inline validations', () => {
       expect(emptyInlineErrors).toHaveLength(4);
     });
 
-    it('should detect empty marks even when nested', async () => {
+    it('should detect empty elements even when nested', async () => {
       const callback = vi.fn();
       await createTestEditor(`<h1>Title</h1><p>Nested: <b><i>&nbsp;</i></b></p>`, callback);
 
