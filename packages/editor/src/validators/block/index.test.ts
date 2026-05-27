@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { ValidationResult } from '../../types/validation.ts';
 import { createTestEditor } from '../../../test/createTestEditor';
-import { elementValidations } from '../../constants';
+import { blockValidations } from '../../constants';
 import { paragraphMustUseSemanticList } from './index';
 
 const byKey = (map: Map<Range, ValidationResult>, key: string): ValidationResult | undefined =>
@@ -10,7 +10,7 @@ const byKey = (map: Map<Range, ValidationResult>, key: string): ValidationResult
 const allByKey = (map: Map<Range, ValidationResult>, key: string): ValidationResult[] =>
   [...map.values()].filter((v) => v.validatorKey === key);
 
-describe('Element validations', () => {
+describe('Block validations', () => {
   describe('Headings', () => {
     it('returns the ValidationMap after Editor.onCreated', async () => {
       const callback = vi.fn();
@@ -26,7 +26,7 @@ describe('Element validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      expect(byKey(mapArg, elementValidations.HEADING_MUST_NOT_BE_EMPTY)).toBeDefined();
+      expect(byKey(mapArg, blockValidations.HEADING_MUST_NOT_BE_EMPTY)).toBeDefined();
     });
   });
 
@@ -44,7 +44,7 @@ describe('Element validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      expect(byKey(mapArg, elementValidations.PARAGRAPH_MUST_USE_SEMANTIC_LIST)).toBeDefined();
+      expect(byKey(mapArg, blockValidations.PARAGRAPH_MUST_USE_SEMANTIC_LIST)).toBeDefined();
     });
 
     it('returns errors for potential lists', async () => {
@@ -131,15 +131,15 @@ describe('Element validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       const thEntry =
-        byKey(mapArg, elementValidations.NODE_SHOULD_NOT_BE_EMPTY + '') &&
+        byKey(mapArg, blockValidations.NODE_SHOULD_NOT_BE_EMPTY + '') &&
         [...mapArg.values()].find(
           (v) =>
-            v.validatorKey === elementValidations.NODE_SHOULD_NOT_BE_EMPTY &&
+            v.validatorKey === blockValidations.NODE_SHOULD_NOT_BE_EMPTY &&
             v.tipPayload?.['nodeType'] === 'tableHeader',
         );
       const tdEntry = [...mapArg.values()].find(
         (v) =>
-          v.validatorKey === elementValidations.NODE_SHOULD_NOT_BE_EMPTY && v.tipPayload?.['nodeType'] === 'tableCell',
+          v.validatorKey === blockValidations.NODE_SHOULD_NOT_BE_EMPTY && v.tipPayload?.['nodeType'] === 'tableCell',
       );
       expect(thEntry).toBeDefined();
       expect(tdEntry).toBeDefined();
@@ -168,7 +168,7 @@ describe('Element validations', () => {
         callback,
       );
       expect(
-        byKey(callback.mock.calls[0][0], elementValidations.NODE_SHOULD_NOT_BE_EMPTY)?.tipPayload?.['nodeType'],
+        byKey(callback.mock.calls[0][0], blockValidations.NODE_SHOULD_NOT_BE_EMPTY)?.tipPayload?.['nodeType'],
       ).toBe('tableCaption');
     });
   });
@@ -232,7 +232,7 @@ describe('Element validations', () => {
       const validationMap = callback.mock.calls[0][0];
       expect(validationMap).toBeInstanceOf(Map);
 
-      const validation = byKey(validationMap, elementValidations.NODE_SHOULD_NOT_BE_EMPTY);
+      const validation = byKey(validationMap, blockValidations.NODE_SHOULD_NOT_BE_EMPTY);
 
       expect(validation).toBeDefined();
       expect(validation!.severity).toBe('info');
@@ -256,7 +256,7 @@ describe('Element validations', () => {
       });
 
       const validationMap = callback.mock.calls[0][0];
-      expect(byKey(validationMap, elementValidations.NODE_SHOULD_NOT_BE_EMPTY)).toBeUndefined();
+      expect(byKey(validationMap, blockValidations.NODE_SHOULD_NOT_BE_EMPTY)).toBeUndefined();
     });
 
     it('should detect multiple empty nodes in the same document', async () => {
@@ -287,7 +287,7 @@ describe('Element validations', () => {
       });
 
       const validationMap = callback.mock.calls[0][0];
-      const emptyNodeErrors = allByKey(validationMap, elementValidations.NODE_SHOULD_NOT_BE_EMPTY);
+      const emptyNodeErrors = allByKey(validationMap, blockValidations.NODE_SHOULD_NOT_BE_EMPTY);
       expect(emptyNodeErrors.length).toBeGreaterThan(0);
     });
   });
@@ -300,7 +300,7 @@ describe('Element validations', () => {
         callback,
       );
       await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
-      expect(byKey(callback.mock.calls[0][0], elementValidations.TABLE_MUST_HAVE_HEADINGS)).toBeUndefined();
+      expect(byKey(callback.mock.calls[0][0], blockValidations.TABLE_MUST_HAVE_HEADINGS)).toBeUndefined();
     });
 
     it('returns no errors for table with header column', async () => {
@@ -310,7 +310,7 @@ describe('Element validations', () => {
         callback,
       );
       await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
-      expect(byKey(callback.mock.calls[0][0], elementValidations.TABLE_MUST_HAVE_HEADINGS)).toBeUndefined();
+      expect(byKey(callback.mock.calls[0][0], blockValidations.TABLE_MUST_HAVE_HEADINGS)).toBeUndefined();
     });
 
     it('returns warning for table without header cells', async () => {
@@ -320,14 +320,14 @@ describe('Element validations', () => {
         callback,
       );
       await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
-      expect(byKey(callback.mock.calls[0][0], elementValidations.TABLE_MUST_HAVE_HEADINGS)?.severity).toBe('warning');
+      expect(byKey(callback.mock.calls[0][0], blockValidations.TABLE_MUST_HAVE_HEADINGS)?.severity).toBe('warning');
     });
 
     it('returns warning for table with a single row', async () => {
       const callback = vi.fn();
       await createTestEditor(`<h1>Title</h1><table><tbody><tr><td>C1</td><td>C2</td></tr></tbody></table>`, callback);
       await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
-      expect(byKey(callback.mock.calls[0][0], elementValidations.TABLE_MUST_HAVE_MULTIPLE_ROWS)?.severity).toBe(
+      expect(byKey(callback.mock.calls[0][0], blockValidations.TABLE_MUST_HAVE_MULTIPLE_ROWS)?.severity).toBe(
         'warning',
       );
     });
@@ -339,7 +339,7 @@ describe('Element validations', () => {
         callback,
       );
       await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
-      expect(byKey(callback.mock.calls[0][0], elementValidations.TABLE_MUST_HAVE_MULTIPLE_ROWS)).toBeUndefined();
+      expect(byKey(callback.mock.calls[0][0], blockValidations.TABLE_MUST_HAVE_MULTIPLE_ROWS)).toBeUndefined();
     });
   });
 
@@ -348,7 +348,7 @@ describe('Element validations', () => {
       const callback = vi.fn();
       await createTestEditor(`<h1>Title</h1><p><strong>Short bold text</strong></p>`, callback);
       await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
-      expect(byKey(callback.mock.calls[0][0], elementValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING)?.severity).toBe(
+      expect(byKey(callback.mock.calls[0][0], blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING)?.severity).toBe(
         'info',
       );
     });
@@ -357,9 +357,7 @@ describe('Element validations', () => {
       const callback = vi.fn();
       await createTestEditor(`<h1>Title</h1><p>Some <strong>bold</strong> and plain text</p>`, callback);
       await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
-      expect(
-        byKey(callback.mock.calls[0][0], elementValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING),
-      ).toBeUndefined();
+      expect(byKey(callback.mock.calls[0][0], blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING)).toBeUndefined();
     });
 
     it('does not flag a long all-bold paragraph', async () => {
@@ -369,9 +367,7 @@ describe('Element validations', () => {
         callback,
       );
       await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
-      expect(
-        byKey(callback.mock.calls[0][0], elementValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING),
-      ).toBeUndefined();
+      expect(byKey(callback.mock.calls[0][0], blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING)).toBeUndefined();
     });
   });
 
@@ -381,7 +377,7 @@ describe('Element validations', () => {
       await createTestEditor(`<h1>Title</h1><h2><strong>Bold heading</strong></h2>`, callback);
       await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
       expect(
-        byKey(callback.mock.calls[0][0], elementValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC)?.severity,
+        byKey(callback.mock.calls[0][0], blockValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC)?.severity,
       ).toBe('info');
     });
 
@@ -390,7 +386,7 @@ describe('Element validations', () => {
       await createTestEditor(`<h1>Title</h1><h2><em>Italic heading</em></h2>`, callback);
       await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
       expect(
-        byKey(callback.mock.calls[0][0], elementValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC)?.severity,
+        byKey(callback.mock.calls[0][0], blockValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC)?.severity,
       ).toBe('info');
     });
 
@@ -399,7 +395,7 @@ describe('Element validations', () => {
       await createTestEditor(`<h1>Title</h1><h2>Plain heading</h2>`, callback);
       await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
       expect(
-        byKey(callback.mock.calls[0][0], elementValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC),
+        byKey(callback.mock.calls[0][0], blockValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC),
       ).toBeUndefined();
     });
   });
@@ -409,14 +405,14 @@ describe('Element validations', () => {
       const callback = vi.fn();
       await createTestEditor(`<h1>Title</h1><p><img src="https://example.com/img.jpg" /></p>`, callback);
       await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
-      expect(byKey(callback.mock.calls[0][0], elementValidations.IMAGE_MUST_HAVE_ALT_TEXT)?.severity).toBe('info');
+      expect(byKey(callback.mock.calls[0][0], blockValidations.IMAGE_MUST_HAVE_ALT_TEXT)?.severity).toBe('info');
     });
 
     it('flags an image with an empty alt attribute', async () => {
       const callback = vi.fn();
       await createTestEditor(`<h1>Title</h1><p><img src="https://example.com/img.jpg" alt="" /></p>`, callback);
       await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
-      expect(byKey(callback.mock.calls[0][0], elementValidations.IMAGE_MUST_HAVE_ALT_TEXT)?.severity).toBe('info');
+      expect(byKey(callback.mock.calls[0][0], blockValidations.IMAGE_MUST_HAVE_ALT_TEXT)?.severity).toBe('info');
     });
 
     it('does not flag an image with a descriptive alt attribute', async () => {
@@ -426,7 +422,7 @@ describe('Element validations', () => {
         callback,
       );
       await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
-      expect(byKey(callback.mock.calls[0][0], elementValidations.IMAGE_MUST_HAVE_ALT_TEXT)).toBeUndefined();
+      expect(byKey(callback.mock.calls[0][0], blockValidations.IMAGE_MUST_HAVE_ALT_TEXT)).toBeUndefined();
     });
   });
 });

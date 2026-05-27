@@ -55,7 +55,7 @@ describe('Document validations', () => {
         {
           correct: expect.any(Function),
           range: expect.any(Object),
-          scope: 'element',
+          scope: 'block',
           severity: 'warning',
           tipPayload: {
             headingLevel: 3,
@@ -83,7 +83,7 @@ describe('Document validations', () => {
         {
           correct: expect.any(Function),
           range: expect.any(Object),
-          scope: 'element',
+          scope: 'block',
           severity: 'error',
           tipPayload: {
             headingLevel: 1,
@@ -94,7 +94,7 @@ describe('Document validations', () => {
         {
           correct: expect.any(Function),
           range: expect.any(Object),
-          scope: 'element',
+          scope: 'block',
           severity: 'warning',
           tipPayload: {
             headingLevel: 4,
@@ -178,7 +178,7 @@ describe('Document validations', () => {
       expect(byKey(mapArg, 'document-must-have-top-level-heading')).toEqual({
         correct: expect.any(Function),
         range: expect.any(Object),
-        scope: 'element',
+        scope: 'block',
         severity: 'info',
         validatorKey: 'document-must-have-top-level-heading',
       });

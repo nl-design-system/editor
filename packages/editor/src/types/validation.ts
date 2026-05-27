@@ -9,7 +9,7 @@ export type ValidationEntry = readonly [range: Range, value: ValidationResult];
 
 export type CorrectValidationFunction = (editor: Editor) => void;
 
-export type ValidationScope = 'element' | 'inline';
+export type ValidationScope = 'block' | 'inline';
 
 export type ValidationResult = {
   validatorKey?: string;

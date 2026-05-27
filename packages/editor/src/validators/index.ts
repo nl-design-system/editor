@@ -1,7 +1,7 @@
 import type { EditorSettings } from '@/types/settings.ts';
 import type { ContentValidator, DocumentValidator, ValidationResult } from '@/types/validation.ts';
+import { blockValidatorMap } from '@/validators/block';
 import { documentValidatorObject } from '@/validators/document';
-import { elementValidatorMap } from '@/validators/element';
 import { inlineValidatorMap } from '@/validators/inline';
 import { debounce } from '../utils/debounce.ts';
 
@@ -40,7 +40,7 @@ export const runValidation = (
 
   // Pre-compute active validators once — avoids re-filtering on every node during the walk
   const activeDocumentValidators = getActiveValidators<DocumentValidator>(documentValidatorObject, settings);
-  const activeElementValidators = getActiveValidators<ContentValidator>(elementValidatorMap, settings);
+  const activeBlockValidators = getActiveValidators<ContentValidator>(blockValidatorMap, settings);
   const activeInlineValidators = getActiveValidators<ContentValidator>(inlineValidatorMap, settings);
 
   // Run document-level validators (each does its own internal DOM queries)
@@ -57,9 +57,9 @@ export const runValidation = (
     }
   }
 
-  // Single depth-first DOM walk for element and inline validators
+  // Single depth-first DOM walk for block and inline validators
   const walk = (element: Element): void => {
-    for (const [key, validator] of activeElementValidators) {
+    for (const [key, validator] of activeBlockValidators) {
       const result = validator(dom, element);
       if (result?.range) {
         result.validatorKey = key;
@@ -83,7 +83,7 @@ export const runValidation = (
       walk(child);
     }
   } catch (err) {
-    console.error('Element/inline validator error:', err);
+    console.error('Block/inline validator error:', err);
   }
 
   callback(resultMap);

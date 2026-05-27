@@ -4,7 +4,7 @@ export const documentValidations = {
   DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE: 'document-must-have-top-level-heading',
 } as const;
 
-export const elementValidations = {
+export const blockValidations = {
   DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM: 'definition-description-must-follow-term',
   DESCRIPTION_LIST_MUST_CONTAIN_TERM: 'description-list-must-contain-term',
   HEADING_MUST_NOT_BE_EMPTY: 'heading-must-not-be-empty',
@@ -18,9 +18,9 @@ export const elementValidations = {
 } as const;
 
 export const inlineValidations = {
+  INLINE_SHOULD_NOT_BE_EMPTY: 'mark-should-not-be-empty',
+  INLINE_SHOULD_NOT_BE_UNDERLINED: 'mark-should-not-be-underlined',
   LINK_SHOULD_NOT_BE_TOO_GENERIC: 'link-should-not-be-too-generic',
-  MARK_SHOULD_NOT_BE_EMPTY: 'mark-should-not-be-empty',
-  MARK_SHOULD_NOT_BE_UNDERLINED: 'mark-should-not-be-underlined',
 } as const;
 
 export const validationSeverity = {

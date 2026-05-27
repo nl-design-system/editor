@@ -21,7 +21,7 @@ export const documentMustHaveCorrectHeadingOrder = (
       errors.push({
         correct: () => {},
         range: getElementRange(heading),
-        scope: 'element',
+        scope: 'block',
         severity: validationSeverity.ERROR,
         tipPayload: { headingLevel, precedingHeadingLevel, topHeadingLevel },
       });
@@ -31,7 +31,7 @@ export const documentMustHaveCorrectHeadingOrder = (
       errors.push({
         correct: () => {},
         range: getElementRange(heading),
-        scope: 'element',
+        scope: 'block',
         severity: validationSeverity.WARNING,
         tipPayload: { headingLevel, precedingHeadingLevel, topHeadingLevel },
       });
@@ -50,7 +50,7 @@ export const documentMustHaveSingleHeadingOne = (dom: HTMLElement): ValidationRe
   return h1s.slice(1).map((h1) => ({
     correct: () => {},
     range: getElementRange(h1),
-    scope: 'element' as const,
+    scope: 'block' as const,
     severity: validationSeverity.ERROR,
   }));
 };
@@ -67,7 +67,7 @@ export const documentMustHaveTopLevelHeadingOne = (dom: HTMLElement, settings?: 
     {
       correct: () => {},
       range: getElementRange(target),
-      scope: 'element',
+      scope: 'block',
       severity: validationSeverity.INFO,
     },
   ];

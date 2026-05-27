@@ -35,7 +35,7 @@ describe('Inline validations', () => {
         const validationMap = callback.mock.calls[0][0];
         expect(validationMap).toBeInstanceOf(Map);
 
-        const validation = byKey(validationMap, inlineValidations.MARK_SHOULD_NOT_BE_EMPTY);
+        const validation = byKey(validationMap, inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY);
 
         expect(validation).toBeDefined();
         expect(validation!.severity).toBe('info');
@@ -63,7 +63,7 @@ describe('Inline validations', () => {
       });
 
       const validationMap = callback.mock.calls[0][0];
-      expect(byKey(validationMap, inlineValidations.MARK_SHOULD_NOT_BE_EMPTY)).toBeUndefined();
+      expect(byKey(validationMap, inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY)).toBeUndefined();
     });
 
     it('should detect multiple empty marks in the same document', async () => {
@@ -83,8 +83,8 @@ describe('Inline validations', () => {
       });
 
       const validationMap = callback.mock.calls[0][0];
-      const emptyMarkErrors = allByKey(validationMap, inlineValidations.MARK_SHOULD_NOT_BE_EMPTY);
-      expect(emptyMarkErrors).toHaveLength(4);
+      const emptyInlineErrors = allByKey(validationMap, inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY);
+      expect(emptyInlineErrors).toHaveLength(4);
     });
 
     it('should detect empty marks even when nested', async () => {
@@ -96,8 +96,8 @@ describe('Inline validations', () => {
       });
 
       const validationMap = callback.mock.calls[0][0];
-      const emptyMarkErrors = allByKey(validationMap, inlineValidations.MARK_SHOULD_NOT_BE_EMPTY);
-      expect(emptyMarkErrors.length).toBeGreaterThan(0);
+      const emptyInlineErrors = allByKey(validationMap, inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY);
+      expect(emptyInlineErrors.length).toBeGreaterThan(0);
     });
   });
 
@@ -115,7 +115,7 @@ describe('Inline validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      expect(byKey(mapArg, inlineValidations.MARK_SHOULD_NOT_BE_EMPTY)?.tipPayload?.['nodeType']).toBe('link');
+      expect(byKey(mapArg, inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY)?.tipPayload?.['nodeType']).toBe('link');
     });
 
     it('should notify of empty link or generic link', async () => {
@@ -148,7 +148,9 @@ describe('Inline validations', () => {
       await vi.waitFor(() => {
         expect(callback).toHaveBeenCalledTimes(1);
       });
-      expect(byKey(callback.mock.calls[0][0], inlineValidations.MARK_SHOULD_NOT_BE_UNDERLINED)?.severity).toBe('info');
+      expect(byKey(callback.mock.calls[0][0], inlineValidations.INLINE_SHOULD_NOT_BE_UNDERLINED)?.severity).toBe(
+        'info',
+      );
     });
   });
 });

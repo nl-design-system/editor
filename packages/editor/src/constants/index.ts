@@ -1,1 +1,1 @@
-export { documentValidations, elementValidations, inlineValidations, validationSeverity } from './validations.ts';
+export { blockValidations, documentValidations, inlineValidations, validationSeverity } from './validations.ts';

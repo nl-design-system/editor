@@ -1,5 +1,5 @@
 import type { ContentValidator } from '@/types/validation.ts';
-import { elementValidations, validationSeverity } from '@/constants';
+import { blockValidations, validationSeverity } from '@/constants';
 import { orderedListIndicator, unorderedListIndicator } from '@/correctors/helpers.ts';
 import { getElementRange, isEmptyOrWhitespace } from '@/validators/helpers.ts';
 
@@ -45,32 +45,32 @@ const getPrefix = (text: string): string => text.substring(0, 2);
 const definitionDescriptionMustFollowTerm: ContentValidator = (_dom, node) => {
   if (node.tagName !== 'DT') return null;
   if (node.nextElementSibling?.tagName === 'DD') return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'element', severity: validationSeverity.ERROR };
+  return { correct: () => {}, range: getElementRange(node), scope: 'block', severity: validationSeverity.ERROR };
 };
 
 const descriptionListMustContainTerm: ContentValidator = (_dom, node) => {
   if (node.tagName !== 'DL') return null;
   if (node.querySelector('dt')) return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'element', severity: validationSeverity.ERROR };
+  return { correct: () => {}, range: getElementRange(node), scope: 'block', severity: validationSeverity.ERROR };
 };
 
 const headingMustNotBeEmpty: ContentValidator = (_dom, node) => {
   if (!/^H[1-6]$/.test(node.tagName)) return null;
   if (!isEmptyOrWhitespace(node.textContent ?? '')) return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'element', severity: validationSeverity.ERROR };
+  return { correct: () => {}, range: getElementRange(node), scope: 'block', severity: validationSeverity.ERROR };
 };
 
 const headingShouldNotContainBoldOrItalic: ContentValidator = (_dom, node) => {
   if (!/^H[1-6]$/.test(node.tagName)) return null;
   if (!node.querySelector('strong, b, em, i')) return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'element', severity: validationSeverity.INFO };
+  return { correct: () => {}, range: getElementRange(node), scope: 'block', severity: validationSeverity.INFO };
 };
 
 const imageMustHaveAltText: ContentValidator = (_dom, node) => {
   if (node.tagName !== 'IMG') return null;
   const alt = (node as HTMLImageElement).alt;
   if (alt && !isEmptyOrWhitespace(alt)) return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'element', severity: validationSeverity.INFO };
+  return { correct: () => {}, range: getElementRange(node), scope: 'block', severity: validationSeverity.INFO };
 };
 
 const nodeShouldNotBeEmpty: ContentValidator = (_dom, node) => {
@@ -81,7 +81,7 @@ const nodeShouldNotBeEmpty: ContentValidator = (_dom, node) => {
   return {
     correct: () => {},
     range: getElementRange(node),
-    scope: 'element',
+    scope: 'block',
     severity: validationSeverity.INFO,
     tipPayload: { nodeType },
   };
@@ -97,7 +97,7 @@ const paragraphShouldNotResembleHeading: ContentValidator = (_dom, node) => {
   if (nonEmptyChildren.length === 0) return null;
   const allBold = nonEmptyChildren.every((n) => n instanceof Element && (n.tagName === 'STRONG' || n.tagName === 'B'));
   if (!allBold) return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'element', severity: validationSeverity.INFO };
+  return { correct: () => {}, range: getElementRange(node), scope: 'block', severity: validationSeverity.INFO };
 };
 
 export const paragraphMustUseSemanticList: ContentValidator = (_dom, node) => {
@@ -118,7 +118,7 @@ export const paragraphMustUseSemanticList: ContentValidator = (_dom, node) => {
       return {
         correct: () => {},
         range: getElementRange(node),
-        scope: 'element',
+        scope: 'block',
         severity: validationSeverity.INFO,
         tipPayload: { prefix: firstPrefix.trim() },
       };
@@ -131,7 +131,7 @@ export const paragraphMustUseSemanticList: ContentValidator = (_dom, node) => {
     return {
       correct: () => {},
       range: getElementRange(node),
-      scope: 'element',
+      scope: 'block',
       severity: validationSeverity.INFO,
       tipPayload: { prefix: firstPrefix.trim() },
     };
@@ -148,28 +148,28 @@ const tableMustHaveHeadings: ContentValidator = (_dom, node) => {
   const hasHeaderColumn =
     !hasHeaderRow && Array.from(node.querySelectorAll('tr')).every((row) => row.firstElementChild?.tagName === 'TH');
   if (hasHeaderRow || hasHeaderColumn) return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'element', severity: validationSeverity.WARNING };
+  return { correct: () => {}, range: getElementRange(node), scope: 'block', severity: validationSeverity.WARNING };
 };
 
 const tableMustHaveMultipleRows: ContentValidator = (_dom, node) => {
   if (node.tagName !== 'TABLE') return null;
   if (node.querySelectorAll('tr').length >= 2) return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'element', severity: validationSeverity.WARNING };
+  return { correct: () => {}, range: getElementRange(node), scope: 'block', severity: validationSeverity.WARNING };
 };
 
 // ── Validator map ─────────────────────────────────────────────────────────────
 
-type ElementValidationKey = (typeof elementValidations)[keyof typeof elementValidations];
+type BlockValidationKey = (typeof blockValidations)[keyof typeof blockValidations];
 
-export const elementValidatorMap: { [K in ElementValidationKey]: ContentValidator } = {
-  [elementValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM]: definitionDescriptionMustFollowTerm,
-  [elementValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM]: descriptionListMustContainTerm,
-  [elementValidations.HEADING_MUST_NOT_BE_EMPTY]: headingMustNotBeEmpty,
-  [elementValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: headingShouldNotContainBoldOrItalic,
-  [elementValidations.IMAGE_MUST_HAVE_ALT_TEXT]: imageMustHaveAltText,
-  [elementValidations.NODE_SHOULD_NOT_BE_EMPTY]: nodeShouldNotBeEmpty,
-  [elementValidations.PARAGRAPH_MUST_USE_SEMANTIC_LIST]: paragraphMustUseSemanticList,
-  [elementValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING]: paragraphShouldNotResembleHeading,
-  [elementValidations.TABLE_MUST_HAVE_HEADINGS]: tableMustHaveHeadings,
-  [elementValidations.TABLE_MUST_HAVE_MULTIPLE_ROWS]: tableMustHaveMultipleRows,
+export const blockValidatorMap: { [K in BlockValidationKey]: ContentValidator } = {
+  [blockValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM]: definitionDescriptionMustFollowTerm,
+  [blockValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM]: descriptionListMustContainTerm,
+  [blockValidations.HEADING_MUST_NOT_BE_EMPTY]: headingMustNotBeEmpty,
+  [blockValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: headingShouldNotContainBoldOrItalic,
+  [blockValidations.IMAGE_MUST_HAVE_ALT_TEXT]: imageMustHaveAltText,
+  [blockValidations.NODE_SHOULD_NOT_BE_EMPTY]: nodeShouldNotBeEmpty,
+  [blockValidations.PARAGRAPH_MUST_USE_SEMANTIC_LIST]: paragraphMustUseSemanticList,
+  [blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING]: paragraphShouldNotResembleHeading,
+  [blockValidations.TABLE_MUST_HAVE_HEADINGS]: tableMustHaveHeadings,
+  [blockValidations.TABLE_MUST_HAVE_MULTIPLE_ROWS]: tableMustHaveMultipleRows,
 };
