@@ -110,10 +110,14 @@ describe('Block validations', () => {
         expect(callback).toHaveBeenCalledTimes(1);
       });
       expect(
-        allByKey(callback.mock.calls[0][0], 'description-list-must-contain-term').some((v) => v.severity === 'error'),
+        allByKey(callback.mock.calls[0][0], blockValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM).some(
+          (v) => v.severity === 'error',
+        ),
       ).toBe(true);
-      expect(byKey(callback.mock.calls[0][0], 'definition-description-must-follow-term')?.severity).toBe('error');
-      expect(allByKey(callback.mock.calls[0][0], 'description-list-must-contain-term')).toHaveLength(2);
+      expect(byKey(callback.mock.calls[0][0], blockValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM)?.severity).toBe(
+        'error',
+      );
+      expect(allByKey(callback.mock.calls[0][0], blockValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM)).toHaveLength(2);
     });
   });
 

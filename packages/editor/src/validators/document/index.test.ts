@@ -1,6 +1,7 @@
 import { vi, describe, it, expect } from 'vitest';
 import type { ValidationResult } from '../../types/validation.ts';
 import { createTestEditor } from '../../../test/createTestEditor';
+import { documentValidations } from '../../constants';
 import {
   documentMustHaveCorrectHeadingOrder,
   documentMustHaveSingleHeadingOne,
@@ -28,7 +29,7 @@ describe('Document validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      expect(byKey(mapArg, 'document-must-have-correct-heading-order')).toBeDefined();
+      expect(byKey(mapArg, documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER)).toBeDefined();
     });
 
     it('returns empty array for correct heading order', async () => {
@@ -138,7 +139,9 @@ describe('Document validations', () => {
       await vi.waitFor(() => {
         expect(callback).toHaveBeenCalledTimes(1);
       });
-      expect(byKey(callback.mock.calls[0][0], 'document-must-have-single-heading-one')?.severity).toBe('error');
+      expect(
+        byKey(callback.mock.calls[0][0], documentValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE)?.severity,
+      ).toBe('error');
     });
   });
 
@@ -175,12 +178,12 @@ describe('Document validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      expect(byKey(mapArg, 'document-must-have-top-level-heading')).toEqual({
+      expect(byKey(mapArg, documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE)).toEqual({
         correct: expect.any(Function),
         range: expect.any(Object),
         scope: 'block',
         severity: 'info',
-        validatorKey: 'document-must-have-top-level-heading',
+        validatorKey: documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE,
       });
     });
   });
