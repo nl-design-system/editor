@@ -2,18 +2,7 @@ import type { Level } from '@tiptap/extension-heading';
 import type { EditorSettings } from '@/types/settings.ts';
 import type { DocumentValidator, ValidationResult } from '@/types/validation.ts';
 import { documentValidations, validationSeverity } from '@/constants';
-
-// ── DOM utilities ─────────────────────────────────────────────────────────────
-
-const getElementRange = (element: Element): Range | undefined => {
-  try {
-    const range = document.createRange();
-    range.selectNode(element);
-    return range;
-  } catch {
-    return undefined;
-  }
-};
+import { getElementRange } from '@/validators/helpers.ts';
 
 // ── Document validators ───────────────────────────────────────────────────────
 

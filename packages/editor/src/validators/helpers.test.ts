@@ -1,22 +1,28 @@
 import { describe, it, expect } from 'vitest';
-import { isKeyOf } from './helpers';
+import { isEmptyOrWhitespace } from './helpers';
 
-describe('isKeyOf', () => {
-  it('returns a function', async () => {
-    const tester = isKeyOf({ a: true });
-
-    expect(tester).toBeTypeOf('function');
+describe('isEmptyOrWhitespace', () => {
+  it('returns true for an empty string', () => {
+    expect(isEmptyOrWhitespace('')).toBe(true);
   });
 
-  it('returns true when object has this key', async () => {
-    const tester = isKeyOf({ a: true });
-
-    expect(tester('a')).toBe(true);
+  it('returns true for a string containing only spaces', () => {
+    expect(isEmptyOrWhitespace('   ')).toBe(true);
   });
 
-  it('returns false when object does not have this key', async () => {
-    const tester = isKeyOf({ a: true });
+  it('returns true for a string containing only tabs and newlines', () => {
+    expect(isEmptyOrWhitespace('\t\n\r')).toBe(true);
+  });
 
-    expect(tester('b')).toBe(false);
+  it('returns false for a string with visible characters', () => {
+    expect(isEmptyOrWhitespace('hello')).toBe(false);
+  });
+
+  it('returns false for a string with leading and trailing whitespace around text', () => {
+    expect(isEmptyOrWhitespace('  hello  ')).toBe(false);
+  });
+
+  it('returns true for a non-breaking space (matched by \\s)', () => {
+    expect(isEmptyOrWhitespace('\u00A0')).toBe(true);
   });
 });

@@ -1,12 +1,11 @@
 import type { ContentValidator } from '@/types/validation.ts';
 import { inlineValidations, validationSeverity } from '@/constants';
-import { getElementRange } from '@/validators/element/index.ts';
-import { isEmptyOrWhitespace } from '@/validators/helpers.ts';
+import { getElementRange, isEmptyOrWhitespace } from '@/validators/helpers.ts';
 
 // ── Mark-type mappings ────────────────────────────────────────────────────────
 
 /** Maps HTML tag names to the mark-type name used in tipPayload. */
-export const MARK_TYPES: Partial<Record<string, string>> = {
+const MARK_TYPES: Partial<Record<string, string>> = {
   a: 'link',
   b: 'bold',
   code: 'code',

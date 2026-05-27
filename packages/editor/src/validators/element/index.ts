@@ -1,24 +1,14 @@
 import type { ContentValidator } from '@/types/validation.ts';
 import { elementValidations, validationSeverity } from '@/constants';
 import { orderedListIndicator, unorderedListIndicator } from '@/correctors/helpers.ts';
-import { isEmptyOrWhitespace } from '@/validators/helpers.ts';
+import { getElementRange, isEmptyOrWhitespace } from '@/validators/helpers.ts';
 
 // ── DOM utilities ─────────────────────────────────────────────────────────────
-
-export const getElementRange = (element: Element): Range | undefined => {
-  try {
-    const range = document.createRange();
-    range.selectNode(element);
-    return range;
-  } catch {
-    return undefined;
-  }
-};
 
 // ── Tag → semantic-type mappings ──────────────────────────────────────────────
 
 /** Maps HTML tag names to the ProseMirror node-type name used in tipPayload. */
-export const BLOCK_NODE_TYPES: Partial<Record<string, string>> = {
+const BLOCK_NODE_TYPES: Partial<Record<string, string>> = {
   caption: 'tableCaption',
   dd: 'definitionDescription',
   dt: 'definitionTerm',
