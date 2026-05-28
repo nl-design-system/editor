@@ -54,7 +54,7 @@ export class HeadingStructure extends LitElement {
     if (!this.htmlDocument) return [];
     return Array.from(this.htmlDocument.querySelectorAll<HTMLElement>('h1, h2, h3, h4, h5, h6')).map((element) => ({
       element,
-      level: parseInt(element.tagName[1], 10),
+      level: Number.parseInt(element.tagName[1], 10),
       text: element.textContent ?? '',
       validationEntry: getHighestSeverityEntryByElement(this.validationsMap, element),
     }));

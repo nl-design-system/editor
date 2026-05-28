@@ -46,7 +46,7 @@ export class LanguageChanges extends LitElement {
   /** Returns the ambient document language by walking up the DOM from the
    * editor view element, crossing shadow roots as needed. */
   #resolveDocLang(): string | null {
-    return findNearestAncestorAttribute(this.htmlDocument as Element | null, 'lang');
+    return findNearestAncestorAttribute(this.htmlDocument || null, 'lang');
   }
 
   get #languageChanges(): LanguageChangeEntry[] {
