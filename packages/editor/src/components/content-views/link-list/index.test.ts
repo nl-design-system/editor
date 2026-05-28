@@ -154,8 +154,8 @@ describe('<clippy-link-list>', () => {
         '<h1>Titel</h1><p><a href="https://example.com">Klik hier</a></p>',
       );
 
-      await waitFor(() => expect(contextEl.editor?.view?.dom?.querySelector('a')).not.toBeNull());
-      const linkEl = contextEl.editor!.view.dom.querySelector('a')!;
+      await waitFor(() => expect(contextEl.htmlDocumentElement?.querySelector('a')).toBeTruthy());
+      const linkEl = contextEl.htmlDocumentElement!.querySelector('a')!;
       const linkRange = document.createRange();
       linkRange.selectNode(linkEl);
 
@@ -176,8 +176,8 @@ describe('<clippy-link-list>', () => {
         '<h1>Titel</h1><p><a href="https://example.com">Klik hier</a></p>',
       );
 
-      await waitFor(() => expect(contextEl.editor?.view?.dom?.querySelector('a')).not.toBeNull());
-      const linkEl = contextEl.editor!.view.dom.querySelector('a')!;
+      await waitFor(() => expect(contextEl.htmlDocumentElement?.querySelector('a')).toBeTruthy());
+      const linkEl = contextEl.htmlDocumentElement!.querySelector('a')!;
       const linkRange1 = document.createRange();
       linkRange1.selectNode(linkEl);
       const linkRange2 = document.createRange();

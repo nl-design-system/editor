@@ -1,4 +1,3 @@
-import type { Editor as TiptapEditor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import dataBadgeStyle from '@nl-design-system-candidate/data-badge-css/data-badge.css?inline';
@@ -7,7 +6,7 @@ import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.
 import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
-import { tiptapContext } from '@/context/tiptapContext.ts';
+import { htmlDocumentContext } from '@/context/htmlDocumentContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { findNearestAncestorAttribute } from '@/utils/domTraverser.ts';
 import languageChangesStyles from './styles.ts';
@@ -15,13 +14,11 @@ import languageChangesStyles from './styles.ts';
 const PREVIEW_LENGTH = 20;
 
 interface LanguageChangeEntry {
+  element: Element;
+  isDocumentLanguage: boolean;
   lang: string;
-  /** null means "document start" — no explicit node position */
-  pos: number | null;
   preview: string;
   truncated: boolean;
-  /** true when the effective language equals the ambient document language */
-  isDocumentLanguage: boolean;
 }
 
 const tag = 'clippy-language-changes';
@@ -42,73 +39,52 @@ export class LanguageChanges extends LitElement {
     unsafeCSS(paragraphStyle),
   ];
 
-  @consume({ context: tiptapContext, subscribe: true })
+  @consume({ context: htmlDocumentContext, subscribe: true })
   @property({ attribute: false })
-  editor?: TiptapEditor;
+  htmlDocument?: HTMLElement;
 
   /** Returns the ambient document language by walking up the DOM from the
-   * editor view (if mounted) or from this element as a fallback. */
+   * editor view element, crossing shadow roots as needed. */
   #resolveDocLang(): string | null {
-    try {
-      return findNearestAncestorAttribute(this.editor!.view.dom as Element, 'lang');
-    } catch {
-      return findNearestAncestorAttribute(this, 'lang');
-    }
+    return findNearestAncestorAttribute(this.htmlDocument as Element | null, 'lang');
   }
 
   get #languageChanges(): LanguageChangeEntry[] {
-    if (!this.editor) return [];
+    if (!this.htmlDocument) return [];
     const entries: LanguageChangeEntry[] = [];
 
     const docLang = this.#resolveDocLang();
-
-    // Walk all block nodes. Whenever the effective language changes (including
-    // a revert to docLang on a node without an explicit lang), emit an entry.
     let prevLang: string = docLang ?? '';
 
-    this.editor.state.doc.descendants((node, pos) => {
-      if (!node.isBlock || node.type.name === 'doc') return;
-      if (!('lang' in node.attrs)) return;
-
-      const explicitLang = node.attrs['lang'] as string | null;
-      // A node with no explicit lang reverts to the document language.
-      const effectiveLang: string | null = explicitLang ?? docLang;
-      if (effectiveLang === null || effectiveLang === prevLang) return;
-
-      const fullText = node.textContent;
-      entries.push({
-        isDocumentLanguage: docLang !== null && effectiveLang === docLang,
-        lang: effectiveLang,
-        pos,
-        preview: fullText.slice(0, PREVIEW_LENGTH),
-        truncated: fullText.length > PREVIEW_LENGTH,
-      });
-
-      prevLang = effectiveLang;
+    // Walk all elements that carry a lang attribute in document order.
+    const walker = document.createTreeWalker(this.htmlDocument, NodeFilter.SHOW_ELEMENT, {
+      acceptNode: (node: Node) =>
+        (node as Element).hasAttribute('lang') ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP,
     });
+
+    let node = walker.nextNode() as Element | null;
+    while (node) {
+      const lang = node.getAttribute('lang') ?? '';
+      if (lang !== prevLang) {
+        const fullText = node.textContent ?? '';
+        entries.push({
+          element: node,
+          isDocumentLanguage: docLang !== null && lang === docLang,
+          lang,
+          preview: fullText.slice(0, PREVIEW_LENGTH),
+          truncated: fullText.length > PREVIEW_LENGTH,
+        });
+        prevLang = lang;
+      }
+      node = walker.nextNode() as Element | null;
+    }
 
     return entries;
   }
 
-  #scrollToNode(pos: number | null) {
-    if (!this.editor) return;
-
+  #scrollToNode(element: Element) {
     try {
-      if (pos === null) {
-        // Document-language entry: scroll to the top of the editor.
-        const dom = this.editor.view.dom;
-        if (dom instanceof HTMLElement) {
-          dom.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        return;
-      }
-
-      const { view } = this.editor;
-      const nodeDom = view.nodeDOM?.(pos) ?? view.domAtPos(pos).node;
-      const target = nodeDom instanceof HTMLElement ? nodeDom : (nodeDom as Node)?.parentElement;
-      if (target instanceof HTMLElement) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch (err) {
       console.error('[clippy-language-changes] Cannot scroll to node', err);
     }
@@ -122,7 +98,7 @@ export class LanguageChanges extends LitElement {
         ${entries.length > 0
           ? html`
               <ol class="clippy-language-changes__list" role="list">
-                ${map(entries, ({ isDocumentLanguage, lang, pos, preview, truncated }) => {
+                ${map(entries, ({ element, isDocumentLanguage, lang, preview, truncated }) => {
                   return html`
                     <li class="clippy-language-changes__item">
                       <span class="nl-data-badge" aria-label=${msg('Language: ') + lang}>${lang}</span>
@@ -132,7 +108,7 @@ export class LanguageChanges extends LitElement {
                           href="#"
                           @click=${(e: Event) => {
                             e.preventDefault();
-                            this.#scrollToNode(pos);
+                            this.#scrollToNode(element);
                           }}
                         >
                           ${preview || msg('(empty)')}${truncated ? '…' : ''}

@@ -3,6 +3,7 @@ import { Editor as TiptapEditor } from '@tiptap/core';
 import { LitElement, html, type PropertyValues } from 'lit';
 import { property, queryAssignedElements } from 'lit/decorators.js';
 import type { ValidationResult } from '@/types/validation.ts';
+import { htmlDocumentContext } from '@/context/htmlDocumentContext.ts';
 import { identifierContext } from '@/context/identifierContext.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
@@ -101,6 +102,9 @@ export class Context extends LitElement {
   @provide({ context: tiptapContext })
   editor?: TiptapEditor;
 
+  @provide({ context: htmlDocumentContext })
+  htmlDocumentElement?: HTMLElement;
+
   private createEditor(): void {
     const sanitizedTopHeadingLevel = sanitizeTopHeadingLevel(this.topHeadingLevel);
     const content = this.contentSlot.find((el) => el instanceof HTMLDivElement)?.innerHTML || '';
@@ -124,6 +128,11 @@ export class Context extends LitElement {
         this.updateValidationsContext,
         this.id,
       ),
+    });
+    // TipTap 3.x fires 'create' inside mount() via setTimeout(0), so this
+    // listener is guaranteed to run after clippy-content calls editor.mount().
+    this.editor.on('create', () => {
+      this.htmlDocumentElement = this.editor?.view?.dom;
     });
   }
 
@@ -171,6 +180,7 @@ export class Context extends LitElement {
 
   override disconnectedCallback() {
     registeredIdentifiers.delete(this.id);
+    this.htmlDocumentElement = undefined;
     this.editor?.destroy();
     super.disconnectedCallback();
   }
