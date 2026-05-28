@@ -2,7 +2,9 @@ import { consume } from '@lit/context';
 import { Editor as TiptapEditor } from '@tiptap/core';
 import { LitElement, css, html, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import type { ValidationsMap } from '@/types/validation.ts';
+import { htmlDocumentContext } from '@/context/htmlDocumentContext.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
@@ -43,6 +45,10 @@ export class Content extends LitElement {
   @property({ attribute: false })
   public editor?: TiptapEditor;
 
+  @consume({ context: htmlDocumentContext, subscribe: true })
+  @property({ attribute: false })
+  public htmlDocument?: HTMLElement;
+
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
@@ -66,14 +72,25 @@ export class Content extends LitElement {
 
   override firstUpdated(): void {
     const el = this.shadow ? this.shadowRoot?.firstElementChild : this;
-    if (el) {
-      this.editor?.mount(el);
+    if (el && this.editor) {
+      this.editor.mount(el);
     }
   }
+
   override render() {
+    const isReadonly = !this.editor && !!this.htmlDocument;
+
     if (this.shadow) {
-      return html`<div class=${this.inline ? 'inline' : nothing}><slot></slot></div>`;
-    } else return null;
+      return html`<div class=${this.inline ? 'inline' : nothing}>
+        ${isReadonly ? unsafeHTML(this.htmlDocument!.innerHTML) : html`<slot></slot>`}
+      </div>`;
+    }
+
+    if (isReadonly) {
+      return html`${unsafeHTML(this.htmlDocument!.innerHTML)}`;
+    }
+
+    return null;
   }
   protected override createRenderRoot() {
     return this.shadow ? super.createRenderRoot() : this;
