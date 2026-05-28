@@ -129,11 +129,6 @@ export class Context extends LitElement {
         this.id,
       ),
     });
-    // TipTap 3.x fires 'create' inside mount() via setTimeout(0), so this
-    // listener is guaranteed to run after clippy-content calls editor.mount().
-    this.editor.on('create', () => {
-      this.htmlDocumentElement = this.editor?.view?.dom;
-    });
   }
 
   override firstUpdated(): void {
@@ -143,6 +138,7 @@ export class Context extends LitElement {
       );
     }
     registeredIdentifiers.add(this.id);
+    this.htmlDocumentElement = this.contentSlot.find((el) => el instanceof HTMLDivElement);
     this.createEditor();
   }
 
