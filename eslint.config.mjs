@@ -10,7 +10,15 @@ import tseslint from 'typescript-eslint';
 
 export default defineConfig([
   // use the built-in globalIgnores utility to globally ignore files in the project
-  globalIgnores(['**/dist/', '**/build/', '**/coverage/', '**/generated/', '**/tmp/', '**/tsconfig*.json', '**/.astro']),
+  globalIgnores([
+    '**/dist/',
+    '**/build/',
+    '**/coverage/',
+    '**/generated/',
+    '**/tmp/',
+    '**/tsconfig*.json',
+    '**/.astro',
+  ]),
   {
     // Use the Perfectionist recommended/natural configuration for all possible JavaScript, TypeScript and JSX files
     name: 'perfectionist/recommended/natural',

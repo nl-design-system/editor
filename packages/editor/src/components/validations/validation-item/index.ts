@@ -51,7 +51,6 @@ export class ValidationItem extends LitElement {
   @property({ attribute: false })
   private readonly identifier?: string;
 
-
   readonly #listItemRef: Ref<HTMLLIElement> = createRef();
 
   override focus(): void {
