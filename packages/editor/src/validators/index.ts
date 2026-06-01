@@ -1,64 +1,92 @@
 import type { EditorSettings } from '@/types/settings.ts';
-import type { ValidationResult } from '@/types/validation.ts';
-import contentValidator, { contentValidatorMap } from '@/validators/content';
+import type { ContentValidator, DocumentValidator, ValidationResult } from '@/types/validation.ts';
+import { blockValidatorMap } from '@/validators/block';
 import { documentValidatorObject } from '@/validators/document';
+import { inlineValidatorMap } from '@/validators/inline';
 import { debounce } from '../utils/debounce.ts';
-import { getEntries, isKeyOf } from './helpers.ts';
 
 const VALIDATION_TIMEOUT = 500;
+
+/**
+ * Filters a validator map to only the entries active under the given settings.
+ *
+ * - `disableRules: ['*']` — disables all validators in this map.
+ * - `enableRules: ['*']` — enables all (minus any explicitly disabled).
+ * - Otherwise only rules explicitly listed in `enableRules` are active.
+ */
+const getActiveValidators = <V>(
+  validators: Record<string, V>,
+  { disableRules = [], enableRules }: EditorSettings,
+): [string, V][] => {
+  if (disableRules.includes('*')) return [];
+
+  const entries = Object.entries(validators) as [string, V][];
+  const disabled = new Set(disableRules);
+
+  if (enableRules.includes('*')) {
+    return entries.filter(([key]) => !disabled.has(key));
+  }
+
+  const enabled = new Set(enableRules);
+  return entries.filter(([key]) => enabled.has(key) && !disabled.has(key));
+};
 
 export const runValidation = (
   dom: HTMLElement,
   settings: EditorSettings,
   callback: (resultMap: Map<Range, ValidationResult>) => void,
-) => {
-  const documentValidationSettings = {
-    disableRules: settings.disableRules?.filter((x) => x === '*' || isKeyOf(documentValidatorObject)(x)),
-    enableRules: settings.enableRules.filter((x) => x === '*' || isKeyOf(documentValidatorObject)(x)),
-  };
-  const contentValidationSettings = {
-    disableRules: settings.disableRules?.filter((x) => x === '*' || isKeyOf(contentValidatorMap)(x)),
-    enableRules: settings.enableRules.filter((x) => x === '*' || isKeyOf(contentValidatorMap)(x)),
-  };
-  let validationResultMap = new Map<Range, ValidationResult>();
-  const documentValidators = Object.entries(
-    getEntries(
-      documentValidatorObject,
-      documentValidationSettings.enableRules,
-      documentValidationSettings.disableRules,
-    ),
-  );
-  const contentValidators = getEntries(
-    contentValidatorMap,
-    contentValidationSettings.enableRules,
-    contentValidationSettings.disableRules,
-  );
-  for (const [key, validator] of documentValidators) {
+): void => {
+  const resultMap = new Map<Range, ValidationResult>();
+
+  // Pre-compute active validators once — avoids re-filtering on every node during the walk
+  const activeDocumentValidators = getActiveValidators<DocumentValidator>(documentValidatorObject, settings);
+  const activeBlockValidators = getActiveValidators<ContentValidator>(blockValidatorMap, settings);
+  const activeInlineValidators = getActiveValidators<ContentValidator>(inlineValidatorMap, settings);
+
+  // Run document-level validators (each does its own internal DOM queries)
+  for (const [key, validator] of activeDocumentValidators) {
     try {
-      const results = validator?.(dom, settings);
-      if (results?.length) {
-        for (const result of results) {
-          if (result.range) {
-            result.validatorKey = key;
-            validationResultMap.set(result.range, result);
-          }
+      for (const result of validator(dom, settings)) {
+        if (result.range) {
+          result.validatorKey = key;
+          resultMap.set(result.range, result);
         }
       }
     } catch (err) {
-      console.error('document validator error', err);
+      console.error('Document validator error:', err);
     }
   }
+
+  // Single depth-first DOM walk for block and inline validators
+  const walk = (element: Element): void => {
+    for (const [key, validator] of activeBlockValidators) {
+      const result = validator(dom, element);
+      if (result?.range) {
+        result.validatorKey = key;
+        resultMap.set(result.range, result);
+      }
+    }
+    for (const [key, validator] of activeInlineValidators) {
+      const result = validator(dom, element);
+      if (result?.range) {
+        result.validatorKey = key;
+        resultMap.set(result.range, result);
+      }
+    }
+    for (const child of element.children) {
+      walk(child);
+    }
+  };
 
   try {
-    const contentValidationResultMap = contentValidator(dom, contentValidators);
-    if (contentValidationResultMap.size > 0) {
-      validationResultMap = new Map<Range, ValidationResult>([...validationResultMap, ...contentValidationResultMap]);
+    for (const child of dom.children) {
+      walk(child);
     }
   } catch (err) {
-    console.error('content validator error', err);
+    console.error('Block/inline validator error:', err);
   }
 
-  callback(validationResultMap);
+  callback(resultMap);
 };
 
 export const debouncedValidate = debounce(runValidation, VALIDATION_TIMEOUT);

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { page } from 'vitest/browser';
 import type { ValidationResult } from '../../../types/validation';
 import type { Context } from '../../context';
-import { contentValidations, documentValidations } from '../../../constants';
+import { blockValidations, documentValidations, inlineValidations } from '../../../constants';
 import '../../context/index.ts';
 import './index.ts';
 import { CustomEvents } from '../../../events';
@@ -68,18 +68,18 @@ describe('<clippy-validations-dialog>', () => {
     };
 
     const validationsMap: Map<Range, ValidationResult> = new Map([
-      entry(contentValidations.HEADING_MUST_NOT_BE_EMPTY, 'error'),
-      entry(contentValidations.IMAGE_MUST_HAVE_ALT_TEXT, 'error'),
-      entry(contentValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC, 'warning'),
-      entry(contentValidations.NODE_SHOULD_NOT_BE_EMPTY, 'warning', { nodeType: 'paragraph' }),
-      entry(contentValidations.MARK_SHOULD_NOT_BE_EMPTY, 'error', { nodeType: 'link' }),
+      entry(blockValidations.HEADING_MUST_NOT_BE_EMPTY, 'error'),
+      entry(blockValidations.IMAGE_MUST_HAVE_ALT_TEXT, 'error'),
+      entry(inlineValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC, 'warning'),
+      entry(blockValidations.NODE_SHOULD_NOT_BE_EMPTY, 'warning', { nodeType: 'paragraph' }),
+      entry(inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY, 'error', { nodeType: 'link' }),
       entry(documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER, 'error', {
         headingLevel: 3,
         precedingHeadingLevel: 1,
       }),
-      entry(documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS, 'warning', { prefix: '-' }),
-      entry(contentValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC, 'warning'),
-      entry(contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED, 'warning'),
+      entry(blockValidations.PARAGRAPH_MUST_USE_SEMANTIC_LIST, 'warning', { prefix: '-' }),
+      entry(blockValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC, 'warning'),
+      entry(inlineValidations.INLINE_SHOULD_NOT_BE_UNDERLINED, 'warning'),
       entry(documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE, 'error', { topHeadingLevel: 1 }),
     ]);
 

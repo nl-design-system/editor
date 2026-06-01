@@ -2,40 +2,7 @@ import type { Level } from '@tiptap/extension-heading';
 import type { EditorSettings } from '@/types/settings.ts';
 import type { DocumentValidator, ValidationResult } from '@/types/validation.ts';
 import { documentValidations, validationSeverity } from '@/constants';
-import { orderedListIndicator, unorderedListIndicator } from '@/correctors/helpers.ts';
-import { isEmptyOrWhitespace } from '@/validators/helpers.ts';
-
-// ── DOM utilities ─────────────────────────────────────────────────────────────
-
-const getElementRange = (element: Element): Range | undefined => {
-  try {
-    const range = document.createRange();
-    range.selectNode(element);
-    return range;
-  } catch {
-    return undefined;
-  }
-};
-
-/** Split a <p> element into its <br>-separated lines. */
-const getParagraphLinesFromDOM = (paragraph: Element): string[] => {
-  const lines: string[] = [];
-  let current = '';
-  for (const node of paragraph.childNodes) {
-    if (node instanceof Element && node.tagName === 'BR') {
-      if (current.trim().length > 0) lines.push(current);
-      current = '';
-    } else {
-      current += node.textContent ?? '';
-    }
-  }
-  if (current.trim().length > 0) lines.push(current);
-  return lines;
-};
-
-const decrement = (prefix: string): string => (prefix.startsWith('2') ? prefix.replace('2', '1') : prefix);
-
-const getPrefix = (text: string): string => text.substring(0, 2);
+import { getElementRange } from '@/validators/helpers.ts';
 
 // ── Document validators ───────────────────────────────────────────────────────
 
@@ -54,7 +21,7 @@ export const documentMustHaveCorrectHeadingOrder = (
       errors.push({
         correct: () => {},
         range: getElementRange(heading),
-        scope: 'element',
+        scope: 'block',
         severity: validationSeverity.ERROR,
         tipPayload: { headingLevel, precedingHeadingLevel, topHeadingLevel },
       });
@@ -64,7 +31,7 @@ export const documentMustHaveCorrectHeadingOrder = (
       errors.push({
         correct: () => {},
         range: getElementRange(heading),
-        scope: 'element',
+        scope: 'block',
         severity: validationSeverity.WARNING,
         tipPayload: { headingLevel, precedingHeadingLevel, topHeadingLevel },
       });
@@ -76,48 +43,6 @@ export const documentMustHaveCorrectHeadingOrder = (
   return errors;
 };
 
-export const documentMustHaveSemanticLists = (dom: HTMLElement): ValidationResult[] => {
-  const errors: ValidationResult[] = [];
-  const paragraphs = Array.from(dom.querySelectorAll('p'));
-
-  for (const [index, paragraph] of paragraphs.entries()) {
-    const text = paragraph.textContent ?? '';
-    const firstPrefix = getPrefix(text);
-    const isOrdered = orderedListIndicator.test(firstPrefix);
-    const isUnordered = unorderedListIndicator.test(firstPrefix);
-
-    if (!isOrdered && !isUnordered) continue;
-
-    const nextParagraph = paragraphs[index + 1];
-    if (nextParagraph) {
-      const secondPrefix = getPrefix(nextParagraph.textContent ?? '');
-      if (decrement(secondPrefix) === firstPrefix) {
-        errors.push({
-          correct: () => {},
-          range: getElementRange(paragraph),
-          scope: 'element',
-          severity: validationSeverity.INFO,
-          tipPayload: { prefix: firstPrefix.trim() },
-        });
-        continue;
-      }
-    }
-
-    const lines = getParagraphLinesFromDOM(paragraph);
-    if (lines.length > 1 && firstPrefix === decrement(getPrefix(lines[1] ?? ''))) {
-      errors.push({
-        correct: () => {},
-        range: getElementRange(paragraph),
-        scope: 'element',
-        severity: validationSeverity.INFO,
-        tipPayload: { prefix: firstPrefix.trim() },
-      });
-    }
-  }
-
-  return errors;
-};
-
 export const documentMustHaveSingleHeadingOne = (dom: HTMLElement): ValidationResult[] => {
   const h1s = Array.from(dom.querySelectorAll<HTMLHeadingElement>('h1'));
   if (h1s.length <= 1) return [];
@@ -125,7 +50,7 @@ export const documentMustHaveSingleHeadingOne = (dom: HTMLElement): ValidationRe
   return h1s.slice(1).map((h1) => ({
     correct: () => {},
     range: getElementRange(h1),
-    scope: 'element' as const,
+    scope: 'block' as const,
     severity: validationSeverity.ERROR,
   }));
 };
@@ -142,80 +67,10 @@ export const documentMustHaveTopLevelHeadingOne = (dom: HTMLElement, settings?: 
     {
       correct: () => {},
       range: getElementRange(target),
-      scope: 'element',
+      scope: 'block',
       severity: validationSeverity.INFO,
     },
   ];
-};
-
-const documentShouldNotHaveHeadingResemblingParagraphs = (dom: HTMLElement): ValidationResult[] => {
-  const errors: ValidationResult[] = [];
-
-  for (const child of dom.children) {
-    if (child.tagName !== 'P') continue;
-    const text = child.textContent?.trim() ?? '';
-    if (isEmptyOrWhitespace(text) || text.length > 60) continue;
-
-    const nonEmptyChildren = Array.from(child.childNodes).filter(
-      (n) => n.nodeType !== Node.TEXT_NODE || (n.textContent?.trim().length ?? 0) > 0,
-    );
-    if (nonEmptyChildren.length === 0) continue;
-
-    const allBold = nonEmptyChildren.every(
-      (n) => n instanceof Element && (n.tagName === 'STRONG' || n.tagName === 'B'),
-    );
-    if (!allBold) continue;
-
-    errors.push({
-      correct: () => {},
-      range: getElementRange(child),
-      scope: 'element',
-      severity: validationSeverity.INFO,
-    });
-  }
-
-  return errors;
-};
-
-export const documentMustHaveTableWithHeadings = (dom: HTMLElement): ValidationResult[] => {
-  const errors: ValidationResult[] = [];
-
-  dom.querySelectorAll('table').forEach((table) => {
-    const firstRow = table.querySelector('tr');
-    if (!firstRow) return;
-
-    const hasHeaderRow = Array.from(firstRow.children).every((cell) => cell.tagName === 'TH');
-    const hasHeaderColumn =
-      !hasHeaderRow && Array.from(table.querySelectorAll('tr')).every((row) => row.firstElementChild?.tagName === 'TH');
-
-    if (!hasHeaderRow && !hasHeaderColumn) {
-      errors.push({
-        correct: () => {},
-        range: getElementRange(table),
-        scope: 'element',
-        severity: validationSeverity.WARNING,
-      });
-    }
-  });
-
-  return errors;
-};
-
-export const documentMustHaveTableWithMultipleRows = (dom: HTMLElement): ValidationResult[] => {
-  const errors: ValidationResult[] = [];
-
-  dom.querySelectorAll('table').forEach((table) => {
-    if (table.querySelectorAll('tr').length < 2) {
-      errors.push({
-        correct: () => {},
-        range: getElementRange(table),
-        scope: 'element',
-        severity: validationSeverity.WARNING,
-      });
-    }
-  });
-
-  return errors;
 };
 
 // ── Validator map ─────────────────────────────────────────────────────────────
@@ -224,13 +79,6 @@ type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentV
 
 export const documentValidatorObject: { [K in DocumentValidationKey]: DocumentValidator } = {
   [documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: documentMustHaveCorrectHeadingOrder,
-  [documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS]: documentMustHaveSemanticLists,
   [documentValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE]: documentMustHaveSingleHeadingOne,
-  [documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_HEADINGS]: documentMustHaveTableWithHeadings,
-  [documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_MULTIPLE_ROWS]: documentMustHaveTableWithMultipleRows,
   [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE]: documentMustHaveTopLevelHeadingOne,
-  [documentValidations.DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS]:
-    documentShouldNotHaveHeadingResemblingParagraphs,
 };
-
-export default documentValidatorObject;

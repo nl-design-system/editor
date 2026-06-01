@@ -2,7 +2,7 @@ import type { Editor } from '@tiptap/core';
 import type { Level } from '@tiptap/extension-heading';
 import type { ImageUpload } from '@/types/image.ts';
 import type { CorrectValidationFunction } from '@/types/validation.ts';
-import { contentValidations, documentValidations } from '@/constants';
+import { blockValidations, documentValidations, inlineValidations } from '@/constants';
 import { CustomEvents } from '@/events';
 import {
   buildListItemsFromParagraph,
@@ -168,10 +168,10 @@ export const correctEmptyNode =
   };
 
 /**
- * Removes an empty inline mark (and the empty text node it wraps) from the
+ * Removes an empty inline element (and the empty text node it wraps) from the
  * document. The target range is resolved from the document at apply-time.
  */
-export const correctEmptyMark =
+export const correctEmptyInline =
   (pos: number): CorrectValidationFunction =>
   (editor: Editor) => {
     const { doc } = editor.state;
@@ -201,7 +201,7 @@ export const correctGenericLinkText =
 /**
  * Removes the underline mark from the text node.
  */
-export const correctUnderlinedMark =
+export const correctUnderlinedInline =
   (pos: number, nodeSize: number): CorrectValidationFunction =>
   (editor: Editor) => {
     editor
@@ -274,22 +274,25 @@ export const correctDefinitionTermMissingDescription =
 
 export const documentCorrectorMap = {
   [documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: correctHeadingLevel,
-  [documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS]: correctConvertToList,
   [documentValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE]: correctDuplicateHeadingOne,
-  [documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_HEADINGS]: correctTableMissingHeadings,
-  [documentValidations.DOCUMENT_MUST_HAVE_TABLE_WITH_MULTIPLE_ROWS]: correctTableMissingRows,
   [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE]: correctMissingTopLevelHeading,
-  [documentValidations.DOCUMENT_SHOULD_NOT_HAVE_HEADING_RESEMBLING_PARAGRAPHS]: correctHeadingResemblingParagraph,
 } as const;
 
-export const contentCorrectorMap = {
-  [contentValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM]: correctDefinitionTermMissingDescription,
-  [contentValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM]: correctDefinitionListMissingTerm,
-  [contentValidations.HEADING_MUST_NOT_BE_EMPTY]: correctEmptyHeading,
-  [contentValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: correctHeadingWithFormatting,
-  [contentValidations.IMAGE_MUST_HAVE_ALT_TEXT]: correctImageMissingAltText,
-  [contentValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC]: correctGenericLinkText,
-  [contentValidations.MARK_SHOULD_NOT_BE_EMPTY]: correctEmptyMark,
-  [contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED]: correctUnderlinedMark,
-  [contentValidations.NODE_SHOULD_NOT_BE_EMPTY]: correctEmptyNode,
+export const blockCorrectorMap = {
+  [blockValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM]: correctDefinitionTermMissingDescription,
+  [blockValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM]: correctDefinitionListMissingTerm,
+  [blockValidations.HEADING_MUST_NOT_BE_EMPTY]: correctEmptyHeading,
+  [blockValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: correctHeadingWithFormatting,
+  [blockValidations.IMAGE_MUST_HAVE_ALT_TEXT]: correctImageMissingAltText,
+  [blockValidations.NODE_SHOULD_NOT_BE_EMPTY]: correctEmptyNode,
+  [blockValidations.PARAGRAPH_MUST_USE_SEMANTIC_LIST]: correctConvertToList,
+  [blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING]: correctHeadingResemblingParagraph,
+  [blockValidations.TABLE_MUST_HAVE_HEADINGS]: correctTableMissingHeadings,
+  [blockValidations.TABLE_MUST_HAVE_MULTIPLE_ROWS]: correctTableMissingRows,
+} as const;
+
+export const inlineCorrectorMap = {
+  [inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY]: correctEmptyInline,
+  [inlineValidations.INLINE_SHOULD_NOT_BE_UNDERLINED]: correctUnderlinedInline,
+  [inlineValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC]: correctGenericLinkText,
 } as const;
