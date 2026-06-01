@@ -21,7 +21,7 @@
     </script>
   </head>
   <body class="utrecht-body">
-    <clippy-content-views id="clippy-preview">
+    <clippy-context id="clippy-preview" readonly>
       <div slot="value">
         <h1>NL Design System Editor — voorbeeld</h1>
         <p>
@@ -114,6 +114,66 @@
         </p>
         <p lang="ar" dir="rtl">هذه الفقرة باللغة العربية وتتدفق من اليمين إلى اليسار.</p>
       </div>
-    </clippy-content-views>
+
+      <div class="preview-layout">
+        <main class="preview-content">
+          <div class="preview-content__gutter-wrapper">
+            <clippy-validations-gutter mode="readonly"></clippy-validations-gutter>
+            <clippy-content></clippy-content>
+          </div>
+        </main>
+        <aside class="preview-panels">
+          <section class="preview-panel">
+            <clippy-heading-structure></clippy-heading-structure>
+          </section>
+          <section class="preview-panel">
+            <clippy-link-list></clippy-link-list>
+          </section>
+          <section class="preview-panel">
+            <clippy-language-changes></clippy-language-changes>
+          </section>
+        </aside>
+      </div>
+    </clippy-context>
+
+    <style>
+      .preview-layout {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: var(--basis-space-inline-xl, 1.5rem);
+        align-items: start;
+        max-width: 1200px;
+        margin-inline: auto;
+        padding-inline: var(--basis-space-inline-xl, 1.5rem);
+        padding-block: var(--basis-space-block-xl, 1.5rem);
+      }
+
+      @media (max-width: 768px) {
+        .preview-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .preview-content {
+        min-width: 0;
+      }
+
+      .preview-content__gutter-wrapper {
+        position: relative;
+      }
+
+      .preview-panels {
+        display: flex;
+        flex-direction: column;
+        gap: var(--basis-space-block-xl, 1.5rem);
+      }
+
+      .preview-panel {
+        border: 1px solid var(--utrecht-color-border, #ccc);
+        border-radius: 4px;
+        padding-block: var(--basis-space-block-md, 1rem);
+        padding-inline: var(--basis-space-inline-md, 1rem);
+      }
+    </style>
   </body>
 </html>

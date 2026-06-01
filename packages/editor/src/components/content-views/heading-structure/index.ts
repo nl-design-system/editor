@@ -1,4 +1,4 @@
-import type { Editor as TiptapEditor } from '@tiptap/core';
+import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
 import dataBadgeStyle from '@nl-design-system-candidate/data-badge-css/data-badge.css?inline';
@@ -10,6 +10,7 @@ import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import type { ValidationsMap, ValidationResult } from '@/types/validation.ts';
+import { htmlDocumentContext } from '@/context/htmlDocumentContext.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
@@ -18,8 +19,9 @@ import { getHighestSeverityEntryByElement } from '@/utils/validations.ts';
 import headingStructureStyles from './styles.ts';
 
 interface HeadingEntry {
+  element: HTMLElement;
+  index: number;
   level: number;
-  pos: number;
   text: string;
   validationEntry: [Range, ValidationResult] | null;
 }
@@ -43,46 +45,36 @@ export class HeadingStructure extends LitElement {
     unsafeCSS(linkButtonStyle),
   ];
 
+  @consume({ context: htmlDocumentContext, subscribe: true })
+  @property({ attribute: false })
+  htmlDocument?: HTMLElement;
+
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
-  editor?: TiptapEditor;
+  editor?: Editor;
 
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
   validationsMap?: ValidationsMap;
 
   get #headings(): HeadingEntry[] {
-    if (!this.editor) return [];
-    const headings: HeadingEntry[] = [];
-    const { view } = this.editor;
-    this.editor.state.doc.descendants((node, pos) => {
-      if (node.type.name === 'heading') {
-        const domNode = view?.nodeDOM(pos) ?? view?.domAtPos(pos).node ?? null;
-        headings.push({
-          level: node.attrs['level'] as number,
-          pos,
-          text: node.textContent,
-          validationEntry: getHighestSeverityEntryByElement(this.validationsMap, domNode),
-        });
-      }
-    });
-    return headings;
+    if (!this.htmlDocument) return [];
+    return Array.from(this.htmlDocument.querySelectorAll<HTMLElement>('h1, h2, h3, h4, h5, h6')).map(
+      (element, index) => ({
+        element,
+        index,
+        level: Number.parseInt(element.tagName[1], 10),
+        text: element.textContent ?? '',
+        validationEntry: getHighestSeverityEntryByElement(this.validationsMap, element),
+      }),
+    );
   }
 
-  #scrollToHeading(pos: number) {
-    if (!this.editor) return;
-    try {
-      const { view } = this.editor;
-      const nodeDom = view.nodeDOM?.(pos) ?? view.domAtPos(pos).node;
-      if (nodeDom instanceof HTMLElement) {
-        nodeDom.scrollIntoView({ block: 'start' });
-      }
-    } catch (err) {
-      console.error('[clippy-heading-structure] Cannot scroll to heading', err);
-    }
-
-    const domNode = this.editor.view?.nodeDOM(pos) ?? this.editor.view?.domAtPos(pos).node ?? null;
-    const validationRange = getHighestSeverityEntryByElement(this.validationsMap, domNode)?.[0] ?? null;
+  #scrollToHeading(index: number, element: HTMLElement) {
+    const renderedEl =
+      this.editor?.view?.dom?.querySelectorAll<HTMLElement>('h1, h2, h3, h4, h5, h6')[index] ?? element;
+    renderedEl.scrollIntoView({ block: 'start' });
+    const validationRange = getHighestSeverityEntryByElement(this.validationsMap, element)?.[0] ?? null;
     if (validationRange) {
       globalThis.dispatchEvent(
         new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, {
@@ -102,7 +94,7 @@ export class HeadingStructure extends LitElement {
         ${headings.length > 0
           ? html`
               <ol class="clippy-heading-structure__list" role="list">
-                ${map(headings, ({ level, pos, text, validationEntry }) => {
+                ${map(headings, ({ index, level, text, validationEntry }) => {
                   const severity = validationEntry?.[1].severity;
                   return html`
                     <li class="clippy-heading-structure__item" data-level="${level}">
@@ -110,7 +102,7 @@ export class HeadingStructure extends LitElement {
                         class="utrecht-link-button utrecht-link-button--html-button"
                         @click=${(e: Event) => {
                           e.preventDefault();
-                          this.#scrollToHeading(pos);
+                          this.#scrollToHeading(index, this.#headings[index].element);
                         }}
                       >
                         <span

@@ -61,7 +61,11 @@ export const validationMessages = (): ValidationMessages =>
         return msg(html`Remove the empty <strong>${nodeTypesTranslations()[nodeType]}</strong> or add text.`);
       },
     },
-    [blockValidations.PARAGRAPH_MUST_USE_SEMANTIC_LIST]: {
+    [blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING]: {
+      description: msg('Avoid paragraphs that resemble headings'),
+      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#opmaak-van-koppen',
+    },
+    [blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST]: {
       description: msg('List must be a semantic list'),
       href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/opsommingen/#genummerde-en-ongenummerde-lijsten',
       tip: (params) => {
@@ -71,10 +75,6 @@ export const validationMessages = (): ValidationMessages =>
         }
         return msg(html`Use a semantic list instead of lines starting with "<strong>${prefix}</strong>"`);
       },
-    },
-    [blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING]: {
-      description: msg('Avoid paragraphs that resemble headings'),
-      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#opmaak-van-koppen',
     },
     [blockValidations.TABLE_MUST_HAVE_HEADINGS]: {
       description: msg('Table must contain headings'),

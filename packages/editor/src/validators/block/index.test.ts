@@ -44,7 +44,7 @@ describe('Block validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      expect(byKey(mapArg, blockValidations.PARAGRAPH_MUST_USE_SEMANTIC_LIST)).toBeDefined();
+      expect(byKey(mapArg, blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST)).toBeDefined();
     });
 
     it('returns errors for potential lists', async () => {

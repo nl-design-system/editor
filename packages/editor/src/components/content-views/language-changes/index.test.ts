@@ -6,14 +6,11 @@ import '../../context/index.ts';
 import '../../content/index.ts';
 import './index.ts';
 
-async function setupWithContent(
-  contentHtml: string,
-  mountEditor = false,
-): Promise<{ langChanges: LanguageChanges; contextEl: Context }> {
+async function setupWithContent(contentHtml: string): Promise<{ langChanges: LanguageChanges; contextEl: Context }> {
   document.body.innerHTML = `
     <clippy-context id="language-changes-test">
       <div slot="value" hidden>${contentHtml}</div>
-      ${mountEditor ? '<clippy-content></clippy-content>' : ''}
+      <clippy-content></clippy-content>
       <clippy-language-changes></clippy-language-changes>
     </clippy-context>
   `;
@@ -21,8 +18,8 @@ async function setupWithContent(
   const langChanges = document.querySelector('clippy-language-changes') as unknown as LanguageChanges;
   const contextEl = document.querySelector('clippy-context') as unknown as Context;
 
-  // Wait until Lit has performed at least one render cycle and the shadow root
-  // contains the <nav> element.
+  // Wait until the htmlDocumentContext is set (after TipTap fires 'create' via setTimeout)
+  // and the language-changes component has rendered its <nav>.
   await waitFor(() => expect(langChanges.shadowRoot?.querySelector('nav')).not.toBeNull());
 
   return { contextEl, langChanges };
@@ -108,7 +105,6 @@ describe('<clippy-language-changes>', () => {
     it('shows the "(documenttaal)" label when a block language reverts to the document language', async () => {
       const { contextEl, langChanges } = await setupWithContent(
         '<h1>Titel</h1><p lang="en">English.</p><p lang="nl">Terug naar Nederlands.</p>',
-        true,
       );
 
       // After clippy-content mounts the editor, force a re-render so that the

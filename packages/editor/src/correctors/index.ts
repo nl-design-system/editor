@@ -285,8 +285,8 @@ export const blockCorrectorMap = {
   [blockValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: correctHeadingWithFormatting,
   [blockValidations.IMAGE_MUST_HAVE_ALT_TEXT]: correctImageMissingAltText,
   [blockValidations.NODE_SHOULD_NOT_BE_EMPTY]: correctEmptyNode,
-  [blockValidations.PARAGRAPH_MUST_USE_SEMANTIC_LIST]: correctConvertToList,
   [blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING]: correctHeadingResemblingParagraph,
+  [blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST]: correctConvertToList,
   [blockValidations.TABLE_MUST_HAVE_HEADINGS]: correctTableMissingHeadings,
   [blockValidations.TABLE_MUST_HAVE_MULTIPLE_ROWS]: correctTableMissingRows,
 } as const;

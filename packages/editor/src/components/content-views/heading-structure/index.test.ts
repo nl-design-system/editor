@@ -22,6 +22,10 @@ async function setupWithContent(
   const headingStructure = document.querySelector('clippy-heading-structure') as unknown as HeadingStructure;
   const contextEl = document.querySelector('clippy-context') as unknown as Context;
 
+  // Wait until TipTap has mounted (create event fires via setTimeout(0)) and
+  // the htmlDocumentContext value has propagated to heading-structure.
+  await waitFor(() => expect(contextEl.htmlDocumentElement).toBeTruthy());
+  // One additional update cycle for the context change to propagate to the component.
   await headingStructure.updateComplete;
 
   return { contextEl, headingStructure };
@@ -130,8 +134,8 @@ describe('<clippy-heading-structure>', () => {
       const { contextEl, headingStructure } = await setupWithContent('<h1>Titel</h1>');
 
       // Build a range that intersects the heading element in the editor DOM
-      await waitFor(() => expect(contextEl.editor?.view?.dom?.querySelector('h1')).not.toBeNull());
-      const headingEl = contextEl.editor!.view.dom.querySelector('h1')!;
+      await waitFor(() => expect(contextEl.htmlDocumentElement?.querySelector('h1')).toBeTruthy());
+      const headingEl = contextEl.htmlDocumentElement!.querySelector('h1')!;
       const headingRange = document.createRange();
       headingRange.selectNode(headingEl);
 
@@ -161,7 +165,7 @@ describe('<clippy-heading-structure>', () => {
     it('does not dispatch FOCUS_VALIDATION_ITEM_IN_GUTTER when the clicked heading has no validation entry', async () => {
       const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
 
-      const button = headingStructure.shadowRoot!.querySelector('button') as HTMLButtonElement;
+      const button = await waitFor(() => headingStructure.shadowRoot!.querySelector('button') as HTMLButtonElement);
       expect(button).toBeVisible();
 
       let eventFired = false;
