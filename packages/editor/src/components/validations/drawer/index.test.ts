@@ -77,7 +77,7 @@ describe('<clippy-validations-dialog>', () => {
         headingLevel: 3,
         precedingHeadingLevel: 1,
       }),
-      entry(blockValidations.PARAGRAPH_MUST_USE_SEMANTIC_LIST, 'warning', { prefix: '-' }),
+      entry(blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST, 'warning', { prefix: '-' }),
       entry(blockValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC, 'warning'),
       entry(inlineValidations.INLINE_SHOULD_NOT_BE_UNDERLINED, 'warning'),
       entry(documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE, 'error', { topHeadingLevel: 1 }),
