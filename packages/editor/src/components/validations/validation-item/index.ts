@@ -1,4 +1,3 @@
-import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
@@ -17,7 +16,6 @@ import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { identifierContext } from '@/context/identifierContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
-import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
 import validationListItemStyles from './styles.ts';
 
@@ -53,8 +51,6 @@ export class ValidationItem extends LitElement {
   @property({ attribute: false })
   private readonly identifier?: string;
 
-  @editor()
-  private readonly editor: Editor | undefined;
 
   readonly #listItemRef: Ref<HTMLLIElement> = createRef();
 
