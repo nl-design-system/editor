@@ -81,8 +81,8 @@ export class ValidationItem extends LitElement {
         detail: { identifier: this.identifier },
       }),
     );
-    if (this.editor && typeof this.correct === 'function') {
-      this.correct(this.editor);
+    if (typeof this.correct === 'function') {
+      this.correct();
     }
   };
 
