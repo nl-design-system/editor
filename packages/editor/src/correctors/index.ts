@@ -5,7 +5,7 @@ import { orderedListIndicator, unorderedListIndicator } from './helpers.ts';
 // ── DOM helpers ───────────────────────────────────────────────────────────────
 
 /** Unwrap an element: replace it with its children in-place. */
-export const unwrapElement = (element: Element): void => {
+const unwrapElement = (element: Element): void => {
   const parent = element.parentNode;
   if (!parent) return;
   while (element.firstChild) {
@@ -15,7 +15,7 @@ export const unwrapElement = (element: Element): void => {
 };
 
 /** Select a Range in the browser's selection (focuses the content). */
-export const selectRange = (range: Range | undefined): void => {
+const selectRange = (range: Range | undefined): void => {
   if (!range) return;
   const selection = globalThis.getSelection();
   if (!selection) return;
@@ -24,7 +24,7 @@ export const selectRange = (range: Range | undefined): void => {
 };
 
 /** Change the tag name of an element while preserving attributes and inner HTML. */
-export const changeTagName = (element: Element, newTag: string): void => {
+const changeTagName = (element: Element, newTag: string): void => {
   const newEl = document.createElement(newTag);
   for (const attr of Array.from(element.attributes)) {
     newEl.setAttribute(attr.name, attr.value);
@@ -43,7 +43,7 @@ const stripListPrefix = (text: string, isOrdered: boolean): string => {
  * Convert a list-like paragraph (and any consecutive sibling list paragraphs)
  * into a proper <ul> or <ol> element using only DOM APIs.
  */
-export const convertParagraphsToList = (startParagraph: Element, isOrdered: boolean): void => {
+const convertParagraphsToList = (startParagraph: Element, isOrdered: boolean): void => {
   const listTag = isOrdered ? 'ol' : 'ul';
   const list = document.createElement(listTag);
   const parent = startParagraph.parentNode;
@@ -69,7 +69,7 @@ export const convertParagraphsToList = (startParagraph: Element, isOrdered: bool
     }
   }
 
-  parent.insertBefore(list, startParagraph);
+  startParagraph.before(list, startParagraph);
   for (const paragraph of toReplace) {
     paragraph.remove();
   }

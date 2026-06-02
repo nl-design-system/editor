@@ -39,27 +39,6 @@ export const isParagraphListLike = (paragraphNode: Node, isOrdered: boolean): bo
     ? orderedListIndicator.test(paragraphNode.textContent.substring(0, 2))
     : unorderedListIndicator.test(paragraphNode.textContent.substring(0, 2));
 
-export const collectConsecutiveListParagraphs = (
-  doc: Node,
-  startPos: number,
-  isOrdered: boolean,
-): { endPos: number; paragraphs: Node[] } => {
-  const paragraphs: Node[] = [];
-  let currentPos = startPos;
-  let endPos = startPos;
-
-  while (currentPos < doc.content.size) {
-    const node = doc.nodeAt(currentPos);
-    if (node?.type.name !== 'paragraph' || !isParagraphListLike(node, isOrdered)) break;
-
-    paragraphs.push(node);
-    endPos = currentPos + node.nodeSize;
-    currentPos = endPos;
-  }
-
-  return { endPos, paragraphs };
-};
-
 /**
  * Converts a single hard-break line of text into a list item node.
  * The list marker prefix is stripped; inline marks are lost because the line
