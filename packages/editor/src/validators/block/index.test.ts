@@ -95,6 +95,102 @@ describe('Block validations', () => {
       expect(results[6].tipPayload).toEqual({ prefix: '*' });
       expect(results[7].tipPayload).toEqual({ prefix: '1' });
     });
+
+    it('corrects consecutive ordered-list-like paragraphs to a semantic <ol>', async () => {
+      const editor = await createTestEditor(`
+        <h1>Title</h1>
+        <p>1 - Test</p>
+        <p>2 - Test</p>
+        <p>3 - Test</p>
+      `);
+
+      const dom = editor.view.dom;
+      const firstParagraph = dom.querySelector('p')!;
+      const result = paragraphMustUseSemanticList(dom, firstParagraph);
+
+      expect(result).not.toBeNull();
+      expect(result!.tipPayload).toEqual({ prefix: '1' });
+
+      result!.correct!();
+
+      expect(dom.querySelector('ol')).not.toBeNull();
+      expect(dom.querySelectorAll('ol > li')).toHaveLength(3);
+      dom.querySelectorAll('ol > li').forEach((li) => {
+        expect(li.textContent).toBe('Test');
+      });
+      expect(dom.querySelectorAll('p')).toHaveLength(0);
+    });
+
+    it('corrects consecutive unordered-list-like paragraphs to a semantic <ul>', async () => {
+      const editor = await createTestEditor(`
+        <h1>Title</h1>
+        <p>- Test</p>
+        <p>- Test</p>
+        <p>- Test</p>
+      `);
+
+      const dom = editor.view.dom;
+      const firstParagraph = dom.querySelector('p')!;
+      const result = paragraphMustUseSemanticList(dom, firstParagraph);
+
+      expect(result).not.toBeNull();
+      expect(result!.tipPayload).toEqual({ prefix: '-' });
+
+      result!.correct!();
+
+      expect(dom.querySelector('ul')).not.toBeNull();
+      expect(dom.querySelectorAll('ul > li')).toHaveLength(3);
+      dom.querySelectorAll('ul > li').forEach((li) => {
+        expect(li.textContent).toBe('Test');
+      });
+      expect(dom.querySelectorAll('p')).toHaveLength(0);
+    });
+
+    it('corrects a single <br>-separated ordered-list-like paragraph to a semantic <ol>', async () => {
+      const editor = await createTestEditor(`
+        <h1>Title</h1>
+        <p>1 - Test<br>2 - Test<br>3 - Test</p>
+      `);
+
+      const dom = editor.view.dom;
+      const firstParagraph = dom.querySelector('p')!;
+      const result = paragraphMustUseSemanticList(dom, firstParagraph);
+
+      expect(result).not.toBeNull();
+      expect(result!.tipPayload).toEqual({ prefix: '1' });
+
+      result!.correct!();
+
+      expect(dom.querySelector('ol')).not.toBeNull();
+      expect(dom.querySelectorAll('ol > li')).toHaveLength(3);
+      dom.querySelectorAll('ol > li').forEach((li) => {
+        expect(li.textContent).toBe('Test');
+      });
+      expect(dom.querySelectorAll('p')).toHaveLength(0);
+    });
+
+    it('corrects a single <br>-separated unordered-list-like paragraph to a semantic <ul>', async () => {
+      const editor = await createTestEditor(`
+        <h1>Title</h1>
+        <p>- Test<br>- Test<br>- Test</p>
+      `);
+
+      const dom = editor.view.dom;
+      const firstParagraph = dom.querySelector('p')!;
+      const result = paragraphMustUseSemanticList(dom, firstParagraph);
+
+      expect(result).not.toBeNull();
+      expect(result!.tipPayload).toEqual({ prefix: '-' });
+
+      result!.correct!();
+
+      expect(dom.querySelector('ul')).not.toBeNull();
+      expect(dom.querySelectorAll('ul > li')).toHaveLength(3);
+      dom.querySelectorAll('ul > li').forEach((li) => {
+        expect(li.textContent).toBe('Test');
+      });
+      expect(dom.querySelectorAll('p')).toHaveLength(0);
+    });
   });
 
   describe('Definition list validations', () => {

@@ -33,10 +33,26 @@ const changeTagName = (element: Element, newTag: string): void => {
   element.parentNode?.replaceChild(newEl, element);
 };
 
-/** Strip the list-item prefix (e.g. "1. ", "- ") from a line of text. */
+/** Strip the list-item prefix (e.g. "1. ", "1 - ", "- ") from a line of text. */
 const stripListPrefix = (text: string, isOrdered: boolean): string => {
-  const pattern = isOrdered ? /^\d+[.)\]/ ]\s*/ : /^\s*[•\-*+]\s+/;
+  const pattern = isOrdered ? /^\d+[.)\]/ ]-?\s*/ : /^\s*[•\-*+]\s+/;
   return text.replace(pattern, '');
+};
+
+/** Split a paragraph element into its <br>-separated text lines. */
+const getParagraphLinesFromDOM = (paragraph: Element): string[] => {
+  const lines: string[] = [];
+  let current = '';
+  for (const node of paragraph.childNodes) {
+    if (node instanceof Element && node.tagName === 'BR') {
+      if (current.trim().length > 0) lines.push(current);
+      current = '';
+    } else {
+      current += node.textContent ?? '';
+    }
+  }
+  if (current.trim().length > 0) lines.push(current);
+  return lines;
 };
 
 /**
@@ -59,8 +75,7 @@ const convertParagraphsToList = (startParagraph: Element, isOrdered: boolean): v
   }
 
   for (const paragraph of toReplace) {
-    const rawText = paragraph.textContent ?? '';
-    for (const line of rawText.split(/\n/)) {
+    for (const line of getParagraphLinesFromDOM(paragraph)) {
       const trimmed = line.trim();
       if (!trimmed) continue;
       const li = document.createElement('li');
