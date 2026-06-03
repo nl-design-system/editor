@@ -1,6 +1,6 @@
 import type { ContentValidator } from '@/types/validation.ts';
 import { blockValidations, validationSeverity } from '@/constants';
-import { orderedListIndicator, unorderedListIndicator } from '@/correctors/helpers.ts';
+import { getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from '@/correctors/helpers.ts';
 import {
   correctConvertToList,
   correctDefinitionListMissingTerm,
@@ -31,22 +31,6 @@ const BLOCK_NODE_TYPES: Partial<Record<string, string>> = {
 };
 
 // ── List helpers ──────────────────────────────────────────────────────────────
-
-/** Split a <p> element into its <br>-separated lines. */
-const getParagraphLinesFromDOM = (paragraph: Element): string[] => {
-  const lines: string[] = [];
-  let current = '';
-  for (const node of paragraph.childNodes) {
-    if (node instanceof Element && node.tagName === 'BR') {
-      if (current.trim().length > 0) lines.push(current);
-      current = '';
-    } else {
-      current += node.textContent ?? '';
-    }
-  }
-  if (current.trim().length > 0) lines.push(current);
-  return lines;
-};
 
 const decrementPrefix = (prefix: string): string => (prefix.startsWith('2') ? prefix.replace('2', '1') : prefix);
 

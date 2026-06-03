@@ -7,6 +7,22 @@ export const unorderedListIndicator = /^\s*([•\-*+])\s+/;
 const orderedPrefixPattern = /^\d+[.)\]/ ]\s*/;
 const unorderedPrefixPattern = /^\s*[•\-*+]\s+/;
 
+/** Split a paragraph element into its <br>-separated text lines. */
+export const getParagraphLinesFromDOM = (paragraph: Element): string[] => {
+  const lines: string[] = [];
+  let current = '';
+  for (const node of paragraph.childNodes) {
+    if (node instanceof Element && node.tagName === 'BR') {
+      if (current.trim().length > 0) lines.push(current);
+      current = '';
+    } else {
+      current += node.textContent ?? '';
+    }
+  }
+  if (current.trim().length > 0) lines.push(current);
+  return lines;
+};
+
 export const getParagraphLines = (node: Node): string[] => {
   const lines: string[] = [];
   let buffer = '';

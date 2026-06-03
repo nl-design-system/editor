@@ -1,6 +1,6 @@
 import type { CorrectValidationFunction } from '@/types/validation.ts';
 import { CustomEvents } from '@/events';
-import { orderedListIndicator, unorderedListIndicator } from './helpers.ts';
+import { getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from './helpers.ts';
 
 // ── DOM helpers ───────────────────────────────────────────────────────────────
 
@@ -37,22 +37,6 @@ const changeTagName = (element: Element, newTag: string): void => {
 const stripListPrefix = (text: string, isOrdered: boolean): string => {
   const pattern = isOrdered ? /^\d+[.)\]/ ]-?\s*/ : /^\s*[•\-*+]\s+/;
   return text.replace(pattern, '');
-};
-
-/** Split a paragraph element into its <br>-separated text lines. */
-const getParagraphLinesFromDOM = (paragraph: Element): string[] => {
-  const lines: string[] = [];
-  let current = '';
-  for (const node of paragraph.childNodes) {
-    if (node instanceof Element && node.tagName === 'BR') {
-      if (current.trim().length > 0) lines.push(current);
-      current = '';
-    } else {
-      current += node.textContent ?? '';
-    }
-  }
-  if (current.trim().length > 0) lines.push(current);
-  return lines;
 };
 
 /**
