@@ -29,6 +29,27 @@ import { validationMessages, type ValidationKey } from '@/messages';
 import type { ValidationItem } from '../validation-item';
 import dialogStyles from './styles.ts';
 
+/**
+ * Slide-in drawer dialog that lists all accessibility validation results and
+ * provides document overview panels (heading structure, link list, language
+ * changes). Opens and closes in response to the global
+ * `CustomEvents.OPEN_VALIDATIONS_DIALOG` event, scoped to the current editor
+ * identifier.
+ *
+ * @element clippy-validations-dialog
+ *
+ * @fires CustomEvents.OPEN_VALIDATIONS_DIALOG - Listens for this event to
+ *   toggle the dialog open state.
+ * @fires CustomEvents.TAB_CHANGE - Listens to filter the displayed validations
+ *   by severity.
+ *
+ * @example
+ * ```html
+ * <clippy-validations-dialog></clippy-validations-dialog>
+ * ```
+ *
+ * @wcag WCAG 2.2 SC 4.1.3 – status messages; SC 2.1.1 – keyboard accessible dialog
+ */
 @localized()
 @safeCustomElement('clippy-validations-dialog')
 export class ValidationsDialog extends LitElement {

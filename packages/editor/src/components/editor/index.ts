@@ -23,8 +23,29 @@ declare global {
   }
 }
 
+/**
+ * The main rich text editor component. It composes the toolbar, editable content area,
+ * accessibility validation gutter, bubble menu and the validations dialog.
+ *
+ * @element clippy-editor
+ *
+ * @slot value - Hidden slot for providing an initial HTML value to the editor.
+ *
+ * @example
+ * ```html
+ * <clippy-editor>
+ *   <div slot="value"><p>Hello world</p></div>
+ * </clippy-editor>
+ * ```
+ *
+ * @wcag WCAG 2.2 Level AA – keyboard navigable editor; ATAG 2.0 Part A & B
+ */
 @safeCustomElement(tag)
 export class Editor extends Context {
+  /**
+   * Configures which toolbar items (and their grouping) are visible.
+   * Defaults to {@link defaultToolbarConfig}.
+   */
   @property({ attribute: 'toolbar-config', type: Array })
   toolbarConfig: ToolbarConfig = defaultToolbarConfig;
 
