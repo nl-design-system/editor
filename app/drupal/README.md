@@ -54,3 +54,14 @@ To reset completely and start from scratch:
 ```shell
 docker compose down -v
 ```
+
+## Custom modules
+
+Custom modules live in `modules/` and are bind-mounted into the container at
+`/var/www/html/modules/custom/`. Edits to PHP files are reflected immediately on
+page reload. After structural changes (new hooks, schema updates) clear the
+Drupal cache via **Administration → Configuration → Development → Performance → Clear cache**.
+
+Modules are **not enabled automatically** — go to
+<http://localhost:8081/admin/modules>, find your module, check the box, and click
+**Install**.
