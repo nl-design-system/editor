@@ -1,0 +1,204 @@
+---
+import Document from '../layouts/document.astro';
+---
+
+<Document title="NL Design System - CKEditor">
+  <main>
+    <div class="ma-page-section ma-page-section--with-space">
+      <h1>CKEditor Validation</h1>
+        <div id="ck-editor">
+          <div id="ck-editor__editor"></div>
+          <div id="ck-editor__results"></div>
+          <div id="ck-editor__overlay"></div>
+        </div>
+    </div>
+  </main>
+</Document>
+
+<script>
+  import 'ckeditor5/ckeditor5.css';
+  import {
+    ClassicEditor,
+    Bold,
+    Essentials,
+    Heading,
+    Image,
+    ImageTextAlternative,
+    ImageUpload,
+    Italic,
+    Link,
+    List,
+    Paragraph,
+    Underline,
+  } from 'ckeditor5';
+  import { ValidationPlugin } from '@nl-design-system-community/editor-ckeditor';
+  import type { ValidationResult } from '@nl-design-system-community/editor-ckeditor';
+
+  const containerEl = document.querySelector<HTMLElement>('#ck-editor');
+  const editorEl = document.querySelector<HTMLElement>('#ck-editor__editor');
+  const resultsEl = document.querySelector<HTMLElement>('#ck-editor__results');
+  const overlayEl = document.querySelector<HTMLElement>('#ck-editor__overlay');
+
+  if (!containerEl || !editorEl || !resultsEl || !overlayEl) {
+    throw new Error('Missing required elements');
+  }
+
+  const editor = await ClassicEditor.create(editorEl, {
+    plugins: [
+      Essentials,
+      Heading,
+      Paragraph,
+      Bold,
+      Italic,
+      Underline,
+      Link,
+      List,
+      Image,
+      ImageTextAlternative,
+      ImageUpload,
+      ValidationPlugin,
+    ],
+    toolbar: [
+      'heading',
+      '|',
+      'bold',
+      'italic',
+      'underline',
+      'link',
+      '|',
+      'bulletedList',
+      'numberedList',
+      '|',
+      'insertImage',
+    ],
+    heading: {
+      options: [
+        { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+        { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+        { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+        { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+        { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' },
+        { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
+        { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' },
+      ],
+    },
+    licenseKey: 'GPL',
+    initialData: `
+      <h1>NL Design System Editor kop 1</h1>
+      <h1>second h1</h1>
+        <p>
+          Onder die steden, <strong>welke</strong> <i>vanouds</i> aan de <strong><i>grafelijke</i></strong> kroon
+          van Holland gelijk zoovele edelgesteenten flonkerden, en wier macht en rijkdom tot een hechten steun
+          verstrekten aan des Landsheer gezag, was Haarlem, gelijk genoeg bekend is, een der voornaamste.
+        </p>
+        <h2>NL Design System Editor kop 2</h2>
+        <p></p>
+        <h4>Dat mag niet, he</h4>
+        <p>
+          Aan den over eener rivier gebouwd, waarvan zij zich als van
+          <a href="https://example.com">twee armen bedienen</a> kon, om, aan de eene zijde, het Haarlemmermeer en de
+          daarom gelegen landen, aan de andere hij IJ, en door het IJ, de Zuiderzee te bereiken, had zij van deze
+          gunstige ligging reeds vroeg partij getrokken, om een<a href="https://example.com"> </a>handel te drijven,
+          die, schoon zich zelden verder uitstrekkende dan de gewesten, welke om die binnenzeeën gelegen waren, haar
+          niettemin gelegenheid gaf.
+        </p>
+        <table>
+          <tbody>
+            <tr>
+              <th>Naam</th>
+              <th colspan="3">Beschrijving</th>
+            </tr>
+            <tr>
+              <td>Rij 1, cel 1</td>
+              <td>Rij 1, cel 2</td>
+              <td>Rij 1, cel 3</td>
+              <td>Rij 1, cel 4</td>
+            </tr>
+          </tbody>
+        </table>
+        <dl>
+          <dt>Foo</dt>
+          <dd>The meaning of foo</dd>
+          <dt>Bar</dt>
+          <dd>The meaning of bar</dd>
+        </dl>
+        <h2>Afbeeldingen</h2>
+        <img src="https://placehold.co/800x400" />
+        <h3>Correct lijst</h3>
+        <ul>
+          <li>Test</li>
+          <li>Test</li>
+          <li>Test</li>
+        </ul>
+        <h3>Incorrect genummerde lijst</h3>
+        <p>1 - Test<br />2 - Test<br />3 - Test</p>
+      </div>
+    `,
+  });
+
+
+  const renderOverlays = (results: ValidationResult[]) => {
+    overlayEl.innerHTML = '';
+    const containerRect = containerEl.getBoundingClientRect();
+
+    results.forEach(({ boundingBox }) => {
+      if (!boundingBox) {
+        return;
+      }
+      const overlay = document.createElement('div');
+      overlay.className = 'ck-editor__overlay-item';
+      overlay.style.top = `${boundingBox.top - containerRect.top}px`;
+      overlay.style.height = `${boundingBox.height}px`;
+      overlayEl.appendChild(overlay);
+    });
+  };
+
+
+  const renderResults = (results: ValidationResult[]) => {
+    renderOverlays(results);
+
+    if (results.length === 0) {
+      resultsEl.innerHTML = 'No errors, well done!';
+      return;
+    }
+
+    const items = results
+      .map(
+        (result) => `
+        <li>
+          <span>${result.severity}</span>
+          <code>${result.ruleId}</code>
+        </li>`,
+      )
+      .join('');
+
+    resultsEl.innerHTML = `<ul>${items}</ul>`;
+    console.log('results', results);
+  };
+
+  editor.on('validation:results', (_evt: unknown, results: ValidationResult[]) => {
+    renderResults(results);
+  });
+</script>
+
+<style is:global>
+  #ck-editor {
+    position: relative;
+  }
+
+  .ck-editor__overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .ck-editor__overlay-item {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 0, 0, 0.1);
+    outline: 2px solid red;
+    border-radius: 4px;
+    pointer-events: none;
+  }
+</style>
