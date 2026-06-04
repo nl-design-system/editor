@@ -42,7 +42,8 @@
   "scripts": {
     "dev": "vite",
     "dev:ssr": "tsx server.ts",
-    "build": "npm-run-all build:ts build:vite",
+    "build": "npm-run-all build:cem build:ts build:vite",
+    "build:cem": "cem analyze --config custom-elements-manifest.config.mjs --litelement",
     "build:analyze": "cross-env ANALYZE_BUNDLE=true vite build",
     "build:ts": "tsc --build",
     "build:vite": "vite build",
