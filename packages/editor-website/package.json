@@ -28,6 +28,7 @@
     "@fontsource/source-sans-pro": "5.2.5",
     "@nl-design-system-candidate/button-css": "1.1.0",
     "@nl-design-system-community/editor": "workspace:*",
+    "@nl-design-system-community/editor-ckeditor": "workspace:*",
     "@nl-design-system-community/editor-react": "workspace:*",
     "@nl-design-system-community/ma-design-tokens": "5.2.0",
     "@tabler/icons": "3.44.0",
@@ -36,6 +37,7 @@
     "@utrecht/component-library-css": "9.0.12",
     "@utrecht/design-tokens": "6.2.1",
     "astro": "6.4.3",
+    "ckeditor5": "45.1.0",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "remark-custom-header-id": "1.0.0"
