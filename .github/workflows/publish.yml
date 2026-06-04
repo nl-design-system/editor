@@ -48,6 +48,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generate Custom Elements Manifest
+        run: pnpm --filter @nl-design-system-community/editor run cem
+
+      - name: Commit updated custom-elements.json
+        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          commit_message: "docs(cem): update custom-elements.json"
+          commit_author: "NL Design System <${{ secrets.GIT_COMMITTER_EMAIL }}>"
+          file_pattern: "packages/editor/custom-elements.json"
+
       - name: Build
         run: pnpm run build
 
