@@ -1,4 +1,3 @@
-import type { Editor } from '@tiptap/core';
 import type { EditorSettings } from '@/types/settings.ts';
 
 export type DocumentValidator = (dom: HTMLElement, settings: EditorSettings) => ValidationResult[];
@@ -7,7 +6,7 @@ export type ContentValidator = (dom: HTMLElement, element: Element) => Validatio
 
 export type ValidationEntry = readonly [range: Range, value: ValidationResult];
 
-export type CorrectValidationFunction = (editor: Editor) => void;
+export type CorrectValidationFunction = () => void;
 
 export type ValidationScope = 'block' | 'inline';
 

@@ -2,6 +2,7 @@ import type { Level } from '@tiptap/extension-heading';
 import type { EditorSettings } from '@/types/settings.ts';
 import type { DocumentValidator, ValidationResult } from '@/types/validation.ts';
 import { documentValidations, validationSeverity } from '@/constants';
+import { correctDuplicateHeadingOne, correctHeadingLevel, correctMissingTopLevelHeading } from '@/correctors/index.ts';
 import { getElementRange } from '@/validators/helpers.ts';
 
 // ── Document validators ───────────────────────────────────────────────────────
@@ -18,8 +19,9 @@ export const documentMustHaveCorrectHeadingOrder = (
     const headingLevel = Number.parseInt(heading.tagName.slice(1), 10) as Level;
 
     if (headingLevel < topHeadingLevel) {
+      const targetLevel = topHeadingLevel as Level;
       errors.push({
-        correct: () => {},
+        correct: correctHeadingLevel(heading, targetLevel),
         range: getElementRange(heading),
         scope: 'block',
         severity: validationSeverity.ERROR,
@@ -28,8 +30,9 @@ export const documentMustHaveCorrectHeadingOrder = (
     }
 
     if (headingLevel > precedingHeadingLevel + 1) {
+      const targetLevel = (precedingHeadingLevel + 1) as Level;
       errors.push({
-        correct: () => {},
+        correct: correctHeadingLevel(heading, targetLevel),
         range: getElementRange(heading),
         scope: 'block',
         severity: validationSeverity.WARNING,
@@ -48,7 +51,7 @@ export const documentMustHaveSingleHeadingOne = (dom: HTMLElement): ValidationRe
   if (h1s.length <= 1) return [];
 
   return h1s.slice(1).map((h1) => ({
-    correct: () => {},
+    correct: correctDuplicateHeadingOne(h1),
     range: getElementRange(h1),
     scope: 'block' as const,
     severity: validationSeverity.ERROR,
@@ -65,7 +68,7 @@ export const documentMustHaveTopLevelHeadingOne = (dom: HTMLElement, settings?: 
   const target = firstChild ?? dom;
   return [
     {
-      correct: () => {},
+      correct: target instanceof Element ? correctMissingTopLevelHeading(target) : undefined,
       range: getElementRange(target),
       scope: 'block',
       severity: validationSeverity.INFO,

@@ -1,5 +1,6 @@
 import type { ContentValidator } from '@/types/validation.ts';
 import { inlineValidations, validationSeverity } from '@/constants';
+import { correctEmptyMark, correctGenericLinkText, correctUnderlinedMark } from '@/correctors/index.ts';
 import { getElementRange, isEmptyOrWhitespace } from '@/validators/helpers.ts';
 
 // ── Inline-type mappings ──────────────────────────────────────────────────────
@@ -27,7 +28,12 @@ const linkShouldNotBeTooGeneric: ContentValidator = (_dom, node) => {
   if (node.tagName !== 'A') return null;
   const text = (node.textContent ?? '').trim().toLowerCase();
   if (!genericLinkTexts.has(text)) return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'inline', severity: validationSeverity.INFO };
+  return {
+    correct: correctGenericLinkText(getElementRange(node)),
+    range: getElementRange(node),
+    scope: 'inline',
+    severity: validationSeverity.INFO,
+  };
 };
 
 const inlineShouldNotBeEmpty: ContentValidator = (_dom, node) => {
@@ -36,7 +42,7 @@ const inlineShouldNotBeEmpty: ContentValidator = (_dom, node) => {
   if (!inlineType) return null;
   if (!isEmptyOrWhitespace(node.textContent ?? '')) return null;
   return {
-    correct: () => {},
+    correct: correctEmptyMark(node),
     range: getElementRange(node),
     scope: 'inline',
     severity: validationSeverity.INFO,
@@ -46,7 +52,12 @@ const inlineShouldNotBeEmpty: ContentValidator = (_dom, node) => {
 
 const inlineShouldNotBeUnderlined: ContentValidator = (_dom, node) => {
   if (node.tagName !== 'U') return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'inline', severity: validationSeverity.INFO };
+  return {
+    correct: correctUnderlinedMark(node),
+    range: getElementRange(node),
+    scope: 'inline',
+    severity: validationSeverity.INFO,
+  };
 };
 
 // ── Validator map ─────────────────────────────────────────────────────────────

@@ -1,6 +1,18 @@
 import type { ContentValidator } from '@/types/validation.ts';
 import { blockValidations, validationSeverity } from '@/constants';
-import { orderedListIndicator, unorderedListIndicator } from '@/correctors/helpers.ts';
+import { getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from '@/correctors/helpers.ts';
+import {
+  correctConvertToList,
+  correctDefinitionListMissingTerm,
+  correctDefinitionTermMissingDescription,
+  correctEmptyHeading,
+  correctEmptyNode,
+  correctHeadingResemblingParagraph,
+  correctHeadingWithFormatting,
+  correctImageMissingAltText,
+  correctTableMissingHeadings,
+  correctTableMissingRows,
+} from '@/correctors/index.ts';
 import { getElementRange, isEmptyOrWhitespace } from '@/validators/helpers.ts';
 
 // ── DOM utilities ─────────────────────────────────────────────────────────────
@@ -20,22 +32,6 @@ const BLOCK_NODE_TYPES: Partial<Record<string, string>> = {
 
 // ── List helpers ──────────────────────────────────────────────────────────────
 
-/** Split a <p> element into its <br>-separated lines. */
-const getParagraphLinesFromDOM = (paragraph: Element): string[] => {
-  const lines: string[] = [];
-  let current = '';
-  for (const node of paragraph.childNodes) {
-    if (node instanceof Element && node.tagName === 'BR') {
-      if (current.trim().length > 0) lines.push(current);
-      current = '';
-    } else {
-      current += node.textContent ?? '';
-    }
-  }
-  if (current.trim().length > 0) lines.push(current);
-  return lines;
-};
-
 const decrementPrefix = (prefix: string): string => (prefix.startsWith('2') ? prefix.replace('2', '1') : prefix);
 
 const getPrefix = (text: string): string => text.substring(0, 2);
@@ -45,32 +41,58 @@ const getPrefix = (text: string): string => text.substring(0, 2);
 const definitionDescriptionMustFollowTerm: ContentValidator = (_dom, node) => {
   if (node.tagName !== 'DT') return null;
   if (node.nextElementSibling?.tagName === 'DD') return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'block', severity: validationSeverity.ERROR };
+  return {
+    correct: correctDefinitionTermMissingDescription(node),
+    range: getElementRange(node),
+    scope: 'block',
+    severity: validationSeverity.ERROR,
+  };
 };
 
 const descriptionListMustContainTerm: ContentValidator = (_dom, node) => {
   if (node.tagName !== 'DL') return null;
   if (node.querySelector('dt')) return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'block', severity: validationSeverity.ERROR };
+  return {
+    correct: correctDefinitionListMissingTerm(node),
+    range: getElementRange(node),
+    scope: 'block',
+    severity: validationSeverity.ERROR,
+  };
 };
 
 const headingMustNotBeEmpty: ContentValidator = (_dom, node) => {
   if (!/^H[1-6]$/.test(node.tagName)) return null;
   if (!isEmptyOrWhitespace(node.textContent ?? '')) return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'block', severity: validationSeverity.ERROR };
+  return {
+    correct: correctEmptyHeading(node),
+    range: getElementRange(node),
+    scope: 'block',
+    severity: validationSeverity.ERROR,
+  };
 };
 
 const headingShouldNotContainBoldOrItalic: ContentValidator = (_dom, node) => {
   if (!/^H[1-6]$/.test(node.tagName)) return null;
   if (!node.querySelector('strong, b, em, i')) return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'block', severity: validationSeverity.INFO };
+  return {
+    correct: correctHeadingWithFormatting(node),
+    range: getElementRange(node),
+    scope: 'block',
+    severity: validationSeverity.INFO,
+  };
 };
 
 const imageMustHaveAltText: ContentValidator = (_dom, node) => {
   if (node.tagName !== 'IMG') return null;
   const alt = (node as HTMLImageElement).alt;
   if (alt && !isEmptyOrWhitespace(alt)) return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'block', severity: validationSeverity.INFO };
+  const range = getElementRange(node);
+  return {
+    correct: correctImageMissingAltText(node as HTMLImageElement, range),
+    range,
+    scope: 'block',
+    severity: validationSeverity.INFO,
+  };
 };
 
 const nodeShouldNotBeEmpty: ContentValidator = (_dom, node) => {
@@ -78,9 +100,10 @@ const nodeShouldNotBeEmpty: ContentValidator = (_dom, node) => {
   const nodeType = BLOCK_NODE_TYPES[tag];
   if (!nodeType) return null;
   if (!isEmptyOrWhitespace(node.textContent ?? '')) return null;
+  const range = getElementRange(node);
   return {
-    correct: () => {},
-    range: getElementRange(node),
+    correct: correctEmptyNode(node, nodeType, range),
+    range,
     scope: 'block',
     severity: validationSeverity.INFO,
     tipPayload: { nodeType },
@@ -97,7 +120,12 @@ const paragraphShouldNotResembleHeading: ContentValidator = (_dom, node) => {
   if (nonEmptyChildren.length === 0) return null;
   const allBold = nonEmptyChildren.every((n) => n instanceof Element && (n.tagName === 'STRONG' || n.tagName === 'B'));
   if (!allBold) return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'block', severity: validationSeverity.INFO };
+  return {
+    correct: correctHeadingResemblingParagraph(node, text),
+    range: getElementRange(node),
+    scope: 'block',
+    severity: validationSeverity.INFO,
+  };
 };
 
 export const paragraphMustUseSemanticList: ContentValidator = (_dom, node) => {
@@ -116,7 +144,7 @@ export const paragraphMustUseSemanticList: ContentValidator = (_dom, node) => {
     const secondPrefix = getPrefix(nextSibling.textContent ?? '');
     if (decrementPrefix(secondPrefix) === firstPrefix) {
       return {
-        correct: () => {},
+        correct: correctConvertToList(node, isOrdered),
         range: getElementRange(node),
         scope: 'block',
         severity: validationSeverity.INFO,
@@ -129,7 +157,7 @@ export const paragraphMustUseSemanticList: ContentValidator = (_dom, node) => {
   const lines = getParagraphLinesFromDOM(node);
   if (lines.length > 1 && firstPrefix === decrementPrefix(getPrefix(lines[1] ?? ''))) {
     return {
-      correct: () => {},
+      correct: correctConvertToList(node, isOrdered),
       range: getElementRange(node),
       scope: 'block',
       severity: validationSeverity.INFO,
@@ -148,13 +176,23 @@ const tableMustHaveHeadings: ContentValidator = (_dom, node) => {
   const hasHeaderColumn =
     !hasHeaderRow && Array.from(node.querySelectorAll('tr')).every((row) => row.firstElementChild?.tagName === 'TH');
   if (hasHeaderRow || hasHeaderColumn) return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'block', severity: validationSeverity.WARNING };
+  return {
+    correct: correctTableMissingHeadings(node as HTMLTableElement),
+    range: getElementRange(node),
+    scope: 'block',
+    severity: validationSeverity.WARNING,
+  };
 };
 
 const tableMustHaveMultipleRows: ContentValidator = (_dom, node) => {
   if (node.tagName !== 'TABLE') return null;
   if (node.querySelectorAll('tr').length >= 2) return null;
-  return { correct: () => {}, range: getElementRange(node), scope: 'block', severity: validationSeverity.WARNING };
+  return {
+    correct: correctTableMissingRows(node as HTMLTableElement),
+    range: getElementRange(node),
+    scope: 'block',
+    severity: validationSeverity.WARNING,
+  };
 };
 
 // ── Validator map ─────────────────────────────────────────────────────────────
