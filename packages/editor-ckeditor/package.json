@@ -13,6 +13,13 @@
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./styles": {
+      "types": "./dist/clippy.css.d.ts",
+      "default": "./dist/clippy.css"
+    }
+  },
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
