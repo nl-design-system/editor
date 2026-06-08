@@ -73,6 +73,7 @@
 's61eacb19db252f5e': `URL`,
 's620c25bb9799375e': `Geordende lijst`,
 's626daf42b1ab7df7': `Links uitlijnen`,
+'s63d894b1ddb06289': `Beschrijving`,
 's64666f3c1e287e34': `Link naar:`,
 's6490655f25ad112c': `Bewerk de afbeelding om een alt-tekst toe te voegen`,
 's64ef2a6c2dd1d3d1': `Bewerken`,

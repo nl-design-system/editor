@@ -54,9 +54,6 @@ const ariaDescribedBy = 'validation-item-header';
  *   href="https://wcag.nl/…"
  * ></clippy-validation-item>
  * ```
- *
- * @wcag WCAG 2.2 SC 1.4.1 – severity communicated with both icon and colour;
- *        SC 4.1.2 – buttons have accessible names via `aria-describedby`
  */
 @localized()
 @safeCustomElement(tag)

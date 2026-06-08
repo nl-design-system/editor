@@ -39,9 +39,6 @@ declare global {
  * ```html
  * <clippy-content shadow></clippy-content>
  * ```
- *
- * @wcag WCAG 2.2 Level AA – focusable editable region with correct ARIA role
- *        provided by TipTap's ProseMirror view
  */
 @safeCustomElement(tag)
 export class Content extends LitElement {

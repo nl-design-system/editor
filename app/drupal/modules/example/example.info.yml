@@ -1,0 +1,5 @@
+name: Example
+type: module
+description: Example module for the Clippy Editor integration.
+core_version_requirement: ^11
+package: Custom

@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * Implements hook_page_attachments().
+ */
+function example_page_attachments(array &$attachments): void {
+  $attachments['#attached']['library'][] = 'example/hello-world';
+}

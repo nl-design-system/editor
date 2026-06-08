@@ -47,8 +47,6 @@ import dialogStyles from './styles.ts';
  * ```html
  * <clippy-validations-dialog></clippy-validations-dialog>
  * ```
- *
- * @wcag WCAG 2.2 SC 4.1.3 – status messages; SC 2.1.1 – keyboard accessible dialog
  */
 @localized()
 @safeCustomElement('clippy-validations-dialog')
