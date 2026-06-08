@@ -87,14 +87,14 @@ const convertParagraphsToList = (startParagraph: Element, isOrdered: boolean): v
  */
 export const correctImageMissingAltText =
   (node: HTMLImageElement, range: Range | undefined): CorrectValidationFunction =>
-    () => {
-      selectRange(range);
-      globalThis.dispatchEvent(
-        new CustomEvent(CustomEvents.OPEN_IMAGE_DIALOG, {
-          detail: { files: [{ name: node.alt, type: 'image/*', url: node.src }], replace: true },
-        }),
-      );
-    };
+  () => {
+    selectRange(range);
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_IMAGE_DIALOG, {
+        detail: { files: [{ name: node.alt, type: 'image/*', url: node.src }], replace: true },
+      }),
+    );
+  };
 
 /**
  * Removes an empty node from the document.
@@ -103,22 +103,22 @@ export const correctImageMissingAltText =
  */
 export const correctEmptyNode =
   (node: Element, nodeType: string, range: Range | undefined): CorrectValidationFunction =>
-    () => {
-      if (nodeType === 'tableCell' || nodeType === 'tableHeader' || nodeType === 'tableCaption') {
-        selectRange(range);
-      } else {
-        node.remove();
-      }
-    };
+  () => {
+    if (nodeType === 'tableCell' || nodeType === 'tableHeader' || nodeType === 'tableCaption') {
+      selectRange(range);
+    } else {
+      node.remove();
+    }
+  };
 
 /**
  * Removes an empty inline mark element from the document.
  */
 export const correctEmptyMark =
   (node: Element): CorrectValidationFunction =>
-    () => {
-      node.remove();
-    };
+  () => {
+    node.remove();
+  };
 
 /**
  * Selects the generic link text so the user can replace it with something
@@ -126,36 +126,36 @@ export const correctEmptyMark =
  */
 export const correctGenericLinkText =
   (range: Range | undefined): CorrectValidationFunction =>
-    () => {
-      selectRange(range);
-    };
+  () => {
+    selectRange(range);
+  };
 
 /**
  * Removes the underline mark by unwrapping the <u> element in-place.
  */
 export const correctUnderlinedMark =
   (node: Element): CorrectValidationFunction =>
-    () => {
-      unwrapElement(node);
-    };
+  () => {
+    unwrapElement(node);
+  };
 
 /**
  * Deletes an empty heading node.
  */
 export const correctEmptyHeading =
   (node: Element): CorrectValidationFunction =>
-    () => {
-      node.remove();
-    };
+  () => {
+    node.remove();
+  };
 
 /**
  * Removes bold and italic marks from the content of a heading node.
  */
 export const correctHeadingWithFormatting =
   (node: Element): CorrectValidationFunction =>
-    () => {
-      node.querySelectorAll('strong, b, em, i').forEach(unwrapElement);
-    };
+  () => {
+    node.querySelectorAll('strong, b, em, i').forEach(unwrapElement);
+  };
 
 /**
  * Inserts a placeholder definition term at the start of a definition list
@@ -163,11 +163,11 @@ export const correctHeadingWithFormatting =
  */
 export const correctDefinitionListMissingTerm =
   (node: Element): CorrectValidationFunction =>
-    () => {
-      const dt = document.createElement('dt');
-      dt.textContent = 'Term';
-      node.prepend(dt);
-    };
+  () => {
+    const dt = document.createElement('dt');
+    dt.textContent = 'Term';
+    node.prepend(dt);
+  };
 
 /**
  * Inserts a placeholder definition description immediately after a definition
@@ -175,11 +175,11 @@ export const correctDefinitionListMissingTerm =
  */
 export const correctDefinitionTermMissingDescription =
   (node: Element): CorrectValidationFunction =>
-    () => {
-      const dd = document.createElement('dd');
-      dd.textContent = msg('Description');
-      node.after(dd);
-    };
+  () => {
+    const dd = document.createElement('dd');
+    dd.textContent = msg('Description');
+    node.after(dd);
+  };
 
 // ── Document correctors ───────────────────────────────────────────────────────
 
@@ -189,9 +189,9 @@ export const correctDefinitionTermMissingDescription =
  */
 export const correctHeadingLevel =
   (heading: Element, targetLevel: number): CorrectValidationFunction =>
-    () => {
-      changeTagName(heading, `h${targetLevel}`);
-    };
+  () => {
+    changeTagName(heading, `h${targetLevel}`);
+  };
 
 /**
  * Converts a sequence of list-like paragraphs starting at `startParagraph`
@@ -199,18 +199,18 @@ export const correctHeadingLevel =
  */
 export const correctConvertToList =
   (paragraph: Element, isOrdered: boolean): CorrectValidationFunction =>
-    () => {
-      convertParagraphsToList(paragraph, isOrdered);
-    };
+  () => {
+    convertParagraphsToList(paragraph, isOrdered);
+  };
 
 /**
  * Demotes a duplicate <h1> to <h2>.
  */
 export const correctDuplicateHeadingOne =
   (h1: Element): CorrectValidationFunction =>
-    () => {
-      changeTagName(h1, 'h2');
-    };
+  () => {
+    changeTagName(h1, 'h2');
+  };
 
 /**
  * Promotes the first block in the document to <h1> when the document
@@ -218,9 +218,9 @@ export const correctDuplicateHeadingOne =
  */
 export const correctMissingTopLevelHeading =
   (target: Element): CorrectValidationFunction =>
-    () => {
-      changeTagName(target, 'h1');
-    };
+  () => {
+    changeTagName(target, 'h1');
+  };
 
 /**
  * Converts a fully-bold short paragraph into the appropriate heading level,
@@ -230,22 +230,22 @@ export const correctMissingTopLevelHeading =
  */
 export const correctHeadingResemblingParagraph =
   (child: Element, text: string): CorrectValidationFunction =>
-    () => {
-      let precedingLevel = 1;
-      let sibling = child.previousElementSibling;
-      while (sibling) {
-        const match = /^H([1-6])$/.exec(sibling.tagName);
-        if (match) {
-          precedingLevel = Number.parseInt(match[1], 10);
-          break;
-        }
-        sibling = sibling.previousElementSibling;
+  () => {
+    let precedingLevel = 1;
+    let sibling = child.previousElementSibling;
+    while (sibling) {
+      const match = /^H([1-6])$/.exec(sibling.tagName);
+      if (match) {
+        precedingLevel = Number.parseInt(match[1], 10);
+        break;
       }
-      const targetLevel = Math.min(precedingLevel + 1, 6);
-      const newHeading = document.createElement(`h${targetLevel}`);
-      newHeading.textContent = text;
-      child.replaceWith(newHeading);
-    };
+      sibling = sibling.previousElementSibling;
+    }
+    const targetLevel = Math.min(precedingLevel + 1, 6);
+    const newHeading = document.createElement(`h${targetLevel}`);
+    newHeading.textContent = text;
+    child.replaceWith(newHeading);
+  };
 
 /**
  * Adds a header row to a table that has neither a header row nor a header
@@ -253,19 +253,19 @@ export const correctHeadingResemblingParagraph =
  */
 export const correctTableMissingHeadings =
   (table: HTMLTableElement): CorrectValidationFunction =>
-    () => {
-      const firstRow = table.querySelector('tr');
-      if (!firstRow) return;
-      for (const cell of firstRow.children) {
-        if (cell.tagName === 'TH') return;
-        const th = document.createElement('th');
-        th.innerHTML = cell.innerHTML;
-        for (const attr of cell.attributes) {
-          th.setAttribute(attr.name, attr.value);
-        }
-        cell.replaceWith(th);
+  () => {
+    const firstRow = table.querySelector('tr');
+    if (!firstRow) return;
+    for (const cell of firstRow.children) {
+      if (cell.tagName === 'TH') return;
+      const th = document.createElement('th');
+      th.innerHTML = cell.innerHTML;
+      for (const attr of cell.attributes) {
+        th.setAttribute(attr.name, attr.value);
       }
-    };
+      cell.replaceWith(th);
+    }
+  };
 
 /**
  * Adds a new empty row after the first row of a table that contains only
@@ -273,11 +273,11 @@ export const correctTableMissingHeadings =
  */
 export const correctTableMissingRows =
   (table: HTMLTableElement): CorrectValidationFunction =>
-    () => {
-      const firstRow = table.querySelector('tr');
-      if (!firstRow) return;
-      const tbody = table.querySelector('tbody') ?? table;
-      const newRow = document.createElement('tr');
-      Array.from({ length: firstRow.children.length }, () => newRow.appendChild(document.createElement('td')));
-      tbody.appendChild(newRow);
-    };
+  () => {
+    const firstRow = table.querySelector('tr');
+    if (!firstRow) return;
+    const tbody = table.querySelector('tbody') ?? table;
+    const newRow = document.createElement('tr');
+    Array.from({ length: firstRow.children.length }, () => newRow.appendChild(document.createElement('td')));
+    tbody.appendChild(newRow);
+  };
