@@ -1,0 +1,19 @@
+# Register the ClippyPlugin with Drupal's CKEditor5 plugin system.
+# The YAML keys (ckeditor5/drupal) must match the constructor parameters of the
+# #[CKEditor5Plugin] PHP attribute — do NOT use a ckeditor5_plugin_info wrapper.
+# The 'plugins' condition ties this plugin to ckeditor5_essentials, which is
+# present in every CKEditor5 text format. Drupal auto-enables conditioned plugins
+# whose conditions are always satisfied, so this plugin is active without
+# requiring manual per-format configuration.
+clippy_validation:
+  ckeditor5:
+    plugins:
+      - clippyCkeditor.ClippyPlugin
+  drupal:
+    label: "Clippy"
+    library: "clippy/plugin"
+    elements: false
+    toolbar_items: {}
+    conditions:
+      plugins:
+        - ckeditor5_essentials
