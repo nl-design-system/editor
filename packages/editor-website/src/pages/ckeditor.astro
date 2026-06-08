@@ -5,12 +5,8 @@ import Document from '../layouts/document.astro';
 <Document title="NL Design System - CKEditor">
   <main>
     <div class="ma-page-section ma-page-section--with-space">
-      <h1>CKEditor Validation</h1>
-        <div id="ck-editor">
-          <div id="ck-editor__editor"></div>
-          <div id="ck-editor__results"></div>
-          <div id="ck-editor__overlay"></div>
-        </div>
+      <h1>CKEditor Clippy</h1>
+      <div id="ck-editor"></div>
     </div>
   </main>
 </Document>
@@ -31,19 +27,16 @@ import Document from '../layouts/document.astro';
     Paragraph,
     Underline,
   } from 'ckeditor5';
-  import { ValidationPlugin } from '@nl-design-system-community/editor-ckeditor';
-  import type { ValidationResult } from '@nl-design-system-community/editor-ckeditor';
+  import { ClippyPlugin } from '@nl-design-system-community/editor-ckeditor';
+  import '@nl-design-system-community/editor-ckeditor/styles';
 
-  const containerEl = document.querySelector<HTMLElement>('#ck-editor');
-  const editorEl = document.querySelector<HTMLElement>('#ck-editor__editor');
-  const resultsEl = document.querySelector<HTMLElement>('#ck-editor__results');
-  const overlayEl = document.querySelector<HTMLElement>('#ck-editor__overlay');
+  const editorEl = document.querySelector<HTMLElement>('#ck-editor');
 
-  if (!containerEl || !editorEl || !resultsEl || !overlayEl) {
-    throw new Error('Missing required elements');
+  if (!editorEl) {
+    throw new Error('Missing editor element');
   }
 
-  const editor = await ClassicEditor.create(editorEl, {
+  await ClassicEditor.create(editorEl, {
     plugins: [
       Essentials,
       Heading,
@@ -56,7 +49,7 @@ import Document from '../layouts/document.astro';
       Image,
       ImageTextAlternative,
       ImageUpload,
-      ValidationPlugin,
+      ClippyPlugin,
     ],
     toolbar: [
       'heading',
@@ -135,70 +128,4 @@ import Document from '../layouts/document.astro';
       </div>
     `,
   });
-
-
-  const renderOverlays = (results: ValidationResult[]) => {
-    overlayEl.innerHTML = '';
-    const containerRect = containerEl.getBoundingClientRect();
-
-    results.forEach(({ boundingBox }) => {
-      if (!boundingBox) {
-        return;
-      }
-      const overlay = document.createElement('div');
-      overlay.className = 'ck-editor__overlay-item';
-      overlay.style.top = `${boundingBox.top - containerRect.top}px`;
-      overlay.style.height = `${boundingBox.height}px`;
-      overlayEl.appendChild(overlay);
-    });
-  };
-
-
-  const renderResults = (results: ValidationResult[]) => {
-    renderOverlays(results);
-
-    if (results.length === 0) {
-      resultsEl.innerHTML = 'No errors, well done!';
-      return;
-    }
-
-    const items = results
-      .map(
-        (result) => `
-        <li>
-          <span>${result.severity}</span>
-          <code>${result.ruleId}</code>
-        </li>`,
-      )
-      .join('');
-
-    resultsEl.innerHTML = `<ul>${items}</ul>`;
-    console.log('results', results);
-  };
-
-  editor.on('validation:results', (_evt: unknown, results: ValidationResult[]) => {
-    renderResults(results);
-  });
 </script>
-
-<style is:global>
-  #ck-editor {
-    position: relative;
-  }
-
-  .ck-editor__overlay {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
-
-  .ck-editor__overlay-item {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    background: rgba(255, 0, 0, 0.1);
-    outline: 2px solid red;
-    border-radius: 4px;
-    pointer-events: none;
-  }
-</style>
