@@ -1,6 +1,7 @@
 import type { CorrectValidationFunction } from '@/types/validation.ts';
 import { CustomEvents } from '@/events';
 import { getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from './helpers.ts';
+import { msg } from '@lit/localize';
 
 // ── DOM helpers ───────────────────────────────────────────────────────────────
 
@@ -26,16 +27,19 @@ const selectRange = (range: Range | undefined): void => {
 /** Change the tag name of an element while preserving attributes and inner HTML. */
 const changeTagName = (element: Element, newTag: string): void => {
   const newEl = document.createElement(newTag);
-  for (const attr of Array.from(element.attributes)) {
+  for (const attr of element.attributes) {
     newEl.setAttribute(attr.name, attr.value);
   }
   newEl.innerHTML = element.innerHTML;
   element.parentNode?.replaceChild(newEl, element);
 };
 
+const ORDERED_LIST_PREFIX_PATTERN = /^\d+[.)\]/ ]-?\s*/;
+const UNORDERED_LIST_PREFIX_PATTERN = /^\s*[•\-*+]\s+/;
+
 /** Strip the list-item prefix (e.g. "1. ", "1 - ", "- ") from a line of text. */
 const stripListPrefix = (text: string, isOrdered: boolean): string => {
-  const pattern = isOrdered ? /^\d+[.)\]/ ]-?\s*/ : /^\s*[•\-*+]\s+/;
+  const pattern = isOrdered ? ORDERED_LIST_PREFIX_PATTERN : UNORDERED_LIST_PREFIX_PATTERN;
   return text.replace(pattern, '');
 };
 
@@ -172,7 +176,7 @@ export const correctDefinitionTermMissingDescription =
   (node: Element): CorrectValidationFunction =>
   () => {
     const dd = document.createElement('dd');
-    dd.textContent = 'Beschrijving';
+    dd.textContent = msg('Description');
     node.after(dd);
   };
 
@@ -239,7 +243,7 @@ export const correctHeadingResemblingParagraph =
     const targetLevel = Math.min(precedingLevel + 1, 6);
     const newHeading = document.createElement(`h${targetLevel}`);
     newHeading.textContent = text;
-    child.parentNode?.replaceChild(newHeading, child);
+    child.replaceWith(newHeading);
   };
 
 /**
@@ -251,15 +255,15 @@ export const correctTableMissingHeadings =
   () => {
     const firstRow = table.querySelector('tr');
     if (!firstRow) return;
-    Array.from(firstRow.children).forEach((cell) => {
+    for (const cell of firstRow.children) {
       if (cell.tagName === 'TH') return;
       const th = document.createElement('th');
       th.innerHTML = cell.innerHTML;
-      for (const attr of Array.from(cell.attributes)) {
+      for (const attr of cell.attributes) {
         th.setAttribute(attr.name, attr.value);
       }
-      cell.parentNode?.replaceChild(th, cell);
-    });
+      cell.replaceWith(th);
+    }
   };
 
 /**

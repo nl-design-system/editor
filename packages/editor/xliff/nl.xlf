@@ -550,6 +550,10 @@
         <source>Start met typen...</source>
         <target>Start typing...</target>
       </trans-unit>
+      <trans-unit id="s63d894b1ddb06289">
+        <source>Description</source>
+        <target>Beschrijving</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
