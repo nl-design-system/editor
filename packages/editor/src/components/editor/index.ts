@@ -37,8 +37,6 @@ declare global {
  *   <div slot="value"><p>Hello world</p></div>
  * </clippy-editor>
  * ```
- *
- * @wcag WCAG 2.2 Level AA – keyboard navigable editor; ATAG 2.0 Part A & B
  */
 @safeCustomElement(tag)
 export class Editor extends Context {

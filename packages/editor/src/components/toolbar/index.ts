@@ -66,9 +66,6 @@ declare global {
  * ```html
  * <clippy-toolbar .config=${myToolbarConfig}></clippy-toolbar>
  * ```
- *
- * @wcag WCAG 2.2 SC 2.1.1 – all actions reachable by keyboard;
- *        SC 4.1.3 – status messages for live-region notification count
  */
 @localized()
 @safeCustomElement('clippy-toolbar')

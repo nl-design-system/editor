@@ -49,9 +49,6 @@ declare global {
  *   <clippy-content></clippy-content>
  * </clippy-context>
  * ```
- *
- * @wcag WCAG 2.2 Level AA – ATAG 2.0 Part A & B – editor produces accessible output
- *        and is itself operable by keyboard
  */
 @safeCustomElement(tag)
 export class Context extends LitElement {

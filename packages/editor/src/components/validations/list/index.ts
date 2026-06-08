@@ -33,8 +33,6 @@ declare global {
  * ```html
  * <clippy-validations-list></clippy-validations-list>
  * ```
- *
- * @wcag WCAG 2.2 SC 1.3.1 – list semantics; SC 4.1.3 – programmatic focus management
  */
 @localized()
 @safeCustomElement(tag)

@@ -38,9 +38,6 @@ declare global {
  * ```html
  * <clippy-validations-gutter></clippy-validations-gutter>
  * ```
- *
- * @wcag WCAG 2.2 SC 1.4.1 – colour is not the only indicator (icons + ARIA labels);
- *        SC 4.1.3 – status messages via aria-live
  */
 @localized()
 @safeCustomElement(tag)
