@@ -44,6 +44,25 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      - name: Check if custom-elements.json changed
+        id: cem-diff
+        run: |
+          if git diff --quiet packages/editor/custom-elements.json; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit updated custom-elements.json
+        if: steps.cem-diff.outputs.changed == 'true'
+        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          commit_message: "docs(cem): update custom-elements.json"
+          commit_author: "NL Design System <${{ secrets.GIT_COMMITTER_EMAIL }}>"
+          file_pattern: "packages/editor/custom-elements.json"
+
       - name: Publish to the npm Registry
         uses: changesets/action@63a615b9cd06ba9a3e6d13796c7fbcb080a60a0b # v1.8.0
         env:
