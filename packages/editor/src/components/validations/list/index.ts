@@ -21,11 +21,25 @@ declare global {
   }
 }
 
+/**
+ * Renders all current accessibility validations as a list of
+ * `<clippy-validation-item>` elements. Listens to the global
+ * `CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST` event to scroll and focus the
+ * matching item.
+ *
+ * @element clippy-validations-list
+ *
+ * @example
+ * ```html
+ * <clippy-validations-list></clippy-validations-list>
+ * ```
+ */
 @localized()
 @safeCustomElement(tag)
 export class ValidationsList extends LitElement {
   static override readonly styles = [listStyles, unsafeCSS(paragraphStyle)];
 
+  /** @internal Consumed from the nearest {@link validationsContext} provider. */
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
   validationsContext?: ValidationsMap;

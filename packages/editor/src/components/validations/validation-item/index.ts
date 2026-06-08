@@ -34,6 +34,32 @@ declare global {
 
 const ariaDescribedBy = 'validation-item-header';
 
+/**
+ * A single accessibility validation result card. Displays the severity icon,
+ * description, optional tip, and action buttons (Focus, Correct, Open in drawer).
+ * The `mode` property controls which actions are visible.
+ *
+ * @element clippy-validation-item
+ *
+ * @slot tip-html - Optional HTML content rendered as additional guidance below
+ *   the description. Wrap content in a `<p>` element.
+ *
+ * @fires CustomEvents.FOCUS_NODE - Dispatched when the user clicks "Focus",
+ *   carrying `detail.range` so the editor can scroll to the relevant node.
+ * @fires CustomEvents.CORRECT_VALIDATION_ISSUE - Dispatched when the user
+ *   clicks "Correct", triggering the auto-fix callback.
+ * @fires CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER - Dispatched in `tooltip`
+ *   mode when the user clicks the "Open in drawer" icon button.
+ *
+ * @example
+ * ```html
+ * <clippy-validation-item
+ *   severity="error"
+ *   description="Missing alt text on image"
+ *   href="https://wcag.nl/…"
+ * ></clippy-validation-item>
+ * ```
+ */
 @localized()
 @safeCustomElement(tag)
 export class ValidationItem extends LitElement {
@@ -44,12 +70,24 @@ export class ValidationItem extends LitElement {
     unsafeCSS(linkCss),
   ];
 
+  /**
+   * Display context for the item's action buttons.
+   * - `list` (default) – Focus and Correct buttons.
+   * - `tooltip` – additionally shows an "Open in drawer" button.
+   * - `readonly` – no action buttons rendered.
+   */
   @property({ type: String }) mode: 'tooltip' | 'list' | 'readonly' = 'list';
+  /** The DOM `Range` that this validation issue relates to. */
   @property({ attribute: false }) range?: Range;
+  /** Severity level of the validation issue. */
   @property({ type: String }) severity!: ValidationSeverity;
+  /** Human-readable description of the validation issue. */
   @property({ type: String }) description!: string;
+  /** Optional URL linking to a more extensive explanation of the WCAG criterion. */
   @property({ type: String }) href?: string;
+  /** Custom label for the auto-fix button. Falls back to "Correct". */
   @property({ type: String }) customCorrectLabel?: string;
+  /** Optional function that applies the automatic fix for this issue. */
   @property({ type: Function }) correct?: CorrectValidationFunction;
 
   @consume({ context: identifierContext, subscribe: true })
