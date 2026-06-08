@@ -48,10 +48,11 @@ const stripListPrefix = (text: string, isOrdered: boolean): string => {
  * into a proper <ul> or <ol> element using only DOM APIs.
  */
 const convertParagraphsToList = (startParagraph: Element, isOrdered: boolean): void => {
-  const listTag = isOrdered ? 'ol' : 'ul';
-  const list = document.createElement(listTag);
   const parent = startParagraph.parentNode;
   if (!parent) return;
+
+  const listTag = isOrdered ? 'ol' : 'ul';
+  const list = document.createElement(listTag);
 
   const toReplace: Element[] = [startParagraph];
   let next = startParagraph.nextElementSibling;
