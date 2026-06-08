@@ -1,25 +1,23 @@
-import type { Editor } from '@tiptap/core';
-import type { Node } from 'prosemirror-model';
 import type { EditorSettings } from '@/types/settings.ts';
 
-export type BoundingBox = { top: number; height: number };
+export type DocumentValidator = (dom: HTMLElement, settings: EditorSettings) => ValidationResult[];
 
-export type DocumentValidator = (editor: Editor, settings: EditorSettings) => ValidationResult[];
+export type ContentValidator = (dom: HTMLElement, element: Element) => ValidationResult | null;
 
-export type ContentValidator = (editor: Editor, node: Node, pos: number) => ValidationResult | null;
+export type ValidationEntry = readonly [range: Range, value: ValidationResult];
 
-export type ValidationEntry = readonly [key: string, value: ValidationResult];
+export type CorrectValidationFunction = () => void;
 
-export type CorrectValidationFunction = (editor: Editor) => void;
+export type ValidationScope = 'block' | 'inline';
 
 export type ValidationResult = {
-  boundingBox: BoundingBox | null;
+  validatorKey?: string;
+  range?: Range;
+  scope?: ValidationScope;
   severity: ValidationSeverity;
-  pos: number;
   tipPayload?: Record<string, number | string | boolean>;
   correct?: CorrectValidationFunction;
 };
 
 export type ValidationSeverity = 'info' | 'warning' | 'error';
-
-export type ValidationsMap = Map<string, ValidationResult>;
+export type ValidationsMap = Map<Range, ValidationResult>;

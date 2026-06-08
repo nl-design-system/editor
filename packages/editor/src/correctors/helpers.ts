@@ -7,6 +7,22 @@ export const unorderedListIndicator = /^\s*([•\-*+])\s+/;
 const orderedPrefixPattern = /^\d+[.)\]/ ]\s*/;
 const unorderedPrefixPattern = /^\s*[•\-*+]\s+/;
 
+/** Split a paragraph element into its <br>-separated text lines. */
+export const getParagraphLinesFromDOM = (paragraph: Element): string[] => {
+  const lines: string[] = [];
+  let current = '';
+  for (const node of paragraph.childNodes) {
+    if (node instanceof Element && node.tagName === 'BR') {
+      if (current.trim().length > 0) lines.push(current);
+      current = '';
+    } else {
+      current += node.textContent ?? '';
+    }
+  }
+  if (current.trim().length > 0) lines.push(current);
+  return lines;
+};
+
 export const getParagraphLines = (node: Node): string[] => {
   const lines: string[] = [];
   let buffer = '';
@@ -38,27 +54,6 @@ export const isParagraphListLike = (paragraphNode: Node, isOrdered: boolean): bo
   isOrdered
     ? orderedListIndicator.test(paragraphNode.textContent.substring(0, 2))
     : unorderedListIndicator.test(paragraphNode.textContent.substring(0, 2));
-
-export const collectConsecutiveListParagraphs = (
-  doc: Node,
-  startPos: number,
-  isOrdered: boolean,
-): { endPos: number; paragraphs: Node[] } => {
-  const paragraphs: Node[] = [];
-  let currentPos = startPos;
-  let endPos = startPos;
-
-  while (currentPos < doc.content.size) {
-    const node = doc.nodeAt(currentPos);
-    if (node?.type.name !== 'paragraph' || !isParagraphListLike(node, isOrdered)) break;
-
-    paragraphs.push(node);
-    endPos = currentPos + node.nodeSize;
-    currentPos = endPos;
-  }
-
-  return { endPos, paragraphs };
-};
 
 /**
  * Converts a single hard-break line of text into a list item node.

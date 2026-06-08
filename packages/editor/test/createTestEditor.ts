@@ -7,7 +7,7 @@ const DEFAULT_EDITOR_SETTINGS: EditorSettings = { disableRules: [], enableRules:
 
 export async function createTestEditor(
   content: string,
-  callback: (resultMap: Map<string, unknown>) => void = vi.fn(),
+  callback: (resultMap: Map<Range, unknown>) => void = vi.fn(),
   settings: EditorSettings = DEFAULT_EDITOR_SETTINGS,
 ): Promise<Editor> {
   const editor = new Editor({

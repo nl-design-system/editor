@@ -1,5 +1,4 @@
 export { ClippyContent } from './components/Content';
-export { ClippyContentView } from './components/ContentView';
 export { ClippyContext } from './components/Context';
 export { ClippyEditor } from './components/Editor';
 export { ClippyGutter } from './components/Gutter';

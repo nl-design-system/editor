@@ -1,3 +1,4 @@
+import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import { localized } from '@lit/localize';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
@@ -5,13 +6,16 @@ import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import type { ValidationsMap } from '@/types/validation.ts';
+import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
+import { ResizeController } from '@/controllers/ResizeController.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents } from '@/events';
 import { type ValidationKey, validationMessages } from '@/messages';
 import gutterStyles from './styles.ts';
 
 const tag = 'clippy-validations-gutter';
+const MIN_GUTTER_ITEM_HEIGHT = 8;
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -28,29 +32,39 @@ export class Gutter extends LitElement {
   mode: 'tooltip' | 'list' | 'readonly' = 'tooltip';
 
   @state()
-  private activeValidationItemKey: string | null = null;
+  private activeRange: Range | null = null;
+
+  @consume({ context: tiptapContext, subscribe: true })
+  @property({ attribute: false })
+  private readonly editor?: Editor;
 
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
 
   readonly #closeValidationItem = () => {
-    this.activeValidationItemKey = null;
+    this.activeRange = null;
   };
 
-  #handleIndicatorClick(key: string) {
+  readonly #resizeController = new ResizeController(this);
+
+  #handleIndicatorClick(range: Range) {
     if (this.mode === 'list') {
       this.dispatchEvent(
-        new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST, { bubbles: true, composed: true, detail: { key } }),
+        new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST, {
+          bubbles: true,
+          composed: true,
+          detail: { range },
+        }),
       );
     } else {
-      this.activeValidationItemKey = this.activeValidationItemKey === key ? null : key;
+      this.activeRange = this.activeRange === range ? null : range;
     }
   }
 
   readonly #handleFocusValidationItemInGutter = (event: Event) => {
-    const { key } = (event as CustomEvent<{ key: string }>).detail;
-    this.activeValidationItemKey = this.activeValidationItemKey === key ? null : key;
+    const { range } = (event as CustomEvent<{ range: Range }>).detail;
+    this.activeRange = this.activeRange === range ? null : range;
   };
 
   override connectedCallback() {
@@ -58,6 +72,10 @@ export class Gutter extends LitElement {
     globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, this.#handleFocusValidationItemInGutter);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
+  }
+
+  override firstUpdated() {
+    this.editor?.on('create', this.#attachResizeObserver);
   }
 
   override disconnectedCallback() {
@@ -68,6 +86,29 @@ export class Gutter extends LitElement {
     );
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
     globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
+    this.editor?.off('create', this.#attachResizeObserver);
+  }
+
+  readonly #attachResizeObserver = () => {
+    const dom = this.editor?.view?.dom;
+    if (!dom) return;
+    this.#resizeController.observe(dom);
+  };
+
+  #getIndicatorPosition(range: Range): { top: number; height: number } | null {
+    try {
+      const rangeRect = range.getBoundingClientRect();
+      if (rangeRect.width === 0 && rangeRect.height === 0) return null;
+      const editorDom = this.editor?.view?.dom;
+      if (!editorDom) return null;
+      const editorRect = editorDom.getBoundingClientRect();
+      return {
+        height: Math.max(rangeRect.height, MIN_GUTTER_ITEM_HEIGHT),
+        top: rangeRect.top - editorRect.top + editorDom.scrollTop,
+      };
+    } catch {
+      return null;
+    }
   }
 
   override render() {
@@ -75,21 +116,20 @@ export class Gutter extends LitElement {
       return nothing;
     }
 
-    const sortedValidations = [...this.validationsContext.entries()].sort(([, a], [, b]) => a.pos - b.pos);
-
     return html`
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
-        ${sortedValidations
-          .filter(([, { boundingBox }]) => boundingBox !== undefined)
-          .map(([key, { boundingBox, correct, pos, severity, tipPayload }]) => {
-            if (!boundingBox) return nothing;
-            const validationKey = key.split('_')[0] as ValidationKey;
-            const { customCorrectLabel, description, href, tip } = validationMessages()[validationKey];
+        ${[...this.validationsContext.entries()]
+          .filter(([range]) => range !== undefined)
+          .map(([range, { correct, severity, tipPayload, validatorKey }]) => {
+            const position = this.#getIndicatorPosition(range);
+            if (!position) return nothing;
+            const valKey = validatorKey as ValidationKey;
+            const { customCorrectLabel, description, href, tip } = validationMessages()[valKey];
             const tipHtml = tip?.(tipPayload) ?? null;
-            const isActive = this.activeValidationItemKey === key;
+            const isActive = this.activeRange === range;
             return html`<li
               class="clippy-validations-gutter__indicator"
-              style="inset-block-start: ${boundingBox.top}px; block-size: ${boundingBox.height}px"
+              style="inset-block-start: ${position.top}px; block-size: ${position.height}px"
             >
               <button
                 class="${classMap({
@@ -99,7 +139,7 @@ export class Gutter extends LitElement {
                 })}"
                 aria-expanded=${isActive ? 'true' : 'false'}
                 aria-label=${description}
-                @click=${() => this.#handleIndicatorClick(key)}
+                @click=${() => this.#handleIndicatorClick(range)}
               ></button>
               <div
                 class="${classMap({
@@ -108,9 +148,8 @@ export class Gutter extends LitElement {
                 })}"
               >
                 <clippy-validation-item
-                  .key=${key}
                   .mode=${this.mode}
-                  .pos=${pos}
+                  .range=${range}
                   .severity=${severity}
                   .description=${description}
                   .href=${href}

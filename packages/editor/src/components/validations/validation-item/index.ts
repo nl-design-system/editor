@@ -1,4 +1,3 @@
-import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
@@ -10,13 +9,13 @@ import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
 import ListDetailsIcon from '@tabler/icons/outline/list-details.svg?raw';
 import { LitElement, html, nothing, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
+import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { CorrectValidationFunction, ValidationSeverity } from '@/types/validation.ts';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { identifierContext } from '@/context/identifierContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
-import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
 import validationListItemStyles from './styles.ts';
 
@@ -40,9 +39,8 @@ export class ValidationItem extends LitElement {
     unsafeCSS(linkCss),
   ];
 
-  @property({ type: String }) key: string = '';
   @property({ type: String }) mode: 'tooltip' | 'list' | 'readonly' = 'list';
-  @property({ type: Number }) pos: number = 0;
+  @property({ attribute: false }) range?: Range;
   @property({ type: String }) severity!: ValidationSeverity;
   @property({ type: String }) description!: string;
   @property({ type: String }) href?: string;
@@ -53,15 +51,19 @@ export class ValidationItem extends LitElement {
   @property({ attribute: false })
   private readonly identifier?: string;
 
-  @editor()
-  private readonly editor: Editor | undefined;
+  readonly #listItemRef: Ref<HTMLLIElement> = createRef();
+
+  override focus(): void {
+    this.#listItemRef.value?.focus();
+  }
 
   readonly #focusNode = () => {
+    if (!this.range) return;
     this.dispatchEvent(
       new CustomEvent(CustomEvents.FOCUS_NODE, {
         bubbles: true,
         composed: true,
-        detail: { pos: this.pos },
+        detail: { range: this.range },
       }),
     );
   };
@@ -74,18 +76,18 @@ export class ValidationItem extends LitElement {
         detail: { identifier: this.identifier },
       }),
     );
-    if (this.editor && typeof this.correct === 'function') {
-      this.correct(this.editor);
+    if (typeof this.correct === 'function') {
+      this.correct();
     }
   };
 
-  #handleValidationItemClick(event: Event, key: string) {
+  #handleValidationItemClick(event: Event) {
     event.stopPropagation();
     this.dispatchEvent(
       new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, {
         bubbles: true,
         composed: true,
-        detail: { identifier: this.identifier, key },
+        detail: { identifier: this.identifier, range: this.range },
       }),
     );
   }
@@ -110,7 +112,7 @@ export class ValidationItem extends LitElement {
       <div class="clippy-dialog__list-item-actions">
         ${this.mode === 'tooltip'
           ? html`<clippy-button
-              @click=${(event: Event) => this.#handleValidationItemClick(event, this.key)}
+              @click=${(event: Event) => this.#handleValidationItemClick(event)}
               icon-only
               purpose="subtle"
             >
@@ -133,8 +135,8 @@ export class ValidationItem extends LitElement {
   override render() {
     return html`
       <li
+        ${ref(this.#listItemRef)}
         class="clippy-dialog__list-item clippy-dialog__list-item--${this.severity}"
-        data-validation-key="${this.key}"
         tabindex="-1"
       >
         <div class="clippy-dialog__list-item-message">

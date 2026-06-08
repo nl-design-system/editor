@@ -3,6 +3,7 @@ import { Editor as TiptapEditor } from '@tiptap/core';
 import { LitElement, html, type PropertyValues } from 'lit';
 import { property, queryAssignedElements } from 'lit/decorators.js';
 import type { ValidationResult } from '@/types/validation.ts';
+import { htmlDocumentContext } from '@/context/htmlDocumentContext.ts';
 import { identifierContext } from '@/context/identifierContext.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
@@ -10,6 +11,7 @@ import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editorExtensions } from '@/extensions';
 import { initializeLocale } from '@/localization.ts';
 import { sanitizeTopHeadingLevel } from '@/utils/sanitize.ts';
+import { runValidation } from '@/validators';
 import { editorContextStyles } from './styles.ts';
 
 const tag = 'clippy-context';
@@ -93,7 +95,7 @@ export class Context extends LitElement {
     initialValue: new Map(),
   });
 
-  updateValidationsContext = (resultMap: Map<string, ValidationResult>): void => {
+  updateValidationsContext = (resultMap: Map<Range, ValidationResult>): void => {
     this.validationsContext = resultMap;
     this.lightValidationsContext.setValue(this.validationsContext);
   };
@@ -101,8 +103,19 @@ export class Context extends LitElement {
   @provide({ context: tiptapContext })
   editor?: TiptapEditor;
 
-  private createEditor(): void {
-    const sanitizedTopHeadingLevel = sanitizeTopHeadingLevel(this.topHeadingLevel);
+  @provide({ context: htmlDocumentContext })
+  htmlDocumentElement?: HTMLElement;
+
+  protected get editorSettings() {
+    return {
+      disableRules: this.disableRules,
+      enableRules: this.enableRules,
+      readonly: this.readonly,
+      topHeadingLevel: sanitizeTopHeadingLevel(this.topHeadingLevel),
+    };
+  }
+
+  protected createEditor(): void {
     const content = this.contentSlot.find((el) => el instanceof HTMLDivElement)?.innerHTML || '';
     this.editor = new TiptapEditor({
       content,
@@ -112,18 +125,9 @@ export class Context extends LitElement {
           class: 'clippy-content',
         },
       },
-      // Prevent auto-mounting during SSR; Content component calls mount() client-side
+      // Prevent auto-mounting during SSR; Content component calls moumountnt() client-side
       element: null,
-      extensions: editorExtensions(
-        {
-          disableRules: this.disableRules,
-          enableRules: this.enableRules,
-          readonly: this.readonly,
-          topHeadingLevel: sanitizedTopHeadingLevel,
-        },
-        this.updateValidationsContext,
-        this.id,
-      ),
+      extensions: editorExtensions(this.editorSettings, this.updateValidationsContext, this.id),
     });
   }
 
@@ -134,7 +138,18 @@ export class Context extends LitElement {
       );
     }
     registeredIdentifiers.add(this.id);
-    this.createEditor();
+    this.htmlDocumentElement = this.contentSlot.find((el) => el instanceof HTMLDivElement);
+
+    if (this.readonly) {
+      // In readonly mode, skip TipTap entirely and validate the slot DOM directly.
+      if (this.htmlDocumentElement) {
+        runValidation(this.htmlDocumentElement, this.editorSettings, this.updateValidationsContext);
+      }
+    } else {
+      // Non-readonly: create the TipTap editor (clippy-editor enables the
+      // Validation extension via _includeValidationExtension).
+      this.createEditor();
+    }
   }
 
   override updated(changedProperties: PropertyValues): void {
@@ -171,6 +186,7 @@ export class Context extends LitElement {
 
   override disconnectedCallback() {
     registeredIdentifiers.delete(this.id);
+    this.htmlDocumentElement = undefined;
     this.editor?.destroy();
     super.disconnectedCallback();
   }

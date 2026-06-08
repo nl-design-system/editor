@@ -41,13 +41,13 @@ export class ValidationsList extends LitElement {
   }
 
   readonly #handleFocusValidationItem = (event: Event) => {
-    const { key } = (event as CustomEvent<{ key: string }>).detail;
+    const { range } = (event as CustomEvent<{ range: Range }>).detail;
 
     const items = this.shadowRoot?.querySelectorAll('clippy-validation-item');
-    const match = [...(items ?? [])].find((el) => (el as ValidationItem).key === key);
+    const match = [...(items ?? [])].find((el) => (el as ValidationItem).range === range);
     if (match instanceof HTMLElement) {
       match.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      match.shadowRoot?.querySelector<HTMLElement>('[data-validation-key]')?.focus();
+      (match as ValidationItem).focus();
     }
   };
 
@@ -58,14 +58,13 @@ export class ValidationsList extends LitElement {
 
     return html`
       <ul class="clippy-validations-list" role="list">
-        ${map(this.validationsContext.entries(), ([key, { correct, pos, severity, tipPayload }]) => {
-          const validationKey = key.split('_')[0] as ValidationKey;
-          const { customCorrectLabel, description, href, tip } = validationMessages()[validationKey];
+        ${map(this.validationsContext.entries(), ([, { correct, range, severity, tipPayload, validatorKey }]) => {
+          const valKey = validatorKey as ValidationKey;
+          const { customCorrectLabel, description, href, tip } = validationMessages()[valKey];
           const tipHtml = tip?.(tipPayload) ?? null;
           return html`
             <clippy-validation-item
-              .key=${key}
-              .pos=${pos}
+              .range=${range}
               .severity=${severity}
               .description=${description}
               .href=${href}

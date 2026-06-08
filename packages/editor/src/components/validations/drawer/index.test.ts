@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { page } from 'vitest/browser';
 import type { ValidationResult } from '../../../types/validation';
 import type { Context } from '../../context';
-import { contentValidations, documentValidations } from '../../../constants';
+import { blockValidations, documentValidations, inlineValidations } from '../../../constants';
 import '../../context/index.ts';
 import './index.ts';
 import { CustomEvents } from '../../../events';
@@ -57,47 +57,30 @@ describe('<clippy-validations-dialog>', () => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
 
-    const validationsMap: Map<string, Omit<ValidationResult, 'tipPayload'>> = new Map([
-      [
-        `${contentValidations.HEADING_MUST_NOT_BE_EMPTY}_1`,
-        {
-          boundingBox: null,
-          pos: 1,
-          severity: 'error' as const,
-        },
-      ],
-      [`${contentValidations.IMAGE_MUST_HAVE_ALT_TEXT}_5`, { boundingBox: null, pos: 5, severity: 'error' }],
-      [`${contentValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC}_10`, { boundingBox: null, pos: 10, severity: 'warning' }],
-      [
-        `${contentValidations.NODE_SHOULD_NOT_BE_EMPTY}_15`,
-        { boundingBox: null, pos: 15, severity: 'warning', tipPayload: { nodeType: 'paragraph' } },
-      ],
-      [
-        `${contentValidations.MARK_SHOULD_NOT_BE_EMPTY}_20`,
-        { boundingBox: null, pos: 20, severity: 'error', tipPayload: { nodeType: 'link' } },
-      ],
-      [
-        `${documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER}_25`,
-        {
-          boundingBox: null,
-          pos: 25,
-          severity: 'error',
-          tipPayload: { headingLevel: 3, precedingHeadingLevel: 1 },
-        },
-      ],
-      [
-        `${documentValidations.DOCUMENT_MUST_HAVE_SEMANTIC_LISTS}_30`,
-        { boundingBox: null, pos: 30, severity: 'warning', tipPayload: { prefix: '-' } },
-      ],
-      [
-        `${contentValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC}_35`,
-        { boundingBox: null, pos: 35, severity: 'warning' },
-      ],
-      [`${contentValidations.MARK_SHOULD_NOT_BE_UNDERLINED}_40`, { boundingBox: null, pos: 40, severity: 'warning' }],
-      [
-        `${documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE}_45`,
-        { boundingBox: null, pos: 45, severity: 'error', tipPayload: { topHeadingLevel: 1 } },
-      ],
+    /** Helper: create a ValidationResult keyed by a fresh Range with validatorKey set. */
+    const entry = (
+      validatorKey: string,
+      severity: ValidationResult['severity'],
+      tipPayload?: ValidationResult['tipPayload'],
+    ): [Range, ValidationResult] => {
+      const range = document.createRange();
+      return [range, { severity, tipPayload, validatorKey }];
+    };
+
+    const validationsMap: Map<Range, ValidationResult> = new Map([
+      entry(blockValidations.HEADING_MUST_NOT_BE_EMPTY, 'error'),
+      entry(blockValidations.IMAGE_MUST_HAVE_ALT_TEXT, 'error'),
+      entry(inlineValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC, 'warning'),
+      entry(blockValidations.NODE_SHOULD_NOT_BE_EMPTY, 'warning', { nodeType: 'paragraph' }),
+      entry(inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY, 'error', { nodeType: 'link' }),
+      entry(documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER, 'error', {
+        headingLevel: 3,
+        precedingHeadingLevel: 1,
+      }),
+      entry(blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST, 'warning', { prefix: '-' }),
+      entry(blockValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC, 'warning'),
+      entry(inlineValidations.INLINE_SHOULD_NOT_BE_UNDERLINED, 'warning'),
+      entry(documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE, 'error', { topHeadingLevel: 1 }),
     ]);
 
     // Set validationsContext on the context provider, which will provide it to children

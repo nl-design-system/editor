@@ -1,13 +1,18 @@
 import { vi, describe, it, expect } from 'vitest';
+import type { ValidationResult } from '../../types/validation.ts';
 import { createTestEditor } from '../../../test/createTestEditor';
+import { documentValidations } from '../../constants';
 import {
   documentMustHaveCorrectHeadingOrder,
-  documentMustHaveSemanticLists,
-  documentMustHaveTableWithHeadings,
+  documentMustHaveSingleHeadingOne,
+  documentMustHaveTopLevelHeadingOne,
 } from './index';
 
+const byKey = (map: Map<Range, ValidationResult>, key: string): ValidationResult | undefined =>
+  [...map.values()].find((v) => v.validatorKey === key);
+
 describe('Document validations', () => {
-  describe('Headings', () => {
+  describe('documentMustHaveCorrectHeadingOrder', () => {
     it('returns the ValidationMap after Editor.onCreated', async () => {
       const callback = vi.fn();
 
@@ -24,10 +29,10 @@ describe('Document validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      expect(mapArg.has('document-must-have-correct-heading-order_7')).toBeTruthy();
+      expect(byKey(mapArg, documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER)).toBeDefined();
     });
 
-    it('returns null for correct heading order', async () => {
+    it('returns empty array for correct heading order', async () => {
       const editor = await createTestEditor(
         `
         <h1>Title</h1>
@@ -36,22 +41,22 @@ describe('Document validations', () => {
       `,
       );
 
-      const result = documentMustHaveCorrectHeadingOrder(editor);
+      const result = documentMustHaveCorrectHeadingOrder(editor.view.dom);
       expect(result).toStrictEqual([]);
     });
 
-    it('returns error for invalid heading order', async () => {
+    it('returns warning for skipped heading level', async () => {
       const editor = await createTestEditor(`
         <h1>Title</h1>
         <h3>Subtitle</h3>
       `);
 
-      const result = documentMustHaveCorrectHeadingOrder(editor);
+      const result = documentMustHaveCorrectHeadingOrder(editor.view.dom);
       expect(result).toEqual([
         {
-          boundingBox: expect.any(Object),
           correct: expect.any(Function),
-          pos: 7,
+          range: expect.any(Object),
+          scope: 'block',
           severity: 'warning',
           tipPayload: {
             headingLevel: 3,
@@ -62,7 +67,7 @@ describe('Document validations', () => {
       ]);
     });
 
-    it('returns error for invalid heading order with top level heading 2', async () => {
+    it('returns error when heading level is below topHeadingLevel', async () => {
       const settings = { disableRules: [], enableRules: ['*'], topHeadingLevel: 2 };
       const editor = await createTestEditor(
         `
@@ -74,12 +79,12 @@ describe('Document validations', () => {
         settings,
       );
 
-      const result = documentMustHaveCorrectHeadingOrder(editor, settings);
+      const result = documentMustHaveCorrectHeadingOrder(editor.view.dom, settings);
       expect(result).toEqual([
         {
-          boundingBox: expect.any(Object),
           correct: expect.any(Function),
-          pos: 0,
+          range: expect.any(Object),
+          scope: 'block',
           severity: 'error',
           tipPayload: {
             headingLevel: 1,
@@ -88,9 +93,9 @@ describe('Document validations', () => {
           },
         },
         {
-          boundingBox: expect.any(Object),
           correct: expect.any(Function),
-          pos: 17,
+          range: expect.any(Object),
+          scope: 'block',
           severity: 'warning',
           tipPayload: {
             headingLevel: 4,
@@ -100,10 +105,28 @@ describe('Document validations', () => {
         },
       ]);
     });
+  });
 
-    it('returns error when content contains multiple level 1 headings', async () => {
+  describe('documentMustHaveSingleHeadingOne', () => {
+    it('returns empty array when document has exactly one h1', async () => {
+      const editor = await createTestEditor(`<h1>Title</h1><h2>Subtitle</h2><p>Text</p>`);
+      expect(documentMustHaveSingleHeadingOne(editor.view.dom)).toStrictEqual([]);
+    });
+
+    it('returns empty array when document has no h1', async () => {
+      const editor = await createTestEditor(`<h2>Subtitle</h2><p>Text</p>`);
+      expect(documentMustHaveSingleHeadingOne(editor.view.dom)).toStrictEqual([]);
+    });
+
+    it('returns error for each duplicate h1', async () => {
+      const editor = await createTestEditor(`<h1>First</h1><p>Text</p><h1>Second</h1><h1>Third</h1>`);
+      const results = documentMustHaveSingleHeadingOne(editor.view.dom);
+      expect(results).toHaveLength(2);
+      results.forEach((r) => expect(r.severity).toBe('error'));
+    });
+
+    it('is reported via the validation callback', async () => {
       const callback = vi.fn();
-
       await createTestEditor(
         `
         <h1>test</h1>
@@ -116,13 +139,33 @@ describe('Document validations', () => {
       await vi.waitFor(() => {
         expect(callback).toHaveBeenCalledTimes(1);
       });
-      const mapArg = callback.mock.calls[0][0];
-      expect(mapArg.get('document-must-have-single-heading-one_23').pos).toBe(23);
+      expect(
+        byKey(callback.mock.calls[0][0], documentValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE)?.severity,
+      ).toBe('error');
+    });
+  });
+
+  describe('documentMustHaveTopLevelHeadingOne', () => {
+    it('returns empty array when document starts with h1', async () => {
+      const editor = await createTestEditor(`<h1>Title</h1><p>Text</p>`);
+      expect(documentMustHaveTopLevelHeadingOne(editor.view.dom)).toStrictEqual([]);
     });
 
-    it('returns error for invalid top level heading', async () => {
-      const callback = vi.fn();
+    it('returns info result when document does not start with h1', async () => {
+      const editor = await createTestEditor(`<h2>Subtitle</h2><p>Text</p>`);
+      const results = documentMustHaveTopLevelHeadingOne(editor.view.dom);
+      expect(results).toHaveLength(1);
+      expect(results[0].severity).toBe('info');
+    });
 
+    it('returns empty array when topHeadingLevel is not 1', async () => {
+      const settings = { disableRules: [], enableRules: ['*'], topHeadingLevel: 2 };
+      const editor = await createTestEditor(`<h2>Title</h2>`, undefined, settings);
+      expect(documentMustHaveTopLevelHeadingOne(editor.view.dom, settings)).toStrictEqual([]);
+    });
+
+    it('is reported via the validation callback', async () => {
+      const callback = vi.fn();
       await createTestEditor(
         `
       <h2>Title</h2>
@@ -135,253 +178,12 @@ describe('Document validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      expect(mapArg.get('document-must-have-top-level-heading_1')).toEqual({
-        boundingBox: expect.any(Object),
+      expect(byKey(mapArg, documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE)).toEqual({
         correct: expect.any(Function),
-        pos: 1,
+        range: expect.any(Object),
+        scope: 'block',
         severity: 'info',
-      });
-    });
-
-    describe('Lists', () => {
-      it('returns the ValidationMap after Editor.onCreated', async () => {
-        const callback = vi.fn();
-
-        await createTestEditor(
-          `
-          <h1>test</h1>
-          <p>1 - single Test<br />2 - Test<br />3 - Test</p>
-          <p>1. Test<br>2. Test<br>3. Test</p>
-      `,
-          callback,
-        );
-        await vi.waitFor(() => {
-          expect(callback).toHaveBeenCalledTimes(1);
-        });
-        const mapArg = callback.mock.calls[0][0];
-        expect(mapArg).toBeInstanceOf(Map);
-        expect(mapArg.has('document-must-have-semantic-lists_6')).toBeTruthy();
-      });
-
-      it('returns errors for potential lists', async () => {
-        const editor = await createTestEditor(`
-        <h3>Enkele paragraaf test</h3>
-            <p>- Lijst item<br />- Lijst item<br />- Lijst item</p>
-            <h3>Correct lijst</h3>
-            <ul>
-              <li>Test</li>
-              <li>Test</li>
-              <li>Test</li>
-            </ul>
-            <h3>Incorrect geordende lijst</h3>
-            <p>1 - Test<br />2 - Test<br />3 - Test</p>
-            <p>1. Test<br>2. Test<br>3. Test</p>
-            <h3>Correcte geordende lijst</h3>
-            <ol>
-              <li>Test</li>
-              <li>Test</li>
-              <li>Test</li>
-            </ol>
-            <h3>Losse paragrafen, waarschijnlijk een ongeordende lijst</h3>
-            <p>- Losse paragrafen test</p>
-            <p>- Losse paragrafen test</p>
-            <p>- Losse paragrafen test<br />- Losse paragrafen test</p>
-            <h3>test</h3>
-            <p>* Losse paragrafen test<br />* Losse paragrafen test<br/>* Losse paragrafen test</p>
-            <h3>Losse paragrafen, waarschijnlijk een geordende lijst</h3>
-            <p>1 - Losse paragrafen test</p>
-            <p>2 - Losse paragrafen test</p>
-            <p>3 - Losse paragrafen test</p>
-      `);
-
-        const results = documentMustHaveSemanticLists(editor);
-
-        results.forEach((result) => {
-          expect(result.severity).toEqual('info');
-        });
-        expect(results[0].tipPayload).toEqual({ prefix: '-' });
-        expect(results[1].tipPayload).toEqual({ prefix: '1' });
-        expect(results[2].tipPayload).toEqual({ prefix: '1.' });
-        expect(results[3].tipPayload).toEqual({ prefix: '-' });
-        expect(results[4].tipPayload).toEqual({ prefix: '-' });
-        expect(results[5].tipPayload).toEqual({ prefix: '-' });
-        expect(results[6].tipPayload).toEqual({ prefix: '*' });
-        expect(results[7].tipPayload).toEqual({ prefix: '1' });
-      });
-    });
-
-    describe('Tables', () => {
-      it('parses table html correctly it returns', async () => {
-        const editor = await createTestEditor(`
-      <h1>Title</h1>
-      <table>
-        <caption>caption</caption>
-        <thead>
-          <tr>
-            <th>tablehead</th>
-            <th>tablehead</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>table body cell</td>
-            <td>table body cell</td>
-          </tr>
-        </tbody>
-      </table>`);
-        expect(editor.getHTML()).toEqual(
-          `<h1 class="nl-heading nl-heading--level-1">Title</h1><table class="utrecht-table utrecht-table--html-table"><caption>caption</caption><thead><tr><th colspan="1" rowspan="1"><p class="nl-paragraph">tablehead</p></th><th colspan="1" rowspan="1"><p class="nl-paragraph">tablehead</p></th></tr></thead><tbody headrows="0" rowheadcolumns="0"><tr><td colspan="1" rowspan="1"><p class="nl-paragraph">table body cell</p></td><td colspan="1" rowspan="1"><p class="nl-paragraph">table body cell</p></td></tr></tbody></table>`,
-        );
-      });
-
-      it('returns no errors for table with header row in thead', async () => {
-        const editor = await createTestEditor(`
-      <h1>Title</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Header 1</th>
-            <th>Header 2</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Cell 1</td>
-            <td>Cell 2</td>
-          </tr>
-        </tbody>
-      </table>
-    `);
-
-        const result = documentMustHaveTableWithHeadings(editor);
-        expect(result).toStrictEqual([]);
-      });
-
-      it('returns no errors for table with header row in tbody', async () => {
-        const editor = await createTestEditor(`
-      <h1>Title</h1>
-      <table>
-        <tbody>
-          <tr>
-            <th>Header 1</th>
-            <th>Header 2</th>
-          </tr>
-          <tr>
-            <td>Cell 1</td>
-            <td>Cell 2</td>
-          </tr>
-        </tbody>
-      </table>
-    `);
-
-        const result = documentMustHaveTableWithHeadings(editor);
-        expect(result).toStrictEqual([]);
-      });
-
-      it('returns no errors for table with header column', async () => {
-        const editor = await createTestEditor(`
-      <h1>Title</h1>
-      <table>
-        <tbody>
-          <tr>
-            <th>Row header 1</th>
-            <td>Cell 1</td>
-          </tr>
-          <tr>
-            <th>Row header 2</th>
-            <td>Cell 2</td>
-          </tr>
-        </tbody>
-      </table>
-    `);
-
-        const result = documentMustHaveTableWithHeadings(editor);
-        expect(result).toStrictEqual([]);
-      });
-
-      it('returns error for table without header cells', async () => {
-        const editor = await createTestEditor(`
-      <h1>Title</h1>
-      <table>
-        <tbody>
-          <tr>
-            <td>Cell 1</td>
-            <td>Cell 2</td>
-          </tr>
-          <tr>
-            <td>Cell 3</td>
-            <td>Cell 4</td>
-          </tr>
-          <tr>
-            <td>Cell 5</td>
-            <td>Cell 6</td>
-          </tr>
-        </tbody>
-      </table>
-    `);
-
-        const result = documentMustHaveTableWithHeadings(editor);
-        expect(result).toEqual([
-          {
-            boundingBox: expect.any(Object),
-            correct: expect.any(Function),
-            pos: 7,
-            severity: 'warning',
-          },
-        ]);
-      });
-
-      it('returns no error for table with both header row and header column', async () => {
-        const editor = await createTestEditor(`
-      <h1>Title</h1>
-      <table>
-        <tbody>
-          <tr>
-            <th>Header cell</th>
-            <th>Header cell</th>
-          </tr>
-          <tr>
-            <th>Cell 1</th>
-            <td>Cell 2</td>
-          </tr>
-          <tr>
-            <th>Cell 3</th>
-            <td>Cell 4</td>
-          </tr>
-          <tr>
-            <th>Cell 5</th>
-            <td>Cell 6</td>
-          </tr>
-        </tbody>
-      </table>
-    `);
-
-        const result = documentMustHaveTableWithHeadings(editor);
-        expect(result).toEqual([]);
-      });
-
-      it('returns error for table with single row', async () => {
-        const editor = await createTestEditor(`
-        <h1>Title</h1>
-        <table>
-          <tbody>
-            <tr>
-              <td>Single row table cell</td>
-              <td>Single row table cell</td>
-            </tr>
-          </tbody>
-        </table>
-      `);
-
-        const result = documentMustHaveTableWithHeadings(editor);
-        expect(result).toEqual([
-          {
-            boundingBox: expect.any(Object),
-            correct: expect.any(Function),
-            pos: 7,
-            severity: 'warning',
-          },
-        ]);
+        validatorKey: documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE,
       });
     });
   });
