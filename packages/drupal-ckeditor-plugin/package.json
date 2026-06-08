@@ -1,0 +1,26 @@
+{
+  "name": "@nl-design-system-community/drupal-ckeditor-plugin",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nl-design-system/editor.git",
+    "directory": "packages/drupal-ckeditor-plugin"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@nl-design-system-community/editor-ckeditor": "workspace:*"
+  },
+  "peerDependencies": {
+    "ckeditor5": ">=43.0.0"
+  },
+  "devDependencies": {
+    "@nl-design-system/tsconfig": "1.0.5",
+    "@types/node": "22.19.19",
+    "ckeditor5": "45.1.0",
+    "typescript": "5.9.3",
+    "vite": "8.0.14"
+  }
+}

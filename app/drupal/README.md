@@ -65,3 +65,9 @@ Drupal cache via **Administration → Configuration → Development → Performa
 Modules are **not enabled automatically** — go to
 <http://localhost:8081/admin/modules>, find your module, check the box, and click
 **Install**.
+
+### Available modules
+
+| Module   | Description                                                                                                                   |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `clippy` | Registers the ClippyPlugin with Drupal's CKEditor 5. Build it first with `pnpm build` from `packages/drupal-ckeditor-plugin`. |

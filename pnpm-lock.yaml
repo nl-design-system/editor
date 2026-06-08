@@ -85,6 +85,28 @@ importers:
         specifier: 8.60.1
         version: 8.60.1(eslint@9.39.2)(typescript@5.9.3)
 
+  packages/drupal-ckeditor-plugin:
+    dependencies:
+      '@nl-design-system-community/editor-ckeditor':
+        specifier: workspace:*
+        version: link:../editor-ckeditor
+    devDependencies:
+      '@nl-design-system/tsconfig':
+        specifier: 1.0.5
+        version: 1.0.5(typescript@5.9.3)
+      '@types/node':
+        specifier: 22.19.19
+        version: 22.19.19
+      ckeditor5:
+        specifier: 45.1.0
+        version: 45.1.0
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      vite:
+        specifier: 8.0.14
+        version: 8.0.14(@types/node@22.19.19)(esbuild@0.27.7)(yaml@2.9.0)
+
   packages/editor:
     dependencies:
       '@lit/context':

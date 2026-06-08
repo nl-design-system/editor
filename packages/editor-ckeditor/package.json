@@ -14,7 +14,10 @@
   "type": "module",
   "main": "./dist/index.js",
   "exports": {
-    ".": "./dist/index.js",
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "default": "./dist/index.js"
+    },
     "./styles": {
       "types": "./dist/clippy.css.d.ts",
       "default": "./dist/clippy.css"
