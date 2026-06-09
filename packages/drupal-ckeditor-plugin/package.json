@@ -11,7 +11,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@nl-design-system-community/editor-ckeditor": "workspace:*"
+    "@nl-design-system-community/ckeditor-plugin": "workspace:*"
   },
   "peerDependencies": {
     "ckeditor5": ">=43.0.0"

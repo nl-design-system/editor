@@ -85,11 +85,35 @@ importers:
         specifier: 8.60.1
         version: 8.60.1(eslint@9.39.2)(typescript@5.9.3)
 
+  packages/ckeditor-plugin:
+    devDependencies:
+      '@nl-design-system/tsconfig':
+        specifier: 1.0.5
+        version: 1.0.5(typescript@5.9.3)
+      '@types/node':
+        specifier: 22.19.19
+        version: 22.19.19
+      ckeditor5:
+        specifier: 45.1.0
+        version: 45.1.0
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      vite:
+        specifier: 8.0.14
+        version: 8.0.14(@types/node@22.19.19)(esbuild@0.27.7)(yaml@2.9.0)
+      vite-plugin-dts:
+        specifier: 5.0.1
+        version: 5.0.1(esbuild@0.27.7)(rolldown@1.0.3)(rollup@4.61.0)(typescript@5.9.3)(vite@8.0.14(@types/node@22.19.19)(esbuild@0.27.7)(yaml@2.9.0))
+      vitest:
+        specifier: 4.1.7
+        version: 4.1.7(@types/node@22.19.19)(vite@8.0.14(@types/node@22.19.19)(esbuild@0.27.7)(yaml@2.9.0))
+
   packages/drupal-ckeditor-plugin:
     dependencies:
-      '@nl-design-system-community/editor-ckeditor':
+      '@nl-design-system-community/ckeditor-plugin':
         specifier: workspace:*
-        version: link:../editor-ckeditor
+        version: link:../ckeditor-plugin
     devDependencies:
       '@nl-design-system/tsconfig':
         specifier: 1.0.5
@@ -345,30 +369,6 @@ importers:
         specifier: 4.1.8
         version: 4.1.8(@types/node@22.19.19)(@vitest/browser-playwright@4.1.8)(@vitest/coverage-v8@4.1.8)(vite@8.0.16(@types/node@22.19.19)(esbuild@0.27.7)(yaml@2.9.0))
 
-  packages/editor-ckeditor:
-    devDependencies:
-      '@nl-design-system/tsconfig':
-        specifier: 1.0.5
-        version: 1.0.5(typescript@5.9.3)
-      '@types/node':
-        specifier: 22.19.19
-        version: 22.19.19
-      ckeditor5:
-        specifier: 45.1.0
-        version: 45.1.0
-      typescript:
-        specifier: 5.9.3
-        version: 5.9.3
-      vite:
-        specifier: 8.0.14
-        version: 8.0.14(@types/node@22.19.19)(esbuild@0.27.7)(yaml@2.9.0)
-      vite-plugin-dts:
-        specifier: 5.0.1
-        version: 5.0.1(esbuild@0.27.7)(rolldown@1.0.3)(rollup@4.61.0)(typescript@5.9.3)(vite@8.0.14(@types/node@22.19.19)(esbuild@0.27.7)(yaml@2.9.0))
-      vitest:
-        specifier: 4.1.7
-        version: 4.1.7(@types/node@22.19.19)(vite@8.0.14(@types/node@22.19.19)(esbuild@0.27.7)(yaml@2.9.0))
-
   packages/editor-website:
     dependencies:
       '@astrojs/mdx':
@@ -392,12 +392,12 @@ importers:
       '@nl-design-system-candidate/button-css':
         specifier: 1.1.0
         version: 1.1.0
+      '@nl-design-system-community/ckeditor-plugin':
+        specifier: workspace:*
+        version: link:../ckeditor-plugin
       '@nl-design-system-community/editor':
         specifier: workspace:*
         version: link:../editor
-      '@nl-design-system-community/editor-ckeditor':
-        specifier: workspace:*
-        version: link:../editor-ckeditor
       '@nl-design-system-community/editor-react':
         specifier: workspace:*
         version: link:../react

@@ -8,10 +8,10 @@ The build output is written directly to `app/drupal/modules/clippy/dist/` — no
 
 ## Prerequisites
 
-Build `editor-ckeditor` first, since this package depends on its compiled output:
+Build `ckeditor-plugin` first, since this package depends on its compiled output:
 
 ```sh
-pnpm --filter @nl-design-system-community/editor-ckeditor build
+pnpm --filter @nl-design-system-community/ckeditor-plugin build
 ```
 
 ## Build
