@@ -1,0 +1,11 @@
+plugin:
+  js:
+    dist/clippy.js:
+      preprocess: false
+  css:
+    component:
+      dist/clippy.css: {}
+  dependencies:
+    - core/drupal
+    - core/ckeditor5
+    - ckeditor5/internal.drupal.ckeditor5

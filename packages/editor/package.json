@@ -24,12 +24,19 @@
       "types": "./dist/toolbar.d.ts",
       "default": "./dist/toolbar.js"
     },
+    "./validators": {
+      "types": "./dist/validators/validators.d.ts",
+      "default": "./dist/validators.js"
+    },
     "./theme.css": "./theme.css"
   },
   "typesVersions": {
     "*": {
       "toolbar": [
         "./dist/toolbar.d.ts"
+      ],
+      "validators": [
+        "./dist/validators/validators.d.ts"
       ]
     }
   },

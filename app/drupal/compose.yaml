@@ -17,6 +17,7 @@ services:
       - drupal_themes:/var/www/html/themes
       - drupal_sites:/var/www/html/sites
       - ./modules/example:/var/www/html/modules/custom/example
+      - ./modules/clippy:/var/www/html/modules/custom/clippy
     depends_on:
       postgres:
         condition: service_healthy

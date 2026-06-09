@@ -1,0 +1,7 @@
+name: "Clippy"
+type: module
+description: "Accessibility feedback and recommendations in CKEditor, based on NL Design System guidelines."
+core_version_requirement: ^11
+package: Custom
+dependencies:
+  - drupal:ckeditor5
