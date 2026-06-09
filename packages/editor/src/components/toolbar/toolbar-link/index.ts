@@ -175,7 +175,7 @@ export class ToolbarLink extends LitElement {
         icon-only
         toggle
         size="small"
-        purpose="secondary"
+        purpose="subtle"
       >
         <clippy-icon slot="iconStart">${unsafeSVG(LinkIcon)}</clippy-icon>
         ${msg('Link')}
@@ -271,7 +271,7 @@ export class ToolbarLink extends LitElement {
               ${
                 this.editor?.isActive('link')
                   ? html`
-                      <clippy-button type="button" purpose="secondary" hint="negative" @click=${this.#unsetLink} style="margin-inline-end: auto"">
+                      <clippy-button type="button" purpose="subtle" hint="negative" @click=${this.#unsetLink} style="margin-inline-end: auto"">
                         ${msg('Remove link')}
                       </clippy-button>
                     `

@@ -87,7 +87,7 @@ export class ImageBubbleMenu extends LitElement {
           ${ref(this.#focusNode)}
           icon-only
           size="small"
-          purpose="secondary"
+          purpose="subtle"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(AlignLeftIcon)}</clippy-icon>
           ${msg('Align left')}
@@ -97,12 +97,12 @@ export class ImageBubbleMenu extends LitElement {
           @click="${() => this.#setAlignment('right')}"
           icon-only
           size="small"
-          purpose="secondary"
+          purpose="subtle"
         >
           <clippy-icon slot="iconStart">${unsafeSVG(AlignRightIcon)}</clippy-icon>
           ${msg('Align right')}
         </clippy-button>
-        <clippy-button @click=${this.#editImage} icon-only size="small" purpose="secondary">
+        <clippy-button @click=${this.#editImage} icon-only size="small" purpose="subtle">
           <clippy-icon slot="iconStart">${unsafeSVG(EditIcon)}</clippy-icon>
           ${msg('Edit image')}
         </clippy-button>

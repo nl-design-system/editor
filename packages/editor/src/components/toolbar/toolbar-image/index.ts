@@ -239,14 +239,7 @@ export class ToolbarImageUpload extends LitElement {
     const isEditing = this.editor?.isActive('image') ?? false;
 
     return html`
-      <clippy-button
-        @click=${this.#openForEdit}
-        .pressed=${isEditing}
-        icon-only
-        toggle
-        size="small"
-        purpose="secondary"
-      >
+      <clippy-button @click=${this.#openForEdit} .pressed=${isEditing} icon-only toggle size="small" purpose="subtle">
         <clippy-icon slot="iconStart">${unsafeSVG(PhotoIcon)}</clippy-icon>
         ${msg('Image')}
       </clippy-button>

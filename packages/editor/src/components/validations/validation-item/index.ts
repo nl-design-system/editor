@@ -120,7 +120,7 @@ export class ValidationItem extends LitElement {
               ${msg('Open in drawer')}
             </clippy-button>`
           : nothing}
-        <clippy-button purpose="secondary" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
+        <clippy-button purpose="subtle" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
           ${msg('Focus')}
         </clippy-button>
         ${typeof this.correct === 'function'

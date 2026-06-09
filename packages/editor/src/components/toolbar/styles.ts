@@ -7,9 +7,8 @@ export default css`
     flex-wrap: wrap;
     align-items: center;
     gap: var(--basis-space-inline-sm);
-    background-color: var(--basis-color-default-bg-document);
-    border: 1px solid var(--basis-color-accent-1-border-default);
-    border-radius: 3px;
+    background-color: var(--basis-color-action-1-bg-default);
+    border-block-start: var(--basis-border-width-md) solid var(--basis-color-accent-1-border-default);
     padding-block: var(--basis-space-inline-md);
     padding-inline: var(--basis-space-inline-md);
   }
@@ -31,9 +30,9 @@ export default css`
   .clippy-toolbar__group:not(:last-of-type):has(> :not([hidden]))::after {
     content: '';
     display: block;
-    inline-size: 2px;
-    height: 100%;
-    background: var(--basis-color-accent-1-border-default);
+    inline-size: var(--basis-border-width-md);
+    height: calc(100% - 2 * var(--basis-space-inline-md));
+    background: var(--basis-color-accent-1-border-subtle);
   }
 
   .clippy-screen-reader-text {
