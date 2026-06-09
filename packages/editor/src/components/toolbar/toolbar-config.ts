@@ -5,6 +5,7 @@ export type ToolbarItem = (typeof TOOLBAR_ITEM)[keyof typeof TOOLBAR_ITEM];
 export type ToolbarConfig = ToolbarItem[][];
 
 export const defaultToolbarConfig: ToolbarConfig = [
+  [TOOLBAR_ITEM.UNDO, TOOLBAR_ITEM.REDO],
   [TOOLBAR_ITEM.FORMAT_SELECT, TOOLBAR_ITEM.LANGUAGE_SELECT],
   [
     TOOLBAR_ITEM.BOLD,
@@ -16,7 +17,6 @@ export const defaultToolbarConfig: ToolbarConfig = [
     TOOLBAR_ITEM.SUPERSCRIPT,
     TOOLBAR_ITEM.SUBSCRIPT,
   ],
-  [TOOLBAR_ITEM.UNDO, TOOLBAR_ITEM.REDO],
   [TOOLBAR_ITEM.ORDERED_LIST, TOOLBAR_ITEM.BULLET_LIST, TOOLBAR_ITEM.DEFINITION_LIST],
   [TOOLBAR_ITEM.INSERT_TABLE],
   [TOOLBAR_ITEM.TEXT_ALIGN],
