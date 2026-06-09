@@ -1,13 +1,3 @@
-export const documentValidations = {
-  DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE: 'document-must-have-single-heading-one',
-} as const;
+import type { EditorSettings } from '@nl-design-system-community/editor/validators';
 
-export const contentValidations = {
-  IMAGE_MUST_HAVE_ALT_TEXT: 'image-must-have-alt-text',
-} as const;
-
-export const validationSeverity = {
-  ERROR: 'error',
-  INFO: 'info',
-  WARNING: 'warning',
-} as const;
+export const DEFAULT_SETTINGS: EditorSettings = { topHeadingLevel: 1, enableRules: ['*'] };
