@@ -2,15 +2,27 @@ import { css } from 'lit';
 
 export default css`
   .clippy-toolbar__wrapper {
-    /* Wrap the toolbar to make a toolbar with many items fit on small screens. */
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
     gap: var(--basis-space-inline-sm);
     background-color: var(--basis-color-action-1-bg-default);
     border-block-start: var(--basis-border-width-md) solid var(--basis-color-accent-1-border-default);
     padding-block: var(--basis-space-inline-md);
     padding-inline: var(--basis-space-inline-md);
+  }
+
+  .clippy-toolbar__start {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--basis-space-inline-sm);
+  }
+
+  .clippy-toolbar__end {
+    display: flex;
+    align-items: center;
+    justify-self: end;
   }
 
   .clippy-toolbar__group {
@@ -26,13 +38,18 @@ export default css`
     display: none;
   }
 
-  /* Draw a divider after every visible group, except the last */
-  .clippy-toolbar__group:not(:last-of-type):has(> :not([hidden]))::after {
+  /* Draw a divider after every visible group */
+  .clippy-toolbar__group:has(> :not([hidden]))::after {
     content: '';
     display: block;
     inline-size: var(--basis-border-width-md);
     height: calc(100% - 2 * var(--basis-space-inline-md));
     background: var(--basis-color-accent-1-border-subtle);
+  }
+
+  /* Remove the divider from the last group */
+  .clippy-toolbar__group:last-of-type::after {
+    display: none;
   }
 
   .clippy-screen-reader-text {
@@ -47,9 +64,14 @@ export default css`
     word-wrap: normal !important;
   }
 
-  .nl-number-badge--clippy {
+  .clippy-toolbar__dot-badge {
     position: absolute;
-    inset-block-start: calc(var(--nl-number-badge-min-block-size) * -0.3);
-    inset-inline-end: calc(var(--nl-number-badge-min-inline-size) * -0.3);
+    inset-block-start: var(--basis-space-inline-sm);
+    inset-inline-end: var(--basis-space-inline-sm);
+    inline-size: var(--basis-space-inline-md);
+    block-size: var(--basis-space-inline-md);
+    border-radius: 50%;
+    background-color: var(--basis-color-negative-inverse-bg-default);
+    pointer-events: none;
   }
 `;

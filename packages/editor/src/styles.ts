@@ -2,7 +2,6 @@ import { css } from 'lit';
 
 export default css`
   :host {
-    background-color: var(--basis-color-default-bg-document);
     display: block;
   }
 
@@ -15,6 +14,7 @@ export default css`
     position-area: top center;
   }
   .clippy-editor-container {
+    background: var(--basis-color-default-bg-document);
     position: relative;
     padding-inline-end: 1rem;
   }

@@ -2,11 +2,11 @@ import type { Editor } from '@tiptap/core';
 import type { TemplateResult } from 'lit';
 import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
-import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import AccessibleIcon from '@tabler/icons/outline/accessible.svg?raw';
 import ArrowBackUpIcon from '@tabler/icons/outline/arrow-back-up.svg?raw';
 import ArrowForwardUpIcon from '@tabler/icons/outline/arrow-forward-up.svg?raw';
 import BoldIcon from '@tabler/icons/outline/bold.svg?raw';
+import ChevronDownIcon from '@tabler/icons/outline/chevron-down.svg?raw';
 import './shortcuts-dialog';
 import CodeIcon from '@tabler/icons/outline/code.svg?raw';
 import IconHighlight from '@tabler/icons/outline/highlight.svg?raw';
@@ -28,7 +28,7 @@ import './toolbar-format-select';
 import './toolbar-language-select';
 import './toolbar-text-align';
 import UnderlineIcon from '@tabler/icons/outline/underline.svg?raw';
-import { LitElement, html, unsafeCSS, nothing } from 'lit';
+import { LitElement, html, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { createRef, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
@@ -137,8 +137,6 @@ export class Toolbar extends LitElement {
   };
 
   get #itemRenderers(): Map<ToolbarItem, () => TemplateResult | typeof nothing> {
-    const { size = 0 } = this.validationsContext || {};
-
     return new Map<ToolbarItem, () => TemplateResult | typeof nothing>([
       ['format-select', () => html`<clippy-format-select data-toolbar-item="format-select"></clippy-format-select>`],
       [
@@ -458,33 +456,30 @@ export class Toolbar extends LitElement {
           </clippy-button>
         `,
       ],
-      [
-        'accessibility-notifications',
-        () => html`
-          <span data-toolbar-item="accessibility-notifications" style="position: relative;">
-            <clippy-button
-              @click=${this.#toggleOpenValidationsDialog}
-              aria-controls="dialog-content"
-              icon-only
-              size="small"
-              purpose="subtle"
-            >
-              <clippy-icon slot="iconStart">${unsafeSVG(AccessibleIcon)}</clippy-icon>
-              ${msg('Show accessibility notifications')}
-            </clippy-button>
-            ${size > 0
-              ? html`<data value=${size} class="nl-number-badge nl-number-badge--clippy">
-                  <span hidden aria-hidden="true" class="nl-number-badge__visible-label">${size}</span>
-                  <span class="nl-number-badge__hidden-label">${msg(str`${size} accessibility notifications`)}</span>
-                </data>`
-              : nothing}
-          </span>
-        `,
-      ],
     ]);
   }
 
-  static override readonly styles = [toolbarStyles, unsafeCSS(numberBadgeStyles)];
+  static override readonly styles = [toolbarStyles];
+
+  #renderAccessibilityNotifications() {
+    const { size = 0 } = this.validationsContext || {};
+    return html`
+      <span data-toolbar-item="accessibility-notifications" style="position: relative;">
+        <clippy-button
+          @click=${this.#toggleOpenValidationsDialog}
+          aria-controls="dialog-content"
+          icon-only
+          size="small"
+          purpose="subtle"
+        >
+          <clippy-icon slot="iconStart">${unsafeSVG(AccessibleIcon)}</clippy-icon>
+          ${msg('Show accessibility notifications')}
+          <clippy-icon slot="iconEnd">${unsafeSVG(ChevronDownIcon)}</clippy-icon>
+        </clippy-button>
+        ${size > 0 ? html`<span class="clippy-toolbar__dot-badge" aria-hidden="true"></span>` : nothing}
+      </span>
+    `;
+  }
 
   override render() {
     const { size = 0 } = this.validationsContext || {};
@@ -492,16 +487,19 @@ export class Toolbar extends LitElement {
     const visibleGroups = this.config.filter((group) => group.some((id) => renderers.has(id)));
     return html`
       <div class="clippy-toolbar__wrapper" role="toolbar" aria-label=${msg('Text editor toolbar')}>
-        ${visibleGroups.map(
-          (group) => html`
-            <div class="clippy-toolbar__group" role="group">
-              ${group.map((itemId) => {
-                const renderer = renderers.get(itemId);
-                return renderer ? renderer() : nothing;
-              })}
-            </div>
-          `,
-        )}
+        <div class="clippy-toolbar__start">
+          ${visibleGroups.map(
+            (group) => html`
+              <div class="clippy-toolbar__group" role="group">
+                ${group.map((itemId) => {
+                  const renderer = renderers.get(itemId);
+                  return renderer ? renderer() : nothing;
+                })}
+              </div>
+            `,
+          )}
+        </div>
+        <div class="clippy-toolbar__end" role="group">${this.#renderAccessibilityNotifications()}</div>
       </div>
       <clippy-shortcuts .dialogRef=${this.#dialogRef}></clippy-shortcuts>
       <div class="clippy-screen-reader-text" aria-live=${size > 0 ? 'polite' : 'off'}>
