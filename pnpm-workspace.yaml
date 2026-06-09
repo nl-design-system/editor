@@ -1,9 +1,11 @@
-# Edit this file by hand. Using `pnpm config` reformats the file and removes all comments.
-
 packages:
   - 'components/**'
   - 'packages/*'
   - 'proprietary/*'
+
+allowBuilds:
+  esbuild: true
+  sharp: true
 
 # Configure pnpm so peer dependencies must be explicitly added instead of being automatically installed.
 autoInstallPeers: false
@@ -31,4 +33,3 @@ savePrefix: ''
 
 # Configure pnpm to not fail when there are missing or invalid peer dependencies in the tree.
 strictPeerDependencies: false
-
