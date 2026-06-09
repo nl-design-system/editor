@@ -1,0 +1,54 @@
+---
+import logo from "../assets/logo.svg?raw";
+
+interface Props {
+  href: string;
+  ariaLabel: string;
+}
+
+const { href, ariaLabel } = Astro.props;
+---
+
+<a class="ma-site-logo" href={href} aria-label={ariaLabel}>
+  <span class="ma-site-logo__icon"><Fragment set:html={logo} /></span>
+  <span class="ma-site-logo__label">
+    <span class="ma-site-logo__label-primary">Clippy</span>
+    <span class="ma-site-logo__label-secondary">Editor</span>
+  </span>
+</a>
+
+<style>
+  .ma-site-logo {
+    align-items: center;
+    color: inherit;
+    display: flex;
+    flex-shrink: 0;
+    gap: var(--basis-space-inline-sm);
+    text-decoration: none;
+  }
+
+  .ma-site-logo:hover {
+    text-decoration: underline;
+  }
+
+  .ma-site-logo__icon {
+    display: flex;
+    flex-shrink: 0;
+    block-size: 2rem;
+    inline-size: 2rem;
+  }
+
+  .ma-site-logo__icon :global(svg) {
+    block-size: 100%;
+    inline-size: 100%;
+  }
+
+  .ma-site-logo__label {
+    display: flex;
+    flex-direction: column;
+    font-size: var(--basis-text-font-size-md);
+    font-weight: var(--basis-text-font-weight-bold);
+    line-height: 1.1;
+  }
+</style>
+

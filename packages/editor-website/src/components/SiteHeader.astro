@@ -1,5 +1,5 @@
 ---
-import logo from "../assets/logo.svg?raw";
+import SiteLogo from './SiteLogo.astro';
 import type { Locale } from '../i18n/translations.ts';
 import { useTranslations } from '../i18n/translations.ts';
 
@@ -20,10 +20,9 @@ const localeRoot = locale === 'en' ? '/en' : '/';
 ---
 
 <header class="ma-site-header">
-    <a class="ma-site-header__logo" href={t('nav.href.editor')} aria-label={t('site.logo.label')}>
-      <Fragment set:html={logo} />
-      <span class="ma-site-header__logo-label">{t('site.logo.name')}</span>
-    </a>
+    <div class="ma-site-header__logo">
+      <SiteLogo href={t('nav.href.editor')} ariaLabel={t('site.logo.label')} />
+    </div>
     <nav class="ma-site-header__nav" aria-label={t('nav.label')}>
       <ul class="ma-site-header__nav-list" role="list">
         {
@@ -65,27 +64,17 @@ const localeRoot = locale === 'en' ? '/en' : '/';
   }
 
   .ma-site-header__logo {
-    align-items: center;
-    color: inherit;
     display: flex;
+    align-items: center;
     flex-shrink: 0;
-    gap: var(--basis-space-inline-sm);
-    text-decoration: none;
-    padding-block: var(--basis-space-block-md);
-    padding-inline: var(--basis-space-inline-xl);
-  }
-
-  .ma-site-header__logo:hover {
-    text-decoration: underline;
-  }
-
-  .ma-site-header__logo-label {
-    font-size: var(--basis-text-font-size-lg);
-    font-weight: var(--basis-text-font-weight-bold);
+    padding-block: var(--basis-space-block-lg);
+    padding-inline: var(--basis-space-inline-lg);
   }
 
   .ma-site-header__nav {
     display: flex;
+    align-self: stretch;
+    align-items: stretch;
   }
 
   .ma-site-header__nav-list {
@@ -116,7 +105,7 @@ const localeRoot = locale === 'en' ? '/en' : '/';
 
   .ma-site-header__nav-link--active {
     background-color: var(--basis-color-accent-1-color-active);
-    border-block-end: var(--basis-border-width-md) solid var(--basis-color-default-inverse-color-document);
+    border-block-end: var(--basis-border-width-md) solid var(--basis-color-neutral-color-white);
   }
 
   .ma-site-header__lang-nav {
@@ -137,4 +126,3 @@ const localeRoot = locale === 'en' ? '/en' : '/';
     text-decoration: underline;
   }
 </style>
-

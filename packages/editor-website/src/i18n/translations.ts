@@ -46,8 +46,6 @@ const translations = {
     'react.title': 'React integration - Rich-text Editor - NL Design System',
     'site.logo.label': 'NL Design System Editor – home',
 
-    'site.logo.name': 'Clippy Editor',
-
     // Site
     'site.title': 'Rich-text Editor - NL Design System',
   },
@@ -95,8 +93,6 @@ const translations = {
     // React page
     'react.title': 'React integratie - Rich-text Editor - NL Design System',
     'site.logo.label': 'NL Design System Editor – home',
-
-    'site.logo.name': 'Clippy Editor',
 
     // Site
     'site.title': 'Rich-text Editor - NL Design System',
