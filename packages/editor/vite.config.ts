@@ -8,6 +8,7 @@ export default defineConfig({
       entry: {
         index: 'src/index.ts',
         toolbar: 'src/toolbar.ts',
+        validators: 'src/validators/validators.ts',
       },
       formats: ['es'],
     },

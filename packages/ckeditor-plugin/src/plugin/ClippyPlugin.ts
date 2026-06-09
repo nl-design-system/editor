@@ -1,7 +1,7 @@
-import type { Element } from 'ckeditor5';
 import { Plugin } from 'ckeditor5';
-import type { BoundingBox, ValidationResult } from '../types/index.ts';
-import { runValidation } from '../validators/index.ts';
+import { runValidation, debouncedValidate, type ValidationResult } from '@nl-design-system-community/editor/validators';
+import { DEFAULT_SETTINGS } from '../constants/index.ts';
+import { toResults } from '../utils/index.ts';
 
 export class ClippyPlugin extends Plugin {
   static get pluginName() {
@@ -14,10 +14,10 @@ export class ClippyPlugin extends Plugin {
   private _resultsEl: HTMLElement | null = null;
 
   init(): void {
-    this.editor.model.document.on('change:data', () => this._validate());
     this.editor.on('ready', () => {
       this._setupUI();
       this._validate();
+      this.editor.model.document.on('change:data', () => this._debouncedValidate());
     });
   }
 
@@ -36,21 +36,31 @@ export class ClippyPlugin extends Plugin {
     this._resultsEl.className = 'clippy-ckeditor__results';
     this._editorEl.append(this._resultsEl);
 
-    new ResizeObserver(() => this._refreshBoundingBoxes()).observe(editableEl!);
+    new ResizeObserver(() => this._renderOverlays()).observe(editableEl!);
   }
 
   private _validate(): void {
-    const root = this.editor.model.document.getRoot();
-    if (!root) {
+    const editableEl = this.editor.ui.getEditableElement();
+    if (!editableEl) {
       return;
     }
 
-    this._results = runValidation(root).map((result) => ({
-      ...result,
-      boundingBox: this._getBoundingBox(result.element),
-    }));
+    runValidation(editableEl, DEFAULT_SETTINGS, (resultMap) => {
+      this._results = toResults(resultMap);
+      this._render();
+    });
+  }
 
-    this._render();
+  private _debouncedValidate(): void {
+    const editableEl = this.editor.ui.getEditableElement();
+    if (!editableEl) {
+      return;
+    }
+
+    debouncedValidate(editableEl, DEFAULT_SETTINGS, (resultMap) => {
+      this._results = toResults(resultMap);
+      this._render();
+    });
   }
 
   private _render(): void {
@@ -65,7 +75,8 @@ export class ClippyPlugin extends Plugin {
     this._overlayEl!.innerHTML = '';
     const editorRect = this._editorEl!.getBoundingClientRect();
 
-    this._results.forEach(({ boundingBox }) => {
+    this._results.forEach(({ range }) => {
+      const boundingBox = this._getBoundingBoxFromRange(range);
       if (!boundingBox) {
         return;
       }
@@ -86,36 +97,26 @@ export class ClippyPlugin extends Plugin {
 
     const items = this._results
       .map(
-        ({ ruleId, severity }) => `
+        ({ validatorKey, severity }) => `
         <li>
           <span>${severity}</span>
-          <code>${ruleId}</code>
+          <code>${validatorKey}</code>
         </li>`,
       )
       .join('');
     this._resultsEl!.innerHTML = `<ul>${items}</ul>`;
   }
 
-  private _refreshBoundingBoxes(): void {
-    this._results = this._results.map((result) => ({
-      ...result,
-      boundingBox: this._getBoundingBox(result.element),
-    }));
-    this._renderOverlays();
-  }
-
-  private _getBoundingBox(element: Element): BoundingBox | null {
-    const viewElement = this.editor.editing.mapper.toViewElement(element);
-    if (!viewElement) {
+  private _getBoundingBoxFromRange(range: Range | undefined): { top: number; height: number } | null {
+    if (!range) {
       return null;
     }
 
-    const domElement = this.editor.editing.view.domConverter.mapViewToDom(viewElement);
-    if (!(domElement instanceof HTMLElement)) {
+    const { height, top } = range.getBoundingClientRect();
+    if (!height) {
+      // height is 0 for collapsed/invisible ranges; top can legitimately be 0
       return null;
     }
-
-    const { height, top } = domElement.getBoundingClientRect();
-    return { height, top };
+    return { top, height };
   }
 }
