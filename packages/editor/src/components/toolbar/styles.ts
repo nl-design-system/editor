@@ -2,7 +2,7 @@ import { css } from 'lit';
 
 export default css`
   .clippy-toolbar__wrapper {
-    --_clippy-toolbar-wrapper-padding-block: var(--basis-space-inline-md);
+    --_clippy-toolbar-wrapper-padding-block: var(--basis-space-block-md);
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: start;
