@@ -1,9 +1,11 @@
 import type { Editor } from '@tiptap/core';
 import '@nl-design-system-community/clippy-components/clippy-lang-combobox';
-import { localized, msg } from '@lit/localize';
+import { localized } from '@lit/localize';
 import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
+import LanguageIcon from '@tabler/icons/outline/language.svg?raw';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
+import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import { sourceLocale } from '@/generated/locale-codes.ts';
@@ -81,11 +83,10 @@ export class FormatSelect extends LitElement {
     return html`
       <clippy-lang-combobox
         @change=${this.#handleValueChange}
-        hidden-label=${msg('Language of the element')}
         .options=${languageOptions.map(({ lang }) => lang)}
-        value=${this.#getCurrentLanguage() || ''}
-        format="both"
+        value=${this.#getCurrentLanguage() ?? ''}
       >
+        <div slot="icon-start">${unsafeSVG(LanguageIcon)}</div>
       </clippy-lang-combobox>
     `;
   }
