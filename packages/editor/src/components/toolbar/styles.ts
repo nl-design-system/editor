@@ -2,13 +2,14 @@ import { css } from 'lit';
 
 export default css`
   .clippy-toolbar__wrapper {
+    --_clippy-toolbar-wrapper-padding-block: var(--basis-space-inline-md);
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: start;
     gap: var(--basis-space-inline-sm);
     background-color: var(--basis-color-action-1-bg-default);
     border-block-start: var(--basis-border-width-md) solid var(--basis-color-accent-1-border-default);
-    padding-block: var(--basis-space-inline-md);
+    padding-block: var(--_clippy-toolbar-wrapper-padding-block);
     padding-inline: var(--basis-space-inline-md);
   }
 
@@ -43,7 +44,7 @@ export default css`
     content: '';
     display: block;
     inline-size: var(--basis-border-width-md);
-    height: calc(100% - 2 * var(--basis-space-inline-md));
+    block-size: calc(100% - 2 * var(--_clippy-toolbar-wrapper-padding-block));
     background: var(--basis-color-accent-1-border-subtle);
   }
 
@@ -65,12 +66,15 @@ export default css`
   }
 
   .clippy-toolbar__dot-badge {
+    --clippy-toolbar-dot-badge-size: var(--basis-space-inline-md);
+    --clippy-toolbar-dot-badge-inset: var(--basis-space-inline-sm);
+
     position: absolute;
-    inset-block-start: var(--basis-space-inline-sm);
-    inset-inline-end: var(--basis-space-inline-sm);
-    inline-size: var(--basis-space-inline-md);
-    block-size: var(--basis-space-inline-md);
-    border-radius: 50%;
+    inset-block-start: var(--clippy-toolbar-dot-badge-inset);
+    inset-inline-end: var(--clippy-toolbar-dot-badge-inset);
+    inline-size: var(--clippy-toolbar-dot-badge-size);
+    block-size: var(--clippy-toolbar-dot-badge-size);
+    border-radius: var(--basis-border-radius-round);
     background-color: var(--basis-color-negative-inverse-bg-default);
     pointer-events: none;
   }
