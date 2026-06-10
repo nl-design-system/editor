@@ -6,10 +6,11 @@
   --clippy-validations-dialog-tabs-border-color: var(--basis-color-default-border-default);
   --clippy-button-small-min-inline-size: 32px;
   --clippy-button-small-min-block-size: 32px;
-  --clippy-button-small-icon: 18px;
+  --clippy-button-small-icon: 20px;
   --utrecht-space-around: 1;
   --utrecht-form-field-margin-block-end: 10px;
   --utrecht-form-field-label-margin-block-end: 18px;
 
+  background-color: var(--basis-color-accent-1-bg-subtle);
   font-family: "Source Sans Pro", "Helvetica", "Arial", sans-serif;
 }

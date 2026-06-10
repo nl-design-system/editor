@@ -1,11 +1,12 @@
 import type { Editor } from '@tiptap/core';
 import type { Level } from '@tiptap/extension-heading';
 import { localized, msg, str } from '@lit/localize';
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import '@nl-design-system-community/clippy-components/clippy-combobox';
 import { editor } from '@/decorators/TipTapDecorator.ts';
+import toolbarFormatSelectStyles from './styles.ts';
 
 const tag = 'clippy-format-select';
 
@@ -33,21 +34,7 @@ const getConfiguredHeadingLevels = (editor: Editor): Level[] => {
 export class FormatSelect extends LitElement {
   @property({ type: Boolean }) disabled = false;
   @property({ type: Boolean }) readOnly = false;
-  static override readonly styles = [
-    css`
-      clippy-combobox {
-        --utrecht-pointer-target-min-size: var(--clippy-button-small-min-block-size);
-        --utrecht-textbox-padding-block-end: 0;
-        --utrecht-textbox-padding-block-start: 0;
-        --utrecht-textbox-border-color: var(--nl-button-secondary-border-color);
-        --utrecht-textbox-color: var(--nl-button-secondary-color);
-        --utrecht-textbox-font-weight: var(--nl-button-secondary-font-weight);
-        --utrecht-textbox-border-radius: var(--nl-button-border-radius);
-        --utrecht-listbox-border-radius: var(--nl-button-border-radius);
-        --utrecht-textbox-line-height: 30px;
-      }
-    `,
-  ];
+  static override readonly styles = [toolbarFormatSelectStyles];
 
   @editor()
   private readonly editor: Editor | undefined;

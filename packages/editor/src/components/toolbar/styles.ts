@@ -2,16 +2,28 @@ import { css } from 'lit';
 
 export default css`
   .clippy-toolbar__wrapper {
-    /* Wrap the toolbar to make a toolbar with many items fit on small screens. */
+    --_clippy-toolbar-wrapper-padding-block: var(--basis-space-block-md);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: var(--basis-space-inline-sm);
+    background-color: var(--basis-color-action-1-bg-default);
+    border-block-start: var(--basis-border-width-md) solid var(--basis-color-accent-1-border-default);
+    padding-block: var(--_clippy-toolbar-wrapper-padding-block);
+    padding-inline: var(--basis-space-inline-md);
+  }
+
+  .clippy-toolbar__start {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--basis-space-inline-sm);
-    background-color: var(--basis-color-default-bg-document);
-    border: 1px solid var(--basis-color-accent-1-border-default);
-    border-radius: 3px;
-    padding-block: var(--basis-space-inline-md);
-    padding-inline: var(--basis-space-inline-md);
+  }
+
+  .clippy-toolbar__end {
+    display: flex;
+    align-items: center;
+    justify-self: end;
   }
 
   .clippy-toolbar__group {
@@ -27,13 +39,18 @@ export default css`
     display: none;
   }
 
-  /* Draw a divider after every visible group, except the last */
-  .clippy-toolbar__group:not(:last-of-type):has(> :not([hidden]))::after {
+  /* Draw a divider after every visible group */
+  .clippy-toolbar__group:has(> :not([hidden]))::after {
     content: '';
     display: block;
-    inline-size: 2px;
-    height: 100%;
-    background: var(--basis-color-accent-1-border-default);
+    inline-size: var(--basis-border-width-md);
+    block-size: calc(100% - 2 * var(--_clippy-toolbar-wrapper-padding-block));
+    background: var(--basis-color-accent-1-border-subtle);
+  }
+
+  /* Remove the divider from the last group */
+  .clippy-toolbar__group:last-of-type::after {
+    display: none;
   }
 
   .clippy-screen-reader-text {
@@ -48,9 +65,17 @@ export default css`
     word-wrap: normal !important;
   }
 
-  .nl-number-badge--clippy {
+  .clippy-toolbar__dot-badge {
+    --clippy-toolbar-dot-badge-size: var(--basis-space-inline-md);
+    --clippy-toolbar-dot-badge-inset: var(--basis-space-inline-sm);
+
     position: absolute;
-    inset-block-start: calc(var(--nl-number-badge-min-block-size) * -0.3);
-    inset-inline-end: calc(var(--nl-number-badge-min-inline-size) * -0.3);
+    inset-block-start: var(--clippy-toolbar-dot-badge-inset);
+    inset-inline-end: var(--clippy-toolbar-dot-badge-inset);
+    inline-size: var(--clippy-toolbar-dot-badge-size);
+    block-size: var(--clippy-toolbar-dot-badge-size);
+    border-radius: var(--basis-border-radius-round);
+    background-color: var(--basis-color-negative-inverse-bg-default);
+    pointer-events: none;
   }
 `;

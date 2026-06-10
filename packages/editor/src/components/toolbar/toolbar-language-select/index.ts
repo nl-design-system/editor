@@ -2,13 +2,14 @@ import type { Editor } from '@tiptap/core';
 import '@nl-design-system-community/clippy-components/clippy-lang-combobox';
 import { localized, msg } from '@lit/localize';
 import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
-import { css, html, LitElement, unsafeCSS } from 'lit';
+import { html, LitElement, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import { sourceLocale } from '@/generated/locale-codes.ts';
 import { findNearestAncestorAttribute } from '@/utils/domTraverser.ts';
 import { languages, isSameLanguage, type Language } from './languages.ts';
+import toolbarLanguageSelectStyles from './styles.ts';
 
 export interface SelectOption {
   active: boolean;
@@ -33,23 +34,7 @@ export class FormatSelect extends LitElement {
   @property({ type: Boolean }) readOnly = false;
   @property({ type: Boolean }) matchTextDirection = false;
 
-  static override readonly styles = [
-    unsafeCSS(buttonCss),
-    css`
-      clippy-lang-combobox {
-        /* overrides for clippy-lang-combobox to make it fit in the toolbar */
-        --utrecht-pointer-target-min-size: var(--clippy-button-small-min-block-size);
-        --utrecht-textbox-padding-block-end: 0;
-        --utrecht-textbox-padding-block-start: 0;
-        --utrecht-textbox-border-color: var(--nl-button-secondary-border-color);
-        --utrecht-textbox-color: var(--nl-button-secondary-color);
-        --utrecht-textbox-font-weight: var(--nl-button-secondary-font-weight);
-        --utrecht-textbox-border-radius: var(--nl-button-border-radius);
-        --utrecht-listbox-border-radius: var(--nl-button-border-radius);
-        --utrecht-textbox-line-height: 30px;
-      }
-    `,
-  ];
+  static override readonly styles = [toolbarLanguageSelectStyles, unsafeCSS(buttonCss)];
 
   @editor()
   private readonly editor: Editor | undefined;

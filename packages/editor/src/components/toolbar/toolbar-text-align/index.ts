@@ -90,7 +90,7 @@ export class ToolbarTextAlign extends LitElement {
     const activeAlignment = this.#getActiveAlignment();
 
     return html`
-      <clippy-button @click=${this.#toggleBubbleMenu} size="small" purpose="secondary" icon-only>
+      <clippy-button @click=${this.#toggleBubbleMenu} size="small" purpose="subtle" icon-only>
         <clippy-icon slot="iconStart">${unsafeSVG(iconMap[activeAlignment])}</clippy-icon>
         ${this.#getAlignmentLabel(activeAlignment)}
         <clippy-icon slot="iconEnd" class="clippy-icon__dropdown">${unsafeSVG(ChevronDownIcon)}</clippy-icon>

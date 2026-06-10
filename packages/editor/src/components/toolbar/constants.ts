@@ -1,5 +1,4 @@
 export const TOOLBAR_ITEM = {
-  ACCESSIBILITY_NOTIFICATIONS: 'accessibility-notifications',
   BOLD: 'bold',
   BULLET_LIST: 'bullet-list',
   CODE: 'code',

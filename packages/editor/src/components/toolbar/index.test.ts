@@ -101,10 +101,9 @@ describe('<clippy-toolbar>', () => {
 
     it('renders all expected groups from default config', async () => {
       const toolbar = document.querySelector(tag)!;
-      const groups = toolbar.shadowRoot!.querySelectorAll('[role="group"]');
+      const groups = toolbar.shadowRoot!.querySelectorAll('.clippy-toolbar__start [role="group"]');
 
-      // defaultToolbarConfig has 9 groups
-      expect(groups.length).toBe(9);
+      expect(groups.length).toBe(10);
     });
 
     it('renders no divider elements (dividers are CSS pseudo-elements)', async () => {
@@ -122,7 +121,7 @@ describe('<clippy-toolbar>', () => {
       const customConfig: ToolbarConfig = [['bold', 'italic']];
       toolbar.config = customConfig;
       await vi.waitFor(() => {
-        const groups = toolbar.shadowRoot!.querySelectorAll('[role="group"]');
+        const groups = toolbar.shadowRoot!.querySelectorAll('.clippy-toolbar__start [role="group"]');
         expect(groups.length).toBe(1);
       });
 
