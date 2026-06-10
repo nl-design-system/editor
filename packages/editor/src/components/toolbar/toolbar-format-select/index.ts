@@ -1,7 +1,7 @@
 import type { Editor } from '@tiptap/core';
 import type { Level } from '@tiptap/extension-heading';
 import { localized, msg, str } from '@lit/localize';
-import TableImportIcon from '@tabler/icons/outline/table-import.svg?raw';
+import PilcrowIcon from '@tabler/icons/outline/pilcrow.svg?raw';
 import { html, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import '@nl-design-system-community/clippy-components/clippy-combobox';
@@ -97,9 +97,8 @@ export class FormatSelect extends LitElement {
         @change=${this.#handleTextFormatChange}
         value=${this.options[this.#selectedIndex]?.value ?? ''}
         .options=${this.options}
-        name="text-format-select"
       >
-        <div slot="icon-start">${unsafeSVG(TableImportIcon)}</slot>
+        <slot name="icon-start" slot="icon-start">${unsafeSVG(PilcrowIcon)}</slot>
       </clippy-combobox>
     `;
   }

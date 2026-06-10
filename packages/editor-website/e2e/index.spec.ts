@@ -45,8 +45,8 @@ test.describe('Toolbar visibility', () => {
 
   test('all toolbar comboboxes are visible', async ({ page }) => {
     const clippyEditor = page.locator('#clippy-editor-localhost');
-    await expect(clippyEditor.getByRole('combobox', { name: 'text-format-select' })).toBeVisible();
-    await expect(clippyEditor.getByRole('combobox', { name: 'language-select' })).toBeVisible();
+    await expect(clippyEditor.getByRole('combobox').first()).toBeVisible();
+    await expect(clippyEditor.getByRole('combobox').nth(1)).toBeVisible();
   });
 });
 
@@ -104,7 +104,7 @@ test.describe('Text formatting', () => {
       .click();
     await page.keyboard.type('test heading');
 
-    await clippyEditor.getByRole('combobox', { name: 'text-format-select' }).clear();
+    await clippyEditor.getByRole('combobox').first().clear();
     await clippyEditor.getByRole('option', { name: 'Kopniveau 3' }).click();
 
     await expect(editor.getByRole('heading', { name: 'test heading', level: 3 })).toBeVisible();
