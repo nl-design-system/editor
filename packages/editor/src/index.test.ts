@@ -39,7 +39,7 @@ describe('<clippy-editor>', () => {
       { keys: '[/MouseLeft]' },
     ]);
 
-    const combobox = page.getByRole('combobox', { name: 'Selecteer tekstformaat' });
+    const combobox = page.getByRole('combobox', { name: 'text-format-select' });
     expect(combobox).toBeInTheDocument();
     await user.click(combobox.element());
     await user.keyboard('{Control>}a{/Control}{Delete}');

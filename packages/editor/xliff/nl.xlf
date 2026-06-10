@@ -106,10 +106,6 @@
         <source>Blockquote</source>
         <target>Citaatblok</target>
       </trans-unit>
-      <trans-unit id="s83545917a8791873">
-        <source>Select text format</source>
-        <target>Selecteer tekstformaat</target>
-      </trans-unit>
       <trans-unit id="s3d93f9ea0c5a13fa">
         <source>Image</source>
         <target>Afbeelding</target>
@@ -323,14 +319,6 @@
       <trans-unit id="s125a86b2f45bbb25">
         <source><x id="0" equiv-text="${count}"/> items</source>
         <target><x id="0" equiv-text="${count}"/> items</target>
-      </trans-unit>
-      <trans-unit id="s078a19b8dc74d589">
-        <source><x id="0" equiv-text="${size}"/> accessibility notifications</source>
-        <target><x id="0" equiv-text="${size}"/> toegankelijkheidsmeldingen</target>
-      </trans-unit>
-      <trans-unit id="sae0518337f2a9a5f">
-        <source>Language of the element</source>
-        <target>Taal van het element</target>
       </trans-unit>
       <trans-unit id="sa4d58219ed66ed0f">
         <source>Text alignment</source>

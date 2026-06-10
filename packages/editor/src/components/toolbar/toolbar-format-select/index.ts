@@ -97,6 +97,7 @@ export class FormatSelect extends LitElement {
         @change=${this.#handleTextFormatChange}
         value=${this.options[this.#selectedIndex]?.value ?? ''}
         .options=${this.options}
+        name="text-format-select"
       >
         <div slot="icon-start">${unsafeSVG(TableImportIcon)}</slot>
       </clippy-combobox>

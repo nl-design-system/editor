@@ -85,6 +85,7 @@ export class FormatSelect extends LitElement {
         @change=${this.#handleValueChange}
         .options=${languageOptions.map(({ lang }) => lang)}
         value=${this.#getCurrentLanguage() ?? ''}
+        name="language-select"
       >
         <div slot="icon-start">${unsafeSVG(LanguageIcon)}</div>
       </clippy-lang-combobox>
