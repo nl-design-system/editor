@@ -52,23 +52,45 @@ declare global {
   }
 }
 
+/**
+ * The editor toolbar component. Renders a configurable set of formatting controls
+ * grouped into logical sections. Consumes the TipTap editor instance and the
+ * validations context via Lit context providers.
+ *
+ * @element clippy-toolbar
+ *
+ * @fires CustomEvents.OPEN_VALIDATIONS_DIALOG - Dispatched (global) when the user
+ *   clicks the accessibility-notifications button.
+ *
+ * @example
+ * ```html
+ * <clippy-toolbar .config=${myToolbarConfig}></clippy-toolbar>
+ * ```
+ */
 @localized()
 @safeCustomElement('clippy-toolbar')
 export class Toolbar extends LitElement {
   readonly #dialogRef: Ref<HTMLDialogElement> = createRef();
   readonly #focusNode: Ref<HTMLButtonElement> = createRef();
 
+  /**
+   * Ordered list of toolbar item groups. Each group is an array of
+   * {@link ToolbarItem} identifiers. Defaults to {@link defaultToolbarConfig}.
+   */
   @property({ type: Array })
   config: ToolbarConfig = defaultToolbarConfig;
 
+  /** @internal Consumed from the nearest {@link identifierContext} provider. */
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })
   private readonly identifier?: string;
 
+  /** @internal Consumed from the nearest {@link validationsContext} provider. */
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
 
+  /** @internal TipTap editor instance injected via {@link editor} decorator. */
   @editor()
   private readonly editor: Editor | undefined;
 
