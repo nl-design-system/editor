@@ -23,8 +23,8 @@ test.describe('Clippy Editor rendering', () => {
   });
 
   test('toolbar comboboxes are visible', async ({ page }) => {
-    await expect(page.getByRole('combobox', { name: 'Selecteer tekstformaat' })).toBeVisible();
-    await expect(page.getByRole('combobox', { name: 'Taal van het element' })).toBeVisible();
+    await expect(page.getByRole('combobox').first()).toBeVisible();
+    await expect(page.getByRole('combobox').nth(1)).toBeVisible();
   });
 
   test('initial content is rendered correctly', async ({ page }) => {

@@ -76,7 +76,7 @@ describe('<clippy-toolbar>', () => {
 
     // A preview <img> should appear with the filename as its alt text
     await vi.waitFor(() => {
-      expect(page.getByRole('img')).toHaveAttribute('alt', 'clippy.png');
+      expect(page.getByRole('img', { name: 'clippy.png' })).toHaveAttribute('alt', 'clippy.png');
     });
 
     // The alt-text input should be pre-filled with the filename

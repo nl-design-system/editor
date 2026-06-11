@@ -106,8 +106,8 @@ importers:
         specifier: 1.1.5
         version: 1.1.5
       '@nl-design-system-community/clippy-components':
-        specifier: 2.0.0
-        version: 2.0.0
+        specifier: 3.0.0
+        version: 3.0.0
       '@tabler/icons':
         specifier: 3.44.0
         version: 3.44.0
@@ -460,11 +460,11 @@ importers:
 
 packages:
 
-  '@amsterdam/design-system-css@2.2.0':
-    resolution: {integrity: sha512-fcYZ60h8HTu00qSGu0IxxX/Qlo41V4J3wITaMFxg10yDgrpeoY3paJRSoK8k+IS3wbwSIoPlG7RTBZJt7yf05w==}
+  '@amsterdam/design-system-css@4.1.0':
+    resolution: {integrity: sha512-AfR2vCwOTnbpv1P6oaa8CPcwJSi6NNtBfExszqxSob5EWg0+o/mvdBah6GddItEg8sGrXctSvnYGM/I00q3chQ==}
     peerDependencies:
-      '@amsterdam/design-system-assets': 1.1.0
-      '@amsterdam/design-system-tokens': 2.2.0
+      '@amsterdam/design-system-assets': 2.3.0
+      '@amsterdam/design-system-tokens': 4.0.1
 
   '@astrojs/compiler@2.13.1':
     resolution: {integrity: sha512-f3FN83d2G/v32ipNClRKgYv30onQlMZX1vCeZMjPsMMPl1mDpmbl0+N5BYo4S/ofzqJyS5hvwacEo0CCVDn/Qg==}
@@ -1403,38 +1403,68 @@ packages:
   '@nl-design-system-candidate/button-css@1.1.0':
     resolution: {integrity: sha512-w0JLQyiPL9UrfRwzu3Mq2EWbYvAJbolepeFH4ggyBFXoYm9RMWX6vWb/8Oj999GzAF6N77LlES5jUnaR3BJ7Yw==}
 
+  '@nl-design-system-candidate/button-tokens@1.0.0':
+    resolution: {integrity: sha512-2uxqqVUW9kyib/rPn1rvWI09auUVOkA5IUC+rBlYxUz9DVVn4UcXPeOe9KVgh0a1WuM2dzX3k/bpWRBINtKACw==}
+
   '@nl-design-system-candidate/code-block-css@1.2.0':
     resolution: {integrity: sha512-oem6db9bdWyllcCJ1WNEuLQfx9uF9yZAsbmzMYs7YF448EYhhEnEXEqfjtkUrLwuly3OEnThI28g69IXpigx/g==}
 
-  '@nl-design-system-candidate/code-css@2.0.5':
-    resolution: {integrity: sha512-KYRoiv389rTyGEb1xK1jFkzmQ4v3H6B82OOMafVqm3L5+ntr2f3tbJNYBkep3XYjAEq8VmNLkkJQYJZHiEo2ng==}
+  '@nl-design-system-candidate/code-block-tokens@2.0.3':
+    resolution: {integrity: sha512-cMaLJRxJFbgbxG18E+Dky8mABMCJR/KwugqlfF8ERK7S4K06m4dwHQk3Al18adISuRReApfueJ2CiMTSJL40GQ==}
 
   '@nl-design-system-candidate/code-css@3.0.0':
     resolution: {integrity: sha512-W+7AG3fyNN1IPpaCf0fFAgTqHW59DKfrY055tzlwmQ/TmZK3oOJ3hvAvjh/esRhz9KxsQpVlGxVasCXwIP8aAg==}
 
+  '@nl-design-system-candidate/code-tokens@3.0.0':
+    resolution: {integrity: sha512-uPjCHB5mvFMFXDjxjAhWk9zmPxdDdRrrza2vUROmB8jSszxP/37f2tPMqEa+F/ugZTyBOt9AYWk/feBfOruhmQ==}
+
   '@nl-design-system-candidate/color-sample-css@1.0.5':
     resolution: {integrity: sha512-ork71HMKs0Maiqd6bhYB1YNxFcHpxKUWp6Pi2GoEQZuo9zobSI750ja8Qi8g1NIExVIlCAm3rSjdiIHZXNeolg==}
+
+  '@nl-design-system-candidate/color-sample-tokens@2.0.3':
+    resolution: {integrity: sha512-B3hIdU+bX70W5XbRpPjXrpi3F1JiNoMhNbsP0PauO0jhK2386uSFgBEqb4iDN0wruqX0qAiBhOcJuepy7vding==}
 
   '@nl-design-system-candidate/data-badge-css@1.0.5':
     resolution: {integrity: sha512-CDcXpGQDonWIw9omDL5O/rn1IaS0y8s4WprVDCZRwYKOgpIE6N3T4MwiuESzijldhT4lnYIxK1q3jdp2G8enFQ==}
 
+  '@nl-design-system-candidate/data-badge-tokens@2.0.3':
+    resolution: {integrity: sha512-W2SB4PTND45OEJeXLSeYjA+RT2cyLRFXKcZu1rDTh5Q3n6EED65HsocFmOu6uRK7pAb6WwU6W14X4EAD47QOUA==}
+
   '@nl-design-system-candidate/heading-css@1.1.3':
     resolution: {integrity: sha512-s4ERGrHcsBkZlCc+qz8+XDB5rCpxvkxwxI2bg4OB2GDS0DU5LzjNMWhsV1I8IPOboTvWMabvrsscxVuj5Bijuw==}
+
+  '@nl-design-system-candidate/heading-tokens@1.1.2':
+    resolution: {integrity: sha512-9A7V/k2JyQ6It6JBViu2h06uN7IbMZ6//hdkznJxc9w7qVJjlx+5sIewgEs/8kkFAlSCMBrgNRkqZsQZaRPTRg==}
 
   '@nl-design-system-candidate/link-css@2.0.3':
     resolution: {integrity: sha512-NpRIm9YDCK1bihslc9UD3OvV5hmm91Dc7v2oBIllqlZZyS1THFmPsyi+sJ1Vd7ZDa54GgqjuzUJOzAoQDJOFzQ==}
 
+  '@nl-design-system-candidate/link-tokens@3.0.3':
+    resolution: {integrity: sha512-4CS7pyfBpCwCY9u2C1QbQg/sYBLcruB7ZHCprUCJR11NyjcdXGYVnxxnOU+uko/G7UZ6Vuy66bALIbro7Iy+aw==}
+
   '@nl-design-system-candidate/mark-css@1.0.5':
     resolution: {integrity: sha512-QIoqT5Rv27VaQc/HnCjw2kfb9wCt37Sb5O7geHysZfaSsAIMZx22lZ2Fzs2vUSxO7pdMT9MidKpipwWrusZ+5g==}
+
+  '@nl-design-system-candidate/mark-tokens@2.0.3':
+    resolution: {integrity: sha512-eA0Poy1qyoGSOAwJUirRHOm4nSzsL33fz1D585FKIucmQTV8EDrBLgLlysRDAdLriWAXPINsETaAkSQ9/EFq0A==}
 
   '@nl-design-system-candidate/number-badge-css@1.1.5':
     resolution: {integrity: sha512-H9/+72dHiuKZUk+xixykqpgoH7O70SUw1Ak71NIAscVcBbivWK4Hzj9fF4uNXpIXdERxVdiJxa1TIBhCdMRwAQ==}
 
+  '@nl-design-system-candidate/number-badge-tokens@2.0.3':
+    resolution: {integrity: sha512-LfJVX9ha486SMJ7laHy/yRy31mDdJHS5r8bczsuR4afll5F6xiwvhyxeJlzGv4z/Gsdoub3SWiz3apVObYJErg==}
+
   '@nl-design-system-candidate/paragraph-css@2.1.3':
     resolution: {integrity: sha512-f3GHiSpisUZAcn4gSNpSX2C3Mhl7y9dg1TfTe+jGMtHAqau/tztrtE3H27FlwrZeVEtsUtvssRCYUA3UO/GDpQ==}
 
-  '@nl-design-system-community/clippy-components@2.0.0':
-    resolution: {integrity: sha512-HIYkRZYPyQ+eI2mSjqtymXCLQQ5FcHQAWF1ItKAx8RGqphONteGAojq4ED7j7oJ+HV90ulJ6MpRHR1JJ85AOGQ==}
+  '@nl-design-system-candidate/paragraph-tokens@1.1.3':
+    resolution: {integrity: sha512-EtFFQagTwkJYL5k9+h8xDQDh9GKzgo4CJnFrSuxWNzM3A3Hi+vAd6bIBAj4ECBZfW5IJBtsONAduSoCiPo5CbA==}
+
+  '@nl-design-system-candidate/skip-link-tokens@1.0.4':
+    resolution: {integrity: sha512-MD1+m55nRqkj2eATcBNOLE8N5jWfvjJg2ax+POX8zXm49wJcBGTS6B/kK4kzIPbMuivYnxVtNlmA+Cz/upFBZA==}
+
+  '@nl-design-system-community/clippy-components@3.0.0':
+    resolution: {integrity: sha512-V7OcAJrwlupqqTnbeN304MJtPGzosEq62IPhquVNgAVNUjcBvMSdo2ZfddleAs+bUo/dnGT8GK92ndl11aQguw==}
 
   '@nl-design-system-community/ma-design-tokens@5.2.0':
     resolution: {integrity: sha512-QUtNjFjmWgIivCIiO6frPqZnImieO4K5TkQJmxhiFUFJPfJUId/zeFc56vHx5V1VMi7yPyLWTS1vlNGALPV0iQ==}
@@ -1477,6 +1507,10 @@ packages:
 
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
+
+  '@projectwallace/css-parser@0.16.0':
+    resolution: {integrity: sha512-4WJOIU/6Zbscp5snGGvqx2UobIgYOfBaZDGbx6Mj7b7PjcMz34fFufus7h3AbDFlS7nXEkHHlPDZJl/Qu5gumg==}
+    engines: {pnpm: '>=11.0.0'}
 
   '@rolldown/binding-android-arm64@1.0.3':
     resolution: {integrity: sha512-454rs7jHngixp/NMxd5srYD57OnzSlZ/eFTETjORQHLwJG1lRtmNOJcBerZlfu4GjKqeq8aCCIQrMdHyhI51Hw==}
@@ -1763,9 +1797,6 @@ packages:
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
-
-  '@tabler/icons@3.40.0':
-    resolution: {integrity: sha512-V/Q4VgNPKubRTiLdmWjV/zscYcj5IIk+euicUtaVVqF6luSC9rDngYWgST5/yh3Mrg/mYUwRv1YVTk71Jp0twQ==}
 
   '@tabler/icons@3.44.0':
     resolution: {integrity: sha512-Wn0AOZG9sg0L+bjfMqq4eNhC6pQjIrk94LvvWYNYkY8KH8wC3YILRzQlrnVJc4FUeMxH/AK97QsYCX35H3LndA==}
@@ -2218,9 +2249,6 @@ packages:
   '@utrecht/breadcrumb-nav-css@3.0.1':
     resolution: {integrity: sha512-Xi94I04iGSTwD9jynmkjyXCQ1lRXr3jz/1TNKKnHmA9iRy9shdyVZKUJBPPVTzlSIJLxuplj8acmICH8uZYbrQ==}
 
-  '@utrecht/button-css@3.1.0':
-    resolution: {integrity: sha512-4iUf9AG12XR+LkZ8679RJwFY+5RMtoJUuj1iYUohc7BEE2hS28hxQuycZ5g28QQST2M6DGBSjyi5QiG3skAVVw==}
-
   '@utrecht/button-css@4.0.1':
     resolution: {integrity: sha512-FUGMLlIu8p5aRtZrUgPk7KnHUnVaTcwS7dYhCOGGHqau7MUf8I41hKfp1gc77ptxgNAgw3s8EA1vmeH8UdON9w==}
 
@@ -2247,9 +2275,6 @@ packages:
 
   '@utrecht/column-layout-css@3.0.1':
     resolution: {integrity: sha512-mVEDKrcPMCN/S+cqaf/A7ADw79mSgcWt7b1NYjIl2rRNPYcWwaQeFzBIsiWoGRgdb49y4Ddn/iETJebB6KIc7w==}
-
-  '@utrecht/combobox-css@2.0.1':
-    resolution: {integrity: sha512-BUpeg4RNO/MezKQLMVdCIGCYlBvq9piKbsLwAROtQtEiGLWJlDqPL39OtCp2vZo1sesDUphVdXaYG9NiOrk8og==}
 
   '@utrecht/combobox-css@3.0.1':
     resolution: {integrity: sha512-ediZEhoGqVN9ytnyc8ZAHOCBE7P5GefIMeYoHXolRQrOBDh2UBZ5BmUSpVBiXKk/bbzRWGodNqWYN5Gy9rSB+g==}
@@ -2368,9 +2393,6 @@ packages:
   '@utrecht/list-social-css@3.0.1':
     resolution: {integrity: sha512-MMij+ktQeUqD0WHTxOTOuhpAvhsg+ce1mfLKUyxBT6Lz8QWpoQZkMK16oq9xKCpAl61kLGJhS+7luksQoFi2Vw==}
 
-  '@utrecht/listbox-css@2.1.0':
-    resolution: {integrity: sha512-3m5BRchEAtjzm0W2fJ9qU4ms45jp1J86rerdFDOSP+Zu0LEN0GCONIhkGM+dfiiq8h0YUl03WRemu2NUjcH8UA==}
-
   '@utrecht/listbox-css@3.0.1':
     resolution: {integrity: sha512-pA1AVnLJec2s6sQBFdTqHZx6IYRE9uzwhSESa7iBnT//8CJ5JuvIxwHsLhAuCwSyRRiZDQWjXxHdeGcJMHEmQw==}
 
@@ -2484,9 +2506,6 @@ packages:
 
   '@utrecht/textarea-css@4.0.1':
     resolution: {integrity: sha512-zBplMHqKnZ4QVq7yYv9LXr+mRik6WHlde6/QLQgoJOxiEzW008pAKapHPf3FK/rS/WquSf74nuEvXFbTmqj+xw==}
-
-  '@utrecht/textbox-css@3.1.0':
-    resolution: {integrity: sha512-KT2r6v1yTcdQPFZhswo/7+dMPL7x8aulBLeYO9SmrlVkpY47owJcB0KrkmMbF51/VvTLh4kW0qbaQ+vKnjwUsg==}
 
   '@utrecht/textbox-css@4.0.1':
     resolution: {integrity: sha512-lmZyMV2RW/b3nOt1UO9lsF68AKVYG9YFwOxIrkZcMAHfpL/IyOxQkhhJmzrp9uGV4KVdW0AGN/ldAjtBYFfD0A==}
@@ -4200,9 +4219,6 @@ packages:
   lit-html@3.3.3:
     resolution: {integrity: sha512-el8M6jK2o3RXBnrSHX3ZKrsN8zEV63pSExTO1wYJz7QndGYZ8353e2a5PPX+qHe2aGayfnchQmkAojaWAREOIA==}
 
-  lit@3.3.2:
-    resolution: {integrity: sha512-NF9zbsP79l4ao2SNrH3NkfmFgN/hBYSQo90saIVI1o5GpjAdCPVstVzO1MrLOakHoEhYkrtRjPK6Ob521aoYWQ==}
-
   lit@3.3.3:
     resolution: {integrity: sha512-fycuvZg/hkpozL00lm1pEJH5nN/lr9ZXd6mJI2HSN4+Bzc+LDNdEApJ6HFbPkdFNHLvOplIIuJvxkS4XUxqirw==}
 
@@ -4374,9 +4390,9 @@ packages:
   memfs@4.57.6:
     resolution: {integrity: sha512-WQK+DGjKCnPdpSyJUXphz+COF2uEhhsxQ3VIWBSbzpbbXuch3h4FePMqXrXGdLjsTgo4JFzBFsP6AWd9pVazGw==}
 
-  memoize@10.2.0:
-    resolution: {integrity: sha512-DeC6b7QBrZsRs3Y02A6A7lQyzFbsQbqgjI6UW0GigGWV+u1s25TycMr0XHZE4cJce7rY/vyw2ctMQqfDkIhUEA==}
-    engines: {node: '>=18'}
+  memoize@11.0.0:
+    resolution: {integrity: sha512-cjsfZaC9b1clqPeIVMbb5dLHSXgdgGWGxdAU3oTUUkHiwWTKTBNnSmcqWJncNjYtBi3S8Rp0c5GIiyGztR8TRA==}
+    engines: {node: '>=22'}
 
   meow@14.1.0:
     resolution: {integrity: sha512-EDYo6VlmtnumlcBCbh1gLJ//9jvM/ndXHfVXIFrZVr6fGcwTUyCTFNTLCKuY3ffbK8L/+3Mzqnd58RojiZqHVw==}
@@ -5002,6 +5018,11 @@ packages:
   radix3@1.1.2:
     resolution: {integrity: sha512-b484I/7b8rDEdSDKckSSBA8knMpcdsXudlE/LNL639wFoHKwLbEkQFZHWEYwDC0wa0FKUcCY+GAF73Z7wxNVFA==}
 
+  react-dom@19.2.6:
+    resolution: {integrity: sha512-0prMI+hvBbPjsWnxDLxlCGyM8PN6UuWjEUCYmZhO67xIV9Xasa/r/vDnq+Xyq4Lo27g8QSbO5YzARu0D1Sps3g==}
+    peerDependencies:
+      react: ^19.2.6
+
   react-dom@19.2.7:
     resolution: {integrity: sha512-t0BRVXvbiE/o20Hfw669rLbMCDWtYZLvmJigy2f0MxsXF+71pxhR3xOkspmsO8h3ZlNzyibAmtCa3l4lYKk6gQ==}
     peerDependencies:
@@ -5015,6 +5036,10 @@ packages:
 
   react-refresh@0.18.0:
     resolution: {integrity: sha512-QgT5//D3jfjJb6Gsjxv0Slpj23ip+HtOpnNgnb2S5zU3CB26G/IDPGoy4RJB42wzFE46DRsstbW6tKHoKbhAxw==}
+    engines: {node: '>=0.10.0'}
+
+  react@19.2.6:
+    resolution: {integrity: sha512-sfWGGfavi0xr8Pg0sVsyHMAOziVYKgPLNrS7ig+ivMNb3wbCBw3KxtflsGBAwD3gYQlE/AEZsTLgToRrSCjb0Q==}
     engines: {node: '>=0.10.0'}
 
   react@19.2.7:
@@ -5480,6 +5505,11 @@ packages:
 
   style-dictionary@5.4.3:
     resolution: {integrity: sha512-VpIXPFqIJXR5bLzWhV9PjB7NBteyAVHq9THk5Hyw6zRqAjgfJkH9zalC9szLthkQlS+S8szmmq6tlnLWFksmTQ==}
+    engines: {node: '>=22.0.0'}
+    hasBin: true
+
+  style-dictionary@5.4.4:
+    resolution: {integrity: sha512-Sd7dkEOLn33EpvlMyS8ykUu0us2EIFUqsysf4DSwZQ46nqQkZ2Q9o5mozu8cSizj3t7E220HaPk7EV1O7LjvDQ==}
     engines: {node: '>=22.0.0'}
     hasBin: true
 
@@ -6194,7 +6224,7 @@ packages:
 
 snapshots:
 
-  '@amsterdam/design-system-css@2.2.0': {}
+  '@amsterdam/design-system-css@4.1.0': {}
 
   '@astrojs/compiler@2.13.1': {}
 
@@ -7260,43 +7290,79 @@ snapshots:
 
   '@nl-design-system-candidate/button-css@1.1.0': {}
 
+  '@nl-design-system-candidate/button-tokens@1.0.0': {}
+
   '@nl-design-system-candidate/code-block-css@1.2.0': {}
 
-  '@nl-design-system-candidate/code-css@2.0.5': {}
+  '@nl-design-system-candidate/code-block-tokens@2.0.3': {}
 
   '@nl-design-system-candidate/code-css@3.0.0': {}
 
+  '@nl-design-system-candidate/code-tokens@3.0.0': {}
+
   '@nl-design-system-candidate/color-sample-css@1.0.5': {}
+
+  '@nl-design-system-candidate/color-sample-tokens@2.0.3': {}
 
   '@nl-design-system-candidate/data-badge-css@1.0.5': {}
 
+  '@nl-design-system-candidate/data-badge-tokens@2.0.3': {}
+
   '@nl-design-system-candidate/heading-css@1.1.3': {}
+
+  '@nl-design-system-candidate/heading-tokens@1.1.2': {}
 
   '@nl-design-system-candidate/link-css@2.0.3': {}
 
+  '@nl-design-system-candidate/link-tokens@3.0.3': {}
+
   '@nl-design-system-candidate/mark-css@1.0.5': {}
+
+  '@nl-design-system-candidate/mark-tokens@2.0.3': {}
 
   '@nl-design-system-candidate/number-badge-css@1.1.5': {}
 
+  '@nl-design-system-candidate/number-badge-tokens@2.0.3': {}
+
   '@nl-design-system-candidate/paragraph-css@2.1.3': {}
 
-  '@nl-design-system-community/clippy-components@2.0.0':
+  '@nl-design-system-candidate/paragraph-tokens@1.1.3': {}
+
+  '@nl-design-system-candidate/skip-link-tokens@1.0.4': {}
+
+  '@nl-design-system-community/clippy-components@3.0.0':
     dependencies:
-      '@amsterdam/design-system-css': 2.2.0
+      '@amsterdam/design-system-css': 4.1.0
       '@nl-design-system-candidate/button-css': 1.1.0
-      '@nl-design-system-candidate/code-css': 2.0.5
+      '@nl-design-system-candidate/button-tokens': 1.0.0
+      '@nl-design-system-candidate/code-block-tokens': 2.0.3
+      '@nl-design-system-candidate/code-css': 3.0.0
+      '@nl-design-system-candidate/code-tokens': 3.0.0
       '@nl-design-system-candidate/color-sample-css': 1.0.5
+      '@nl-design-system-candidate/color-sample-tokens': 2.0.3
+      '@nl-design-system-candidate/data-badge-css': 1.0.5
+      '@nl-design-system-candidate/data-badge-tokens': 2.0.3
       '@nl-design-system-candidate/heading-css': 1.1.3
-      '@tabler/icons': 3.40.0
-      '@utrecht/button-css': 3.1.0
-      '@utrecht/combobox-css': 2.0.1
-      '@utrecht/listbox-css': 2.1.0
-      '@utrecht/textbox-css': 3.1.0
+      '@nl-design-system-candidate/heading-tokens': 1.1.2
+      '@nl-design-system-candidate/link-tokens': 3.0.3
+      '@nl-design-system-candidate/mark-tokens': 2.0.3
+      '@nl-design-system-candidate/number-badge-tokens': 2.0.3
+      '@nl-design-system-candidate/paragraph-tokens': 1.1.3
+      '@nl-design-system-candidate/skip-link-tokens': 1.0.4
+      '@projectwallace/css-parser': 0.16.0
+      '@tabler/icons': 3.44.0
+      '@utrecht/combobox-css': 3.0.1
+      '@utrecht/customizable-text-input-css': 1.0.0
+      '@utrecht/listbox-css': 3.0.1
+      '@utrecht/textbox-css': 4.0.1
       colorjs.io: 0.6.1
       debounce: 3.0.0
       dequal: 2.0.3
-      lit: 3.3.2
-      memoize: 10.2.0
+      lit: 3.3.3
+      memoize: 11.0.0
+      react: 19.2.6
+      react-dom: 19.2.6(react@19.2.6)
+      style-dictionary: 5.4.4
     transitivePeerDependencies:
       - '@amsterdam/design-system-assets'
       - '@amsterdam/design-system-tokens'
@@ -7346,6 +7412,8 @@ snapshots:
       playwright: 1.60.0
 
   '@polka/url@1.0.0-next.29': {}
+
+  '@projectwallace/css-parser@0.16.0': {}
 
   '@rolldown/binding-android-arm64@1.0.3':
     optional: true
@@ -7526,8 +7594,6 @@ snapshots:
   '@sindresorhus/merge-streams@4.0.0': {}
 
   '@standard-schema/spec@1.1.0': {}
-
-  '@tabler/icons@3.40.0': {}
 
   '@tabler/icons@3.44.0': {}
 
@@ -8045,8 +8111,6 @@ snapshots:
 
   '@utrecht/breadcrumb-nav-css@3.0.1': {}
 
-  '@utrecht/button-css@3.1.0': {}
-
   '@utrecht/button-css@4.0.1': {}
 
   '@utrecht/button-group-css@3.0.1': {}
@@ -8064,8 +8128,6 @@ snapshots:
   '@utrecht/color-sample-css@3.0.1': {}
 
   '@utrecht/column-layout-css@3.0.1': {}
-
-  '@utrecht/combobox-css@2.0.1': {}
 
   '@utrecht/combobox-css@3.0.1': {}
 
@@ -8249,8 +8311,6 @@ snapshots:
 
   '@utrecht/list-social-css@3.0.1': {}
 
-  '@utrecht/listbox-css@2.1.0': {}
-
   '@utrecht/listbox-css@3.0.1': {}
 
   '@utrecht/logo-button-css@2.0.1': {}
@@ -8326,8 +8386,6 @@ snapshots:
   '@utrecht/table-of-contents-css@2.0.1': {}
 
   '@utrecht/textarea-css@4.0.1': {}
-
-  '@utrecht/textbox-css@3.1.0': {}
 
   '@utrecht/textbox-css@4.0.1': {}
 
@@ -10319,12 +10377,6 @@ snapshots:
     dependencies:
       '@types/trusted-types': 2.0.7
 
-  lit@3.3.2:
-    dependencies:
-      '@lit/reactive-element': 2.1.2
-      lit-element: 4.2.2
-      lit-html: 3.3.3
-
   lit@3.3.3:
     dependencies:
       '@lit/reactive-element': 2.1.2
@@ -10646,7 +10698,7 @@ snapshots:
       tree-dump: 1.1.0(tslib@2.8.1)
       tslib: 2.8.1
 
-  memoize@10.2.0:
+  memoize@11.0.0:
     dependencies:
       mimic-function: 5.0.1
 
@@ -11478,6 +11530,11 @@ snapshots:
 
   radix3@1.1.2: {}
 
+  react-dom@19.2.6(react@19.2.6):
+    dependencies:
+      react: 19.2.6
+      scheduler: 0.27.0
+
   react-dom@19.2.7(react@19.2.7):
     dependencies:
       react: 19.2.7
@@ -11488,6 +11545,8 @@ snapshots:
   react-is@17.0.2: {}
 
   react-refresh@0.18.0: {}
+
+  react@19.2.6: {}
 
   react@19.2.7: {}
 
@@ -12152,6 +12211,22 @@ snapshots:
   strip-json-comments@3.1.1: {}
 
   style-dictionary@5.4.3:
+    dependencies:
+      '@bundled-es-modules/deepmerge': 4.3.2
+      '@bundled-es-modules/glob': 13.0.6
+      '@bundled-es-modules/memfs': 4.17.0
+      '@zip.js/zip.js': 2.8.26
+      chalk: 5.6.2
+      change-case: 5.4.4
+      colorjs.io: 0.5.2
+      commander: 12.1.0
+      is-plain-obj: 4.1.0
+      json5: 2.2.3
+      path-unified: 0.2.0
+      prettier: 3.8.3
+      tinycolor2: 1.6.0
+
+  style-dictionary@5.4.4:
     dependencies:
       '@bundled-es-modules/deepmerge': 4.3.2
       '@bundled-es-modules/glob': 13.0.6

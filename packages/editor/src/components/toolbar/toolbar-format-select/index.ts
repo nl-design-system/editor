@@ -1,10 +1,12 @@
 import type { Editor } from '@tiptap/core';
 import type { Level } from '@tiptap/extension-heading';
 import { localized, msg, str } from '@lit/localize';
+import PilcrowIcon from '@tabler/icons/outline/pilcrow.svg?raw';
 import { html, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import '@nl-design-system-community/clippy-components/clippy-combobox';
+import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import toolbarFormatSelectStyles from './styles.ts';
 
@@ -93,11 +95,11 @@ export class FormatSelect extends LitElement {
     return html`
       <clippy-combobox
         @change=${this.#handleTextFormatChange}
-        hidden-label=${msg('Select text format')}
-        value=${this.options[this.#selectedIndex]?.value || ''}
-        .selectedIndex=${this.#selectedIndex}
+        value=${this.options[this.#selectedIndex]?.value ?? ''}
         .options=${this.options}
-      ></clippy-combobox>
+      >
+        <slot name="icon-start" slot="icon-start">${unsafeSVG(PilcrowIcon)}</slot>
+      </clippy-combobox>
     `;
   }
 }
