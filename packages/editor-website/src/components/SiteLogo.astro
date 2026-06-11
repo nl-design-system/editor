@@ -27,15 +27,11 @@ const { href, ariaLabel } = Astro.props;
     text-decoration: none;
   }
 
-  .ma-site-logo:hover {
-    text-decoration: underline;
-  }
-
   .ma-site-logo__icon {
     display: flex;
     flex-shrink: 0;
-    block-size: 2rem;
-    inline-size: 2rem;
+    block-size: var(--basis-size-sm);
+    inline-size: var(--basis-size-sm);
   }
 
   .ma-site-logo__icon :global(svg) {
