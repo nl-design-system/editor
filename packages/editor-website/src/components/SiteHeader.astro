@@ -1,5 +1,5 @@
 ---
-import logo from "../assets/logo.svg?raw";
+import SiteLogo from './SiteLogo.astro';
 import type { Locale } from '../i18n/translations.ts';
 import { useTranslations } from '../i18n/translations.ts';
 
@@ -20,11 +20,9 @@ const localeRoot = locale === 'en' ? '/en' : '/';
 ---
 
 <header class="ma-site-header">
-  <div class="ma-site-header__inner">
-    <a class="ma-site-header__logo" href={t('nav.href.editor')} aria-label={t('site.logo.label')}>
-      <Fragment set:html={logo} />
-      <span class="ma-site-header__logo-label">{t('site.logo.name')}</span>
-    </a>
+    <div class="ma-site-header__logo">
+      <SiteLogo href={t('nav.href.editor')} ariaLabel={t('site.logo.label')} />
+    </div>
     <nav class="ma-site-header__nav" aria-label={t('nav.label')}>
       <ul class="ma-site-header__nav-list" role="list">
         {
@@ -53,74 +51,69 @@ const localeRoot = locale === 'en' ? '/en' : '/';
         {t('nav.language')}
       </a>
     </nav>
-  </div>
 </header>
 
 <style>
   .ma-site-header {
-    background-color: var(--basis-color-accent-1-bg-default);
-    border-block-end: 1px solid var(--basis-color-accent-1-border-default, transparent);
-    color: var(--basis-color-accent-1-color-default);
-  }
-
-  .ma-site-header__inner {
-    align-items: center;
+    background-color: var(--basis-color-accent-1-color-default);
+    color: var(--basis-color-accent-1-inverse-color-document);
+    align-items: stretch;
+    justify-content: space-between;
     display: flex;
     gap: var(--basis-space-inline-xl);
-    margin-inline: auto;
-    max-inline-size: var(--basis-page-max-inline-size);
-    padding-block: var(--basis-space-block-md);
-    padding-inline: var(--basis-space-inline-xl);
   }
 
   .ma-site-header__logo {
-    align-items: center;
-    color: inherit;
     display: flex;
+    align-items: center;
     flex-shrink: 0;
-    gap: var(--basis-space-inline-sm);
-    text-decoration: none;
-  }
-
-  .ma-site-header__logo:hover {
-    text-decoration: underline;
-  }
-
-  .ma-site-header__logo-label {
-    font-size: var(--basis-text-font-size-lg);
-    font-weight: var(--basis-text-font-weight-bold);
+    padding-block: var(--basis-space-block-lg);
+    padding-inline: var(--basis-space-inline-lg);
   }
 
   .ma-site-header__nav {
-    flex: 1;
+    display: flex;
+    align-self: stretch;
+    align-items: stretch;
   }
 
   .ma-site-header__nav-list {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--basis-space-inline-lg);
+    align-items: stretch;
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
   .ma-site-header__nav-link {
+    font-weight: var(--basis-text-font-weight-bold);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    padding-block: var(--basis-space-block-md);
+    padding-inline: var(--basis-space-inline-xl);
+    block-size: 100%;
     color: inherit;
     font-size: var(--basis-text-font-size-md);
     text-decoration: none;
   }
 
   .ma-site-header__nav-link:hover {
-    text-decoration: underline;
+    background-color: var(--basis-color-accent-1-color-hover);
   }
 
   .ma-site-header__nav-link--active {
-    font-weight: var(--basis-text-font-weight-bold);
-    text-decoration: underline;
+    background-color: var(--basis-color-accent-1-color-active);
+    border-block-end: var(--basis-border-width-md) solid var(--basis-color-default-inverse-border-default);
   }
 
   .ma-site-header__lang-nav {
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding-block: var(--basis-space-block-md);
+    padding-inline: var(--basis-space-inline-xl);
   }
 
   .ma-site-header__lang-link {
@@ -133,4 +126,3 @@ const localeRoot = locale === 'en' ? '/en' : '/';
     text-decoration: underline;
   }
 </style>
-

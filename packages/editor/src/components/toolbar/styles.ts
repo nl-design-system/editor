@@ -40,17 +40,12 @@ export default css`
   }
 
   /* Draw a divider after every visible group */
-  .clippy-toolbar__group:has(> :not([hidden]))::after {
+  .clippy-toolbar__group:has(> :not([hidden])):not(:last-of-type)::after {
     content: '';
     display: block;
     inline-size: var(--basis-border-width-md);
     block-size: calc(100% - 2 * var(--_clippy-toolbar-wrapper-padding-block));
     background: var(--basis-color-accent-1-border-subtle);
-  }
-
-  /* Remove the divider from the last group */
-  .clippy-toolbar__group:last-of-type::after {
-    display: none;
   }
 
   .clippy-screen-reader-text {
@@ -63,6 +58,10 @@ export default css`
     position: absolute;
     width: 1px;
     word-wrap: normal !important;
+  }
+
+  .clippy-toolbar__notifications {
+    position: relative;
   }
 
   .clippy-toolbar__dot-badge {

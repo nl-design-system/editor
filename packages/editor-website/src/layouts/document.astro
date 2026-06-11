@@ -39,6 +39,10 @@ const locale = (Astro.currentLocale ?? 'nl') as Locale;
 </html>
 
 <style is:global>
+  main {
+    background-color: var(--basis-color-accent-1-bg-subtle);
+  }
+
   .ma-banner {
     container-name: ma-banner;
     container-type: inline-size;
@@ -54,7 +58,7 @@ const locale = (Astro.currentLocale ?? 'nl') as Locale;
     grid-template-rows: repeat(3, auto);
     margin-inline: auto;
     max-inline-size: var(--basis-page-max-inline-size);
-    padding-block: var(--basis-space-block-4xl);
+    padding-block: var(--basis-space-block-5xl);
     padding-inline: var(--basis-space-inline-xl);
     row-gap: var(--basis-space-row-xl);
 
@@ -73,7 +77,7 @@ const locale = (Astro.currentLocale ?? 'nl') as Locale;
     }
 
     @container ma-banner (min-width: 44rem) {
-      padding-block: var(--basis-space-block-6xl);
+      padding-block: var(--basis-space-block-5xl);
       padding-inline: var(--basis-space-inline-xl);
     }
   }
@@ -96,7 +100,7 @@ const locale = (Astro.currentLocale ?? 'nl') as Locale;
   }
 
   .ma-page-section--with-space {
-    margin-block: var(--basis-space-block-6xl);
+    margin-block: var(--basis-space-block-4xl);
     padding-inline: var(--basis-space-inline-xl);
   }
 
@@ -108,6 +112,7 @@ const locale = (Astro.currentLocale ?? 'nl') as Locale;
     margin-block-start: 0;
     margin-inline-end: 0;
     margin-inline-start: 0;
+    background-color: var(--basis-color-default-bg-document);
   }
 
   .clippy-guideline:first-of-type {
@@ -193,6 +198,10 @@ const locale = (Astro.currentLocale ?? 'nl') as Locale;
     border-block-start: 1px solid var(--basis-color-default-border-default);
     padding-block: var(--basis-space-inline-md);
     padding-inline: var(--basis-space-inline-md);
+  }
+
+  clippy-editor, .clippy-guideline {
+    box-shadow: var(--basis-box-shadow-md);
   }
 
   .clippy-toolbar-config-demo {

@@ -18,7 +18,7 @@ const t = useTranslations('nl');
           target="_blank"
           rel="noreferrer"
         >
-          {t('index.cta.github')}
+          <span class="nl-button__label">{t('index.cta.github')}</span>
         </a>
         <a
           class="nl-button nl-button--secondary"
@@ -26,14 +26,16 @@ const t = useTranslations('nl');
           target="_blank"
           rel="noreferrer"
         >
-          {t('index.cta.roadmap')}
+          <span class="nl-button__label">{t('index.cta.roadmap')}</span>
         </a>
       </Fragment>
     </Hero>
 
     <Section>
       <div class="clippy-index__preview-bar">
-        <a class="nl-link nl-button nl-button--secondary" href="/preview">Voorbeeld</a>
+        <a class="nl-button nl-button--secondary" href="/preview">
+          <span class="nl-button__label">Voorbeeld</span>
+        </a>
       </div>
       <clippy-editor id="clippy-editor-localhost">
         <div slot="value">

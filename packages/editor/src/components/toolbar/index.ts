@@ -464,7 +464,7 @@ export class Toolbar extends LitElement {
   #renderAccessibilityNotifications() {
     const { size = 0 } = this.validationsContext || {};
     return html`
-      <span data-toolbar-item="accessibility-notifications" style="position: relative;">
+      <span data-toolbar-item="accessibility-notifications" class="clippy-toolbar__notifications">
         <clippy-button
           @click=${this.#toggleOpenValidationsDialog}
           aria-controls="dialog-content"

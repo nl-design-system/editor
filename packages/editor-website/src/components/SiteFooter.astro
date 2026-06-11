@@ -1,5 +1,5 @@
 ---
-import logo from "../assets/logo.svg?raw";
+import SiteLogo from './SiteLogo.astro';
 import type { Locale } from '../i18n/translations.ts';
 import { useTranslations } from '../i18n/translations.ts';
 
@@ -10,10 +10,7 @@ const t = useTranslations(locale);
 <footer class="clippy-website-footer">
   <div class="clippy-website-footer__inner">
     <div class="clippy-website-footer__logo">
-      <a class="clippy-website-footer__logo-link" href={t('nav.href.editor')} aria-label={t('site.logo.label')}>
-        <Fragment set:html={logo} />
-        <span class="clippy-website-footer__logo-label">{t('site.logo.name')}</span>
-      </a>
+      <SiteLogo href={t('nav.href.editor')} ariaLabel={t('site.logo.label')} />
     </div>
 
     <div class="clippy-website-footer__about">
@@ -33,9 +30,8 @@ const t = useTranslations(locale);
 
 <style>
   .clippy-website-footer {
-    background-color: var(--basis-color-accent-1-bg-default);
-    border-block-start: 1px solid var(--basis-color-accent-1-border-default, transparent);
-    color: var(--basis-color-accent-1-color-default);
+    background-color: var(--basis-color-accent-1-color-default);
+    color: var(--basis-color-accent-1-inverse-color-document);
   }
 
   .clippy-website-footer__inner {
@@ -49,19 +45,6 @@ const t = useTranslations(locale);
     padding-inline: var(--basis-space-inline-2xl);
   }
 
-  .clippy-website-footer__logo-link {
-    align-items: center;
-    color: inherit;
-    display: flex;
-    flex-shrink: 0;
-    gap: var(--basis-space-inline-sm);
-    text-decoration: none;
-  }
-
-  .clippy-website-footer__logo-label {
-    font-size: var(--basis-text-font-size-lg);
-    font-weight: var(--basis-text-font-weight-bold);
-  }
 
   .clippy-website-footer__about a {
     color: inherit;
