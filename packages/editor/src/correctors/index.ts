@@ -15,9 +15,26 @@ const unwrapElement = (element: Element): void => {
   element.remove();
 };
 
-/** Select a Range in the browser's selection (focuses the content). */
+/**
+ * Select a Range in the browser's selection and ensure keyboard focus moves to
+ * the element that contains the range.  When operating outside a TipTap editor
+ * (e.g. standalone / readonly mode) the browser does not automatically move
+ * focus to the contenteditable container, so we walk up the ancestor chain to
+ * find the nearest focusable element and call `.focus()` explicitly.
+ */
 const selectRange = (range: Range | undefined): void => {
   if (!range) return;
+
+  // Move keyboard focus to the nearest contenteditable ancestor (TipTap or
+  // standalone), falling back to the direct parent element.
+  const startNode = range.startContainer;
+  const startElement = startNode instanceof HTMLElement ? startNode : startNode.parentElement;
+  const focusTarget =
+    startElement?.closest<HTMLElement>('[contenteditable]') ??
+    startElement?.closest<HTMLElement>('[tabindex]') ??
+    startElement;
+  focusTarget?.focus();
+
   const selection = globalThis.getSelection();
   if (!selection) return;
   selection.removeAllRanges();

@@ -2,7 +2,7 @@ import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import { localized } from '@lit/localize';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
-import { html, LitElement, nothing, unsafeCSS } from 'lit';
+import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import type { ValidationsMap } from '@/types/validation.ts';
@@ -31,12 +31,20 @@ export class Gutter extends LitElement {
   @property({ type: String })
   mode: 'tooltip' | 'list' | 'readonly' = 'tooltip';
 
+  /**
+   * Optional reference element used for indicator positioning and resize
+   * observation when no TipTap editor context is available (standalone use).
+   * Pass the element that wraps the content being validated.
+   */
+  @property({ attribute: false })
+  contentElement?: HTMLElement;
+
   @state()
   private activeRange: Range | null = null;
 
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
-  private readonly editor?: Editor;
+  private editor?: Editor;
 
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
@@ -74,8 +82,42 @@ export class Gutter extends LitElement {
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
   }
 
-  override firstUpdated() {
-    this.editor?.on('create', this.#attachResizeObserver);
+  override updated(changedProperties: PropertyValues): void {
+    super.updated(changedProperties);
+
+    if (changedProperties.has('editor')) {
+      // Detach any previous observer tied to the old editor DOM.
+      if (!this.contentElement) {
+        this.#resizeController.disconnect();
+      }
+      const previousEditor = changedProperties.get('editor') as Editor | undefined;
+      previousEditor?.off('create', this.#attachResizeObserver);
+
+      if (this.editor) {
+        // editor.view is a getter that throws in TipTap 3.x when not yet mounted.
+        let editorDom: HTMLElement | null = null;
+        try {
+          editorDom = this.editor.view?.dom ?? null;
+        } catch {
+          // Not mounted yet — will wait for the 'create' event.
+        }
+        if (editorDom) {
+          // Editor already mounted — attach the resize observer immediately.
+          this.#attachResizeObserver();
+        } else {
+          // Editor not yet mounted — listen for the create event.
+          this.editor.on('create', this.#attachResizeObserver);
+        }
+      }
+    }
+
+    if (changedProperties.has('contentElement')) {
+      if (this.contentElement) {
+        this.#resizeController.observe(this.contentElement);
+      } else if (!this.editor?.view?.dom) {
+        this.#resizeController.disconnect();
+      }
+    }
   }
 
   override disconnectedCallback() {
@@ -90,21 +132,26 @@ export class Gutter extends LitElement {
   }
 
   readonly #attachResizeObserver = () => {
-    const dom = this.editor?.view?.dom;
+    const dom = this.contentElement ?? this.editor?.view?.dom;
     if (!dom) return;
     this.#resizeController.observe(dom);
   };
 
+  /**
+   * Compute the top offset and height of a gutter indicator for the given
+   * range.  Uses the gutter host element as the reference rectangle so that
+   * positioning is correct regardless of whether a TipTap editor is present.
+   * The host is always rendered at `inset-block-start: 0` inside its
+   * containing block, so its top equals the container's top.
+   */
   #getIndicatorPosition(range: Range): { top: number; height: number } | null {
     try {
       const rangeRect = range.getBoundingClientRect();
       if (rangeRect.width === 0 && rangeRect.height === 0) return null;
-      const editorDom = this.editor?.view?.dom;
-      if (!editorDom) return null;
-      const editorRect = editorDom.getBoundingClientRect();
+      const hostRect = this.getBoundingClientRect();
       return {
         height: Math.max(rangeRect.height, MIN_GUTTER_ITEM_HEIGHT),
-        top: rangeRect.top - editorRect.top + editorDom.scrollTop,
+        top: rangeRect.top - hostRect.top,
       };
     } catch {
       return null;

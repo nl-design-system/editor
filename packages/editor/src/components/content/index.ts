@@ -1,6 +1,6 @@
 import { consume } from '@lit/context';
 import { Editor as TiptapEditor } from '@tiptap/core';
-import { LitElement, css, html, nothing } from 'lit';
+import { LitElement, css, html, nothing, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import type { ValidationsMap } from '@/types/validation.ts';
@@ -59,6 +59,9 @@ export class Content extends LitElement {
   @property({ attribute: true, type: Boolean })
   public inline?: boolean;
 
+  /** Whether TipTap has already been mounted into this element. */
+  #editorMounted = false;
+
   override connectedCallback(): void {
     super.connectedCallback();
     this.style.position = 'relative';
@@ -67,13 +70,28 @@ export class Content extends LitElement {
 
   override disconnectedCallback() {
     this.editor?.destroy();
+    this.#editorMounted = false;
     super.disconnectedCallback();
   }
 
   override firstUpdated(): void {
     const el = this.shadow ? this.shadowRoot?.firstElementChild : this;
-    if (el && this.editor) {
+    if (el && this.editor && !this.#editorMounted) {
+      this.#editorMounted = true;
       this.editor.mount(el);
+    }
+  }
+
+  override updated(changedProperties: PropertyValues): void {
+    super.updated(changedProperties);
+    // Handle the case where the TipTap editor context arrives after firstUpdated()
+    // (e.g. when clippy-content is used standalone inside clippy-context).
+    if (changedProperties.has('editor') && this.editor && !this.#editorMounted) {
+      const el = this.shadow ? this.shadowRoot?.firstElementChild : this;
+      if (el) {
+        this.#editorMounted = true;
+        this.editor.mount(el);
+      }
     }
   }
 

@@ -8,26 +8,44 @@ import { debounce } from '../utils/debounce.ts';
 const VALIDATION_TIMEOUT = 500;
 
 /**
+ * Normalise a rule identifier to the canonical SCREAMING_SNAKE_CASE format
+ * used by the validator maps (e.g. `'NODE_SHOULD_NOT_BE_EMPTY'`).
+ *
+ * Accepts both kebab-case (`'node-should-not-be-empty'`) as used in HTML
+ * `enable-rules` / `disable-rules` attributes, and SCREAMING_SNAKE_CASE
+ * (`'NODE_SHOULD_NOT_BE_EMPTY'`) as used in TypeScript constants — both are
+ * normalised to uppercase before comparison.
+ *
+ * The wildcard `'*'` is returned unchanged.
+ */
+const toUpperKey = (key: string): string => (key === '*' ? '*' : key.toUpperCase().replace(/-/g, '_'));
+
+/**
  * Filters a validator map to only the entries active under the given settings.
  *
  * - `disableRules: ['*']` — disables all validators in this map.
  * - `enableRules: ['*']` — enables all (minus any explicitly disabled).
  * - Otherwise only rules explicitly listed in `enableRules` are active.
+ *
+ * Rule identifiers are accepted in both kebab-case (`'node-should-not-be-empty'`)
+ * and SCREAMING_SNAKE_CASE (`'NODE_SHOULD_NOT_BE_EMPTY'`) formats.
  */
 const getActiveValidators = <V>(
   validators: Record<string, V>,
   { disableRules = [], enableRules }: EditorSettings,
 ): [string, V][] => {
-  if (disableRules.includes('*')) return [];
+  const normalisedDisable = disableRules.map(toUpperKey);
+  if (normalisedDisable.includes('*')) return [];
 
   const entries = Object.entries(validators) as [string, V][];
-  const disabled = new Set(disableRules);
+  const disabled = new Set(normalisedDisable);
 
-  if (enableRules.includes('*')) {
+  const normalisedEnable = enableRules.map(toUpperKey);
+  if (normalisedEnable.includes('*')) {
     return entries.filter(([key]) => !disabled.has(key));
   }
 
-  const enabled = new Set(enableRules);
+  const enabled = new Set(normalisedEnable);
   return entries.filter(([key]) => enabled.has(key) && !disabled.has(key));
 };
 
