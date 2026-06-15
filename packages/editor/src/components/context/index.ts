@@ -8,11 +8,10 @@ import { identifierContext } from '@/context/identifierContext.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
-import { CustomEvents } from '@/events';
 import { editorExtensions } from '@/extensions';
 import { initializeLocale } from '@/localization.ts';
 import { sanitizeTopHeadingLevel } from '@/utils/sanitize.ts';
-import { debouncedValidate, runValidation } from '@/validators';
+import { runValidation } from '@/validators';
 import { editorContextStyles } from './styles.ts';
 
 const tag = 'clippy-context';
@@ -162,21 +161,9 @@ export class Context extends LitElement {
 
   private isLocaleInitialized = false;
 
-  /**
-   * Re-validate the document DOM after a corrector has mutated it.
-   * This is only needed in readonly (non-TipTap) mode — TipTap handles
-   * re-validation via its own `onUpdate` extension hook.
-   */
-  readonly #handleCorrectionInReadonly = () => {
-    if (this.readonly && this.htmlDocumentElement) {
-      debouncedValidate(this.htmlDocumentElement, this.editorSettings, this.updateValidationsContext);
-    }
-  };
-
   override connectedCallback() {
     super.connectedCallback();
     this.lightValidationsContext.hostConnected();
-    globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#handleCorrectionInReadonly);
     if (!this.isLocaleInitialized) {
       this.isLocaleInitialized = true;
       initializeLocale().then(() => {
@@ -201,7 +188,6 @@ export class Context extends LitElement {
     registeredIdentifiers.delete(this.id);
     this.htmlDocumentElement = undefined;
     this.editor?.destroy();
-    globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#handleCorrectionInReadonly);
     super.disconnectedCallback();
   }
 
