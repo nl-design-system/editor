@@ -24,7 +24,14 @@ import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
-import { CustomEvents, type DocumentOverviewMode, type OpenDocumentOverviewDetail } from '@/events';
+import {
+  CustomEvents,
+  type CorrectValidationIssueEvent,
+  type DocumentOverviewMode,
+  type FocusNodeEvent,
+  type OpenDocumentOverviewDetail,
+  type OpenValidationsDialogEvent,
+} from '@/events';
 import { validationMessages, type ValidationKey } from '@/messages';
 import type { ValidationItem } from '../validation-item';
 import dialogStyles from './styles.ts';
@@ -77,7 +84,7 @@ export class ValidationsDialog extends LitElement {
 
   readonly #closeDialog = (event: Event) => {
     if (event instanceof CustomEvent) {
-      const eventIdentifier = (event as CustomEvent<{ identifier?: string }>).detail?.identifier;
+      const eventIdentifier = (event as CorrectValidationIssueEvent).detail?.identifier;
       if (eventIdentifier !== this.identifier) return;
     }
     if (this.open) {
@@ -89,7 +96,7 @@ export class ValidationsDialog extends LitElement {
   readonly #toggleOpen = (event?: Event) => {
     // When triggered from a global event, only respond if the identifier matches this instance
     if (event instanceof CustomEvent) {
-      const eventIdentifier = (event as CustomEvent<{ identifier?: string }>).detail?.identifier;
+      const eventIdentifier = (event as OpenValidationsDialogEvent).detail?.identifier;
       if (eventIdentifier !== this.identifier) return;
     }
     const { value } = this.#dialogRef;
@@ -110,8 +117,8 @@ export class ValidationsDialog extends LitElement {
     }
   };
 
-  readonly #focusNode = (event: CustomEventInit<{ range: Range }>) => {
-    const { range } = event.detail || {};
+  readonly #focusNode = (event: Event) => {
+    const { range } = (event as FocusNodeEvent).detail;
 
     if (this.open) {
       this.#dialogRef.value?.close();

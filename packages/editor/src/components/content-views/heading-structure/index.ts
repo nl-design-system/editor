@@ -14,7 +14,7 @@ import { htmlDocumentContext } from '@/context/htmlDocumentContext.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
-import { CustomEvents } from '@/events';
+import { CustomEvents, type FocusValidationItemInGutterDetail } from '@/events';
 import { getHighestSeverityEntryByElement } from '@/utils/validations.ts';
 import headingStructureStyles from './styles.ts';
 
@@ -77,7 +77,7 @@ export class HeadingStructure extends LitElement {
     const validationRange = getHighestSeverityEntryByElement(this.validationsMap, element)?.[0] ?? null;
     if (validationRange) {
       globalThis.dispatchEvent(
-        new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, {
+        new CustomEvent<FocusValidationItemInGutterDetail>(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, {
           bubbles: true,
           composed: true,
           detail: { range: validationRange },

@@ -39,7 +39,7 @@ import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import './toolbar-image';
 import './toolbar-link';
-import { CustomEvents } from '@/events';
+import { CustomEvents, type OpenValidationsDialogDetail } from '@/events';
 import toolbarStyles from './styles.ts';
 import { type ToolbarConfig, type ToolbarItem, defaultToolbarConfig } from './toolbar-config.ts';
 import { isDefaultDir } from './toolbar-language-select/languages.ts';
@@ -88,7 +88,7 @@ export class Toolbar extends LitElement {
 
   readonly #toggleOpenValidationsDialog = () => {
     globalThis.dispatchEvent(
-      new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, {
+      new CustomEvent<OpenValidationsDialogDetail>(CustomEvents.OPEN_VALIDATIONS_DIALOG, {
         bubbles: true,
         composed: true,
         detail: { identifier: this.identifier },
