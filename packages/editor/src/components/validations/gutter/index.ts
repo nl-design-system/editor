@@ -8,7 +8,6 @@ import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import type { ValidationResult, ValidationsMap } from '@/types/validation.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
-import { validationsContext } from '@/context/validationsContext.ts';
 import { ResizeController } from '@/controllers/ResizeController.ts';
 import { CustomEvents, type FocusValidationItemInGutterEvent, type FocusValidationItemInListDetail } from '@/events';
 import { type ValidationKey, validationMessages } from '@/messages';
@@ -46,9 +45,8 @@ export class Gutter extends LitElement {
   @property({ attribute: false })
   private readonly editor?: Editor;
 
-  @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsContext?: ValidationsMap;
+  validationsMap?: ValidationsMap;
 
   readonly #closeValidationItem = () => {
     this.activeRange = null;
