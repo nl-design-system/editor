@@ -300,7 +300,7 @@
       </trans-unit>
       <trans-unit id="h3a4689bd2e1e317d">
         <source><x id="0" equiv-text="&lt;strong&gt;"/>Heading level <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> exceeds the highest allowed heading level
-          (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in this document.</source>
+              (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in this document.</source>
         <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> overschrijdt het hoogste toegestane kopniveau
           (<x id="2" equiv-text="${precedingHeadingLevel}"/>) in dit document.</target>
       </trans-unit>
@@ -494,7 +494,7 @@
       </trans-unit>
       <trans-unit id="h61200cf48b93f338">
         <source><x id="0" equiv-text="&lt;strong&gt;"/>Heading level <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> must not directly follow a
-          <x id="2" equiv-text="&lt;strong&gt;"/>heading level <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Use heading level <x id="4" equiv-text="${levelsTemplate}"/>.</source>
+            <x id="2" equiv-text="&lt;strong&gt;"/>heading level <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Use heading level <x id="4" equiv-text="${levelsTemplate}"/>.</source>
         <target><x id="0" equiv-text="&lt;strong&gt;"/>Kopniveau <x id="1" equiv-text="${headingLevel}&lt;/strong&gt;"/> mag niet direct volgen op een
           <x id="2" equiv-text="&lt;strong&gt;"/>kopniveau <x id="3" equiv-text="${precedingHeadingLevel}&lt;/strong&gt;"/>. Gebruik kopniveau <x id="4" equiv-text="${levelsTemplate}"/>.</target>
       </trans-unit>
@@ -541,6 +541,10 @@
       <trans-unit id="s63d894b1ddb06289">
         <source>Description</source>
         <target>Beschrijving</target>
+      </trans-unit>
+      <trans-unit id="s63a1c77c657a8c07">
+        <source>No validation issues found</source>
+        <target>Geen validatiemeldingen gevonden</target>
       </trans-unit>
     </body>
   </file>

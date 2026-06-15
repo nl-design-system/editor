@@ -59,6 +59,15 @@ export class Content extends LitElement {
   @property({ attribute: true, type: Boolean })
   public inline?: boolean;
 
+  /**
+   * Synchronous guard preventing double-mount within a single Lit update cycle.
+   * `editor.isInitialized` cannot be used here because it is set asynchronously
+   * inside a `setTimeout` after the `create` event fires — both `firstUpdated()`
+   * and `updated()` would therefore see it as `false` in the same tick and both
+   * call `editor.mount()`, producing a second contenteditable div.
+   */
+  #editorMounted = false;
+
   override connectedCallback(): void {
     super.connectedCallback();
     this.style.position = 'relative';
@@ -67,12 +76,14 @@ export class Content extends LitElement {
 
   override disconnectedCallback() {
     this.editor?.destroy();
+    this.#editorMounted = false;
     super.disconnectedCallback();
   }
 
   override firstUpdated(): void {
     const el = this.shadow ? this.shadowRoot?.firstElementChild : this;
-    if (el && this.editor && !this.editor.isInitialized) {
+    if (el && this.editor && !this.#editorMounted) {
+      this.#editorMounted = true;
       this.editor.mount(el);
     }
   }
@@ -81,9 +92,10 @@ export class Content extends LitElement {
     super.updated(changedProperties);
     // Handle the case where the TipTap editor context arrives after firstUpdated()
     // (e.g. when clippy-content is used standalone inside clippy-context).
-    if (changedProperties.has('editor') && this.editor && !this.editor.isInitialized) {
+    if (changedProperties.has('editor') && this.editor && !this.#editorMounted) {
       const el = this.shadow ? this.shadowRoot?.firstElementChild : this;
       if (el) {
+        this.#editorMounted = true;
         this.editor.mount(el);
       }
     }
