@@ -59,9 +59,6 @@ export class Content extends LitElement {
   @property({ attribute: true, type: Boolean })
   public inline?: boolean;
 
-  /** Whether TipTap has already been mounted into this element. */
-  #editorMounted = false;
-
   override connectedCallback(): void {
     super.connectedCallback();
     this.style.position = 'relative';
@@ -70,14 +67,12 @@ export class Content extends LitElement {
 
   override disconnectedCallback() {
     this.editor?.destroy();
-    this.#editorMounted = false;
     super.disconnectedCallback();
   }
 
   override firstUpdated(): void {
     const el = this.shadow ? this.shadowRoot?.firstElementChild : this;
-    if (el && this.editor && !this.#editorMounted) {
-      this.#editorMounted = true;
+    if (el && this.editor && !this.editor.isInitialized) {
       this.editor.mount(el);
     }
   }
@@ -86,10 +81,9 @@ export class Content extends LitElement {
     super.updated(changedProperties);
     // Handle the case where the TipTap editor context arrives after firstUpdated()
     // (e.g. when clippy-content is used standalone inside clippy-context).
-    if (changedProperties.has('editor') && this.editor && !this.#editorMounted) {
+    if (changedProperties.has('editor') && this.editor && !this.editor.isInitialized) {
       const el = this.shadow ? this.shadowRoot?.firstElementChild : this;
       if (el) {
-        this.#editorMounted = true;
         this.editor.mount(el);
       }
     }
