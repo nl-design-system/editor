@@ -19,3 +19,46 @@ export type DocumentOverviewMode = 'heading-structure' | 'language-changes' | 'l
 export interface OpenDocumentOverviewDetail {
   mode: DocumentOverviewMode;
 }
+
+export interface FocusNodeDetail {
+  range: Range;
+}
+
+export type FocusNodeEvent = CustomEvent<FocusNodeDetail>;
+
+export interface FocusValidationItemInGutterDetail {
+  range: Range;
+}
+
+export type FocusValidationItemInGutterEvent = CustomEvent<FocusValidationItemInGutterDetail>;
+
+export interface FocusValidationItemInListDetail {
+  range: Range;
+}
+
+export type FocusValidationItemInListEvent = CustomEvent<FocusValidationItemInListDetail>;
+
+export interface FocusValidationItemInDrawerDetail {
+  identifier?: string;
+  range?: Range;
+}
+
+export type FocusValidationItemInDrawerEvent = CustomEvent<FocusValidationItemInDrawerDetail>;
+
+export interface CorrectValidationIssueDetail {
+  identifier?: string;
+}
+
+export type CorrectValidationIssueEvent = CustomEvent<CorrectValidationIssueDetail>;
+
+export interface OpenValidationsDialogDetail {
+  identifier?: string;
+}
+
+export type OpenValidationsDialogEvent = CustomEvent<OpenValidationsDialogDetail>;
+
+export interface TabChangeDetail {
+  severity: string | null;
+}
+
+export type TabChangeEvent = CustomEvent<TabChangeDetail>;

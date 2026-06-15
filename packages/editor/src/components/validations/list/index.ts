@@ -8,7 +8,7 @@ import type { ValidationsMap } from '@/types/validation.ts';
 import '../validation-item';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
-import { CustomEvents } from '@/events';
+import { CustomEvents, type FocusValidationItemInListEvent } from '@/events';
 import { type ValidationKey, validationMessages } from '@/messages';
 import type { ValidationItem } from '../validation-item';
 import listStyles from './styles.ts';
@@ -41,7 +41,7 @@ export class ValidationsList extends LitElement {
   }
 
   readonly #handleFocusValidationItem = (event: Event) => {
-    const { range } = (event as CustomEvent<{ range: Range }>).detail;
+    const { range } = (event as FocusValidationItemInListEvent).detail;
 
     const items = this.shadowRoot?.querySelectorAll('clippy-validation-item');
     const match = [...(items ?? [])].find((el) => (el as ValidationItem).range === range);

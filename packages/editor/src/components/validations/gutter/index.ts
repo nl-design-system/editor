@@ -10,7 +10,7 @@ import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { ResizeController } from '@/controllers/ResizeController.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
-import { CustomEvents } from '@/events';
+import { CustomEvents, type FocusValidationItemInGutterEvent, type FocusValidationItemInListDetail } from '@/events';
 import { type ValidationKey, validationMessages } from '@/messages';
 import gutterStyles from './styles.ts';
 
@@ -51,7 +51,7 @@ export class Gutter extends LitElement {
   #handleIndicatorClick(range: Range) {
     if (this.mode === 'list') {
       this.dispatchEvent(
-        new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST, {
+        new CustomEvent<FocusValidationItemInListDetail>(CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST, {
           bubbles: true,
           composed: true,
           detail: { range },
@@ -63,7 +63,7 @@ export class Gutter extends LitElement {
   }
 
   readonly #handleFocusValidationItemInGutter = (event: Event) => {
-    const { range } = (event as CustomEvent<{ range: Range }>).detail;
+    const { range } = (event as FocusValidationItemInGutterEvent).detail;
     this.activeRange = this.activeRange === range ? null : range;
   };
 

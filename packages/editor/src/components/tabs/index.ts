@@ -9,7 +9,7 @@ import type { ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
 import { validationSeverity } from '@/constants';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
-import { CustomEvents } from '@/events';
+import { CustomEvents, type TabChangeDetail } from '@/events';
 import tabsStyles from './styles.ts';
 
 type TabKey = ValidationSeverity | 'all';
@@ -60,7 +60,7 @@ export class Tabs extends LitElement {
   #handleTabClick(key: TabKey) {
     this.activeTab = key;
     this.dispatchEvent(
-      new CustomEvent(CustomEvents.TAB_CHANGE, {
+      new CustomEvent<TabChangeDetail>(CustomEvents.TAB_CHANGE, {
         bubbles: true,
         composed: true,
         detail: { severity: key === 'all' ? null : key },

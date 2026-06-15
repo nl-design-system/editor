@@ -16,7 +16,12 @@ import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { identifierContext } from '@/context/identifierContext.ts';
 import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
-import { CustomEvents } from '@/events';
+import {
+  CustomEvents,
+  type CorrectValidationIssueDetail,
+  type FocusNodeDetail,
+  type FocusValidationItemInDrawerDetail,
+} from '@/events';
 import validationListItemStyles from './styles.ts';
 
 const tag = 'clippy-validation-item';
@@ -60,7 +65,7 @@ export class ValidationItem extends LitElement {
   readonly #focusNode = () => {
     if (!this.range) return;
     this.dispatchEvent(
-      new CustomEvent(CustomEvents.FOCUS_NODE, {
+      new CustomEvent<FocusNodeDetail>(CustomEvents.FOCUS_NODE, {
         bubbles: true,
         composed: true,
         detail: { range: this.range },
@@ -70,7 +75,7 @@ export class ValidationItem extends LitElement {
 
   readonly #applyFix = () => {
     this.dispatchEvent(
-      new CustomEvent(CustomEvents.CORRECT_VALIDATION_ISSUE, {
+      new CustomEvent<CorrectValidationIssueDetail>(CustomEvents.CORRECT_VALIDATION_ISSUE, {
         bubbles: true,
         composed: true,
         detail: { identifier: this.identifier },
@@ -84,7 +89,7 @@ export class ValidationItem extends LitElement {
   #handleValidationItemClick(event: Event) {
     event.stopPropagation();
     this.dispatchEvent(
-      new CustomEvent(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, {
+      new CustomEvent<FocusValidationItemInDrawerDetail>(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, {
         bubbles: true,
         composed: true,
         detail: { identifier: this.identifier, range: this.range },
