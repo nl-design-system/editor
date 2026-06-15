@@ -10,4 +10,22 @@ export { ValidationsDialog } from './components/validations/drawer';
 export { Toolbar } from './components/toolbar';
 export { defaultToolbarConfig } from './components/toolbar/toolbar-config.ts';
 export type { ToolbarConfig, ToolbarItem } from './components/toolbar/toolbar-config.ts';
-export type { DocumentOverviewMode, OpenDocumentOverviewDetail } from './events';
+export { CustomEvents } from './events';
+export type {
+  DocumentOverviewMode,
+  OpenDocumentOverviewDetail,
+  FocusNodeDetail,
+  FocusNodeEvent,
+  FocusValidationItemInGutterDetail,
+  FocusValidationItemInGutterEvent,
+  FocusValidationItemInListDetail,
+  FocusValidationItemInListEvent,
+  FocusValidationItemInDrawerDetail,
+  FocusValidationItemInDrawerEvent,
+  CorrectValidationIssueDetail,
+  CorrectValidationIssueEvent,
+  OpenValidationsDialogDetail,
+  OpenValidationsDialogEvent,
+  TabChangeDetail,
+  TabChangeEvent,
+} from './events';

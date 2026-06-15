@@ -6,9 +6,10 @@ export default defineConfig({
   build: {
     lib: {
       entry: {
+        gutter: 'src/gutter.ts',
         index: 'src/index.ts',
         toolbar: 'src/toolbar.ts',
-        validators: 'src/validators/validators.ts',
+        validators: 'src/validators.ts',
       },
       formats: ['es'],
     },
