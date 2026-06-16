@@ -28,6 +28,16 @@ export const imageDialogStyles = css`
     flex: 1;
   }
 
+  .toolbar-image__alt-row {
+    display: flex;
+    gap: var(--basis-space-inline-sm);
+    align-items: center;
+  }
+
+  .toolbar-image__alt-row .utrecht-textbox {
+    flex: 1;
+  }
+
   .toolbar-image__dimensions-fieldset {
     border: var(--basis-border-width-sm) solid var(--basis-color-default-border-default);
     padding: var(--basis-space-block-md) var(--basis-space-inline-lg);
