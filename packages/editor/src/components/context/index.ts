@@ -157,7 +157,7 @@ export class Context extends LitElement {
         // computing indicator positions.
         const mediaEls = [...targetEl.querySelectorAll('img, video, audio')];
 
-        Promise.all(mediaEls.map(waitForMedia)).then(() => {
+        Promise.all(mediaEls.map((el) => waitForMedia(el))).then(() => {
           runValidation(targetEl, this.editorSettings, this.updateValidationsContext);
         });
       });

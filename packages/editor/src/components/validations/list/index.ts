@@ -53,7 +53,8 @@ export class ValidationsList extends LitElement {
 
   override render() {
     if (!this.validationsContext || this.validationsContext.size === 0) {
-      return html`<p class="nl-paragraph">${msg(str`No validation issues found`)}</p>`;
+      const emptyMessage = msg(str`No validation issues found`);
+      return html`<p class="nl-paragraph">${emptyMessage}</p>`;
     }
 
     return html`

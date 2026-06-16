@@ -5,7 +5,7 @@ import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.
 import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import type { ValidationsMap } from '@/types/validation.ts';
+import type { ValidationResult, ValidationsMap } from '@/types/validation.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { ResizeController } from '@/controllers/ResizeController.ts';
@@ -44,7 +44,7 @@ export class Gutter extends LitElement {
 
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
-  private editor?: Editor;
+  private readonly editor?: Editor;
 
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
@@ -86,29 +86,7 @@ export class Gutter extends LitElement {
     super.updated(changedProperties);
 
     if (changedProperties.has('editor')) {
-      // Detach any previous observer tied to the old editor DOM.
-      if (!this.contentElement) {
-        this.#resizeController.disconnect();
-      }
-      const previousEditor = changedProperties.get('editor') as Editor | undefined;
-      previousEditor?.off('create', this.#attachResizeObserver);
-
-      if (this.editor) {
-        // editor.view is a getter that throws in TipTap 3.x when not yet mounted.
-        let editorDom: HTMLElement | null = null;
-        try {
-          editorDom = this.editor.view?.dom ?? null;
-        } catch {
-          // Not mounted yet — will wait for the 'create' event.
-        }
-        if (editorDom) {
-          // Editor already mounted — attach the resize observer immediately.
-          this.#attachResizeObserver();
-        } else {
-          // Editor not yet mounted — listen for the create event.
-          this.editor.on('create', this.#attachResizeObserver);
-        }
-      }
+      this.#handleEditorChanged(changedProperties.get('editor'));
     }
 
     if (changedProperties.has('contentElement')) {
@@ -117,6 +95,28 @@ export class Gutter extends LitElement {
       } else if (!this.editor?.view?.dom) {
         this.#resizeController.disconnect();
       }
+    }
+  }
+
+  #handleEditorChanged(previousEditor: Editor | undefined): void {
+    if (!this.contentElement) {
+      this.#resizeController.disconnect();
+    }
+    previousEditor?.off('create', this.#attachResizeObserver);
+
+    if (!this.editor) return;
+
+    // editor.view is a getter that throws in TipTap 3.x when not yet mounted.
+    let editorDom: HTMLElement | null = null;
+    try {
+      editorDom = this.editor.view?.dom ?? null;
+    } catch {
+      // Not mounted yet — will wait for the 'create' event.
+    }
+    if (editorDom) {
+      this.#attachResizeObserver();
+    } else {
+      this.editor.on('create', this.#attachResizeObserver);
     }
   }
 
@@ -158,6 +158,54 @@ export class Gutter extends LitElement {
     }
   }
 
+  #renderIndicator(
+    range: Range,
+    correct: ValidationResult['correct'],
+    severity: ValidationResult['severity'],
+    tipPayload: ValidationResult['tipPayload'],
+    validatorKey: ValidationResult['validatorKey'],
+  ) {
+    const position = this.#getIndicatorPosition(range);
+    if (!position) return nothing;
+    const valKey = validatorKey as ValidationKey;
+    const { customCorrectLabel, description, href, tip } = validationMessages()[valKey];
+    const tipHtml = tip?.(tipPayload) ?? null;
+    const isActive = this.activeRange === range;
+    return html`<li
+      class="clippy-validations-gutter__indicator"
+      style="inset-block-start: ${position.top}px; block-size: ${position.height}px"
+    >
+      <button
+        class="${classMap({
+          [`clippy-validations-gutter__toggle--${severity}`]: true,
+          'clippy-validations-gutter__toggle': true,
+          'clippy-validations-gutter__toggle--active': isActive,
+        })}"
+        aria-expanded=${isActive ? 'true' : 'false'}
+        aria-label=${description}
+        @click=${() => this.#handleIndicatorClick(range)}
+      ></button>
+      <div
+        class="${classMap({
+          'clippy-validation-gutter__tooltip': true,
+          'clippy-validation-gutter__tooltip--active': isActive,
+        })}"
+      >
+        <clippy-validation-item
+          .mode=${this.mode}
+          .range=${range}
+          .severity=${severity}
+          .description=${description}
+          .href=${href}
+          .customCorrectLabel=${customCorrectLabel}
+          .correct=${correct}
+        >
+          ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
+        </clippy-validation-item>
+      </div>
+    </li>`;
+  }
+
   override render() {
     if (!this.validationsContext || this.validationsContext.size === 0) {
       return nothing;
@@ -167,47 +215,9 @@ export class Gutter extends LitElement {
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
         ${[...this.validationsContext.entries()]
           .filter(([range]) => range !== undefined)
-          .map(([range, { correct, severity, tipPayload, validatorKey }]) => {
-            const position = this.#getIndicatorPosition(range);
-            if (!position) return nothing;
-            const valKey = validatorKey as ValidationKey;
-            const { customCorrectLabel, description, href, tip } = validationMessages()[valKey];
-            const tipHtml = tip?.(tipPayload) ?? null;
-            const isActive = this.activeRange === range;
-            return html`<li
-              class="clippy-validations-gutter__indicator"
-              style="inset-block-start: ${position.top}px; block-size: ${position.height}px"
-            >
-              <button
-                class="${classMap({
-                  [`clippy-validations-gutter__toggle--${severity}`]: true,
-                  'clippy-validations-gutter__toggle': true,
-                  'clippy-validations-gutter__toggle--active': isActive,
-                })}"
-                aria-expanded=${isActive ? 'true' : 'false'}
-                aria-label=${description}
-                @click=${() => this.#handleIndicatorClick(range)}
-              ></button>
-              <div
-                class="${classMap({
-                  'clippy-validation-gutter__tooltip': true,
-                  'clippy-validation-gutter__tooltip--active': isActive,
-                })}"
-              >
-                <clippy-validation-item
-                  .mode=${this.mode}
-                  .range=${range}
-                  .severity=${severity}
-                  .description=${description}
-                  .href=${href}
-                  .customCorrectLabel=${customCorrectLabel}
-                  .correct=${correct}
-                >
-                  ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
-                </clippy-validation-item>
-              </div>
-            </li>`;
-          })}
+          .map(([range, { correct, severity, tipPayload, validatorKey }]) =>
+            this.#renderIndicator(range, correct, severity, tipPayload, validatorKey),
+          )}
       </ol>
     `;
   }
