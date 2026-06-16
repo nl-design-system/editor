@@ -2,9 +2,97 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file target-language="nl" source-language="en" original="lit-localize-inputs" datatype="plaintext">
     <body>
-      <trans-unit id="sbd432fec05ae41a3">
-        <source>Alt-text wizard</source>
-        <target>Alt-tekst keuzehulp</target>
+      <trans-unit id="back-button">
+        <source>Back</source>
+        <target>Terug</target>
+      </trans-unit>
+      <trans-unit id="continue-button">
+        <source>Continue</source>
+        <target>Doorgaan</target>
+      </trans-unit>
+      <trans-unit id="image-type-decorative">
+        <source>Decorative</source>
+        <target>Decoratief</target>
+      </trans-unit>
+      <trans-unit id="image-type-functional">
+        <source>Functional (clickable)</source>
+        <target>Functioneel (klikbaar)</target>
+      </trans-unit>
+      <trans-unit id="image-type-informative">
+        <source>Informative</source>
+        <target>Informatief</target>
+      </trans-unit>
+      <trans-unit id="image-type-logo">
+        <source>Logo</source>
+        <target>Logo</target>
+      </trans-unit>
+      <trans-unit id="image-type-text">
+        <source>Image of text (screenshot)</source>
+        <target>Afbeelding van tekst (screenshot)</target>
+      </trans-unit>
+      <trans-unit id="informatief-type-clickable-no-text">
+        <source>Clickable without text</source>
+        <target>Klikbaar zonder tekst</target>
+      </trans-unit>
+      <trans-unit id="informatief-type-clickable-with-text">
+        <source>Clickable with text</source>
+        <target>Klikbaar met tekst</target>
+      </trans-unit>
+      <trans-unit id="informatief-type-decorative-after-all">
+        <source>Decorative after all</source>
+        <target>Toch decoratief</target>
+      </trans-unit>
+      <trans-unit id="informatief-type-informative">
+        <source>Informative</source>
+        <target>Informatief</target>
+      </trans-unit>
+      <trans-unit id="informatief-type-informative-description">
+        <source>The image contains information that is not available as text on the page and is necessary to understand the content. For example: chart, diagram, step-by-step guide, important photo.</source>
+        <target>De afbeelding bevat informatie die niet als tekst op de pagina staat en nodig is om de inhoud te begrijpen. Bijvoorbeeld: grafiek, schema, stappenplan, belangrijke foto.</target>
+      </trans-unit>
+      <trans-unit id="no">
+        <source>No</source>
+        <target>Nee</target>
+      </trans-unit>
+      <trans-unit id="question-decoratief-check">
+        <source>If I remove the image, will information be lost?</source>
+        <target>Als ik de afbeelding weglaat, gaat er dan informatie verloren?</target>
+      </trans-unit>
+      <trans-unit id="question-image-type">
+        <source>What type of image is it?</source>
+        <target>Wat voor soort afbeelding is het?</target>
+      </trans-unit>
+      <trans-unit id="question-informatief-type">
+        <source>What type of informative image is this?</source>
+        <target>Wat voor informatieve afbeelding is dit?</target>
+      </trans-unit>
+      <trans-unit id="result-answers">
+        <source>Answers:</source>
+        <target>Antwoorden:</target>
+      </trans-unit>
+      <trans-unit id="result-decoratief-check">
+        <source>Information lost when removed:</source>
+        <target>Informatie verloren bij weglaten:</target>
+      </trans-unit>
+      <trans-unit id="result-image-type">
+        <source>Type of image:</source>
+        <target>Soort afbeelding:</target>
+      </trans-unit>
+      <trans-unit id="result-informatief-type">
+        <source>Type of informative image:</source>
+        <target>Type informatieve afbeelding:</target>
+      </trans-unit>
+      <trans-unit id="wizard-intro">
+        <source>Answer a few short questions about your image. You will immediately get advice about:</source>
+        <target>Beantwoord een paar korte vragen over je afbeelding. Je krijgt direct advies over:</target>
+      </trans-unit>
+      <trans-unit id="wizard-title">
+        <source>Choose the right alt text</source>
+        <target>Kies de juiste alt-tekst</target>
+      </trans-unit>
+      <trans-unit id="yes">
+        <source>Yes</source>
+        <target>Ja</target>
       </trans-unit>
     </body>
   </file>
