@@ -1,17 +1,32 @@
-import { copyFileSync, mkdirSync } from 'node:fs';
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 import { defineConfig, type Plugin } from 'vite';
 
 const moduleOut = resolve(import.meta.dirname, '../../app/drupal/modules/clippy');
 
-function copyYmlFiles(): Plugin {
+// TEMP: tokens bundled into the module so the drupal demo is self-contained.
+const editorRequire = createRequire(resolve(import.meta.dirname, '../editor/package.json'));
+const TOKENS_CSS = [
+  '@nl-design-system-community/ma-design-tokens/dist/theme.css',
+  '@utrecht/design-tokens/dist/theme.css',
+  '@nl-design-system-candidate/button-css/button.css',
+];
+
+function copyModuleAssets(): Plugin {
   return {
-    name: 'copy-yml-files',
+    name: 'copy-module-assets',
     closeBundle() {
       mkdirSync(moduleOut, { recursive: true });
       for (const file of ['clippy.ckeditor5.yml', 'clippy.info.yml', 'clippy.libraries.yml']) {
         copyFileSync(resolve(import.meta.dirname, file), resolve(moduleOut, file));
       }
+      // Ship the editor's clippy theme tokens (--clippy-*) as the module stylesheet.
+      copyFileSync(resolve(import.meta.dirname, '../editor/theme.css'), resolve(moduleOut, 'dist/clippy.css'));
+
+      // TEMP - inject tokens from --basis / --utrecht --nl; to be discussed
+      const tokenString = TOKENS_CSS.map((spec) => readFileSync(editorRequire.resolve(spec), 'utf8')).join('\n');
+      writeFileSync(resolve(moduleOut, 'dist/clippy-tokens.css'), tokenString);
     },
   };
 }
@@ -21,7 +36,6 @@ export default defineConfig({
     emptyOutDir: true,
     lib: {
       name: 'clippyCkeditor',
-      cssFileName: 'clippy',
       entry: 'src/index.ts',
       formats: ['iife'],
     },
@@ -41,5 +55,5 @@ export default defineConfig({
       },
     },
   },
-  plugins: [copyYmlFiles()],
+  plugins: [copyModuleAssets()],
 });
