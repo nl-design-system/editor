@@ -1,17 +1,18 @@
+import { CustomEvents, type FocusNodeEvent, type Gutter } from '@nl-design-system-community/editor/gutter';
+import { debouncedValidate, runValidation, type ValidationsMap } from '@nl-design-system-community/editor/validators';
 import { Plugin } from 'ckeditor5';
-import { runValidation, debouncedValidate, type ValidationResult } from '@nl-design-system-community/editor/validators';
-import { DEFAULT_SETTINGS } from '../constants/index.ts';
-import { toResults } from '../utils/index.ts';
+import { DEFAULT_SETTINGS } from '../constants/';
+import { findMatchingCorrection, findOccurrenceIndex, runValidations } from '../utils/correction.ts';
 
 export class ClippyPlugin extends Plugin {
   static get pluginName() {
     return 'ClippyPlugin' as const;
   }
 
-  private _results: ValidationResult[] = [];
+  private _editableEl: HTMLElement | null = null;
   private _editorEl: HTMLElement | null = null;
-  private _overlayEl: HTMLElement | null = null;
-  private _resultsEl: HTMLElement | null = null;
+  private _gutterEl: Gutter | null = null;
+  private _validationsMap: ValidationsMap = new Map();
 
   init(): void {
     this.editor.on('ready', () => {
@@ -22,101 +23,117 @@ export class ClippyPlugin extends Plugin {
   }
 
   private _setupUI(): void {
-    const editableEl = this.editor.ui.getEditableElement();
-    this._editorEl = editableEl?.closest<HTMLElement>('.ck-editor') ?? null;
-    if (!this._editorEl) {
+    this._editableEl = this.editor.ui.getEditableElement() ?? null;
+    this._editorEl = this._editableEl?.closest<HTMLElement>('.ck-editor') ?? null;
+
+    const gutterContainer = this._editableEl?.parentElement ?? null;
+    if (!this._editorEl || !gutterContainer) {
       return;
     }
 
-    this._overlayEl = document.createElement('div');
-    this._overlayEl.className = 'clippy-ckeditor__overlay';
-    this._editorEl.append(this._overlayEl);
+    const gutter = document.createElement('clippy-validations-gutter') as Gutter;
+    gutter.mode = 'tooltip';
 
-    this._resultsEl = document.createElement('div');
-    this._resultsEl.className = 'clippy-ckeditor__results';
-    this._editorEl.append(this._resultsEl);
-
-    new ResizeObserver(() => this._renderOverlays()).observe(editableEl!);
+    // Temp: add theme token scoping for drupal envirnment
+    gutter.classList.add('ma-theme', 'clippy-theme', 'utrecht-theme');
+    gutterContainer.append(gutter);
+    this._gutterEl = gutter;
+    this._editorEl.addEventListener(CustomEvents.FOCUS_NODE, this._handleFocusNode);
   }
 
   private _validate(): void {
-    const editableEl = this.editor.ui.getEditableElement();
-    if (!editableEl) {
+    if (!this._editableEl) {
       return;
     }
 
-    runValidation(editableEl, DEFAULT_SETTINGS, (resultMap) => {
-      this._results = toResults(resultMap);
+    runValidation(this._editableEl, DEFAULT_SETTINGS, (validationsMap: ValidationsMap) => {
+      this._validationsMap = validationsMap;
       this._render();
     });
   }
 
   private _debouncedValidate(): void {
-    const editableEl = this.editor.ui.getEditableElement();
-    if (!editableEl) {
+    if (!this._editableEl) {
       return;
     }
 
-    debouncedValidate(editableEl, DEFAULT_SETTINGS, (resultMap) => {
-      this._results = toResults(resultMap);
+    debouncedValidate(this._editableEl, DEFAULT_SETTINGS, (validationsMap: ValidationsMap) => {
+      this._validationsMap = validationsMap;
       this._render();
     });
   }
 
   private _render(): void {
-    if (!this._overlayEl || !this._editorEl || !this._resultsEl) {
+    if (!this._gutterEl || !this._editableEl) {
       return;
     }
-    this._renderOverlays();
-    this._renderResults();
+
+    this._gutterEl.validationsMap = this._patchCorrectionsForCKEditor(this._validationsMap);
+    this._gutterEl.editorDom = this._editableEl;
   }
 
-  private _renderOverlays(): void {
-    this._overlayEl!.innerHTML = '';
-    const editorRect = this._editorEl!.getBoundingClientRect();
-
-    this._results.forEach(({ range }) => {
-      const boundingBox = this._getBoundingBoxFromRange(range);
-      if (!boundingBox) {
-        return;
+  private _patchCorrectionsForCKEditor(validationsMap: ValidationsMap): ValidationsMap {
+    for (const [range, result] of validationsMap) {
+      const { correct, validatorKey } = result;
+      if (!correct || !validatorKey) {
+        continue;
       }
 
-      const item = document.createElement('div');
-      item.className = `clippy-ckeditor__overlay-item`;
-      item.style.top = `${boundingBox.top - editorRect.top}px`;
-      item.style.height = `${boundingBox.height}px`;
-      this._overlayEl!.appendChild(item);
-    });
+      // replace correct functions with model-aware versions that go through editor.setData()
+      result.correct = this._modelCorrectionFactory(correct, validatorKey, range);
+    }
+    return validationsMap;
   }
 
-  private _renderResults(): void {
-    if (this._results.length === 0) {
-      this._resultsEl!.innerHTML = 'No errors, well done!';
+  private _modelCorrectionFactory(originalCorrect: () => void, validatorKey: string, range: Range): () => void {
+    return () => {
+      // create a clean HTML copy via this.editor.getData()
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = this.editor.getData();
+      const modelDataValidationsMap = runValidations(tempDiv, DEFAULT_SETTINGS);
+
+      // A validator can flag multiple spots, get the range's position among correctable results sharing its validatorKey
+      const occurrenceIndex = findOccurrenceIndex(this._validationsMap, range, validatorKey);
+
+      // locate the matching correction in the clean HTML copy
+      const target = findMatchingCorrection(modelDataValidationsMap, validatorKey, occurrenceIndex);
+
+      if (target?.correct) {
+        // apply it and check whether it actually changed the DOM
+        const before = tempDiv.innerHTML;
+        target.correct();
+        if (tempDiv.innerHTML !== before) {
+          // setData uses CKEditor's model pipeline, keeping the undo/redo state valid.
+          this.editor.setData(tempDiv.innerHTML);
+          return;
+        }
+      }
+
+      // No matching correction, or it didn't modify the DOM (e.g. open dialog, select range), call original directly.
+      originalCorrect();
+    };
+  }
+
+  private readonly _handleFocusNode = (event: Event) => {
+    const { range } = (event as FocusNodeEvent).detail;
+    const domConverter = this.editor.editing.view.domConverter;
+
+    // from DOM to virtual view layer, without CKEditor injected DOM artifacts.
+    const viewRange = domConverter.domRangeToView(range);
+    if (!viewRange) {
       return;
     }
 
-    const items = this._results
-      .map(
-        ({ validatorKey, severity }) => `
-        <li>
-          <span>${severity}</span>
-          <code>${validatorKey}</code>
-        </li>`,
-      )
-      .join('');
-    this._resultsEl!.innerHTML = `<ul>${items}</ul>`;
-  }
+    // map view range to model range
+    const modelRange = this.editor.editing.mapper.toModelRange(viewRange);
 
-  private _getBoundingBoxFromRange(range: Range | undefined): { top: number; height: number } | null {
-    if (!range) {
-      return null;
-    }
+    // set the view selection, triggering a DOM render
+    this.editor.model.change((writer) => writer.setSelection(modelRange));
+    this.editor.focus();
+  };
 
-    const { height, top } = range.getBoundingClientRect();
-    if (!height) {
-      // height is 0 for collapsed/invisible ranges; top can legitimately be 0
-      return null;
-    }
-    return { top, height };
+  override destroy(): void {
+    this._editorEl?.removeEventListener(CustomEvents.FOCUS_NODE, this._handleFocusNode);
+    super.destroy();
   }
 }
