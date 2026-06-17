@@ -1,1 +1,1 @@
-export { AltTextWizard } from './components/alt-text-wizard/index.ts';
+export { ClippyAltTextWizard } from './components/alt-text-wizard/index.ts';

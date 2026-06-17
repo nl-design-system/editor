@@ -8,7 +8,7 @@ const tag = 'clippy-alt-text-wizard';
 
 declare global {
   interface HTMLElementTagNameMap {
-    [tag]: AltTextWizard;
+    [tag]: ClippyAltTextWizard;
   }
 }
 
@@ -27,7 +27,7 @@ declare global {
  */
 @localized()
 @safeCustomElement(tag)
-export class AltTextWizard extends LitElement {
+export class ClippyAltTextWizard extends LitElement {
   static override readonly styles = unsafeCSS(headingStyle);
 
   override connectedCallback() {
