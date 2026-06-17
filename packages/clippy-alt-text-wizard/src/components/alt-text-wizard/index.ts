@@ -28,7 +28,7 @@ declare global {
 @localized()
 @safeCustomElement(tag)
 export class AltTextWizard extends LitElement {
-  static override styles = unsafeCSS(headingStyle);
+  static override readonly styles = unsafeCSS(headingStyle);
 
   override connectedCallback() {
     super.connectedCallback();
