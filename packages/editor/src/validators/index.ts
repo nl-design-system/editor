@@ -15,10 +15,8 @@ const VALIDATION_TIMEOUT = 500;
  * `enable-rules` / `disable-rules` attributes, and SCREAMING_SNAKE_CASE
  * (`'NODE_SHOULD_NOT_BE_EMPTY'`) as used in TypeScript constants — both are
  * normalised to uppercase before comparison.
- *
- * The wildcard `'*'` is returned unchanged.
  */
-const toUpperKey = (key: string): string => (key === '*' ? '*' : key.toUpperCase().replace(/-/g, '_'));
+const toUpperKey = (key: string): string => key.toUpperCase().replace(/-/g, '_');
 
 /**
  * Filters a validator map to only the entries active under the given settings.
