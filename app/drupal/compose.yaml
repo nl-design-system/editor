@@ -1,23 +1,18 @@
-# Drupal with PostgreSQL
-#
-# Access via "http://localhost:8081"
-#
-# During initial Drupal setup:
-#   Database type:     PostgreSQL
-#   Database host:     postgres
-
 services:
   drupal:
-    image: drupal:11-apache
+    build: .
     ports:
-      - 8081:80
+      - 8081:8080
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-drupal}
+      POSTGRES_USER: ${POSTGRES_USER:-drupal}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-drupal}
+      DRUPAL_ADMIN_USER: ${DRUPAL_ADMIN_USER:-admin}
+      DRUPAL_ADMIN_PASSWORD: ${DRUPAL_ADMIN_PASSWORD:-admin}
+      DRUPAL_SITE_NAME: ${DRUPAL_SITE_NAME:-Drupal}
     volumes:
-      - drupal_modules:/var/www/html/modules
-      - drupal_profiles:/var/www/html/profiles
-      - drupal_themes:/var/www/html/themes
       - drupal_sites:/var/www/html/sites
-      - ./modules/example:/var/www/html/modules/custom/example
-      - ./modules/clippy:/var/www/html/modules/custom/clippy
+      - ./modules:/var/www/html/modules/custom
     depends_on:
       postgres:
         condition: service_healthy
@@ -26,9 +21,9 @@ services:
   postgres:
     image: postgres:16
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-drupal}
+      POSTGRES_USER: ${POSTGRES_USER:-drupal}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-drupal}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -39,8 +34,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  drupal_modules:
-  drupal_profiles:
-  drupal_themes:
   drupal_sites:
   postgres_data:
