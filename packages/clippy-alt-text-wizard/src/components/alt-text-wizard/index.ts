@@ -13,17 +13,8 @@ declare global {
 }
 
 /**
- * Alt-text wizard component.
- *
- * Guides users through the process of writing meaningful alternative text for
- * images, in compliance with WCAG 2.2 success criterion 1.1.1 (Non-text Content).
- *
- * @element clippy-alt-text-wizard
- *
- * @example
- * ```html
- * <clippy-alt-text-wizard></clippy-alt-text-wizard>
- * ```
+ * @summary Guides authors through writing accessible alt text for images.
+ * @tag clippy-alt-text-wizard
  */
 @localized()
 @safeCustomElement(tag)
