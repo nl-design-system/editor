@@ -194,6 +194,12 @@ const locale = (Astro.currentLocale ?? 'nl') as Locale;
     padding-inline: var(--basis-space-inline-md);
   }
 
+  /* Make room for the absolutely-positioned gutter (1rem wide) that lives
+     inside clippy-content in the guidelines canvas examples. */
+  .clippy-canvas clippy-content {
+    padding-inline-end: 1rem;
+  }
+
   .clippy-guideline__validations {
     border-block-start: 1px solid var(--basis-color-default-border-default);
     padding-block: var(--basis-space-inline-md);

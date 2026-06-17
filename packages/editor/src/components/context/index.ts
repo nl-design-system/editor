@@ -11,6 +11,7 @@ import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editorExtensions } from '@/extensions';
 import { initializeLocale } from '@/localization.ts';
 import { sanitizeTopHeadingLevel } from '@/utils/sanitize.ts';
+import { waitForMedia } from '@/utils/waitForMedia.ts';
 import { runValidation } from '@/validators';
 import { editorContextStyles } from './styles.ts';
 
@@ -141,10 +142,25 @@ export class Context extends LitElement {
     this.htmlDocumentElement = this.contentSlot.find((el) => el instanceof HTMLDivElement);
 
     if (this.readonly) {
-      // In readonly mode, skip TipTap entirely and validate the slot DOM directly.
-      if (this.htmlDocumentElement) {
-        runValidation(this.htmlDocumentElement, this.editorSettings, this.updateValidationsContext);
-      }
+      // In readonly mode, skip TipTap entirely and validate the rendered content.
+      // We defer to the next animation frame so that clippy-content has had a chance
+      // to render its visible copy of the HTML via unsafeHTML(). Validating against
+      // the hidden slot element (htmlDocumentElement) produces Range objects whose
+      // getBoundingClientRect() returns zeros, making gutter indicators invisible.
+      requestAnimationFrame(() => {
+        const contentEl = this.querySelector('clippy-content') as HTMLElement | null;
+        const targetEl = contentEl ?? this.htmlDocumentElement;
+        if (!targetEl) return;
+
+        // Media elements affect layout dimensions and therefore Range bounding
+        // rects. Wait for every media element inside the target to settle before
+        // computing indicator positions.
+        const mediaEls = [...targetEl.querySelectorAll('img, video, audio')];
+
+        Promise.all(mediaEls.map((el) => waitForMedia(el))).then(() => {
+          runValidation(targetEl, this.editorSettings, this.updateValidationsContext);
+        });
+      });
     } else {
       // Non-readonly: create the TipTap editor (clippy-editor enables the
       // Validation extension via _includeValidationExtension).

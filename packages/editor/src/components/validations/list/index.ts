@@ -1,5 +1,5 @@
 import { consume } from '@lit/context';
-import { localized } from '@lit/localize';
+import { localized, msg, str } from '@lit/localize';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
@@ -53,7 +53,8 @@ export class ValidationsList extends LitElement {
 
   override render() {
     if (!this.validationsContext || this.validationsContext.size === 0) {
-      return nothing;
+      const emptyMessage = msg(str`No validation issues found`);
+      return html`<p class="nl-paragraph">${emptyMessage}</p>`;
     }
 
     return html`

@@ -32,14 +32,19 @@ const t = useTranslations('en');
           <div class="clippy-guideline__example">
             <div class="clippy-canvas">
               <div class="clippy-canvas__example">
-                <clippy-content></clippy-content>
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
               </div>
             </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
           </div>
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-2" enable-rules="mark-should-not-be-empty">
+      <clippy-context id="editor-2" enable-rules="inline-should-not-be-empty">
         <div slot="value">
           <h2>Bold</h2>
           <p>Empty Bold: <b>&nbsp;</b></p>
@@ -91,7 +96,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-3" enable-rules="mark-should-not-be-underlined">
+      <clippy-context id="editor-3" enable-rules="inline-should-not-be-underlined">
         <div slot="value">
           <p>There is insufficient difference between the underline of an <u>underline</u> and a <a href="#">link</a>.</p>
         </div>
@@ -182,7 +187,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-6" enable-rules="document-must-have-semantic-lists">
+      <clippy-context id="editor-6" enable-rules="paragraph-should-not-resemble-list">
         <div slot="value">
           <p>1. Option 1<br />2. Option 2<br />3. Option 3</p>
         </div>
@@ -209,7 +214,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-7" enable-rules="document-must-have-semantic-lists">
+      <clippy-context id="editor-7" enable-rules="paragraph-should-not-resemble-list">
         <div slot="value">
           <p>- Option 1<br />- Option 2<br />- Option 3</p>
         </div>
@@ -344,7 +349,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-11" enable-rules="document-should-not-have-heading-resembling-paragraph">
+      <clippy-context id="editor-11" enable-rules="paragraph-should-not-resemble-heading">
         <div slot="value">
           <p><strong>If it looks like a heading, it should be a heading</strong></p>
           <p>Foo</p>
@@ -401,7 +406,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-13" enable-rules="document-must-have-table-with-headings">
+      <clippy-context id="editor-13" enable-rules="table-must-have-headings">
         <div slot="value">
           <table>
             <thead>
@@ -442,7 +447,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-14" enable-rules="document-must-have-table-with-multiple-rows">
+      <clippy-context id="editor-14" enable-rules="table-must-have-multiple-rows">
         <div slot="value">
           <table>
             <tbody>
@@ -510,7 +515,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-16" enable-rules="document-must-have-top-level-heading">
+      <clippy-context id="editor-16" enable-rules="document-must-have-top-level-heading-one">
         <div slot="value">
           <p>Text without a main heading</p>
         </div>
@@ -600,7 +605,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-19" enable-rules="heading-should-contain-bold-or-italic">
+      <clippy-context id="editor-19" enable-rules="heading-should-not-contain-bold-or-italic">
         <div slot="value">
           <h1>Heading with <strong>bold</strong></h1>
           <p>...</p>
@@ -628,7 +633,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-20" enable-rules="heading-should-contain-bold-or-italic">
+      <clippy-context id="editor-20" enable-rules="heading-should-not-contain-bold-or-italic">
         <div slot="value">
           <h1>Heading with <em>italic</em></h1>
           <p>...</p>
