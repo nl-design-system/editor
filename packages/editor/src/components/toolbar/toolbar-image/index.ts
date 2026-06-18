@@ -2,21 +2,23 @@ import type { Editor } from '@tiptap/core';
 import { localized, msg } from '@lit/localize';
 import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 import { ClippyModal } from '@nl-design-system-community/clippy-components/clippy-modal';
+import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import FolderIcon from '@tabler/icons/outline/folder.svg?raw';
 import LockOpenIcon from '@tabler/icons/outline/lock-open.svg?raw';
 import LockIcon from '@tabler/icons/outline/lock.svg?raw';
 import PhotoIcon from '@tabler/icons/outline/photo.svg?raw';
+import WandIcon from '@tabler/icons/outline/wand.svg?raw';
 import formFieldStyles from '@utrecht/form-field-css/dist/index.css?inline';
-import formLabelStyles from '@utrecht/form-label-css/dist/index.css?inline';
+import '@nl-design-system-community/clippy-alt-text-wizard';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
+import formLabelStyles from '@utrecht/form-label-css/dist/index.css?inline';
 import textBoxStyles from '@utrecht/textbox-css/dist/index.css?inline';
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { query, state } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ImageUpload } from '@/types/image.ts';
-import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
 import { imageDialogStyles } from './styles.ts';
@@ -40,8 +42,11 @@ export class ToolbarImageUpload extends LitElement {
     unsafeCSS(textBoxStyles),
   ];
 
-  @query('clippy-modal')
+  @query('clippy-modal[data-testid="clippy-image-dialog"]')
   private readonly modalDialog!: ClippyModal;
+
+  @query('clippy-modal[data-testid="clippy-alt-text-wizard-dialog"]')
+  private readonly wizardDialog!: ClippyModal;
 
   readonly #fileInputRef: Ref<HTMLInputElement> = createRef();
   readonly #srcRef: Ref<HTMLInputElement> = createRef();
@@ -225,6 +230,10 @@ export class ToolbarImageUpload extends LitElement {
     this.#pendingFiles = [];
   }
 
+  readonly #openWizard = () => {
+    this.wizardDialog.open();
+  };
+
   override connectedCallback() {
     super.connectedCallback();
     globalThis.addEventListener(CustomEvents.OPEN_IMAGE_DIALOG, this.#onOpenImageDialog);
@@ -311,7 +320,7 @@ export class ToolbarImageUpload extends LitElement {
               <div class="utrecht-form-field__label">
                 <label class="utrecht-form-label" for="clippy-image-alt">${msg('Alt text:')}</label>
               </div>
-              <div class="utrecht-form-field__input">
+              <div class="utrecht-form-field__input toolbar-image__alt-row">
                 <input
                   id="clippy-image-alt"
                   type="text"
@@ -322,6 +331,10 @@ export class ToolbarImageUpload extends LitElement {
                   }}
                   placeholder=${msg('Describe the image for screen readers')}
                 />
+                <clippy-button purpose="secondary" @click=${this.#openWizard}>
+                  <clippy-icon slot="iconStart">${unsafeSVG(WandIcon)}</clippy-icon>
+                  ${msg('Alt-text wizard')}
+                </clippy-button>
               </div>
             </div>
 
@@ -400,6 +413,10 @@ export class ToolbarImageUpload extends LitElement {
             </div>
           </form>
         </div>
+      </clippy-modal>
+
+      <clippy-modal .title=${msg('Alt-text wizard')} actions="none" data-testid="clippy-alt-text-wizard-dialog">
+        <clippy-alt-text-wizard></clippy-alt-text-wizard>
       </clippy-modal>
     `;
   }

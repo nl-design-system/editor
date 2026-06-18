@@ -1,12 +1,12 @@
 import type { Editor } from '@tiptap/core';
 import type { Level } from '@tiptap/extension-heading';
 import { localized, msg, str } from '@lit/localize';
+import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import PilcrowIcon from '@tabler/icons/outline/pilcrow.svg?raw';
 import { html, LitElement } from 'lit';
-import { property, state } from 'lit/decorators.js';
 import '@nl-design-system-community/clippy-components/clippy-combobox';
+import { property, state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import toolbarFormatSelectStyles from './styles.ts';
 

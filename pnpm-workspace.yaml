@@ -5,6 +5,7 @@ packages:
 
 allowBuilds:
   esbuild: true
+  rs-module-lexer: true
   sharp: true
 
 # Configure pnpm so peer dependencies must be explicitly added instead of being automatically installed.

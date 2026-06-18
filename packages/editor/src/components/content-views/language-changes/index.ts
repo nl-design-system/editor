@@ -4,12 +4,12 @@ import { localized, msg } from '@lit/localize';
 import dataBadgeStyle from '@nl-design-system-candidate/data-badge-css/data-badge.css?inline';
 import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
+import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
-import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { findNearestAncestorAttribute } from '@/utils/domTraverser.ts';
 import languageChangesStyles from './styles.ts';
 

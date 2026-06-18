@@ -1,5 +1,5 @@
+import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { html } from 'lit';
-import { property } from 'lit/decorators.js';
 import '../toolbar';
 import '../validations/gutter';
 import '../validations/drawer';
@@ -8,7 +8,7 @@ import '../bubble-menu';
 import '../content-views/heading-structure';
 import '../content-views/link-list';
 import '../content-views/language-changes';
-import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
+import { property } from 'lit/decorators.js';
 import '../content';
 import { Context } from '../context';
 import { type ToolbarConfig, defaultToolbarConfig } from '../toolbar/toolbar-config.ts';

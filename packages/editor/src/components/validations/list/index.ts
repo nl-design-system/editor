@@ -1,13 +1,13 @@
 import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
+import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
-import type { ValidationsMap } from '@/types/validation.ts';
 import '../validation-item';
+import type { ValidationsMap } from '@/types/validation.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
-import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents, type FocusValidationItemInListEvent } from '@/events';
 import { type ValidationKey, validationMessages } from '@/messages';
 import type { ValidationItem } from '../validation-item';

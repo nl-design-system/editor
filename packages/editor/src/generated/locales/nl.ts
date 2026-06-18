@@ -118,6 +118,7 @@
 'sb9ebdd08bb1dbe7c': `Afbeelding verwijderen`,
 'sbb9a89ec42048453': `Element mag niet leeg zijn`,
 'sbc2807a81d10a828': `Aspect ratio ontgrendelen`,
+'sbd432fec05ae41a3': `Alt-tekst keuzehulp`,
 'sc0ccc1191e1c2652': `definitieterm`,
 'sc5c4c16296a2ad67': `Afbeelding moet alternatieve tekst hebben`,
 'sc716a380ec8e3282': `Definitiebeschrijving moet een definitieterm volgen`,

@@ -1,4 +1,5 @@
 import { ContextProvider, provide } from '@lit/context';
+import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { Editor as TiptapEditor } from '@tiptap/core';
 import { LitElement, html, type PropertyValues } from 'lit';
 import { property, queryAssignedElements } from 'lit/decorators.js';
@@ -7,7 +8,6 @@ import { htmlDocumentContext } from '@/context/htmlDocumentContext.ts';
 import { identifierContext } from '@/context/identifierContext.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
-import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editorExtensions } from '@/extensions';
 import { initializeLocale } from '@/localization.ts';
 import { sanitizeTopHeadingLevel } from '@/utils/sanitize.ts';

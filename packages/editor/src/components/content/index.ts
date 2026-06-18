@@ -1,4 +1,5 @@
 import { consume } from '@lit/context';
+import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { Editor as TiptapEditor } from '@tiptap/core';
 import { LitElement, css, html, nothing, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
@@ -7,7 +8,6 @@ import type { ValidationsMap } from '@/types/validation.ts';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
-import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 
 const tag = 'clippy-content';
 

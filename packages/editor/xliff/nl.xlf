@@ -546,6 +546,10 @@
         <source>No validation issues found</source>
         <target>Geen validatiemeldingen gevonden</target>
       </trans-unit>
+      <trans-unit id="sbd432fec05ae41a3">
+        <source>Alt-text wizard</source>
+        <target>Alt-tekst keuzehulp</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
