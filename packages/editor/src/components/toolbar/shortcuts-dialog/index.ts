@@ -1,15 +1,15 @@
 import { localized, msg, str } from '@lit/localize';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
+import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import CrossIcon from '@tabler/icons/outline/x.svg?raw';
-import separatorStyle from '@utrecht/separator-css/dist/index.css?inline';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
+import separatorStyle from '@utrecht/separator-css/dist/index.css?inline';
 import tableStyle from '@utrecht/table-css/dist/index.css?inline';
 import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import shortcutsDialogStyles from './styles.ts';
 
 const tag = 'clippy-shortcuts';

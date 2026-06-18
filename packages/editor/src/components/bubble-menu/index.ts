@@ -1,5 +1,6 @@
 import type { Editor } from '@tiptap/core';
 import { localized, msg } from '@lit/localize';
+import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import AlignLeftIcon from '@tabler/icons/outline/align-left.svg?raw';
 import AlignRightIcon from '@tabler/icons/outline/align-right.svg?raw';
 import EditIcon from '@tabler/icons/outline/edit.svg?raw';
@@ -8,7 +9,6 @@ import { html, LitElement, nothing } from 'lit';
 import { state } from 'lit/decorators.js';
 import { createRef, type Ref, ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import { CustomEvents } from '@/events';
 import '@nl-design-system-community/clippy-components/clippy-button';

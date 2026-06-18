@@ -1,7 +1,7 @@
 import { localized, msg } from '@lit/localize';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
+import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { LitElement, html, unsafeCSS } from 'lit';
-import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { initializeLocale } from '@/localization.ts';
 
 const tag = 'clippy-alt-text-wizard';

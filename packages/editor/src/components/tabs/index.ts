@@ -1,6 +1,7 @@
 import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
+import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -8,7 +9,6 @@ import { map } from 'lit/directives/map.js';
 import type { ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
 import { validationSeverity } from '@/constants';
 import { validationsContext } from '@/context/validationsContext.ts';
-import { safeCustomElement } from '@/decorators/SafeCustomElementDecorator.ts';
 import { CustomEvents, type TabChangeDetail } from '@/events';
 import tabsStyles from './styles.ts';
 
