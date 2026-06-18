@@ -1,9 +1,13 @@
 import { localized, msg } from '@lit/localize';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
+import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import ArrowBackIcon from '@tabler/icons/outline/arrow-back-up.svg?raw';
 import formFieldStyles from '@utrecht/form-field-css/dist/index.css?inline';
+import formFieldDescriptionStyles from '@utrecht/form-field-description-css/dist/index.css?inline';
+import formLabelStyles from '@utrecht/form-label-css/dist/index.css?inline';
 import radioButtonStyles from '@utrecht/radio-button-css/dist/index.css?inline';
+import unorderedListStyles from '@utrecht/unordered-list-css/dist/index.css?inline';
 import { LitElement, html, nothing, unsafeCSS } from 'lit';
 import { state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
@@ -34,7 +38,15 @@ declare global {
 @localized()
 @safeCustomElement(tag)
 export class ClippyAltTextWizard extends LitElement {
-  static override readonly styles = [unsafeCSS(headingStyle), unsafeCSS(formFieldStyles), unsafeCSS(radioButtonStyles)];
+  static override readonly styles = [
+    unsafeCSS(headingStyle),
+    unsafeCSS(paragraphStyle),
+    unsafeCSS(formFieldStyles),
+    unsafeCSS(formFieldDescriptionStyles),
+    unsafeCSS(formLabelStyles),
+    unsafeCSS(radioButtonStyles),
+    unsafeCSS(unorderedListStyles),
+  ];
 
   private readonly wizard = new WizardMachineController(this, altTextWizardMachine);
 
@@ -92,7 +104,7 @@ export class ClippyAltTextWizard extends LitElement {
         </div>
         <div class="utrecht-form-field__label">
           <label class="utrecht-form-label" for=${id}>${label}</label>
-          ${description ? html`<p class="utrecht-form-field__description">${description}</p>` : nothing}
+          ${description ? html`<p class="utrecht-form-field-description">${description}</p>` : nothing}
         </div>
       </div>
     `;
@@ -132,12 +144,31 @@ export class ClippyAltTextWizard extends LitElement {
     ];
 
     return html`
-      <fieldset class="clippy-wizard__fieldset">
-        <legend class="nl-heading nl-heading--level-3 clippy-wizard__legend">
-          ${msg('What type of image is it?', { id: 'question-image-type' })}
-        </legend>
+      <p class="nl-paragraph">
+        ${msg('Answer a few short questions about your image. You will immediately get advice about:', {
+          id: 'wizard-intro',
+        })}
+      </p>
+      <ul class="utrecht-unordered-list">
+        <li class="utrecht-unordered-list__item">
+          ${msg('Whether alt text is needed.', { id: 'wizard-intro-item-1' })}
+        </li>
+        <li class="utrecht-unordered-list__item">${msg('What to write.', { id: 'wizard-intro-item-2' })}</li>
+      </ul>
+      <p class="nl-paragraph">
+        ${msg(
+          'This way you ensure everyone can understand your content, including with assistive technology such as a screen reader.',
+          { id: 'wizard-intro-outro' },
+        )}
+      </p>
+      <div class="utrecht-form-field" role="radiogroup" aria-labelledby="image-type-label">
+        <div class="utrecht-form-field__label">
+          <label id="image-type-label" class="utrecht-form-label nl-heading nl-heading--level-3">
+            ${msg('What type of image is it?', { id: 'question-image-type' })}
+          </label>
+        </div>
         ${options.map((opt) => this.#renderRadioOption('imageType', opt.value, opt.label, null))}
-      </fieldset>
+      </div>
       ${this.#renderContinueButton()}
     `;
   }
@@ -150,12 +181,14 @@ export class ClippyAltTextWizard extends LitElement {
 
     return html`
       ${this.#renderBackButton()}
-      <fieldset class="clippy-wizard__fieldset">
-        <legend class="nl-heading nl-heading--level-3 clippy-wizard__legend">
-          ${msg('If I remove the image, will information be lost?', { id: 'question-decoratief-check' })}
-        </legend>
+      <div class="utrecht-form-field" role="radiogroup" aria-labelledby="decorative-check-label">
+        <div class="utrecht-form-field__label">
+          <label id="decorative-check-label" class="utrecht-form-label nl-heading nl-heading--level-3">
+            ${msg('If I remove the image, will information be lost?', { id: 'question-decoratief-check' })}
+          </label>
+        </div>
         ${options.map((opt) => this.#renderRadioOption('decorativeCheck', opt.value, opt.label, null))}
-      </fieldset>
+      </div>
       ${this.#renderContinueButton()}
     `;
   }
@@ -189,14 +222,16 @@ export class ClippyAltTextWizard extends LitElement {
 
     return html`
       ${this.#renderBackButton()}
-      <fieldset class="clippy-wizard__fieldset">
-        <legend class="nl-heading nl-heading--level-3 clippy-wizard__legend">
-          ${msg('What type of informative image is this?', { id: 'question-informatief-type' })}
-        </legend>
+      <div class="utrecht-form-field" role="radiogroup" aria-labelledby="informative-type-label">
+        <div class="utrecht-form-field__label">
+          <label id="informative-type-label" class="utrecht-form-label nl-heading nl-heading--level-3">
+            ${msg('What type of informative image is this?', { id: 'question-informatief-type' })}
+          </label>
+        </div>
         ${options.map((opt) =>
           this.#renderRadioOption('informativeType', opt.value, opt.label, opt.description || null),
         )}
-      </fieldset>
+      </div>
       ${this.#renderContinueButton()}
     `;
   }
@@ -205,21 +240,23 @@ export class ClippyAltTextWizard extends LitElement {
     return html`
       ${this.#renderBackButton()}
       <div class="clippy-wizard__result" role="status" aria-live="polite">
-        <p class="utrecht-paragraph">
+        <p class="nl-paragraph">
           <strong>${msg('Answers:', { id: 'result-answers' })}</strong>
         </p>
-        <ul>
+        <ul class="utrecht-unordered-list">
           ${context.imageType
-            ? html`<li>${msg('Type of image:', { id: 'result-image-type' })} <strong>${context.imageType}</strong></li>`
+            ? html`<li class="utrecht-unordered-list__item">
+                ${msg('Type of image:', { id: 'result-image-type' })} <strong>${context.imageType}</strong>
+              </li>`
             : nothing}
           ${context.decorativeCheck
-            ? html`<li>
+            ? html`<li class="utrecht-unordered-list__item">
                 ${msg('Information lost when removed:', { id: 'result-decoratief-check' })}
                 <strong>${context.decorativeCheck}</strong>
               </li>`
             : nothing}
           ${context.informativeType
-            ? html`<li>
+            ? html`<li class="utrecht-unordered-list__item">
                 ${msg('Type of informative image:', { id: 'result-informatief-type' })}
                 <strong>${context.informativeType}</strong>
               </li>`
@@ -258,11 +295,6 @@ export class ClippyAltTextWizard extends LitElement {
         <h2 class="nl-heading nl-heading--level-2 clippy-wizard__title">
           ${msg('Choose the right alt text', { id: 'wizard-title' })}
         </h2>
-        <p class="utrecht-paragraph clippy-wizard__intro">
-          ${msg('Answer a few short questions about your image. You will immediately get advice about:', {
-            id: 'wizard-intro',
-          })}
-        </p>
         <form class="clippy-wizard__form" @submit=${(e: Event) => e.preventDefault()} novalidate>
           ${this.#renderCurrentStep()}
         </form>
