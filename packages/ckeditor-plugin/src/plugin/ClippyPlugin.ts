@@ -69,7 +69,6 @@ export class ClippyPlugin extends Plugin {
     }
 
     this._gutterEl.validationsMap = this._patchCorrectionsForCKEditor(this._validationsMap);
-    this._gutterEl.editorDom = this._editableEl;
   }
 
   private _patchCorrectionsForCKEditor(validationsMap: ValidationsMap): ValidationsMap {

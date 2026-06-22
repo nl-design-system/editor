@@ -205,13 +205,13 @@ export class Gutter extends LitElement {
   }
 
   override render() {
-    if (!this.validationsContext || this.validationsContext.size === 0) {
+    if (!this.validationsMap || this.validationsMap.size === 0) {
       return nothing;
     }
 
     return html`
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
-        ${[...this.validationsContext.entries()]
+        ${[...this.validationsMap.entries()]
           .filter(([range]) => range !== undefined)
           .map(([range, { correct, severity, tipPayload, validatorKey }]) =>
             this.#renderIndicator(range, correct, severity, tipPayload, validatorKey),
