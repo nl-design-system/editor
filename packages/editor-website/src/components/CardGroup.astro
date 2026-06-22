@@ -1,0 +1,14 @@
+---
+---
+
+<div class="clippy-card-group">
+  <slot />
+</div>
+
+<style>
+  .clippy-card-group {
+    display: grid;
+    gap: var(--basis-space-block-xl);
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  }
+</style>

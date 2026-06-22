@@ -26,6 +26,8 @@ const translations = {
     'index.cta.roadmap': 'Clippy Editor Roadmap',
     // Index page
     'index.title': 'Rich-text Editor - NL Design System',
+    // Integrations page
+    'integrations.title': 'Integrations - Rich-text Editor - NL Design System',
     'nav.configuration': 'Configuration',
     'nav.editor': 'Editor',
     'nav.guidelines': 'Guidelines',
@@ -34,15 +36,16 @@ const translations = {
     'nav.href.editor': '/en',
     'nav.href.guidelines': '/en/guidelines',
 
+    'nav.href.integrations': '/en/integrations',
     'nav.href.language': '/',
     'nav.href.react': '/en/react',
-    // Navigation
-    'nav.label': 'Main navigation',
 
+    // Navigation
+    'nav.integrations': 'Integrations',
+    'nav.label': 'Main navigation',
     'nav.language': 'Nederlands',
     'nav.language.label': 'Schakel naar Nederlands',
     'nav.react': 'React',
-    // React page
     'react.title': 'React integration - Rich-text Editor - NL Design System',
     'site.logo.label': 'NL Design System Editor – home',
 
@@ -74,6 +77,8 @@ const translations = {
     'index.cta.roadmap': 'Clippy Editor Roadmap',
     // Index page
     'index.title': 'Rich-text Editor - NL Design System',
+    // Integrations page
+    'integrations.title': 'Integraties - Rich-text Editor - NL Design System',
     'nav.configuration': 'Configuratie',
     'nav.editor': 'Editor',
     'nav.guidelines': 'Richtlijnen',
@@ -82,15 +87,16 @@ const translations = {
     'nav.href.editor': '/',
     'nav.href.guidelines': '/richtlijnen',
 
+    'nav.href.integrations': '/integraties',
     'nav.href.language': '/en',
     'nav.href.react': '/react',
-    // Navigation
-    'nav.label': 'Hoofdnavigatie',
 
+    // Navigation
+    'nav.integrations': 'Integraties',
+    'nav.label': 'Hoofdnavigatie',
     'nav.language': 'English',
     'nav.language.label': 'Switch to English',
     'nav.react': 'React',
-    // React page
     'react.title': 'React integratie - Rich-text Editor - NL Design System',
     'site.logo.label': 'NL Design System Editor – home',
 

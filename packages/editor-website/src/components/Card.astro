@@ -1,0 +1,78 @@
+---
+interface Props {
+  heading: string;
+  href?: string;
+}
+
+const { heading, href } = Astro.props;
+---
+
+{href ? (
+  <a class="clippy-card clippy-card--linked" href={href}>
+    <h2 class="clippy-card__heading">{heading}</h2>
+    <div class="clippy-card__content">
+      <slot />
+    </div>
+  </a>
+) : (
+  <div class="clippy-card">
+    <h2 class="clippy-card__heading">{heading}</h2>
+    <div class="clippy-card__content">
+      <slot />
+    </div>
+  </div>
+)}
+
+<style is:global>
+  .clippy-card {
+    background-color: transparent;
+    border-radius: var(--basis-border-radius-md);
+    box-shadow: var(--basis-box-shadow-md);
+    color: var(--basis-color-default-color-default);
+    display: flex;
+    flex-direction: column;
+    padding-block: var(--basis-space-block-xl);
+    padding-inline: var(--basis-space-inline-xl);
+    row-gap: var(--basis-space-row-lg);
+  }
+
+  .clippy-card--linked {
+    cursor: var(--basis-action-activate-cursor, pointer);
+    text-decoration: none;
+  }
+
+  .clippy-card--linked:hover {
+    box-shadow: var(--basis-box-shadow-lg);
+  }
+
+  .clippy-card--linked:focus-visible {
+    outline-color: var(--basis-focus-outline-color);
+    outline-offset: var(--basis-focus-outline-offset);
+    outline-style: var(--basis-focus-outline-style, solid);
+    outline-width: var(--basis-focus-outline-width);
+  }
+
+  .clippy-card__heading {
+    font-size: var(--basis-text-font-size-xl);
+    font-weight: var(--basis-text-font-weight-bold);
+    margin-block: 0;
+  }
+
+  .clippy-card--linked .clippy-card__heading {
+    color: var(--basis-color-action-1-color-default);
+  }
+
+  .clippy-card--linked:active .clippy-card__heading {
+    color: var(--basis-color-action-1-color-active);
+  }
+
+  .clippy-card__content {
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--basis-space-row-md);
+  }
+
+  .clippy-card__content :global(p) {
+    margin-block: 0;
+  }
+</style>
