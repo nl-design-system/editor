@@ -1,5 +1,9 @@
-import type { ValidationResult, ValidationsMap } from '@nl-design-system-community/editor/validators';
-import { runValidation, type EditorSettings } from '@nl-design-system-community/editor/validators';
+import {
+  type ValidationResult,
+  type ValidationsMap,
+  type EditorSettings,
+  runValidation,
+} from '@nl-design-system-community/editor/validators';
 
 // A validator can flag the same issue in several spots. Check which validation triggers the range and return the position.
 export function findOccurrenceIndex(validationsMap: ValidationsMap, range: Range, validatorKey: string): number {
