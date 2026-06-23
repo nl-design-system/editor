@@ -1,0 +1,36 @@
+---
+import Document from '../../layouts/document.astro';
+import Hero from '../../components/Hero.astro';
+import Section from '../../components/Section.astro';
+import Card from '../../components/Card.astro';
+import CardGroup from '../../components/CardGroup.astro';
+import { frontmatter as indexFrontmatter } from '../../../../../docs/en/index.md';
+import { useTranslations } from '../../i18n/translations.ts';
+
+const t = useTranslations('en');
+---
+
+<Document title={t('integrations.title')}>
+  <main>
+    <Hero title={indexFrontmatter['title']} intro={indexFrontmatter['intro']} />
+
+    <Section>
+      <CardGroup>
+        <Card heading="Drupal">
+          <p>
+            Integrate Clippy into Drupal by adding the <code>ClippyPlugin</code> to the CKEditor configuration.
+            This makes accessibility validations available directly to editors.
+          </p>
+        </Card>
+
+        <Card heading="CKEditor" href="/ckeditor">
+          <p>
+            Clippy Editor provides a CKEditor 5 plugin that lets you add Clippy's accessibility validations
+            to any CKEditor instance. The plugin is available as
+            <code>@nl-design-system-community/ckeditor-plugin</code>.
+          </p>
+        </Card>
+      </CardGroup>
+    </Section>
+  </main>
+</Document>

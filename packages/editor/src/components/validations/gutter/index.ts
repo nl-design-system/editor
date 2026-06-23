@@ -8,7 +8,6 @@ import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import type { ValidationResult, ValidationsMap } from '@/types/validation.ts';
 import { tiptapContext } from '@/context/tiptapContext.ts';
-import { validationsContext } from '@/context/validationsContext.ts';
 import { ResizeController } from '@/controllers/ResizeController.ts';
 import { CustomEvents, type FocusValidationItemInGutterEvent, type FocusValidationItemInListDetail } from '@/events';
 import { type ValidationKey, validationMessages } from '@/messages';
@@ -46,9 +45,8 @@ export class Gutter extends LitElement {
   @property({ attribute: false })
   private readonly editor?: Editor;
 
-  @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsContext?: ValidationsMap;
+  validationsMap?: ValidationsMap;
 
   readonly #closeValidationItem = () => {
     this.activeRange = null;
@@ -207,13 +205,13 @@ export class Gutter extends LitElement {
   }
 
   override render() {
-    if (!this.validationsContext || this.validationsContext.size === 0) {
+    if (!this.validationsMap || this.validationsMap.size === 0) {
       return nothing;
     }
 
     return html`
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
-        ${[...this.validationsContext.entries()]
+        ${[...this.validationsMap.entries()]
           .filter(([range]) => range !== undefined)
           .map(([range, { correct, severity, tipPayload, validatorKey }]) =>
             this.#renderIndicator(range, correct, severity, tipPayload, validatorKey),

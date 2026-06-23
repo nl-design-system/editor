@@ -33,7 +33,7 @@ export class Editor extends Context {
       <clippy-toolbar .config=${this.toolbarConfig}></clippy-toolbar>
       <div class="clippy-editor-container" id=${EDITOR_ID}>
         <slot name="value" hidden></slot>
-        <clippy-validations-gutter></clippy-validations-gutter>
+        <clippy-validations-gutter .validationsMap=${this.validationsContext}></clippy-validations-gutter>
         <clippy-content></clippy-content>
         <clippy-bubble-menu class="clippy-bubble-menu"></clippy-bubble-menu>
       </div>

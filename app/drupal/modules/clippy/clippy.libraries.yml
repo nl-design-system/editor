@@ -1,0 +1,13 @@
+plugin:
+  js:
+    dist/clippy.js:
+      preprocess: false
+  css:
+    component:
+      dist/clippy.css: {}
+      # TEMP: inject tokens from --basis / --utrecht --nl; to be discussed
+      dist/clippy-tokens.css: {}
+  dependencies:
+    - core/drupal
+    - core/ckeditor5
+    - ckeditor5/internal.drupal.ckeditor5

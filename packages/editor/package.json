@@ -16,6 +16,10 @@
   "version": "1.4.2",
   "type": "module",
   "exports": {
+    "./gutter": {
+      "types": "./dist/gutter.d.ts",
+      "default": "./dist/gutter.js"
+    },
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
@@ -24,12 +28,22 @@
       "types": "./dist/toolbar.d.ts",
       "default": "./dist/toolbar.js"
     },
+    "./validators": {
+      "types": "./dist/validators.d.ts",
+      "default": "./dist/validators.js"
+    },
     "./theme.css": "./theme.css"
   },
   "typesVersions": {
     "*": {
+      "gutter": [
+        "./dist/gutter.d.ts"
+      ],
       "toolbar": [
         "./dist/toolbar.d.ts"
+      ],
+      "validators": [
+        "./dist/validators.d.ts"
       ]
     }
   },
