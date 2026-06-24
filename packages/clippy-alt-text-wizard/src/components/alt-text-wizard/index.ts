@@ -13,7 +13,7 @@ import { state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
-import { WizardMachineController } from '@/controllers/WizardMachineController.ts';
+import { AltTextStateMachineController } from '@/controllers/AltTextStateMachineController.ts';
 import { initializeLocale } from '@/localization.ts';
 import { altTextWizardMachine } from '@/state-machine.ts';
 
@@ -42,7 +42,7 @@ export class ClippyAltTextWizard extends LitElement {
     unsafeCSS(unorderedListStyles),
   ];
 
-  private readonly wizard = new WizardMachineController(this, altTextWizardMachine);
+  private readonly wizard = new AltTextStateMachineController(this, altTextWizardMachine);
 
   @state() private _pendingSelection: 'yes' | 'no' | null = null;
 

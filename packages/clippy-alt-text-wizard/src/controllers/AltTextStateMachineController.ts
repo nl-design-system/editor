@@ -10,7 +10,7 @@ import { type Actor, type AnyStateMachine, type SnapshotFrom, createActor } from
  *
  * @template TMachine - The XState state machine type.
  */
-export class WizardMachineController<TMachine extends AnyStateMachine> implements ReactiveController {
+export class AltTextStateMachineController<TMachine extends AnyStateMachine> implements ReactiveController {
   private readonly host: ReactiveControllerHost;
   private readonly machine: TMachine;
   private actor: Actor<TMachine> | null = null;

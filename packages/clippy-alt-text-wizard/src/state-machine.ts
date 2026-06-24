@@ -1,14 +1,6 @@
 import { setup } from 'xstate';
 
-// ---------------------------------------------------------------------------
-// Events — simple yes/no decision tree
-// ---------------------------------------------------------------------------
-
 export type AltTextWizardEvent = { type: 'ANSWER_NO' } | { type: 'ANSWER_YES' } | { type: 'BACK' };
-
-// ---------------------------------------------------------------------------
-// Machine — pure state-based decision tree (no context needed)
-// ---------------------------------------------------------------------------
 
 export const altTextWizardMachine = setup({
   types: {
@@ -24,9 +16,6 @@ export const altTextWizardMachine = setup({
       },
     },
 
-    // ── Question states ────────────────────────────────────────────────────
-
-    // Q4b: "Kun je de tekst ook in/naast het plaatje plaatsen?"
     canPlaceTextBeside: {
       on: {
         ANSWER_NO: 'functionalWithTextResult',
@@ -47,7 +36,6 @@ export const altTextWizardMachine = setup({
       },
     },
 
-    // Q4a: "Bevat de afbeelding tekst?"
     containsText: {
       on: {
         ANSWER_NO: 'functionalWithoutTextResult',
