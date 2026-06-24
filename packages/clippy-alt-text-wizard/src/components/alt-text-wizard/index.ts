@@ -55,8 +55,6 @@ export class ClippyAltTextWizard extends LitElement {
     });
   }
 
-  // ── Helpers ──────────────────────────────────────────────────────────────
-
   #handleContinue() {
     if (!this._pendingSelection) return;
 
@@ -182,8 +180,6 @@ export class ClippyAltTextWizard extends LitElement {
 
     return nothing;
   }
-
-  // ── Main render ───────────────────────────────────────────────────────────
 
   override render() {
     return html`
