@@ -27,7 +27,7 @@ declare global {
  * `CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST` event to scroll and focus the
  * matching item.
  *
- * @element clippy-validations-list
+ * @tag clippy-validations-list
  *
  * @example
  * ```html

@@ -19,7 +19,7 @@ export default {
   ],
 
   /** Output path for the generated custom-elements.json manifest. */
-  outdir: '.',
+  outdir: 'dist',
 
   /** Include information from package.json in the manifest. */
   packagejson: true,

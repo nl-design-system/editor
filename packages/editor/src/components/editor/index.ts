@@ -27,7 +27,7 @@ declare global {
  * The main rich text editor component. It composes the toolbar, editable content area,
  * accessibility validation gutter, bubble menu and the validations dialog.
  *
- * @element clippy-editor
+ * @tag clippy-editor
  *
  * @slot value - Hidden slot for providing an initial HTML value to the editor.
  *

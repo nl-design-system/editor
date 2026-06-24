@@ -39,16 +39,16 @@ const ariaDescribedBy = 'validation-item-header';
  * description, optional tip, and action buttons (Focus, Correct, Open in drawer).
  * The `mode` property controls which actions are visible.
  *
- * @element clippy-validation-item
+ * @tag clippy-validation-item
  *
  * @slot tip-html - Optional HTML content rendered as additional guidance below
  *   the description. Wrap content in a `<p>` element.
  *
- * @fires CustomEvents.FOCUS_NODE - Dispatched when the user clicks "Focus",
+ * @fires {CustomEvent<FocusNodeDetail>} FOCUS_NODE - Dispatched when the user clicks "Focus",
  *   carrying `detail.range` so the editor can scroll to the relevant node.
- * @fires CustomEvents.CORRECT_VALIDATION_ISSUE - Dispatched when the user
+ * @fires {CustomEvent<CorrectValidationIssueDetail>} CORRECT_VALIDATION_ISSUE - Dispatched when the user
  *   clicks "Correct", triggering the auto-fix callback.
- * @fires CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER - Dispatched in `tooltip`
+ * @fires {CustomEvent<FocusValidationItemInDrawerDetail>} FOCUS_VALIDATION_ITEM_IN_DRAWER - Dispatched in `tooltip`
  *   mode when the user clicks the "Open in drawer" icon button.
  *
  * @example

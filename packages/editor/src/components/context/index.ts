@@ -35,7 +35,7 @@ declare global {
  * placing `<clippy-context>` directly and adding `<clippy-content>` and any
  * other public components as children.
  *
- * @element clippy-context
+ * @tag clippy-context
  *
  * @slot value - Place a `<div>` with your initial HTML content here. The slot
  *   is hidden from the user; it is only read by the editor on first render.
@@ -122,31 +122,35 @@ export class Context extends LitElement {
   @property({ attribute: 'readonly', reflect: true, type: Boolean })
   readonly = false;
 
+  /** @internal */
   @queryAssignedElements({ flatten: true, slot: 'value' })
   contentSlot!: HTMLElement[];
 
+  /** @internal */
   @provide({ context: validationsContext })
   validationsContext = new Map();
 
-  // create a provider for the whole document body.
-  // https://lit.dev/docs/data/context/
-  // https://github.com/lit/lit/blob/main/packages/context/README.md
+  /** @internal */
   lightValidationsContext = new ContextProvider(document.body, {
     context: validationsContext,
     initialValue: new Map(),
   });
 
+  /** @internal */
   updateValidationsContext = (resultMap: Map<Range, ValidationResult>): void => {
     this.validationsContext = resultMap;
     this.lightValidationsContext.setValue(this.validationsContext);
   };
 
+  /** @internal */
   @provide({ context: tiptapContext })
   editor?: TiptapEditor;
 
+  /** @internal */
   @provide({ context: htmlDocumentContext })
   htmlDocumentElement?: HTMLElement;
 
+  /** @internal */
   protected get editorSettings() {
     return {
       disableRules: this.disableRules,
@@ -156,6 +160,7 @@ export class Context extends LitElement {
     };
   }
 
+  /** @internal */
   protected createEditor(): void {
     const content = this.contentSlot.find((el) => el instanceof HTMLDivElement)?.innerHTML || '';
     this.editor = new TiptapEditor({
@@ -215,6 +220,7 @@ export class Context extends LitElement {
     }
   }
 
+  /** @internal */
   private isLocaleInitialized = false;
 
   override connectedCallback() {

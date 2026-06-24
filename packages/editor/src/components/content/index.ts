@@ -28,7 +28,7 @@ declare global {
  * The element requires a TipTap editor context (provided by `<clippy-editor>`)
  * to be present in an ancestor.
  *
- * @element clippy-content
+ * @tag clippy-content
  *
  * @example Light DOM (default)
  * ```html

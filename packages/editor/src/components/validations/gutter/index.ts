@@ -28,9 +28,9 @@ declare global {
  * Clicking an indicator either shows an inline tooltip or scrolls the
  * validations list to the matching item, depending on `mode`.
  *
- * @element clippy-validations-gutter
+ * @tag clippy-validations-gutter
  *
- * @fires CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST - Dispatched in `list` mode
+ * @fires {FocusValidationItemInListEvent} FOCUS_VALIDATION_ITEM_IN_LIST - Dispatched in `list` mode
  *   when the user clicks an indicator, so the list component can scroll to it.
  *
  * @example
@@ -60,13 +60,16 @@ export class Gutter extends LitElement {
   @property({ attribute: false })
   contentElement?: HTMLElement;
 
+  /** @internal */
   @state()
   private activeRange: Range | null = null;
 
+  /** @internal Consumed from the nearest {@link tiptapContext} provider. */
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
   private readonly editor?: Editor;
 
+  /** Map of DOM ranges to their validation results, used to render indicators. */
   @property({ attribute: false })
   validationsMap?: ValidationsMap;
 

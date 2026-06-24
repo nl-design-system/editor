@@ -57,9 +57,9 @@ declare global {
  * grouped into logical sections. Consumes the TipTap editor instance and the
  * validations context via Lit context providers.
  *
- * @element clippy-toolbar
+ * @tag clippy-toolbar
  *
- * @fires CustomEvents.OPEN_VALIDATIONS_DIALOG - Dispatched (global) when the user
+ * @fires {OpenValidationsDialogEvent} OPEN_VALIDATIONS_DIALOG - Dispatched (global) when the user
  *   clicks the accessibility-notifications button.
  *
  * @example

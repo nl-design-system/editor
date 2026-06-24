@@ -43,11 +43,11 @@ import dialogStyles from './styles.ts';
  * `CustomEvents.OPEN_VALIDATIONS_DIALOG` event, scoped to the current editor
  * identifier.
  *
- * @element clippy-validations-dialog
+ * @tag clippy-validations-dialog
  *
- * @fires CustomEvents.OPEN_VALIDATIONS_DIALOG - Listens for this event to
+ * @fires {OpenValidationsDialogEvent} OPEN_VALIDATIONS_DIALOG - Listens for this event to
  *   toggle the dialog open state.
- * @fires CustomEvents.TAB_CHANGE - Listens to filter the displayed validations
+ * @fires {CustomEvent} TAB_CHANGE - Listens to filter the displayed validations
  *   by severity.
  *
  * @example

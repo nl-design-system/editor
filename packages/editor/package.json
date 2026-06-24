@@ -48,7 +48,6 @@
     }
   },
   "files": [
-    "custom-elements.json",
     "dist",
     "theme.css"
   ],
@@ -151,5 +150,5 @@
     "vite-plugin-dts": "5.0.2",
     "vitest": "4.1.8"
   },
-  "customElements": "custom-elements.json"
+  "customElements": "dist/custom-elements.json"
 }
