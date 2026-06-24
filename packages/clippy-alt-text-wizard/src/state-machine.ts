@@ -2,6 +2,29 @@ import { setup } from 'xstate';
 
 export type AltTextWizardEvent = { type: 'ANSWER_NO' } | { type: 'ANSWER_YES' } | { type: 'BACK' };
 
+export type AltTextWizardQuestionState =
+  | 'canPlaceTextBeside'
+  | 'containsText'
+  | 'containsUniqueInfo'
+  | 'informationLost'
+  | 'isClickable'
+  | 'isInfoSimple'
+  | 'isLogo'
+  | 'isLogoClickable';
+
+export type AltTextWizardResultState =
+  | 'ambientResult'
+  | 'clickableLogoResult'
+  | 'complexInformativeResult'
+  | 'decorativeResult'
+  | 'functionalWithSupplementaryTextResult'
+  | 'functionalWithTextResult'
+  | 'functionalWithoutTextResult'
+  | 'logoResult'
+  | 'simpleInformativeResult';
+
+export type AltTextWizardState = AltTextWizardQuestionState | AltTextWizardResultState;
+
 export const altTextWizardMachine = setup({
   types: {
     events: {} as AltTextWizardEvent,

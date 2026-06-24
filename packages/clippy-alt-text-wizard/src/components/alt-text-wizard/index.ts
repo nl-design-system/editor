@@ -15,7 +15,9 @@ import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { AltTextStateMachineController } from '@/controllers/AltTextStateMachineController.ts';
 import { initializeLocale } from '@/localization.ts';
-import { altTextWizardMachine } from '@/state-machine.ts';
+import { type AltTextWizardState, altTextWizardMachine } from '@/state-machine.ts';
+import { getQuestionContent } from './question-content.ts';
+import { getResultContent } from './result-content.ts';
 
 const tag = 'clippy-alt-text-wizard';
 
@@ -137,9 +139,9 @@ export class ClippyAltTextWizard extends LitElement {
     `;
   }
 
-  #renderQuestion(questionId: string, questionText: unknown) {
+  #renderQuestion(questionId: string, questionText: unknown, showBack: boolean) {
     return html`
-      ${this.#renderBackButton()}
+      ${showBack ? this.#renderBackButton() : nothing}
       <div class="utrecht-form-field" role="radiogroup" aria-labelledby="${questionId}-label">
         <div class="utrecht-form-field__label">
           <label id="${questionId}-label" class="utrecht-form-label nl-heading nl-heading--level-3">
@@ -152,8 +154,6 @@ export class ClippyAltTextWizard extends LitElement {
     `;
   }
 
-  // ── Step renders ─────────────────────────────────────────────────────────
-
   #renderResult(title: unknown, instructions: unknown) {
     return html`
       ${this.#renderBackButton()}
@@ -164,173 +164,23 @@ export class ClippyAltTextWizard extends LitElement {
     `;
   }
 
-  // ── Result renderers ────────────────────────────────────────────────────
-
-  #renderDecorativeResult() {
-    return this.#renderResult(
-      msg('Decorative image', { id: 'result-decorative-title' }),
-      msg(
-        'This image is decorative. Set the alt attribute to empty (alt=""). This way, screen readers will skip the image.',
-        { id: 'result-decorative-instructions' },
-      ),
-    );
-  }
-
-  #renderClickableLogoResult() {
-    return this.#renderResult(
-      msg('Clickable logo', { id: 'result-clickable-logo-title' }),
-      msg('Use the company or organization name as alt text. For example: alt="Organization Name - go to homepage".', {
-        id: 'result-clickable-logo-instructions',
-      }),
-    );
-  }
-
-  #renderFunctionalWithoutTextResult() {
-    return this.#renderResult(
-      msg('Functional image without text', { id: 'result-functional-no-text-title' }),
-      msg(
-        'Describe the function of the image, not what it looks like. For example: alt="Search" for a magnifying glass icon used as a search button.',
-        {
-          id: 'result-functional-no-text-instructions',
-        },
-      ),
-    );
-  }
-
-  #renderFunctionalWithSupplementaryTextResult() {
-    return this.#renderResult(
-      msg('Functional image with supplementary text', { id: 'result-functional-supplementary-text-title' }),
-      msg(
-        'The text next to the image already describes its function. Set the alt attribute to empty (alt="") to avoid repetition.',
-        { id: 'result-functional-supplementary-text-instructions' },
-      ),
-    );
-  }
-
-  #renderFunctionalWithTextResult() {
-    return this.#renderResult(
-      msg('Functional image with text', { id: 'result-functional-with-text-title' }),
-      msg('The image contains text that is not available elsewhere. Use the text from the image as alt text.', {
-        id: 'result-functional-with-text-instructions',
-      }),
-    );
-  }
-
-  #renderLogoResult() {
-    return this.#renderResult(
-      msg('Logo', { id: 'result-logo-title' }),
-      msg('Use the company or organization name as alt text. For example: alt="Organization Name".', {
-        id: 'result-logo-instructions',
-      }),
-    );
-  }
-
-  #renderAmbientResult() {
-    return this.#renderResult(
-      msg('Ambient image', { id: 'result-ambient-title' }),
-      msg(
-        'This image sets the mood but does not contain unique information. Set the alt attribute to empty (alt="") or use a brief description that conveys the mood.',
-        { id: 'result-ambient-instructions' },
-      ),
-    );
-  }
-
-  #renderSimpleInformativeResult() {
-    return this.#renderResult(
-      msg('Simple informative image', { id: 'result-simple-informative-title' }),
-      msg('Describe the essential information from the image in the alt text. Keep it short: 1 to 2 sentences.', {
-        id: 'result-simple-informative-instructions',
-      }),
-    );
-  }
-
-  #renderComplexInformativeResult() {
-    return this.#renderResult(
-      msg('Complex informative image', { id: 'result-complex-informative-title' }),
-      msg(
-        'Provide a short alt text as summary. Also provide a detailed description in the surrounding text or via a link to a full description.',
-        { id: 'result-complex-informative-instructions' },
-      ),
-    );
-  }
-
-  // ── Main step dispatcher ─────────────────────────────────────────────────
-
   #renderCurrentStep() {
     const snapshot = this.wizard.snapshot;
     if (!snapshot) return nothing;
 
-    const stateValue = snapshot.value as string;
+    const stateValue = snapshot.value as AltTextWizardState;
 
-    switch (stateValue) {
-      case 'informationLost':
-        return html`
-          <div class="utrecht-form-field" role="radiogroup" aria-labelledby="informationLost-label">
-            <div class="utrecht-form-field__label">
-              <label id="informationLost-label" class="utrecht-form-label nl-heading nl-heading--level-3">
-                ${msg('If I remove the image, will information be lost?', { id: 'question-information-lost' })}
-              </label>
-            </div>
-            ${this.#renderYesNoRadio('informationLost')}
-          </div>
-          ${this.#renderContinueButton()}
-        `;
-      case 'isClickable':
-        return this.#renderQuestion(
-          'isClickable',
-          msg('Is the image clickable (link, button)?', { id: 'question-is-clickable' }),
-        );
-      case 'isLogoClickable':
-        return this.#renderQuestion(
-          'isLogoClickable',
-          msg('Is the image a logo?', { id: 'question-is-logo-clickable' }),
-        );
-      case 'containsText':
-        return this.#renderQuestion(
-          'containsText',
-          msg('Does the image contain text?', { id: 'question-contains-text' }),
-        );
-      case 'canPlaceTextBeside':
-        return this.#renderQuestion(
-          'canPlaceTextBeside',
-          msg('Can you also place the text in or next to the image?', { id: 'question-can-place-text-beside' }),
-        );
-      case 'isLogo':
-        return this.#renderQuestion('isLogo', msg('Is it a logo?', { id: 'question-is-logo' }));
-      case 'containsUniqueInfo':
-        return this.#renderQuestion(
-          'containsUniqueInfo',
-          msg(
-            'Does the image contain information that is not available as text on the page and is necessary to understand the content?',
-            { id: 'question-contains-unique-info' },
-          ),
-        );
-      case 'isInfoSimple':
-        return this.#renderQuestion(
-          'isInfoSimple',
-          msg('Is the information short and simple (2-3 lines)?', { id: 'question-is-info-simple' }),
-        );
-      case 'decorativeResult':
-        return this.#renderDecorativeResult();
-      case 'clickableLogoResult':
-        return this.#renderClickableLogoResult();
-      case 'functionalWithoutTextResult':
-        return this.#renderFunctionalWithoutTextResult();
-      case 'functionalWithSupplementaryTextResult':
-        return this.#renderFunctionalWithSupplementaryTextResult();
-      case 'functionalWithTextResult':
-        return this.#renderFunctionalWithTextResult();
-      case 'logoResult':
-        return this.#renderLogoResult();
-      case 'ambientResult':
-        return this.#renderAmbientResult();
-      case 'simpleInformativeResult':
-        return this.#renderSimpleInformativeResult();
-      case 'complexInformativeResult':
-        return this.#renderComplexInformativeResult();
-      default:
-        return nothing;
+    const question = getQuestionContent().get(stateValue);
+    if (question) {
+      return this.#renderQuestion(question.questionId, question.questionText, question.showBack);
     }
+
+    const result = getResultContent().get(stateValue);
+    if (result) {
+      return this.#renderResult(result.title, result.instructions);
+    }
+
+    return nothing;
   }
 
   // ── Main render ───────────────────────────────────────────────────────────
