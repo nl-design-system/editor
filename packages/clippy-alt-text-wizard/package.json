@@ -46,6 +46,7 @@
     "@fontsource/fira-sans": "5.2.7",
     "@fontsource/source-sans-pro": "5.2.5",
     "@lit/localize-tools": "0.8.2",
+    "@nl-design-system-candidate/button-css": "1.1.0",
     "@nl-design-system-candidate/heading-css": "1.1.3",
     "@nl-design-system-candidate/paragraph-css": "2.1.3",
     "@nl-design-system-community/ma-design-tokens": "5.2.0",

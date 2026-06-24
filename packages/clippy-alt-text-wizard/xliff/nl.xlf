@@ -10,81 +10,113 @@
         <source>Continue</source>
         <target>Doorgaan</target>
       </trans-unit>
-      <trans-unit id="image-type-decorative">
-        <source>Decorative</source>
-        <target>Decoratief</target>
-      </trans-unit>
-      <trans-unit id="image-type-functional">
-        <source>Functional (clickable)</source>
-        <target>Functioneel (klikbaar)</target>
-      </trans-unit>
-      <trans-unit id="image-type-informative">
-        <source>Informative</source>
-        <target>Informatief</target>
-      </trans-unit>
-      <trans-unit id="image-type-logo">
-        <source>Logo</source>
-        <target>Logo</target>
-      </trans-unit>
-      <trans-unit id="image-type-text">
-        <source>Image of text (screenshot)</source>
-        <target>Afbeelding van tekst (screenshot)</target>
-      </trans-unit>
-      <trans-unit id="informatief-type-clickable-no-text">
-        <source>Clickable without text</source>
-        <target>Klikbaar zonder tekst</target>
-      </trans-unit>
-      <trans-unit id="informatief-type-clickable-with-text">
-        <source>Clickable with text</source>
-        <target>Klikbaar met tekst</target>
-      </trans-unit>
-      <trans-unit id="informatief-type-decorative-after-all">
-        <source>Decorative after all</source>
-        <target>Toch decoratief</target>
-      </trans-unit>
-      <trans-unit id="informatief-type-informative">
-        <source>Informative</source>
-        <target>Informatief</target>
-      </trans-unit>
-      <trans-unit id="informatief-type-informative-description">
-        <source>The image contains information that is not available as text on the page and is necessary to understand the content. For example: chart, diagram, step-by-step guide, important photo.</source>
-        <target>De afbeelding bevat informatie die niet als tekst op de pagina staat en nodig is om de inhoud te begrijpen. Bijvoorbeeld: grafiek, schema, stappenplan, belangrijke foto.</target>
-      </trans-unit>
       <trans-unit id="no">
         <source>No</source>
         <target>Nee</target>
       </trans-unit>
-      <trans-unit id="question-decoratief-check">
+      <trans-unit id="question-can-place-text-beside">
+        <source>Can you also place the text in or next to the image?</source>
+        <target>Kun je de tekst ook in of naast het plaatje plaatsen?</target>
+      </trans-unit>
+      <trans-unit id="question-contains-text">
+        <source>Does the image contain text?</source>
+        <target>Bevat de afbeelding tekst?</target>
+      </trans-unit>
+      <trans-unit id="question-contains-unique-info">
+        <source>Does the image contain information that is not available as text on the page and is necessary to understand the content?</source>
+        <target>Bevat de afbeelding informatie die niet als tekst op de pagina staat en nodig is om de inhoud te begrijpen?</target>
+      </trans-unit>
+      <trans-unit id="question-information-lost">
         <source>If I remove the image, will information be lost?</source>
         <target>Als ik de afbeelding weglaat, gaat er dan informatie verloren?</target>
       </trans-unit>
-      <trans-unit id="question-image-type">
-        <source>What type of image is it?</source>
-        <target>Wat voor soort afbeelding is het?</target>
+      <trans-unit id="question-is-clickable">
+        <source>Is the image clickable (link, button)?</source>
+        <target>Is de afbeelding klikbaar (link, button)?</target>
       </trans-unit>
-      <trans-unit id="question-informatief-type">
-        <source>What type of informative image is this?</source>
-        <target>Wat voor informatieve afbeelding is dit?</target>
+      <trans-unit id="question-is-info-simple">
+        <source>Is the information short and simple (2-3 lines)?</source>
+        <target>Is de informatie kort en simpel (2-3 regels)?</target>
       </trans-unit>
-      <trans-unit id="result-answers">
-        <source>Answers:</source>
-        <target>Antwoorden:</target>
+      <trans-unit id="question-is-logo">
+        <source>Is it a logo?</source>
+        <target>Is het een logo?</target>
       </trans-unit>
-      <trans-unit id="result-decoratief-check">
-        <source>Information lost when removed:</source>
-        <target>Informatie verloren bij weglaten:</target>
+      <trans-unit id="question-is-logo-clickable">
+        <source>Is the image a logo?</source>
+        <target>Is de afbeelding een logo?</target>
       </trans-unit>
-      <trans-unit id="result-image-type">
-        <source>Type of image:</source>
-        <target>Soort afbeelding:</target>
+      <trans-unit id="result-ambient-instructions">
+        <source>This image sets the mood but does not contain unique information. Set the alt attribute to empty (alt="") or use a brief description that conveys the mood.</source>
+        <target>Deze afbeelding bepaalt de sfeer maar bevat geen unieke informatie. Zet het alt-attribuut op leeg (alt="") of gebruik een korte beschrijving die de sfeer overbrengt.</target>
       </trans-unit>
-      <trans-unit id="result-informatief-type">
-        <source>Type of informative image:</source>
-        <target>Type informatieve afbeelding:</target>
+      <trans-unit id="result-ambient-title">
+        <source>Ambient image</source>
+        <target>Sfeerbeeld</target>
       </trans-unit>
-      <trans-unit id="wizard-intro">
-        <source>Answer a few short questions about your image. You will immediately get advice about:</source>
-        <target>Beantwoord een paar korte vragen over je afbeelding. Je krijgt direct advies over:</target>
+      <trans-unit id="result-clickable-logo-instructions">
+        <source>Use the company or organization name as alt text. For example: alt="Organization Name - go to homepage".</source>
+        <target>Gebruik de bedrijfs- of organisatienaam als alt-tekst. Bijvoorbeeld: alt="Organisatienaam - ga naar de homepage".</target>
+      </trans-unit>
+      <trans-unit id="result-clickable-logo-title">
+        <source>Clickable logo</source>
+        <target>Klikbaar logo</target>
+      </trans-unit>
+      <trans-unit id="result-complex-informative-instructions">
+        <source>Provide a short alt text as summary. Also provide a detailed description in the surrounding text or via a link to a full description.</source>
+        <target>Geef een korte alt-tekst als samenvatting. Geef ook een uitgebreide beschrijving in de omringende tekst of via een link naar een volledige beschrijving.</target>
+      </trans-unit>
+      <trans-unit id="result-complex-informative-title">
+        <source>Complex informative image</source>
+        <target>Complexe informatieve afbeelding</target>
+      </trans-unit>
+      <trans-unit id="result-decorative-instructions">
+        <source>This image is decorative. Set the alt attribute to empty (alt=""). This way, screen readers will skip the image.</source>
+        <target>Deze afbeelding is decoratief. Zet het alt-attribuut op leeg (alt=""). Zo slaan schermlezers de afbeelding over.</target>
+      </trans-unit>
+      <trans-unit id="result-decorative-title">
+        <source>Decorative image</source>
+        <target>Decoratieve afbeelding</target>
+      </trans-unit>
+      <trans-unit id="result-functional-no-text-instructions">
+        <source>Describe the function of the image, not what it looks like. For example: alt="Search" for a magnifying glass icon used as a search button.</source>
+        <target>Beschrijf de functie van de afbeelding, niet hoe deze eruitziet. Bijvoorbeeld: alt="Zoeken" voor een vergrootglasicoon dat als zoekknop wordt gebruikt.</target>
+      </trans-unit>
+      <trans-unit id="result-functional-no-text-title">
+        <source>Functional image without text</source>
+        <target>Functionele afbeelding zonder tekst</target>
+      </trans-unit>
+      <trans-unit id="result-functional-supplementary-text-instructions">
+        <source>The text next to the image already describes its function. Set the alt attribute to empty (alt="") to avoid repetition.</source>
+        <target>De tekst naast de afbeelding beschrijft de functie al. Zet het alt-attribuut op leeg (alt="") om herhaling te voorkomen.</target>
+      </trans-unit>
+      <trans-unit id="result-functional-supplementary-text-title">
+        <source>Functional image with supplementary text</source>
+        <target>Functionele afbeelding met aanvullende tekst</target>
+      </trans-unit>
+      <trans-unit id="result-functional-with-text-instructions">
+        <source>The image contains text that is not available elsewhere. Use the text from the image as alt text.</source>
+        <target>De afbeelding bevat tekst die niet ergens anders beschikbaar is. Gebruik de tekst uit de afbeelding als alt-tekst.</target>
+      </trans-unit>
+      <trans-unit id="result-functional-with-text-title">
+        <source>Functional image with text</source>
+        <target>Functionele afbeelding met tekst</target>
+      </trans-unit>
+      <trans-unit id="result-logo-instructions">
+        <source>Use the company or organization name as alt text. For example: alt="Organization Name".</source>
+        <target>Gebruik de bedrijfs- of organisatienaam als alt-tekst. Bijvoorbeeld: alt="Organisatienaam".</target>
+      </trans-unit>
+      <trans-unit id="result-logo-title">
+        <source>Logo</source>
+        <target>Logo</target>
+      </trans-unit>
+      <trans-unit id="result-simple-informative-instructions">
+        <source>Describe the essential information from the image in the alt text. Keep it short: 1 to 2 sentences.</source>
+        <target>Beschrijf de essentiële informatie uit de afbeelding in de alt-tekst. Houd het kort: 1 tot 2 zinnen.</target>
+      </trans-unit>
+      <trans-unit id="result-simple-informative-title">
+        <source>Simple informative image</source>
+        <target>Simpele informatieve afbeelding</target>
       </trans-unit>
       <trans-unit id="wizard-title">
         <source>Choose the right alt text</source>

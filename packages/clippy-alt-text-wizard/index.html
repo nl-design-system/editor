@@ -15,9 +15,28 @@
   </head>
   <body>
     <main>
-      <clippy-alt-text-wizard></clippy-alt-text-wizard>
+      <div id="intro">
+        <h2 class="nl-heading nl-heading--level-2">Kies de juiste alt-tekst</h2>
+        <p class="nl-paragraph">Beantwoord een paar korte vragen over je afbeelding. Je krijgt direct advies over:</p>
+        <ul class="utrecht-unordered-list">
+          <li class="utrecht-unordered-list__item">Of alt-tekst nodig is.</li>
+          <li class="utrecht-unordered-list__item">Wat je moet schrijven.</li>
+        </ul>
+        <p class="nl-paragraph">
+          Zo zorg je ervoor dat iedereen je content kan begrijpen, ook met hulptechnologie zoals een schermlezer.
+        </p>
+        <button class="nl-button nl-button--primary" type="button" id="start-button">Start</button>
+      </div>
+
+      <clippy-alt-text-wizard hidden id="wizard"></clippy-alt-text-wizard>
     </main>
 
     <script type="module" src="/src/main.ts"></script>
+    <script>
+      document.getElementById('start-button').addEventListener('click', () => {
+        document.getElementById('intro').hidden = true;
+        document.getElementById('wizard').hidden = false;
+      });
+    </script>
   </body>
 </html>
