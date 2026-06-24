@@ -41,6 +41,13 @@ const mermaid = lines.join('\n');
     <Hero title="Alt-text wizard" intro="A step-by-step wizard that helps authors write accessible alt text for images." />
 
     <Section>
+      <h2>Demo</h2>
+      <div class="clippy-alt-text-wizard-card">
+        <clippy-alt-text-wizard></clippy-alt-text-wizard>
+      </div>
+    </Section>
+
+    <Section>
       <h2>Decision tree</h2>
       <p>
         The wizard guides users through a yes/no decision tree. The diagram below is automatically generated
@@ -50,3 +57,16 @@ const mermaid = lines.join('\n');
     </Section>
   </main>
 </Document>
+
+<script>
+  import '@nl-design-system-community/clippy-alt-text-wizard';
+</script>
+
+<style>
+  .clippy-alt-text-wizard-card {
+    background-color: var(--basis-color-default-bg-document);
+    box-shadow: var(--basis-box-shadow-md);
+    padding-block: var(--basis-space-block-3xl);
+    padding-inline: var(--basis-space-inline-3xl);
+  }
+</style>
