@@ -28,6 +28,7 @@
     "@fontsource/source-sans-pro": "5.2.5",
     "@nl-design-system-candidate/button-css": "1.1.0",
     "@nl-design-system-community/ckeditor-plugin": "workspace:*",
+    "@nl-design-system-community/clippy-alt-text-wizard": "workspace:*",
     "@nl-design-system-community/editor": "workspace:*",
     "@nl-design-system-community/editor-react": "workspace:*",
     "@nl-design-system-community/ma-design-tokens": "5.2.0",

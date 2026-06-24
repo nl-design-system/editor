@@ -1,0 +1,52 @@
+---
+import Document from '../layouts/document.astro';
+import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import MermaidDiagram from '../components/MermaidDiagram.astro';
+import { useTranslations } from '../i18n/translations.ts';
+import { altTextWizardMachine } from '@nl-design-system-community/clippy-alt-text-wizard/state-machine';
+
+const t = useTranslations('nl');
+
+// Generate Mermaid stateDiagram from the XState machine at build time
+const rootDef = altTextWizardMachine.definition;
+const lines: string[] = ['stateDiagram-v2'];
+
+const initialTarget = rootDef.initial?.target?.[0] as { key: string } | undefined;
+if (initialTarget) {
+  lines.push(`    [*] --> ${initialTarget.key}`);
+}
+
+for (const [stateKey, stateDef] of Object.entries(rootDef.states)) {
+  const on = (stateDef as Record<string, unknown>).on as
+    | Record<string, Array<{ eventType: string; target: Array<{ key: string }> }>>
+    | undefined;
+  if (!on) continue;
+
+  for (const [eventType, transitions] of Object.entries(on)) {
+    if (eventType === 'BACK') continue;
+    for (const transition of transitions) {
+      for (const target of transition.target) {
+        lines.push(`    ${stateKey} --> ${target.key}: ${eventType}`);
+      }
+    }
+  }
+}
+
+const mermaid = lines.join('\n');
+---
+
+<Document title={t('alt-text-wizard.title')}>
+  <main>
+    <Hero title="Alt-tekst wizard" intro="Een stapsgewijze wizard die auteurs helpt bij het schrijven van toegankelijke alt-teksten voor afbeeldingen." />
+
+    <Section>
+      <h2>Beslisboom</h2>
+      <p>
+        De wizard leidt gebruikers door een ja/nee-beslisboom. Het onderstaande diagram wordt automatisch gegenereerd
+        vanuit de <a href="https://stately.ai/docs">XState</a> state machine.
+      </p>
+      <MermaidDiagram diagram={mermaid} />
+    </Section>
+  </main>
+</Document>

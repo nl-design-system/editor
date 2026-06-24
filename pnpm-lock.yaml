@@ -487,6 +487,9 @@ importers:
       '@nl-design-system-community/ckeditor-plugin':
         specifier: workspace:*
         version: link:../ckeditor-plugin
+      '@nl-design-system-community/clippy-alt-text-wizard':
+        specifier: workspace:*
+        version: link:../clippy-alt-text-wizard
       '@nl-design-system-community/editor':
         specifier: workspace:*
         version: link:../editor
