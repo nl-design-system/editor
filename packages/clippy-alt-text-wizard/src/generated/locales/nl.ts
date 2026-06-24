@@ -36,6 +36,7 @@
 'sc16e00a7a8b2fde2': `Terug`,
 'scb489a1a173ac3f0': `Ja`,
 'sdfebdde2d1bb8524': `Geef een korte alt-tekst als samenvatting. Geef ook een uitgebreide beschrijving in de omringende tekst of via een link naar een volledige beschrijving.`,
+'se535a09511d72dcc': `Lees meer op nldesignsystem.nl`,
 'se663ab3fb8e88346': `Sfeerbeeld`,
 'sf8b7a6f3b77f3fa0': `Gebruik de bedrijfs- of organisatienaam als alt-tekst. Bijvoorbeeld: alt="Organisatienaam".`,
 'sf9551d7cabb3ee5d': `Is het een logo?`,

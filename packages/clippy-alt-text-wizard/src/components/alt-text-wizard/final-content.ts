@@ -2,6 +2,7 @@ import { msg } from '@lit/localize';
 import type { AltTextWizardFinalState, AltTextWizardState } from '@/state-machine.ts';
 
 export interface FinalStepContent {
+  documentationUrl: string;
   instructions: unknown;
   title: unknown;
 }
@@ -15,6 +16,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
     [
       'final_ambient',
       {
+        documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/decoratieve-afbeeldingen/',
         instructions: msg(
           'This image sets the mood but does not contain unique information. Set the alt attribute to empty (alt="") or use a brief description that conveys the mood.',
         ),
@@ -24,6 +26,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
     [
       'final_clickableLogo',
       {
+        documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/functionele-afbeeldingen/',
         instructions: msg(
           'Use the company or organization name as alt text. For example: alt="Organization Name - go to homepage".',
         ),
@@ -33,6 +36,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
     [
       'final_complexInformative',
       {
+        documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/informatieve-afbeeldingen/',
         instructions: msg(
           'Provide a short alt text as summary. Also provide a detailed description in the surrounding text or via a link to a full description.',
         ),
@@ -42,6 +46,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
     [
       'final_decorative',
       {
+        documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/decoratieve-afbeeldingen/',
         instructions: msg(
           'This image is decorative. Set the alt attribute to empty (alt=""). This way, screen readers will skip the image.',
         ),
@@ -51,6 +56,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
     [
       'final_functionalWithSupplementaryText',
       {
+        documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/functionele-afbeeldingen/',
         instructions: msg(
           'The text next to the image already describes its function. Set the alt attribute to empty (alt="") to avoid repetition.',
         ),
@@ -60,6 +66,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
     [
       'final_functionalWithText',
       {
+        documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/tekst-in-afbeelding/',
         instructions: msg(
           'The image contains text that is not available elsewhere. Use the text from the image as alt text.',
         ),
@@ -69,6 +76,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
     [
       'final_functionalWithoutText',
       {
+        documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/functionele-afbeeldingen/',
         instructions: msg(
           'Describe the function of the image, not what it looks like. For example: alt="Search" for a magnifying glass icon used as a search button.',
         ),
@@ -78,6 +86,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
     [
       'final_logo',
       {
+        documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/functionele-afbeeldingen/',
         instructions: msg('Use the company or organization name as alt text. For example: alt="Organization Name".'),
         title: msg('Logo'),
       },
@@ -85,6 +94,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
     [
       'final_simpleInformative',
       {
+        documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/informatieve-afbeeldingen/',
         instructions: msg(
           'Describe the essential information from the image in the alt text. Keep it short: 1 to 2 sentences.',
         ),
