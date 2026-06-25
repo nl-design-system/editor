@@ -37,6 +37,7 @@ export const altTextWizardMachine = setup({
       on: {
         BACK: 'containsUniqueInfo',
       },
+      type: 'final',
     },
 
     canPlaceTextBeside: {
@@ -51,12 +52,14 @@ export const altTextWizardMachine = setup({
       on: {
         BACK: 'isLogoClickable',
       },
+      type: 'final',
     },
 
     complexInformativeResult: {
       on: {
         BACK: 'isInfoSimple',
       },
+      type: 'final',
     },
 
     containsText: {
@@ -79,24 +82,28 @@ export const altTextWizardMachine = setup({
       on: {
         BACK: 'informationLost',
       },
+      type: 'final',
     },
 
     functionalWithoutTextResult: {
       on: {
         BACK: 'containsText',
       },
+      type: 'final',
     },
 
     functionalWithSupplementaryTextResult: {
       on: {
         BACK: 'canPlaceTextBeside',
       },
+      type: 'final',
     },
 
     functionalWithTextResult: {
       on: {
         BACK: 'canPlaceTextBeside',
       },
+      type: 'final',
     },
 
     informationLost: {
@@ -142,12 +149,14 @@ export const altTextWizardMachine = setup({
       on: {
         BACK: 'isLogo',
       },
+      type: 'final',
     },
 
     simpleInformativeResult: {
       on: {
         BACK: 'isInfoSimple',
       },
+      type: 'final',
     },
   },
 });
