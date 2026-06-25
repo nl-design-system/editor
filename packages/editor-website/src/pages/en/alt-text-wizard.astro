@@ -5,35 +5,10 @@ import Section from '../../components/Section.astro';
 import MermaidDiagram from '../../components/MermaidDiagram.astro';
 import { useTranslations } from '../../i18n/translations.ts';
 import { altTextWizardMachine } from '@nl-design-system-community/clippy-alt-text-wizard/state-machine';
+import { generateMermaidStateDiagram } from '../../utils/generateMermaidStateDiagram.ts';
 
 const t = useTranslations('en');
-
-// Generate Mermaid stateDiagram from the XState machine at build time
-const rootDef = altTextWizardMachine.definition;
-const lines: string[] = ['stateDiagram-v2'];
-
-const initialTarget = rootDef.initial?.target?.[0] as { key: string } | undefined;
-if (initialTarget) {
-  lines.push(`    [*] --> ${initialTarget.key}`);
-}
-
-for (const [stateKey, stateDef] of Object.entries(rootDef.states)) {
-  const on = (stateDef as Record<string, unknown>).on as
-    | Record<string, Array<{ eventType: string; target: Array<{ key: string }> }>>
-    | undefined;
-  if (!on) continue;
-
-  for (const [eventType, transitions] of Object.entries(on)) {
-    if (eventType === 'BACK') continue;
-    for (const transition of transitions) {
-      for (const target of transition.target) {
-        lines.push(`    ${stateKey} --> ${target.key}: ${eventType}`);
-      }
-    }
-  }
-}
-
-const mermaid = lines.join('\n');
+const mermaid = generateMermaidStateDiagram(altTextWizardMachine);
 ---
 
 <Document title={t('alt-text-wizard.title')}>
