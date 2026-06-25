@@ -2,28 +2,28 @@ import { setup } from 'xstate';
 
 export type AltTextWizardEvent = { type: 'ANSWER_NO' } | { type: 'ANSWER_YES' } | { type: 'BACK' };
 
-export type AltTextWizardQuestionState =
-  | 'canPlaceTextBeside'
-  | 'containsText'
-  | 'containsUniqueInfo'
-  | 'informationLost'
-  | 'isClickable'
-  | 'isInfoSimple'
-  | 'isLogo'
-  | 'isLogoClickable';
+export type AltTextWizardAtomicState =
+  | 'atomic_canPlaceTextBeside'
+  | 'atomic_containsText'
+  | 'atomic_containsUniqueInfo'
+  | 'atomic_informationLost'
+  | 'atomic_isClickable'
+  | 'atomic_isInfoSimple'
+  | 'atomic_isLogo'
+  | 'atomic_isLogoClickable';
 
-export type AltTextWizardResultState =
-  | 'ambientResult'
-  | 'clickableLogoResult'
-  | 'complexInformativeResult'
-  | 'decorativeResult'
-  | 'functionalWithSupplementaryTextResult'
-  | 'functionalWithTextResult'
-  | 'functionalWithoutTextResult'
-  | 'logoResult'
-  | 'simpleInformativeResult';
+export type AltTextWizardFinalState =
+  | 'final_ambient'
+  | 'final_clickableLogo'
+  | 'final_complexInformative'
+  | 'final_decorative'
+  | 'final_functionalWithSupplementaryText'
+  | 'final_functionalWithText'
+  | 'final_functionalWithoutText'
+  | 'final_logo'
+  | 'final_simpleInformative';
 
-export type AltTextWizardState = AltTextWizardQuestionState | AltTextWizardResultState;
+export type AltTextWizardState = AltTextWizardAtomicState | AltTextWizardFinalState;
 
 export const altTextWizardMachine = setup({
   types: {
@@ -31,130 +31,131 @@ export const altTextWizardMachine = setup({
   },
 }).createMachine({
   id: 'altTextWizard',
-  initial: 'informationLost',
+  initial: 'atomic_informationLost',
   states: {
-    ambientResult: {
+    atomic_canPlaceTextBeside: {
       on: {
-        BACK: 'containsUniqueInfo',
+        ANSWER_NO: 'final_functionalWithText',
+        ANSWER_YES: 'final_functionalWithSupplementaryText',
+        BACK: 'atomic_containsText',
+      },
+    },
+
+    atomic_containsText: {
+      on: {
+        ANSWER_NO: 'final_functionalWithoutText',
+        ANSWER_YES: 'atomic_canPlaceTextBeside',
+        BACK: 'atomic_isLogoClickable',
+      },
+    },
+
+    atomic_containsUniqueInfo: {
+      on: {
+        ANSWER_NO: 'final_ambient',
+        ANSWER_YES: 'atomic_isInfoSimple',
+        BACK: 'atomic_isLogo',
+      },
+    },
+
+    atomic_informationLost: {
+      on: {
+        ANSWER_NO: 'final_decorative',
+        ANSWER_YES: 'atomic_isClickable',
+      },
+    },
+
+    atomic_isClickable: {
+      on: {
+        ANSWER_NO: 'atomic_isLogo',
+        ANSWER_YES: 'atomic_isLogoClickable',
+        BACK: 'atomic_informationLost',
+      },
+    },
+
+    atomic_isInfoSimple: {
+      on: {
+        ANSWER_NO: 'final_complexInformative',
+        ANSWER_YES: 'final_simpleInformative',
+        BACK: 'atomic_containsUniqueInfo',
+      },
+    },
+
+    atomic_isLogo: {
+      on: {
+        ANSWER_NO: 'atomic_containsUniqueInfo',
+        ANSWER_YES: 'final_logo',
+        BACK: 'atomic_isClickable',
+      },
+    },
+
+    atomic_isLogoClickable: {
+      on: {
+        ANSWER_NO: 'atomic_containsText',
+        ANSWER_YES: 'final_clickableLogo',
+        BACK: 'atomic_isClickable',
+      },
+    },
+
+    // Final states
+    final_ambient: {
+      on: {
+        BACK: 'atomic_containsUniqueInfo',
       },
       type: 'final',
     },
 
-    canPlaceTextBeside: {
+    final_clickableLogo: {
       on: {
-        ANSWER_NO: 'functionalWithTextResult',
-        ANSWER_YES: 'functionalWithSupplementaryTextResult',
-        BACK: 'containsText',
-      },
-    },
-
-    clickableLogoResult: {
-      on: {
-        BACK: 'isLogoClickable',
+        BACK: 'atomic_isLogoClickable',
       },
       type: 'final',
     },
 
-    complexInformativeResult: {
+    final_complexInformative: {
       on: {
-        BACK: 'isInfoSimple',
+        BACK: 'atomic_isInfoSimple',
       },
       type: 'final',
     },
 
-    containsText: {
+    final_decorative: {
       on: {
-        ANSWER_NO: 'functionalWithoutTextResult',
-        ANSWER_YES: 'canPlaceTextBeside',
-        BACK: 'isLogoClickable',
-      },
-    },
-
-    containsUniqueInfo: {
-      on: {
-        ANSWER_NO: 'ambientResult',
-        ANSWER_YES: 'isInfoSimple',
-        BACK: 'isLogo',
-      },
-    },
-
-    decorativeResult: {
-      on: {
-        BACK: 'informationLost',
+        BACK: 'atomic_informationLost',
       },
       type: 'final',
     },
 
-    functionalWithoutTextResult: {
+    final_functionalWithoutText: {
       on: {
-        BACK: 'containsText',
+        BACK: 'atomic_containsText',
       },
       type: 'final',
     },
 
-    functionalWithSupplementaryTextResult: {
+    final_functionalWithSupplementaryText: {
       on: {
-        BACK: 'canPlaceTextBeside',
+        BACK: 'atomic_canPlaceTextBeside',
       },
       type: 'final',
     },
 
-    functionalWithTextResult: {
+    final_functionalWithText: {
       on: {
-        BACK: 'canPlaceTextBeside',
+        BACK: 'atomic_canPlaceTextBeside',
       },
       type: 'final',
     },
 
-    informationLost: {
+    final_logo: {
       on: {
-        ANSWER_NO: 'decorativeResult',
-        ANSWER_YES: 'isClickable',
-      },
-    },
-
-    isClickable: {
-      on: {
-        ANSWER_NO: 'isLogo',
-        ANSWER_YES: 'isLogoClickable',
-        BACK: 'informationLost',
-      },
-    },
-
-    isInfoSimple: {
-      on: {
-        ANSWER_NO: 'complexInformativeResult',
-        ANSWER_YES: 'simpleInformativeResult',
-        BACK: 'containsUniqueInfo',
-      },
-    },
-
-    isLogo: {
-      on: {
-        ANSWER_NO: 'containsUniqueInfo',
-        ANSWER_YES: 'logoResult',
-        BACK: 'isClickable',
-      },
-    },
-
-    isLogoClickable: {
-      on: {
-        ANSWER_NO: 'containsText',
-        ANSWER_YES: 'clickableLogoResult',
-        BACK: 'isClickable',
-      },
-    },
-
-    logoResult: {
-      on: {
-        BACK: 'isLogo',
+        BACK: 'atomic_isLogo',
       },
       type: 'final',
     },
 
-    simpleInformativeResult: {
+    final_simpleInformative: {
       on: {
-        BACK: 'isInfoSimple',
+        BACK: 'atomic_isInfoSimple',
       },
       type: 'final',
     },

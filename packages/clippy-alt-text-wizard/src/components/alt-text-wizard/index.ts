@@ -16,8 +16,8 @@ import '@nl-design-system-community/clippy-components/clippy-icon';
 import { AltTextStateMachineController } from '@/controllers/AltTextStateMachineController.ts';
 import { initializeLocale } from '@/localization.ts';
 import { type AltTextWizardState, altTextWizardMachine } from '@/state-machine.ts';
+import { getFinalContent } from './final-content.ts';
 import { getQuestionContent } from './question-content.ts';
-import { getResultContent } from './result-content.ts';
 
 const tag = 'clippy-alt-text-wizard';
 
@@ -84,7 +84,7 @@ export class ClippyAltTextWizard extends LitElement {
           />
         </div>
         <div class="utrecht-form-field__label">
-          <label class="utrecht-form-label" for="${groupName}-yes">${msg('Yes', { id: 'yes' })}</label>
+          <label class="utrecht-form-label" for="${groupName}-yes">${msg('Yes')}</label>
         </div>
       </div>
       <div class="utrecht-form-field utrecht-form-field--radio">
@@ -102,7 +102,7 @@ export class ClippyAltTextWizard extends LitElement {
           />
         </div>
         <div class="utrecht-form-field__label">
-          <label class="utrecht-form-label" for="${groupName}-no">${msg('No', { id: 'no' })}</label>
+          <label class="utrecht-form-label" for="${groupName}-no">${msg('No')}</label>
         </div>
       </div>
     `;
@@ -119,7 +119,7 @@ export class ClippyAltTextWizard extends LitElement {
         }}
       >
         <clippy-icon slot="iconStart">${unsafeSVG(ArrowBackIcon)}</clippy-icon>
-        ${msg('Back', { id: 'back-button' })}
+        ${msg('Back')}
       </clippy-button>
     `;
   }
@@ -132,7 +132,7 @@ export class ClippyAltTextWizard extends LitElement {
         ?disabled=${!this._pendingSelection}
         @click=${this.#handleContinue}
       >
-        ${msg('Continue', { id: 'continue-button' })}
+        ${msg('Continue')}
       </clippy-button>
     `;
   }
@@ -152,10 +152,10 @@ export class ClippyAltTextWizard extends LitElement {
     `;
   }
 
-  #renderResult(title: unknown, instructions: unknown) {
+  #renderFinal(title: unknown, instructions: unknown) {
     return html`
       ${this.#renderBackButton()}
-      <div class="clippy-wizard__result" role="status" aria-live="polite">
+      <div class="clippy-wizard__final" role="status" aria-live="polite">
         <h3 class="nl-heading nl-heading--level-3">${title}</h3>
         <p class="nl-paragraph">${instructions}</p>
       </div>
@@ -173,9 +173,9 @@ export class ClippyAltTextWizard extends LitElement {
       return this.#renderQuestion(question.questionId, question.questionText, question.showBack);
     }
 
-    const result = getResultContent().get(stateValue);
-    if (result) {
-      return this.#renderResult(result.title, result.instructions);
+    const finalContent = getFinalContent().get(stateValue);
+    if (finalContent) {
+      return this.#renderFinal(finalContent.title, finalContent.instructions);
     }
 
     return nothing;
@@ -184,9 +184,7 @@ export class ClippyAltTextWizard extends LitElement {
   override render() {
     return html`
       <div class="clippy-wizard">
-        <h2 class="nl-heading nl-heading--level-2 clippy-wizard__title">
-          ${msg('Choose the right alt text', { id: 'wizard-title' })}
-        </h2>
+        <h2 class="nl-heading nl-heading--level-2 clippy-wizard__title">${msg('Choose the right alt text')}</h2>
         <form class="clippy-wizard__form" @submit=${(e: Event) => e.preventDefault()} novalidate>
           ${this.#renderCurrentStep()}
         </form>
