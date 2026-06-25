@@ -161,7 +161,7 @@ export class ClippyAltTextWizard extends LitElement {
         <h3 class="nl-heading nl-heading--level-3">${title}</h3>
         <p class="nl-paragraph">${instructions}</p>
         <p class="nl-paragraph">
-          <a class="nl-link" href=${documentationUrl} target="_blank" rel="noopener noreferrer">
+          <a class="nl-link" href=${documentationUrl} target="_blank" rel="noreferrer">
             ${msg('Read more on nldesignsystem.nl')}
           </a>
         </p>
