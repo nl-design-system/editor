@@ -2,10 +2,134 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file target-language="nl" source-language="en" original="lit-localize-inputs" datatype="plaintext">
     <body>
-      <trans-unit id="sbd432fec05ae41a3">
-        <source>Alt-text wizard</source>
-        <target>Alt-tekst keuzehulp</target>
-      </trans-unit>
+<trans-unit id="s55889b9f03a030c3">
+  <source>This image sets the mood but does not contain unique information. Set the alt attribute to empty (alt="") or use a brief description that conveys the mood.</source>
+  <target>Deze afbeelding bepaalt de sfeer maar bevat geen unieke informatie. Zet het alt-attribuut op leeg (alt="") of gebruik een korte beschrijving die de sfeer overbrengt.</target>
+</trans-unit>
+<trans-unit id="se663ab3fb8e88346">
+  <source>Ambient image</source>
+  <target>Sfeerbeeld</target>
+</trans-unit>
+<trans-unit id="s230aaf919c4802f4">
+  <source>Use the company or organization name as alt text. For example: alt="Organization Name - go to homepage".</source>
+  <target>Gebruik de bedrijfs- of organisatienaam als alt-tekst. Bijvoorbeeld: alt="Organisatienaam - ga naar de homepage".</target>
+</trans-unit>
+<trans-unit id="s509a9da8150157d6">
+  <source>Clickable logo</source>
+  <target>Klikbaar logo</target>
+</trans-unit>
+<trans-unit id="sdfebdde2d1bb8524">
+  <source>Provide a short alt text as summary. Also provide a detailed description in the surrounding text or via a link to a full description.</source>
+  <target>Geef een korte alt-tekst als samenvatting. Geef ook een uitgebreide beschrijving in de omringende tekst of via een link naar een volledige beschrijving.</target>
+</trans-unit>
+<trans-unit id="s187e8c134fff97c8">
+  <source>Complex informative image</source>
+  <target>Complexe informatieve afbeelding</target>
+</trans-unit>
+<trans-unit id="s92d1b57a145cd2a9">
+  <source>This image is decorative. Set the alt attribute to empty (alt=""). This way, screen readers will skip the image.</source>
+  <target>Deze afbeelding is decoratief. Zet het alt-attribuut op leeg (alt=""). Zo slaan schermlezers de afbeelding over.</target>
+</trans-unit>
+<trans-unit id="s94d1fb4e977ef43e">
+  <source>Decorative image</source>
+  <target>Decoratieve afbeelding</target>
+</trans-unit>
+<trans-unit id="s70f3481f89c83e23">
+  <source>The text next to the image already describes its function. Set the alt attribute to empty (alt="") to avoid repetition.</source>
+  <target>De tekst naast de afbeelding beschrijft de functie al. Zet het alt-attribuut op leeg (alt="") om herhaling te voorkomen.</target>
+</trans-unit>
+<trans-unit id="s01e16de45e97e01b">
+  <source>Functional image with supplementary text</source>
+  <target>Functionele afbeelding met aanvullende tekst</target>
+</trans-unit>
+<trans-unit id="s2ea6e3510d5dfa8b">
+  <source>The image contains text that is not available elsewhere. Use the text from the image as alt text.</source>
+  <target>De afbeelding bevat tekst die niet ergens anders beschikbaar is. Gebruik de tekst uit de afbeelding als alt-tekst.</target>
+</trans-unit>
+<trans-unit id="s8c6501e34051ec32">
+  <source>Functional image with text</source>
+  <target>Functionele afbeelding met tekst</target>
+</trans-unit>
+<trans-unit id="s56560a635946b8f4">
+  <source>Describe the function of the image, not what it looks like. For example: alt="Search" for a magnifying glass icon used as a search button.</source>
+  <target>Beschrijf de functie van de afbeelding, niet hoe deze eruitziet. Bijvoorbeeld: alt="Zoeken" voor een vergrootglasicoon dat als zoekknop wordt gebruikt.</target>
+</trans-unit>
+<trans-unit id="s7b036aec5c57c730">
+  <source>Functional image without text</source>
+  <target>Functionele afbeelding zonder tekst</target>
+</trans-unit>
+<trans-unit id="sf8b7a6f3b77f3fa0">
+  <source>Use the company or organization name as alt text. For example: alt="Organization Name".</source>
+  <target>Gebruik de bedrijfs- of organisatienaam als alt-tekst. Bijvoorbeeld: alt="Organisatienaam".</target>
+</trans-unit>
+<trans-unit id="s4f1af2b48a5e249a">
+  <source>Logo</source>
+  <target>Logo</target>
+</trans-unit>
+<trans-unit id="s0c36ff23849f85d9">
+  <source>Describe the essential information from the image in the alt text. Keep it short: 1 to 2 sentences.</source>
+  <target>Beschrijf de essentiële informatie uit de afbeelding in de alt-tekst. Houd het kort: 1 tot 2 zinnen.</target>
+</trans-unit>
+<trans-unit id="s2deaa6bdf5bd7620">
+  <source>Simple informative image</source>
+  <target>Simpele informatieve afbeelding</target>
+</trans-unit>
+<trans-unit id="scb489a1a173ac3f0">
+  <source>Yes</source>
+  <target>Ja</target>
+</trans-unit>
+<trans-unit id="s09205907b5b56cda">
+  <source>No</source>
+  <target>Nee</target>
+</trans-unit>
+<trans-unit id="sc16e00a7a8b2fde2">
+  <source>Back</source>
+  <target>Terug</target>
+</trans-unit>
+<trans-unit id="s81ecf2d4386b8e84">
+  <source>Continue</source>
+  <target>Doorgaan</target>
+</trans-unit>
+<trans-unit id="sa7bea54f6c2fd809">
+  <source>Choose the right alt text</source>
+  <target>Kies de juiste alt-tekst</target>
+</trans-unit>
+<trans-unit id="sb045c9999741aea1">
+  <source>Can you also place the text in or next to the image?</source>
+  <target>Kun je de tekst ook in of naast het plaatje plaatsen?</target>
+</trans-unit>
+<trans-unit id="s8f0c9ec4dfab07d2">
+  <source>Does the image contain text?</source>
+  <target>Bevat de afbeelding tekst?</target>
+</trans-unit>
+<trans-unit id="sfaab3e67e6c37c23">
+  <source>Does the image contain information that is not available as text on the page and is necessary to understand the content?</source>
+  <target>Bevat de afbeelding informatie die niet als tekst op de pagina staat en nodig is om de inhoud te begrijpen?</target>
+</trans-unit>
+<trans-unit id="s6258bf1c015c4667">
+  <source>If I remove the image, will information be lost?</source>
+  <target>Als ik de afbeelding weglaat, gaat er dan informatie verloren?</target>
+</trans-unit>
+<trans-unit id="s31e6cf91068b663f">
+  <source>Is the image clickable (link, button)?</source>
+  <target>Is de afbeelding klikbaar (link, button)?</target>
+</trans-unit>
+<trans-unit id="s3b835a4b673b3988">
+  <source>Is the information short and simple (2-3 lines)?</source>
+  <target>Is de informatie kort en simpel (2-3 regels)?</target>
+</trans-unit>
+<trans-unit id="sf9551d7cabb3ee5d">
+  <source>Is it a logo?</source>
+  <target>Is het een logo?</target>
+</trans-unit>
+<trans-unit id="s473b469e67050570">
+  <source>Is the image a logo?</source>
+  <target>Is de afbeelding een logo?</target>
+</trans-unit>
+<trans-unit id="se535a09511d72dcc">
+  <source>Read more on nldesignsystem.nl</source>
+  <target>Lees meer op nldesignsystem.nl</target>
+</trans-unit>
     </body>
   </file>
 </xliff>
