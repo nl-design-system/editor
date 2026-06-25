@@ -1,5 +1,6 @@
 import { localized, msg } from '@lit/localize';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
+import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import ArrowBackIcon from '@tabler/icons/outline/arrow-back-up.svg?raw';
@@ -36,6 +37,7 @@ declare global {
 export class ClippyAltTextWizard extends LitElement {
   static override readonly styles = [
     unsafeCSS(headingStyle),
+    unsafeCSS(linkStyle),
     unsafeCSS(paragraphStyle),
     unsafeCSS(formFieldStyles),
     unsafeCSS(formFieldDescriptionStyles),
@@ -152,12 +154,17 @@ export class ClippyAltTextWizard extends LitElement {
     `;
   }
 
-  #renderFinal(title: unknown, instructions: unknown) {
+  #renderFinal(title: unknown, instructions: unknown, documentationUrl: string) {
     return html`
       ${this.#renderBackButton()}
       <div class="clippy-wizard__final" role="status" aria-live="polite">
         <h3 class="nl-heading nl-heading--level-3">${title}</h3>
         <p class="nl-paragraph">${instructions}</p>
+        <p class="nl-paragraph">
+          <a class="nl-link" href=${documentationUrl} target="_blank" rel="noreferrer">
+            ${msg('Read more on nldesignsystem.nl')}
+          </a>
+        </p>
       </div>
     `;
   }
@@ -175,7 +182,7 @@ export class ClippyAltTextWizard extends LitElement {
 
     const finalContent = getFinalContent().get(stateValue);
     if (finalContent) {
-      return this.#renderFinal(finalContent.title, finalContent.instructions);
+      return this.#renderFinal(finalContent.title, finalContent.instructions, finalContent.documentationUrl);
     }
 
     return nothing;

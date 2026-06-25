@@ -126,6 +126,10 @@
   <source>Is the image a logo?</source>
   <target>Is de afbeelding een logo?</target>
 </trans-unit>
+<trans-unit id="se535a09511d72dcc">
+  <source>Read more on nldesignsystem.nl</source>
+  <target>Lees meer op nldesignsystem.nl</target>
+</trans-unit>
     </body>
   </file>
 </xliff>
