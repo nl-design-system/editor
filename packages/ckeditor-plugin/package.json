@@ -10,6 +10,10 @@
     "nl-design-system"
   ],
   "version": "0.0.2",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "type": "module",
   "main": "./dist/index.js",
   "exports": {
