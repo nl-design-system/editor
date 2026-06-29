@@ -1,5 +1,5 @@
 import { msg } from '@lit/localize';
-import type { AltTextWizardAtomicState, AltTextWizardState } from '@/state-machine.ts';
+import type { AltTextWizardQuestionState, AltTextWizardState } from '@/state-machine.ts';
 
 export interface QuestionStepContent {
   questionId: string;
@@ -13,27 +13,27 @@ export interface QuestionStepContent {
  * Must be called inside `render()` so `msg()` resolves in the correct `@localized()` context.
  */
 export function getQuestionContent(): ReadonlyMap<AltTextWizardState, QuestionStepContent> {
-  return new Map<AltTextWizardAtomicState, QuestionStepContent>([
+  return new Map<AltTextWizardQuestionState, QuestionStepContent>([
     [
-      'atomic_canPlaceTextBeside',
+      'canPlaceTextBeside',
       {
-        questionId: 'atomic_canPlaceTextBeside',
+        questionId: 'canPlaceTextBeside',
         questionText: msg('Can you also place the text in or next to the image?'),
         showBack: true,
       },
     ],
     [
-      'atomic_containsText',
+      'containsText',
       {
-        questionId: 'atomic_containsText',
+        questionId: 'containsText',
         questionText: msg('Does the image contain text?'),
         showBack: true,
       },
     ],
     [
-      'atomic_containsUniqueInfo',
+      'containsUniqueInfo',
       {
-        questionId: 'atomic_containsUniqueInfo',
+        questionId: 'containsUniqueInfo',
         questionText: msg(
           'Does the image contain information that is not available as text on the page and is necessary to understand the content?',
         ),
@@ -41,42 +41,42 @@ export function getQuestionContent(): ReadonlyMap<AltTextWizardState, QuestionSt
       },
     ],
     [
-      'atomic_informationLost',
+      'informationLost',
       {
-        questionId: 'atomic_informationLost',
+        questionId: 'informationLost',
         questionText: msg('If I remove the image, will information be lost?'),
         sectionTitle: msg('Decorative images'),
         showBack: false,
       },
     ],
     [
-      'atomic_isClickable',
+      'isClickable',
       {
-        questionId: 'atomic_isClickable',
+        questionId: 'isClickable',
         questionText: msg('Is the image clickable (link, button)?'),
         showBack: true,
       },
     ],
     [
-      'atomic_isInfoSimple',
+      'isInfoSimple',
       {
-        questionId: 'atomic_isInfoSimple',
+        questionId: 'isInfoSimple',
         questionText: msg('Is the information short and simple (2-3 lines)?'),
         showBack: true,
       },
     ],
     [
-      'atomic_isLogo',
+      'isLogo',
       {
-        questionId: 'atomic_isLogo',
+        questionId: 'isLogo',
         questionText: msg('Is it a logo?'),
         showBack: true,
       },
     ],
     [
-      'atomic_isLogoClickable',
+      'isLogoClickable',
       {
-        questionId: 'atomic_isLogoClickable',
+        questionId: 'isLogoClickable',
         questionText: msg('Is the image a logo?'),
         sectionTitle: msg('Logo'),
         showBack: true,
