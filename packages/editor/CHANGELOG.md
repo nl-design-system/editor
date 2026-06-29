@@ -1,5 +1,12 @@
 # @nl-design-system-community/editor
 
+## 1.4.3
+
+### Patch Changes
+
+- Updated dependencies [a98b7da]
+  - @nl-design-system-community/clippy-alt-text-wizard@0.2.0
+
 ## 1.4.2
 
 ### Patch Changes
