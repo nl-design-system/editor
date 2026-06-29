@@ -4,6 +4,7 @@ import type { AltTextWizardAtomicState, AltTextWizardState } from '@/state-machi
 export interface QuestionStepContent {
   questionId: string;
   questionText: unknown;
+  sectionTitle?: unknown;
   showBack: boolean;
 }
 
@@ -44,6 +45,7 @@ export function getQuestionContent(): ReadonlyMap<AltTextWizardState, QuestionSt
       {
         questionId: 'atomic_informationLost',
         questionText: msg('If I remove the image, will information be lost?'),
+        sectionTitle: msg('Decorative images'),
         showBack: false,
       },
     ],
@@ -76,6 +78,7 @@ export function getQuestionContent(): ReadonlyMap<AltTextWizardState, QuestionSt
       {
         questionId: 'atomic_isLogoClickable',
         questionText: msg('Is the image a logo?'),
+        sectionTitle: msg('Logo'),
         showBack: true,
       },
     ],
