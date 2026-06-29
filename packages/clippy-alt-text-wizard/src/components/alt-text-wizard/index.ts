@@ -12,7 +12,7 @@ import formFieldDescriptionStyles from '@utrecht/form-field-description-css/dist
 import formLabelStyles from '@utrecht/form-label-css/dist/index.css?inline';
 import radioButtonStyles from '@utrecht/radio-button-css/dist/index.css?inline';
 import unorderedListStyles from '@utrecht/unordered-list-css/dist/index.css?inline';
-import { LitElement, html, nothing, unsafeCSS } from 'lit';
+import { LitElement, css, html, nothing, unsafeCSS } from 'lit';
 import { state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
@@ -20,8 +20,8 @@ import '@nl-design-system-community/clippy-components/clippy-icon';
 import { AltTextStateMachineController } from '@/controllers/AltTextStateMachineController.ts';
 import { initializeLocale } from '@/localization.ts';
 import { type AltTextWizardState, altTextWizardMachine } from '@/state-machine.ts';
-import { getFinalContent } from './final-content.ts';
 import { getQuestionContent } from './question-content.ts';
+import { getResultContent } from './result-content.ts';
 
 const tag = 'clippy-alt-text-wizard';
 
@@ -49,6 +49,15 @@ export class ClippyAltTextWizard extends LitElement {
     unsafeCSS(formLabelStyles),
     unsafeCSS(radioButtonStyles),
     unsafeCSS(unorderedListStyles),
+    css`
+      :host {
+        --utrecht-space-around: 1;
+        --utrecht-form-field-margin-block-end: var(--basis-space-block-md);
+        --utrecht-form-field-margin-block-start: var(--basis-space-block-md);
+        --nl-paragraph-margin-block-end: var(--basis-space-block-md);
+        --nl-paragraph-margin-block-start: var(--basis-space-block-md);
+      }
+    `,
   ];
 
   private readonly wizard = new AltTextStateMachineController(this, altTextWizardMachine);
@@ -179,9 +188,10 @@ export class ClippyAltTextWizard extends LitElement {
     `;
   }
 
-  #renderFinal(title: unknown, instructions: unknown, documentationUrl: string) {
+  #renderResult(title: unknown, instructions: unknown, documentationUrl: string) {
     return html`
-      <div class="clippy-wizard__final" role="status" aria-live="polite">
+      ${this.#renderBackButton()}
+      <div class="clippy-wizard__result" role="status" aria-live="polite">
         <h3 class="nl-heading nl-heading--level-3">${title}</h3>
         ${instructions}
         <p class="nl-paragraph">
@@ -205,9 +215,9 @@ export class ClippyAltTextWizard extends LitElement {
       return this.#renderQuestion(question.questionId, question.questionText, question.showBack, question.sectionTitle);
     }
 
-    const finalContent = getFinalContent().get(stateValue);
-    if (finalContent) {
-      return this.#renderFinal(finalContent.title, finalContent.instructions, finalContent.documentationUrl);
+    const resultContent = getResultContent().get(stateValue);
+    if (resultContent) {
+      return this.#renderResult(resultContent.title, resultContent.instructions, resultContent.documentationUrl);
     }
 
     return nothing;

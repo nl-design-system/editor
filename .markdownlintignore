@@ -9,3 +9,7 @@ CHANGELOG.md
 # Ignore doc fragment files in examples directories (not standalone documents)
 docs/**/examples
 
+# Ignore changeset files
+.changeset
+!.changeset/README.md
+

@@ -1,21 +1,21 @@
 import { msg } from '@lit/localize';
 import { html } from 'lit';
-import type { AltTextWizardFinalState, AltTextWizardState } from '@/state-machine.ts';
+import type { AltTextWizardResultState, AltTextWizardState } from '@/state-machine.ts';
 
-export interface FinalStepContent {
+export interface ResultStepContent {
   documentationUrl: string;
   instructions: unknown;
   title: unknown;
 }
 
 /**
- * Returns the content map for all final steps.
+ * Returns the content map for all result steps.
  * Must be called inside `render()` so `msg()` resolves in the correct `@localized()` context.
  */
-export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepContent> {
-  return new Map<AltTextWizardFinalState, FinalStepContent>([
+export function getResultContent(): ReadonlyMap<AltTextWizardState, ResultStepContent> {
+  return new Map<AltTextWizardResultState, ResultStepContent>([
     [
-      'final_ambient',
+      'result_ambient',
       {
         documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/decoratieve-afbeeldingen/',
         instructions: html`<p class="nl-paragraph">
@@ -27,7 +27,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
       },
     ],
     [
-      'final_clickableLogo',
+      'result_clickableLogo',
       {
         documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/functionele-afbeeldingen/',
         instructions: html`
@@ -45,7 +45,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
       },
     ],
     [
-      'final_complexInformative',
+      'result_complexInformative',
       {
         documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/informatieve-afbeeldingen/',
         instructions: html`
@@ -68,7 +68,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
       },
     ],
     [
-      'final_decorative',
+      'result_decorative',
       {
         documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/decoratieve-afbeeldingen/',
         instructions: html`
@@ -93,7 +93,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
       },
     ],
     [
-      'final_functionalWithSupplementaryText',
+      'result_functionalWithSupplementaryText',
       {
         documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/functionele-afbeeldingen/',
         instructions: html`
@@ -127,7 +127,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
       },
     ],
     [
-      'final_functionalWithText',
+      'result_functionalWithText',
       {
         documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/tekst-in-afbeelding/',
         instructions: html`
@@ -141,7 +141,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
       },
     ],
     [
-      'final_functionalWithoutText',
+      'result_functionalWithoutText',
       {
         documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/functionele-afbeeldingen/',
         instructions: html`
@@ -164,7 +164,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
       },
     ],
     [
-      'final_logo',
+      'result_logo',
       {
         documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/functionele-afbeeldingen/',
         instructions: html`<p class="nl-paragraph">
@@ -174,7 +174,7 @@ export function getFinalContent(): ReadonlyMap<AltTextWizardState, FinalStepCont
       },
     ],
     [
-      'final_simpleInformative',
+      'result_simpleInformative',
       {
         documentationUrl: 'https://nldesignsystem.nl/richtlijnen/content/afbeeldingen/informatieve-afbeeldingen/',
         instructions: html`
