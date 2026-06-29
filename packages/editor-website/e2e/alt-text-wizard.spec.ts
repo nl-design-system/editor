@@ -14,7 +14,7 @@ test.describe('Alt-text wizard (NL)', () => {
 
   test('continue button is disabled until a radio option is selected', async ({ page }) => {
     const wizard = page.locator('clippy-alt-text-wizard');
-    const continueButton = wizard.getByRole('button', { name: 'Doorgaan' });
+    const continueButton = wizard.getByRole('button', { name: 'Volgende stap' });
     await expect(continueButton).toBeDisabled();
 
     await wizard.getByRole('radio').first().click();
@@ -30,11 +30,13 @@ test.describe('Alt-text wizard (NL)', () => {
     const wizard = page.locator('clippy-alt-text-wizard');
 
     await wizard.getByLabel('Nee').click();
-    await wizard.getByRole('button', { name: 'Doorgaan' }).click();
+    await wizard.getByRole('button', { name: 'Volgende stap' }).click();
 
-    await expect(wizard.getByRole('heading', { name: 'Decoratieve afbeelding', level: 3 })).toBeVisible();
+    await expect(
+      wizard.getByRole('heading', { name: 'Oplossing voor decoratieve afbeeldingen', level: 3 }),
+    ).toBeVisible();
     await expect(wizard.getByRole('status')).toBeVisible();
-    await expect(wizard.getByRole('button', { name: 'Terug' })).toBeVisible();
+    await expect(wizard.getByRole('button', { name: 'Opnieuw beginnen' })).toBeVisible();
   });
 
   test('decision tree diagram is visible', async ({ page }) => {
@@ -50,16 +52,16 @@ test.describe('Alt-text wizard (EN)', () => {
 
   test('wizard renders in English', async ({ page }) => {
     const wizard = page.locator('clippy-alt-text-wizard');
-    await expect(wizard.getByRole('button', { name: 'Continue' })).toBeVisible();
+    await expect(wizard.getByRole('button', { name: 'Next step' })).toBeVisible();
   });
 
   test('answering "no" shows a result in English', async ({ page }) => {
     const wizard = page.locator('clippy-alt-text-wizard');
 
     await wizard.getByLabel('No').click();
-    await wizard.getByRole('button', { name: 'Continue' }).click();
+    await wizard.getByRole('button', { name: 'Next step' }).click();
 
-    await expect(wizard.getByRole('heading', { name: 'Decorative image', level: 3 })).toBeVisible();
-    await expect(wizard.getByRole('button', { name: 'Back' })).toBeVisible();
+    await expect(wizard.getByRole('heading', { name: 'Solution for decorative images', level: 3 })).toBeVisible();
+    await expect(wizard.getByRole('button', { name: 'Start over' })).toBeVisible();
   });
 });
