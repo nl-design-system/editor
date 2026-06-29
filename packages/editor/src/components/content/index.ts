@@ -18,16 +18,27 @@ declare global {
 }
 
 /**
- * The editable content of the rich text editor. It is a separate element, so you can decide
- * where it goes in your user interface.
+ * The editable content area of the rich text editor. It is a separate element
+ * so consumers can decide where it appears in the page layout.
  *
- * Decide if you want to render in the Shadow DOM or not. This feature is available
- * to experiment, and find out the pro's and cons. The default is Light DOM rendering.
+ * By default the TipTap `ProseMirror` DOM is mounted directly into the Light DOM
+ * of this element so that standard browser stylesheets apply. Pass the `shadow`
+ * attribute to mount inside the Shadow DOM instead (experimental).
  *
- *     <clippy-content shadow><clippy-content>
+ * The element requires a TipTap editor context (provided by `<clippy-editor>`)
+ * to be present in an ancestor.
  *
- * The element requires to have the context of an editor instance, so it must always
- * be rendered somewhere inside a <clippy-editor> element.
+ * @tag clippy-content
+ *
+ * @example Light DOM (default)
+ * ```html
+ * <clippy-content></clippy-content>
+ * ```
+ *
+ * @example Shadow DOM
+ * ```html
+ * <clippy-content shadow></clippy-content>
+ * ```
  */
 @safeCustomElement(tag)
 export class Content extends LitElement {
@@ -41,21 +52,32 @@ export class Content extends LitElement {
       }
     `,
   ];
+  /** @internal TipTap editor instance consumed from context. */
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
   public editor?: TiptapEditor;
 
+  /** @internal Serialised HTML document for read-only rendering, consumed from context. */
   @consume({ context: htmlDocumentContext, subscribe: true })
   @property({ attribute: false })
   public htmlDocument?: HTMLElement;
 
+  /** @internal Validations map consumed from context (used for reactive updates). */
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
 
+  /**
+   * When present, mounts the ProseMirror view inside the Shadow DOM instead of
+   * the Light DOM. Experimental — use with care.
+   */
   @property({ attribute: true })
   public shadow?: boolean;
 
+  /**
+   * When `true`, the host element and its ProseMirror children are rendered as
+   * `display: inline` so the editor can be embedded inside flowing text.
+   */
   @property({ attribute: true, type: Boolean })
   public inline?: boolean;
 

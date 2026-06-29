@@ -23,11 +23,33 @@ declare global {
   }
 }
 
+/**
+ * Side gutter that displays colour-coded accessibility validation indicators
+ * vertically aligned with their corresponding positions in the editor content.
+ * Clicking an indicator either shows an inline tooltip or scrolls the
+ * validations list to the matching item, depending on `mode`.
+ *
+ * @tag clippy-validations-gutter
+ *
+ * @fires {FocusValidationItemInListEvent} FOCUS_VALIDATION_ITEM_IN_LIST - Dispatched in `list` mode
+ *   when the user clicks an indicator, so the list component can scroll to it.
+ *
+ * @example
+ * ```html
+ * <clippy-validations-gutter></clippy-validations-gutter>
+ * ```
+ */
 @localized()
 @safeCustomElement(tag)
 export class Gutter extends LitElement {
   static override readonly styles = [gutterStyles, unsafeCSS(paragraphStyle)];
 
+  /**
+   * Display mode for validation interactions.
+   * - `tooltip` – show an inline tooltip on click (default).
+   * - `list` – scroll the external validations list to the item on click.
+   * - `readonly` – indicators are visible but not interactive.
+   */
   @property({ type: String })
   mode: 'tooltip' | 'list' | 'readonly' = 'tooltip';
 
@@ -39,13 +61,16 @@ export class Gutter extends LitElement {
   @property({ attribute: false })
   contentElement?: HTMLElement;
 
+  /** @internal */
   @state()
   private activeRange: Range | null = null;
 
+  /** @internal Consumed from the nearest {@link tiptapContext} provider. */
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
   private readonly editor?: Editor;
 
+  /** Map of DOM ranges to their validation results, used to render indicators. */
   @property({ attribute: false })
   validationsMap?: ValidationsMap;
 

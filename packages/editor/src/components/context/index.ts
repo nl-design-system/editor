@@ -27,30 +27,58 @@ declare global {
 }
 
 /**
- * Make rich text content editable with this element.
- * Put the rich text content inside the `content` slot.
- * Use other custom elements from our collection to create your own rich text editor.
+ * Context provider that powers the rich text editor. Sets up the TipTap editor
+ * instance, runs accessibility validations, and distributes state to child
+ * components via Lit context.
  *
- * A very minimal example:
+ * Use `<clippy-editor>` for the full-featured editor, or compose your own UI by
+ * placing `<clippy-context>` directly and adding `<clippy-content>` and any
+ * other public components as children.
  *
- *     <clippy-editor>
- *       <!-- This content is the source -->
- *       <div slot=""><h1>Page title</h1></div>
- *       <!-- This is the editable rendering the content above -->
- *       <clippy-content></clippy-content>
- *     </clippy-editor>
+ * @tag clippy-context
+ *
+ * @slot value - Place a `<div>` with your initial HTML content here. The slot
+ *   is hidden from the user; it is only read by the editor on first render.
+ * @slot - Default slot for child components such as `<clippy-content>`,
+ *   `<clippy-toolbar>`, `<clippy-validations-gutter>`, etc.
+ *
+ * @example
+ * ```html
+ * <clippy-context id="my-editor">
+ *   <div slot="value"><p>Hello world</p></div>
+ *   <clippy-toolbar></clippy-toolbar>
+ *   <clippy-content></clippy-content>
+ * </clippy-context>
+ * ```
  */
 @safeCustomElement(tag)
 export class Context extends LitElement {
   static override readonly styles = editorContextStyles;
 
+  /**
+   * Unique identifier for this editor instance. Reflected as the host element's
+   * `id` attribute and used to scope validation events across multiple editors
+   * on the same page.
+   */
   @provide({ context: identifierContext })
   @property({ reflect: true, type: String })
   override id = 'clippy-editor-id';
 
+  /**
+   * The highest heading level allowed in the document (1–6).
+   * Heading levels below this value are removed from the format-select options.
+   * Reflected as `top-heading-level`.
+   * @default 1
+   */
   @property({ attribute: 'top-heading-level', reflect: true, type: Number })
   topHeadingLevel = 1;
 
+  /**
+   * Space-separated list of validation rule keys to enable.
+   * Use `'*'` (the default) to enable all rules.
+   * Reflected as `enable-rules`.
+   * @default ['*']
+   */
   @property({
     attribute: 'enable-rules',
     converter: {
@@ -65,6 +93,12 @@ export class Context extends LitElement {
   })
   enableRules: string[] = ['*'];
 
+  /**
+   * Space-separated list of validation rule keys to disable.
+   * Takes precedence over `enable-rules`.
+   * Reflected as `disable-rules`.
+   * @default []
+   */
   @property({
     attribute: 'disable-rules',
     converter: {
@@ -79,34 +113,44 @@ export class Context extends LitElement {
   })
   disableRules: string[] = [];
 
+  /**
+   * When `true`, the editor is rendered in read-only mode. TipTap is not
+   * initialised; accessibility validations are still run against the slot DOM.
+   * Reflected as the `readonly` attribute.
+   * @default false
+   */
   @property({ attribute: 'readonly', reflect: true, type: Boolean })
   readonly = false;
 
+  /** @internal */
   @queryAssignedElements({ flatten: true, slot: 'value' })
   contentSlot!: HTMLElement[];
 
+  /** @internal */
   @provide({ context: validationsContext })
   validationsContext = new Map();
 
-  // create a provider for the whole document body.
-  // https://lit.dev/docs/data/context/
-  // https://github.com/lit/lit/blob/main/packages/context/README.md
+  /** @internal */
   lightValidationsContext = new ContextProvider(document.body, {
     context: validationsContext,
     initialValue: new Map(),
   });
 
+  /** @internal */
   updateValidationsContext = (resultMap: Map<Range, ValidationResult>): void => {
     this.validationsContext = resultMap;
     this.lightValidationsContext.setValue(this.validationsContext);
   };
 
+  /** @internal */
   @provide({ context: tiptapContext })
   editor?: TiptapEditor;
 
+  /** @internal */
   @provide({ context: htmlDocumentContext })
   htmlDocumentElement?: HTMLElement;
 
+  /** @internal */
   protected get editorSettings() {
     return {
       disableRules: this.disableRules,
@@ -116,6 +160,7 @@ export class Context extends LitElement {
     };
   }
 
+  /** @internal */
   protected createEditor(): void {
     const content = this.contentSlot.find((el) => el instanceof HTMLDivElement)?.innerHTML || '';
     this.editor = new TiptapEditor({
@@ -175,6 +220,7 @@ export class Context extends LitElement {
     }
   }
 
+  /** @internal */
   private isLocaleInitialized = false;
 
   override connectedCallback() {
