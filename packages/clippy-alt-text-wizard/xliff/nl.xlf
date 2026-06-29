@@ -10,54 +10,6 @@
   <source>Ambient image</source>
   <target>Sfeerbeeld</target>
 </trans-unit>
-<trans-unit id="s230aaf919c4802f4">
-  <source>Use the company or organization name as alt text. For example: alt="Organization Name - go to homepage".</source>
-  <target>Gebruik de bedrijfs- of organisatienaam als alt-tekst. Bijvoorbeeld: alt="Organisatienaam - ga naar de homepage".</target>
-</trans-unit>
-<trans-unit id="s509a9da8150157d6">
-  <source>Clickable logo</source>
-  <target>Klikbaar logo</target>
-</trans-unit>
-<trans-unit id="sdfebdde2d1bb8524">
-  <source>Provide a short alt text as summary. Also provide a detailed description in the surrounding text or via a link to a full description.</source>
-  <target>Geef een korte alt-tekst als samenvatting. Geef ook een uitgebreide beschrijving in de omringende tekst of via een link naar een volledige beschrijving.</target>
-</trans-unit>
-<trans-unit id="s187e8c134fff97c8">
-  <source>Complex informative image</source>
-  <target>Complexe informatieve afbeelding</target>
-</trans-unit>
-<trans-unit id="s92d1b57a145cd2a9">
-  <source>This image is decorative. Set the alt attribute to empty (alt=""). This way, screen readers will skip the image.</source>
-  <target>Deze afbeelding is decoratief. Zet het alt-attribuut op leeg (alt=""). Zo slaan schermlezers de afbeelding over.</target>
-</trans-unit>
-<trans-unit id="s94d1fb4e977ef43e">
-  <source>Decorative image</source>
-  <target>Decoratieve afbeelding</target>
-</trans-unit>
-<trans-unit id="s70f3481f89c83e23">
-  <source>The text next to the image already describes its function. Set the alt attribute to empty (alt="") to avoid repetition.</source>
-  <target>De tekst naast de afbeelding beschrijft de functie al. Zet het alt-attribuut op leeg (alt="") om herhaling te voorkomen.</target>
-</trans-unit>
-<trans-unit id="s01e16de45e97e01b">
-  <source>Functional image with supplementary text</source>
-  <target>Functionele afbeelding met aanvullende tekst</target>
-</trans-unit>
-<trans-unit id="s2ea6e3510d5dfa8b">
-  <source>The image contains text that is not available elsewhere. Use the text from the image as alt text.</source>
-  <target>De afbeelding bevat tekst die niet ergens anders beschikbaar is. Gebruik de tekst uit de afbeelding als alt-tekst.</target>
-</trans-unit>
-<trans-unit id="s8c6501e34051ec32">
-  <source>Functional image with text</source>
-  <target>Functionele afbeelding met tekst</target>
-</trans-unit>
-<trans-unit id="s56560a635946b8f4">
-  <source>Describe the function of the image, not what it looks like. For example: alt="Search" for a magnifying glass icon used as a search button.</source>
-  <target>Beschrijf de functie van de afbeelding, niet hoe deze eruitziet. Bijvoorbeeld: alt="Zoeken" voor een vergrootglasicoon dat als zoekknop wordt gebruikt.</target>
-</trans-unit>
-<trans-unit id="s7b036aec5c57c730">
-  <source>Functional image without text</source>
-  <target>Functionele afbeelding zonder tekst</target>
-</trans-unit>
 <trans-unit id="sf8b7a6f3b77f3fa0">
   <source>Use the company or organization name as alt text. For example: alt="Organization Name".</source>
   <target>Gebruik de bedrijfs- of organisatienaam als alt-tekst. Bijvoorbeeld: alt="Organisatienaam".</target>
@@ -65,14 +17,6 @@
 <trans-unit id="s4f1af2b48a5e249a">
   <source>Logo</source>
   <target>Logo</target>
-</trans-unit>
-<trans-unit id="s0c36ff23849f85d9">
-  <source>Describe the essential information from the image in the alt text. Keep it short: 1 to 2 sentences.</source>
-  <target>Beschrijf de essentiële informatie uit de afbeelding in de alt-tekst. Houd het kort: 1 tot 2 zinnen.</target>
-</trans-unit>
-<trans-unit id="s2deaa6bdf5bd7620">
-  <source>Simple informative image</source>
-  <target>Simpele informatieve afbeelding</target>
 </trans-unit>
 <trans-unit id="scb489a1a173ac3f0">
   <source>Yes</source>
@@ -85,14 +29,6 @@
 <trans-unit id="sc16e00a7a8b2fde2">
   <source>Back</source>
   <target>Terug</target>
-</trans-unit>
-<trans-unit id="s81ecf2d4386b8e84">
-  <source>Continue</source>
-  <target>Doorgaan</target>
-</trans-unit>
-<trans-unit id="sa7bea54f6c2fd809">
-  <source>Choose the right alt text</source>
-  <target>Kies de juiste alt-tekst</target>
 </trans-unit>
 <trans-unit id="sb045c9999741aea1">
   <source>Can you also place the text in or next to the image?</source>
@@ -129,6 +65,195 @@
 <trans-unit id="se535a09511d72dcc">
   <source>Read more on nldesignsystem.nl</source>
   <target>Lees meer op nldesignsystem.nl</target>
+</trans-unit>
+<trans-unit id="s779327dcc04839d7">
+  <source>The alt text must:</source>
+  <target>De alt-tekst moet:</target>
+</trans-unit>
+<trans-unit id="sf2561b4330da8510">
+  <source>Contain the text of the logo.</source>
+  <target>De tekst van het logo bevatten.</target>
+</trans-unit>
+<trans-unit id="s483f936b33cc3d5b">
+  <source>Clearly indicate the destination.</source>
+  <target>De bestemming duidelijk maken.</target>
+</trans-unit>
+<trans-unit id="s80e8e0f6726ce585">
+  <source>Example of a logo that is also a link to the homepage:</source>
+  <target>Voorbeeld van logo dat ook een link naar de homepage is:</target>
+</trans-unit>
+<trans-unit id="sfc46e4f571fd71ba">
+  <source>Example Municipality, go to homepage</source>
+  <target>Gemeente Voorbeeld, naar de homepage</target>
+</trans-unit>
+<trans-unit id="sfce47331940f0af8">
+  <source>Solution for clickable logo</source>
+  <target>Oplossing voor klikbaar logo</target>
+</trans-unit>
+<trans-unit id="heac01ecbf4808881">
+  <source>For complex images you need <x id="0" equiv-text="&lt;strong&gt;"/>two<x id="1" equiv-text="&lt;/strong&gt;"/> text alternatives:</source>
+  <target>Bij complexe afbeeldingen heb je <x id="0" equiv-text="&lt;strong&gt;"/>twee<x id="1" equiv-text="&lt;/strong&gt;"/> tekstalternatieven nodig:</target>
+</trans-unit>
+<trans-unit id="see2bc635d182a2a6">
+  <source>1. Short alt text</source>
+  <target>1. Korte alt-tekst</target>
+</trans-unit>
+<trans-unit id="s8c95d8b5d1683ebd">
+  <source>Refer to the detailed description.</source>
+  <target>Verwijs naar de uitgebreide beschrijving.</target>
+</trans-unit>
+<trans-unit id="s7458c3e835ad08bc">
+  <source>For example:</source>
+  <target>Bijvoorbeeld:</target>
+</trans-unit>
+<trans-unit id="s3b0df352e5339b75">
+  <source>Number of visitors in 2024, chart. Full description below the image.</source>
+  <target>Aantal bezoekers in 2024, grafiek. Volledige beschrijving onder de afbeelding.</target>
+</trans-unit>
+<trans-unit id="s6e5d01a01348db2c">
+  <source>2. Detailed explanation</source>
+  <target>2. Uitgebreide uitleg</target>
+</trans-unit>
+<trans-unit id="sc299e140066c4067">
+  <source>Place below the image:</source>
+  <target>Plaats onder de afbeelding:</target>
+</trans-unit>
+<trans-unit id="s3ec038ea031168e0">
+  <source>full text description, or</source>
+  <target>volledige tekstbeschrijving, of</target>
+</trans-unit>
+<trans-unit id="sb3a5344981137fc4">
+  <source>data table, or</source>
+  <target>tabel met data, of</target>
+</trans-unit>
+<trans-unit id="s6b230bb2310b92e5">
+  <source>downloadable file</source>
+  <target>downloadbaar bestand</target>
+</trans-unit>
+<trans-unit id="scc794b9356d782f3">
+  <source>Solution for complex informative images</source>
+  <target>Oplossing voor complexe informatieve afbeeldingen</target>
+</trans-unit>
+<trans-unit id="sd62e0a55bb321fda">
+  <source>Use one of these options:</source>
+  <target>Gebruik één van deze opties:</target>
+</trans-unit>
+<trans-unit id="hd7b00fc1cd16ca2d">
+  <source>For an <x id="0" equiv-text="&lt;code class=&quot;nl-code&quot;&gt;"/>&lt;img&gt;<x id="1" equiv-text="&lt;/code&gt;"/></source>
+  <target>Bij een <x id="0" equiv-text="&lt;code class=&quot;nl-code&quot;&gt;"/>&lt;img&gt;<x id="1" equiv-text="&lt;/code&gt;"/></target>
+</trans-unit>
+<trans-unit id="s8d1dee91861edd8c">
+  <source>Use alt="".</source>
+  <target>Gebruik alt="".</target>
+</trans-unit>
+<trans-unit id="h86fe0ef2c0349066">
+  <source>For an <x id="0" equiv-text="&lt;code class=&quot;nl-code&quot;&gt;"/>&lt;svg&gt;<x id="1" equiv-text="&lt;/code&gt;"/></source>
+  <target>Bij een <x id="0" equiv-text="&lt;code class=&quot;nl-code&quot;&gt;"/>&lt;svg&gt;<x id="1" equiv-text="&lt;/code&gt;"/></target>
+</trans-unit>
+<trans-unit id="hdb78581a5f5d574c">
+  <source>Remove the <x id="0" equiv-text="&lt;code class=&quot;nl-code&quot;&gt;"/>&lt;title&gt;<x id="1" equiv-text="&lt;/code&gt;"/> and
+                <x id="2" equiv-text="&lt;code class=&quot;nl-code&quot;&gt;"/>&lt;desc&gt;<x id="3" equiv-text="&lt;/code&gt;"/> elements or add aria-hidden="true".</source>
+  <target>Laat de <x id="0" equiv-text="&lt;code class=&quot;nl-code&quot;&gt;"/>&lt;title&gt;<x id="1" equiv-text="&lt;/code&gt;"/> en <x id="2" equiv-text="&lt;code class=&quot;nl-code&quot;&gt;"/>&lt;desc&gt;<x id="3" equiv-text="&lt;/code&gt;"/> elementen weg of voeg aria-hidden="true" toe.</target>
+</trans-unit>
+<trans-unit id="s8f39ab3a45c61f81">
+  <source>Solution for decorative images</source>
+  <target>Oplossing voor decoratieve afbeeldingen</target>
+</trans-unit>
+<trans-unit id="s7cd49e95cdb2c0ac">
+  <source>The solution depends on the supplementary visible text. Does it already provide sufficient explanation or not.</source>
+  <target>De oplossing hangt af van de aanvullende zichtbare tekst. Geeft deze al voldoende uitleg of niet.</target>
+</trans-unit>
+<trans-unit id="sa8cb4fa64dabe16f">
+  <source>Text provides sufficient explanation</source>
+  <target>Tekst geeft voldoende uitleg</target>
+</trans-unit>
+<trans-unit id="sf8e28de19cf9d6db">
+  <source>Example for a button:</source>
+  <target>Voorbeeld bij een button:</target>
+</trans-unit>
+<trans-unit id="s5d929ff1619ac0c9">
+  <source>Search</source>
+  <target>Zoeken</target>
+</trans-unit>
+<trans-unit id="s296fd6f0266a149f">
+  <source>Example for a link:</source>
+  <target>Voorbeeld bij een link:</target>
+</trans-unit>
+<trans-unit id="s68c2a59d0ff6304c">
+  <source>Download annual report 2024 as PDF</source>
+  <target>Download jaarverslag 2024 als PDF</target>
+</trans-unit>
+<trans-unit id="s3cccb4b3cb8534aa">
+  <source>Text does not provide sufficient explanation</source>
+  <target>Tekst geeft niet voldoende uitleg</target>
+</trans-unit>
+<trans-unit id="hc42cb64a046f0fa8">
+  <source>Provide a short, clear alt text that describes the <x id="0" equiv-text="&lt;strong&gt;"/>function<x id="1" equiv-text="&lt;/strong&gt;"/> and not the appearance.</source>
+  <target>Geef een korte, duidelijke alt-tekst die de <x id="0" equiv-text="&lt;strong&gt;"/>functie<x id="1" equiv-text="&lt;/strong&gt;"/> beschrijft en niet het uiterlijk.</target>
+</trans-unit>
+<trans-unit id="s54d879a6a0d61372">
+  <source>Download annual report 2024</source>
+  <target>Download jaarverslag 2024</target>
+</trans-unit>
+<trans-unit id="s2ff98c8aaba47fd1">
+  <source>Solution for functional images supplemented with text</source>
+  <target>Oplossing voor functionele afbeeldingen aangevuld met tekst</target>
+</trans-unit>
+<trans-unit id="sc858bcbcdd7f1f29">
+  <source>Provide a short, clear alt text that conveys the important information.</source>
+  <target>Geef een korte, duidelijke alt-tekst die de belangrijke informatie overbrengt.</target>
+</trans-unit>
+<trans-unit id="s4507b40bdef68378">
+  <source>Poster with the text 'Freedom for everyone' in handwritten style</source>
+  <target>Poster met de tekst 'Vrijheid voor iedereen' in handgeschreven stijl</target>
+</trans-unit>
+<trans-unit id="s5ad46ca2b619ce41">
+  <source>Solution for images of text</source>
+  <target>Oplossing voor afbeeldingen van tekst</target>
+</trans-unit>
+<trans-unit id="sf186c4543359b2b5">
+  <source>You may also use aria-label="..." if you know what you are doing.</source>
+  <target>Je mag ook aria-label="..." gebruiken als je weet wat je doet.</target>
+</trans-unit>
+<trans-unit id="sc5c8d21a71e83107">
+  <source>Solution for functional images without text</source>
+  <target>Oplossing voor functionele afbeeldingen zonder tekst</target>
+</trans-unit>
+<trans-unit id="s463b8c4e92751ba5">
+  <source>Options</source>
+  <target>Opties</target>
+</trans-unit>
+<trans-unit id="h150b5e64bd1ede2f">
+  <source>Alt attribute on <x id="0" equiv-text="&lt;code class=&quot;nl-code&quot;&gt;"/>&lt;img&gt;<x id="1" equiv-text="&lt;/code&gt;"/>.</source>
+  <target>Alt-attribuut op <x id="0" equiv-text="&lt;code class=&quot;nl-code&quot;&gt;"/>&lt;img&gt;<x id="1" equiv-text="&lt;/code&gt;"/>.</target>
+</trans-unit>
+<trans-unit id="s4619c4a97a41ae36">
+  <source>Text or table directly above or below the image.</source>
+  <target>Tekst of tabel direct boven of onder de afbeelding.</target>
+</trans-unit>
+<trans-unit id="s51dde8e65f8a5019">
+  <source>Bar chart showing visitor growth in 2024. Average per month: 300, highest count is 400 in May.</source>
+  <target>Staafdiagram met groei van bezoekers in 2024. Gemiddeld per maand: 300, hoogste aantal is 400 in mei.</target>
+</trans-unit>
+<trans-unit id="sb3a1fa6a902c4f73">
+  <source>Solution for simple informative images</source>
+  <target>Oplossing voor simpele informatieve afbeeldingen</target>
+</trans-unit>
+<trans-unit id="s9837b40ce085547a">
+  <source>Next step</source>
+  <target>Volgende stap</target>
+</trans-unit>
+<trans-unit id="s338cca2d2f313247">
+  <source>Start over</source>
+  <target>Opnieuw beginnen</target>
+</trans-unit>
+<trans-unit id="sf9fdfb920669ee3e">
+  <source>Alt text wizard</source>
+  <target>Alt-tekst keuzehulp</target>
+</trans-unit>
+<trans-unit id="s5fc2538b6cb91ed7">
+  <source>Decorative images</source>
+  <target>Decoratieve afbeeldingen</target>
 </trans-unit>
     </body>
   </file>

@@ -97,67 +97,14 @@ export const altTextWizardMachine = setup({
     },
 
     // Final states
-    final_ambient: {
-      on: {
-        BACK: 'atomic_containsUniqueInfo',
-      },
-      type: 'final',
-    },
-
-    final_clickableLogo: {
-      on: {
-        BACK: 'atomic_isLogoClickable',
-      },
-      type: 'final',
-    },
-
-    final_complexInformative: {
-      on: {
-        BACK: 'atomic_isInfoSimple',
-      },
-      type: 'final',
-    },
-
-    final_decorative: {
-      on: {
-        BACK: 'atomic_informationLost',
-      },
-      type: 'final',
-    },
-
-    final_functionalWithoutText: {
-      on: {
-        BACK: 'atomic_containsText',
-      },
-      type: 'final',
-    },
-
-    final_functionalWithSupplementaryText: {
-      on: {
-        BACK: 'atomic_canPlaceTextBeside',
-      },
-      type: 'final',
-    },
-
-    final_functionalWithText: {
-      on: {
-        BACK: 'atomic_canPlaceTextBeside',
-      },
-      type: 'final',
-    },
-
-    final_logo: {
-      on: {
-        BACK: 'atomic_isLogo',
-      },
-      type: 'final',
-    },
-
-    final_simpleInformative: {
-      on: {
-        BACK: 'atomic_isInfoSimple',
-      },
-      type: 'final',
-    },
+    final_ambient: { type: 'final' },
+    final_clickableLogo: { type: 'final' },
+    final_complexInformative: { type: 'final' },
+    final_decorative: { type: 'final' },
+    final_functionalWithoutText: { type: 'final' },
+    final_functionalWithSupplementaryText: { type: 'final' },
+    final_functionalWithText: { type: 'final' },
+    final_logo: { type: 'final' },
+    final_simpleInformative: { type: 'final' },
   },
 });

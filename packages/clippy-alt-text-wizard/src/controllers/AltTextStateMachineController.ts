@@ -48,4 +48,18 @@ export class AltTextStateMachineController<TMachine extends AnyStateMachine> imp
   send(event: Parameters<Actor<TMachine>['send']>[0]) {
     this.actor?.send(event);
   }
+
+  /**
+   * Stop the current actor and start a fresh one from the initial state.
+   */
+  restart() {
+    this.actor?.stop();
+    this.actor = createActor(this.machine);
+    this.actor.subscribe((snapshot) => {
+      this.snapshot = snapshot;
+      this.host.requestUpdate();
+    });
+    this.actor.start();
+    this.snapshot = this.actor.getSnapshot();
+  }
 }

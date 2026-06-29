@@ -1,9 +1,12 @@
 import { localized, msg } from '@lit/localize';
+import codeBlockStyle from '@nl-design-system-candidate/code-block-css/code-block.css?inline';
+import codeStyle from '@nl-design-system-candidate/code-css/code.css?inline';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
 import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import ArrowBackIcon from '@tabler/icons/outline/arrow-back-up.svg?raw';
+import RefreshIcon from '@tabler/icons/outline/refresh.svg?raw';
 import formFieldStyles from '@utrecht/form-field-css/dist/index.css?inline';
 import formFieldDescriptionStyles from '@utrecht/form-field-description-css/dist/index.css?inline';
 import formLabelStyles from '@utrecht/form-label-css/dist/index.css?inline';
@@ -36,6 +39,8 @@ declare global {
 @safeCustomElement(tag)
 export class ClippyAltTextWizard extends LitElement {
   static override readonly styles = [
+    unsafeCSS(codeBlockStyle),
+    unsafeCSS(codeStyle),
     unsafeCSS(headingStyle),
     unsafeCSS(linkStyle),
     unsafeCSS(paragraphStyle),
@@ -134,17 +139,21 @@ export class ClippyAltTextWizard extends LitElement {
         ?disabled=${!this._pendingSelection}
         @click=${this.#handleContinue}
       >
-        ${msg('Continue')}
+        ${msg('Next step')}
       </clippy-button>
     `;
   }
 
-  #renderQuestion(questionId: string, questionText: unknown, showBack: boolean) {
+  #renderQuestion(questionId: string, questionText: unknown, showBack: boolean, sectionTitle?: unknown) {
     return html`
       ${showBack ? this.#renderBackButton() : nothing}
+      ${sectionTitle ? html`<h3 class="nl-heading nl-heading--level-3">${sectionTitle}</h3>` : nothing}
       <div class="utrecht-form-field" role="radiogroup" aria-labelledby="${questionId}-label">
         <div class="utrecht-form-field__label">
-          <label id="${questionId}-label" class="utrecht-form-label nl-heading nl-heading--level-3">
+          <label
+            id="${questionId}-label"
+            class="utrecht-form-label${sectionTitle ? '' : ' nl-heading nl-heading--level-3'}"
+          >
             ${questionText}
           </label>
         </div>
@@ -154,18 +163,34 @@ export class ClippyAltTextWizard extends LitElement {
     `;
   }
 
+  #renderStartOverButton() {
+    return html`
+      <clippy-button
+        purpose="subtle"
+        type="button"
+        @click=${() => {
+          this._pendingSelection = null;
+          this.wizard.restart();
+        }}
+      >
+        <clippy-icon slot="iconStart">${unsafeSVG(RefreshIcon)}</clippy-icon>
+        ${msg('Start over')}
+      </clippy-button>
+    `;
+  }
+
   #renderFinal(title: unknown, instructions: unknown, documentationUrl: string) {
     return html`
-      ${this.#renderBackButton()}
       <div class="clippy-wizard__final" role="status" aria-live="polite">
         <h3 class="nl-heading nl-heading--level-3">${title}</h3>
-        <p class="nl-paragraph">${instructions}</p>
+        ${instructions}
         <p class="nl-paragraph">
           <a class="nl-link" href=${documentationUrl} target="_blank" rel="noreferrer">
             ${msg('Read more on nldesignsystem.nl')}
           </a>
         </p>
       </div>
+      ${this.#renderStartOverButton()}
     `;
   }
 
@@ -177,7 +202,7 @@ export class ClippyAltTextWizard extends LitElement {
 
     const question = getQuestionContent().get(stateValue);
     if (question) {
-      return this.#renderQuestion(question.questionId, question.questionText, question.showBack);
+      return this.#renderQuestion(question.questionId, question.questionText, question.showBack, question.sectionTitle);
     }
 
     const finalContent = getFinalContent().get(stateValue);
@@ -191,7 +216,7 @@ export class ClippyAltTextWizard extends LitElement {
   override render() {
     return html`
       <div class="clippy-wizard">
-        <h2 class="nl-heading nl-heading--level-2 clippy-wizard__title">${msg('Choose the right alt text')}</h2>
+        <h2 class="nl-heading nl-heading--level-2 clippy-wizard__title">${msg('Alt text wizard')}</h2>
         <form class="clippy-wizard__form" @submit=${(e: Event) => e.preventDefault()} novalidate>
           ${this.#renderCurrentStep()}
         </form>
