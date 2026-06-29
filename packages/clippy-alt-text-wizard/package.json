@@ -19,6 +19,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./state-machine": {
+      "types": "./dist/state-machine.d.ts",
+      "default": "./dist/state-machine.js"
     }
   },
   "customElements": "dist/custom-elements.json",

@@ -7,6 +7,7 @@ export default defineConfig({
     lib: {
       entry: {
         index: 'src/index.ts',
+        'state-machine': 'src/state-machine.ts',
       },
       formats: ['es'],
     },
