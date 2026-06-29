@@ -12,7 +12,7 @@ import formFieldDescriptionStyles from '@utrecht/form-field-description-css/dist
 import formLabelStyles from '@utrecht/form-label-css/dist/index.css?inline';
 import radioButtonStyles from '@utrecht/radio-button-css/dist/index.css?inline';
 import unorderedListStyles from '@utrecht/unordered-list-css/dist/index.css?inline';
-import { LitElement, html, nothing, unsafeCSS } from 'lit';
+import { LitElement, css, html, nothing, unsafeCSS } from 'lit';
 import { state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
@@ -49,6 +49,15 @@ export class ClippyAltTextWizard extends LitElement {
     unsafeCSS(formLabelStyles),
     unsafeCSS(radioButtonStyles),
     unsafeCSS(unorderedListStyles),
+    css`
+      :host {
+        --utrecht-space-around: 1;
+        --utrecht-form-field-margin-block-end: var(--basis-space-block-md);
+        --utrecht-form-field-margin-block-start: var(--basis-space-block-md);
+        --nl-paragraph-margin-block-end: var(--basis-space-block-md);
+        --nl-paragraph-margin-block-start: var(--basis-space-block-md);
+      }
+    `,
   ];
 
   private readonly wizard = new AltTextStateMachineController(this, altTextWizardMachine);
