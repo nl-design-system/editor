@@ -15,6 +15,11 @@ const { title, intro } = Astro.props;
         {intro && <p class="utrecht-paragraph">{intro}</p>}
       </div>
     )}
+    {Astro.slots.has('badges') && (
+      <div class="ma-banner__badges">
+        <slot name="badges" />
+      </div>
+    )}
     {Astro.slots.has('footer') && (
       <footer class="ma-banner__footer">
         <div slot="footer" class="utrecht-action-group">
