@@ -42,27 +42,19 @@ export default css`
       block-size: 100%;
       inset-block-start: 0;
       inset-inline-start: 0;
-      background-color: var(--basis-color-default-color-subtle);
+      background-color: var(--basis-color-info-color-subtle);
       border-radius: calc(1rem / 6);
-      outline: 1px solid var(--basis-color-default-bg-document);
+      outline: 1px solid var(--basis-color-info-bg-document);
       transition: all 0.2s 0s;
-      mask-image: var(--clippy-background-texture-info);
-      mask-repeat: repeat;
-      mask-composite: subtract;
-      mask-size: 10px;
     }
-    &.clippy-validations-gutter__toggle--info::before {
-      mask-position: -1px;
-    }
+
     &.clippy-validations-gutter__toggle--warning::before {
       margin-inline-start: calc(1rem / 3);
       background-color: var(--basis-color-warning-border-default);
-      mask-image: var(--clippy-background-texture-warning);
     }
     &.clippy-validations-gutter__toggle--error::before {
       margin-inline-start: calc(1rem * 2 / 3);
       background-color: var(--basis-color-negative-border-default);
-      mask-image: var(--clippy-background-texture-error);
     }
     &:hover::before,
     &:focus-visible::before,

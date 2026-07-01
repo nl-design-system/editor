@@ -5,13 +5,13 @@ export default css`
     display: contents;
   }
 
-  .clippy-dialog__close-button {
+  .clippy-validation-item__close-button {
     border: none;
     background: none;
     float: inline-end;
   }
 
-  .clippy-dialog__content {
+  .clippy-validation-item__content {
     position: fixed;
     inset-block-start: 0;
     inset-inline-end: 0;
@@ -35,13 +35,13 @@ export default css`
     }
   }
 
-  .clippy-dialog__header {
+  .clippy-validation-item__header {
     flex-shrink: 0;
     padding-block: var(--basis-space-block-xl);
     padding-inline: var(--basis-space-inline-xl);
   }
 
-  .clippy-dialog__body {
+  .clippy-validation-item__body {
     flex: 1;
     min-block-size: 0;
     overflow-y: auto;
@@ -49,7 +49,7 @@ export default css`
     padding-block-end: var(--basis-space-block-xl);
   }
 
-  .clippy-dialog__list {
+  .clippy-validation-item__list {
     display: grid;
     gap: var(--basis-space-inline-xl);
     list-style: none;
@@ -59,7 +59,7 @@ export default css`
   }
 
   @media (forced-colors: active) {
-    .clippy-dialog__list-item::after {
+    .clippy-validation-item::after {
       background-color: CanvasText;
       color: Canvas;
     }
