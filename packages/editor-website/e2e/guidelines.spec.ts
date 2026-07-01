@@ -129,9 +129,9 @@ test.describe('Gutter indicators', () => {
     { id: 'editor-15', expectedIndicators: 1, title: 'meer dan 1 hoofdkop' },
     // document-must-have-top-level-heading-one: no h1
     { id: 'editor-16', expectedIndicators: 1, title: 'geen hoofdkop' },
-    // definition-description-must-follow-term: <dt> not followed by <dd>
+    // definition-description-must-follow-term: empty <dt> paired with a non-empty <dd>
     { id: 'editor-17', expectedIndicators: 1, title: 'definitie zonder term' },
-    // description-list-must-contain-term: <dl> without any <dt>
+    // description-list-must-contain-term: <dl> where every <dt> is empty
     { id: 'editor-18', expectedIndicators: 1, title: 'definitielijst zonder term' },
     // heading-should-not-contain-bold-or-italic: h1 with <strong>
     { id: 'editor-19', expectedIndicators: 1, title: 'heading met bold' },
