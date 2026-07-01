@@ -22,37 +22,34 @@ const localeRoot = locale === 'en' ? '/en' : '/';
 ---
 
 <header class="ma-site-header">
-    <div class="ma-site-header__logo">
-      <SiteLogo href={t('nav.href.editor')} ariaLabel={t('site.logo.label')} />
-    </div>
-    <nav class="ma-site-header__nav" aria-label={t('nav.label')}>
-      <ul class="ma-site-header__nav-list" role="list">
-        {
-          navItems.map(({ href, label }) => {
-            const isActive =
-              href === localeRoot
-                ? currentPath === localeRoot
-                : currentPath.startsWith(href);
-            return (
-              <li>
-                <a
-                  class={`ma-site-header__nav-link${isActive ? ' ma-site-header__nav-link--active' : ''}`}
-                  href={href}
-                  aria-current={isActive ? 'page' : undefined}
-                >
-                  {label}
-                </a>
-              </li>
-            );
-          })
-        }
-      </ul>
-    </nav>
-    <nav class="ma-site-header__lang-nav" aria-label={t('nav.language.label')}>
-      <a class="ma-site-header__lang-link" href={t('nav.href.language')} hreflang={locale === 'en' ? 'nl' : 'en'}>
-        {t('nav.language')}
-      </a>
-    </nav>
+  <div class="ma-site-header__logo">
+    <SiteLogo href={t('nav.href.editor')} ariaLabel={t('site.logo.label')} />
+  </div>
+  <nav class="ma-site-header__nav" aria-label={t('nav.label')}>
+    <ul class="ma-site-header__nav-list" role="list">
+      {
+        navItems.map(({ href, label }) => {
+          const isActive = href === localeRoot ? currentPath === localeRoot : currentPath.startsWith(href);
+          return (
+            <li>
+              <a
+                class={`ma-site-header__nav-link${isActive ? ' ma-site-header__nav-link--active' : ''}`}
+                href={href}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                {label}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </nav>
+  <nav class="ma-site-header__lang-nav" aria-label={t('nav.language.label')}>
+    <a class="ma-site-header__lang-link" href={t('nav.href.language')} hreflang={locale === 'en' ? 'nl' : 'en'}>
+      {t('nav.language')}
+    </a>
+  </nav>
 </header>
 
 <style>

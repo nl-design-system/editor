@@ -11,7 +11,8 @@ const t = useTranslations('en');
 <Document title={t('index.title')}>
   <main>
     <Hero title={indexFrontmatter['title']} intro={indexFrontmatter['intro']}>
-      <a
+      <Fragment slot="footer">
+        <a
           class="nl-button nl-button--primary"
           href="https://github.com/nl-design-system/editor"
           target="_blank"
@@ -27,6 +28,7 @@ const t = useTranslations('en');
         >
           <span class="nl-button__label">{t('index.cta.roadmap')}</span>
         </a>
+      </Fragment>
       <Fragment slot="badges">
         <a href="https://www.npmjs.com/package/@nl-design-system-community/editor">
           <img src="https://img.shields.io/npm/v/@nl-design-system-community/editor" alt="npm version" />
@@ -47,20 +49,20 @@ const t = useTranslations('en');
         <div slot="value">
           <h1>NL Design System Editor heading 1</h1>
           <p>
-            Among the cities that <strong>have</strong> <i>long</i> adorned the <strong><i>comital</i></strong> crown
-            of Holland like so many precious gems, and whose power and wealth provided a firm support
-            for the authority of the Count, Haarlem, as is well known, was one of the most important.
+            Among the cities that <strong>have</strong>
+            <i>long</i> adorned the <strong><i>comital</i></strong> crown of Holland like so many precious gems, and whose
+            power and wealth provided a firm support for the authority of the Count, Haarlem, as is well known, was one of
+            the most important.
           </p>
           <h2>NL Design System Editor heading 2</h2>
           <p></p>
           <h4>That is not allowed</h4>
           <p>
             Built on the banks of a river of which it made use as
-            <a href="https://example.com">two arms</a> to reach, on the one side, the Haarlemmermeer and the
-            surrounding lands, and on the other the IJ, and through the IJ, the Zuiderzee, it had already early taken
-            advantage of this favourable position to conduct a<a href="https://example.com"> </a>trade that,
-            though seldom extending further than the regions surrounding those inland seas, nonetheless
-            provided it with opportunity.
+            <a href="https://example.com">two arms</a> to reach, on the one side, the Haarlemmermeer and the surrounding lands,
+            and on the other the IJ, and through the IJ, the Zuiderzee, it had already early taken advantage of this favourable
+            position to conduct a<a href="https://example.com"> </a>trade that, though seldom extending further than the
+            regions surrounding those inland seas, nonetheless provided it with opportunity.
           </p>
           <table>
             <tbody>

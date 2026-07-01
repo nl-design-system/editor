@@ -5,6 +5,7 @@ interface Props {
 }
 const { content: Content } = Astro.props;
 ---
+
 <section class="ma-page-section ma-page-section--with-space">
   {Content && <Content />}
   <slot />
