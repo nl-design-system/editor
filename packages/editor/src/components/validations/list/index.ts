@@ -78,16 +78,18 @@ export class ValidationsList extends LitElement {
           const { customCorrectLabel, description, href, tip } = validationMessages()[valKey];
           const tipHtml = tip?.(tipPayload) ?? null;
           return html`
-            <clippy-validation-item
-              .range=${range}
-              .severity=${severity}
-              .description=${description}
-              .href=${href}
-              .customCorrectLabel=${customCorrectLabel}
-              .correct=${correct}
-            >
-              ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${tipHtml}</p>` : nothing}
-            </clippy-validation-item>
+            <li>
+              <clippy-validation-item
+                .range=${range}
+                .severity=${severity}
+                .description=${description}
+                .href=${href}
+                .customCorrectLabel=${customCorrectLabel}
+                .correct=${correct}
+              >
+                ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${tipHtml}</p>` : nothing}
+              </clippy-validation-item>
+            </li>
           `;
         })}
       </ul>

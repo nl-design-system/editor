@@ -196,12 +196,12 @@ export class ValidationsDialog extends LitElement {
       <dialog
         ${ref(this.#dialogRef)}
         data-testid="clippy-validations-drawer"
-        class="clippy-dialog__content"
+        class="clippy-validation-item__content"
         aria-label=${msg('Accessibility notifications')}
       >
-        <div class="clippy-dialog__header">
+        <div class="clippy-validation-item__header">
           <clippy-button
-            class="clippy-dialog__close-button"
+            class="clippy-validation-item__close-button"
             icon-only
             purpose="subtle"
             @click=${() => this.#toggleOpen()}
@@ -209,7 +209,7 @@ export class ValidationsDialog extends LitElement {
             <clippy-icon slot="iconStart">${unsafeSVG(X)}</clippy-icon>
             ${msg('Close')}
           </clippy-button>
-          <div class="clippy-dialog__overview-buttons">
+          <div class="clippy-validation-item__overview-buttons">
             <clippy-button
               purpose="subtle"
               aria-pressed=${this._overviewMode === 'heading-structure'}
@@ -237,7 +237,7 @@ export class ValidationsDialog extends LitElement {
           </div>
           <clippy-tabs ?hidden=${isOverview}></clippy-tabs>
         </div>
-        <div class="clippy-dialog__body">
+        <div class="clippy-validation-item__body">
           <div
             role="region"
             aria-label=${msg('Heading structure')}
@@ -251,26 +251,28 @@ export class ValidationsDialog extends LitElement {
           <div role="region" aria-label=${msg('Language changes')} ?hidden=${this._overviewMode !== 'language-changes'}>
             <clippy-language-changes></clippy-language-changes>
           </div>
-          <ul class="clippy-dialog__list" data-testid="clippy-validations-list" ?hidden=${isOverview}>
+          <ul class="clippy-validation-item__list" data-testid="clippy-validations-list" ?hidden=${isOverview}>
             ${size > 0
               ? map(filteredValidations, ([, { correct, range, severity, tipPayload, validatorKey }]) => {
                   const valKey = validatorKey as ValidationKey;
                   const { customCorrectLabel, description, href, tip } = validationMessages()[valKey];
                   const tipHtml = tip?.(tipPayload) ?? null;
                   return html`
-                    <clippy-validation-item
-                      .range=${range}
-                      .severity=${severity}
-                      .description=${description}
-                      .href=${href}
-                      .customCorrectLabel=${customCorrectLabel}
-                      .correct=${correct}
-                    >
-                      ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${tipHtml}</p>` : nothing}
-                    </clippy-validation-item>
+                    <li>
+                      <clippy-validation-item
+                        .range=${range}
+                        .severity=${severity}
+                        .description=${description}
+                        .href=${href}
+                        .customCorrectLabel=${customCorrectLabel}
+                        .correct=${correct}
+                      >
+                        ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${tipHtml}</p>` : nothing}
+                      </clippy-validation-item>
+                    </li>
                   `;
                 })
-              : html`<li class="clippy-dialog__list-item">${msg('No accessibility notifications found.')}</li>`}
+              : html`<li class="clippy-validation-item">${msg('No accessibility notifications found.')}</li>`}
           </ul>
         </div>
       </dialog>
