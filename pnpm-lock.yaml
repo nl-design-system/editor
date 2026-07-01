@@ -225,6 +225,9 @@ importers:
 
   packages/editor:
     dependencies:
+      '@gemeente-denhaag/descriptionlist':
+        specifier: 4.1.0
+        version: 4.1.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@lit/context':
         specifier: 1.1.6
         version: 1.1.6
@@ -1415,6 +1418,12 @@ packages:
 
   '@fontsource/source-sans-pro@5.2.5':
     resolution: {integrity: sha512-ypendqc4pYUc+EgF7qqPY9iVYEz1t/Qr03VojKxG/2g3dnpHa1B6DOlDxWQjQXDj5QrG6inEqGT0g+edjALZyg==}
+
+  '@gemeente-denhaag/descriptionlist@4.1.0':
+    resolution: {integrity: sha512-UhWEfFpK9zWH9GfFIzIcMkLe5KVdedeLR9FtGNoAyr4FUChCZPLFKLaKQ6j4gQdS07g5WLfPFnaIKTv9F4zhWA==}
+    peerDependencies:
+      react: 18 || 19
+      react-dom: 18 || 19
 
   '@github/catalyst@1.8.1':
     resolution: {integrity: sha512-dnN4WWpbeuQvA17LvsGdlXEueJdBk9y+I+WO5pdNpoHNOXPsFcz3hJrq1iRmdsNgQOf4S8e83axtwIxvG62eWA==}
@@ -8876,6 +8885,12 @@ snapshots:
   '@fontsource/fira-sans@5.2.7': {}
 
   '@fontsource/source-sans-pro@5.2.5': {}
+
+  '@gemeente-denhaag/descriptionlist@4.1.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+    dependencies:
+      clsx: 2.1.1
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
 
   '@github/catalyst@1.8.1': {}
 

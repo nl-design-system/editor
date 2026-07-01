@@ -1,3 +1,4 @@
+import descriptionListStyle from '@gemeente-denhaag/descriptionlist/index.css?inline';
 import codeBlockStyle from '@nl-design-system-candidate/code-block-css/code-block.css?inline';
 import codeStyle from '@nl-design-system-candidate/code-css/code.css?inline';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
@@ -17,6 +18,7 @@ import editorStyles from '../../styles';
 
 export const editorContextStyles = [
   editorStyles,
+  unsafeCSS(descriptionListStyle),
   unsafeCSS(codeBlockStyle),
   unsafeCSS(codeStyle),
   unsafeCSS(headingStyle),
