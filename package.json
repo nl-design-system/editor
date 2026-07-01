@@ -31,7 +31,7 @@
     "@nl-design-system/eslint-config": "2.2.0",
     "@playwright/test": "1.60.0",
     "@types/node": "22.19.19",
-    "eslint": "9.39.2",
+    "eslint": "10.6.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-perfectionist": "5.9.0",
     "eslint-plugin-react": "7.37.5",
