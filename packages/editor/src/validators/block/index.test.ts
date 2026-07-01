@@ -194,26 +194,23 @@ describe('Block validations', () => {
   });
 
   describe('Definition list validations', () => {
-    it('should notify of incorrect definition list', async () => {
+    it('should notify of incorrect definition list via empty-node errors', async () => {
       const callback = vi.fn();
       await createTestEditor(
-        `
-    <h1>foo</h1><dl></dl><dl><dt>term only</dt></dl><dl><dd>description only</dd></dl>`,
+        `<h1>foo</h1><dl></dl><dl><dt>term only</dt></dl><dl><dd>description only</dd></dl>`,
         callback,
       );
 
       await vi.waitFor(() => {
         expect(callback).toHaveBeenCalledTimes(1);
       });
-      expect(
-        allByKey(callback.mock.calls[0][0], blockValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM).some(
-          (v) => v.severity === 'error',
-        ),
-      ).toBe(true);
-      expect(byKey(callback.mock.calls[0][0], blockValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM)?.severity).toBe(
-        'error',
-      );
-      expect(allByKey(callback.mock.calls[0][0], blockValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM)).toHaveLength(2);
+
+      // The DefinitionList extension enforces definitionListItem → definitionTerm definitionDescription+,
+      // so TipTap normalizes malformed <dl> input by auto-inserting the missing node as empty content.
+      // NODE_SHOULD_NOT_BE_EMPTY then catches those auto-inserted empty nodes.
+      const emptyNodeErrors = allByKey(callback.mock.calls[0][0], blockValidations.NODE_SHOULD_NOT_BE_EMPTY);
+      expect(emptyNodeErrors.some((v) => v.tipPayload?.['nodeType'] === 'definitionTerm')).toBe(true);
+      expect(emptyNodeErrors.some((v) => v.tipPayload?.['nodeType'] === 'definitionDescription')).toBe(true);
     });
   });
 
