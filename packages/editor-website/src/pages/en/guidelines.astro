@@ -98,7 +98,9 @@ const t = useTranslations('en');
 
       <clippy-context id="editor-3" enable-rules="inline-should-not-be-underlined">
         <div slot="value">
-          <p>There is insufficient difference between the underline of an <u>underline</u> and a <a href="#">link</a>.</p>
+          <p>
+            There is insufficient difference between the underline of an <u>underline</u> and a <a href="#">link</a>.
+          </p>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
@@ -664,8 +666,8 @@ const t = useTranslations('en');
       <clippy-context id="editor-21" enable-rules="link-should-not-be-too-generic">
         <div slot="value">
           <p>
-            Read more about why link text matters, in the blog post "<a
-              href="https://example.com/blog/click-here">click here</a
+            Read more about why link text matters, in the blog post "<a href="https://example.com/blog/click-here"
+              >click here</a
             >".
           </p>
         </div>
@@ -694,4 +696,3 @@ const t = useTranslations('en');
     </Section>
   </main>
 </Document>
-
