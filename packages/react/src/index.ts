@@ -5,4 +5,4 @@ export { ClippyGutter } from './components/Gutter';
 export { ClippyHeadingStructure } from './components/HeadingStructure';
 export { ClippyToolbar } from './components/Toolbar';
 export { ClippyValidationsList } from './components/ValidationsList.tsx';
-export { ClippyValidationsDialog } from './components/ValidationsDialog.tsx';
+export { ClippyValidationsDrawer } from './components/ValidationsDrawer.tsx';

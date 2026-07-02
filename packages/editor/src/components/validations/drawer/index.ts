@@ -4,20 +4,16 @@ import { localized, msg } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
-import LanguageIcon from '@tabler/icons/outline/language.svg?raw';
-import LinkIcon from '@tabler/icons/outline/link.svg?raw';
-import ListIcon from '@tabler/icons/outline/list.svg?raw';
 import X from '@tabler/icons/outline/x.svg?raw';
-import { html, LitElement, nothing, unsafeCSS } from 'lit';
+import { html, LitElement, unsafeCSS } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { map } from 'lit/directives/map.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
-import '../validation-item';
+import '../list';
 import '../../content-views/heading-structure';
 import '../../content-views/link-list';
 import '../../content-views/language-changes';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import type { ValidationsMap, ValidationResult, ValidationSeverity } from '@/types/validation.ts';
+import type { ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
 import { identifierContext } from '@/context/identifierContext.ts';
 import '@/components/tabs';
 import '@nl-design-system-community/clippy-components/clippy-button';
@@ -30,11 +26,11 @@ import {
   type DocumentOverviewMode,
   type FocusNodeEvent,
   type OpenDocumentOverviewDetail,
-  type OpenValidationsDialogEvent,
 } from '@/events';
-import { validationMessages, type ValidationKey } from '@/messages';
 import type { ValidationItem } from '../validation-item';
-import dialogStyles from './styles.ts';
+import drawerStyles from './styles.ts';
+
+const tag = 'clippy-validations-drawer';
 
 /**
  * Slide-in drawer dialog that lists all accessibility validation results and
@@ -43,7 +39,7 @@ import dialogStyles from './styles.ts';
  * `CustomEvents.OPEN_VALIDATIONS_DIALOG` event, scoped to the current editor
  * identifier.
  *
- * @tag clippy-validations-dialog
+ * @tag clippy-validations-drawer
  *
  * @fires {OpenValidationsDialogEvent} OPEN_VALIDATIONS_DIALOG - Listens for this event to
  *   toggle the dialog open state.
@@ -52,13 +48,13 @@ import dialogStyles from './styles.ts';
  *
  * @example
  * ```html
- * <clippy-validations-dialog></clippy-validations-dialog>
+ * <clippy-validations-drawer></clippy-validations-drawer>
  * ```
  */
 @localized()
-@safeCustomElement('clippy-validations-dialog')
-export class ValidationsDialog extends LitElement {
-  static override readonly styles = [dialogStyles, unsafeCSS(numberBadgeStyles), unsafeCSS(paragraphStyle)];
+@safeCustomElement(tag)
+export class ValidationsDrawer extends LitElement {
+  static override readonly styles = [drawerStyles, unsafeCSS(numberBadgeStyles), unsafeCSS(paragraphStyle)];
   @state()
   private open = false;
 
@@ -66,7 +62,7 @@ export class ValidationsDialog extends LitElement {
   private selectedSeverity: ValidationSeverity | null = null;
 
   @state()
-  private _overviewMode: DocumentOverviewMode | null = null;
+  private _mode: DocumentOverviewMode = 'validations';
 
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })
@@ -85,7 +81,6 @@ export class ValidationsDialog extends LitElement {
   override connectedCallback() {
     super.connectedCallback();
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
-    globalThis.addEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpen);
     globalThis.addEventListener(CustomEvents.TAB_CHANGE, this.#handleTabChange);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
     globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#focusValidationItem);
@@ -94,7 +89,7 @@ export class ValidationsDialog extends LitElement {
 
   override disconnectedCallback() {
     globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
-    globalThis.removeEventListener(CustomEvents.OPEN_VALIDATIONS_DIALOG, this.#toggleOpen);
+    globalThis.removeEventListener(CustomEvents.TAB_CHANGE, this.#handleTabChange);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
     globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#focusValidationItem);
     globalThis.removeEventListener(CustomEvents.OPEN_DOCUMENT_OVERVIEW, this.#handleOverviewOpen);
@@ -112,28 +107,18 @@ export class ValidationsDialog extends LitElement {
     }
   };
 
-  readonly #toggleOpen = (event?: Event) => {
-    // When triggered from a global event, only respond if the identifier matches this instance
-    if (event instanceof CustomEvent) {
-      const eventIdentifier = (event as OpenValidationsDialogEvent).detail?.identifier;
-      if (eventIdentifier !== this.identifier) return;
-    }
-    const { value } = this.#dialogRef;
-    if (this.open) {
-      value?.close();
-    } else {
-      value?.showModal();
-    }
-    this.open = !this.open;
-  };
-
   readonly #handleOverviewOpen = (event: Event) => {
     const { mode } = (event as CustomEvent<OpenDocumentOverviewDetail>).detail;
-    this._overviewMode = mode;
+    this._mode = mode;
     if (!this.open) {
       this.#dialogRef.value?.showModal();
       this.open = true;
     }
+  };
+
+  readonly #closeDrawer = () => {
+    this.#dialogRef.value?.close();
+    this.open = false;
   };
 
   readonly #focusNode = (event: Event) => {
@@ -157,12 +142,15 @@ export class ValidationsDialog extends LitElement {
     if (!range) return;
 
     if (!this.open && identifier === this.identifier) {
-      this.#toggleOpen();
+      this._mode = 'validations';
+      this.#dialogRef.value?.showModal();
+      this.open = true;
     }
 
     await this.updateComplete;
 
-    const items = this.shadowRoot?.querySelectorAll('clippy-validation-item');
+    const listEl = this.shadowRoot?.querySelector('clippy-validations-list');
+    const items = listEl?.shadowRoot?.querySelectorAll('clippy-validation-item');
     const match = [...(items ?? [])].find((el) => (el as ValidationItem).range === range);
     if (match instanceof HTMLElement) {
       match.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -174,106 +162,35 @@ export class ValidationsDialog extends LitElement {
     this.selectedSeverity = event.detail?.severity || null;
   };
 
-  #getFilteredValidations(): [Range, ValidationResult][] {
-    const validations = [...(this.validationsContext?.entries() ?? [])];
-
-    if (!this.selectedSeverity) {
-      return validations;
-    }
-
-    return validations.filter(([, validation]) => validation.severity === this.selectedSeverity);
-  }
-
-  #setOverviewMode(mode: DocumentOverviewMode) {
-    this._overviewMode = this._overviewMode === mode ? null : mode;
-  }
-
   override render() {
-    const { size = 0 } = this.validationsContext || {};
-    const filteredValidations = this.#getFilteredValidations();
-    const isOverview = this._overviewMode !== null;
+    const isOverview = this._mode !== 'validations';
     return html`
       <dialog
         ${ref(this.#dialogRef)}
         data-testid="clippy-validations-drawer"
-        class="clippy-validation-item__content"
+        class="clippy-drawer__content"
         aria-label=${msg('Accessibility notifications')}
       >
-        <div class="clippy-validation-item__header">
-          <clippy-button
-            class="clippy-validation-item__close-button"
-            icon-only
-            purpose="subtle"
-            @click=${() => this.#toggleOpen()}
-          >
+        <div class="clippy-drawer__header">
+          <clippy-button class="clippy-drawer__close-button" icon-only purpose="subtle" @click=${this.#closeDrawer}>
             <clippy-icon slot="iconStart">${unsafeSVG(X)}</clippy-icon>
             ${msg('Close')}
           </clippy-button>
-          <div class="clippy-validation-item__overview-buttons">
-            <clippy-button
-              purpose="subtle"
-              aria-pressed=${this._overviewMode === 'heading-structure'}
-              @click=${() => this.#setOverviewMode('heading-structure')}
-            >
-              <clippy-icon slot="iconStart">${unsafeSVG(ListIcon)}</clippy-icon>
-              ${msg('Heading structure')}
-            </clippy-button>
-            <clippy-button
-              purpose="subtle"
-              aria-pressed=${this._overviewMode === 'link-list'}
-              @click=${() => this.#setOverviewMode('link-list')}
-            >
-              <clippy-icon slot="iconStart">${unsafeSVG(LinkIcon)}</clippy-icon>
-              ${msg('Links')}
-            </clippy-button>
-            <clippy-button
-              purpose="subtle"
-              aria-pressed=${this._overviewMode === 'language-changes'}
-              @click=${() => this.#setOverviewMode('language-changes')}
-            >
-              <clippy-icon slot="iconStart">${unsafeSVG(LanguageIcon)}</clippy-icon>
-              ${msg('Language changes')}
-            </clippy-button>
-          </div>
           <clippy-tabs ?hidden=${isOverview}></clippy-tabs>
         </div>
-        <div class="clippy-validation-item__body">
-          <div
-            role="region"
-            aria-label=${msg('Heading structure')}
-            ?hidden=${this._overviewMode !== 'heading-structure'}
-          >
+        <div class="clippy-drawer__body">
+          <div role="region" aria-label=${msg('Heading structure')} ?hidden=${this._mode !== 'heading-structure'}>
             <clippy-heading-structure></clippy-heading-structure>
           </div>
-          <div role="region" aria-label=${msg('Links')} ?hidden=${this._overviewMode !== 'link-list'}>
+          <div role="region" aria-label=${msg('Links')} ?hidden=${this._mode !== 'link-list'}>
             <clippy-link-list></clippy-link-list>
           </div>
-          <div role="region" aria-label=${msg('Language changes')} ?hidden=${this._overviewMode !== 'language-changes'}>
+          <div role="region" aria-label=${msg('Language changes')} ?hidden=${this._mode !== 'language-changes'}>
             <clippy-language-changes></clippy-language-changes>
           </div>
-          <ul class="clippy-validation-item__list" data-testid="clippy-validations-list" ?hidden=${isOverview}>
-            ${size > 0
-              ? map(filteredValidations, ([, { correct, range, severity, tipPayload, validatorKey }]) => {
-                  const valKey = validatorKey as ValidationKey;
-                  const { customCorrectLabel, description, href, tip } = validationMessages()[valKey];
-                  const tipHtml = tip?.(tipPayload) ?? null;
-                  return html`
-                    <li>
-                      <clippy-validation-item
-                        .range=${range}
-                        .severity=${severity}
-                        .description=${description}
-                        .href=${href}
-                        .customCorrectLabel=${customCorrectLabel}
-                        .correct=${correct}
-                      >
-                        ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${tipHtml}</p>` : nothing}
-                      </clippy-validation-item>
-                    </li>
-                  `;
-                })
-              : html`<li class="clippy-validation-item">${msg('No accessibility notifications found.')}</li>`}
-          </ul>
+          <div role="region" aria-label=${msg('Validations')} ?hidden=${this._mode !== 'validations'}>
+            <clippy-validations-list .severity=${this.selectedSeverity}></clippy-validations-list>
+          </div>
         </div>
       </dialog>
     `;
@@ -282,6 +199,6 @@ export class ValidationsDialog extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'clippy-validations-dialog': ValidationsDialog;
+    'clippy-validations-drawer': ValidationsDrawer;
   }
 }
