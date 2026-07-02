@@ -175,27 +175,22 @@ export const correctHeadingWithFormatting =
   };
 
 /**
- * Inserts a placeholder definition term at the start of a definition list
- * that is missing one.
+ * Fills the first empty definition term in a definition list with a placeholder.
  */
 export const correctDefinitionListMissingTerm =
   (node: Element): CorrectValidationFunction =>
   () => {
-    const dt = document.createElement('dt');
-    dt.textContent = 'Term';
-    node.prepend(dt);
+    const emptyDt = Array.from(node.querySelectorAll('dt')).find((dt) => !dt.textContent?.trim());
+    if (emptyDt) emptyDt.textContent = msg('definition term');
   };
 
 /**
- * Inserts a placeholder definition description immediately after a definition
- * term that is not followed by one.
+ * Fills an empty definition term with a placeholder so the description has a matching term.
  */
 export const correctDefinitionTermMissingDescription =
   (node: Element): CorrectValidationFunction =>
   () => {
-    const dd = document.createElement('dd');
-    dd.textContent = msg('Description');
-    node.after(dd);
+    node.textContent = msg('definition term');
   };
 
 // ── Document correctors ───────────────────────────────────────────────────────

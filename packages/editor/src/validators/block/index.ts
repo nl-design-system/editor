@@ -40,7 +40,10 @@ const getPrefix = (text: string): string => text.substring(0, 2);
 
 const definitionDescriptionMustFollowTerm: ContentValidator = (_dom, node) => {
   if (node.tagName !== 'DT') return null;
-  if (node.nextElementSibling?.tagName === 'DD') return null;
+  if (!isEmptyOrWhitespace(node.textContent ?? '')) return null;
+  const dd = node.nextElementSibling;
+  if (dd?.tagName !== 'DD') return null;
+  if (isEmptyOrWhitespace(dd.textContent ?? '')) return null;
   return {
     correct: correctDefinitionTermMissingDescription(node),
     range: getElementRange(node),
@@ -51,7 +54,9 @@ const definitionDescriptionMustFollowTerm: ContentValidator = (_dom, node) => {
 
 const descriptionListMustContainTerm: ContentValidator = (_dom, node) => {
   if (node.tagName !== 'DL') return null;
-  if (node.querySelector('dt')) return null;
+  const terms = Array.from(node.querySelectorAll('dt')).filter((dt) => dt.closest('dl') === node);
+  if (terms.length === 0) return null;
+  if (terms.some((dt) => !isEmptyOrWhitespace(dt.textContent ?? ''))) return null;
   return {
     correct: correctDefinitionListMissingTerm(node),
     range: getElementRange(node),

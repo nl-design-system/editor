@@ -197,8 +197,10 @@ describe('Block validations', () => {
     it('should notify of incorrect definition list', async () => {
       const callback = vi.fn();
       await createTestEditor(
-        `
-    <h1>foo</h1><dl></dl><dl><dt>term only</dt></dl><dl><dd>description only</dd></dl>`,
+        `<h1>foo</h1>` +
+          `<dl><div class="denhaag-description-list-item"><dt></dt><dd></dd></div></dl>` +
+          `<dl><div class="denhaag-description-list-item"><dt>term only</dt><dd></dd></div></dl>` +
+          `<dl><div class="denhaag-description-list-item"><dt></dt><dd>description only</dd></div></dl>`,
         callback,
       );
 

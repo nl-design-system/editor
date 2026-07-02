@@ -156,30 +156,59 @@ describe('Allowed HTML in Clippy Editor', () => {
   });
 
   describe('Definition list (<dl>, <dt>, <dd>)', () => {
-    it('renders the <dl> element', async () => {
-      editor = await createTestEditor('<dl><dt>Term</dt><dd>Description</dd></dl>');
-      expect(editor.getHTML()).toContain('<dl>');
+    const singleItem = `
+      <div class="denhaag-description-list-container">
+        <dl class="denhaag-description-list">
+          <div class="denhaag-description-list-item">
+            <dt class="denhaag-description-list__title">Term</dt>
+            <dd class="denhaag-description-list__detail">Description</dd>
+          </div>
+        </dl>
+      </div>
+    `;
+
+    it('renders the <dl> with the Den Haag description-list class', async () => {
+      editor = await createTestEditor(singleItem);
+      expect(editor.getHTML()).toContain('class="denhaag-description-list"');
     });
 
-    it('renders <dt> (definition term) elements', async () => {
-      editor = await createTestEditor('<dl><dt>Term</dt><dd>Description</dd></dl>');
-      expect(editor.getHTML()).toContain('<dt>');
+    it('wraps the list in a container div', async () => {
+      editor = await createTestEditor(singleItem);
+      expect(editor.getHTML()).toContain('class="denhaag-description-list-container"');
     });
 
-    it('renders <dd> (definition description) elements', async () => {
-      editor = await createTestEditor('<dl><dt>Term</dt><dd>Description</dd></dl>');
-      expect(editor.getHTML()).toContain('<dd>');
+    it('renders <dt> with the Den Haag title class', async () => {
+      editor = await createTestEditor(singleItem);
+      expect(editor.getHTML()).toContain('class="denhaag-description-list__title"');
+    });
+
+    it('renders <dd> with the Den Haag detail class', async () => {
+      editor = await createTestEditor(singleItem);
+      expect(editor.getHTML()).toContain('class="denhaag-description-list__detail"');
     });
 
     it('preserves the text content of <dt> and <dd>', async () => {
-      editor = await createTestEditor('<dl><dt>My Term</dt><dd>My Definition</dd></dl>');
+      editor = await createTestEditor(singleItem);
       const html = editor.getHTML();
-      expect(html).toContain('My Term');
-      expect(html).toContain('My Definition');
+      expect(html).toContain('Term');
+      expect(html).toContain('Description');
     });
 
     it('supports multiple term–description pairs', async () => {
-      editor = await createTestEditor('<dl><dt>A</dt><dd>Alpha</dd><dt>B</dt><dd>Beta</dd></dl>');
+      editor = await createTestEditor(`
+        <div class="denhaag-description-list-container">
+          <dl class="denhaag-description-list">
+            <div class="denhaag-description-list-item">
+              <dt class="denhaag-description-list__title">A</dt>
+              <dd class="denhaag-description-list__detail">Alpha</dd>
+            </div>
+            <div class="denhaag-description-list-item">
+              <dt class="denhaag-description-list__title">B</dt>
+              <dd class="denhaag-description-list__detail">Beta</dd>
+            </div>
+          </dl>
+        </div>
+      `);
       const html = editor.getHTML();
       expect(html).toContain('Alpha');
       expect(html).toContain('Beta');

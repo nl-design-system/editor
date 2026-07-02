@@ -245,14 +245,14 @@ const t = useTranslations('en');
 
       <clippy-context id="editor-8" enable-rules="node-should-not-be-empty">
         <div slot="value">
-          <dl>
-            <div>
-              <dt></dt>
-              <dd></dd>
+          <dl class="denhaag-description-list">
+            <div class="denhaag-description-list-item">
+              <dt class="denhaag-description-list__title"></dt>
+              <dd class="denhaag-description-list__detail"></dd>
             </div>
-            <div>
-              <dt>text</dt>
-              <dd>text</dd>
+            <div class="denhaag-description-list-item">
+              <dt class="denhaag-description-list__title">text</dt>
+              <dd class="denhaag-description-list__detail">text</dd>
             </div>
           </dl>
         </div>
@@ -546,10 +546,10 @@ const t = useTranslations('en');
 
       <clippy-context id="editor-17" enable-rules="definition-description-must-follow-term">
         <div slot="value">
-          <dl>
-            <div>
-              <dd>Standalone definition</dd>
-              <dt>With a term after it</dt>
+          <dl class="denhaag-description-list">
+            <div class="denhaag-description-list-item">
+              <dt class="denhaag-description-list__title"></dt>
+              <dd class="denhaag-description-list__detail">Description without a term</dd>
             </div>
           </dl>
         </div>
@@ -578,9 +578,14 @@ const t = useTranslations('en');
 
       <clippy-context id="editor-18" enable-rules="description-list-must-contain-term">
         <div slot="value">
-          <dl>
-            <div>
-              <dd>Standalone definition</dd>
+          <dl class="denhaag-description-list">
+            <div class="denhaag-description-list-item">
+              <dt class="denhaag-description-list__title"></dt>
+              <dd class="denhaag-description-list__detail">First definition</dd>
+            </div>
+            <div class="denhaag-description-list-item">
+              <dt class="denhaag-description-list__title"></dt>
+              <dd class="denhaag-description-list__detail">Second definition</dd>
             </div>
           </dl>
         </div>
