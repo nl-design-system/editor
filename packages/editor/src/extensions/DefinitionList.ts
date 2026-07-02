@@ -10,15 +10,15 @@ declare module '@tiptap/core' {
   }
 }
 
-function insertItemAfter(editor: Editor): boolean {
+const insertItemAfter = (editor: Editor): boolean => {
   const { state } = editor.view;
   const { schema, selection } = state;
   const { $from } = selection;
 
   let itemDepth = -1;
-  for (let d = $from.depth; d > 0; d--) {
-    if ($from.node(d).type === schema.nodes['definitionListItem']) {
-      itemDepth = d;
+  for (let depth = $from.depth; depth > 0; depth--) {
+    if ($from.node(depth).type === schema.nodes['definitionListItem']) {
+      itemDepth = depth;
       break;
     }
   }
@@ -37,7 +37,7 @@ function insertItemAfter(editor: Editor): boolean {
   tr.scrollIntoView();
   editor.view.dispatch(tr);
   return true;
-}
+};
 
 function removeItemIfEmpty(editor: Editor): boolean {
   const { state } = editor.view;
@@ -47,9 +47,9 @@ function removeItemIfEmpty(editor: Editor): boolean {
   if ($from.parent.content.size > 0) return false;
 
   let itemDepth = -1;
-  for (let d = $from.depth; d > 0; d--) {
-    if ($from.node(d).type === schema.nodes['definitionListItem']) {
-      itemDepth = d;
+  for (let depth = $from.depth; depth > 0; depth--) {
+    if ($from.node(depth).type === schema.nodes['definitionListItem']) {
+      itemDepth = depth;
       break;
     }
   }

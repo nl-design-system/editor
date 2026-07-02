@@ -54,7 +54,7 @@ const definitionDescriptionMustFollowTerm: ContentValidator = (_dom, node) => {
 
 const descriptionListMustContainTerm: ContentValidator = (_dom, node) => {
   if (node.tagName !== 'DL') return null;
-  const terms = Array.from(node.querySelectorAll('dt'));
+  const terms = Array.from(node.querySelectorAll('dt')).filter((dt) => dt.closest('dl') === node);
   if (terms.length === 0) return null;
   if (terms.some((dt) => !isEmptyOrWhitespace(dt.textContent ?? ''))) return null;
   return {
