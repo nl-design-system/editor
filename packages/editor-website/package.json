@@ -31,23 +31,23 @@
     "@nl-design-system-community/clippy-alt-text-wizard": "workspace:*",
     "@nl-design-system-community/editor": "workspace:*",
     "@nl-design-system-community/editor-react": "workspace:*",
-    "@nl-design-system-community/ma-design-tokens": "5.2.0",
+    "@nl-design-system-community/ma-design-tokens": "5.4.0",
     "@tabler/icons": "3.44.0",
-    "@types/react": "19.2.16",
+    "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
     "@utrecht/component-library-css": "9.0.12",
     "@utrecht/design-tokens": "6.2.1",
     "astro": "6.4.3",
     "ckeditor5": "45.1.0",
-    "mermaid": "11.15.0",
+    "mermaid": "11.16.0",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "remark-custom-header-id": "1.0.0",
-    "xstate": "5.32.1"
+    "xstate": "5.32.2"
   },
   "devDependencies": {
     "@nl-design-system/tsconfig": "1.0.5",
-    "@types/node": "22.19.19",
+    "@types/node": "22.20.0",
     "typescript": "5.9.3"
   }
 }
