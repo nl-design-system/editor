@@ -42,7 +42,7 @@ const definitionDescriptionMustFollowTerm: ContentValidator = (_dom, node) => {
   if (node.tagName !== 'DT') return null;
   if (!isEmptyOrWhitespace(node.textContent ?? '')) return null;
   const dd = node.nextElementSibling;
-  if (!dd || dd.tagName !== 'DD') return null;
+  if (dd?.tagName !== 'DD') return null;
   if (isEmptyOrWhitespace(dd.textContent ?? '')) return null;
   return {
     correct: correctDefinitionTermMissingDescription(node),
