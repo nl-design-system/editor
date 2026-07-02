@@ -14,7 +14,7 @@ describe('<clippy-validations-dialog>', () => {
     document.documentElement.lang = 'nl';
     document.body.innerHTML = `
       <clippy-context id="${TEST_IDENTIFIER}">
-        <clippy-validations-dialog></clippy-validations-dialog>
+        <clippy-validations-drawer></clippy-validations-drawer>
       </clippy-context>
     `;
   });
@@ -31,22 +31,18 @@ describe('<clippy-validations-dialog>', () => {
     const dialog = page.getByTestId('clippy-validations-drawer');
     expect(dialog).not.toHaveAttribute('open');
     expect(dialog.element()).not.toHaveAttribute('open');
-    globalThis.dispatchEvent(
-      new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, { detail: { identifier: TEST_IDENTIFIER } }),
-    );
+    globalThis.dispatchEvent(new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { mode: 'validations' } }));
     expect(dialog).toHaveAttribute('open');
   });
 
-  it('does not open dialog when OPEN_VALIDATIONS_DIALOG event has a different identifier', async () => {
+  it('does not open dialog when an unrelated event is dispatched', async () => {
     await vi.waitFor(() => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
 
     const dialog = page.getByTestId('clippy-validations-drawer');
     expect(dialog.element()).not.toHaveAttribute('open');
-    globalThis.dispatchEvent(
-      new CustomEvent(CustomEvents.OPEN_VALIDATIONS_DIALOG, { detail: { identifier: 'other-editor-id' } }),
-    );
+    globalThis.dispatchEvent(new CustomEvent('some-unrelated-event'));
     expect(dialog.element()).not.toHaveAttribute('open');
   });
 
@@ -89,17 +85,19 @@ describe('<clippy-validations-dialog>', () => {
       await contextElement.updateComplete;
     }
 
-    const listSelector = page.getByTestId('clippy-validations-list');
-    await vi.waitFor(() => {
-      expect(listSelector).toBeInTheDocument();
-    });
+    // Open the drawer so the list is rendered
+    globalThis.dispatchEvent(new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { mode: 'validations' } }));
+
+    const drawerEl = document.querySelector('clippy-validations-drawer');
 
     await vi.waitFor(() => {
-      const items = listSelector.element()?.querySelectorAll('clippy-validation-item');
+      const listEl = drawerEl?.shadowRoot?.querySelector('clippy-validations-list');
+      const items = listEl?.shadowRoot?.querySelectorAll('clippy-validation-item');
       expect(items?.length).toBe(10);
     });
 
-    const validationItems = listSelector.element()?.querySelectorAll('clippy-validation-item');
+    const listEl = drawerEl?.shadowRoot?.querySelector('clippy-validations-list');
+    const validationItems = listEl?.shadowRoot?.querySelectorAll('clippy-validation-item');
 
     // Wait for the first item to render its shadow DOM
     if (validationItems?.[0]?.updateComplete) {

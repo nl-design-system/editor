@@ -2,12 +2,14 @@ import type { Editor } from '@tiptap/core';
 import type { TemplateResult } from 'lit';
 import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
+import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
+import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import AccessibleIcon from '@tabler/icons/outline/accessible.svg?raw';
 import ArrowBackUpIcon from '@tabler/icons/outline/arrow-back-up.svg?raw';
+import './shortcuts-dialog';
 import ArrowForwardUpIcon from '@tabler/icons/outline/arrow-forward-up.svg?raw';
 import BoldIcon from '@tabler/icons/outline/bold.svg?raw';
-import './shortcuts-dialog';
 import ChevronDownIcon from '@tabler/icons/outline/chevron-down.svg?raw';
 import CodeIcon from '@tabler/icons/outline/code.svg?raw';
 import IconHighlight from '@tabler/icons/outline/highlight.svg?raw';
@@ -18,28 +20,27 @@ import OrderedListIcon from '@tabler/icons/outline/list-numbers.svg?raw';
 import BulletListIcon from '@tabler/icons/outline/list.svg?raw';
 import SeparatorIcon from '@tabler/icons/outline/separator.svg?raw';
 import StrikethroughIcon from '@tabler/icons/outline/strikethrough.svg?raw';
-import SubscriptIcon from '@tabler/icons/outline/subscript.svg?raw';
-import SuperscriptIcon from '@tabler/icons/outline/superscript.svg?raw';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
-import TableIcon from '@tabler/icons/outline/table.svg?raw';
-import IconTextDirectionLtr from '@tabler/icons/outline/text-direction-ltr.svg?raw';
+import SubscriptIcon from '@tabler/icons/outline/subscript.svg?raw';
+import SuperscriptIcon from '@tabler/icons/outline/superscript.svg?raw';
 import './toolbar-format-select';
 import './toolbar-language-select';
 import './toolbar-text-align';
+import TableIcon from '@tabler/icons/outline/table.svg?raw';
+import IconTextDirectionLtr from '@tabler/icons/outline/text-direction-ltr.svg?raw';
 import IconTextDirectionRtl from '@tabler/icons/outline/text-direction-rtl.svg?raw';
 import UnderlineIcon from '@tabler/icons/outline/underline.svg?raw';
-import { LitElement, html, nothing } from 'lit';
-import { property } from 'lit/decorators.js';
+import { LitElement, html, nothing, unsafeCSS } from 'lit';
+import { property, state } from 'lit/decorators.js';
 import { createRef, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationsMap } from '@/types/validation.ts';
-import { identifierContext } from '@/context/identifierContext.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { editor } from '@/decorators/TipTapDecorator.ts';
 import './toolbar-image';
 import './toolbar-link';
-import { CustomEvents, type OpenValidationsDialogDetail } from '@/events';
+import { CustomEvents, type DocumentOverviewMode, type OpenDocumentOverviewDetail } from '@/events';
 import toolbarStyles from './styles.ts';
 import { type ToolbarConfig, type ToolbarItem, defaultToolbarConfig } from './toolbar-config.ts';
 import { isDefaultDir } from './toolbar-language-select/languages.ts';
@@ -80,11 +81,6 @@ export class Toolbar extends LitElement {
   @property({ type: Array })
   config: ToolbarConfig = defaultToolbarConfig;
 
-  /** @internal Consumed from the nearest {@link identifierContext} provider. */
-  @consume({ context: identifierContext, subscribe: true })
-  @property({ attribute: false })
-  private readonly identifier?: string;
-
   /** @internal Consumed from the nearest {@link validationsContext} provider. */
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
@@ -108,12 +104,17 @@ export class Toolbar extends LitElement {
     value?.shadowRoot?.querySelector('button')?.focus();
   };
 
-  readonly #toggleOpenValidationsDialog = () => {
+  @state() private _notificationsMenuOpen = false;
+
+  readonly #toggleNotificationsMenu = () => {
+    this._notificationsMenuOpen = !this._notificationsMenuOpen;
+  };
+
+  readonly #toggleOpenValidationsDialog = (mode: DocumentOverviewMode = 'validations') => {
+    this._notificationsMenuOpen = false;
     globalThis.dispatchEvent(
-      new CustomEvent<OpenValidationsDialogDetail>(CustomEvents.OPEN_VALIDATIONS_DIALOG, {
-        bubbles: true,
-        composed: true,
-        detail: { identifier: this.identifier },
+      new CustomEvent<OpenDocumentOverviewDetail>(CustomEvents.OPEN_DOCUMENT_OVERVIEW, {
+        detail: { mode },
       }),
     );
   };
@@ -131,13 +132,19 @@ export class Toolbar extends LitElement {
     this.editor?.chain().focus().updateAttributes(nodeTypeName, { dir: newValue }).run();
   };
 
+  readonly #handleKeydown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') this._notificationsMenuOpen = false;
+  };
+
   override connectedCallback() {
     globalThis.addEventListener(CustomEvents.FOCUS_TOOLBAR, this.#onToolbarFocus);
+    this.addEventListener('keydown', this.#handleKeydown);
     super.connectedCallback();
   }
 
   override disconnectedCallback() {
     globalThis.removeEventListener(CustomEvents.FOCUS_TOOLBAR, this.#onToolbarFocus);
+    this.removeEventListener('keydown', this.#handleKeydown);
     super.disconnectedCallback();
   }
 
@@ -481,24 +488,61 @@ export class Toolbar extends LitElement {
     ]);
   }
 
-  static override readonly styles = [toolbarStyles];
+  static override readonly styles = [toolbarStyles, unsafeCSS(numberBadgeStyles), unsafeCSS(buttonCss)];
 
   #renderAccessibilityNotifications() {
     const { size = 0 } = this.validationsContext || {};
     return html`
       <span data-toolbar-item="accessibility-notifications" class="clippy-toolbar__notifications">
         <clippy-button
-          @click=${this.#toggleOpenValidationsDialog}
-          aria-controls="dialog-content"
+          @click=${this.#toggleNotificationsMenu}
+          aria-haspopup="menu"
+          .pressed=${this._notificationsMenuOpen}
           icon-only
           size="small"
           purpose="subtle"
+          toggle
         >
           <clippy-icon slot="iconStart">${unsafeSVG(AccessibleIcon)}</clippy-icon>
           ${msg('Show accessibility notifications')}
           <clippy-icon slot="iconEnd">${unsafeSVG(ChevronDownIcon)}</clippy-icon>
         </clippy-button>
         ${size > 0 ? html`<span class="clippy-toolbar__dot-badge" aria-hidden="true"></span>` : nothing}
+        ${this._notificationsMenuOpen
+          ? html`
+              <div role="menu" class="clippy-toolbar__notifications-menu">
+                <button
+                  role="menuitem"
+                  class="nl-button nl-button--subtle"
+                  @click=${() => this.#toggleOpenValidationsDialog()}
+                >
+                  ${msg('Errors, warnings and tips')}
+                  ${size > 0 ? html`<span class="nl-number-badge">${size}</span>` : nothing}
+                </button>
+                <button
+                  role="menuitem"
+                  class="nl-button nl-button--subtle"
+                  @click=${() => this.#toggleOpenValidationsDialog('heading-structure')}
+                >
+                  ${msg('Heading structure')}
+                </button>
+                <button
+                  role="menuitem"
+                  class="nl-button nl-button--subtle"
+                  @click=${() => this.#toggleOpenValidationsDialog('link-list')}
+                >
+                  ${msg('Links')}
+                </button>
+                <button
+                  role="menuitem"
+                  class="nl-button nl-button--subtle"
+                  @click=${() => this.#toggleOpenValidationsDialog('language-changes')}
+                >
+                  ${msg('Language changes')}
+                </button>
+              </div>
+            `
+          : nothing}
       </span>
     `;
   }
