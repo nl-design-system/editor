@@ -94,7 +94,7 @@ export class ValidationItem extends LitElement {
   @property({ attribute: false })
   private readonly identifier?: string;
 
-  readonly #listItemRef: Ref<HTMLLIElement> = createRef();
+  readonly #listItemRef: Ref<HTMLDivElement> = createRef();
 
   override focus(): void {
     this.#listItemRef.value?.focus();
@@ -152,7 +152,15 @@ export class ValidationItem extends LitElement {
     }
 
     return html`
-      <div class="clippy-dialog__list-item-actions">
+      <div class="clippy-validation-item-actions">
+        ${typeof this.correct === 'function'
+          ? html`<clippy-button purpose="primary" @click=${this.#applyFix} aria-describedby=${ariaDescribedBy}>
+              ${this.customCorrectLabel ?? msg('Correct')}
+            </clippy-button>`
+          : nothing}
+        <clippy-button purpose="secondary" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
+          ${msg('Focus')}
+        </clippy-button>
         ${this.mode === 'tooltip'
           ? html`<clippy-button
               @click=${(event: Event) => this.#handleValidationItemClick(event)}
@@ -163,49 +171,43 @@ export class ValidationItem extends LitElement {
               ${msg('Open in drawer')}
             </clippy-button>`
           : nothing}
-        <clippy-button purpose="subtle" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
-          ${msg('Focus')}
-        </clippy-button>
-        ${typeof this.correct === 'function'
-          ? html`<clippy-button purpose="primary" @click=${this.#applyFix} aria-describedby=${ariaDescribedBy}>
-              ${this.customCorrectLabel ?? msg('Correct')}
-            </clippy-button>`
-          : nothing}
       </div>
     `;
   }
 
   override render() {
     return html`
-      <li
+      <div
         ${ref(this.#listItemRef)}
-        class="clippy-dialog__list-item clippy-dialog__list-item--${this.severity}"
+        class="clippy-validation-item clippy-validation-item--${this.severity}"
         tabindex="-1"
       >
-        <div class="clippy-dialog__list-item-message">
-          <h4 class="nl-heading nl-heading--level-4" id=${ariaDescribedBy}>${this.description}</h4>
-          <span class="clippy-dialog__list-item-severity clippy-dialog__list-item-severity--${this.severity}">
+        <div class="clippy-validation-item__title">
+          <span class="clippy-validation-item-severity clippy-validation-item-severity--${this.severity}">
             ${unsafeSVG(this.#getAlertIcon())}
           </span>
+          <h4 class="nl-heading nl-heading--level-4" id=${ariaDescribedBy}>${this.description}</h4>
         </div>
-        <slot name="tip-html" class="clippy-dialog__list-item-tip"></slot>
-        ${this.href
-          ? html`
-              <p class="clippy-dialog__list-item-link nl-paragraph">
-                <a
-                  class="nl-link"
-                  href="${this.href}"
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-describedby=${ariaDescribedBy}
-                >
-                  ${msg('Extensive explanation')}
-                </a>
-              </p>
-            `
-          : null}
-        ${this.#renderActions()}
-      </li>
+        <div class="clippy-validation-item__message">
+          <slot name="tip-html"></slot>
+          ${this.href
+            ? html`
+                <p class="nl-paragraph">
+                  <a
+                    class="nl-link"
+                    href="${this.href}"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-describedby=${ariaDescribedBy}
+                  >
+                    ${msg('Extensive explanation')}
+                  </a>
+                </p>
+              `
+            : null}
+        </div>
+        <div class="clippy-validation-item__footer">${this.#renderActions()}</div>
+      </div>
     `;
   }
 }

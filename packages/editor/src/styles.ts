@@ -28,8 +28,8 @@ export default css`
   }
 
   .clippy-content {
-    padding-block: var(--basis-space-inline-lg);
-    padding-inline: var(--basis-space-inline-lg);
+    padding-block: var(--basis-space-inline-4xl);
+    padding-inline: var(--basis-space-inline-4xl);
   }
 
   .clippy-content:focus-visible {

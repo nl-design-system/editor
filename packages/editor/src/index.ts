@@ -6,7 +6,7 @@ export { LanguageChanges } from './components/content-views/language-changes';
 export { LinkList } from './components/content-views/link-list';
 export { Gutter } from './components/validations/gutter';
 export { ValidationsList } from './components/validations/list';
-export { ValidationsDialog } from './components/validations/drawer';
+export { ValidationsDrawer } from './components/validations/drawer';
 export { Toolbar } from './components/toolbar';
 export { defaultToolbarConfig } from './components/toolbar/toolbar-config.ts';
 export type { ToolbarConfig, ToolbarItem } from './components/toolbar/toolbar-config.ts';

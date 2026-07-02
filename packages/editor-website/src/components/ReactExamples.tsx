@@ -4,7 +4,7 @@ import {
   ClippyEditor,
   ClippyGutter,
   ClippyToolbar,
-  ClippyValidationsDialog,
+  ClippyValidationsDrawer,
 } from '@nl-design-system-community/editor-react';
 
 export function ReactEditorExample() {
@@ -44,7 +44,7 @@ export function ReactContextExample() {
       <ClippyContent>
         <ClippyGutter mode="tooltip" />
       </ClippyContent>
-      <ClippyValidationsDialog />
+      <ClippyValidationsDrawer />
     </ClippyContext>
   );
 }
