@@ -85,7 +85,7 @@ export class ValidationsList extends LitElement {
           const { customCorrectLabel, description, href, tip } = validationMessages()[valKey];
           const tipHtml = tip?.(tipPayload) ?? null;
           return html`
-            <li>
+            <li class="clippy-validations-list__item">
               <clippy-validation-item
                 .range=${range}
                 .severity=${severity}
