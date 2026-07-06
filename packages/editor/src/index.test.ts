@@ -69,10 +69,16 @@ describe('<clippy-editor>', () => {
     } else {
       await user.keyboard('{control>}{alt>}{t}{/alt}{/control}');
     }
-    const a11yDialog = page.getByRole('dialog').element();
-    expect(a11yDialog).toHaveAttribute('open');
+    const a11yDialog = page.getByRole('dialog');
+    await expect.element(a11yDialog).toHaveAttribute('open');
 
-    await expect(a11yDialog).toHaveTextContent('Geen toegankelijkheidsmeldingen gevonden.');
+    await vi.waitFor(() => {
+      const editorEl = document.querySelector('clippy-editor');
+      const drawer = editorEl?.shadowRoot?.querySelector('clippy-validations-drawer');
+      const list = drawer?.shadowRoot?.querySelector('clippy-validations-list');
+      const emptyMsg = list?.shadowRoot?.querySelector('p');
+      expect(emptyMsg?.textContent?.trim() ?? '').toContain('Geen validatiemeldingen gevonden');
+    });
   });
 
   it('all toolbar buttons are visible, regardless of viewport size', async () => {

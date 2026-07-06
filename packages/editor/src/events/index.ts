@@ -14,7 +14,7 @@ export const CustomEvents = {
   VALIDATION_ERROR: 'VALIDATION_ERROR',
 } as const;
 
-export type DocumentOverviewMode = 'heading-structure' | 'language-changes' | 'link-list';
+export type DocumentOverviewMode = 'heading-structure' | 'language-changes' | 'link-list' | 'validations';
 
 export interface OpenDocumentOverviewDetail {
   mode: DocumentOverviewMode;

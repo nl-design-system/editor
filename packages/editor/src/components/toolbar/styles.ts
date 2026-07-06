@@ -61,7 +61,27 @@ export default css`
   }
 
   .clippy-toolbar__notifications {
+    anchor-name: --clippy-notifications-trigger;
     position: relative;
+  }
+
+  .clippy-toolbar__notifications-menu {
+    position: fixed;
+    inset-block-start: anchor(--clippy-notifications-trigger bottom);
+    inset-inline-end: anchor(--clippy-notifications-trigger right);
+    display: flex;
+    flex-direction: column;
+    min-inline-size: max-content;
+    border-radius: var(--nl-button-border-radius);
+    box-shadow: var(--basis-box-shadow-lg);
+    background-color: var(--basis-color-default-bg-document);
+    z-index: 1000;
+
+    & .nl-button {
+      --nl-button-border-radius: 0;
+      inline-size: 100%;
+      justify-content: flex-start;
+    }
   }
 
   .clippy-toolbar__dot-badge {

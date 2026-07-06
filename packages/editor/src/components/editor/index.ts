@@ -56,7 +56,7 @@ export class Editor extends Context {
         <clippy-content></clippy-content>
         <clippy-bubble-menu class="clippy-bubble-menu"></clippy-bubble-menu>
       </div>
-      <clippy-validations-dialog></clippy-validations-dialog>
+      <clippy-validations-drawer></clippy-validations-drawer>
     `;
   }
 }

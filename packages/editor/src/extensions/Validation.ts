@@ -1,5 +1,5 @@
 import { Extension } from '@tiptap/core';
-import { CustomEvents, type OpenValidationsDialogDetail } from '@/events';
+import { CustomEvents, type OpenDocumentOverviewDetail } from '@/events';
 import { debouncedValidate, runValidation } from '@/validators';
 
 export default Extension.create({
@@ -8,10 +8,8 @@ export default Extension.create({
   addKeyboardShortcuts() {
     return {
       'Mod-Alt-t': () => {
-        const event = new CustomEvent<OpenValidationsDialogDetail>(CustomEvents.OPEN_VALIDATIONS_DIALOG, {
-          bubbles: true,
-          composed: true,
-          detail: { identifier: this.options.identifier },
+        const event = new CustomEvent<OpenDocumentOverviewDetail>(CustomEvents.OPEN_DOCUMENT_OVERVIEW, {
+          detail: { mode: 'validations' },
         });
         globalThis.dispatchEvent(event);
         return true;

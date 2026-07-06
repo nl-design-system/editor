@@ -18,7 +18,7 @@ describe('<validation-item>', () => {
     const slotContent = await page.getByText('This is a great tip!');
     await expect.element(slotContent).toBeInTheDocument();
 
-    const listItem = await page.getByRole('listitem');
-    await expect.element(listItem).toBeInTheDocument();
+    const heading = await page.getByRole('heading', { name: 'Beware of the great error!' });
+    await expect.element(heading).toBeInTheDocument();
   });
 });

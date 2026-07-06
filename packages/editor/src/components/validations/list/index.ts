@@ -6,7 +6,7 @@ import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import '../validation-item';
-import type { ValidationsMap } from '@/types/validation.ts';
+import type { ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
 import { validationsContext } from '@/context/validationsContext.ts';
 import { CustomEvents, type FocusValidationItemInListEvent } from '@/events';
 import { type ValidationKey, validationMessages } from '@/messages';
@@ -44,6 +44,9 @@ export class ValidationsList extends LitElement {
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
 
+  /** Optional severity filter. When set, only items of this severity are rendered. */
+  @property({ type: String }) severity: ValidationSeverity | null = null;
+
   override connectedCallback() {
     super.connectedCallback();
     globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST, this.#handleFocusValidationItem);
@@ -66,28 +69,34 @@ export class ValidationsList extends LitElement {
   };
 
   override render() {
-    if (!this.validationsContext || this.validationsContext.size === 0) {
+    const entries = [...(this.validationsContext?.entries() ?? [])].filter(
+      ([, { severity }]) => !this.severity || severity === this.severity,
+    );
+
+    if (entries.length === 0) {
       const emptyMessage = msg(str`No validation issues found`);
       return html`<p class="nl-paragraph">${emptyMessage}</p>`;
     }
 
     return html`
       <ul class="clippy-validations-list" role="list">
-        ${map(this.validationsContext.entries(), ([, { correct, range, severity, tipPayload, validatorKey }]) => {
+        ${map(entries, ([, { correct, range, severity, tipPayload, validatorKey }]) => {
           const valKey = validatorKey as ValidationKey;
           const { customCorrectLabel, description, href, tip } = validationMessages()[valKey];
           const tipHtml = tip?.(tipPayload) ?? null;
           return html`
-            <clippy-validation-item
-              .range=${range}
-              .severity=${severity}
-              .description=${description}
-              .href=${href}
-              .customCorrectLabel=${customCorrectLabel}
-              .correct=${correct}
-            >
-              ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${tipHtml}</p>` : nothing}
-            </clippy-validation-item>
+            <li class="clippy-validations-list__item">
+              <clippy-validation-item
+                .range=${range}
+                .severity=${severity}
+                .description=${description}
+                .href=${href}
+                .customCorrectLabel=${customCorrectLabel}
+                .correct=${correct}
+              >
+                ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${tipHtml}</p>` : nothing}
+              </clippy-validation-item>
+            </li>
           `;
         })}
       </ul>
