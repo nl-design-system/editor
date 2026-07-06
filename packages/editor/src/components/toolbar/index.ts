@@ -437,8 +437,9 @@ export class Toolbar extends LitElement {
           <clippy-button
             data-toolbar-item="text-direction-ltr"
             toggle
-            .pressed=${this.editor?.isActive(this.editor?.state.selection.$anchor.node().type.name, { dir: 'ltr' }) ??
-            false}
+            .pressed=${
+              this.editor?.isActive(this.editor?.state.selection.$anchor.node().type.name, { dir: 'ltr' }) ?? false
+            }
             @click=${() => this.#toggleTextDirection('rtl')}
             icon-only
             size="small"
@@ -456,8 +457,9 @@ export class Toolbar extends LitElement {
           <clippy-button
             data-toolbar-item="text-direction-rtl"
             toggle
-            .pressed=${this.editor?.isActive(this.editor?.state.selection.$anchor.node().type.name, { dir: 'rtl' }) ??
-            false}
+            .pressed=${
+              this.editor?.isActive(this.editor?.state.selection.$anchor.node().type.name, { dir: 'rtl' }) ?? false
+            }
             @click=${() => this.#toggleTextDirection('rtl')}
             icon-only
             size="small"
@@ -508,41 +510,43 @@ export class Toolbar extends LitElement {
           <clippy-icon slot="iconEnd">${unsafeSVG(ChevronDownIcon)}</clippy-icon>
         </clippy-button>
         ${size > 0 ? html`<span class="clippy-toolbar__dot-badge" aria-hidden="true"></span>` : nothing}
-        ${this._notificationsMenuOpen
-          ? html`
-              <div role="menu" class="clippy-toolbar__notifications-menu">
-                <button
-                  role="menuitem"
-                  class="nl-button nl-button--subtle"
-                  @click=${() => this.#toggleOpenValidationsDialog()}
-                >
-                  ${msg('Errors, warnings and tips')}
-                  ${size > 0 ? html`<span class="nl-number-badge">${size}</span>` : nothing}
-                </button>
-                <button
-                  role="menuitem"
-                  class="nl-button nl-button--subtle"
-                  @click=${() => this.#toggleOpenValidationsDialog('heading-structure')}
-                >
-                  ${msg('Heading structure')}
-                </button>
-                <button
-                  role="menuitem"
-                  class="nl-button nl-button--subtle"
-                  @click=${() => this.#toggleOpenValidationsDialog('link-list')}
-                >
-                  ${msg('Links')}
-                </button>
-                <button
-                  role="menuitem"
-                  class="nl-button nl-button--subtle"
-                  @click=${() => this.#toggleOpenValidationsDialog('language-changes')}
-                >
-                  ${msg('Language changes')}
-                </button>
-              </div>
-            `
-          : nothing}
+        ${
+          this._notificationsMenuOpen
+            ? html`
+                <div role="menu" class="clippy-toolbar__notifications-menu">
+                  <button
+                    role="menuitem"
+                    class="nl-button nl-button--subtle"
+                    @click=${() => this.#toggleOpenValidationsDialog()}
+                  >
+                    ${msg('Errors, warnings and tips')}
+                    ${size > 0 ? html`<span class="nl-number-badge">${size}</span>` : nothing}
+                  </button>
+                  <button
+                    role="menuitem"
+                    class="nl-button nl-button--subtle"
+                    @click=${() => this.#toggleOpenValidationsDialog('heading-structure')}
+                  >
+                    ${msg('Heading structure')}
+                  </button>
+                  <button
+                    role="menuitem"
+                    class="nl-button nl-button--subtle"
+                    @click=${() => this.#toggleOpenValidationsDialog('link-list')}
+                  >
+                    ${msg('Links')}
+                  </button>
+                  <button
+                    role="menuitem"
+                    class="nl-button nl-button--subtle"
+                    @click=${() => this.#toggleOpenValidationsDialog('language-changes')}
+                  >
+                    ${msg('Language changes')}
+                  </button>
+                </div>
+              `
+            : nothing
+        }
       </span>
     `;
   }

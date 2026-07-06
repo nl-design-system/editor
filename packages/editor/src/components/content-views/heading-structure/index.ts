@@ -91,35 +91,39 @@ export class HeadingStructure extends LitElement {
 
     return html`
       <nav aria-label=${msg('Heading structure')}>
-        ${headings.length > 0
-          ? html`
-              <ol class="clippy-heading-structure__list" role="list">
-                ${map(headings, ({ index, level, text, validationEntry }) => {
-                  const severity = validationEntry?.[1].severity;
-                  return html`
-                    <li class="clippy-heading-structure__item" data-level="${level}">
-                      <button
-                        class="utrecht-link-button utrecht-link-button--html-button"
-                        @click=${(e: Event) => {
-                          e.preventDefault();
-                          this.#scrollToHeading(index, this.#headings[index].element);
-                        }}
-                      >
-                        <span
-                          class="nl-data-badge${severity ? ` clippy-heading-structure__badge--${severity}` : ''}"
-                          aria-label=${msg(str`Heading level ${level}`)}
-                          >H${level}</span
+        ${
+          headings.length > 0
+            ? html`
+                <ol class="clippy-heading-structure__list" role="list">
+                  ${map(headings, ({ index, level, text, validationEntry }) => {
+                    const severity = validationEntry?.[1].severity;
+                    return html`
+                      <li class="clippy-heading-structure__item" data-level="${level}">
+                        <button
+                          class="utrecht-link-button utrecht-link-button--html-button"
+                          @click=${(e: Event) => {
+                            e.preventDefault();
+                            this.#scrollToHeading(index, this.#headings[index].element);
+                          }}
                         >
-                        ${text || msg('(empty)')}
-                      </button>
-                    </li>
-                  `;
-                })}
-              </ol>
-            `
-          : html`
-              <p class="nl-paragraph clippy-heading-structure__empty">${msg('No headings found in this document.')}</p>
-            `}
+                          <span
+                            class="nl-data-badge${severity ? ` clippy-heading-structure__badge--${severity}` : ''}"
+                            aria-label=${msg(str`Heading level ${level}`)}
+                            >H${level}</span
+                          >
+                          ${text || msg('(empty)')}
+                        </button>
+                      </li>
+                    `;
+                  })}
+                </ol>
+              `
+            : html`
+                <p class="nl-paragraph clippy-heading-structure__empty">
+                  ${msg('No headings found in this document.')}
+                </p>
+              `
+        }
       </nav>
     `;
   }

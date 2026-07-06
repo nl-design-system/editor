@@ -96,28 +96,30 @@ export class ToolbarTextAlign extends LitElement {
         <clippy-icon slot="iconEnd" class="clippy-icon__dropdown">${unsafeSVG(ChevronDownIcon)}</clippy-icon>
       </clippy-button>
 
-      ${this.open
-        ? html`
-            <div role="menu" aria-label=${msg('Text alignment')} class="clippy-toolbar-text-align__menu">
-              ${alignments.map(
-                (alignment) => html`
-                  <clippy-button
-                    @click=${() => this.#setAlignment(alignment)}
-                    .pressed=${activeAlignment === alignment}
-                    size="small"
-                    purpose="secondary"
-                    toggle
-                    icon-only
-                    style="display: block; width: 100%;"
-                  >
-                    <clippy-icon slot="iconStart">${unsafeSVG(iconMap[alignment])}</clippy-icon>
-                    ${this.#getAlignmentLabel(alignment)}
-                  </clippy-button>
-                `,
-              )}
-            </div>
-          `
-        : null}
+      ${
+        this.open
+          ? html`
+              <div role="menu" aria-label=${msg('Text alignment')} class="clippy-toolbar-text-align__menu">
+                ${alignments.map(
+                  (alignment) => html`
+                    <clippy-button
+                      @click=${() => this.#setAlignment(alignment)}
+                      .pressed=${activeAlignment === alignment}
+                      size="small"
+                      purpose="secondary"
+                      toggle
+                      icon-only
+                      style="display: block; width: 100%;"
+                    >
+                      <clippy-icon slot="iconStart">${unsafeSVG(iconMap[alignment])}</clippy-icon>
+                      ${this.#getAlignmentLabel(alignment)}
+                    </clippy-button>
+                  `,
+                )}
+              </div>
+            `
+          : null
+      }
     `;
   }
 }
