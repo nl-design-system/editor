@@ -14,15 +14,15 @@ import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
-import type { CorrectValidationFunction, ValidationSeverity } from '@/types/validation.ts';
-import { identifierContext } from '@/context/identifierContext.ts';
+import type { CorrectValidationFunction, ValidationSeverity } from '@/types/validation';
+import { identifierContext } from '@/context/identifierContext';
 import {
   CustomEvents,
   type CorrectValidationIssueDetail,
   type FocusNodeDetail,
   type FocusValidationItemInDrawerDetail,
 } from '@/events';
-import validationListItemStyles from './styles.ts';
+import validationListItemStyles from './styles';
 
 const tag = 'clippy-validation-item';
 

@@ -1,7 +1,7 @@
+import { createTestEditor } from '@test/createTestEditor';
 import { describe, expect, it, vi } from 'vitest';
-import type { ValidationResult } from '../../types/validation.ts';
-import { createTestEditor } from '../../../test/createTestEditor';
-import { inlineValidations } from '../../constants';
+import type { ValidationResult } from '@/types/validation';
+import { inlineValidations } from '@/constants';
 
 const byKey = (map: Map<Range, ValidationResult>, key: string): ValidationResult | undefined =>
   [...map.values()].find((v) => v.validatorKey === key);

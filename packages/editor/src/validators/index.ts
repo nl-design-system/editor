@@ -1,9 +1,9 @@
-import type { EditorSettings } from '@/types/settings.ts';
-import type { ContentValidator, DocumentValidator, ValidationResult } from '@/types/validation.ts';
+import type { EditorSettings } from '@/types/settings';
+import type { ContentValidator, DocumentValidator, ValidationResult } from '@/types/validation';
+import { debounce } from '@/utils/debounce';
 import { blockValidatorMap } from '@/validators/block';
 import { documentValidatorObject } from '@/validators/document';
 import { inlineValidatorMap } from '@/validators/inline';
-import { debounce } from '../utils/debounce.ts';
 
 const VALIDATION_TIMEOUT = 500;
 

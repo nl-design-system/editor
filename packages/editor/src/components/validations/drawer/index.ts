@@ -8,18 +8,19 @@ import X from '@tabler/icons/outline/x.svg?raw';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
-import '../list';
-import '../../content-views/heading-structure';
-import '../../content-views/link-list';
-import '../../content-views/language-changes';
+import '@/components/validations/list';
+import '@/components/content-views/heading-structure';
+import '@/components/content-views/link-list';
+import '@/components/content-views/language-changes';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import type { ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
-import { identifierContext } from '@/context/identifierContext.ts';
+import type { ValidationItem } from '@/components/validations/validation-item';
+import type { ValidationsMap, ValidationSeverity } from '@/types/validation';
 import '@/components/tabs';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
-import { tiptapContext } from '@/context/tiptapContext.ts';
-import { validationsContext } from '@/context/validationsContext.ts';
+import { identifierContext } from '@/context/identifierContext';
+import { tiptapContext } from '@/context/tiptapContext';
+import { validationsContext } from '@/context/validationsContext';
 import {
   CustomEvents,
   type CorrectValidationIssueEvent,
@@ -27,8 +28,7 @@ import {
   type FocusNodeEvent,
   type OpenDocumentOverviewDetail,
 } from '@/events';
-import type { ValidationItem } from '../validation-item';
-import drawerStyles from './styles.ts';
+import drawerStyles from './styles';
 
 const tag = 'clippy-validations-drawer';
 

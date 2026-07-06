@@ -18,10 +18,10 @@ import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { query, state } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import type { ImageUpload } from '@/types/image.ts';
-import { editor } from '@/decorators/TipTapDecorator.ts';
+import type { ImageUpload } from '@/types/image';
+import { editor } from '@/decorators/TipTapDecorator';
 import { CustomEvents } from '@/events';
-import { imageDialogStyles } from './styles.ts';
+import { imageDialogStyles } from './styles';
 
 const tag = 'clippy-toolbar-image';
 

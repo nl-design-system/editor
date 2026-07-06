@@ -1,7 +1,7 @@
 import { msg } from '@lit/localize';
-import type { CorrectValidationFunction } from '@/types/validation.ts';
+import type { CorrectValidationFunction } from '@/types/validation';
 import { CustomEvents } from '@/events';
-import { getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from './helpers.ts';
+import { getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from './helpers';
 
 // ── DOM helpers ───────────────────────────────────────────────────────────────
 

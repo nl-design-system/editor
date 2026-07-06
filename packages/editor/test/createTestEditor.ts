@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/core';
 import { vi } from 'vitest';
-import { editorExtensions } from '../src/extensions';
-import { EditorSettings } from '../src/types/settings';
+import type { EditorSettings } from '@/types/settings';
+import { editorExtensions } from '@/extensions';
 
 const DEFAULT_EDITOR_SETTINGS: EditorSettings = { disableRules: [], enableRules: ['*'], topHeadingLevel: 1 };
 

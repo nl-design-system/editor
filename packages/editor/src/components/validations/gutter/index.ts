@@ -6,13 +6,13 @@ import { safeCustomElement } from '@nl-design-system-community/clippy-components
 import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import type { ValidationResult, ValidationsMap } from '@/types/validation.ts';
-import { tiptapContext } from '@/context/tiptapContext.ts';
-import { validationsContext } from '@/context/validationsContext.ts';
-import { ResizeController } from '@/controllers/ResizeController.ts';
+import type { ValidationResult, ValidationsMap } from '@/types/validation';
+import { tiptapContext } from '@/context/tiptapContext';
+import { validationsContext } from '@/context/validationsContext';
+import { ResizeController } from '@/controllers/ResizeController';
 import { CustomEvents, type FocusValidationItemInGutterEvent, type FocusValidationItemInListDetail } from '@/events';
 import { type ValidationKey, validationMessages } from '@/messages';
-import gutterStyles from './styles.ts';
+import gutterStyles from './styles';
 
 const tag = 'clippy-validations-gutter';
 const MIN_GUTTER_ITEM_HEIGHT = 8;

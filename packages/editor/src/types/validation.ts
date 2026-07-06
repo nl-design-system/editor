@@ -1,4 +1,4 @@
-import type { EditorSettings } from '@/types/settings.ts';
+import type { EditorSettings } from '@/types/settings';
 
 export type DocumentValidator = (dom: HTMLElement, settings: EditorSettings) => ValidationResult[];
 

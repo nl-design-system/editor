@@ -1,8 +1,8 @@
 import userEvent from '@testing-library/user-event';
-import './index.ts';
+import './index';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { page } from 'vitest/browser';
-import { isMacOS } from '@/utils/isMacOS.ts';
+import { isMacOS } from '@/utils/isMacOS';
 import './index';
 
 describe('<clippy-editor>', () => {
@@ -92,8 +92,8 @@ describe('<clippy-editor>', () => {
     expect(page.getByRole('button', { name: 'Definitielijst' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Tabel invoegen' })).toBeVisible();
     const toolbar = await page.getByLabelText('Werkbalk tekstbewerker').element();
-    await toolbar.querySelector('clippy-toolbar-link').updateComplete;
-    await toolbar.querySelector('clippy-toolbar-image').updateComplete;
+    await toolbar.querySelector('clippy-toolbar-link')?.updateComplete;
+    await toolbar.querySelector('clippy-toolbar-image')?.updateComplete;
     await expect(page.getByRole('button', { name: 'Link', exact: true })).toBeVisible();
     expect(page.getByRole('button', { name: 'Afbeelding' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Sneltoetsen' })).toBeVisible();

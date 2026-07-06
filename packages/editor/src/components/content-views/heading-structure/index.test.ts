@@ -1,12 +1,12 @@
 import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import type { ValidationsMap } from '../../../types/validation.ts';
-import type { Context } from '../../context';
-import type { HeadingStructure } from './index.ts';
-import '../../context/index.ts';
-import '../../content/index.ts';
-import './index.ts';
-import { CustomEvents } from '../../../events';
+import type { Context } from '@/components/context';
+import type { ValidationsMap } from '@/types/validation';
+import { CustomEvents } from '@/events';
+import '@/components/context';
+import '@/components/content';
+import './index';
+import type { HeadingStructure } from './index';
 
 async function setupWithContent(
   contentHtml: string,

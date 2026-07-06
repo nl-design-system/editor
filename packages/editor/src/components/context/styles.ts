@@ -14,7 +14,7 @@ import superscriptStyle from '@utrecht/superscript-css/dist/index.css?inline';
 import tableStyle from '@utrecht/table-css/dist/index.css?inline';
 import unorderedListStyle from '@utrecht/unordered-list-css/dist/index.css?inline';
 import { unsafeCSS } from 'lit';
-import editorStyles from '../../styles';
+import editorStyles from '@/styles';
 
 export const editorContextStyles = [
   editorStyles,

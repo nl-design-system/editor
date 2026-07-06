@@ -1,5 +1,5 @@
-import '../../context/index.ts';
-import './index.ts';
+import '@/components/context';
+import './index';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 

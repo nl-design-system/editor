@@ -1,17 +1,17 @@
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { html } from 'lit';
-import '../toolbar';
-import '../validations/gutter';
-import '../validations/drawer';
-import '../validations/list';
-import '../bubble-menu';
-import '../content-views/heading-structure';
-import '../content-views/link-list';
-import '../content-views/language-changes';
+import '@/components/toolbar';
+import '@/components/validations/gutter';
+import '@/components/validations/drawer';
+import '@/components/validations/list';
+import '@/components/bubble-menu';
+import '@/components/content-views/heading-structure';
+import '@/components/content-views/link-list';
+import '@/components/content-views/language-changes';
 import { property } from 'lit/decorators.js';
-import '../content';
-import { Context } from '../context';
-import { type ToolbarConfig, defaultToolbarConfig } from '../toolbar/toolbar-config.ts';
+import '@/components/content';
+import { Context } from '@/components/context';
+import { type ToolbarConfig, defaultToolbarConfig } from '@/components/toolbar/toolbar-config';
 
 const EDITOR_ID = 'editor';
 

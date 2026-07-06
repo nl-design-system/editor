@@ -10,7 +10,7 @@ import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import shortcutsDialogStyles from './styles.ts';
+import shortcutsDialogStyles from './styles';
 
 const tag = 'clippy-shortcuts';
 

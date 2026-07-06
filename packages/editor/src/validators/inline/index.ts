@@ -1,7 +1,7 @@
-import type { ContentValidator } from '@/types/validation.ts';
+import type { ContentValidator } from '@/types/validation';
 import { inlineValidations, validationSeverity } from '@/constants';
-import { correctEmptyMark, correctGenericLinkText, correctUnderlinedMark } from '@/correctors/index.ts';
-import { getElementRange, isEmptyOrWhitespace } from '@/validators/helpers.ts';
+import { correctEmptyMark, correctGenericLinkText, correctUnderlinedMark } from '@/correctors';
+import { getElementRange, isEmptyOrWhitespace } from '@/validators/helpers';
 
 // ── Inline-type mappings ──────────────────────────────────────────────────────
 

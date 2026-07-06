@@ -35,15 +35,15 @@ import { LitElement, html, nothing, unsafeCSS } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { createRef, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import type { ValidationsMap } from '@/types/validation.ts';
-import { validationsContext } from '@/context/validationsContext.ts';
-import { editor } from '@/decorators/TipTapDecorator.ts';
+import type { ValidationsMap } from '@/types/validation';
+import { validationsContext } from '@/context/validationsContext';
+import { editor } from '@/decorators/TipTapDecorator';
 import './toolbar-image';
 import './toolbar-link';
 import { CustomEvents, type DocumentOverviewMode, type OpenDocumentOverviewDetail } from '@/events';
-import toolbarStyles from './styles.ts';
-import { type ToolbarConfig, type ToolbarItem, defaultToolbarConfig } from './toolbar-config.ts';
-import { isDefaultDir } from './toolbar-language-select/languages.ts';
+import toolbarStyles from './styles';
+import { type ToolbarConfig, type ToolbarItem, defaultToolbarConfig } from './toolbar-config';
+import { isDefaultDir } from './toolbar-language-select/languages';
 
 const tag = 'clippy-toolbar';
 

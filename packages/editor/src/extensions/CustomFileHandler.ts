@@ -1,5 +1,5 @@
 import FileHandler from '@tiptap/extension-file-handler';
-import type { ImageUpload } from '@/types/image.ts';
+import type { ImageUpload } from '@/types/image';
 import { CustomEvents } from '@/events';
 
 export const CustomFileHandler = FileHandler.configure({

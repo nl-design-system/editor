@@ -1,6 +1,5 @@
-import type { ContentValidator } from '@/types/validation.ts';
+import type { ContentValidator } from '@/types/validation';
 import { blockValidations, validationSeverity } from '@/constants';
-import { getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from '@/correctors/helpers.ts';
 import {
   correctConvertToList,
   correctDefinitionListMissingTerm,
@@ -12,8 +11,9 @@ import {
   correctImageMissingAltText,
   correctTableMissingHeadings,
   correctTableMissingRows,
-} from '@/correctors/index.ts';
-import { getElementRange, isEmptyOrWhitespace } from '@/validators/helpers.ts';
+} from '@/correctors';
+import { getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from '@/correctors/helpers';
+import { getElementRange, isEmptyOrWhitespace } from '@/validators/helpers';
 
 // ── DOM utilities ─────────────────────────────────────────────────────────────
 

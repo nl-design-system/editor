@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { waitForMedia } from './waitForMedia.ts';
+import { waitForMedia } from './waitForMedia';
 
 /** Smallest valid GIF (1×1 px) as a data URI — used to trigger a real load event. */
 const TINY_GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';

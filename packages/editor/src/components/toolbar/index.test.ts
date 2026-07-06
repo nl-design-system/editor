@@ -1,9 +1,9 @@
-import '../../components/context/index.ts';
-import './index.ts';
+import '@/components/context';
+import './index';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
-import type { Toolbar } from './index.ts';
-import type { ToolbarConfig } from './toolbar-config.ts';
+import type { Toolbar } from './index';
+import type { ToolbarConfig } from './toolbar-config';
 
 const tag = 'clippy-toolbar';
 
