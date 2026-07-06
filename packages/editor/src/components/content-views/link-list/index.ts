@@ -84,38 +84,42 @@ export class LinkList extends LitElement {
 
     return html`
       <nav aria-label=${msg('Links')}>
-        ${links.length > 0
-          ? html`
-              <ol class="clippy-link-list__list" role="list">
-                ${map(links, ({ element, href, index, text, validationEntry }) => {
-                  const severity = validationEntry?.[1].severity ?? null;
-                  return html`
-                    <li class="clippy-link-list__item">
-                      <div class="clippy-link-list__item-header">
-                        ${severity
-                          ? html`<span
-                              class="nl-data-badge clippy-link-list__badge--${severity}"
-                              aria-label=${severity}
-                            ></span>`
-                          : ''}
-                        <a
-                          class="nl-link"
-                          href="#"
-                          @click=${(e: Event) => {
-                            e.preventDefault();
-                            this.#scrollToLink(index, element, validationEntry?.[0]);
-                          }}
-                        >
-                          ${text.trim() || msg('(empty)')}
-                        </a>
-                      </div>
-                      ${href ? html`<span class="clippy-link-list__href" title=${href}>${href}</span>` : ''}
-                    </li>
-                  `;
-                })}
-              </ol>
-            `
-          : html` <p class="nl-paragraph clippy-link-list__empty">${msg('No links found in this document.')}</p> `}
+        ${
+          links.length > 0
+            ? html`
+                <ol class="clippy-link-list__list" role="list">
+                  ${map(links, ({ element, href, index, text, validationEntry }) => {
+                    const severity = validationEntry?.[1].severity ?? null;
+                    return html`
+                      <li class="clippy-link-list__item">
+                        <div class="clippy-link-list__item-header">
+                          ${
+                            severity
+                              ? html`<span
+                                  class="nl-data-badge clippy-link-list__badge--${severity}"
+                                  aria-label=${severity}
+                                ></span>`
+                              : ''
+                          }
+                          <a
+                            class="nl-link"
+                            href="#"
+                            @click=${(e: Event) => {
+                              e.preventDefault();
+                              this.#scrollToLink(index, element, validationEntry?.[0]);
+                            }}
+                          >
+                            ${text.trim() || msg('(empty)')}
+                          </a>
+                        </div>
+                        ${href ? html`<span class="clippy-link-list__href" title=${href}>${href}</span>` : ''}
+                      </li>
+                    `;
+                  })}
+                </ol>
+              `
+            : html` <p class="nl-paragraph clippy-link-list__empty">${msg('No links found in this document.')}</p> `
+        }
       </nav>
     `;
   }

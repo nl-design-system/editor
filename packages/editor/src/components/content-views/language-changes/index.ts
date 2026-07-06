@@ -108,38 +108,44 @@ export class LanguageChanges extends LitElement {
 
     return html`
       <nav aria-label=${msg('Language changes')}>
-        ${entries.length > 0
-          ? html`
-              <ol class="clippy-language-changes__list" role="list">
-                ${map(entries, ({ element, index, isDocumentLanguage, lang, preview, truncated }) => {
-                  return html`
-                    <li class="clippy-language-changes__item">
-                      <span class="nl-data-badge" aria-label=${msg('Language: ') + lang}>${lang}</span>
-                      <div class="clippy-language-changes__item-content">
-                        <a
-                          class="nl-link"
-                          href="#"
-                          @click=${(e: Event) => {
-                            e.preventDefault();
-                            this.#scrollToNode(index, element);
-                          }}
-                        >
-                          ${preview || msg('(empty)')}${truncated ? '…' : ''}
-                        </a>
-                        ${isDocumentLanguage
-                          ? html`<span class="clippy-language-changes__doc-label">${msg('(document language)')}</span>`
-                          : ''}
-                      </div>
-                    </li>
-                  `;
-                })}
-              </ol>
-            `
-          : html`
-              <p class="nl-paragraph clippy-language-changes__empty">
-                ${msg('No language changes found in this document.')}
-              </p>
-            `}
+        ${
+          entries.length > 0
+            ? html`
+                <ol class="clippy-language-changes__list" role="list">
+                  ${map(entries, ({ element, index, isDocumentLanguage, lang, preview, truncated }) => {
+                    return html`
+                      <li class="clippy-language-changes__item">
+                        <span class="nl-data-badge" aria-label=${msg('Language: ') + lang}>${lang}</span>
+                        <div class="clippy-language-changes__item-content">
+                          <a
+                            class="nl-link"
+                            href="#"
+                            @click=${(e: Event) => {
+                              e.preventDefault();
+                              this.#scrollToNode(index, element);
+                            }}
+                          >
+                            ${preview || msg('(empty)')}${truncated ? '…' : ''}
+                          </a>
+                          ${
+                            isDocumentLanguage
+                              ? html`<span class="clippy-language-changes__doc-label"
+                                  >${msg('(document language)')}</span
+                                >`
+                              : ''
+                          }
+                        </div>
+                      </li>
+                    `;
+                  })}
+                </ol>
+              `
+            : html`
+                <p class="nl-paragraph clippy-language-changes__empty">
+                  ${msg('No language changes found in this document.')}
+                </p>
+              `
+        }
       </nav>
     `;
   }

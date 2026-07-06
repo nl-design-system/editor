@@ -275,13 +275,15 @@ export class ToolbarImageUpload extends LitElement {
               this.#applyImage();
             }}
           >
-            ${this.src
-              ? html`
-                  <div class="toolbar-image__preview">
-                    <img src=${this.src} alt=${this.alt} class="toolbar-image__preview-img" />
-                  </div>
-                `
-              : nothing}
+            ${
+              this.src
+                ? html`
+                    <div class="toolbar-image__preview">
+                      <img src=${this.src} alt=${this.alt} class="toolbar-image__preview-img" />
+                    </div>
+                  `
+                : nothing
+            }
 
             <div class="utrecht-form-field utrecht-form-field--text">
               <div class="utrecht-form-field__label">
@@ -393,19 +395,21 @@ export class ToolbarImageUpload extends LitElement {
             </fieldset>
 
             <div class="toolbar-image__actions">
-              ${isEditing
-                ? html`
-                    <clippy-button
-                      type="button"
-                      purpose="secondary"
-                      hint="negative"
-                      @click=${this.#removeImage}
-                      class="toolbar-image__remove-button"
-                    >
-                      ${msg('Remove image')}
-                    </clippy-button>
-                  `
-                : nothing}
+              ${
+                isEditing
+                  ? html`
+                      <clippy-button
+                        type="button"
+                        purpose="secondary"
+                        hint="negative"
+                        @click=${this.#removeImage}
+                        class="toolbar-image__remove-button"
+                      >
+                        ${msg('Remove image')}
+                      </clippy-button>
+                    `
+                  : nothing
+              }
               <clippy-button type="button" @click=${() => this.modalDialog.close()}>${msg('Close')}</clippy-button>
               <button type="submit" class="nl-button nl-button--primary">
                 ${isEditing ? msg('Update') : msg('Insert image')}

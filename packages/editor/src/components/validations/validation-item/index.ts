@@ -153,24 +153,28 @@ export class ValidationItem extends LitElement {
 
     return html`
       <div class="clippy-validation-item-actions">
-        ${typeof this.correct === 'function'
-          ? html`<clippy-button purpose="primary" @click=${this.#applyFix} aria-describedby=${ariaDescribedBy}>
-              ${this.customCorrectLabel ?? msg('Correct')}
-            </clippy-button>`
-          : nothing}
+        ${
+          typeof this.correct === 'function'
+            ? html`<clippy-button purpose="primary" @click=${this.#applyFix} aria-describedby=${ariaDescribedBy}>
+                ${this.customCorrectLabel ?? msg('Correct')}
+              </clippy-button>`
+            : nothing
+        }
         <clippy-button purpose="secondary" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
           ${msg('Focus')}
         </clippy-button>
-        ${this.mode === 'tooltip'
-          ? html`<clippy-button
-              @click=${(event: Event) => this.#handleValidationItemClick(event)}
-              icon-only
-              purpose="subtle"
-            >
-              <clippy-icon slot="iconStart">${unsafeSVG(ListDetailsIcon)}</clippy-icon>
-              ${msg('Open in drawer')}
-            </clippy-button>`
-          : nothing}
+        ${
+          this.mode === 'tooltip'
+            ? html`<clippy-button
+                @click=${(event: Event) => this.#handleValidationItemClick(event)}
+                icon-only
+                purpose="subtle"
+              >
+                <clippy-icon slot="iconStart">${unsafeSVG(ListDetailsIcon)}</clippy-icon>
+                ${msg('Open in drawer')}
+              </clippy-button>`
+            : nothing
+        }
       </div>
     `;
   }
@@ -190,21 +194,23 @@ export class ValidationItem extends LitElement {
         </div>
         <div class="clippy-validation-item__message">
           <slot name="tip-html"></slot>
-          ${this.href
-            ? html`
-                <p class="nl-paragraph">
-                  <a
-                    class="nl-link"
-                    href="${this.href}"
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-describedby=${ariaDescribedBy}
-                  >
-                    ${msg('Extensive explanation')}
-                  </a>
-                </p>
-              `
-            : null}
+          ${
+            this.href
+              ? html`
+                  <p class="nl-paragraph">
+                    <a
+                      class="nl-link"
+                      href="${this.href}"
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-describedby=${ariaDescribedBy}
+                    >
+                      ${msg('Extensive explanation')}
+                    </a>
+                  </p>
+                `
+              : null
+          }
         </div>
         <div class="clippy-validation-item__footer">${this.#renderActions()}</div>
       </div>
