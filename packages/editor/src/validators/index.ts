@@ -16,7 +16,7 @@ const VALIDATION_TIMEOUT = 500;
  * (`'NODE_SHOULD_NOT_BE_EMPTY'`) as used in TypeScript constants — both are
  * normalised to uppercase before comparison.
  */
-const toUpperKey = (key: string): string => key.toUpperCase().replace(/-/g, '_');
+const toUpperKey = (key: string): string => key.toUpperCase().replaceAll(/-/g, '_');
 
 /**
  * Filters a validator map to only the entries active under the given settings.
