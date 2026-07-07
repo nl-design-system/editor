@@ -1,4 +1,4 @@
-import type { ValidationResult, ValidationSeverity, ValidationsMap } from '@/types/validation.ts';
+import type { ValidationResult, ValidationSeverity, ValidationsMap } from '@/types/validation';
 import { validationSeverity } from '@/constants';
 
 export const validationSeverityOrder: ValidationSeverity[] = [

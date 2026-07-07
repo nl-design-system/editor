@@ -7,11 +7,11 @@ import LanguageIcon from '@tabler/icons/outline/language.svg?raw';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { editor } from '@/decorators/TipTapDecorator.ts';
-import { sourceLocale } from '@/generated/locale-codes.ts';
-import { findNearestAncestorAttribute } from '@/utils/domTraverser.ts';
-import { languages, isSameLanguage, type Language } from './languages.ts';
-import toolbarLanguageSelectStyles from './styles.ts';
+import { editor } from '@/decorators/TipTapDecorator';
+import { sourceLocale } from '@/generated/locale-codes';
+import { findNearestAncestorAttribute } from '@/utils/domTraverser';
+import { languages, isSameLanguage, type Language } from './languages';
+import toolbarLanguageSelectStyles from './styles';
 
 export interface SelectOption {
   active: boolean;

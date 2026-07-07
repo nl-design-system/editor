@@ -1,7 +1,7 @@
 import type { Editor } from '@tiptap/core';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import { ContextConsumer } from '@lit/context';
-import { tiptapContext } from '@/context/tiptapContext.ts';
+import { tiptapContext } from '@/context/tiptapContext';
 
 export class TipTapController implements ReactiveController {
   private readonly host: ReactiveControllerHost;

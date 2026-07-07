@@ -5,13 +5,13 @@ import { safeCustomElement } from '@nl-design-system-community/clippy-components
 import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
-import '../validation-item';
-import type { ValidationsMap, ValidationSeverity } from '@/types/validation.ts';
-import { validationsContext } from '@/context/validationsContext.ts';
+import '@/components/validations/validation-item';
+import type { ValidationItem } from '@/components/validations/validation-item';
+import type { ValidationsMap, ValidationSeverity } from '@/types/validation';
+import { validationsContext } from '@/context/validationsContext';
 import { CustomEvents, type FocusValidationItemInListEvent } from '@/events';
 import { type ValidationKey, validationMessages } from '@/messages';
-import type { ValidationItem } from '../validation-item';
-import listStyles from './styles.ts';
+import listStyles from './styles';
 
 const tag = 'clippy-validations-list';
 

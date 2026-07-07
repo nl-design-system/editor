@@ -10,8 +10,8 @@ import ChevronDownIcon from '@tabler/icons/outline/chevron-down.svg?raw';
 import { html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { tiptapContext } from '@/context/tiptapContext.ts';
-import toolbarTextAlignStyles from './styles.ts';
+import { tiptapContext } from '@/context/tiptapContext';
+import toolbarTextAlignStyles from './styles';
 
 const tag = 'clippy-toolbar-text-align';
 

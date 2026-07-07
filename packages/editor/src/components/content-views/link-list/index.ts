@@ -8,13 +8,13 @@ import { safeCustomElement } from '@nl-design-system-community/clippy-components
 import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
-import type { ValidationsMap, ValidationResult } from '@/types/validation.ts';
-import { htmlDocumentContext } from '@/context/htmlDocumentContext.ts';
-import { tiptapContext } from '@/context/tiptapContext.ts';
-import { validationsContext } from '@/context/validationsContext.ts';
+import type { ValidationsMap, ValidationResult } from '@/types/validation';
+import { htmlDocumentContext } from '@/context/htmlDocumentContext';
+import { tiptapContext } from '@/context/tiptapContext';
+import { validationsContext } from '@/context/validationsContext';
 import { CustomEvents, type FocusValidationItemInGutterDetail } from '@/events';
-import { getHighestSeverityEntryByElement } from '@/utils/validations.ts';
-import linkListStyles from './styles.ts';
+import { getHighestSeverityEntryByElement } from '@/utils/validations';
+import linkListStyles from './styles';
 
 interface LinkEntry {
   element: HTMLAnchorElement;

@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { page } from 'vitest/browser';
-import type { ValidationResult } from '../../../types/validation';
-import type { Context } from '../../context';
-import { blockValidations, documentValidations, inlineValidations } from '../../../constants';
-import '../../context/index.ts';
-import './index.ts';
-import { CustomEvents } from '../../../events';
+import type { Context } from '@/components/context';
+import type { ValidationResult } from '@/types/validation';
+import { blockValidations, documentValidations, inlineValidations } from '@/constants';
+import '@/components/context';
+import './index';
+import { CustomEvents } from '@/events';
 
 const TEST_IDENTIFIER = 'test-editor-id';
 

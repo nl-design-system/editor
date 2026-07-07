@@ -3,17 +3,17 @@ import { safeCustomElement } from '@nl-design-system-community/clippy-components
 import { Editor as TiptapEditor } from '@tiptap/core';
 import { LitElement, html, type PropertyValues } from 'lit';
 import { property, queryAssignedElements } from 'lit/decorators.js';
-import type { ValidationResult } from '@/types/validation.ts';
-import { htmlDocumentContext } from '@/context/htmlDocumentContext.ts';
-import { identifierContext } from '@/context/identifierContext.ts';
-import { tiptapContext } from '@/context/tiptapContext.ts';
-import { validationsContext } from '@/context/validationsContext.ts';
+import type { ValidationResult } from '@/types/validation';
+import { htmlDocumentContext } from '@/context/htmlDocumentContext';
+import { identifierContext } from '@/context/identifierContext';
+import { tiptapContext } from '@/context/tiptapContext';
+import { validationsContext } from '@/context/validationsContext';
 import { editorExtensions } from '@/extensions';
-import { initializeLocale } from '@/localization.ts';
-import { sanitizeTopHeadingLevel } from '@/utils/sanitize.ts';
-import { waitForMedia } from '@/utils/waitForMedia.ts';
+import { initializeLocale } from '@/localization';
+import { sanitizeTopHeadingLevel } from '@/utils/sanitize';
+import { waitForMedia } from '@/utils/waitForMedia';
 import { runValidation } from '@/validators';
-import { editorContextStyles } from './styles.ts';
+import { editorContextStyles } from './styles';
 
 const tag = 'clippy-context';
 

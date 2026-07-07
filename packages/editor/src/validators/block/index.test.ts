@@ -1,7 +1,7 @@
+import { createTestEditor } from '@test/createTestEditor';
 import { describe, expect, it, vi } from 'vitest';
-import type { ValidationResult } from '../../types/validation.ts';
-import { createTestEditor } from '../../../test/createTestEditor';
-import { blockValidations } from '../../constants';
+import type { ValidationResult } from '@/types/validation';
+import { blockValidations } from '@/constants';
 import { paragraphMustUseSemanticList } from './index';
 
 const byKey = (map: Map<Range, ValidationResult>, key: string): ValidationResult | undefined =>

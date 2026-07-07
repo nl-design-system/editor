@@ -1,7 +1,7 @@
+import { createTestEditor } from '@test/createTestEditor';
 import { vi, describe, it, expect } from 'vitest';
-import type { ValidationResult } from '../../types/validation.ts';
-import { createTestEditor } from '../../../test/createTestEditor';
-import { documentValidations } from '../../constants';
+import type { ValidationResult } from '@/types/validation';
+import { documentValidations } from '@/constants';
 import {
   documentMustHaveCorrectHeadingOrder,
   documentMustHaveSingleHeadingOne,

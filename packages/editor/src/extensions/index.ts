@@ -23,13 +23,13 @@ import Text from '@tiptap/extension-text';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
 import { Dropcursor, UndoRedo, Placeholder } from '@tiptap/extensions';
-import type { EditorSettings } from '@/types/settings.ts';
-import type { ValidationResult } from '@/types/validation.ts';
-import { CustomFileHandler } from '@/extensions/CustomFileHandler.ts';
-import { DefinitionList } from '@/extensions/DefinitionList.ts';
-import KeyboardShortcuts from '@/extensions/KeyboardShortcuts.ts';
+import type { EditorSettings } from '@/types/settings';
+import type { ValidationResult } from '@/types/validation';
+import { CustomFileHandler } from '@/extensions/CustomFileHandler';
+import { DefinitionList } from '@/extensions/DefinitionList';
+import KeyboardShortcuts from '@/extensions/KeyboardShortcuts';
 import { Table, TableBody, TableCaption, TableFoot, TableHead } from '@/extensions/Table';
-import Validation from '@/extensions/Validation.ts';
+import Validation from '@/extensions/Validation';
 
 export const editorExtensions = (
   settings: EditorSettings,

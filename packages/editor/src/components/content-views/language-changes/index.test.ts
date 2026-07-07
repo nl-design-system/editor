@@ -1,10 +1,10 @@
 import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import type { Context } from '../../context';
-import type { LanguageChanges } from './index.ts';
-import '../../context/index.ts';
-import '../../content/index.ts';
-import './index.ts';
+import type { Context } from '@/components/context';
+import type { LanguageChanges } from './index';
+import '@/components/context';
+import '@/components/content';
+import './index';
 
 async function setupWithContent(contentHtml: string): Promise<{ langChanges: LanguageChanges; contextEl: Context }> {
   document.body.innerHTML = `

@@ -7,8 +7,8 @@ import { html, LitElement } from 'lit';
 import '@nl-design-system-community/clippy-components/clippy-combobox';
 import { property, state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { editor } from '@/decorators/TipTapDecorator.ts';
-import toolbarFormatSelectStyles from './styles.ts';
+import { editor } from '@/decorators/TipTapDecorator';
+import toolbarFormatSelectStyles from './styles';
 
 const tag = 'clippy-format-select';
 

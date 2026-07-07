@@ -1,6 +1,6 @@
 import type { Editor } from '@tiptap/core';
+import { createTestEditor } from '@test/createTestEditor';
 import { describe, it, expect, afterEach } from 'vitest';
-import { createTestEditor } from '../test/createTestEditor';
 
 describe('Allowed HTML in Clippy Editor', () => {
   let editor: Editor;

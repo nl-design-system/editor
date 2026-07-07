@@ -1,10 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "allowImportingTsExtensions": true,
     "declaration": true,
     "emitDeclarationOnly": true,
     "erasableSyntaxOnly": true,
+    "allowSyntheticDefaultImports": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "preserve",
     "moduleDetection": "force",
@@ -14,6 +14,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
+    "rootDir": "./src",
     "types": ["vite/client"],
     "useDefineForClassFields": false,
     "verbatimModuleSyntax": true

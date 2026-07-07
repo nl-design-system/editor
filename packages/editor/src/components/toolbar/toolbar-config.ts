@@ -1,4 +1,4 @@
-import { TOOLBAR_ITEM } from './constants.ts';
+import { TOOLBAR_ITEM } from './constants';
 
 export type ToolbarItem = (typeof TOOLBAR_ITEM)[keyof typeof TOOLBAR_ITEM];
 

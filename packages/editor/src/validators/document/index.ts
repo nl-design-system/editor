@@ -1,9 +1,9 @@
 import type { Level } from '@tiptap/extension-heading';
-import type { EditorSettings } from '@/types/settings.ts';
-import type { DocumentValidator, ValidationResult } from '@/types/validation.ts';
+import type { EditorSettings } from '@/types/settings';
+import type { DocumentValidator, ValidationResult } from '@/types/validation';
 import { documentValidations, validationSeverity } from '@/constants';
-import { correctDuplicateHeadingOne, correctHeadingLevel, correctMissingTopLevelHeading } from '@/correctors/index.ts';
-import { getElementRange } from '@/validators/helpers.ts';
+import { correctDuplicateHeadingOne, correctHeadingLevel, correctMissingTopLevelHeading } from '@/correctors';
+import { getElementRange } from '@/validators/helpers';
 
 // ── Document validators ───────────────────────────────────────────────────────
 

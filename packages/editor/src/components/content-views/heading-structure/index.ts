@@ -10,13 +10,13 @@ import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import { map } from 'lit/directives/map.js';
-import type { ValidationsMap, ValidationResult } from '@/types/validation.ts';
-import { htmlDocumentContext } from '@/context/htmlDocumentContext.ts';
-import { tiptapContext } from '@/context/tiptapContext.ts';
-import { validationsContext } from '@/context/validationsContext.ts';
+import type { ValidationsMap, ValidationResult } from '@/types/validation';
+import { htmlDocumentContext } from '@/context/htmlDocumentContext';
+import { tiptapContext } from '@/context/tiptapContext';
+import { validationsContext } from '@/context/validationsContext';
 import { CustomEvents, type FocusValidationItemInGutterDetail } from '@/events';
-import { getHighestSeverityEntryByElement } from '@/utils/validations.ts';
-import headingStructureStyles from './styles.ts';
+import { getHighestSeverityEntryByElement } from '@/utils/validations';
+import headingStructureStyles from './styles';
 
 interface HeadingEntry {
   element: HTMLElement;

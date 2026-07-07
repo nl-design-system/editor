@@ -1,6 +1,6 @@
 import type { Editor } from '@tiptap/core';
 import type { ReactiveControllerHost } from 'lit';
-import { TipTapController } from '@/controllers/TipTapController.ts';
+import { TipTapController } from '@/controllers/TipTapController';
 
 const controllerInstances = new WeakMap<ReactiveControllerHost, TipTapController>();
 

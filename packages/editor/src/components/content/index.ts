@@ -4,10 +4,10 @@ import { Editor as TiptapEditor } from '@tiptap/core';
 import { LitElement, css, html, nothing, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import type { ValidationsMap } from '@/types/validation.ts';
-import { htmlDocumentContext } from '@/context/htmlDocumentContext.ts';
-import { tiptapContext } from '@/context/tiptapContext.ts';
-import { validationsContext } from '@/context/validationsContext.ts';
+import type { ValidationsMap } from '@/types/validation';
+import { htmlDocumentContext } from '@/context/htmlDocumentContext';
+import { tiptapContext } from '@/context/tiptapContext';
+import { validationsContext } from '@/context/validationsContext';
 
 const tag = 'clippy-content';
 

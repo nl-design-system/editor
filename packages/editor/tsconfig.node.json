@@ -2,8 +2,6 @@
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
-    "emitDeclarationOnly": false,
-    "erasableSyntaxOnly": false,
     "noEmit": true,
     "lib": ["ES2023"],
     "module": "ESNext",

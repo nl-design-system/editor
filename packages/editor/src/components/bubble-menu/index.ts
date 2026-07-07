@@ -9,11 +9,11 @@ import { html, LitElement, nothing } from 'lit';
 import { state } from 'lit/decorators.js';
 import { createRef, type Ref, ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { editor } from '@/decorators/TipTapDecorator.ts';
+import { editor } from '@/decorators/TipTapDecorator';
 import { CustomEvents } from '@/events';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
-import bubbleMenuStyles from './styles.ts';
+import bubbleMenuStyles from './styles';
 
 @localized()
 @safeCustomElement('clippy-bubble-menu')

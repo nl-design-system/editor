@@ -1,5 +1,5 @@
 import { configureLocalization, type LocaleModule } from '@lit/localize';
-import * as templates_nl from './../src/generated/locales/nl.ts';
+import * as templates_nl from './../src/generated/locales/nl';
 import { allLocales, sourceLocale, targetLocales } from './generated/locale-codes.js';
 
 const localizedTemplates = new Map([['nl', templates_nl]]);

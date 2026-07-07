@@ -8,10 +8,10 @@ import { safeCustomElement } from '@nl-design-system-community/clippy-components
 import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
-import { htmlDocumentContext } from '@/context/htmlDocumentContext.ts';
-import { tiptapContext } from '@/context/tiptapContext.ts';
-import { findNearestAncestorAttribute } from '@/utils/domTraverser.ts';
-import languageChangesStyles from './styles.ts';
+import { htmlDocumentContext } from '@/context/htmlDocumentContext';
+import { tiptapContext } from '@/context/tiptapContext';
+import { findNearestAncestorAttribute } from '@/utils/domTraverser';
+import languageChangesStyles from './styles';
 
 const PREVIEW_LENGTH = 20;
 
