@@ -71,11 +71,11 @@ export class FormatSelect extends LitElement {
     if (!this.editor) return [];
     const headingLevels = getConfiguredHeadingLevels(this.editor);
     return [
+      { label: msg('Paragraph'), value: 'paragraph' },
       ...headingLevels.map((level) => ({
         label: msg(str`Heading level ${level}`),
         value: `h${level}`,
       })),
-      { label: msg('Paragraph'), value: 'paragraph' },
       { label: msg('Code block'), value: 'codeBlock' },
       { label: msg('Blockquote'), value: 'blockquote' },
     ];
