@@ -50,7 +50,11 @@ export default defineConfig({
         // clippy.ckeditor5.yml.
         footer: '(globalThis.CKEditor5 = globalThis.CKEditor5 || {}).clippyCkeditor = clippyCkeditor;',
         globals: {
-          ckeditor5: "globalThis.CKEditor5.dll('./src/core.js')",
+          // Drupal's DLL has no umbrella entry, so merge core (`Plugin`) and ui
+          // (`View`), giving us the ui exports needed to register new
+          // functionality like the accessibility-notifications toolbar button.
+          ckeditor5:
+            "Object.assign({}, globalThis.CKEditor5.dll('./src/core.js'), globalThis.CKEditor5.dll('./src/ui.js'))",
         },
       },
     },
