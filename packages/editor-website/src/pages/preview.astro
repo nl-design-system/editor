@@ -1,4 +1,5 @@
 ---
+import iconChevronLeft from '@tabler/icons/outline/chevron-left.svg?raw';
 import { EDITOR_STORAGE_KEY } from '../utils/editorPersistence';
 ---
 
@@ -22,6 +23,12 @@ import { EDITOR_STORAGE_KEY } from '../utils/editorPersistence';
     </script>
   </head>
   <body class="utrecht-body">
+    <header class="preview-header">
+      <a class="preview-header__back nl-button nl-button--subtle" href="/">
+        <span class="preview-header__icon" aria-hidden="true"><Fragment set:html={iconChevronLeft} /></span>
+        <span class="nl-button__label">Terug naar editor</span>
+      </a>
+    </header>
     <clippy-context id="clippy-preview" readonly>
       <div slot="value">
         <h1>NL Design System Editor — voorbeeld</h1>
@@ -159,6 +166,30 @@ import { EDITOR_STORAGE_KEY } from '../utils/editorPersistence';
     </clippy-context>
 
     <style>
+      .preview-header {
+        display: flex;
+        align-items: center;
+        max-width: 1200px;
+        margin-inline: auto;
+        padding-inline: var(--basis-space-inline-xl, 1.5rem);
+        padding-block: var(--basis-space-block-md, 1rem);
+      }
+
+      .preview-header__back {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--basis-space-inline-sm, 0.5rem);
+      }
+
+      .preview-header__icon {
+        display: inline-flex;
+      }
+
+      .preview-header__icon :global(svg) {
+        inline-size: 1.25em;
+        block-size: 1.25em;
+      }
+
       .preview-layout {
         display: grid;
         grid-template-columns: 1fr 320px;
