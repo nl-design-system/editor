@@ -15,8 +15,10 @@
 /* bordered form field */
 .clippy-toolbar-group__field {
   align-items: center;
-  border: var(--basis-border-width-sm) solid var(--basis-color-default-border-default);
+  border-color: var(--basis-color-default-border-default);
   border-radius: var(--basis-border-radius-sm);
+  border-style: solid;
+  border-width: var(--basis-border-width-sm);
   display: flex;
   gap: var(--basis-space-inline-sm);
   padding-block: var(--basis-space-block-sm);
@@ -33,8 +35,10 @@
 }
 
 .clippy-toolbar-group__select {
-  border: var(--basis-border-width-sm) solid var(--basis-color-default-border-default);
+  border-color: var(--basis-color-default-border-default);
   border-radius: var(--basis-border-radius-sm);
+  border-style: solid;
+  border-width: var(--basis-border-width-sm);
   flex: 1;
   font: inherit;
   padding-block: var(--basis-space-block-xs);
@@ -68,8 +72,10 @@
 
 .clippy-config-snippet__pre {
   background-color: var(--basis-color-default-bg-subtle);
-  border: var(--basis-border-width-sm) solid var(--basis-color-default-border-default);
+  border-color: var(--basis-color-default-border-default);
   border-radius: var(--basis-border-radius-sm);
+  border-style: solid;
+  border-width: var(--basis-border-width-sm);
   flex: 1;
   font-family: monospace;
   font-size: var(--basis-text-font-size-sm);
