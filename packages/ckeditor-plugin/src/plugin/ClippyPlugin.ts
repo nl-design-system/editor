@@ -1,7 +1,9 @@
+import { type AccessibilityNotificationsPanel } from '@nl-design-system-community/editor/accessibility-notifications';
 import { CustomEvents, type FocusNodeEvent, type Gutter } from '@nl-design-system-community/editor/gutter';
 import { debouncedValidate, runValidation, type ValidationsMap } from '@nl-design-system-community/editor/validators';
-import { Plugin } from 'ckeditor5';
+import { Plugin, View, type Locale, type ToolbarView } from 'ckeditor5';
 import { DEFAULT_SETTINGS } from '../constants/';
+import { adoptClippyStyles } from '../styles/';
 import { findMatchingCorrection, findOccurrenceIndex, runValidations } from '../utils/correction.ts';
 
 export class ClippyPlugin extends Plugin {
@@ -12,9 +14,11 @@ export class ClippyPlugin extends Plugin {
   private _editableEl: HTMLElement | null = null;
   private _editorEl: HTMLElement | null = null;
   private _gutterEl: Gutter | null = null;
+  private _notificationsView: View | null = null;
   private _validationsMap: ValidationsMap = new Map();
 
   init(): void {
+    this._registerNotificationsToolbarItem();
     this.editor.on('ready', () => {
       this._setupUI();
       this._validate();
@@ -31,14 +35,37 @@ export class ClippyPlugin extends Plugin {
       return;
     }
 
+    // add theme token scoping for the drupal environment.
+    this._editorEl.classList.add('ma-theme', 'clippy-theme', 'utrecht-theme');
+    adoptClippyStyles();
+
     const gutter = document.createElement('clippy-validations-gutter') as Gutter;
     gutter.mode = 'tooltip';
-
-    // Temp: add theme token scoping for drupal envirnment
-    gutter.classList.add('ma-theme', 'clippy-theme', 'utrecht-theme');
     gutterContainer.append(gutter);
     this._gutterEl = gutter;
     this._editorEl.addEventListener(CustomEvents.FOCUS_NODE, this._handleFocusNode);
+
+    this._addNotificationsToolbarItem();
+  }
+
+  private _registerNotificationsToolbarItem(): void {
+    this.editor.ui.componentFactory.add('clippyAccessibilityNotifications', (locale: Locale) => {
+      const view = new View(locale);
+      view.setTemplate({
+        tag: 'clippy-accessibility-notifications-panel',
+      });
+      this._notificationsView = view;
+      return view;
+    });
+  }
+
+  private _addNotificationsToolbarItem(): void {
+    const toolbar = (this.editor.ui.view as Partial<{ toolbar: ToolbarView }>).toolbar;
+    if (!toolbar) {
+      return;
+    }
+
+    toolbar.items.add(this.editor.ui.componentFactory.create('clippyAccessibilityNotifications'));
   }
 
   private _validate(): void {
@@ -68,7 +95,23 @@ export class ClippyPlugin extends Plugin {
       return;
     }
 
-    this._gutterEl.validationsMap = this._patchCorrectionsForCKEditor(this._validationsMap);
+    const validationsMap = this._patchCorrectionsForCKEditor(this._validationsMap);
+    this._gutterEl.validationsMap = validationsMap;
+    this._renderNotifications(validationsMap);
+  }
+
+  private _renderNotifications(validationsMap: ValidationsMap): void {
+    // `element` is created lazily by CKEditor when the toolbar item is rendered
+    const panel = this._notificationsView?.element as AccessibilityNotificationsPanel | null;
+    if (!panel || !this._editableEl) {
+      return;
+    }
+
+    // Forward the CKEditor DOM element and its validations so the panel can match
+    // intersecting ranges to the correct validations. Both must reference the
+    // same DOM tree the ranges were created against for the intersection to work.
+    panel.htmlDocument = this._editableEl;
+    panel.validationsMap = validationsMap;
   }
 
   private _patchCorrectionsForCKEditor(validationsMap: ValidationsMap): ValidationsMap {
