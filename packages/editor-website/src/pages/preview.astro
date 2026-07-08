@@ -1,5 +1,5 @@
 ---
-
+import { EDITOR_STORAGE_KEY } from '../utils/editorPersistence';
 ---
 
 <html lang="nl" dir="ltr" class="ma-theme clippy-theme utrecht-root">
@@ -110,6 +110,32 @@
         <p>Dit alinea heeft geen taalkenmerk en valt daardoor terug op de documenttaal (Nederlands).</p>
         <p lang="ar" dir="rtl">هذه الفقرة باللغة العربية وتتدفق من اليمين إلى اليسار.</p>
       </div>
+
+      <!--
+        Runs synchronously during parsing, before the deferred editor module
+        upgrades <clippy-context> and reads its "value" slot. This swaps in the
+        content edited on the home page (persisted to localStorage) so the
+        preview reflects the user's own document.
+      -->
+      <script is:inline define:vars={{ storageKey: EDITOR_STORAGE_KEY }}>
+        (function () {
+          try {
+            var saved = localStorage.getItem(storageKey);
+            if (!saved) return;
+            var slot = document.querySelector('#clippy-preview > div[slot="value"]');
+            if (slot) slot.innerHTML = saved;
+          } catch (error) {
+            /* localStorage may be unavailable (e.g. privacy mode); keep default content. */
+          }
+        })();
+
+        // When the page is restored from the back/forward (bfcache), scripts do
+        // not re-run and <clippy-context> keeps its previously validated content.
+        // Force a fresh load so the latest edits (and their validations) show.
+        window.addEventListener('pageshow', function (event) {
+          if (event.persisted) window.location.reload();
+        });
+      </script>
 
       <div class="preview-layout">
         <main class="preview-content">
