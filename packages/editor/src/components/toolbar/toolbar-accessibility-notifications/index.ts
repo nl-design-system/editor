@@ -40,14 +40,14 @@ export class AccessibilityNotifications extends LitElement {
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
 
-  @state() private _menuOpen = false;
+  @state() private _expanded = false;
 
-  readonly #toggleMenu = () => {
-    this._menuOpen = !this._menuOpen;
+  readonly #togglePanel = () => {
+    this._expanded = !this._expanded;
   };
 
   readonly #openOverview = (mode: DocumentOverviewMode = 'validations') => {
-    this._menuOpen = false;
+    this._expanded = false;
     globalThis.dispatchEvent(
       new CustomEvent<OpenDocumentOverviewDetail>(CustomEvents.OPEN_DOCUMENT_OVERVIEW, {
         detail: { mode },
@@ -56,7 +56,7 @@ export class AccessibilityNotifications extends LitElement {
   };
 
   readonly #handleKeydown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') this._menuOpen = false;
+    if (event.key === 'Escape') this._expanded = false;
   };
 
   override connectedCallback() {
@@ -79,9 +79,9 @@ export class AccessibilityNotifications extends LitElement {
     return html`
       <span data-toolbar-item="accessibility-notifications" class="clippy-accessibility-notifications">
         <clippy-button
-          @click=${this.#toggleMenu}
-          aria-haspopup="menu"
-          .pressed=${this._menuOpen}
+          @click=${this.#togglePanel}
+          aria-expanded=${this._expanded}
+          .pressed=${this._expanded}
           icon-only
           size="small"
           purpose="subtle"
@@ -93,32 +93,20 @@ export class AccessibilityNotifications extends LitElement {
         </clippy-button>
         ${size > 0 ? html`<span class="clippy-accessibility-notifications__dot-badge" aria-hidden="true"></span>` : nothing}
         ${
-          this._menuOpen
+          this._expanded
             ? html`
-                <div role="menu" class="clippy-accessibility-notifications__menu">
-                  <button role="menuitem" class="nl-button nl-button--subtle" @click=${() => this.#openOverview()}>
+                <div class="clippy-accessibility-notifications__panel">
+                  <button class="nl-button nl-button--subtle" @click=${() => this.#openOverview()}>
                     ${msg('Errors, warnings and tips')}
                     ${size > 0 ? html`<span class="nl-number-badge">${size}</span>` : nothing}
                   </button>
-                  <button
-                    role="menuitem"
-                    class="nl-button nl-button--subtle"
-                    @click=${() => this.#openOverview('heading-structure')}
-                  >
+                  <button class="nl-button nl-button--subtle" @click=${() => this.#openOverview('heading-structure')}>
                     ${msg('Heading structure')}
                   </button>
-                  <button
-                    role="menuitem"
-                    class="nl-button nl-button--subtle"
-                    @click=${() => this.#openOverview('link-list')}
-                  >
+                  <button class="nl-button nl-button--subtle" @click=${() => this.#openOverview('link-list')}>
                     ${msg('Links')}
                   </button>
-                  <button
-                    role="menuitem"
-                    class="nl-button nl-button--subtle"
-                    @click=${() => this.#openOverview('language-changes')}
-                  >
+                  <button class="nl-button nl-button--subtle" @click=${() => this.#openOverview('language-changes')}>
                     ${msg('Language changes')}
                   </button>
                 </div>

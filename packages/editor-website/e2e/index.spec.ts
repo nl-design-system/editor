@@ -306,7 +306,7 @@ test.describe('Accessibility notifications', () => {
   test('open drawer and list notifications', async ({ page }) => {
     const clippyEditor = page.locator('#clippy-editor-localhost');
     await clippyEditor.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
-    await clippyEditor.getByRole('menuitem', { name: 'Errors, warnings and tips' }).click();
+    await clippyEditor.getByRole('button', { name: 'Errors, warnings and tips' }).click();
 
     const drawer = clippyEditor.getByTestId('clippy-validations-drawer');
     await expect(drawer).toBeVisible();
@@ -316,7 +316,7 @@ test.describe('Accessibility notifications', () => {
   test('navigate to node via Focus button', async ({ page }) => {
     const clippyEditor = page.locator('#clippy-editor-localhost');
     await clippyEditor.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
-    await clippyEditor.getByRole('menuitem', { name: 'Errors, warnings and tips' }).click();
+    await clippyEditor.getByRole('button', { name: 'Errors, warnings and tips' }).click();
 
     const drawer = clippyEditor.getByTestId('clippy-validations-drawer');
     await expect(drawer).toBeVisible();
