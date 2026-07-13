@@ -59,7 +59,10 @@ export function setupEditorPersistence({
   const previewLink = document.getElementById(previewLinkId);
   const valueSlot = editorEl.querySelector('div[slot="value"]');
 
-  // Snapshot the initial markup so "reset" can restore the example content.
+  // Snapshot the initial slot markup so "reset" can restore the example content.
+  // Reset feeds this raw markup back through setContent(), which reproduces the
+  // exact same parse path the editor used on first render — so the reset result
+  // is byte-identical to the initial content.
   const exampleHtml = valueSlot?.innerHTML ?? '';
 
   getEditor(editorEl).then((editor) => {
