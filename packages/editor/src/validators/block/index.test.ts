@@ -473,6 +473,43 @@ describe('Block validations', () => {
     });
   });
 
+  describe('Paragraph entirely bold', () => {
+    it('flags a long all-bold paragraph as a warning', async () => {
+      const callback = vi.fn();
+      await createTestEditor(
+        `<h1>Title</h1><p><strong>This is a very long bold paragraph that exceeds the character limit for heading detection</strong></p>`,
+        callback,
+      );
+      await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
+      expect(byKey(callback.mock.calls[0][0], blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD)?.severity).toBe(
+        'warning',
+      );
+    });
+
+    it('flags a short all-bold paragraph regardless of length', async () => {
+      const callback = vi.fn();
+      await createTestEditor(`<h1>Title</h1><p><strong>Short bold text</strong></p>`, callback);
+      await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
+      expect(byKey(callback.mock.calls[0][0], blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD)?.severity).toBe(
+        'warning',
+      );
+    });
+
+    it('does not flag a paragraph with mixed bold and plain content', async () => {
+      const callback = vi.fn();
+      await createTestEditor(`<h1>Title</h1><p>Some <strong>bold</strong> and plain text</p>`, callback);
+      await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
+      expect(byKey(callback.mock.calls[0][0], blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD)).toBeUndefined();
+    });
+
+    it('does not flag an empty paragraph', async () => {
+      const callback = vi.fn();
+      await createTestEditor(`<h1>Title</h1><p><strong> </strong></p>`, callback);
+      await vi.waitFor(() => expect(callback).toHaveBeenCalledTimes(1));
+      expect(byKey(callback.mock.calls[0][0], blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD)).toBeUndefined();
+    });
+  });
+
   describe('Heading with bold or italic', () => {
     it('flags a heading that contains bold text', async () => {
       const callback = vi.fn();

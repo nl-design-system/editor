@@ -12,6 +12,8 @@ import { property } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
+import '@nl-design-system-community/clippy-components/clippy-icon';
+import '@vanillawc/wc-markdown';
 import type { CorrectValidationFunction, ValidationInteractionMode, ValidationSeverity } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';
@@ -76,6 +78,8 @@ export class ValidationItem extends LitElement {
   @property({ type: String }) description!: string;
   /** Optional URL linking to a more extensive explanation of the WCAG criterion. */
   @property({ type: String }) href?: string;
+  /** Optional markdown documentation snippet rendered below the tip. */
+  @property({ type: String }) docs?: string;
   /** Custom label for the auto-fix button. Falls back to "Correct". */
   @property({ type: String }) customCorrectLabel?: string;
   /** Optional function that applies the automatic fix for this issue. */
@@ -162,6 +166,7 @@ export class ValidationItem extends LitElement {
         </div>
         <div class="clippy-validation-item__message">
           <slot name="tip-html"></slot>
+          ${this.docs ? html`<wc-markdown class="nl-paragraph" .textContent=${this.docs}></wc-markdown>` : nothing}
           ${
             this.href
               ? html`

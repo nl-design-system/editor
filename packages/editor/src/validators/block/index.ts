@@ -6,6 +6,7 @@ import {
   correctDefinitionTermMissingDescription,
   correctEmptyHeading,
   correctEmptyNode,
+  correctEntirelyBoldParagraph,
   correctHeadingResemblingParagraph,
   correctHeadingWithFormatting,
   correctImageMissingAltText,
@@ -115,6 +116,24 @@ const nodeShouldNotBeEmpty: ContentValidator = (_dom, node) => {
   };
 };
 
+const paragraphShouldNotBeEntirelyBold: ContentValidator = (_dom, node) => {
+  if (node.tagName !== 'P') return null;
+  const text = node.textContent?.trim() ?? '';
+  if (isEmptyOrWhitespace(text)) return null;
+  const nonEmptyChildren = Array.from(node.childNodes).filter(
+    (n) => n.nodeType !== Node.TEXT_NODE || (n.textContent?.trim().length ?? 0) > 0,
+  );
+  if (nonEmptyChildren.length === 0) return null;
+  const allBold = nonEmptyChildren.every((n) => n instanceof Element && (n.tagName === 'STRONG' || n.tagName === 'B'));
+  if (!allBold) return null;
+  return {
+    correct: correctEntirelyBoldParagraph(node),
+    range: getElementRange(node),
+    scope: 'block',
+    severity: validationSeverity.WARNING,
+  };
+};
+
 const paragraphShouldNotResembleHeading: ContentValidator = (_dom, node) => {
   if (node.tagName !== 'P') return null;
   const text = node.textContent?.trim() ?? '';
@@ -211,6 +230,7 @@ export const blockValidatorMap: { [K in BlockValidationKey]: ContentValidator } 
   [blockValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: headingShouldNotContainBoldOrItalic,
   [blockValidations.IMAGE_MUST_HAVE_ALT_TEXT]: imageMustHaveAltText,
   [blockValidations.NODE_SHOULD_NOT_BE_EMPTY]: nodeShouldNotBeEmpty,
+  [blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD]: paragraphShouldNotBeEntirelyBold,
   [blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING]: paragraphShouldNotResembleHeading,
   [blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST]: paragraphMustUseSemanticList,
   [blockValidations.TABLE_MUST_HAVE_HEADINGS]: tableMustHaveHeadings,

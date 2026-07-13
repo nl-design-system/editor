@@ -1,6 +1,11 @@
 import { msg, str } from '@lit/localize';
+import paragraphStrongDocs from '@nl-design-system-unstable/documentation/componenten/paragraph/_issues/strong/editor-error.md?raw';
 import { html, type TemplateResult } from 'lit';
 import { blockValidations, documentValidations, inlineValidations } from '@/constants';
+
+export const contentDocs: Record<string, string> = {
+  'paragraph-strong': paragraphStrongDocs,
+};
 
 type TipFn = (args?: Record<string, number | string | boolean>) => string | TemplateResult | null;
 
@@ -10,7 +15,7 @@ type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentV
 export type ValidationKey = BlockValidationKey | DocumentValidationKey | InlineValidationKey;
 
 type ValidationMessages = {
-  [K in ValidationKey]: { customCorrectLabel?: string; description: string; href?: string; tip?: TipFn };
+  [K in ValidationKey]: { customCorrectLabel?: string; description: string; docs?: string; href?: string; tip?: TipFn };
 };
 
 export type { ValidationMessages };
@@ -60,6 +65,12 @@ export const validationMessages = (): ValidationMessages =>
         }
         return msg(html`Remove the empty <strong>${nodeTypesTranslations()[nodeType]}</strong> or add text.`);
       },
+    },
+    [blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD]: {
+      description: msg('Avoid making an entire paragraph bold'),
+      docs: contentDocs['paragraph-strong'],
+      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/tekst-benadrukken/',
+      tip: () => msg('Remove the bold formatting from the paragraph.'),
     },
     [blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING]: {
       description: msg('Avoid paragraphs that resemble headings'),
