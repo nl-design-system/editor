@@ -6,7 +6,7 @@ export default css`
     position: relative;
   }
 
-  .clippy-accessibility-notifications__menu {
+  .clippy-accessibility-notifications__panel {
     position: fixed;
     inset-block-start: anchor(--clippy-notifications-trigger bottom);
     inset-inline-end: anchor(--clippy-notifications-trigger right);
