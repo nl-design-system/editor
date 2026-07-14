@@ -1,5 +1,6 @@
 export const CustomEvents = {
   CORRECT_VALIDATION_ISSUE: 'CORRECT_VALIDATION_ISSUE',
+  FILTER_CHANGE: 'FILTER_CHANGE',
   FOCUS_BUBBLE_MENU: 'FOCUS_BUBBLE_MENU',
   FOCUS_NODE: 'FOCUS_NODE',
   FOCUS_TOOLBAR: 'FOCUS_TOOLBAR',
@@ -9,7 +10,6 @@ export const CustomEvents = {
   OPEN_DOCUMENT_OVERVIEW: 'OPEN_DOCUMENT_OVERVIEW',
   OPEN_IMAGE_DIALOG: 'OPEN_IMAGE_DIALOG',
   OPEN_VALIDATIONS_DIALOG: 'OPEN_VALIDATIONS_DIALOG',
-  TAB_CHANGE: 'TAB_CHANGE',
   TEXT_FORMAT_CHANGE: 'TEXT_FORMAT_CHANGE',
   VALIDATION_ERROR: 'VALIDATION_ERROR',
 } as const;
@@ -57,8 +57,8 @@ export interface OpenValidationsDialogDetail {
 
 export type OpenValidationsDialogEvent = CustomEvent<OpenValidationsDialogDetail>;
 
-export interface TabChangeDetail {
+export interface FilterChangeDetail {
   severity: string | null;
 }
 
-export type TabChangeEvent = CustomEvent<TabChangeDetail>;
+export type FilterChangeEvent = CustomEvent<FilterChangeDetail>;

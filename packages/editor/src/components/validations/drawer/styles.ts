@@ -20,6 +20,9 @@ export default css`
     max-inline-size: 500px;
     max-block-size: 100%;
     border: 0;
+    background-color: var(--basis-color-action-1-bg-default);
+    border-block-start: var(--basis-border-width-md) solid var(--basis-color-accent-1-border-default);
+    margin-block-start: 0;
     margin-inline-end: 0;
     padding-inline: 0;
     padding-block: 0;
