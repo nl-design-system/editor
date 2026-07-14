@@ -15,7 +15,7 @@ import '@/components/content-views/language-changes';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationItem } from '@/components/validations/validation-item';
 import type { ValidationsMap, ValidationSeverity } from '@/types/validation';
-import '@/components/tabs';
+import '@/components/validation-filters';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { identifierContext } from '@/context/identifierContext';
@@ -43,7 +43,7 @@ const tag = 'clippy-validations-drawer';
  *
  * @fires {OpenValidationsDialogEvent} OPEN_VALIDATIONS_DIALOG - Listens for this event to
  *   toggle the dialog open state.
- * @fires {CustomEvent} TAB_CHANGE - Listens to filter the displayed validations
+ * @fires {CustomEvent} FILTER_CHANGE - Listens to filter the displayed validations
  *   by severity.
  *
  * @example
@@ -81,7 +81,7 @@ export class ValidationsDrawer extends LitElement {
   override connectedCallback() {
     super.connectedCallback();
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
-    globalThis.addEventListener(CustomEvents.TAB_CHANGE, this.#handleTabChange);
+    globalThis.addEventListener(CustomEvents.FILTER_CHANGE, this.#handleFilterChange);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
     globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#focusValidationItem);
     globalThis.addEventListener(CustomEvents.OPEN_DOCUMENT_OVERVIEW, this.#handleOverviewOpen);
@@ -89,7 +89,7 @@ export class ValidationsDrawer extends LitElement {
 
   override disconnectedCallback() {
     globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
-    globalThis.removeEventListener(CustomEvents.TAB_CHANGE, this.#handleTabChange);
+    globalThis.removeEventListener(CustomEvents.FILTER_CHANGE, this.#handleFilterChange);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
     globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#focusValidationItem);
     globalThis.removeEventListener(CustomEvents.OPEN_DOCUMENT_OVERVIEW, this.#handleOverviewOpen);
@@ -158,7 +158,7 @@ export class ValidationsDrawer extends LitElement {
     }
   };
 
-  readonly #handleTabChange = (event: CustomEventInit<{ severity: ValidationSeverity }>) => {
+  readonly #handleFilterChange = (event: CustomEventInit<{ severity: ValidationSeverity }>) => {
     this.selectedSeverity = event.detail?.severity || null;
   };
 
@@ -176,7 +176,7 @@ export class ValidationsDrawer extends LitElement {
             <clippy-icon slot="iconStart">${unsafeSVG(X)}</clippy-icon>
             ${msg('Close')}
           </clippy-button>
-          <clippy-tabs ?hidden=${isOverview}></clippy-tabs>
+          <clippy-validation-filters ?hidden=${isOverview}></clippy-validation-filters>
         </div>
         <div class="clippy-drawer__body">
           <div role="region" aria-label=${msg('Heading structure')} ?hidden=${this._mode !== 'heading-structure'}>
