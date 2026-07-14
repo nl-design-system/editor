@@ -29,6 +29,27 @@ export default css`
     align-items: baseline;
     display: flex;
     gap: var(--basis-space-inline-sm);
+    min-inline-size: 0;
+  }
+
+  .clippy-heading-structure__button {
+    align-items: baseline;
+    display: flex;
+    gap: var(--basis-space-inline-sm);
+    inline-size: 100%;
+    min-inline-size: 0;
+    text-align: start;
+  }
+
+  .clippy-heading-structure__button .nl-data-badge {
+    flex-shrink: 0;
+  }
+
+  .clippy-heading-structure__text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-inline-size: 0;
   }
 
   .clippy-heading-structure__item[data-level='2'] {

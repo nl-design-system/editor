@@ -28,11 +28,11 @@ describe('<clippy-validations-dialog>', () => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
 
-    const dialog = page.getByTestId('clippy-validations-drawer');
-    expect(dialog).not.toHaveAttribute('open');
-    expect(dialog.element()).not.toHaveAttribute('open');
+    const drawer = page.getByTestId('clippy-validations-drawer');
+    expect(drawer).toHaveAttribute('hidden');
+    expect(drawer.element()).toHaveAttribute('hidden');
     globalThis.dispatchEvent(new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { mode: 'validations' } }));
-    expect(dialog).toHaveAttribute('open');
+    await expect.element(drawer).not.toHaveAttribute('hidden');
   });
 
   it('does not open dialog when an unrelated event is dispatched', async () => {
@@ -40,10 +40,10 @@ describe('<clippy-validations-dialog>', () => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
 
-    const dialog = page.getByTestId('clippy-validations-drawer');
-    expect(dialog.element()).not.toHaveAttribute('open');
+    const drawer = page.getByTestId('clippy-validations-drawer');
+    expect(drawer.element()).toHaveAttribute('hidden');
     globalThis.dispatchEvent(new CustomEvent('some-unrelated-event'));
-    expect(dialog.element()).not.toHaveAttribute('open');
+    expect(drawer.element()).toHaveAttribute('hidden');
   });
 
   it('renders large validations map with all validation items', async () => {

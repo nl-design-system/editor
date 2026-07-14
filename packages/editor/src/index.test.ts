@@ -58,19 +58,19 @@ describe('<clippy-editor>', () => {
     expect(text).toBeInTheDocument();
 
     await vi.waitFor(() => {
-      expect(page.getByLabelText('Toegankelijkheidsmeldingen', { exact: true })).toBeInTheDocument();
+      expect(page.getByLabelText('Fouten, waarschuwingen of tips', { exact: true })).toBeInTheDocument();
     });
 
-    expect(page.getByLabelText('Toegankelijkheidsmeldingen', { exact: true })).not.toHaveAttribute('open');
-    expect(page.getByTestId('clippy-validations-drawer')).not.toHaveAttribute('open');
+    expect(page.getByLabelText('Fouten, waarschuwingen of tips', { exact: true })).toHaveAttribute('hidden');
+    expect(page.getByTestId('clippy-validations-drawer')).toHaveAttribute('hidden');
     await user.click(text);
     if (isMacOS()) {
       await user.keyboard('{meta>}{alt>}{t}{/alt}{/meta}');
     } else {
       await user.keyboard('{control>}{alt>}{t}{/alt}{/control}');
     }
-    const a11yDialog = page.getByRole('dialog');
-    await expect.element(a11yDialog).toHaveAttribute('open');
+    const a11yDrawer = page.getByTestId('clippy-validations-drawer');
+    await expect.element(a11yDrawer).not.toHaveAttribute('hidden');
 
     await vi.waitFor(() => {
       const editorEl = document.querySelector('clippy-editor');

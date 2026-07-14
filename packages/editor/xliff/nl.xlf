@@ -316,17 +316,9 @@
         <source>Filter validations by severity</source>
         <target>Valideringen filteren op ernst</target>
       </trans-unit>
-      <trans-unit id="s125a86b2f45bbb25">
-        <source><x id="0" equiv-text="${count}"/> items</source>
-        <target><x id="0" equiv-text="${count}"/> items</target>
-      </trans-unit>
       <trans-unit id="sa4d58219ed66ed0f">
         <source>Text alignment</source>
         <target>Tekstuitlijning</target>
-      </trans-unit>
-      <trans-unit id="sd85b875fac3ec430">
-        <source>No accessibility notifications found.</source>
-        <target>Geen toegankelijkheidsmeldingen gevonden.</target>
       </trans-unit>
       <trans-unit id="scd32ea9bc6b26ff6">
         <source>bold</source>
@@ -538,10 +530,6 @@
         <source>Start met typen...</source>
         <target>Start typing...</target>
       </trans-unit>
-      <trans-unit id="s63d894b1ddb06289">
-        <source>Description</source>
-        <target>Beschrijving</target>
-      </trans-unit>
       <trans-unit id="s63a1c77c657a8c07">
         <source>No validation issues found</source>
         <target>Geen validatiemeldingen gevonden</target>
@@ -550,6 +538,16 @@
         <source>Alt-text wizard</source>
         <target>Alt-tekst keuzehulp</target>
       </trans-unit>
+<trans-unit id="sd830252189685028">
+  <source>Errors, warnings and tips</source>
+</trans-unit>
+<trans-unit id="s1f7dddc454d49c86">
+  <source>Errors, warnings or tips</source>
+  <target>Fouten, waarschuwingen of tips</target>
+</trans-unit>
+<trans-unit id="s29a1a2dd90ffd24b">
+  <source>Validations</source>
+</trans-unit>
     </body>
   </file>
 </xliff>
