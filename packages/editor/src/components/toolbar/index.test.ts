@@ -132,5 +132,17 @@ describe('<clippy-toolbar>', () => {
       const undoButtons = toolbar.shadowRoot!.querySelectorAll('[data-toolbar-item="undo"]');
       expect(undoButtons.length).toBe(0);
     });
+
+    it('falls back to the default config when config is set to null', async () => {
+      const toolbar = document.querySelector(tag) as Toolbar;
+      // React wrappers pass an unset prop through as `null`, overriding the property default.
+      (toolbar as unknown as { config: ToolbarConfig | null }).config = null;
+      await vi.waitFor(() => {
+        const groups = toolbar.shadowRoot!.querySelectorAll('.clippy-toolbar__start [role="group"]');
+        expect(groups.length).toBeGreaterThan(0);
+      });
+
+      expect(page.getByRole('button', { name: 'Vet' })).toBeInTheDocument();
+    });
   });
 });
