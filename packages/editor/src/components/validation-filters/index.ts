@@ -13,6 +13,7 @@ import { map } from 'lit/directives/map.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationsMap, ValidationSeverity } from '@/types/validation';
 import { validationSeverity } from '@/constants';
+import { identifierContext } from '@/context/identifierContext';
 import { validationsContext } from '@/context/validationsContext';
 import { CustomEvents, type FilterChangeDetail } from '@/events';
 import validationFiltersStyles from './styles';
@@ -49,6 +50,10 @@ export class ValidationFilters extends LitElement {
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
+
+  @consume({ context: identifierContext, subscribe: true })
+  @property({ attribute: false })
+  private readonly identifier?: string;
 
   @state()
   private activeFilter: FilterKey = 'all';
@@ -95,7 +100,7 @@ export class ValidationFilters extends LitElement {
       new CustomEvent<FilterChangeDetail>(CustomEvents.FILTER_CHANGE, {
         bubbles: true,
         composed: true,
-        detail: { severity: key === 'all' ? null : key },
+        detail: { identifier: this.identifier, severity: key === 'all' ? null : key },
       }),
     );
   }

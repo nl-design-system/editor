@@ -7,7 +7,7 @@ const CLIPPY_STYLES = css`
   }
 
   /* Make sure the accessibility button aligns to the right - CKEditor does not support such a setting natively */
-  clippy-accessibility-notifications-panel {
+  clippy-accessibility-notifications {
     margin-inline-start: auto !important;
   }
 `;

@@ -1,11 +1,11 @@
 import type { Editor } from '@tiptap/core';
-import { consume } from '@lit/context';
+import { consume, ContextProvider } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import X from '@tabler/icons/outline/x.svg?raw';
-import { html, LitElement, unsafeCSS } from 'lit';
+import { html, LitElement, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import '@/components/validations/list';
@@ -16,6 +16,7 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationItem } from '@/components/validations/validation-item';
 import type { ValidationsMap, ValidationSeverity } from '@/types/validation';
 import '@/components/validation-filters';
+import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { identifierContext } from '@/context/identifierContext';
@@ -25,8 +26,9 @@ import {
   CustomEvents,
   type CorrectValidationIssueEvent,
   type DocumentOverviewMode,
+  type FilterChangeEvent,
   type FocusNodeEvent,
-  type OpenDocumentOverviewDetail,
+  type OpenDocumentOverviewEvent,
 } from '@/events';
 import drawerStyles from './styles';
 
@@ -36,12 +38,12 @@ const tag = 'clippy-validations-drawer';
  * Slide-in drawer dialog that lists all accessibility validation results and
  * provides document overview panels (heading structure, link list, language
  * changes). Opens and closes in response to the global
- * `CustomEvents.OPEN_VALIDATIONS_DIALOG` event, scoped to the current editor
- * identifier.
+ * `CustomEvents.OPEN_DOCUMENT_OVERVIEW` event, scoped to the current editor
+ * identifier so that only the drawer of the editor that dispatched it opens.
  *
  * @tag clippy-validations-drawer
  *
- * @fires {OpenValidationsDialogEvent} OPEN_VALIDATIONS_DIALOG - Listens for this event to
+ * @fires {OpenDocumentOverviewEvent} OPEN_DOCUMENT_OVERVIEW - Listens for this event to
  *   toggle the dialog open state.
  * @fires {CustomEvent} FILTER_CHANGE - Listens to filter the displayed validations
  *   by severity.
@@ -66,7 +68,7 @@ export class ValidationsDrawer extends LitElement {
 
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })
-  private readonly identifier?: string;
+  private readonly identifierContextValue?: string;
 
   @consume({ context: tiptapContext, subscribe: true })
   @property({ attribute: false })
@@ -76,7 +78,59 @@ export class ValidationsDrawer extends LitElement {
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
 
+  @consume({ context: htmlDocumentContext, subscribe: true })
+  @property({ attribute: false })
+  private readonly htmlDocumentContextValue?: HTMLElement;
+
+  /**
+   * Standalone inputs for use outside `<clippy-context>` (e.g. embedded in
+   * CKEditor). When set, the drawer re-provides them to its subtree so the list
+   * and overview panels resolve their context without a `<clippy-context>`
+   * ancestor. Each falls back to the consumed context value when unset
+   * (in-editor use).
+   */
+  @property({ attribute: false })
+  validationsMap?: ValidationsMap;
+
+  /** @see {@link validationsMap} */
+  @property({ attribute: false })
+  htmlDocument?: HTMLElement;
+
+  /** @see {@link validationsMap} */
+  @property({ attribute: false })
+  identifier?: string;
+
+  /** Coalesced identifier: standalone prop wins, else the consumed context. */
+  get #identifier(): string | undefined {
+    return this.identifier ?? this.identifierContextValue;
+  }
+
+  /**
+   * Re-provide the coalesced (prop ?? consumed) state to the drawer's subtree,
+   * hosted on the drawer element itself. `@lit/context`'s self-serve guard means
+   * our own `@consume`s above still resolve to an ancestor (`<clippy-context>`
+   * in-editor), so providing `prop ?? consumed` is correct in both modes:
+   * standalone the prop flows down; in-editor the consumed value is relayed.
+   * Scoped to our subtree — no `document.body` pollution or provider thrash.
+   */
+  readonly #validationsProvider = new ContextProvider(this, { context: validationsContext, initialValue: new Map() });
+  readonly #htmlDocumentProvider = new ContextProvider(this, { context: htmlDocumentContext });
+  readonly #identifierProvider = new ContextProvider(this, { context: identifierContext });
+
   readonly #dialogRef: Ref<HTMLDialogElement> = createRef();
+
+  override willUpdate(changed: PropertyValues) {
+    super.willUpdate(changed);
+    if (changed.has('validationsMap') || changed.has('validationsContext')) {
+      this.#validationsProvider.setValue(this.validationsMap ?? this.validationsContext ?? new Map());
+    }
+    if (changed.has('htmlDocument') || changed.has('htmlDocumentContextValue')) {
+      this.#htmlDocumentProvider.setValue(this.htmlDocument ?? this.htmlDocumentContextValue);
+    }
+    if ((changed.has('identifier') || changed.has('identifierContextValue')) && this.#identifier !== undefined) {
+      this.#identifierProvider.setValue(this.#identifier);
+    }
+  }
 
   override connectedCallback() {
     super.connectedCallback();
@@ -99,7 +153,7 @@ export class ValidationsDrawer extends LitElement {
   readonly #closeDialog = (event: Event) => {
     if (event instanceof CustomEvent) {
       const eventIdentifier = (event as CorrectValidationIssueEvent).detail?.identifier;
-      if (eventIdentifier !== this.identifier) return;
+      if (eventIdentifier !== this.#identifier) return;
     }
     if (this.open) {
       this.#dialogRef.value?.close();
@@ -108,7 +162,9 @@ export class ValidationsDrawer extends LitElement {
   };
 
   readonly #handleOverviewOpen = (event: Event) => {
-    const { mode } = (event as CustomEvent<OpenDocumentOverviewDetail>).detail;
+    const { identifier, mode } = (event as OpenDocumentOverviewEvent).detail;
+    if (identifier !== this.#identifier) return;
+
     this._mode = mode;
     if (!this.open) {
       this.#dialogRef.value?.showModal();
@@ -141,7 +197,7 @@ export class ValidationsDrawer extends LitElement {
     const { identifier, range } = event.detail || {};
     if (!range) return;
 
-    if (!this.open && identifier === this.identifier) {
+    if (!this.open && identifier === this.#identifier) {
       this._mode = 'validations';
       this.#dialogRef.value?.showModal();
       this.open = true;
@@ -158,8 +214,11 @@ export class ValidationsDrawer extends LitElement {
     }
   };
 
-  readonly #handleFilterChange = (event: CustomEventInit<{ severity: ValidationSeverity }>) => {
-    this.selectedSeverity = event.detail?.severity || null;
+  readonly #handleFilterChange = (event: Event) => {
+    const { identifier, severity } = (event as FilterChangeEvent).detail;
+    if (identifier !== this.#identifier) return;
+
+    this.selectedSeverity = (severity as ValidationSeverity) || null;
   };
 
   override render() {
