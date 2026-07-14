@@ -23,7 +23,7 @@ describe('<clippy-validations-dialog>', () => {
     document.body.innerHTML = '';
   });
 
-  it('opens dialog when OPEN_VALIDATIONS_DIALOG event is dispatched with matching identifier', async () => {
+  it('opens dialog when OPEN_DOCUMENT_OVERVIEW event is dispatched with matching identifier', async () => {
     await vi.waitFor(() => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
@@ -31,8 +31,27 @@ describe('<clippy-validations-dialog>', () => {
     const dialog = page.getByTestId('clippy-validations-drawer');
     expect(dialog).not.toHaveAttribute('open');
     expect(dialog.element()).not.toHaveAttribute('open');
-    globalThis.dispatchEvent(new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { mode: 'validations' } }));
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, {
+        detail: { identifier: TEST_IDENTIFIER, mode: 'validations' },
+      }),
+    );
     expect(dialog).toHaveAttribute('open');
+  });
+
+  it('does not open dialog when OPEN_DOCUMENT_OVERVIEW targets another editor', async () => {
+    await vi.waitFor(() => {
+      expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
+    });
+
+    const dialog = page.getByTestId('clippy-validations-drawer');
+    expect(dialog.element()).not.toHaveAttribute('open');
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, {
+        detail: { identifier: 'another-editor-id', mode: 'validations' },
+      }),
+    );
+    expect(dialog.element()).not.toHaveAttribute('open');
   });
 
   it('does not open dialog when an unrelated event is dispatched', async () => {
@@ -86,7 +105,11 @@ describe('<clippy-validations-dialog>', () => {
     }
 
     // Open the drawer so the list is rendered
-    globalThis.dispatchEvent(new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { mode: 'validations' } }));
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, {
+        detail: { identifier: TEST_IDENTIFIER, mode: 'validations' },
+      }),
+    );
 
     const drawerEl = document.querySelector('clippy-validations-drawer');
 

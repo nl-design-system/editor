@@ -11,6 +11,7 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import type { ValidationsMap } from '@/types/validation';
+import { identifierContext } from '@/context/identifierContext';
 import { validationsContext } from '@/context/validationsContext';
 import { CustomEvents, type DocumentOverviewMode, type OpenDocumentOverviewDetail } from '@/events';
 import notificationsStyles from './styles';
@@ -40,6 +41,28 @@ export class AccessibilityNotifications extends LitElement {
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
 
+  /** @internal Consumed from the nearest {@link identifierContext} provider. */
+  @consume({ context: identifierContext, subscribe: true })
+  @property({ attribute: false })
+  private readonly identifierContextValue?: string;
+
+  /**
+   * Validation results for standalone use (outside `<clippy-context>`, e.g.
+   * embedded in CKEditor). Takes precedence over {@link validationsContext} when
+   * set; falls back to the consumed context otherwise (in-editor use).
+   */
+  @property({ attribute: false })
+  validationsMap?: ValidationsMap;
+
+  /**
+   * Identifier of the editor instance this trigger belongs to, for standalone
+   * use (outside `<clippy-context>`, e.g. embedded in CKEditor). Must match the
+   * identifier of the drawer it should open. Falls back to the consumed
+   * {@link identifierContext} when unset (in-editor use).
+   */
+  @property({ attribute: false })
+  identifier?: string;
+
   @state() private _expanded = false;
 
   readonly #togglePanel = () => {
@@ -50,7 +73,7 @@ export class AccessibilityNotifications extends LitElement {
     this._expanded = false;
     globalThis.dispatchEvent(
       new CustomEvent<OpenDocumentOverviewDetail>(CustomEvents.OPEN_DOCUMENT_OVERVIEW, {
-        detail: { mode },
+        detail: { identifier: this.identifier ?? this.identifierContextValue, mode },
       }),
     );
   };
@@ -75,7 +98,7 @@ export class AccessibilityNotifications extends LitElement {
   }
 
   override render() {
-    const { size = 0 } = this.validationsContext || {};
+    const { size = 0 } = this.validationsMap ?? this.validationsContext ?? {};
     return html`
       <span data-toolbar-item="accessibility-notifications" class="clippy-accessibility-notifications">
         <clippy-button

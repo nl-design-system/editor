@@ -1,6 +1,7 @@
-import '../components/toolbar/toolbar-accessibility-notifications/panel';
+import '../components/toolbar/toolbar-accessibility-notifications';
+import '../components/validations/drawer';
 
 export { AccessibilityNotifications } from '../components/toolbar/toolbar-accessibility-notifications';
-export { AccessibilityNotificationsPanel } from '../components/toolbar/toolbar-accessibility-notifications/panel';
+export { ValidationsDrawer } from '../components/validations/drawer';
 export { CustomEvents } from '../events';
 export type { DocumentOverviewMode, OpenDocumentOverviewDetail } from '../events';

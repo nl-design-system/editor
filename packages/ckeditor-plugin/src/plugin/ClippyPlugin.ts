@@ -1,4 +1,7 @@
-import { type AccessibilityNotificationsPanel } from '@nl-design-system-community/editor/accessibility-notifications';
+import {
+  type AccessibilityNotifications,
+  type ValidationsDrawer,
+} from '@nl-design-system-community/editor/accessibility-notifications';
 import { CustomEvents, type FocusNodeEvent, type Gutter } from '@nl-design-system-community/editor/gutter';
 import { debouncedValidate, runValidation, type ValidationsMap } from '@nl-design-system-community/editor/validators';
 import { Plugin, View, type Locale, type ToolbarView } from 'ckeditor5';
@@ -14,8 +17,14 @@ export class ClippyPlugin extends Plugin {
   private _editableEl: HTMLElement | null = null;
   private _editorEl: HTMLElement | null = null;
   private _gutterEl: Gutter | null = null;
+  private _drawerEl: ValidationsDrawer | null = null;
   private _notificationsView: View | null = null;
   private _validationsMap: ValidationsMap = new Map();
+
+  // Scope drawer events to this editor so multiple CKEditors on one page don't open each other's drawer.
+  private get _identifier(): string {
+    return `clippy-ckeditor-${this.editor.id}`;
+  }
 
   init(): void {
     this._registerNotificationsToolbarItem();
@@ -43,6 +52,12 @@ export class ClippyPlugin extends Plugin {
     gutter.mode = 'tooltip';
     gutterContainer.append(gutter);
     this._gutterEl = gutter;
+
+    const drawer = document.createElement('clippy-validations-drawer') as ValidationsDrawer;
+    drawer.identifier = this._identifier;
+    this._editorEl.append(drawer);
+    this._drawerEl = drawer;
+
     this._editorEl.addEventListener(CustomEvents.FOCUS_NODE, this._handleFocusNode);
 
     this._addNotificationsToolbarItem();
@@ -52,7 +67,7 @@ export class ClippyPlugin extends Plugin {
     this.editor.ui.componentFactory.add('clippyAccessibilityNotifications', (locale: Locale) => {
       const view = new View(locale);
       view.setTemplate({
-        tag: 'clippy-accessibility-notifications-panel',
+        tag: 'clippy-accessibility-notifications',
       });
       this._notificationsView = view;
       return view;
@@ -101,17 +116,24 @@ export class ClippyPlugin extends Plugin {
   }
 
   private _renderNotifications(validationsMap: ValidationsMap): void {
-    // `element` is created lazily by CKEditor when the toolbar item is rendered
-    const panel = this._notificationsView?.element as AccessibilityNotificationsPanel | null;
-    if (!panel || !this._editableEl) {
+    if (!this._editableEl) {
       return;
     }
 
-    // Forward the CKEditor DOM element and its validations so the panel can match
+    // Feed the toolbar button its validation count, `element` is created lazily by CKEditor when the toolbar item is rendered
+    const button = this._notificationsView?.element as AccessibilityNotifications | null;
+    if (button) {
+      button.identifier = this._identifier;
+      button.validationsMap = validationsMap;
+    }
+
+    // Forward the CKEditor DOM element and its validations so the drawer can match
     // intersecting ranges to the correct validations. Both must reference the
     // same DOM tree the ranges were created against for the intersection to work.
-    panel.htmlDocument = this._editableEl;
-    panel.validationsMap = validationsMap;
+    if (this._drawerEl) {
+      this._drawerEl.htmlDocument = this._editableEl;
+      this._drawerEl.validationsMap = validationsMap;
+    }
   }
 
   private _patchCorrectionsForCKEditor(validationsMap: ValidationsMap): ValidationsMap {
@@ -176,6 +198,8 @@ export class ClippyPlugin extends Plugin {
 
   override destroy(): void {
     this._editorEl?.removeEventListener(CustomEvents.FOCUS_NODE, this._handleFocusNode);
+    this._drawerEl?.remove();
+    this._gutterEl?.remove();
     super.destroy();
   }
 }
