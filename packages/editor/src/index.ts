@@ -26,6 +26,8 @@ export type {
   CorrectValidationIssueEvent,
   OpenValidationsDialogDetail,
   OpenValidationsDialogEvent,
+  OpenValidationGroupDetail,
+  OpenValidationGroupEvent,
   FilterChangeDetail,
   FilterChangeEvent,
 } from './events';

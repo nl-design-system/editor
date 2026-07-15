@@ -5,7 +5,7 @@ import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/numb
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import X from '@tabler/icons/outline/x.svg?raw';
-import { html, LitElement, unsafeCSS, type PropertyValues } from 'lit';
+import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import '@/components/validations/list';
 import '@/components/content-views/heading-structure';
@@ -28,6 +28,7 @@ import {
   type FilterChangeEvent,
   type FocusNodeEvent,
   type OpenDocumentOverviewEvent,
+  type OpenValidationGroupEvent,
 } from '@/events';
 import drawerStyles from './styles';
 
@@ -64,6 +65,13 @@ export class ValidationsDrawer extends LitElement {
 
   @state()
   private _mode: DocumentOverviewMode = 'validations';
+
+  /**
+   * When set, the drawer shows only these validation ranges (a clicked gutter
+   * item plus any overlapping validations) and hides the severity filters.
+   */
+  @state()
+  private focusedRanges: Range[] | null = null;
 
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })
@@ -136,6 +144,7 @@ export class ValidationsDrawer extends LitElement {
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
     globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#focusValidationItem);
     globalThis.addEventListener(CustomEvents.OPEN_DOCUMENT_OVERVIEW, this.#handleOverviewOpen);
+    globalThis.addEventListener(CustomEvents.OPEN_VALIDATION_GROUP, this.#openValidationGroup);
   }
 
   override disconnectedCallback() {
@@ -144,6 +153,7 @@ export class ValidationsDrawer extends LitElement {
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
     globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#focusValidationItem);
     globalThis.removeEventListener(CustomEvents.OPEN_DOCUMENT_OVERVIEW, this.#handleOverviewOpen);
+    globalThis.removeEventListener(CustomEvents.OPEN_VALIDATION_GROUP, this.#openValidationGroup);
     super.disconnectedCallback();
   }
 
@@ -162,13 +172,29 @@ export class ValidationsDrawer extends LitElement {
     if (identifier !== this.#identifier) return;
 
     this._mode = mode;
+    this.focusedRanges = null;
     if (!this.open) {
       this.open = true;
     }
   };
 
+  readonly #openValidationGroup = (event: Event) => {
+    const { identifier, ranges } = (event as OpenValidationGroupEvent).detail;
+    if (identifier !== this.#identifier) return;
+    this._mode = 'validations';
+    this.selectedSeverity = null;
+    this.focusedRanges = ranges;
+    this.open = true;
+  };
+
   readonly #closeDrawer = () => {
     this.open = false;
+    this.focusedRanges = null;
+  };
+
+  // Clears the focused group so the full, filterable validation list is shown.
+  readonly #showAllValidations = () => {
+    this.focusedRanges = null;
   };
 
   // The drawer is an inline panel rather than a native dialog, so Escape-to-close
@@ -201,6 +227,7 @@ export class ValidationsDrawer extends LitElement {
 
     if (!this.open && identifier === this.#identifier) {
       this._mode = 'validations';
+      this.focusedRanges = null;
       this.open = true;
     }
 
@@ -238,6 +265,7 @@ export class ValidationsDrawer extends LitElement {
 
   override render() {
     const isOverview = this._mode !== 'validations';
+    const hasFocusedGroup = !!this.focusedRanges;
     return html`
       <div
         data-testid="clippy-validations-drawer"
@@ -255,7 +283,19 @@ export class ValidationsDrawer extends LitElement {
           </clippy-button>
         </div>
         <div class="clippy-drawer__filters">
-          <clippy-validation-filters ?hidden=${isOverview}></clippy-validation-filters>
+          <clippy-validation-filters ?hidden=${isOverview || hasFocusedGroup}></clippy-validation-filters>
+          ${
+            hasFocusedGroup
+              ? html`<clippy-button
+                  class="clippy-drawer__show-all"
+                  purpose="secondary"
+                  size="small"
+                  @click=${this.#showAllValidations}
+                >
+                  ${msg('Show all validations')}
+                </clippy-button>`
+              : nothing
+          }
         </div>
         <div class="clippy-drawer__body">
           <div role="region" aria-label=${msg('Heading structure')} ?hidden=${this._mode !== 'heading-structure'}>
@@ -268,7 +308,10 @@ export class ValidationsDrawer extends LitElement {
             <clippy-language-changes></clippy-language-changes>
           </div>
           <div role="region" aria-label=${msg('Validations')} ?hidden=${this._mode !== 'validations'}>
-            <clippy-validations-list .severity=${this.selectedSeverity}></clippy-validations-list>
+            <clippy-validations-list
+              .severity=${hasFocusedGroup ? null : this.selectedSeverity}
+              .ranges=${this.focusedRanges}
+            ></clippy-validations-list>
           </div>
         </div>
       </div>

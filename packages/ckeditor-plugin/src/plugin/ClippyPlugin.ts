@@ -58,7 +58,7 @@ export class ClippyPlugin extends Plugin {
     wrapper.append(contentWrapper);
 
     const gutter = document.createElement('clippy-validations-gutter') as Gutter;
-    gutter.mode = 'tooltip';
+    gutter.mode = 'readonly';
     contentWrapper.append(gutter);
     this._gutterEl = gutter;
 

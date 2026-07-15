@@ -9,6 +9,7 @@ export const CustomEvents = {
   FOCUS_VALIDATION_ITEM_IN_LIST: 'FOCUS_VALIDATION_ITEM_IN_LIST',
   OPEN_DOCUMENT_OVERVIEW: 'OPEN_DOCUMENT_OVERVIEW',
   OPEN_IMAGE_DIALOG: 'OPEN_IMAGE_DIALOG',
+  OPEN_VALIDATION_GROUP: 'OPEN_VALIDATION_GROUP',
   OPEN_VALIDATIONS_DIALOG: 'OPEN_VALIDATIONS_DIALOG',
   TEXT_FORMAT_CHANGE: 'TEXT_FORMAT_CHANGE',
   VALIDATION_ERROR: 'VALIDATION_ERROR',
@@ -22,6 +23,18 @@ export interface OpenDocumentOverviewDetail {
 }
 
 export type OpenDocumentOverviewEvent = CustomEvent<OpenDocumentOverviewDetail>;
+
+/**
+ * Detail for {@link CustomEvents.OPEN_VALIDATION_GROUP}: opens the drawer showing
+ * only the given validation ranges (a single clicked validation plus any that
+ * overlap it), with the severity filters hidden.
+ */
+export interface OpenValidationGroupDetail {
+  ranges: Range[];
+  identifier?: string;
+}
+
+export type OpenValidationGroupEvent = CustomEvent<OpenValidationGroupDetail>;
 
 export interface FocusNodeDetail {
   range: Range;

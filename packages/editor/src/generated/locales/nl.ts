@@ -77,6 +77,7 @@
 's6490655f25ad112c': `Bewerk de afbeelding om een alt-tekst toe te voegen`,
 's64ef2a6c2dd1d3d1': `Bewerken`,
 's669b18c6d2d9c95b': `Geen`,
+'s67104c1ba3a78a63': `Alle validatiemeldingen tonen`,
 's703aeed8faa1a0ef': `doorhalen`,
 's71080533c3b54c62': `Verwijder de onderstreping van de tekst.`,
 's7417792bbe720149': `Opnieuw`,

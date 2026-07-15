@@ -22,10 +22,10 @@ declare global {
 }
 
 /**
- * Renders all current accessibility validations as a list of
- * `<clippy-validation-item>` elements. Listens to the global
- * `CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST` event to scroll and focus the
- * matching item.
+ * Renders the current accessibility validations as a list of
+ * `<clippy-validation-item>` elements, optionally filtered by severity or a set
+ * of ranges. Listens to the global `CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST`
+ * event to scroll and focus the matching item.
  *
  * @tag clippy-validations-list
  *
@@ -46,6 +46,13 @@ export class ValidationsList extends LitElement {
 
   /** Optional severity filter. When set, only items of this severity are rendered. */
   @property({ type: String }) severity: ValidationSeverity | null = null;
+
+  /**
+   * Optional range filter. When set, only validations whose range is in this
+   * list are rendered (used to show a single clicked validation and any that
+   * overlap it). Takes precedence over {@link severity}.
+   */
+  @property({ attribute: false }) ranges: Range[] | null = null;
 
   override connectedCallback() {
     super.connectedCallback();
@@ -69,9 +76,10 @@ export class ValidationsList extends LitElement {
   };
 
   override render() {
-    const entries = [...(this.validationsContext?.entries() ?? [])].filter(
-      ([, { severity }]) => !this.severity || severity === this.severity,
-    );
+    const entries = [...(this.validationsContext?.entries() ?? [])].filter(([range, { severity }]) => {
+      if (this.ranges) return this.ranges.includes(range);
+      return !this.severity || severity === this.severity;
+    });
 
     if (entries.length === 0) {
       const emptyMessage = msg(str`No validation issues found`);

@@ -42,7 +42,7 @@ export function ReactContextExample() {
         ]}
       />
       <ClippyContent>
-        <ClippyGutter mode="tooltip" />
+        <ClippyGutter mode="drawer" />
       </ClippyContent>
       <ClippyValidationsDrawer />
     </ClippyContext>

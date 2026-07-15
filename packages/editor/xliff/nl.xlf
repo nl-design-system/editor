@@ -548,6 +548,10 @@
 <trans-unit id="s29a1a2dd90ffd24b">
   <source>Validations</source>
 </trans-unit>
+<trans-unit id="s67104c1ba3a78a63">
+  <source>Show all validations</source>
+  <target>Alle validatiemeldingen tonen</target>
+</trans-unit>
     </body>
   </file>
 </xliff>

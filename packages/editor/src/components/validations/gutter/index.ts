@@ -7,10 +7,16 @@ import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import type { ValidationResult, ValidationsMap } from '@/types/validation';
+import { identifierContext } from '@/context/identifierContext';
 import { tiptapContext } from '@/context/tiptapContext';
 import { validationsContext } from '@/context/validationsContext';
 import { ResizeController } from '@/controllers/ResizeController';
-import { CustomEvents, type FocusValidationItemInGutterEvent, type FocusValidationItemInListDetail } from '@/events';
+import {
+  CustomEvents,
+  type FocusValidationItemInGutterEvent,
+  type FocusValidationItemInListDetail,
+  type OpenValidationGroupDetail,
+} from '@/events';
 import { type ValidationKey, validationMessages } from '@/messages';
 import gutterStyles from './styles';
 
@@ -26,13 +32,17 @@ declare global {
 /**
  * Side gutter that displays colour-coded accessibility validation indicators
  * vertically aligned with their corresponding positions in the editor content.
- * Clicking an indicator either shows an inline tooltip or scrolls the
- * validations list to the matching item, depending on `mode`.
+ * Clicking an indicator either scrolls the external validations list to the
+ * matching item or opens the matching validation(s) in the drawer, depending on
+ * `mode`.
  *
  * @tag clippy-validations-gutter
  *
  * @fires {FocusValidationItemInListEvent} FOCUS_VALIDATION_ITEM_IN_LIST - Dispatched in `list` mode
  *   when the user clicks an indicator, so the list component can scroll to it.
+ * @fires {OpenValidationGroupEvent} OPEN_VALIDATION_GROUP - Dispatched in `drawer` mode
+ *   when the user clicks an indicator, so the drawer can show that validation
+ *   and any overlapping ones.
  *
  * @example
  * ```html
@@ -46,12 +56,13 @@ export class Gutter extends LitElement {
 
   /**
    * Display mode for validation interactions.
-   * - `tooltip` – show an inline tooltip on click (default).
    * - `list` – scroll the external validations list to the item on click.
-   * - `readonly` – indicators are visible but not interactive.
+   * - `drawer` – open the clicked validation (plus any overlapping ones) in the
+   *   validations drawer on click.
+   * - `readonly` – indicators are visible but not interactive (default).
    */
   @property({ type: String })
-  mode: 'tooltip' | 'list' | 'readonly' = 'tooltip';
+  mode: 'list' | 'drawer' | 'readonly' = 'readonly';
 
   /**
    * Optional reference element used for indicator positioning and resize
@@ -78,6 +89,11 @@ export class Gutter extends LitElement {
   @state()
   private readonly validationsContext?: ValidationsMap;
 
+  /** @internal Identifier of the owning editor, used to scope drawer events. */
+  @consume({ context: identifierContext, subscribe: true })
+  @property({ attribute: false })
+  private readonly identifier?: string;
+
   readonly #closeValidationItem = () => {
     this.activeRange = null;
   };
@@ -93,9 +109,31 @@ export class Gutter extends LitElement {
           detail: { range },
         }),
       );
-    } else {
-      this.activeRange = this.activeRange === range ? null : range;
+    } else if (this.mode === 'drawer') {
+      globalThis.dispatchEvent(
+        new CustomEvent<OpenValidationGroupDetail>(CustomEvents.OPEN_VALIDATION_GROUP, {
+          detail: { identifier: this.identifier, ranges: this.#getOverlappingRanges(range) },
+        }),
+      );
     }
+    // `readonly`: indicators are not interactive on click.
+  }
+
+  /** Whether two ranges share any content (overlap) within the same document. */
+  #rangesIntersect(a: Range, b: Range): boolean {
+    try {
+      return a.compareBoundaryPoints(Range.END_TO_START, b) < 0 && a.compareBoundaryPoints(Range.START_TO_END, b) > 0;
+    } catch {
+      return false;
+    }
+  }
+
+  /** The clicked range plus every other validation range that overlaps it. */
+  #getOverlappingRanges(target: Range): Range[] {
+    const map = this.validationsMap ?? this.validationsContext;
+    if (!map) return [target];
+    const group = [...map.keys()].filter((range) => range === target || this.#rangesIntersect(target, range));
+    return group.length ? group : [target];
   }
 
   readonly #handleFocusValidationItemInGutter = (event: Event) => {
