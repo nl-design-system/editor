@@ -11,6 +11,8 @@ import '@nl-design-system-community/editor/theme.css';
 import { ClippyContent } from './components/Content.tsx';
 import { ClippyContext } from './components/Context.tsx';
 import { ClippyEditor } from './components/Editor.tsx';
+import { ClippyEditorContentWrapper } from './components/EditorContentWrapper.tsx';
+import { ClippyEditorWrapper } from './components/EditorWrapper.tsx';
 import { ClippyGutter } from './components/Gutter.tsx';
 import { ClippyToolbar } from './components/Toolbar.tsx';
 import { ClippyValidationsDrawer } from './components/ValidationsDrawer.tsx';
@@ -44,17 +46,21 @@ root.render(
           Dit is een voorbeeld van de Clippy Editor <a href="#">met een Lit React wrapper</a>
         </p>
       </div>
-      <ClippyToolbar
-        config={[
-          ['format-select', 'language-select'],
-          ['bold', 'italic', 'underline', 'code'],
-          ['link', 'image-upload', 'insert-table'],
-        ]}
-      />
-      <ClippyContent>
-        <ClippyGutter mode="list"></ClippyGutter>
-      </ClippyContent>
-      <ClippyValidationsDrawer />
+      <ClippyEditorWrapper>
+        <ClippyEditorContentWrapper>
+          <ClippyToolbar
+            config={[
+              ['format-select', 'language-select'],
+              ['bold', 'italic', 'underline', 'code'],
+              ['link', 'image-upload', 'insert-table'],
+            ]}
+          />
+          <ClippyContent>
+            <ClippyGutter mode="drawer"></ClippyGutter>
+          </ClippyContent>
+        </ClippyEditorContentWrapper>
+        <ClippyValidationsDrawer />
+      </ClippyEditorWrapper>
     </ClippyContext>
   </>,
 );

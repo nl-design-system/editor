@@ -11,6 +11,30 @@ import { validationsContext } from '@/context/validationsContext';
 
 const tag = 'clippy-content';
 
+/**
+ * Padding for the editable area. Because the ProseMirror view (class
+ * `clippy-content`) is mounted in Light DOM, this rule has to live in the same
+ * tree as the editable — the editor's shadow root when embedded in
+ * `<clippy-editor>`, or the document when `<clippy-content>` is used standalone.
+ * It is therefore adopted into `getRootNode()` at connect time rather than
+ * declared in a shadow stylesheet that cannot reach slotted content.
+ */
+const CONTENT_PADDING_CSS = `.clippy-content{padding-block:var(--basis-space-inline-4xl);padding-inline:var(--basis-space-inline-4xl)}`;
+
+let contentPaddingSheet: CSSStyleSheet | undefined;
+
+/** Adopt the editable-padding stylesheet into a root once. */
+function ensureContentPadding(root: Document | ShadowRoot): void {
+  if (typeof CSSStyleSheet === 'undefined') return;
+  if (!contentPaddingSheet) {
+    contentPaddingSheet = new CSSStyleSheet();
+    contentPaddingSheet.replaceSync(CONTENT_PADDING_CSS);
+  }
+  if (!root.adoptedStyleSheets.includes(contentPaddingSheet)) {
+    root.adoptedStyleSheets = [...root.adoptedStyleSheets, contentPaddingSheet];
+  }
+}
+
 declare global {
   interface HTMLElementTagNameMap {
     [tag]: Content;
@@ -94,6 +118,15 @@ export class Content extends LitElement {
     super.connectedCallback();
     this.style.position = 'relative';
     this.style.display = 'block';
+
+    // The editable is Light DOM, so its padding must be adopted into the root it
+    // actually lives in (works both inside <clippy-editor> and standalone).
+    if (!this.shadow && !this.inline) {
+      const root = this.getRootNode();
+      if (root instanceof Document || root instanceof ShadowRoot) {
+        ensureContentPadding(root);
+      }
+    }
   }
 
   override disconnectedCallback() {

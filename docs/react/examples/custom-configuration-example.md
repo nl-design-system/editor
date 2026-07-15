@@ -1,6 +1,6 @@
 ## Voorbeeld 2: context, content, gutter en validaties
 
-Dit voorbeeld toont hoe `ClippyContext`, `ClippyContent`, `ClippyToolbar`, `ClippyGutter` en `ClippyValidationsList` samen gebruikt kunnen worden voor een volledig geconfigureerde editor.
+Dit voorbeeld toont hoe `ClippyContext`, `ClippyEditorWrapper`, `ClippyEditorContentWrapper`, `ClippyContent`, `ClippyToolbar`, `ClippyGutter` en `ClippyValidationsDrawer` samen gebruikt kunnen worden voor een volledig geconfigureerde editor. De `ClippyEditorWrapper` plaatst de lade (`ClippyValidationsDrawer`) naast de inhoud; klik op een item in de gutter (`mode="drawer"`) om de bijbehorende validatie(s) in de lade te openen.
 
 ### Voorbeeld code
 
@@ -8,9 +8,11 @@ Dit voorbeeld toont hoe `ClippyContext`, `ClippyContent`, `ClippyToolbar`, `Clip
 import {
   ClippyContent,
   ClippyContext,
+  ClippyEditorContentWrapper,
+  ClippyEditorWrapper,
   ClippyGutter,
   ClippyToolbar,
-  ClippyValidationsList,
+  ClippyValidationsDrawer,
 } from '@nl-design-system-community/editor-react';
 
 export function ReactContextExample() {
@@ -22,17 +24,21 @@ export function ReactContextExample() {
           Dit is een voorbeeld van de Clippy Editor <a href="#">met een Lit React wrapper</a>
         </p>
       </div>
-      <ClippyToolbar
-        config={[
-          ['format-select', 'language-select'],
-          ['bold', 'italic', 'underline', 'code'],
-          ['link', 'image-upload', 'insert-table'],
-        ]}
-      />
-      <ClippyContent>
-        <ClippyGutter mode="list" />
-      </ClippyContent>
-      <ClippyValidationsList />
+      <ClippyEditorWrapper>
+        <ClippyEditorContentWrapper>
+          <ClippyToolbar
+            config={[
+              ['format-select', 'language-select'],
+              ['bold', 'italic', 'underline', 'code'],
+              ['link', 'image-upload', 'insert-table'],
+            ]}
+          />
+          <ClippyContent>
+            <ClippyGutter mode="drawer" />
+          </ClippyContent>
+        </ClippyEditorContentWrapper>
+        <ClippyValidationsDrawer />
+      </ClippyEditorWrapper>
     </ClippyContext>
   );
 }
