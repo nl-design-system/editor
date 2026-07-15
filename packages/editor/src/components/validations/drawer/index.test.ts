@@ -31,7 +31,11 @@ describe('<clippy-validations-dialog>', () => {
     const drawer = page.getByTestId('clippy-validations-drawer');
     expect(drawer).toHaveAttribute('hidden');
     expect(drawer.element()).toHaveAttribute('hidden');
-    globalThis.dispatchEvent(new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { mode: 'validations' } }));
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, {
+        detail: { identifier: TEST_IDENTIFIER, mode: 'validations' },
+      }),
+    );
     await expect.element(drawer).not.toHaveAttribute('hidden');
   });
 
@@ -86,7 +90,11 @@ describe('<clippy-validations-dialog>', () => {
     }
 
     // Open the drawer so the list is rendered
-    globalThis.dispatchEvent(new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { mode: 'validations' } }));
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, {
+        detail: { identifier: TEST_IDENTIFIER, mode: 'validations' },
+      }),
+    );
 
     const drawerEl = document.querySelector('clippy-validations-drawer');
 

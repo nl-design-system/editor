@@ -36,6 +36,7 @@ import { property, state } from 'lit/decorators.js';
 import { createRef, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationsMap } from '@/types/validation';
+import { identifierContext } from '@/context/identifierContext';
 import { validationsContext } from '@/context/validationsContext';
 import { editor } from '@/decorators/TipTapDecorator';
 import './toolbar-image';
@@ -86,6 +87,11 @@ export class Toolbar extends LitElement {
   @property({ attribute: false })
   validationsContext?: ValidationsMap;
 
+  /** @internal Identifier of the owning editor, used to scope overview events. */
+  @consume({ context: identifierContext, subscribe: true })
+  @property({ attribute: false })
+  private readonly identifier?: string;
+
   /** @internal TipTap editor instance injected via {@link editor} decorator. */
   @editor()
   private readonly editor: Editor | undefined;
@@ -114,7 +120,7 @@ export class Toolbar extends LitElement {
     this._notificationsMenuOpen = false;
     globalThis.dispatchEvent(
       new CustomEvent<OpenDocumentOverviewDetail>(CustomEvents.OPEN_DOCUMENT_OVERVIEW, {
-        detail: { mode },
+        detail: { identifier: this.identifier, mode },
       }),
     );
   };

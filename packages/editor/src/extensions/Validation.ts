@@ -9,7 +9,7 @@ export default Extension.create({
     return {
       'Mod-Alt-t': () => {
         const event = new CustomEvent<OpenDocumentOverviewDetail>(CustomEvents.OPEN_DOCUMENT_OVERVIEW, {
-          detail: { mode: 'validations' },
+          detail: { identifier: this.options.identifier, mode: 'validations' },
         });
         globalThis.dispatchEvent(event);
         return true;

@@ -104,7 +104,8 @@ export class ValidationsDrawer extends LitElement {
   };
 
   readonly #handleOverviewOpen = (event: Event) => {
-    const { mode } = (event as CustomEvent<OpenDocumentOverviewDetail>).detail;
+    const { identifier, mode } = (event as CustomEvent<OpenDocumentOverviewDetail>).detail;
+    if (identifier !== this.identifier) return;
     this._mode = mode;
     if (!this.open) {
       this.open = true;

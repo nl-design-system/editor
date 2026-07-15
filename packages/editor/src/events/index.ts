@@ -18,6 +18,7 @@ export type DocumentOverviewMode = 'heading-structure' | 'language-changes' | 'l
 
 export interface OpenDocumentOverviewDetail {
   mode: DocumentOverviewMode;
+  identifier?: string;
 }
 
 export interface FocusNodeDetail {
