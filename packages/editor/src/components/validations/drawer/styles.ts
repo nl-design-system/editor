@@ -41,7 +41,7 @@ export default css`
   }
 
   .clippy-drawer__title {
-    margin-block: 0;
+    margin-block: var(--basis-space-none);
     font-family: var(--nl-paragraph-font-family, inherit);
   }
 
@@ -62,9 +62,9 @@ export default css`
     display: grid;
     gap: var(--basis-space-inline-xl);
     list-style: none;
-    margin-block: 0;
-    padding-block: 0;
-    padding-inline: 0;
+    margin-block: var(--basis-space-none);
+    padding-block: var(--basis-space-none);
+    padding-inline: var(--basis-space-none);
   }
 
   @media (forced-colors: active) {
