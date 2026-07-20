@@ -22,31 +22,76 @@ updates:
       nl-design-system:
         applies-to: "version-updates"
         patterns:
+          - "@amsterdam/*"
+          - "@gemeente-denhaag/*"
+          - "@gemeente-rotterdam/*"
+          - "@nl-design-system/*"
           - "@nl-design-system-candidate/*"
-          - "@utrecht/*"
-      tiptap:
+          - "@nl-design-system-community/*"
+          - "@nl-design-system-unstable/*"
+          - "@nl-rvo/*"
+          - "@rijkshuisstijl-community/*"
+      react:
         applies-to: "version-updates"
         patterns:
-          - "@tiptap/*"
-          - "prosemirror-model"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+      astro:
+        applies-to: "version-updates"
+        patterns:
+          - "@astrojs/*"
+          - "astro"
       storybook:
         applies-to: "version-updates"
         patterns:
           - "@storybook/*"
           - "storybook"
-      vite:
+      docusaurus:
         applies-to: "version-updates"
         patterns:
-          - "@vitest/*"
+          - "@docusaurus/*"
+      i18next:
+        applies-to: "version-updates"
+        patterns:
+          - "i18next"
+          - "i18next-*"
+          - "react-i18next"
+      tiptap:
+        applies-to: "version-updates"
+        patterns:
+          - "@tiptap/*"
+          - "prosemirror-model"
+      build-toolchain:
+        applies-to: "version-updates"
+        patterns:
+          - "@babel/*"
+          - "@rollup/*"
+          - "@vitejs/*"
+          - "rollup"
           - "vite"
-          - "vite-plugin-dts"
-          - "vitest"
-      astro:
+          - "vite-*"
+      test-toolchain:
         applies-to: "version-updates"
         patterns:
-          - "astro"
-          - "@astrojs/*"
-      patch-and-minor-dependencies:
+          - "@testing-library/*"
+          - "@vitest/*"
+          - "jsdom"
+          - "vitest"
+      lint-toolchain:
+        applies-to: "version-updates"
+        patterns:
+          - "@eslint/*"
+          - "eslint"
+          - "husky"
+          - "lint-staged"
+          - "markdownlint-cli"
+          - "npm-package-json-lint"
+          - "prettier"
+          - "stylelint"
+          - "stylelint-*"
+      patch-and-minor-updates:
         applies-to: "version-updates"
         update-types:
           - "patch"
