@@ -17,9 +17,11 @@ export const CustomEvents = {
 export type DocumentOverviewMode = 'heading-structure' | 'language-changes' | 'link-list' | 'validations';
 
 export interface OpenDocumentOverviewDetail {
-  mode: DocumentOverviewMode;
   identifier?: string;
+  mode: DocumentOverviewMode;
 }
+
+export type OpenDocumentOverviewEvent = CustomEvent<OpenDocumentOverviewDetail>;
 
 export interface FocusNodeDetail {
   range: Range;
@@ -59,6 +61,7 @@ export interface OpenValidationsDialogDetail {
 export type OpenValidationsDialogEvent = CustomEvent<OpenValidationsDialogDetail>;
 
 export interface FilterChangeDetail {
+  identifier?: string;
   severity: string | null;
 }
 

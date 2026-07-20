@@ -6,10 +6,11 @@ export default defineConfig({
   build: {
     lib: {
       entry: {
-        gutter: 'src/gutter.ts',
+        'accessibility-notifications': 'src/entries/accessibility-notifications.ts',
+        gutter: 'src/entries/gutter.ts',
         index: 'src/index.ts',
-        toolbar: 'src/toolbar.ts',
-        validators: 'src/validators.ts',
+        toolbar: 'src/entries/toolbar.ts',
+        validators: 'src/entries/validators.ts',
       },
       formats: ['es'],
     },

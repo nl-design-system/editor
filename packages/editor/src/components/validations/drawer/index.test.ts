@@ -23,7 +23,7 @@ describe('<clippy-validations-dialog>', () => {
     document.body.innerHTML = '';
   });
 
-  it('opens dialog when OPEN_VALIDATIONS_DIALOG event is dispatched with matching identifier', async () => {
+  it('opens dialog when OPEN_DOCUMENT_OVERVIEW event is dispatched with matching identifier', async () => {
     await vi.waitFor(() => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
@@ -37,6 +37,21 @@ describe('<clippy-validations-dialog>', () => {
       }),
     );
     await expect.element(drawer).not.toHaveAttribute('hidden');
+  });
+
+  it('does not open dialog when OPEN_DOCUMENT_OVERVIEW targets another editor', async () => {
+    await vi.waitFor(() => {
+      expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
+    });
+
+    const drawer = page.getByTestId('clippy-validations-drawer');
+    expect(drawer.element()).toHaveAttribute('hidden');
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, {
+        detail: { identifier: 'another-editor-id', mode: 'validations' },
+      }),
+    );
+    expect(drawer.element()).toHaveAttribute('hidden');
   });
 
   it('does not open dialog when an unrelated event is dispatched', async () => {

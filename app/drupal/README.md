@@ -1,45 +1,34 @@
-# Example Drupal app with Clippy Editor
-
-Drupal image: <https://hub.docker.com/_/drupal/>
+# Drupal demo environment
 
 ## Prerequisites
 
-Install Docker
+Install Docker.
 
 ## Getting started
 
-Copy the .env.example environment file to .env:
+Copy the environment file and start the containers:
 
 ```shell
 cp .env.example .env
-```
-
-Then start the containers:
-
-```shell
 docker compose up
 ```
 
-Open <http://localhost:8081> to run the Drupal installer. When prompted for database credentials:
+If you change the `Dockerfile`, `setup.sh` or `wait-for-db.php`, rebuild explicitly — `docker compose up` reuses an existing local image otherwise:
 
-| Field         | Value      |
-| ------------- | ---------- |
-| Database type | PostgreSQL |
-| Database name | drupal     |
-| Username      | drupal     |
-| Password      | drupal     |
+```shell
+docker compose up --build
+```
 
-The host field is hidden under **Advanced Options** — make sure to set it:
+Drupal installs itself automatically on first boot. When it's ready, the terminal prints a direct login URL:
 
-| Field | Value    |
-| ----- | -------- |
-| Host  | postgres |
+```text
+  Drupal ready → http://localhost:8081
+  Login URL    → http://localhost:8081/user/reset/...
+```
 
-This only needs to be done once — the database and Drupal state are persisted in Docker volumes.
+Click the login URL to enter Drupal immediately. A fresh URL is printed on every restart.
 
-## Logging in
-
-Go to <http://localhost:8081/user/login> with the credentials you set during the installer.
+The generated Login URL is single-use and may expire. When necessary, log in manually at `http://localhost:8081/user/login` with the credentials from `.env` (`DRUPAL_ADMIN_USER` / `DRUPAL_ADMIN_PASSWORD`).
 
 ## Stopping
 
@@ -47,7 +36,7 @@ Go to <http://localhost:8081/user/login> with the credentials you set during the
 docker compose down
 ```
 
-Volumes are preserved, so Drupal remains installed on next `docker compose up`.
+The database is preserved in a Docker volume, so Drupal remains installed on next `docker compose up`.
 
 To reset completely and start from scratch:
 
@@ -57,14 +46,13 @@ docker compose down -v
 
 ## Custom modules
 
-Custom modules live in `modules/` and are bind-mounted into the container at
-`/var/www/html/modules/custom/`. Edits to PHP files are reflected immediately on
-page reload. After structural changes (new hooks, schema updates) clear the
-Drupal cache via **Administration → Configuration → Development → Performance → Clear cache**.
+Modules in `./modules/` are automatically mounted into the container and enabled on startup. Add a new module folder there and simply restart the environment.
 
-Modules are **not enabled automatically** — go to
-<http://localhost:8081/admin/modules>, find your module, check the box, and click
-**Install**.
+Edits to PHP files are reflected immediately on page reload. After structural changes (new hooks, schema updates) clear the cache:
+
+```shell
+docker compose exec drupal /opt/drupal/vendor/bin/drush --root=/opt/drupal/web cr
+```
 
 ### Available modules
 

@@ -16,8 +16,12 @@
   "version": "1.4.3",
   "type": "module",
   "exports": {
+    "./accessibility-notifications": {
+      "types": "./dist/entries/accessibility-notifications.d.ts",
+      "default": "./dist/accessibility-notifications.js"
+    },
     "./gutter": {
-      "types": "./dist/gutter.d.ts",
+      "types": "./dist/entries/gutter.d.ts",
       "default": "./dist/gutter.js"
     },
     ".": {
@@ -25,25 +29,28 @@
       "default": "./dist/index.js"
     },
     "./toolbar": {
-      "types": "./dist/toolbar.d.ts",
+      "types": "./dist/entries/toolbar.d.ts",
       "default": "./dist/toolbar.js"
     },
     "./validators": {
-      "types": "./dist/validators.d.ts",
+      "types": "./dist/entries/validators.d.ts",
       "default": "./dist/validators.js"
     },
     "./theme.css": "./theme.css"
   },
   "typesVersions": {
     "*": {
+      "accessibility-notifications": [
+        "./dist/entries/accessibility-notifications.d.ts"
+      ],
       "gutter": [
-        "./dist/gutter.d.ts"
+        "./dist/entries/gutter.d.ts"
       ],
       "toolbar": [
-        "./dist/toolbar.d.ts"
+        "./dist/entries/toolbar.d.ts"
       ],
       "validators": [
-        "./dist/validators.d.ts"
+        "./dist/entries/validators.d.ts"
       ]
     }
   },
