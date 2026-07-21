@@ -21,15 +21,11 @@ const tag = 'clippy-content';
  */
 const CONTENT_PADDING_CSS = `.clippy-content{padding-block:var(--basis-space-inline-4xl);padding-inline:var(--basis-space-inline-4xl)}`;
 
-let contentPaddingSheet: CSSStyleSheet | undefined;
+const contentPaddingSheet = new CSSStyleSheet();
+contentPaddingSheet.replaceSync(CONTENT_PADDING_CSS);
 
 /** Adopt the editable-padding stylesheet into a root once. */
 function ensureContentPadding(root: Document | ShadowRoot): void {
-  if (typeof CSSStyleSheet === 'undefined') return;
-  if (!contentPaddingSheet) {
-    contentPaddingSheet = new CSSStyleSheet();
-    contentPaddingSheet.replaceSync(CONTENT_PADDING_CSS);
-  }
   if (!root.adoptedStyleSheets.includes(contentPaddingSheet)) {
     root.adoptedStyleSheets = [...root.adoptedStyleSheets, contentPaddingSheet];
   }
