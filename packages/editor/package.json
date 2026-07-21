@@ -20,6 +20,10 @@
       "types": "./dist/entries/accessibility-notifications.d.ts",
       "default": "./dist/accessibility-notifications.js"
     },
+    "./content-classes": {
+      "types": "./dist/entries/content-classes.d.ts",
+      "default": "./dist/content-classes.js"
+    },
     "./editor-wrapper": {
       "types": "./dist/entries/editor-wrapper.d.ts",
       "default": "./dist/editor-wrapper.js"
@@ -46,6 +50,9 @@
     "*": {
       "accessibility-notifications": [
         "./dist/entries/accessibility-notifications.d.ts"
+      ],
+      "content-classes": [
+        "./dist/entries/content-classes.d.ts"
       ],
       "editor-wrapper": [
         "./dist/entries/editor-wrapper.d.ts"

@@ -9,10 +9,16 @@ import { Plugin, View, type Locale, type ToolbarView } from 'ckeditor5';
 import { DEFAULT_SETTINGS } from '../constants/';
 import { adoptClippyStyles } from '../styles/';
 import { findMatchingCorrection, findOccurrenceIndex, runValidations } from '../utils/correction.ts';
+import { NldsContentClasses } from './NldsContentClasses.ts';
 
 export class ClippyPlugin extends Plugin {
   static get pluginName() {
     return 'ClippyPlugin' as const;
+  }
+
+  static get requires() {
+    // Ensure the design-system classes are applied to CKEditor content
+    return [NldsContentClasses] as const;
   }
 
   private _editableEl: HTMLElement | null = null;
