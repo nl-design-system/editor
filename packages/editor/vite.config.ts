@@ -7,6 +7,7 @@ export default defineConfig({
     lib: {
       entry: {
         'accessibility-notifications': 'src/entries/accessibility-notifications.ts',
+        'content-classes': 'src/entries/content-classes.ts',
         'editor-wrapper': 'src/entries/editor-wrapper.ts',
         gutter: 'src/entries/gutter.ts',
         index: 'src/index.ts',
