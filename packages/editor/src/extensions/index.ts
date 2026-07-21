@@ -25,6 +25,7 @@ import Underline from '@tiptap/extension-underline';
 import { Dropcursor, UndoRedo, Placeholder } from '@tiptap/extensions';
 import type { EditorSettings } from '@/types/settings';
 import type { ValidationResult } from '@/types/validation';
+import { contentClasses, headingClasses } from '@/constants';
 import { CustomFileHandler } from '@/extensions/CustomFileHandler';
 import { DefinitionList } from '@/extensions/DefinitionList';
 import KeyboardShortcuts from '@/extensions/KeyboardShortcuts';
@@ -49,7 +50,7 @@ export const editorExtensions = (
     },
   }).configure({
     HTMLAttributes: {
-      class: 'nl-paragraph',
+      class: contentClasses.paragraph,
     },
   }),
   Text,
@@ -70,11 +71,7 @@ export const editorExtensions = (
       const level = hasLevel ? node.attrs['level'] : this.options.levels[0];
       return [
         `h${level}`,
-        mergeAttributes(
-          { class: `nl-heading nl-heading--level-${level}` },
-          this.options.HTMLAttributes,
-          HTMLAttributes,
-        ),
+        mergeAttributes({ class: headingClasses(level) }, this.options.HTMLAttributes, HTMLAttributes),
         0,
       ];
     },
@@ -82,12 +79,12 @@ export const editorExtensions = (
   Bold,
   Code.configure({
     HTMLAttributes: {
-      class: 'nl-code',
+      class: contentClasses.code,
     },
   }),
   CodeBlock.configure({
     HTMLAttributes: {
-      class: 'nl-code-block',
+      class: contentClasses.codeBlock,
     },
   }),
   Italic,
@@ -103,7 +100,7 @@ export const editorExtensions = (
     },
   }).configure({
     HTMLAttributes: {
-      class: 'utrecht-unordered-list utrecht-unordered-list--html-content',
+      class: contentClasses.bulletList,
     },
   }),
   OrderedList.extend({
@@ -115,7 +112,7 @@ export const editorExtensions = (
     },
   }).configure({
     HTMLAttributes: {
-      class: 'utrecht-ordered-list utrecht-ordered-list--html-content',
+      class: contentClasses.orderedList,
     },
   }),
   ListItem.extend({
@@ -129,23 +126,23 @@ export const editorExtensions = (
   DefinitionList,
   HorizontalRule.configure({
     HTMLAttributes: {
-      class: 'utrecht-separator',
+      class: contentClasses.horizontalRule,
     },
   }),
   Superscript.configure({
     HTMLAttributes: {
-      class: 'utrecht-superscript',
+      class: contentClasses.superscript,
     },
   }),
   Strike,
   Subscript.configure({
     HTMLAttributes: {
-      class: 'utrecht-subscript',
+      class: contentClasses.subscript,
     },
   }),
   Blockquote.configure({
     HTMLAttributes: {
-      class: 'utrecht-blockquote utrecht-blockquote--html-blockquote',
+      class: contentClasses.blockquote,
     },
   }).extend({
     addAttributes() {
@@ -175,7 +172,7 @@ export const editorExtensions = (
   }).configure({
     defaultProtocol: 'https',
     HTMLAttributes: {
-      class: 'nl-link',
+      class: contentClasses.link,
     },
     openOnClick: false,
   }),
@@ -184,7 +181,7 @@ export const editorExtensions = (
   }),
   Image.configure({
     HTMLAttributes: {
-      class: 'utrecht-image',
+      class: contentClasses.image,
     },
     resize: {
       alwaysPreserveAspectRatio: true,
@@ -196,7 +193,7 @@ export const editorExtensions = (
   }),
   Table.configure({
     HTMLAttributes: {
-      class: 'utrecht-table utrecht-table--html-table',
+      class: contentClasses.table,
     },
   }),
   TableHead,
@@ -232,7 +229,7 @@ export const editorExtensions = (
   }),
   Highlight.configure({
     HTMLAttributes: {
-      class: 'nl-mark',
+      class: contentClasses.highlight,
     },
     multicolor: true,
   }),
