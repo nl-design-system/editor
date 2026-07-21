@@ -31,7 +31,7 @@
     "@nl-design-system-community/clippy-alt-text-wizard": "workspace:*",
     "@nl-design-system-community/editor": "workspace:*",
     "@nl-design-system-community/editor-react": "workspace:*",
-    "@nl-design-system-community/ma-design-tokens": "5.5.0",
+    "@nl-design-system-community/ma-design-tokens": "6.0.0",
     "@tabler/icons": "3.45.0",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
