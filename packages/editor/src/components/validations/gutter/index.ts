@@ -6,7 +6,8 @@ import { safeCustomElement } from '@nl-design-system-community/clippy-components
 import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import type { ValidationResult, ValidationsMap } from '@/types/validation';
+import type { ValidationInteractionMode, ValidationResult, ValidationsMap } from '@/types/validation';
+import { validationInteractionMode } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';
 import { tiptapContext } from '@/context/tiptapContext';
 import { validationsContext } from '@/context/validationsContext';
@@ -59,10 +60,10 @@ export class Gutter extends LitElement {
    * - `list` – scroll the external validations list to the item on click.
    * - `drawer` – open the clicked validation (plus any overlapping ones) in the
    *   validations drawer on click.
-   * - `readonly` – indicators are visible but not interactive (default).
+   * - `readonly` – indicators are visible and focusable, but clicking them performs no action (default).
    */
   @property({ type: String })
-  mode: 'list' | 'drawer' | 'readonly' = 'readonly';
+  mode: ValidationInteractionMode = validationInteractionMode.READONLY;
 
   /**
    * Optional reference element used for indicator positioning and resize
@@ -101,7 +102,7 @@ export class Gutter extends LitElement {
   readonly #resizeController = new ResizeController(this);
 
   #handleIndicatorClick(range: Range) {
-    if (this.mode === 'list') {
+    if (this.mode === validationInteractionMode.LIST) {
       this.dispatchEvent(
         new CustomEvent<FocusValidationItemInListDetail>(CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST, {
           bubbles: true,
@@ -109,14 +110,14 @@ export class Gutter extends LitElement {
           detail: { range },
         }),
       );
-    } else if (this.mode === 'drawer') {
+    } else if (this.mode === validationInteractionMode.DRAWER) {
       globalThis.dispatchEvent(
         new CustomEvent<OpenValidationGroupDetail>(CustomEvents.OPEN_VALIDATION_GROUP, {
           detail: { identifier: this.identifier, ranges: this.#getOverlappingRanges(range) },
         }),
       );
     }
-    // `readonly`: indicators are not interactive on click.
+    // `readonly`: the indicator is a focusable button, but clicking it performs no action.
   }
 
   /** Whether two ranges share any content (overlap) within the same document. */

@@ -12,7 +12,8 @@ import { property } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
-import type { CorrectValidationFunction, ValidationSeverity } from '@/types/validation';
+import type { CorrectValidationFunction, ValidationInteractionMode, ValidationSeverity } from '@/types/validation';
+import { validationInteractionMode } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';
 import { CustomEvents, type CorrectValidationIssueDetail, type FocusNodeDetail } from '@/events';
 import validationListItemStyles from './styles';
@@ -63,10 +64,10 @@ export class ValidationItem extends LitElement {
 
   /**
    * Display context for the item's action buttons.
-   * - `list` (default) – Focus and Correct buttons.
+   * - `list` (default) / `drawer` – Focus and Correct buttons.
    * - `readonly` – no action buttons rendered.
    */
-  @property({ type: String }) mode: 'list' | 'readonly' = 'list';
+  @property({ type: String }) mode: ValidationInteractionMode = validationInteractionMode.LIST;
   /** The DOM `Range` that this validation issue relates to. */
   @property({ attribute: false }) range?: Range;
   /** Severity level of the validation issue. */
@@ -126,7 +127,7 @@ export class ValidationItem extends LitElement {
   };
 
   #renderActions() {
-    if (this.mode === 'readonly') {
+    if (this.mode === validationInteractionMode.READONLY) {
       return nothing;
     }
 
