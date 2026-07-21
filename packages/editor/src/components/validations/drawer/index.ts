@@ -263,6 +263,25 @@ export class ValidationsDrawer extends LitElement {
     }
   }
 
+  /** Severity applied to the list; suppressed while a focused group is shown. */
+  get #listSeverity(): ValidationSeverity | null {
+    if (this.focusedRanges) return null;
+    return this.selectedSeverity;
+  }
+
+  /** "Show all validations" button, rendered only while a group is focused. */
+  #renderShowAllButton() {
+    if (!this.focusedRanges) return nothing;
+    return html`<clippy-button
+      class="clippy-drawer__show-all"
+      purpose="secondary"
+      size="small"
+      @click=${this.#showAllValidations}
+    >
+      ${msg('Show all validations')}
+    </clippy-button>`;
+  }
+
   override render() {
     const isOverview = this._mode !== 'validations';
     const hasFocusedGroup = !!this.focusedRanges;
@@ -284,18 +303,7 @@ export class ValidationsDrawer extends LitElement {
         </div>
         <div class="clippy-drawer__filters">
           <clippy-validation-filters ?hidden=${isOverview || hasFocusedGroup}></clippy-validation-filters>
-          ${
-            hasFocusedGroup
-              ? html`<clippy-button
-                  class="clippy-drawer__show-all"
-                  purpose="secondary"
-                  size="small"
-                  @click=${this.#showAllValidations}
-                >
-                  ${msg('Show all validations')}
-                </clippy-button>`
-              : nothing
-          }
+          ${this.#renderShowAllButton()}
         </div>
         <div class="clippy-drawer__body">
           <div role="region" aria-label=${msg('Heading structure')} ?hidden=${this._mode !== 'heading-structure'}>
@@ -309,7 +317,7 @@ export class ValidationsDrawer extends LitElement {
           </div>
           <div role="region" aria-label=${msg('Validations')} ?hidden=${this._mode !== 'validations'}>
             <clippy-validations-list
-              .severity=${hasFocusedGroup ? null : this.selectedSeverity}
+              .severity=${this.#listSeverity}
               .ranges=${this.focusedRanges}
             ></clippy-validations-list>
           </div>
