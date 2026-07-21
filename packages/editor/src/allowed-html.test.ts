@@ -141,6 +141,16 @@ describe('Allowed HTML in Clippy Editor', () => {
       editor = await createTestEditor('<ol lang="en"><li>Item</li></ol>');
       expect(editor.getHTML()).toContain('lang="en"');
     });
+
+    it('preserves the start attribute on <ol>', async () => {
+      editor = await createTestEditor('<ol start="5"><li>Item</li></ol>');
+      expect(editor.getHTML()).toContain('start="5"');
+    });
+
+    it('preserves the type attribute on <ol>', async () => {
+      editor = await createTestEditor('<ol type="a"><li>Item</li></ol>');
+      expect(editor.getHTML()).toContain('type="a"');
+    });
   });
 
   describe('List item (<li>)', () => {
