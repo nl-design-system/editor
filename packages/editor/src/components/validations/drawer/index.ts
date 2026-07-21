@@ -67,11 +67,13 @@ export class ValidationsDrawer extends LitElement {
   private _mode: DocumentOverviewMode = 'validations';
 
   /**
-   * When set, the drawer shows only these validation ranges (a clicked gutter
-   * item plus any overlapping validations) and hides the severity filters.
+   * When set, the drawer shows only these validation ranges — a clicked gutter
+   * item plus any validations whose range intersects it (they share content, so
+   * their indicators sit on the same spot) — and hides the severity filters.
+   * `null` means the full, filterable list is shown.
    */
   @state()
-  private focusedRanges: Range[] | null = null;
+  private focusedValidationGroup: Range[] | null = null;
 
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })
@@ -172,7 +174,7 @@ export class ValidationsDrawer extends LitElement {
     if (identifier !== this.#identifier) return;
 
     this._mode = mode;
-    this.focusedRanges = null;
+    this.focusedValidationGroup = null;
     if (!this.open) {
       this.open = true;
     }
@@ -183,18 +185,18 @@ export class ValidationsDrawer extends LitElement {
     if (identifier !== this.#identifier) return;
     this._mode = 'validations';
     this.selectedSeverity = null;
-    this.focusedRanges = ranges;
+    this.focusedValidationGroup = ranges;
     this.open = true;
   };
 
   readonly #closeDrawer = () => {
     this.open = false;
-    this.focusedRanges = null;
+    this.focusedValidationGroup = null;
   };
 
   // Clears the focused group so the full, filterable validation list is shown.
   readonly #showAllValidations = () => {
-    this.focusedRanges = null;
+    this.focusedValidationGroup = null;
   };
 
   // The drawer is an inline panel rather than a native dialog, so Escape-to-close
@@ -227,7 +229,7 @@ export class ValidationsDrawer extends LitElement {
 
     if (!this.open && identifier === this.#identifier) {
       this._mode = 'validations';
-      this.focusedRanges = null;
+      this.focusedValidationGroup = null;
       this.open = true;
     }
 
@@ -263,15 +265,20 @@ export class ValidationsDrawer extends LitElement {
     }
   }
 
+  /** Whether the drawer is focused on a single validation group. */
+  get #hasFocusedValidationGroup(): boolean {
+    return this.focusedValidationGroup !== null;
+  }
+
   /** Severity applied to the list; suppressed while a focused group is shown. */
   get #listSeverity(): ValidationSeverity | null {
-    if (this.focusedRanges) return null;
+    if (this.#hasFocusedValidationGroup) return null;
     return this.selectedSeverity;
   }
 
   /** "Show all validations" button, rendered only while a group is focused. */
   #renderShowAllButton() {
-    if (!this.focusedRanges) return nothing;
+    if (!this.#hasFocusedValidationGroup) return nothing;
     return html`<clippy-button
       class="clippy-drawer__show-all"
       purpose="secondary"
@@ -283,8 +290,7 @@ export class ValidationsDrawer extends LitElement {
   }
 
   override render() {
-    const isOverview = this._mode !== 'validations';
-    const hasFocusedGroup = !!this.focusedRanges;
+    const isValidations = this._mode === 'validations';
     return html`
       <div
         data-testid="clippy-validations-drawer"
@@ -302,7 +308,9 @@ export class ValidationsDrawer extends LitElement {
           </clippy-button>
         </div>
         <div class="clippy-drawer__filters">
-          <clippy-validation-filters ?hidden=${isOverview || hasFocusedGroup}></clippy-validation-filters>
+          <clippy-validation-filters
+            ?hidden=${!isValidations || this.#hasFocusedValidationGroup}
+          ></clippy-validation-filters>
           ${this.#renderShowAllButton()}
         </div>
         <div class="clippy-drawer__body">
@@ -315,10 +323,10 @@ export class ValidationsDrawer extends LitElement {
           <div role="region" aria-label=${msg('Language changes')} ?hidden=${this._mode !== 'language-changes'}>
             <clippy-language-changes></clippy-language-changes>
           </div>
-          <div role="region" aria-label=${msg('Validations')} ?hidden=${this._mode !== 'validations'}>
+          <div role="region" aria-label=${msg('Validations')} ?hidden=${!isValidations}>
             <clippy-validations-list
               .severity=${this.#listSeverity}
-              .ranges=${this.focusedRanges}
+              .ranges=${this.focusedValidationGroup}
             ></clippy-validations-list>
           </div>
         </div>
