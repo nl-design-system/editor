@@ -326,7 +326,7 @@ export class ValidationsDrawer extends LitElement {
           <div role="region" aria-label=${msg('Validations')} ?hidden=${!isValidations}>
             <clippy-validations-list
               .severity=${this.#listSeverity}
-              .ranges=${this.focusedValidationGroup}
+              .focusedValidationGroup=${this.focusedValidationGroup}
             ></clippy-validations-list>
           </div>
         </div>
