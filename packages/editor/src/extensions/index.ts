@@ -32,6 +32,11 @@ import KeyboardShortcuts from '@/extensions/KeyboardShortcuts';
 import { Table, TableBody, TableCaption, TableFoot, TableHead } from '@/extensions/Table';
 import Validation from '@/extensions/Validation';
 
+const globalAttributes = {
+  dir: {},
+  lang: {},
+} as const;
+
 export const editorExtensions = (
   settings: EditorSettings,
   callback: (resultMap: Map<Range, ValidationResult>) => void,
@@ -44,8 +49,8 @@ export const editorExtensions = (
   Paragraph.extend({
     addAttributes() {
       return {
-        dir: {},
-        lang: {},
+        ...this.parent?.(),
+        ...globalAttributes,
       };
     },
   }).configure({
@@ -57,13 +62,8 @@ export const editorExtensions = (
   Heading.extend({
     addAttributes() {
       return {
-        dir: {},
-        lang: {},
-        // `level` is copied from the original `Heading` implementation
-        level: {
-          default: 1,
-          rendered: false,
-        },
+        ...this.parent?.(),
+        ...globalAttributes,
       };
     },
     renderHTML({ HTMLAttributes, node }) {
@@ -94,8 +94,8 @@ export const editorExtensions = (
   BulletList.extend({
     addAttributes() {
       return {
-        dir: {},
-        lang: {},
+        ...this.parent?.(),
+        ...globalAttributes,
       };
     },
   }).configure({
@@ -106,8 +106,8 @@ export const editorExtensions = (
   OrderedList.extend({
     addAttributes() {
       return {
-        dir: {},
-        lang: {},
+        ...this.parent?.(),
+        ...globalAttributes,
       };
     },
   }).configure({
@@ -118,8 +118,8 @@ export const editorExtensions = (
   ListItem.extend({
     addAttributes() {
       return {
-        dir: {},
-        lang: {},
+        ...this.parent?.(),
+        ...globalAttributes,
       };
     },
   }),
@@ -147,8 +147,8 @@ export const editorExtensions = (
   }).extend({
     addAttributes() {
       return {
-        dir: {},
-        lang: {},
+        ...this.parent?.(),
+        ...globalAttributes,
       };
     },
   }),
@@ -156,8 +156,7 @@ export const editorExtensions = (
     addAttributes() {
       return {
         ...this.parent?.(),
-        dir: {},
-        lang: {},
+        ...globalAttributes,
         rel: {
           default: null,
         },
