@@ -1,9 +1,8 @@
-import type { ValidationResult } from '@nl-design-system-community/editor/validators';
-import type { ValidationsMap } from '@nl-design-system-community/editor/validators';
+import type { ValidationResult, ValidationsMap } from '@nl-design-system-community/editor/validators';
 import { describe, expect, it, vi } from 'vitest';
 import { findMatchingCorrection, findOccurrenceIndex, runValidations } from './correction.ts';
 
-const range = (id?: string) => ({ id }) as unknown as Range;
+const range = (): Range => document.createRange();
 
 const result = (validatorKey: string, correct?: () => void): ValidationResult => ({
   correct,
@@ -19,8 +18,8 @@ describe('findOccurrenceIndex', () => {
   });
 
   it('returns 1 for the second match of the same key', () => {
-    const r1 = range('a');
-    const r2 = range('b');
+    const r1 = range();
+    const r2 = range();
     const map: ValidationsMap = new Map([
       [r1, result('key', vi.fn())],
       [r2, result('key', vi.fn())],
@@ -29,8 +28,8 @@ describe('findOccurrenceIndex', () => {
   });
 
   it('does not count results without a correct function', () => {
-    const r1 = range('a');
-    const r2 = range('b');
+    const r1 = range();
+    const r2 = range();
     const map: ValidationsMap = new Map([
       [r1, result('key')],
       [r2, result('key', vi.fn())],
@@ -39,8 +38,8 @@ describe('findOccurrenceIndex', () => {
   });
 
   it('does not count results with a different validatorKey', () => {
-    const r1 = range('a');
-    const r2 = range('b');
+    const r1 = range();
+    const r2 = range();
     const map: ValidationsMap = new Map([
       [r1, result('other', vi.fn())],
       [r2, result('key', vi.fn())],
@@ -49,8 +48,8 @@ describe('findOccurrenceIndex', () => {
   });
 
   it('returns 0 when range is not in the map', () => {
-    const r1 = range('a');
-    const r2 = range('b');
+    const r1 = range();
+    const r2 = range();
     const map: ValidationsMap = new Map([[r1, result('key', vi.fn())]]);
     expect(findOccurrenceIndex(map, r2, 'key')).toBe(0);
   });
@@ -82,8 +81,8 @@ describe('findMatchingCorrection', () => {
     const first = result('key', vi.fn());
     const second = result('key', vi.fn());
     const map: ValidationsMap = new Map([
-      [range('a'), first],
-      [range('b'), second],
+      [range(), first],
+      [range(), second],
     ]);
     expect(findMatchingCorrection(map, 'key', 1)).toBe(second);
   });
