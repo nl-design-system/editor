@@ -149,6 +149,17 @@ export class Gutter extends LitElement {
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
   }
 
+  override firstUpdated(): void {
+    // With no TipTap editor (readonly consumers skip TipTap entirely) and no
+    // explicit `contentElement`, nothing else attaches a ResizeObserver. Observe
+    // the host itself: its `block-size: 100%` tracks the validated content's
+    // height, so reflows from resizing or opening the drawer fire the observer
+    // and recompute indicator positions.
+    if (!this.editor && !this.contentElement) {
+      this.#resizeController.observe(this);
+    }
+  }
+
   override updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
 
