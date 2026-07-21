@@ -100,7 +100,7 @@ export class HeadingStructure extends LitElement {
                     return html`
                       <li class="clippy-heading-structure__item" data-level="${level}">
                         <button
-                          class="utrecht-link-button utrecht-link-button--html-button"
+                          class="utrecht-link-button utrecht-link-button--html-button clippy-heading-structure__button"
                           @click=${(e: Event) => {
                             e.preventDefault();
                             this.#scrollToHeading(index, this.#headings[index].element);
@@ -111,7 +111,7 @@ export class HeadingStructure extends LitElement {
                             aria-label=${msg(str`Heading level ${level}`)}
                             >H${level}</span
                           >
-                          ${text || msg('(empty)')}
+                          <span class="clippy-heading-structure__text">${text || msg('(empty)')}</span>
                         </button>
                       </li>
                     `;

@@ -1,5 +1,7 @@
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { html } from 'lit';
+import '@/components/editor-wrapper';
+import '@/components/editor-content-wrapper';
 import '@/components/toolbar';
 import '@/components/validations/gutter';
 import '@/components/validations/drawer';
@@ -10,6 +12,7 @@ import '@/components/content-views/link-list';
 import '@/components/content-views/language-changes';
 import { property } from 'lit/decorators.js';
 import '@/components/content';
+import type { DrawerPosition } from '@/components/editor-wrapper';
 import { Context } from '@/components/context';
 import { type ToolbarConfig, defaultToolbarConfig } from '@/components/toolbar/toolbar-config';
 
@@ -47,16 +50,27 @@ export class Editor extends Context {
   @property({ attribute: 'toolbar-config', type: Array })
   toolbarConfig: ToolbarConfig = defaultToolbarConfig;
 
+  /**
+   * Side of the editor content on which the validations drawer is rendered.
+   * Defaults to `right`.
+   */
+  @property({ attribute: 'drawer-position' })
+  drawerPosition: DrawerPosition = 'right';
+
   override render() {
     return html`
-      <clippy-toolbar .config=${this.toolbarConfig}></clippy-toolbar>
-      <div class="clippy-editor-container" id=${EDITOR_ID}>
-        <slot name="value" hidden></slot>
-        <clippy-validations-gutter></clippy-validations-gutter>
-        <clippy-content></clippy-content>
-        <clippy-bubble-menu class="clippy-bubble-menu"></clippy-bubble-menu>
-      </div>
-      <clippy-validations-drawer></clippy-validations-drawer>
+      <clippy-editor-wrapper drawer-position=${this.drawerPosition}>
+        <clippy-editor-content-wrapper>
+          <clippy-toolbar .config=${this.toolbarConfig}></clippy-toolbar>
+          <div class="clippy-editor-container" id=${EDITOR_ID}>
+            <slot name="value" hidden></slot>
+            <clippy-validations-gutter></clippy-validations-gutter>
+            <clippy-content></clippy-content>
+            <clippy-bubble-menu class="clippy-bubble-menu"></clippy-bubble-menu>
+          </div>
+        </clippy-editor-content-wrapper>
+        <clippy-validations-drawer></clippy-validations-drawer>
+      </clippy-editor-wrapper>
     `;
   }
 }

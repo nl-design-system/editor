@@ -2,6 +2,7 @@ import {
   type AccessibilityNotifications,
   type ValidationsDrawer,
 } from '@nl-design-system-community/editor/accessibility-notifications';
+import { EditorContentWrapper, EditorWrapper } from '@nl-design-system-community/editor/editor-wrapper';
 import { CustomEvents, type FocusNodeEvent, type Gutter } from '@nl-design-system-community/editor/gutter';
 import { debouncedValidate, runValidation, type ValidationsMap } from '@nl-design-system-community/editor/validators';
 import { Plugin, View, type Locale, type ToolbarView } from 'ckeditor5';
@@ -16,6 +17,7 @@ export class ClippyPlugin extends Plugin {
 
   private _editableEl: HTMLElement | null = null;
   private _editorEl: HTMLElement | null = null;
+  private _wrapperEl: EditorWrapper | null = null;
   private _gutterEl: Gutter | null = null;
   private _drawerEl: ValidationsDrawer | null = null;
   private _notificationsView: View | null = null;
@@ -39,8 +41,7 @@ export class ClippyPlugin extends Plugin {
     this._editableEl = this.editor.ui.getEditableElement() ?? null;
     this._editorEl = this._editableEl?.closest<HTMLElement>('.ck-editor') ?? null;
 
-    const gutterContainer = this._editableEl?.parentElement ?? null;
-    if (!this._editorEl || !gutterContainer) {
+    if (!this._editorEl || !this._editableEl?.parentElement) {
       return;
     }
 
@@ -48,14 +49,22 @@ export class ClippyPlugin extends Plugin {
     this._editorEl.classList.add('ma-theme', 'clippy-theme', 'utrecht-theme');
     adoptClippyStyles();
 
+    const wrapper = document.createElement('clippy-editor-wrapper') as EditorWrapper;
+    this._editableEl.replaceWith(wrapper);
+    this._wrapperEl = wrapper;
+
+    const contentWrapper = document.createElement('clippy-editor-content-wrapper') as EditorContentWrapper;
+    contentWrapper.append(this._editableEl);
+    wrapper.append(contentWrapper);
+
     const gutter = document.createElement('clippy-validations-gutter') as Gutter;
     gutter.mode = 'tooltip';
-    gutterContainer.append(gutter);
+    contentWrapper.append(gutter);
     this._gutterEl = gutter;
 
     const drawer = document.createElement('clippy-validations-drawer') as ValidationsDrawer;
     drawer.identifier = this._identifier;
-    this._editorEl.append(drawer);
+    wrapper.append(drawer);
     this._drawerEl = drawer;
 
     this._editorEl.addEventListener(CustomEvents.FOCUS_NODE, this._handleFocusNode);
@@ -200,6 +209,11 @@ export class ClippyPlugin extends Plugin {
     this._editorEl?.removeEventListener(CustomEvents.FOCUS_NODE, this._handleFocusNode);
     this._drawerEl?.remove();
     this._gutterEl?.remove();
+    // Restore the editable to its original parent so CKEditor's own teardown
+    // doesn't have to deal with our extra wrapper elements.
+    if (this._wrapperEl && this._editableEl) {
+      this._wrapperEl.replaceWith(this._editableEl);
+    }
     super.destroy();
   }
 }

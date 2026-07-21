@@ -20,6 +20,10 @@
       "types": "./dist/entries/accessibility-notifications.d.ts",
       "default": "./dist/accessibility-notifications.js"
     },
+    "./editor-wrapper": {
+      "types": "./dist/entries/editor-wrapper.d.ts",
+      "default": "./dist/editor-wrapper.js"
+    },
     "./gutter": {
       "types": "./dist/entries/gutter.d.ts",
       "default": "./dist/gutter.js"
@@ -42,6 +46,9 @@
     "*": {
       "accessibility-notifications": [
         "./dist/entries/accessibility-notifications.d.ts"
+      ],
+      "editor-wrapper": [
+        "./dist/entries/editor-wrapper.d.ts"
       ],
       "gutter": [
         "./dist/entries/gutter.d.ts"

@@ -7,7 +7,6 @@ import { safeCustomElement } from '@nl-design-system-community/clippy-components
 import X from '@tabler/icons/outline/x.svg?raw';
 import { html, LitElement, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import '@/components/validations/list';
 import '@/components/content-views/heading-structure';
 import '@/components/content-views/link-list';
@@ -35,7 +34,7 @@ import drawerStyles from './styles';
 const tag = 'clippy-validations-drawer';
 
 /**
- * Slide-in drawer dialog that lists all accessibility validation results and
+ * Inline drawer panel that lists all accessibility validation results and
  * provides document overview panels (heading structure, link list, language
  * changes). Opens and closes in response to the global
  * `CustomEvents.OPEN_DOCUMENT_OVERVIEW` event, scoped to the current editor
@@ -44,7 +43,7 @@ const tag = 'clippy-validations-drawer';
  * @tag clippy-validations-drawer
  *
  * @fires {OpenDocumentOverviewEvent} OPEN_DOCUMENT_OVERVIEW - Listens for this event to
- *   toggle the dialog open state.
+ *   toggle the panel open state.
  * @fires {CustomEvent} FILTER_CHANGE - Listens to filter the displayed validations
  *   by severity.
  *
@@ -117,8 +116,6 @@ export class ValidationsDrawer extends LitElement {
   readonly #htmlDocumentProvider = new ContextProvider(this, { context: htmlDocumentContext });
   readonly #identifierProvider = new ContextProvider(this, { context: identifierContext });
 
-  readonly #dialogRef: Ref<HTMLDialogElement> = createRef();
-
   override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     if (changed.has('validationsMap') || changed.has('validationsContext')) {
@@ -156,7 +153,6 @@ export class ValidationsDrawer extends LitElement {
       if (eventIdentifier !== this.#identifier) return;
     }
     if (this.open) {
-      this.#dialogRef.value?.close();
       this.open = false;
     }
   };
@@ -167,21 +163,27 @@ export class ValidationsDrawer extends LitElement {
 
     this._mode = mode;
     if (!this.open) {
-      this.#dialogRef.value?.showModal();
       this.open = true;
     }
   };
 
   readonly #closeDrawer = () => {
-    this.#dialogRef.value?.close();
     this.open = false;
+  };
+
+  // The drawer is an inline panel rather than a native dialog, so Escape-to-close
+  // is handled explicitly to preserve keyboard dismissal.
+  readonly #handleKeydown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape' && this.open) {
+      event.preventDefault();
+      this.#closeDrawer();
+    }
   };
 
   readonly #focusNode = (event: Event) => {
     const { range } = (event as FocusNodeEvent).detail;
 
     if (this.open) {
-      this.#dialogRef.value?.close();
       this.open = false;
     }
 
@@ -199,7 +201,6 @@ export class ValidationsDrawer extends LitElement {
 
     if (!this.open && identifier === this.#identifier) {
       this._mode = 'validations';
-      this.#dialogRef.value?.showModal();
       this.open = true;
     }
 
@@ -221,20 +222,39 @@ export class ValidationsDrawer extends LitElement {
     this.selectedSeverity = (severity as ValidationSeverity) || null;
   };
 
+  /** Title of the content currently shown in the drawer. */
+  #getTitle(): string {
+    switch (this._mode) {
+      case 'heading-structure':
+        return msg('Heading structure');
+      case 'link-list':
+        return msg('Links');
+      case 'language-changes':
+        return msg('Language changes');
+      default:
+        return msg('Errors, warnings or tips');
+    }
+  }
+
   override render() {
     const isOverview = this._mode !== 'validations';
     return html`
-      <dialog
-        ${ref(this.#dialogRef)}
+      <div
         data-testid="clippy-validations-drawer"
         class="clippy-drawer__content"
-        aria-label=${msg('Accessibility notifications')}
+        role="region"
+        aria-labelledby="clippy-drawer-title"
+        ?hidden=${!this.open}
+        @keydown=${this.#handleKeydown}
       >
         <div class="clippy-drawer__header">
+          <h3 id="clippy-drawer-title" class="clippy-drawer__title">${this.#getTitle()}</h3>
           <clippy-button class="clippy-drawer__close-button" icon-only purpose="subtle" @click=${this.#closeDrawer}>
             <clippy-icon slot="iconStart">${unsafeSVG(X)}</clippy-icon>
             ${msg('Close')}
           </clippy-button>
+        </div>
+        <div class="clippy-drawer__filters">
           <clippy-validation-filters ?hidden=${isOverview}></clippy-validation-filters>
         </div>
         <div class="clippy-drawer__body">
@@ -251,7 +271,7 @@ export class ValidationsDrawer extends LitElement {
             <clippy-validations-list .severity=${this.selectedSeverity}></clippy-validations-list>
           </div>
         </div>
-      </dialog>
+      </div>
     `;
   }
 }

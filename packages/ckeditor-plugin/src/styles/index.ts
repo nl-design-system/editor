@@ -1,9 +1,13 @@
 const css = (strings: TemplateStringsArray) => strings.join('');
 
 const CLIPPY_STYLES = css`
-  /* Make sure the absolutely-positioned gutter aligns to the content instead of the toolbar */
-  .ck.ck-editor__main {
-    position: relative;
+  /* Re-apply basic CKEditor theme inside the clippy-editor-content-wrapper component */
+  clippy-editor-content-wrapper > .ck-editor__editable {
+    background: var(--ck-color-base-background);
+  }
+
+  clippy-editor-content-wrapper > .ck-editor__editable:not(.ck-focused) {
+    border-color: var(--ck-color-base-border);
   }
 
   /* Make sure the accessibility button aligns to the right - CKEditor does not support such a setting natively */
