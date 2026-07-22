@@ -13,8 +13,6 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     environment: Publish
-    permissions:
-      packages: write
 
     steps:
       - name: Checkout

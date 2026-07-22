@@ -59,7 +59,3 @@ docker compose exec drupal /opt/drupal/vendor/bin/drush --root=/opt/drupal/web c
 | Module   | Description                                                                                                                   |
 | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | `clippy` | Registers the ClippyPlugin with Drupal's CKEditor 5. Build it first with `pnpm build` from `packages/drupal-ckeditor-plugin`. |
-
-## Continuous integration
-
-The `Docker Drupal` workflow (`.github/workflows/docker-drupal.yml`) builds this image whenever files under `app/drupal/` change. Pull requests build the image for validation only; pushes to `main` also publish it to `ghcr.io/<repo>/drupal`.
