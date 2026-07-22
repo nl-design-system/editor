@@ -19,6 +19,7 @@ import {
   type OpenValidationGroupDetail,
 } from '@/events';
 import { type ValidationKey, validationMessages } from '@/messages';
+import { getOverlappingRanges } from '@/utils/ranges';
 import gutterStyles from './styles';
 
 const tag = 'clippy-validations-gutter';
@@ -120,21 +121,11 @@ export class Gutter extends LitElement {
     // `readonly`: the indicator is a focusable button, but clicking it performs no action.
   }
 
-  /** Whether two ranges share any content (overlap) within the same document. */
-  #rangesIntersect(a: Range, b: Range): boolean {
-    try {
-      return a.compareBoundaryPoints(Range.END_TO_START, b) < 0 && a.compareBoundaryPoints(Range.START_TO_END, b) > 0;
-    } catch {
-      return false;
-    }
-  }
-
   /** The clicked range plus every other validation range that overlaps it. */
   #getOverlappingRanges(target: Range): Range[] {
     const map = this.validationsMap ?? this.validationsContext;
     if (!map) return [target];
-    const group = [...map.keys()].filter((range) => range === target || this.#rangesIntersect(target, range));
-    return group.length ? group : [target];
+    return getOverlappingRanges(target, map.keys());
   }
 
   readonly #handleFocusValidationItemInGutter = (event: Event) => {

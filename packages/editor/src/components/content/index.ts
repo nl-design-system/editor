@@ -19,10 +19,15 @@ const tag = 'clippy-content';
  * It is therefore adopted into `getRootNode()` at connect time rather than
  * declared in a shadow stylesheet that cannot reach slotted content.
  */
-const CONTENT_PADDING_CSS = `.clippy-content{padding-block:var(--basis-space-inline-4xl);padding-inline:var(--basis-space-inline-4xl)}`;
+const CONTENT_PADDING_CSS = css`
+  .clippy-content {
+    padding-block: var(--basis-space-inline-4xl);
+    padding-inline: var(--basis-space-inline-4xl);
+  }
+`;
 
 const contentPaddingSheet = new CSSStyleSheet();
-contentPaddingSheet.replaceSync(CONTENT_PADDING_CSS);
+contentPaddingSheet.replaceSync(CONTENT_PADDING_CSS.cssText);
 
 /** Adopt the editable-padding stylesheet into a root once. */
 function ensureContentPadding(root: Document | ShadowRoot): void {
