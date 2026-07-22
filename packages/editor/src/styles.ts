@@ -27,11 +27,6 @@ export default css`
     pointer-events: none;
   }
 
-  .clippy-content {
-    padding-block: var(--basis-space-inline-4xl);
-    padding-inline: var(--basis-space-inline-4xl);
-  }
-
   .clippy-content:focus-visible {
     outline-style: dashed;
     outline-color: var(--basis-color-accent-1-border-default);

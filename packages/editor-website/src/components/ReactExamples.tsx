@@ -2,6 +2,8 @@ import {
   ClippyContent,
   ClippyContext,
   ClippyEditor,
+  ClippyEditorContentWrapper,
+  ClippyEditorWrapper,
   ClippyGutter,
   ClippyToolbar,
   ClippyValidationsDrawer,
@@ -34,17 +36,21 @@ export function ReactContextExample() {
           Dit is een voorbeeld van de Clippy Editor <a href="#">met een Lit React wrapper</a>
         </p>
       </div>
-      <ClippyToolbar
-        config={[
-          ['format-select', 'language-select'],
-          ['bold', 'italic', 'underline', 'code'],
-          ['link', 'image-upload', 'insert-table'],
-        ]}
-      />
-      <ClippyContent>
-        <ClippyGutter mode="tooltip" />
-      </ClippyContent>
-      <ClippyValidationsDrawer />
+      <ClippyEditorWrapper>
+        <ClippyEditorContentWrapper>
+          <ClippyToolbar
+            config={[
+              ['format-select', 'language-select'],
+              ['bold', 'italic', 'underline', 'code'],
+              ['link', 'image-upload', 'insert-table'],
+            ]}
+          />
+          <ClippyContent>
+            <ClippyGutter mode="drawer" />
+          </ClippyContent>
+        </ClippyEditorContentWrapper>
+        <ClippyValidationsDrawer />
+      </ClippyEditorWrapper>
     </ClippyContext>
   );
 }

@@ -137,4 +137,58 @@ describe('<clippy-validations-dialog>', () => {
     expect(heading).not.toBeNull();
     expect(heading?.textContent?.trim()).toBe(firstItem?.description);
   });
+
+  it('shows only the focused group and hides the filters on OPEN_VALIDATION_GROUP', async () => {
+    const contextElement = document.querySelector('clippy-context') as Context | null;
+
+    await vi.waitFor(() => {
+      expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
+    });
+
+    const r1 = document.createRange();
+    const r2 = document.createRange();
+    const r3 = document.createRange();
+    const validationsMap: Map<Range, ValidationResult> = new Map([
+      [r1, { severity: 'error', validatorKey: blockValidations.HEADING_MUST_NOT_BE_EMPTY }],
+      [r2, { severity: 'warning', validatorKey: inlineValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC }],
+      [r3, { severity: 'error', validatorKey: blockValidations.IMAGE_MUST_HAVE_ALT_TEXT }],
+    ]);
+
+    if (contextElement) {
+      contextElement.updateValidationsContext(validationsMap);
+      await contextElement.updateComplete;
+    }
+
+    // Open only the group of r1 + r2 (as if a gutter item with an overlap was clicked).
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_VALIDATION_GROUP, {
+        detail: { identifier: TEST_IDENTIFIER, ranges: [r1, r2] },
+      }),
+    );
+
+    const drawerEl = document.querySelector('clippy-validations-drawer');
+    await expect.element(page.getByTestId('clippy-validations-drawer')).not.toHaveAttribute('hidden');
+
+    // Only the two focused validations are rendered, not the third.
+    await vi.waitFor(() => {
+      const listEl = drawerEl?.shadowRoot?.querySelector('clippy-validations-list');
+      const items = listEl?.shadowRoot?.querySelectorAll('clippy-validation-item');
+      expect(items?.length).toBe(2);
+    });
+
+    // The severity filters are hidden while a group is focused.
+    const filters = drawerEl?.shadowRoot?.querySelector('clippy-validation-filters');
+    expect(filters).toHaveAttribute('hidden');
+
+    // Clicking "Show all validations" clears the group and reveals every item + the filters.
+    const showAll = drawerEl?.shadowRoot?.querySelector('.clippy-drawer__show-all');
+    (showAll as HTMLElement | null)?.click();
+
+    await vi.waitFor(() => {
+      const listEl = drawerEl?.shadowRoot?.querySelector('clippy-validations-list');
+      const items = listEl?.shadowRoot?.querySelectorAll('clippy-validation-item');
+      expect(items?.length).toBe(3);
+    });
+    expect(drawerEl?.shadowRoot?.querySelector('clippy-validation-filters')).not.toHaveAttribute('hidden');
+  });
 });

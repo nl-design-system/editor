@@ -6,12 +6,20 @@ import { safeCustomElement } from '@nl-design-system-community/clippy-components
 import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import type { ValidationResult, ValidationsMap } from '@/types/validation';
+import type { ValidationInteractionMode, ValidationResult, ValidationsMap } from '@/types/validation';
+import { validationInteractionMode } from '@/constants';
+import { identifierContext } from '@/context/identifierContext';
 import { tiptapContext } from '@/context/tiptapContext';
 import { validationsContext } from '@/context/validationsContext';
 import { ResizeController } from '@/controllers/ResizeController';
-import { CustomEvents, type FocusValidationItemInGutterEvent, type FocusValidationItemInListDetail } from '@/events';
+import {
+  CustomEvents,
+  type FocusValidationItemInGutterEvent,
+  type FocusValidationItemInListDetail,
+  type OpenValidationGroupDetail,
+} from '@/events';
 import { type ValidationKey, validationMessages } from '@/messages';
+import { getOverlappingRanges } from '@/utils/ranges';
 import gutterStyles from './styles';
 
 const tag = 'clippy-validations-gutter';
@@ -26,13 +34,17 @@ declare global {
 /**
  * Side gutter that displays colour-coded accessibility validation indicators
  * vertically aligned with their corresponding positions in the editor content.
- * Clicking an indicator either shows an inline tooltip or scrolls the
- * validations list to the matching item, depending on `mode`.
+ * Clicking an indicator either scrolls the external validations list to the
+ * matching item or opens the matching validation(s) in the drawer, depending on
+ * `mode`.
  *
  * @tag clippy-validations-gutter
  *
  * @fires {FocusValidationItemInListEvent} FOCUS_VALIDATION_ITEM_IN_LIST - Dispatched in `list` mode
  *   when the user clicks an indicator, so the list component can scroll to it.
+ * @fires {OpenValidationGroupEvent} OPEN_VALIDATION_GROUP - Dispatched in `drawer` mode
+ *   when the user clicks an indicator, so the drawer can show that validation
+ *   and any overlapping ones.
  *
  * @example
  * ```html
@@ -46,12 +58,13 @@ export class Gutter extends LitElement {
 
   /**
    * Display mode for validation interactions.
-   * - `tooltip` – show an inline tooltip on click (default).
    * - `list` – scroll the external validations list to the item on click.
-   * - `readonly` – indicators are visible but not interactive.
+   * - `drawer` – open the clicked validation (plus any overlapping ones) in the
+   *   validations drawer on click.
+   * - `readonly` – indicators are visible and focusable, but clicking them performs no action (default).
    */
   @property({ type: String })
-  mode: 'tooltip' | 'list' | 'readonly' = 'tooltip';
+  mode: ValidationInteractionMode = validationInteractionMode.READONLY;
 
   /**
    * Optional reference element used for indicator positioning and resize
@@ -78,6 +91,11 @@ export class Gutter extends LitElement {
   @state()
   private readonly validationsContext?: ValidationsMap;
 
+  /** @internal Identifier of the owning editor, used to scope drawer events. */
+  @consume({ context: identifierContext, subscribe: true })
+  @property({ attribute: false })
+  private readonly identifier?: string;
+
   readonly #closeValidationItem = () => {
     this.activeRange = null;
   };
@@ -85,7 +103,7 @@ export class Gutter extends LitElement {
   readonly #resizeController = new ResizeController(this);
 
   #handleIndicatorClick(range: Range) {
-    if (this.mode === 'list') {
+    if (this.mode === validationInteractionMode.LIST) {
       this.dispatchEvent(
         new CustomEvent<FocusValidationItemInListDetail>(CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST, {
           bubbles: true,
@@ -93,9 +111,21 @@ export class Gutter extends LitElement {
           detail: { range },
         }),
       );
-    } else {
-      this.activeRange = this.activeRange === range ? null : range;
+    } else if (this.mode === validationInteractionMode.DRAWER) {
+      globalThis.dispatchEvent(
+        new CustomEvent<OpenValidationGroupDetail>(CustomEvents.OPEN_VALIDATION_GROUP, {
+          detail: { identifier: this.identifier, ranges: this.#getOverlappingRanges(range) },
+        }),
+      );
     }
+    // `readonly`: the indicator is a focusable button, but clicking it performs no action.
+  }
+
+  /** The clicked range plus every other validation range that overlaps it. */
+  #getOverlappingRanges(target: Range): Range[] {
+    const map = this.validationsMap ?? this.validationsContext;
+    if (!map) return [target];
+    return getOverlappingRanges(target, map.keys());
   }
 
   readonly #handleFocusValidationItemInGutter = (event: Event) => {
@@ -108,6 +138,17 @@ export class Gutter extends LitElement {
     globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, this.#handleFocusValidationItemInGutter);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
+  }
+
+  override firstUpdated(): void {
+    // With no TipTap editor (readonly consumers skip TipTap entirely) and no
+    // explicit `contentElement`, nothing else attaches a ResizeObserver. Observe
+    // the host itself: its `block-size: 100%` tracks the validated content's
+    // height, so reflows from resizing or opening the drawer fire the observer
+    // and recompute indicator positions.
+    if (!this.editor && !this.contentElement) {
+      this.#resizeController.observe(this);
+    }
   }
 
   override updated(changedProperties: PropertyValues): void {

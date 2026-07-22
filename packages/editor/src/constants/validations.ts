@@ -28,3 +28,9 @@ export const validationSeverity = {
   INFO: 'info',
   WARNING: 'warning',
 } as const;
+
+export const validationInteractionMode = {
+  DRAWER: 'drawer',
+  LIST: 'list',
+  READONLY: 'readonly',
+} as const;

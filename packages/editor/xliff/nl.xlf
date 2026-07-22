@@ -400,10 +400,6 @@
         <source>Preview</source>
         <target>Voorbeeld</target>
       </trans-unit>
-      <trans-unit id="s241b38e32644d4bd">
-        <source>Open in drawer</source>
-        <target>Open in zijpaneel</target>
-      </trans-unit>
       <trans-unit id="s21905715d95b4173">
         <source>Focus</source>
         <target>Focus</target>
@@ -540,6 +536,7 @@
       </trans-unit>
 <trans-unit id="sd830252189685028">
   <source>Errors, warnings and tips</source>
+  <target>Fouten, waarschuwingen en tips</target>
 </trans-unit>
 <trans-unit id="s1f7dddc454d49c86">
   <source>Errors, warnings or tips</source>
@@ -547,6 +544,11 @@
 </trans-unit>
 <trans-unit id="s29a1a2dd90ffd24b">
   <source>Validations</source>
+  <target>Validatiemeldingen</target>
+</trans-unit>
+<trans-unit id="s67104c1ba3a78a63">
+  <source>Show all validations</source>
+  <target>Alle validatiemeldingen tonen</target>
 </trans-unit>
     </body>
   </file>

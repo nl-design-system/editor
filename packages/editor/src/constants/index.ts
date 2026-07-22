@@ -1,1 +1,7 @@
-export { blockValidations, documentValidations, inlineValidations, validationSeverity } from './validations';
+export {
+  blockValidations,
+  documentValidations,
+  inlineValidations,
+  validationInteractionMode,
+  validationSeverity,
+} from './validations';

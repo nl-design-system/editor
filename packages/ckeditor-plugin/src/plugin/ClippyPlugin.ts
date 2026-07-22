@@ -3,7 +3,12 @@ import {
   type ValidationsDrawer,
 } from '@nl-design-system-community/editor/accessibility-notifications';
 import { EditorContentWrapper, EditorWrapper } from '@nl-design-system-community/editor/editor-wrapper';
-import { CustomEvents, type FocusNodeEvent, type Gutter } from '@nl-design-system-community/editor/gutter';
+import {
+  CustomEvents,
+  type FocusNodeEvent,
+  type Gutter,
+  validationInteractionMode,
+} from '@nl-design-system-community/editor/gutter';
 import { debouncedValidate, runValidation, type ValidationsMap } from '@nl-design-system-community/editor/validators';
 import { Plugin, View, type Locale, type ToolbarView } from 'ckeditor5';
 import { DEFAULT_SETTINGS } from '../constants/';
@@ -58,7 +63,7 @@ export class ClippyPlugin extends Plugin {
     wrapper.append(contentWrapper);
 
     const gutter = document.createElement('clippy-validations-gutter') as Gutter;
-    gutter.mode = 'tooltip';
+    gutter.mode = validationInteractionMode.READONLY;
     contentWrapper.append(gutter);
     this._gutterEl = gutter;
 

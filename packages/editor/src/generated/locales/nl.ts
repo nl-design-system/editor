@@ -31,8 +31,8 @@
 's1f7dddc454d49c86': `Fouten, waarschuwingen of tips`,
 's20d2d5a6ee857cf2': `Vermijd alinea's die op koppen lijken`,
 's21905715d95b4173': `Focus`,
-'s241b38e32644d4bd': `Open in zijpaneel`,
 's274e78669e453ed4': `Vermijd lege elementen`,
+'s29a1a2dd90ffd24b': `Validatiemeldingen`,
 's2dd973ed898d0cf5': `Horizontale lijn`,
 's30b26d80216b4307': `(documenttaal)`,
 's33c26204494fd8c0': `Toon toegankelijkheidsmeldingen`,
@@ -77,6 +77,7 @@
 's6490655f25ad112c': `Bewerk de afbeelding om een alt-tekst toe te voegen`,
 's64ef2a6c2dd1d3d1': `Bewerken`,
 's669b18c6d2d9c95b': `Geen`,
+'s67104c1ba3a78a63': `Alle validatiemeldingen tonen`,
 's703aeed8faa1a0ef': `doorhalen`,
 's71080533c3b54c62': `Verwijder de onderstreping van de tekst.`,
 's7417792bbe720149': `Opnieuw`,
@@ -130,6 +131,7 @@
 'sd6048d71ae60e1d2': `Doorhalen`,
 'sd79022be2c5470fc': `Werkbalk tekstbewerker`,
 'sd7cbea773be90a4a': `definitiebeschrijving`,
+'sd830252189685028': `Fouten, waarschuwingen en tips`,
 'sdf946172dfa0328f': `Superscript`,
 'se3b4c857f91f80d7': `Sneltoetsen`,
 'se44dd3f2702d6bdb': `Link verwijderen`,
@@ -145,7 +147,5 @@
 'sfc63e31ac7c956ed': `Selecteer`,
 'sff5bb7742c2896c8': `Linkdoel`,
 'sffdadf0a576fd802': `Hoogte`,
-'s29a1a2dd90ffd24b': `Validations`,
-'sd830252189685028': `Errors, warnings and tips`,
     };
   
