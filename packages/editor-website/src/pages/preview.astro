@@ -1,5 +1,6 @@
 ---
-
+import iconChevronLeft from '@tabler/icons/outline/chevron-left.svg?raw';
+import { EDITOR_STORAGE_KEY } from '../utils/editorPersistence';
 ---
 
 <html lang="nl" dir="ltr" class="ma-theme clippy-theme utrecht-root">
@@ -22,6 +23,12 @@
     </script>
   </head>
   <body class="utrecht-body">
+    <header class="preview-header">
+      <a class="preview-header__back nl-button nl-button--subtle" href="/">
+        <span class="preview-header__icon" aria-hidden="true"><Fragment set:html={iconChevronLeft} /></span>
+        <span class="nl-button__label">Terug naar editor</span>
+      </a>
+    </header>
     <clippy-context id="clippy-preview" readonly>
       <div slot="value">
         <h1>NL Design System Editor — voorbeeld</h1>
@@ -111,6 +118,32 @@
         <p lang="ar" dir="rtl">هذه الفقرة باللغة العربية وتتدفق من اليمين إلى اليسار.</p>
       </div>
 
+      <!--
+        Runs synchronously during parsing, before the deferred editor module
+        upgrades <clippy-context> and reads its "value" slot. This swaps in the
+        content edited on the home page (persisted to localStorage) so the
+        preview reflects the user's own document.
+      -->
+      <script is:inline define:vars={{ storageKey: EDITOR_STORAGE_KEY }}>
+        (function () {
+          try {
+            var saved = localStorage.getItem(storageKey);
+            if (!saved) return;
+            var slot = document.querySelector('#clippy-preview > div[slot="value"]');
+            if (slot) slot.innerHTML = saved;
+          } catch (error) {
+            /* localStorage may be unavailable (e.g. privacy mode); keep default content. */
+          }
+        })();
+
+        // When the page is restored from the back/forward (bfcache), scripts do
+        // not re-run and <clippy-context> keeps its previously validated content.
+        // Force a fresh load so the latest edits (and their validations) show.
+        window.addEventListener('pageshow', function (event) {
+          if (event.persisted) window.location.reload();
+        });
+      </script>
+
       <div class="preview-layout">
         <main class="preview-content">
           <div class="preview-content__gutter-wrapper">
@@ -133,6 +166,30 @@
     </clippy-context>
 
     <style>
+      .preview-header {
+        display: flex;
+        align-items: center;
+        max-width: 1200px;
+        margin-inline: auto;
+        padding-inline: var(--basis-space-inline-xl, 1.5rem);
+        padding-block: var(--basis-space-block-md, 1rem);
+      }
+
+      .preview-header__back {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--basis-space-inline-sm, 0.5rem);
+      }
+
+      .preview-header__icon {
+        display: inline-flex;
+      }
+
+      .preview-header__icon :global(svg) {
+        inline-size: 1.25em;
+        block-size: 1.25em;
+      }
+
       .preview-layout {
         display: grid;
         grid-template-columns: 1fr 320px;
