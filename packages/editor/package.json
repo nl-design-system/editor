@@ -91,6 +91,7 @@
     "@nl-design-system-candidate/number-badge-css": "1.1.5",
     "@nl-design-system-community/clippy-alt-text-wizard": "workspace:*",
     "@nl-design-system-community/clippy-components": "3.2.0",
+    "@nl-design-system-unstable/documentation": "1.11.0",
     "@tabler/icons": "3.45.0",
     "@tiptap/core": "3.28.0",
     "@tiptap/extension-blockquote": "3.28.0",
@@ -133,6 +134,7 @@
     "@utrecht/table-css": "3.0.1",
     "@utrecht/textbox-css": "4.0.1",
     "@utrecht/unordered-list-css": "3.1.1",
+    "@vanillawc/wc-markdown": "1.6.11",
     "lit": "3.3.3",
     "prosemirror-model": "1.25.11"
   },

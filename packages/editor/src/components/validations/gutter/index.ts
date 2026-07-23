@@ -237,7 +237,7 @@ export class Gutter extends LitElement {
     const position = this.#getIndicatorPosition(range);
     if (!position) return nothing;
     const valKey = validatorKey as ValidationKey;
-    const { customCorrectLabel, description, href, tip } = validationMessages()[valKey];
+    const { customCorrectLabel, description, docs, href, tip } = validationMessages()[valKey];
     const tipHtml = tip?.(tipPayload) ?? null;
     const isActive = this.activeRange === range;
     return html`<li
@@ -268,6 +268,7 @@ export class Gutter extends LitElement {
           .href=${href}
           .customCorrectLabel=${customCorrectLabel}
           .correct=${correct}
+          .docs=${docs}
         >
           ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
         </clippy-validation-item>
