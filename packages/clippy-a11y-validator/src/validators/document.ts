@@ -1,42 +1,36 @@
-import type { Level } from '@tiptap/extension-heading';
-import type { EditorSettings } from '@/types/settings';
-import type { DocumentValidator, ValidationResult } from '@/types/validation';
-import { documentValidations, validationSeverity } from '@/constants';
-import { correctDuplicateHeadingOne, correctHeadingLevel, correctMissingTopLevelHeading } from '@/correctors';
-import { getElementRange } from '@/validators/helpers';
+import type { DocumentValidator, HeadingLevel, ValidationResult, ValidatorSettings } from '../types';
+import { documentValidations, validationSeverity } from '../constants';
 
 // ── Document validators ───────────────────────────────────────────────────────
 
 export const documentMustHaveCorrectHeadingOrder = (
   dom: HTMLElement,
-  settings?: EditorSettings,
+  settings?: ValidatorSettings,
 ): ValidationResult[] => {
   const errors: ValidationResult[] = [];
   const { topHeadingLevel = 1 } = settings ?? {};
   let precedingHeadingLevel = topHeadingLevel;
 
   dom.querySelectorAll<HTMLHeadingElement>('h1, h2, h3, h4, h5, h6').forEach((heading) => {
-    const headingLevel = Number.parseInt(heading.tagName.slice(1), 10) as Level;
+    const headingLevel = Number.parseInt(heading.tagName.slice(1), 10) as HeadingLevel;
 
     if (headingLevel < topHeadingLevel) {
-      const targetLevel = topHeadingLevel as Level;
+      const targetLevel = topHeadingLevel as HeadingLevel;
       errors.push({
-        correct: correctHeadingLevel(heading, targetLevel),
-        range: getElementRange(heading),
+        element: heading,
         scope: 'block',
         severity: validationSeverity.ERROR,
-        tipPayload: { headingLevel, precedingHeadingLevel, topHeadingLevel },
+        tipPayload: { headingLevel, precedingHeadingLevel, targetLevel, topHeadingLevel },
       });
     }
 
     if (headingLevel > precedingHeadingLevel + 1) {
-      const targetLevel = (precedingHeadingLevel + 1) as Level;
+      const targetLevel = (precedingHeadingLevel + 1) as HeadingLevel;
       errors.push({
-        correct: correctHeadingLevel(heading, targetLevel),
-        range: getElementRange(heading),
+        element: heading,
         scope: 'block',
         severity: validationSeverity.WARNING,
-        tipPayload: { headingLevel, precedingHeadingLevel, topHeadingLevel },
+        tipPayload: { headingLevel, precedingHeadingLevel, targetLevel, topHeadingLevel },
       });
     }
 
@@ -51,14 +45,16 @@ export const documentMustHaveSingleHeadingOne = (dom: HTMLElement): ValidationRe
   if (h1s.length <= 1) return [];
 
   return h1s.slice(1).map((h1) => ({
-    correct: correctDuplicateHeadingOne(h1),
-    range: getElementRange(h1),
+    element: h1,
     scope: 'block' as const,
     severity: validationSeverity.ERROR,
   }));
 };
 
-export const documentMustHaveTopLevelHeadingOne = (dom: HTMLElement, settings?: EditorSettings): ValidationResult[] => {
+export const documentMustHaveTopLevelHeadingOne = (
+  dom: HTMLElement,
+  settings?: ValidatorSettings,
+): ValidationResult[] => {
   const topHeadingLevel = settings?.topHeadingLevel ?? 1;
   if (topHeadingLevel !== 1) return [];
 
@@ -68,8 +64,7 @@ export const documentMustHaveTopLevelHeadingOne = (dom: HTMLElement, settings?: 
   const target = firstChild ?? dom;
   return [
     {
-      correct: target instanceof Element ? correctMissingTopLevelHeading(target) : undefined,
-      range: getElementRange(target),
+      element: target,
       scope: 'block',
       severity: validationSeverity.INFO,
     },
