@@ -5,6 +5,10 @@ on:
     branches: main
     paths:
       - app/drupal/**
+      - packages/ckeditor-plugin/**
+      - packages/drupal-ckeditor-plugin/**
+      - packages/editor/**
+      - .github/workflows/docker-drupal.yml
 
 jobs:
   docker:
