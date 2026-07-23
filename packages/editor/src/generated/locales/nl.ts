@@ -149,7 +149,5 @@
 'sfc63e31ac7c956ed': `Selecteer`,
 'sff5bb7742c2896c8': `Linkdoel`,
 'sffdadf0a576fd802': `Hoogte`,
-'s29a1a2dd90ffd24b': `Validations`,
-'sd830252189685028': `Errors, warnings and tips`,
     };
   
