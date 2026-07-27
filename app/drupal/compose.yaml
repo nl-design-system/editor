@@ -10,6 +10,7 @@ services:
       DRUPAL_ADMIN_USER: ${DRUPAL_ADMIN_USER:-admin}
       DRUPAL_ADMIN_PASSWORD: ${DRUPAL_ADMIN_PASSWORD:-admin}
       DRUPAL_SITE_NAME: ${DRUPAL_SITE_NAME:-Drupal}
+      DRUPAL_HASH_SALT: ${DRUPAL_HASH_SALT:-insecure-local-dev-hash-salt}
     volumes:
       - drupal_sites:/var/www/html/sites
       - ./modules:/var/www/html/modules/custom

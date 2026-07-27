@@ -3,21 +3,20 @@ set -e
 
 DRUSH=/opt/drupal/vendor/bin/drush
 DRUPAL_ROOT=/opt/drupal/web
-SETTINGS=${DRUPAL_ROOT}/sites/default/settings.php
 
-# Wait for the database and build a validated, URL-encoded connection URL.
-# Credentials are read from env vars inside PHP, never interpolated into shell/PHP code.
-if ! DB_URL=$(php /usr/local/bin/wait-for-db.php); then
+# Wait for the database to accept connections.
+if ! php /usr/local/bin/wait-for-db.php; then
   echo "[setup] Database not reachable. Aborting."
   exit 1
 fi
 
-# Install Drupal on first run (settings.php is created by site:install)
-if [[ ! -f "$SETTINGS" ]]; then
+# Detect an existing install via the database (settings.php is baked in, never written to)
+if $DRUSH --root="$DRUPAL_ROOT" status --field=bootstrap 2>/dev/null | grep -q "Successful"; then
+  echo "[setup] Drupal already installed. Skipping installation."
+else
   echo "[setup] Installing Drupal..."
   chmod 755 "${DRUPAL_ROOT}/sites/default"
   $DRUSH --root="$DRUPAL_ROOT" site:install standard \
-    --db-url="$DB_URL" \
     --account-name="${DRUPAL_ADMIN_USER:-admin}" \
     --account-pass="${DRUPAL_ADMIN_PASSWORD:-admin}" \
     --site-name="${DRUPAL_SITE_NAME:-Drupal}" \
