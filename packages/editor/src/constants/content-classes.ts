@@ -2,8 +2,6 @@
  * Content classes ensure identical markup between editors (e.g. Tiptap and CKEditor)
  */
 
-export const HEADING_LEVELS = [1, 2, 3, 4, 5, 6] as const;
-
 export const headingClasses = (level: number): string => `nl-heading nl-heading--level-${level}`;
 
 export const contentClasses = {
