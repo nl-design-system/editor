@@ -58,7 +58,7 @@ describe('Document validations', () => {
           range: expect.any(Object),
           scope: 'block',
           severity: 'warning',
-          tipPayload: {
+          solutionPayload: {
             headingLevel: 3,
             precedingHeadingLevel: 1,
             topHeadingLevel: 1,
@@ -86,7 +86,7 @@ describe('Document validations', () => {
           range: expect.any(Object),
           scope: 'block',
           severity: 'error',
-          tipPayload: {
+          solutionPayload: {
             headingLevel: 1,
             precedingHeadingLevel: 2,
             topHeadingLevel: 2,
@@ -97,7 +97,7 @@ describe('Document validations', () => {
           range: expect.any(Object),
           scope: 'block',
           severity: 'warning',
-          tipPayload: {
+          solutionPayload: {
             headingLevel: 4,
             precedingHeadingLevel: 2,
             topHeadingLevel: 2,

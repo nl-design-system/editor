@@ -20,7 +20,7 @@ import { getElementRange, isEmptyOrWhitespace } from '@/validators/helpers';
 
 // ── Tag → semantic-type mappings ──────────────────────────────────────────────
 
-/** Maps HTML tag names to the ProseMirror node-type name used in tipPayload. */
+/** Maps HTML tag names to the ProseMirror node-type name used in solutionPayload. */
 const BLOCK_NODE_TYPES: Partial<Record<string, string>> = {
   caption: 'tableCaption',
   dd: 'definitionDescription',
@@ -112,7 +112,7 @@ const nodeShouldNotBeEmpty: ContentValidator = (_dom, node) => {
     range,
     scope: 'block',
     severity: validationSeverity.INFO,
-    tipPayload: { nodeType },
+    solutionPayload: { nodeType },
   };
 };
 
@@ -172,7 +172,7 @@ export const paragraphMustUseSemanticList: ContentValidator = (_dom, node) => {
         range: getElementRange(node),
         scope: 'block',
         severity: validationSeverity.INFO,
-        tipPayload: { prefix: firstPrefix.trim() },
+        solutionPayload: { prefix: firstPrefix.trim() },
       };
     }
   }
@@ -185,7 +185,7 @@ export const paragraphMustUseSemanticList: ContentValidator = (_dom, node) => {
       range: getElementRange(node),
       scope: 'block',
       severity: validationSeverity.INFO,
-      tipPayload: { prefix: firstPrefix.trim() },
+      solutionPayload: { prefix: firstPrefix.trim() },
     };
   }
 

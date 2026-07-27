@@ -2,7 +2,7 @@ import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
-import { html, LitElement, nothing, unsafeCSS } from 'lit';
+import { html, LitElement, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import '@/components/validations/validation-item';
@@ -10,7 +10,7 @@ import type { ValidationItem } from '@/components/validations/validation-item';
 import type { ValidationsMap, ValidationSeverity } from '@/types/validation';
 import { validationsContext } from '@/context/validationsContext';
 import { CustomEvents, type FocusValidationItemInListEvent } from '@/events';
-import { type ValidationKey, validationMessages } from '@/messages';
+import { renderSolution, type ValidationKey, validationMessages } from '@/messages';
 import listStyles from './styles';
 
 const tag = 'clippy-validations-list';
@@ -89,22 +89,20 @@ export class ValidationsList extends LitElement {
 
     return html`
       <ul class="clippy-validations-list" role="list">
-        ${map(entries, ([, { correct, range, severity, tipPayload, validatorKey }]) => {
+        ${map(entries, ([, { correct, range, severity, solutionPayload, validatorKey }]) => {
           const valKey = validatorKey as ValidationKey;
-          const { customCorrectLabel, description, docs, href, tip } = validationMessages()[valKey];
-          const tipHtml = tip?.(tipPayload) ?? null;
+          const { customCorrectLabel, href, solution, title } = validationMessages()[valKey];
           return html`
             <li class="clippy-validations-list__item">
               <clippy-validation-item
                 .range=${range}
                 .severity=${severity}
-                .description=${description}
+                .title=${title}
                 .href=${href}
                 .customCorrectLabel=${customCorrectLabel}
                 .correct=${correct}
-                .docs=${docs}
               >
-                ${tipHtml ? html`<p class="nl-paragraph" slot="tip-html">${tipHtml}</p>` : nothing}
+                ${renderSolution(solution, solutionPayload)}
               </clippy-validation-item>
             </li>
           `;

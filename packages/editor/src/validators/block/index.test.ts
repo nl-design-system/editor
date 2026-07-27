@@ -86,14 +86,14 @@ describe('Block validations', () => {
       results.forEach((result) => {
         expect(result.severity).toEqual('info');
       });
-      expect(results[0].tipPayload).toEqual({ prefix: '-' });
-      expect(results[1].tipPayload).toEqual({ prefix: '1' });
-      expect(results[2].tipPayload).toEqual({ prefix: '1.' });
-      expect(results[3].tipPayload).toEqual({ prefix: '-' });
-      expect(results[4].tipPayload).toEqual({ prefix: '-' });
-      expect(results[5].tipPayload).toEqual({ prefix: '-' });
-      expect(results[6].tipPayload).toEqual({ prefix: '*' });
-      expect(results[7].tipPayload).toEqual({ prefix: '1' });
+      expect(results[0].solutionPayload).toEqual({ prefix: '-' });
+      expect(results[1].solutionPayload).toEqual({ prefix: '1' });
+      expect(results[2].solutionPayload).toEqual({ prefix: '1.' });
+      expect(results[3].solutionPayload).toEqual({ prefix: '-' });
+      expect(results[4].solutionPayload).toEqual({ prefix: '-' });
+      expect(results[5].solutionPayload).toEqual({ prefix: '-' });
+      expect(results[6].solutionPayload).toEqual({ prefix: '*' });
+      expect(results[7].solutionPayload).toEqual({ prefix: '1' });
     });
 
     it('corrects consecutive ordered-list-like paragraphs to a semantic <ol>', async () => {
@@ -109,7 +109,7 @@ describe('Block validations', () => {
       const result = paragraphMustUseSemanticList(dom, firstParagraph);
 
       expect(result).not.toBeNull();
-      expect(result!.tipPayload).toEqual({ prefix: '1' });
+      expect(result!.solutionPayload).toEqual({ prefix: '1' });
 
       result!.correct!();
 
@@ -134,7 +134,7 @@ describe('Block validations', () => {
       const result = paragraphMustUseSemanticList(dom, firstParagraph);
 
       expect(result).not.toBeNull();
-      expect(result!.tipPayload).toEqual({ prefix: '-' });
+      expect(result!.solutionPayload).toEqual({ prefix: '-' });
 
       result!.correct!();
 
@@ -157,7 +157,7 @@ describe('Block validations', () => {
       const result = paragraphMustUseSemanticList(dom, firstParagraph);
 
       expect(result).not.toBeNull();
-      expect(result!.tipPayload).toEqual({ prefix: '1' });
+      expect(result!.solutionPayload).toEqual({ prefix: '1' });
 
       result!.correct!();
 
@@ -180,7 +180,7 @@ describe('Block validations', () => {
       const result = paragraphMustUseSemanticList(dom, firstParagraph);
 
       expect(result).not.toBeNull();
-      expect(result!.tipPayload).toEqual({ prefix: '-' });
+      expect(result!.solutionPayload).toEqual({ prefix: '-' });
 
       result!.correct!();
 
@@ -237,11 +237,12 @@ describe('Block validations', () => {
         [...mapArg.values()].find(
           (v) =>
             v.validatorKey === blockValidations.NODE_SHOULD_NOT_BE_EMPTY &&
-            v.tipPayload?.['nodeType'] === 'tableHeader',
+            v.solutionPayload?.['nodeType'] === 'tableHeader',
         );
       const tdEntry = [...mapArg.values()].find(
         (v) =>
-          v.validatorKey === blockValidations.NODE_SHOULD_NOT_BE_EMPTY && v.tipPayload?.['nodeType'] === 'tableCell',
+          v.validatorKey === blockValidations.NODE_SHOULD_NOT_BE_EMPTY &&
+          v.solutionPayload?.['nodeType'] === 'tableCell',
       );
       expect(thEntry).toBeDefined();
       expect(tdEntry).toBeDefined();
@@ -270,7 +271,7 @@ describe('Block validations', () => {
         callback,
       );
       expect(
-        byKey(callback.mock.calls[0][0], blockValidations.NODE_SHOULD_NOT_BE_EMPTY)?.tipPayload?.['nodeType'],
+        byKey(callback.mock.calls[0][0], blockValidations.NODE_SHOULD_NOT_BE_EMPTY)?.solutionPayload?.['nodeType'],
       ).toBe('tableCaption');
     });
   });
@@ -338,7 +339,7 @@ describe('Block validations', () => {
 
       expect(validation).toBeDefined();
       expect(validation!.severity).toBe('info');
-      expect(validation!.tipPayload!['nodeType']).toBe(nodeType);
+      expect(validation!.solutionPayload!['nodeType']).toBe(nodeType);
     });
 
     it.each([

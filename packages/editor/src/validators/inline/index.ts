@@ -5,7 +5,7 @@ import { getElementRange, isEmptyOrWhitespace } from '@/validators/helpers';
 
 // ── Inline-type mappings ──────────────────────────────────────────────────────
 
-/** Maps HTML tag names to the inline-type name used in tipPayload. */
+/** Maps HTML tag names to the inline-type name used in solutionPayload. */
 const INLINE_TYPES: Partial<Record<string, string>> = {
   a: 'link',
   b: 'bold',
@@ -46,7 +46,7 @@ const inlineShouldNotBeEmpty: ContentValidator = (_dom, node) => {
     range: getElementRange(node),
     scope: 'inline',
     severity: validationSeverity.INFO,
-    tipPayload: { nodeType: inlineType },
+    solutionPayload: { nodeType: inlineType },
   };
 };
 

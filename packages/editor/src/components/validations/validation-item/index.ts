@@ -32,13 +32,13 @@ const ariaDescribedBy = 'validation-item-header';
 
 /**
  * A single accessibility validation result card. Displays the severity icon,
- * description, optional tip, and action buttons (Focus, Correct).
+ * title, optional solution, and action buttons (Focus, Correct).
  * The `mode` property controls which actions are visible.
  *
  * @tag clippy-validation-item
  *
- * @slot tip-html - Optional HTML content rendered as additional guidance below
- *   the description. Wrap content in a `<p>` element.
+ * @slot solution-html - Optional HTML content rendered as guidance below
+ *   the title. Wrap content in a `<p>` element.
  *
  * @fires {CustomEvent<FocusNodeDetail>} FOCUS_NODE - Dispatched when the user clicks "Focus",
  *   carrying `detail.range` so the editor can scroll to the relevant node.
@@ -49,7 +49,7 @@ const ariaDescribedBy = 'validation-item-header';
  * ```html
  * <clippy-validation-item
  *   severity="error"
- *   description="Missing alt text on image"
+ *   title="Missing alt text on image"
  *   href="https://wcag.nl/…"
  * ></clippy-validation-item>
  * ```
@@ -74,12 +74,10 @@ export class ValidationItem extends LitElement {
   @property({ attribute: false }) range?: Range;
   /** Severity level of the validation issue. */
   @property({ type: String }) severity!: ValidationSeverity;
-  /** Human-readable description of the validation issue. */
-  @property({ type: String }) description!: string;
+  /** Human-readable title of the validation issue, rendered as markdown. */
+  @property({ type: String }) override title!: string;
   /** Optional URL linking to a more extensive explanation of the WCAG criterion. */
   @property({ type: String }) href?: string;
-  /** Optional markdown documentation snippet rendered below the tip. */
-  @property({ type: String }) docs?: string;
   /** Custom label for the auto-fix button. Falls back to "Correct". */
   @property({ type: String }) customCorrectLabel?: string;
   /** Optional function that applies the automatic fix for this issue. */
@@ -162,11 +160,12 @@ export class ValidationItem extends LitElement {
           <span class="clippy-validation-item-severity clippy-validation-item-severity--${this.severity}">
             ${unsafeSVG(this.#getAlertIcon())}
           </span>
-          <h4 class="nl-heading nl-heading--level-4" id=${ariaDescribedBy}>${this.description}</h4>
+          <h4 class="nl-heading nl-heading--level-4" id=${ariaDescribedBy}>
+            <wc-markdown .textContent=${this.title}></wc-markdown>
+          </h4>
         </div>
         <div class="clippy-validation-item__message">
-          <slot name="tip-html"></slot>
-          ${this.docs ? html`<wc-markdown class="nl-paragraph" .textContent=${this.docs}></wc-markdown>` : nothing}
+          <slot name="solution-html"></slot>
           ${
             this.href
               ? html`

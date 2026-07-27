@@ -3,9 +3,11 @@ import { consume } from '@lit/context';
 import { localized } from '@lit/localize';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
+import srOnly from '@nl-design-system-community/clippy-components/lib/sr-only';
 import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
+import '@vanillawc/wc-markdown';
 import type { ValidationInteractionMode, ValidationResult, ValidationsMap } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';
@@ -18,7 +20,7 @@ import {
   type FocusValidationItemInListDetail,
   type OpenValidationGroupDetail,
 } from '@/events';
-import { type ValidationKey, validationMessages } from '@/messages';
+import { renderSolution, type ValidationKey, validationMessages } from '@/messages';
 import { getOverlappingRanges } from '@/utils/ranges';
 import gutterStyles from './styles';
 
@@ -54,7 +56,7 @@ declare global {
 @localized()
 @safeCustomElement(tag)
 export class Gutter extends LitElement {
-  static override readonly styles = [gutterStyles, unsafeCSS(paragraphStyle)];
+  static override readonly styles = [gutterStyles, unsafeCSS(paragraphStyle), srOnly];
 
   /**
    * Display mode for validation interactions.
@@ -231,19 +233,21 @@ export class Gutter extends LitElement {
     range: Range,
     correct: ValidationResult['correct'],
     severity: ValidationResult['severity'],
-    tipPayload: ValidationResult['tipPayload'],
+    solutionPayload: ValidationResult['solutionPayload'],
     validatorKey: ValidationResult['validatorKey'],
+    index: number,
   ) {
     const position = this.#getIndicatorPosition(range);
     if (!position) return nothing;
     const valKey = validatorKey as ValidationKey;
-    const { customCorrectLabel, description, docs, href, tip } = validationMessages()[valKey];
-    const tipHtml = tip?.(tipPayload) ?? null;
+    const { customCorrectLabel, href, solution, title } = validationMessages()[valKey];
     const isActive = this.activeRange === range;
+    const labelId = `clippy-validations-gutter__label--${index}`;
     return html`<li
       class="clippy-validations-gutter__indicator"
       style="inset-block-start: ${position.top}px; block-size: ${position.height}px"
     >
+      <wc-markdown id=${labelId} class="sr-only" .textContent=${title}></wc-markdown>
       <button
         class="${classMap({
           [`clippy-validations-gutter__toggle--${severity}`]: true,
@@ -251,7 +255,7 @@ export class Gutter extends LitElement {
           'clippy-validations-gutter__toggle--active': isActive,
         })}"
         aria-expanded=${isActive ? 'true' : 'false'}
-        aria-label=${description}
+        aria-labelledby=${labelId}
         @click=${() => this.#handleIndicatorClick(range)}
       ></button>
       <div
@@ -264,13 +268,12 @@ export class Gutter extends LitElement {
           .mode=${this.mode}
           .range=${range}
           .severity=${severity}
-          .description=${description}
+          .title=${title}
           .href=${href}
           .customCorrectLabel=${customCorrectLabel}
           .correct=${correct}
-          .docs=${docs}
         >
-          ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
+          ${renderSolution(solution, solutionPayload)}
         </clippy-validation-item>
       </div>
     </li>`;
@@ -286,8 +289,8 @@ export class Gutter extends LitElement {
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
         ${[...map.entries()]
           .filter(([range]) => range !== undefined)
-          .map(([range, { correct, severity, tipPayload, validatorKey }]) =>
-            this.#renderIndicator(range, correct, severity, tipPayload, validatorKey),
+          .map(([range, { correct, severity, solutionPayload, validatorKey }], index) =>
+            this.#renderIndicator(range, correct, severity, solutionPayload, validatorKey, index),
           )}
       </ol>
     `;
