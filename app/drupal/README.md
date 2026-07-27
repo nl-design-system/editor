@@ -13,7 +13,7 @@ cp .env.example .env
 docker compose up
 ```
 
-If you change the `Dockerfile`, `setup.sh` or `wait-for-db.php`, rebuild explicitly — `docker compose up` reuses an existing local image otherwise:
+If you change the `Dockerfile`, `setup.sh`, `settings.php` or `wait-for-db.php`, rebuild explicitly — `docker compose up` reuses an existing local image otherwise:
 
 ```shell
 docker compose up --build

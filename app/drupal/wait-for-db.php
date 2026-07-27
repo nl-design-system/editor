@@ -83,16 +83,3 @@ if (!$connected) {
 }
 
 logLine('Database is ready.');
-
-// rawurlencode() prevents special characters in user/password from breaking the URL structure.
-$url = sprintf(
-    'pgsql://%s:%s@%s:%d/%s',
-    rawurlencode($user),
-    rawurlencode($password),
-    $host,
-    $port,
-    rawurlencode($db)
-);
-
-// Only the URL goes to STDOUT so callers can capture it cleanly.
-fwrite(STDOUT, $url);
