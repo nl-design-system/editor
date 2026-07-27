@@ -25,6 +25,11 @@ else
   echo "[setup] Drupal installed."
 fi
 
+# Apply pending database updates (the database persists across deploys)
+echo "[setup] Running database updates..."
+$DRUSH --root="$DRUPAL_ROOT" updatedb --yes
+$DRUSH --root="$DRUPAL_ROOT" cache:rebuild
+
 # Enable custom modules (idempotent)
 mapfile -t MODULES < <(find "${DRUPAL_ROOT}/modules/custom" -maxdepth 1 -mindepth 1 -type d -exec basename {} \;)
 if [[ ${#MODULES[@]} -gt 0 ]]; then
