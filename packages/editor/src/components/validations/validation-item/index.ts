@@ -32,13 +32,13 @@ const ariaDescribedBy = 'validation-item-header';
 
 /**
  * A single accessibility validation result card. Displays the severity icon,
- * title, optional solution, and action buttons (Focus, Correct).
+ * heading, optional solution, and action buttons (Focus, Correct).
  * The `mode` property controls which actions are visible.
  *
  * @tag clippy-validation-item
  *
  * @slot solution-html - Optional HTML content rendered as guidance below
- *   the title. Wrap content in a `<p>` element.
+ *   the heading. Wrap content in a `<p>` element.
  *
  * @fires {CustomEvent<FocusNodeDetail>} FOCUS_NODE - Dispatched when the user clicks "Focus",
  *   carrying `detail.range` so the editor can scroll to the relevant node.
@@ -49,7 +49,7 @@ const ariaDescribedBy = 'validation-item-header';
  * ```html
  * <clippy-validation-item
  *   severity="error"
- *   title="Missing alt text on image"
+ *   heading="Missing alt text on image"
  *   href="https://wcag.nl/…"
  * ></clippy-validation-item>
  * ```
@@ -74,8 +74,8 @@ export class ValidationItem extends LitElement {
   @property({ attribute: false }) range?: Range;
   /** Severity level of the validation issue. */
   @property({ type: String }) severity!: ValidationSeverity;
-  /** Human-readable title of the validation issue, rendered as markdown. */
-  @property({ type: String }) override title!: string;
+  /** Human-readable heading of the validation issue, rendered as markdown. */
+  @property({ type: String }) heading!: string;
   /** Optional URL linking to a more extensive explanation of the WCAG criterion. */
   @property({ type: String }) href?: string;
   /** Custom label for the auto-fix button. Falls back to "Correct". */
@@ -161,7 +161,7 @@ export class ValidationItem extends LitElement {
             ${unsafeSVG(this.#getAlertIcon())}
           </span>
           <h4 class="nl-heading nl-heading--level-4" id=${ariaDescribedBy}>
-            <wc-markdown .textContent=${this.title}></wc-markdown>
+            <wc-markdown .textContent=${this.heading}></wc-markdown>
           </h4>
         </div>
         <div class="clippy-validation-item__message">

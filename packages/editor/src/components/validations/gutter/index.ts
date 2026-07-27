@@ -240,14 +240,14 @@ export class Gutter extends LitElement {
     const position = this.#getIndicatorPosition(range);
     if (!position) return nothing;
     const valKey = validatorKey as ValidationKey;
-    const { customCorrectLabel, href, solution, title } = validationMessages()[valKey];
+    const { customCorrectLabel, heading, href, solution } = validationMessages()[valKey];
     const isActive = this.activeRange === range;
     const labelId = `clippy-validations-gutter__label--${index}`;
     return html`<li
       class="clippy-validations-gutter__indicator"
       style="inset-block-start: ${position.top}px; block-size: ${position.height}px"
     >
-      <wc-markdown id=${labelId} class="sr-only" .textContent=${title}></wc-markdown>
+      <wc-markdown id=${labelId} class="sr-only" .textContent=${heading}></wc-markdown>
       <button
         class="${classMap({
           [`clippy-validations-gutter__toggle--${severity}`]: true,
@@ -268,7 +268,7 @@ export class Gutter extends LitElement {
           .mode=${this.mode}
           .range=${range}
           .severity=${severity}
-          .title=${title}
+          .heading=${heading}
           .href=${href}
           .customCorrectLabel=${customCorrectLabel}
           .correct=${correct}

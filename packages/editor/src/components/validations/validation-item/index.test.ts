@@ -7,7 +7,7 @@ describe('<validation-item>', () => {
     document.body.innerHTML = `<clippy-validation-item
         pos="2"
         severity="error"
-        title="Beware of the great error!"
+        heading="Beware of the great error!"
         href="https://example.com"
         >
         <div slot="solution-html">This is a <strong>great</strong> tip!</div>

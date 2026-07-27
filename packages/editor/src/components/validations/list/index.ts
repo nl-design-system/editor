@@ -91,13 +91,13 @@ export class ValidationsList extends LitElement {
       <ul class="clippy-validations-list" role="list">
         ${map(entries, ([, { correct, range, severity, solutionPayload, validatorKey }]) => {
           const valKey = validatorKey as ValidationKey;
-          const { customCorrectLabel, href, solution, title } = validationMessages()[valKey];
+          const { customCorrectLabel, heading, href, solution } = validationMessages()[valKey];
           return html`
             <li class="clippy-validations-list__item">
               <clippy-validation-item
                 .range=${range}
                 .severity=${severity}
-                .title=${title}
+                .heading=${heading}
                 .href=${href}
                 .customCorrectLabel=${customCorrectLabel}
                 .correct=${correct}

@@ -127,15 +127,15 @@ describe('<clippy-validations-dialog>', () => {
       await validationItems[0].updateComplete;
     }
 
-    const firstItem = validationItems?.[0] as (Element & { title?: string }) | undefined;
+    const firstItem = validationItems?.[0] as (Element & { heading?: string }) | undefined;
 
-    // Assert the title property is populated (locale-agnostic — avoids shadow DOM piercing)
-    expect(firstItem?.title).toBeTruthy();
+    // Assert the heading property is populated (locale-agnostic — avoids shadow DOM piercing)
+    expect(firstItem?.heading).toBeTruthy();
 
-    // Verify the h4 in the shadow DOM renders the title text
+    // Verify the h4 in the shadow DOM renders the heading text
     const heading = firstItem?.shadowRoot?.querySelector('h4');
     expect(heading).not.toBeNull();
-    expect(heading?.textContent?.trim()).toBe(firstItem?.title);
+    expect(heading?.textContent?.trim()).toBe(firstItem?.heading);
   });
 
   it('shows only the focused group and hides the filters on OPEN_VALIDATION_GROUP', async () => {

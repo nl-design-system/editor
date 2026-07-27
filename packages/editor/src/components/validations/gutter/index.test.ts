@@ -17,7 +17,7 @@ describe('<clippy-validations-gutter>', () => {
     document.body.innerHTML = '';
   });
 
-  it('labels the indicator button via aria-labelledby, without announcing the title markdown comment', async () => {
+  it('labels the indicator button via aria-labelledby, without announcing the heading markdown comment', async () => {
     const content = document.createElement('p');
     content.textContent = 'Deze hele alinea is dikgedrukt.';
     document.body.append(content);
@@ -35,7 +35,7 @@ describe('<clippy-validations-gutter>', () => {
     await gutter.updateComplete;
 
     // The button's accessible name resolves through aria-labelledby to the rendered
-    // title. The imported editor-error.md ships with a `<!-- @license -->` comment
+    // heading. The imported editor-error.md ships with a `<!-- @license -->` comment
     // that is stripped before rendering, so it must not leak into the name.
     const button = page.getByRole('button', { name: 'De hele alinea is dikgedrukt.' });
     await vi.waitFor(() => expect.element(button).toBeInTheDocument());
