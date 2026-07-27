@@ -38,16 +38,4 @@ export default css`
     background-color: var(--basis-color-negative-inverse-bg-default);
     pointer-events: none;
   }
-
-  .clippy-screen-reader-text {
-    border: 0;
-    clip-path: inset(50%);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-    word-wrap: normal !important;
-  }
 `;
