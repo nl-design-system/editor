@@ -35,12 +35,15 @@ describe('<clippy-validations-gutter>', () => {
     await gutter.updateComplete;
 
     // The button's accessible name resolves through aria-labelledby to the rendered
-    // title. The imported editor-error.md starts with a `<!-- @license -->` comment,
-    // which wc-markdown renders as a comment node, so it must not leak into the name.
+    // title. The imported editor-error.md ships with a `<!-- @license -->` comment
+    // that is stripped before rendering, so it must not leak into the name.
     const button = page.getByRole('button', { name: 'De hele alinea is dikgedrukt.' });
     await vi.waitFor(() => expect.element(button).toBeInTheDocument());
 
     const nameContainsComment = page.getByRole('button', { name: /@license/ });
     expect(nameContainsComment.query()).toBeNull();
+
+    // The license comment must not be rendered into the DOM at all.
+    expect(gutter.shadowRoot?.innerHTML).not.toContain('@license');
   });
 });

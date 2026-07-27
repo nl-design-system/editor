@@ -5,6 +5,16 @@ import { html, nothing, type TemplateResult } from 'lit';
 import '@vanillawc/wc-markdown';
 import { blockValidations, documentValidations, inlineValidations } from '@/constants';
 
+/**
+ * Strips HTML comments (e.g. the `<!-- @license -->` header the documentation
+ * snippets ship with) from imported markdown so `<wc-markdown>` does not emit
+ * them into the DOM.
+ */
+const stripHtmlComments = (markdown: string): string => markdown.replace(/<!--[\s\S]*?-->/g, '').trim();
+
+const paragraphStrongErrorText = stripHtmlComments(paragraphStrongError);
+const paragraphStrongSolutionText = stripHtmlComments(paragraphStrongSolution);
+
 type SolutionFn = (args?: Record<string, number | string | boolean>) => string | TemplateResult | null;
 
 /**
@@ -93,8 +103,8 @@ export const validationMessages = (): ValidationMessages =>
     },
     [blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD]: {
       href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/tekst-benadrukken/',
-      solution: paragraphStrongSolution || (() => msg('Remove the bold formatting from the paragraph.')),
-      title: paragraphStrongError || msg('Avoid making an entire paragraph bold'),
+      solution: paragraphStrongSolutionText || (() => msg('Remove the bold formatting from the paragraph.')),
+      title: paragraphStrongErrorText || msg('Avoid making an entire paragraph bold'),
     },
     [blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING]: {
       href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#opmaak-van-koppen',
