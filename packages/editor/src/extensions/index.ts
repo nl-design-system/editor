@@ -25,7 +25,7 @@ import Underline from '@tiptap/extension-underline';
 import { Dropcursor, UndoRedo, Placeholder } from '@tiptap/extensions';
 import type { EditorSettings } from '@/types/settings';
 import type { ValidationResult } from '@/types/validation';
-import { contentClasses, headingClasses } from '@/constants';
+import { HEADING_LEVELS, contentClasses, headingClasses } from '@/constants';
 import { CustomFileHandler } from '@/extensions/CustomFileHandler';
 import { DefinitionList } from '@/extensions/DefinitionList';
 import KeyboardShortcuts from '@/extensions/KeyboardShortcuts';
@@ -67,14 +67,16 @@ export const editorExtensions = (
       };
     },
     renderHTML({ HTMLAttributes, node }) {
-      const hasLevel = this.options.levels.includes(node.attrs['level']);
-      const level = hasLevel ? node.attrs['level'] : this.options.levels[0];
+      const hasLevel = HEADING_LEVELS.includes(node.attrs['level']);
+      const level = hasLevel ? node.attrs['level'] : HEADING_LEVELS[0];
       return [
         `h${level}`,
         mergeAttributes({ class: headingClasses(level) }, this.options.HTMLAttributes, HTMLAttributes),
         0,
       ];
     },
+  }).configure({
+    levels: [...HEADING_LEVELS],
   }),
   Bold,
   Code.configure({

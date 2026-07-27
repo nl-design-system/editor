@@ -1,4 +1,5 @@
-export { HEADING_LEVELS, contentClasses, headingClasses } from './content-classes';
+export { contentClasses, headingClasses } from './content-classes';
+export { HEADING_LEVELS } from './headings';
 export {
   blockValidations,
   documentValidations,

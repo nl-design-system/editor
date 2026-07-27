@@ -1,5 +1,4 @@
 import type { Editor } from '@tiptap/core';
-import type { Level } from '@tiptap/extension-heading';
 import { localized, msg, str } from '@lit/localize';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import PilcrowIcon from '@tabler/icons/outline/pilcrow.svg?raw';
@@ -7,6 +6,7 @@ import { html, LitElement } from 'lit';
 import '@nl-design-system-community/clippy-components/clippy-combobox';
 import { property, state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import { HEADING_LEVELS } from '@/constants';
 import { editor } from '@/decorators/TipTapDecorator';
 import toolbarFormatSelectStyles from './styles';
 
@@ -22,14 +22,6 @@ export interface SelectOption {
   label: string;
   value: string;
 }
-
-const getConfiguredHeadingLevels = (editor: Editor): Level[] => {
-  if (editor.isDestroyed) {
-    return [];
-  }
-  const headingExt = editor.extensionManager.extensions.find((ext) => ext.name === 'heading');
-  return headingExt?.options.levels;
-};
 
 @localized()
 @safeCustomElement(tag)
@@ -69,10 +61,9 @@ export class FormatSelect extends LitElement {
   @state()
   private get options(): SelectOption[] {
     if (!this.editor) return [];
-    const headingLevels = getConfiguredHeadingLevels(this.editor);
     return [
       { label: msg('Paragraph'), value: 'paragraph' },
-      ...headingLevels.map((level) => ({
+      ...HEADING_LEVELS.map((level) => ({
         label: msg(str`Heading level ${level}`),
         value: `h${level}`,
       })),
