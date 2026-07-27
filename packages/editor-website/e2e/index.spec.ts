@@ -104,14 +104,11 @@ test.describe('Text formatting', () => {
       .click();
     await page.keyboard.type('test heading');
 
-    await clippyEditor.getByRole('combobox').first().clear();
-
-    // Wait for the option to render, then force the click: under parallel load the
-    // debounced validation re-render keeps reflowing the layout, so the option never
-    // settles for the default "stable" actionability check. Visibility is enough here.
-    const headingOption = clippyEditor.getByRole('option', { name: 'Kopniveau 3' });
-    await headingOption.waitFor({ state: 'visible', timeout: 15000 });
-    await headingOption.click({ force: true });
+    const formatCombobox = clippyEditor.getByRole('combobox').first();
+    await formatCombobox.clear();
+    await formatCombobox.pressSequentially('Kopniveau 3');
+    await formatCombobox.press('ArrowDown');
+    await formatCombobox.press('Enter');
 
     await expect(editor.getByRole('heading', { name: 'test heading', level: 3 })).toBeVisible();
   });
