@@ -11,6 +11,10 @@ coverage/
 dist/
 tmp/
 
+# Ignore Playwright test artifacts
+test-results/
+playwright-report/
+
 # Ignore archives
 *.7z
 *.dmg
