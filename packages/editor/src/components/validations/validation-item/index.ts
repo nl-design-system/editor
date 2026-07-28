@@ -13,7 +13,7 @@ import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
-import '@vanillawc/wc-markdown';
+import '@/utils/safeWcMarkdown';
 import type { CorrectValidationFunction, ValidationInteractionMode, ValidationSeverity } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';

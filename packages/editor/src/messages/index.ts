@@ -2,7 +2,7 @@ import { msg, str } from '@lit/localize';
 import paragraphStrongError from '@nl-design-system-unstable/documentation/componenten/paragraph/_issues/strong/editor-error.md?raw';
 import paragraphStrongSolution from '@nl-design-system-unstable/documentation/componenten/paragraph/_issues/strong/solution.md?raw';
 import { html, nothing, type TemplateResult } from 'lit';
-import '@vanillawc/wc-markdown';
+import '@/utils/safeWcMarkdown';
 import { blockValidations, documentValidations, inlineValidations } from '@/constants';
 
 /**

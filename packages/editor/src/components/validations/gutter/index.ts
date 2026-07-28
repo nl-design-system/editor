@@ -7,7 +7,7 @@ import srOnly from '@nl-design-system-community/clippy-components/lib/sr-only';
 import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import '@vanillawc/wc-markdown';
+import '@/utils/safeWcMarkdown';
 import type { ValidationInteractionMode, ValidationResult, ValidationsMap } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';
