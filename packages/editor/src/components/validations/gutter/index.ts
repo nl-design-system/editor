@@ -235,19 +235,16 @@ export class Gutter extends LitElement {
     severity: ValidationResult['severity'],
     solutionPayload: ValidationResult['solutionPayload'],
     validatorKey: ValidationResult['validatorKey'],
-    index: number,
   ) {
     const position = this.#getIndicatorPosition(range);
     if (!position) return nothing;
     const valKey = validatorKey as ValidationKey;
     const { customCorrectLabel, heading, href, solution } = validationMessages()[valKey];
     const isActive = this.activeRange === range;
-    const labelId = `clippy-validations-gutter__label--${index}`;
     return html`<li
       class="clippy-validations-gutter__indicator"
       style="inset-block-start: ${position.top}px; block-size: ${position.height}px"
     >
-      <wc-markdown id=${labelId} class="sr-only" .textContent=${heading}></wc-markdown>
       <button
         class="${classMap({
           [`clippy-validations-gutter__toggle--${severity}`]: true,
@@ -255,9 +252,10 @@ export class Gutter extends LitElement {
           'clippy-validations-gutter__toggle--active': isActive,
         })}"
         aria-expanded=${isActive ? 'true' : 'false'}
-        aria-labelledby=${labelId}
         @click=${() => this.#handleIndicatorClick(range)}
-      ></button>
+      >
+        <wc-markdown class="sr-only" .textContent=${heading}></wc-markdown>
+      </button>
       <div
         class="${classMap({
           'clippy-validation-gutter__tooltip': true,
@@ -289,8 +287,8 @@ export class Gutter extends LitElement {
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
         ${[...map.entries()]
           .filter(([range]) => range !== undefined)
-          .map(([range, { correct, severity, solutionPayload, validatorKey }], index) =>
-            this.#renderIndicator(range, correct, severity, solutionPayload, validatorKey, index),
+          .map(([range, { correct, severity, solutionPayload, validatorKey }]) =>
+            this.#renderIndicator(range, correct, severity, solutionPayload, validatorKey),
           )}
       </ol>
     `;
