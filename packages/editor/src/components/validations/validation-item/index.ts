@@ -13,11 +13,11 @@ import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
-import '@/utils/safeWcMarkdown';
 import type { CorrectValidationFunction, ValidationInteractionMode, ValidationSeverity } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';
 import { CustomEvents, type CorrectValidationIssueDetail, type FocusNodeDetail } from '@/events';
+import { renderMarkdown } from '@/utils/markdown';
 import validationListItemStyles from './styles';
 
 const tag = 'clippy-validation-item';
@@ -160,9 +160,7 @@ export class ValidationItem extends LitElement {
           <span class="clippy-validation-item-severity clippy-validation-item-severity--${this.severity}">
             ${unsafeSVG(this.#getAlertIcon())}
           </span>
-          <h4 class="nl-heading nl-heading--level-4" id=${ariaDescribedBy}>
-            <wc-markdown .textContent=${this.heading}></wc-markdown>
-          </h4>
+          <h4 class="nl-heading nl-heading--level-4" id=${ariaDescribedBy}>${renderMarkdown(this.heading)}</h4>
         </div>
         <div class="clippy-validation-item__message">
           <slot name="solution-html"></slot>

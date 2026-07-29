@@ -82,9 +82,9 @@
     "localize:build": "lit-localize build"
   },
   "dependencies": {
+    "@gemeente-denhaag/descriptionlist": "4.1.0",
     "@lit/context": "1.1.6",
     "@lit/localize": "0.12.2",
-    "@gemeente-denhaag/descriptionlist": "4.1.0",
     "@nl-design-system-candidate/button-css": "1.1.0",
     "@nl-design-system-candidate/data-badge-css": "1.0.5",
     "@nl-design-system-candidate/link-css": "2.0.3",
@@ -134,8 +134,8 @@
     "@utrecht/table-css": "3.0.1",
     "@utrecht/textbox-css": "4.0.1",
     "@utrecht/unordered-list-css": "3.1.1",
-    "@vanillawc/wc-markdown": "1.6.11",
     "lit": "3.3.3",
+    "marked": "18.0.7",
     "prosemirror-model": "1.25.11"
   },
   "devDependencies": {

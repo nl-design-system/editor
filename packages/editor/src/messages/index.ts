@@ -2,13 +2,13 @@ import { msg, str } from '@lit/localize';
 import paragraphStrongError from '@nl-design-system-unstable/documentation/componenten/paragraph/_issues/strong/editor-error.md?raw';
 import paragraphStrongSolution from '@nl-design-system-unstable/documentation/componenten/paragraph/_issues/strong/solution.md?raw';
 import { html, nothing, type TemplateResult } from 'lit';
-import '@/utils/safeWcMarkdown';
 import { blockValidations, documentValidations, inlineValidations } from '@/constants';
+import { renderMarkdown } from '@/utils/markdown';
 
 /**
  * Strips HTML comments (e.g. the `<!-- @license -->` header the documentation
- * snippets ship with) from imported markdown so `<wc-markdown>` does not emit
- * them into the DOM.
+ * snippets ship with) from imported markdown so they are not emitted into the
+ * DOM.
  */
 const stripHtmlComments = (markdown: string): string => markdown.replace(/<!--[\s\S]*?-->/g, '').trim();
 
@@ -18,22 +18,22 @@ const paragraphStrongSolutionText = stripHtmlComments(paragraphStrongSolution);
 type SolutionFn = (args?: Record<string, number | string | boolean>) => string | TemplateResult | null;
 
 /**
- * A solution is either a static markdown snippet (rendered via `<wc-markdown>`)
- * or a function that builds contextual guidance from a validation payload.
+ * A solution is either a static markdown snippet or a function that builds
+ * contextual guidance from a validation payload.
  */
 type Solution = string | SolutionFn;
 
 /**
  * Renders a validation solution into the `solution-html` slot of a
- * `<clippy-validation-item>`. Markdown snippets are rendered with
- * `<wc-markdown>`; dynamic solutions are rendered as a paragraph.
+ * `<clippy-validation-item>`. Both static markdown snippets and dynamic
+ * solutions are rendered as a paragraph.
  */
 export const renderSolution = (
   solution: Solution | undefined,
   payload?: Record<string, number | string | boolean>,
 ): TemplateResult | typeof nothing => {
   if (typeof solution === 'string') {
-    return html`<wc-markdown class="nl-paragraph" slot="solution-html" .textContent=${solution}></wc-markdown>`;
+    return html`<p class="nl-paragraph" slot="solution-html">${renderMarkdown(solution)}</p>`;
   }
 
   const content = solution?.(payload) ?? null;

@@ -7,7 +7,6 @@ import srOnly from '@nl-design-system-community/clippy-components/lib/sr-only';
 import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import '@/utils/safeWcMarkdown';
 import type { ValidationInteractionMode, ValidationResult, ValidationsMap } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';
@@ -21,6 +20,7 @@ import {
   type OpenValidationGroupDetail,
 } from '@/events';
 import { renderSolution, type ValidationKey, validationMessages } from '@/messages';
+import { renderMarkdown } from '@/utils/markdown';
 import { getOverlappingRanges } from '@/utils/ranges';
 import gutterStyles from './styles';
 
@@ -254,7 +254,7 @@ export class Gutter extends LitElement {
         aria-expanded=${isActive ? 'true' : 'false'}
         @click=${() => this.#handleIndicatorClick(range)}
       >
-        <wc-markdown class="sr-only" .textContent=${heading}></wc-markdown>
+        <span class="sr-only">${renderMarkdown(heading)}</span>
       </button>
       <div
         class="${classMap({
