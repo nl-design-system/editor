@@ -36,6 +36,10 @@
       "types": "./dist/entries/toolbar.d.ts",
       "default": "./dist/toolbar.js"
     },
+    "./validation-item": {
+      "types": "./dist/entries/validation-item.d.ts",
+      "default": "./dist/validation-item.js"
+    },
     "./validators": {
       "types": "./dist/entries/validators.d.ts",
       "default": "./dist/validators.js"
@@ -55,6 +59,9 @@
       ],
       "toolbar": [
         "./dist/entries/toolbar.d.ts"
+      ],
+      "validation-item": [
+        "./dist/entries/validation-item.d.ts"
       ],
       "validators": [
         "./dist/entries/validators.d.ts"

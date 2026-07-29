@@ -1,0 +1,37 @@
+{
+  "name": "@nl-design-system-community/clippy-a11y-chromium-extension",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nl-design-system/editor.git",
+    "directory": "packages/clippy-a11y-chromium-extension"
+  },
+  "keywords": [
+    "expertteam-digitale-toegankelijkheid",
+    "nl-design-system",
+    "accessibility",
+    "chrome-extension",
+    "html-validation"
+  ],
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm run build:popup && pnpm run build:inject && pnpm run build:tracker && pnpm run build:background",
+    "build:popup": "vite build",
+    "build:inject": "vite build --config vite.inject.config.ts",
+    "build:tracker": "vite build --config vite.tracker.config.ts",
+    "build:background": "vite build --config vite.background.config.ts"
+  },
+  "dependencies": {
+    "@nl-design-system-community/clippy-a11y-validator": "workspace:*",
+    "@nl-design-system-community/editor": "workspace:*"
+  },
+  "devDependencies": {
+    "@nl-design-system-community/ma-design-tokens": "6.0.0",
+    "@nl-design-system/tsconfig": "1.0.5",
+    "@types/node": "22.20.0",
+    "@utrecht/design-tokens": "6.2.1",
+    "typescript": "6.0.3",
+    "vite": "8.1.3"
+  }
+}

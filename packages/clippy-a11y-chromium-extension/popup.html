@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Clippy A11y Validator</title>
+  </head>
+  <body class="ma-theme clippy-theme utrecht-root">
+    <main id="app" class="clippy-app">
+      <header class="clippy-app__header">
+        <h1 class="clippy-app__title">Clippy A11y Validator</h1>
+      </header>
+
+      <form id="controls" class="clippy-controls">
+        <label class="clippy-field">
+          <span class="clippy-field__label">Scope selector (optional)</span>
+          <input
+            id="selector"
+            class="clippy-field__input"
+            type="text"
+            placeholder="e.g. .clippy-content"
+            autocomplete="off"
+          />
+        </label>
+        <div class="clippy-controls__actions">
+          <button id="validate" class="clippy-button clippy-button--primary" type="submit">Validate page</button>
+          <button id="copy" class="clippy-button" type="button" hidden>Copy report</button>
+        </div>
+      </form>
+
+      <p id="context" class="clippy-context" hidden></p>
+      <p id="summary" class="clippy-summary" aria-live="polite">Run a check on the current page.</p>
+      <ol id="violations" class="clippy-violations"></ol>
+    </main>
+
+    <script type="module" src="./src/popup.ts"></script>
+  </body>
+</html>

@@ -11,6 +11,7 @@ export default defineConfig({
         gutter: 'src/entries/gutter.ts',
         index: 'src/index.ts',
         toolbar: 'src/entries/toolbar.ts',
+        'validation-item': 'src/entries/validation-item.ts',
         validators: 'src/entries/validators.ts',
       },
       formats: ['es'],

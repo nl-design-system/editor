@@ -1,0 +1,198 @@
+:root {
+  --clippy-color-error: #d5223b;
+  --clippy-color-warning: #b95000;
+  --clippy-color-info: #0b5cad;
+  --clippy-color-ok: #1a7f37;
+  --clippy-color-border: #d5d5d5;
+  --clippy-color-muted: #5b5b5b;
+  --clippy-color-surface: #f6f6f6;
+
+  color-scheme: light;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #fff;
+  color: #1a1a1a;
+  inline-size: 380px;
+  margin-block: 0;
+  margin-inline: 0;
+  max-block-size: 560px;
+  overflow-y: auto;
+}
+
+.clippy-app {
+  padding-block: 12px;
+  padding-inline: 12px;
+}
+
+.clippy-app__header {
+  margin-block-end: 10px;
+}
+
+.clippy-app__title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-block: 0;
+  margin-inline: 0;
+}
+
+.clippy-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-block-end: 10px;
+}
+
+.clippy-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.clippy-field__label {
+  color: var(--clippy-color-muted);
+  font-size: 12px;
+}
+
+.clippy-field__input {
+  border-color: var(--clippy-color-border);
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 1px;
+  font: inherit;
+  padding-block: 6px;
+  padding-inline: 8px;
+}
+
+.clippy-controls__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.clippy-button {
+  background: #fff;
+  border-color: var(--clippy-color-border);
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 1px;
+  cursor: pointer;
+  font: inherit;
+  padding-block: 6px;
+  padding-inline: 12px;
+}
+
+.clippy-button:disabled {
+  cursor: progress;
+  opacity: 60%;
+}
+
+.clippy-button--primary {
+  background: var(--clippy-color-info);
+  border-color: var(--clippy-color-info);
+  color: #fff;
+}
+
+.clippy-context {
+  background: var(--clippy-color-surface);
+  border-radius: 4px;
+
+  /* Left accent bar via inset shadow so the single border property (radius)
+     avoids the stylelint border-group vs alphabetical-order conflict. */
+  box-shadow: inset 3px 0 0 var(--clippy-color-info);
+  color: var(--clippy-color-muted);
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  margin-block: 0 6px;
+  margin-inline: 0;
+  padding-block: 6px;
+  padding-inline: 10px;
+}
+
+.clippy-summary {
+  background: var(--clippy-color-surface);
+  border-radius: 4px;
+  font-weight: 600;
+  margin-block: 0 10px;
+  margin-inline: 0;
+  padding-block: 8px;
+  padding-inline: 10px;
+}
+
+.clippy-summary--ok {
+  color: var(--clippy-color-ok);
+}
+
+.clippy-summary--error {
+  color: var(--clippy-color-error);
+}
+
+.clippy-violations {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+  margin-block: 0;
+  margin-inline: 0;
+  padding-block: 0;
+  padding-inline: 0;
+}
+
+/* Each violation is rendered as the shared <clippy-validation-item> card, which
+   brings its own (NL Design System) styling. Only the list layout and the
+   slotted node list are styled here. */
+.clippy-violation {
+  margin-block: 0;
+  margin-inline: 0;
+  padding-block: 0;
+  padding-inline: 0;
+}
+
+.clippy-nodes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  list-style: none;
+  margin-block: 0;
+  margin-inline: 0;
+  padding-block: 0;
+  padding-inline: 0;
+}
+
+.clippy-node {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.clippy-node__target {
+  align-self: flex-start;
+  background: var(--clippy-color-surface);
+  border-color: var(--clippy-color-border);
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 1px;
+  color: var(--clippy-color-info);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  padding-block: 2px;
+  padding-inline: 6px;
+}
+
+.clippy-node__html {
+  background: var(--clippy-color-surface);
+  border-radius: 4px;
+  color: var(--clippy-color-muted);
+  font-size: 12px;
+  overflow-x: auto;
+  padding-block: 4px;
+  padding-inline: 6px;
+  white-space: pre;
+}
