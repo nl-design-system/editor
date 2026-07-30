@@ -41,12 +41,19 @@ export type ViolationNode = {
   target: string;
   /** The element's `outerHTML`, truncated for readability. */
   html: string;
+  /**
+   * Structured context forwarded from the detection, so consumers can render
+   * the same localised guidance tip the editor shows (keyed by {@link Violation.validatorKey}).
+   */
+  tipPayload?: TipPayload;
 };
 
 /** A reported rule violation, grouped by rule — modelled after axe-core's results. */
 export type Violation = {
   /** kebab-case rule id, e.g. `image-must-have-alt-text`. */
   id: string;
+  /** Canonical rule key (e.g. `IMAGE_MUST_HAVE_ALT_TEXT`), for message/tip lookup. */
+  validatorKey: string;
   severity: ValidationSeverity;
   description: string;
   /** Optional link to NL Design System guidance. */

@@ -62,11 +62,16 @@ const groupViolations = (results: ValidationResult[], root: Element): Violation[
         href: message?.href,
         nodes: [],
         severity: result.severity,
+        validatorKey: result.validatorKey,
       };
       byKey.set(groupKey, violation);
     }
 
-    violation.nodes.push({ html: htmlSnippet(result.element), target: cssSelector(result.element, root) });
+    violation.nodes.push({
+      html: htmlSnippet(result.element),
+      target: cssSelector(result.element, root),
+      tipPayload: result.tipPayload,
+    });
   }
 
   return [...byKey.values()];

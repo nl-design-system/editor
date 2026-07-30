@@ -7,8 +7,6 @@ declare global {
     __clippyA11y?: {
       analyze(options: AnalyzeOptions): AnalysisResult;
       analyzeElement(element: Element, options: AnalyzeOptions): AnalysisResult;
-      highlight(scopeSelector: string | null, target: string): void;
-      clearHighlights(): void;
     };
     /** The element most recently right-clicked, recorded by the `tracker` content script. */
     __clippyLastRightClicked?: Element | null;

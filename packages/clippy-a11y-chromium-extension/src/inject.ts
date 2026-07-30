@@ -7,9 +7,6 @@ import type { AnalyzeOptions } from './shared';
 // runs in the extension's isolated world, so the popup can call back into the
 // installed `window.__clippyA11y` on the same page.
 
-const HIGHLIGHT_ATTR = 'data-clippy-a11y-highlight';
-const HIGHLIGHT_OUTLINE = '3px solid #d5223b';
-
 const resolveRoot = (scopeSelector: string | null): HTMLElement | null =>
   scopeSelector ? document.querySelector<HTMLElement>(scopeSelector) : document.body;
 
@@ -35,31 +32,5 @@ window.__clippyA11y = {
       .withoutRules(options.disableRules)
       .withTopHeadingLevel(options.topHeadingLevel)
       .analyze(element.outerHTML);
-  },
-
-  clearHighlights(): void {
-    for (const element of document.querySelectorAll<HTMLElement>(`[${HIGHLIGHT_ATTR}]`)) {
-      element.style.outline = '';
-      element.style.outlineOffset = '';
-      element.removeAttribute(HIGHLIGHT_ATTR);
-    }
-  },
-
-  highlight(scopeSelector: string | null, target: string): void {
-    this.clearHighlights();
-    const root = resolveRoot(scopeSelector);
-    // Targets are relative to the analyzed root's children. For a scoped
-    // inspection the sub-target may not resolve, so fall back to the root
-    // element itself (the inspected node).
-    let element = root?.querySelector<HTMLElement>(`:scope > ${target}`) ?? null;
-    if (!element && scopeSelector && root) {
-      element = root;
-    }
-    element ??= document.querySelector<HTMLElement>(target);
-    if (!element) return;
-    element.setAttribute(HIGHLIGHT_ATTR, 'true');
-    element.style.outline = HIGHLIGHT_OUTLINE;
-    element.style.outlineOffset = '2px';
-    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
   },
 };

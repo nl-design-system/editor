@@ -14,8 +14,6 @@ export type InspectionPayload = {
   result: AnalysisResult;
   /** Human-readable descriptor of the inspected element, e.g. `img.hero`. */
   label: string;
-  /** Selector the popup uses to re-locate the inspected element for highlighting. */
-  scopeSelector: string;
   /** Toolbar badge text (offending-node count). */
   badge: string;
 };

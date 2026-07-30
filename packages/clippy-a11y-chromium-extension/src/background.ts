@@ -27,7 +27,6 @@ const inspectInPage = (): InspectionPayload => {
 
   const target: Element = window.__clippyLastRightClicked ?? document.body;
   target.setAttribute(MARK, 'true');
-  const scopeSelector = `[${MARK}]`;
 
   // Document-level rules (single/top-level H1, heading order) are whole-page
   // concerns, so they are excluded when validating a single element.
@@ -38,7 +37,7 @@ const inspectInPage = (): InspectionPayload => {
       'document-must-have-top-level-heading-one',
     ],
     enableRules: ['*'],
-    selector: scopeSelector,
+    selector: `[${MARK}]`,
     topHeadingLevel: 1,
   };
   const result = window.__clippyA11y!.analyzeElement(target, options);
@@ -49,7 +48,7 @@ const inspectInPage = (): InspectionPayload => {
   const classes = classAttr ? `.${classAttr.trim().split(/\s+/).join('.')}` : '';
   const label = `${target.tagName.toLowerCase()}${id}${classes}`.slice(0, 80);
 
-  return { badge: total > 99 ? '99+' : String(total), label, result, scopeSelector };
+  return { badge: total > 99 ? '99+' : String(total), label, result };
 };
 
 const inspectElement = async (tabId: number, frameId: number): Promise<void> => {

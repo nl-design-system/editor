@@ -23,8 +23,10 @@
     "build:background": "vite build --config vite.background.config.ts"
   },
   "dependencies": {
+    "@nl-design-system-candidate/paragraph-css": "2.1.3",
     "@nl-design-system-community/clippy-a11y-validator": "workspace:*",
-    "@nl-design-system-community/editor": "workspace:*"
+    "@nl-design-system-community/editor": "workspace:*",
+    "lit": "3.3.3"
   },
   "devDependencies": {
     "@nl-design-system-community/ma-design-tokens": "6.0.0",

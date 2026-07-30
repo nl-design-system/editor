@@ -136,55 +136,11 @@ body {
   padding-inline: var(--basis-space-none);
 }
 
-/* Each violation is rendered as the shared <clippy-validation-item> card, which
-   brings its own (NL Design System) styling. Only the list layout and the
-   slotted node list are styled here. */
+/* Each detection is rendered as the shared <clippy-validation-item> card, which
+   brings its own (NL Design System) styling. Only the list layout is styled here. */
 .clippy-violation {
   margin-block: var(--basis-space-none);
   margin-inline: var(--basis-space-none);
   padding-block: var(--basis-space-none);
   padding-inline: var(--basis-space-none);
-}
-
-.clippy-nodes {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  list-style: none;
-  margin-block: var(--basis-space-none);
-  margin-inline: var(--basis-space-none);
-  padding-block: var(--basis-space-none);
-  padding-inline: var(--basis-space-none);
-}
-
-.clippy-node {
-  display: flex;
-  flex-direction: column;
-  gap: var(--basis-space-block-xs);
-}
-
-.clippy-node__target {
-  align-self: flex-start;
-  background: var(--basis-color-default-bg-subtle);
-  border-color: var(--basis-color-default-border-subtle);
-  border-radius: var(--basis-border-radius-sm);
-  border-style: solid;
-  border-width: var(--basis-border-width-sm);
-  color: var(--basis-color-info-color-default);
-  cursor: pointer;
-  font: inherit;
-  font-size: 12px;
-  padding-block: var(--basis-space-block-xs);
-  padding-inline: 6px;
-}
-
-.clippy-node__html {
-  background: var(--basis-color-default-bg-subtle);
-  border-radius: var(--basis-border-radius-sm);
-  color: var(--basis-color-default-color-subtle);
-  font-size: 12px;
-  overflow-x: auto;
-  padding-block: var(--basis-space-block-sm);
-  padding-inline: 6px;
-  white-space: pre;
 }

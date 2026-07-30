@@ -1,11 +1,20 @@
-import type { AnalysisResult, Violation } from '@nl-design-system-community/clippy-a11y-validator';
+import type { AnalysisResult, Violation, ViolationNode } from '@nl-design-system-community/clippy-a11y-validator';
 import { SEVERITY_ORDER, countBySeverity, formatViolations } from '@nl-design-system-community/clippy-a11y-validator';
+import {
+  ValidationItem,
+  validationMessages,
+  type ValidationKey,
+} from '@nl-design-system-community/editor/validation-item';
 // Design tokens + theme the shared validation-item card relies on, followed by
-// the card component itself (registers <clippy-validation-item>).
+// the card component itself (registers <clippy-validation-item>) and the
+// localised messages catalogue it shares with the editor's drawer.
 import '@nl-design-system-community/ma-design-tokens/dist/theme.css';
 import '@utrecht/design-tokens/dist/theme.css';
 import '@nl-design-system-community/editor/theme.css';
-import '@nl-design-system-community/editor/validation-item';
+// `.nl-paragraph` for the slotted tip — the drawer gets this from the list's
+// shadow; here the tip lives in the document, so load the rule globally.
+import '@nl-design-system-candidate/paragraph-css/paragraph.css';
+import { render } from 'lit';
 import type { AnalyzeOptions, InspectionPayload } from './shared';
 import './popup.css';
 
@@ -39,63 +48,46 @@ const analyzePage = async (tabId: number, options: AnalyzeOptions): Promise<Anal
   return injection.result;
 };
 
-const highlightOnPage = async (tabId: number, scopeSelector: string | null, target: string): Promise<void> => {
-  await chrome.scripting.executeScript({
-    args: [scopeSelector, target],
-    func: (scope: string | null, sel: string) => window.__clippyA11y!.highlight(scope, sel),
-    target: { tabId },
-  });
+/**
+ * Localised guidance tip for one detection — identical to the editor drawer's
+ * `validationMessages()[key].tip(tipPayload)`. Returns `null` when the rule has
+ * no tip (or its payload is absent), matching the drawer's "no paragraph" case.
+ */
+const tipFor = (violation: Violation, node: ViolationNode) => {
+  const message = validationMessages()[violation.validatorKey as ValidationKey];
+  return message?.tip?.(node.tipPayload) ?? null;
 };
 
-// Builds the list of offending elements (with highlight buttons) that is slotted
-// into the shared card's `tip-html` region.
-const renderNodeList = (violation: Violation, scopeSelector: string | null, tabId: number): HTMLUListElement => {
-  const nodes = document.createElement('ul');
-  nodes.className = 'clippy-nodes';
-  nodes.slot = 'tip-html';
-  for (const node of violation.nodes) {
-    const nodeItem = document.createElement('li');
-    nodeItem.className = 'clippy-node';
-
-    const locate = document.createElement('button');
-    locate.type = 'button';
-    locate.className = 'clippy-node__target';
-    locate.textContent = node.target;
-    locate.title = 'Highlight this element on the page';
-    locate.addEventListener('click', () => {
-      highlightOnPage(tabId, scopeSelector, node.target).catch((error: unknown) => {
-        showError(errorMessage(error));
-      });
-    });
-
-    const snippet = document.createElement('code');
-    snippet.className = 'clippy-node__html';
-    snippet.textContent = node.html; // textContent, never innerHTML — the snippet is page-controlled.
-
-    nodeItem.append(locate, snippet);
-    nodes.append(nodeItem);
-  }
-  return nodes;
-};
-
-// Renders one violation as the shared <clippy-validation-item> card, reused
-// from the editor so the extension and the editor drawer look identical.
-const renderViolation = (violation: Violation, scopeSelector: string | null, tabId: number): HTMLLIElement => {
+// Renders one detection as the shared <clippy-validation-item> card, exactly as
+// the editor's drawer does: description, an optional tip paragraph slotted into
+// `tip-html`, and the "Extensive explanation" href link. `readonly` mode drops
+// the Focus/Correct actions, which have no meaning without a live editor.
+const renderCard = (violation: Violation, node: ViolationNode): HTMLLIElement => {
   const listItem = document.createElement('li');
   listItem.className = 'clippy-violation';
 
-  const card = document.createElement('clippy-validation-item');
+  const card = document.createElement('clippy-validation-item') as ValidationItem;
   card.mode = 'readonly';
   card.severity = violation.severity;
   card.description = violation.description;
-  card.href = violation.href;
-  card.append(renderNodeList(violation, scopeSelector, tabId));
+  if (violation.href) {
+    card.href = violation.href;
+  }
+
+  const tip = tipFor(violation, node);
+  if (tip) {
+    const paragraph = document.createElement('p');
+    paragraph.className = 'nl-paragraph';
+    paragraph.slot = 'tip-html';
+    render(tip, paragraph);
+    card.append(paragraph);
+  }
 
   listItem.append(card);
   return listItem;
 };
 
-const render = (result: AnalysisResult, scopeSelector: string | null, tabId: number): void => {
+const renderResult = (result: AnalysisResult): void => {
   lastResult = result;
   const counts = countBySeverity(result);
   const total = counts.error + counts.warning + counts.info;
@@ -109,11 +101,13 @@ const render = (result: AnalysisResult, scopeSelector: string | null, tabId: num
   copyButton.hidden = total === 0;
 
   listEl.replaceChildren();
-  const ordered = [...result.violations].sort(
-    (a, b) => SEVERITY_ORDER.indexOf(a.severity) - SEVERITY_ORDER.indexOf(b.severity),
-  );
-  for (const violation of ordered) {
-    listEl.append(renderViolation(violation, scopeSelector, tabId));
+  // One card per detection, ordered by severity — mirrors the drawer, which
+  // renders a separate <clippy-validation-item> per validation range.
+  const cards = result.violations
+    .flatMap((violation) => violation.nodes.map((node) => ({ node, violation })))
+    .sort((a, b) => SEVERITY_ORDER.indexOf(a.violation.severity) - SEVERITY_ORDER.indexOf(b.violation.severity));
+  for (const { node, violation } of cards) {
+    listEl.append(renderCard(violation, node));
   }
 };
 
@@ -138,7 +132,7 @@ const runValidation = async (scopeSelector: string | null): Promise<void> => {
       selector: scopeSelector,
       topHeadingLevel: 1,
     });
-    render(result, scopeSelector, tabId);
+    renderResult(result);
   } catch (error) {
     showError(`Could not analyze this page. ${errorMessage(error)}`);
   } finally {
@@ -179,10 +173,9 @@ const consumePendingInspection = async (): Promise<void> => {
   await chrome.storage.session.remove('clippyInspection');
   await chrome.action.setBadgeText({ text: '' });
 
-  const tabId = await getActiveTabId();
   contextEl.hidden = false;
   contextEl.textContent = `Inspecting ${inspection.label}`;
-  render(inspection.result, inspection.scopeSelector, tabId);
+  renderResult(inspection.result);
 };
 
 consumePendingInspection().catch((error: unknown) => {

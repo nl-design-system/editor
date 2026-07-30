@@ -124,12 +124,18 @@ importers:
 
   packages/clippy-a11y-chromium-extension:
     dependencies:
+      '@nl-design-system-candidate/paragraph-css':
+        specifier: 2.1.3
+        version: 2.1.3
       '@nl-design-system-community/clippy-a11y-validator':
         specifier: workspace:*
         version: link:../clippy-a11y-validator
       '@nl-design-system-community/editor':
         specifier: workspace:*
         version: link:../editor
+      lit:
+        specifier: 3.3.3
+        version: 3.3.3
     devDependencies:
       '@nl-design-system-community/ma-design-tokens':
         specifier: 6.0.0
