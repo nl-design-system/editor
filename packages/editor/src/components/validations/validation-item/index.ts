@@ -12,10 +12,12 @@ import { property } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
+import '@nl-design-system-community/clippy-components/clippy-icon';
 import type { CorrectValidationFunction, ValidationInteractionMode, ValidationSeverity } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';
 import { CustomEvents, type CorrectValidationIssueDetail, type FocusNodeDetail } from '@/events';
+import { renderMarkdown } from '@/utils/markdown';
 import validationListItemStyles from './styles';
 
 const tag = 'clippy-validation-item';
@@ -30,13 +32,13 @@ const ariaDescribedBy = 'validation-item-header';
 
 /**
  * A single accessibility validation result card. Displays the severity icon,
- * description, optional tip, and action buttons (Focus, Correct).
+ * heading, optional solution, and action buttons (Focus, Correct).
  * The `mode` property controls which actions are visible.
  *
  * @tag clippy-validation-item
  *
- * @slot tip-html - Optional HTML content rendered as additional guidance below
- *   the description. Wrap content in a `<p>` element.
+ * @slot solution-html - Optional HTML content rendered as guidance below
+ *   the heading. Wrap content in a `<p>` element.
  *
  * @fires {CustomEvent<FocusNodeDetail>} FOCUS_NODE - Dispatched when the user clicks "Focus",
  *   carrying `detail.range` so the editor can scroll to the relevant node.
@@ -47,7 +49,7 @@ const ariaDescribedBy = 'validation-item-header';
  * ```html
  * <clippy-validation-item
  *   severity="error"
- *   description="Missing alt text on image"
+ *   heading="Missing alt text on image"
  *   href="https://wcag.nl/…"
  * ></clippy-validation-item>
  * ```
@@ -72,8 +74,8 @@ export class ValidationItem extends LitElement {
   @property({ attribute: false }) range?: Range;
   /** Severity level of the validation issue. */
   @property({ type: String }) severity!: ValidationSeverity;
-  /** Human-readable description of the validation issue. */
-  @property({ type: String }) description!: string;
+  /** Human-readable heading of the validation issue, rendered as markdown. */
+  @property({ type: String }) heading!: string;
   /** Optional URL linking to a more extensive explanation of the WCAG criterion. */
   @property({ type: String }) href?: string;
   /** Custom label for the auto-fix button. Falls back to "Correct". */
@@ -158,10 +160,10 @@ export class ValidationItem extends LitElement {
           <span class="clippy-validation-item-severity clippy-validation-item-severity--${this.severity}">
             ${unsafeSVG(this.#getAlertIcon())}
           </span>
-          <h4 class="nl-heading nl-heading--level-4" id=${ariaDescribedBy}>${this.description}</h4>
+          <h4 class="nl-heading nl-heading--level-4" id=${ariaDescribedBy}>${renderMarkdown(this.heading)}</h4>
         </div>
         <div class="clippy-validation-item__message">
-          <slot name="tip-html"></slot>
+          <slot name="solution-html"></slot>
           ${
             this.href
               ? html`

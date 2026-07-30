@@ -18,7 +18,7 @@ export type ValidationResult = {
   range?: Range;
   scope?: ValidationScope;
   severity: ValidationSeverity;
-  tipPayload?: Record<string, number | string | boolean>;
+  solutionPayload?: Record<string, number | string | boolean>;
   correct?: CorrectValidationFunction;
 };
 

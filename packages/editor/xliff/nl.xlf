@@ -534,22 +534,30 @@
         <source>Alt-text wizard</source>
         <target>Alt-tekst keuzehulp</target>
       </trans-unit>
-<trans-unit id="sd830252189685028">
-  <source>Errors, warnings and tips</source>
-  <target>Fouten, waarschuwingen en tips</target>
-</trans-unit>
-<trans-unit id="s1f7dddc454d49c86">
-  <source>Errors, warnings or tips</source>
-  <target>Fouten, waarschuwingen of tips</target>
-</trans-unit>
-<trans-unit id="s29a1a2dd90ffd24b">
-  <source>Validations</source>
-  <target>Validatiemeldingen</target>
-</trans-unit>
-<trans-unit id="s67104c1ba3a78a63">
-  <source>Show all validations</source>
-  <target>Alle validatiemeldingen tonen</target>
-</trans-unit>
+      <trans-unit id="sd830252189685028">
+        <source>Errors, warnings and tips</source>
+        <target>Fouten, waarschuwingen en tips</target>
+      </trans-unit>
+      <trans-unit id="s1f7dddc454d49c86">
+        <source>Errors, warnings or tips</source>
+        <target>Fouten, waarschuwingen of tips</target>
+      </trans-unit>
+      <trans-unit id="s29a1a2dd90ffd24b">
+        <source>Validations</source>
+        <target>Validatiemeldingen</target>
+      </trans-unit>
+      <trans-unit id="s67104c1ba3a78a63">
+        <source>Show all validations</source>
+        <target>Alle validatiemeldingen tonen</target>
+      </trans-unit>
+      <trans-unit id="s00eeaddf72988f08">
+        <source>Avoid making an entire paragraph bold</source>
+        <target>Vermijd het vetgedrukt maken van een hele alinea</target>
+      </trans-unit>
+      <trans-unit id="se9e64884fac361d1">
+        <source>Remove the bold formatting from the paragraph.</source>
+        <target>Verwijder de vetgedrukte opmaak uit de alinea.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -25,7 +25,7 @@ export const documentMustHaveCorrectHeadingOrder = (
         range: getElementRange(heading),
         scope: 'block',
         severity: validationSeverity.ERROR,
-        tipPayload: { headingLevel, precedingHeadingLevel, topHeadingLevel },
+        solutionPayload: { headingLevel, precedingHeadingLevel, topHeadingLevel },
       });
     }
 
@@ -36,7 +36,7 @@ export const documentMustHaveCorrectHeadingOrder = (
         range: getElementRange(heading),
         scope: 'block',
         severity: validationSeverity.WARNING,
-        tipPayload: { headingLevel, precedingHeadingLevel, topHeadingLevel },
+        solutionPayload: { headingLevel, precedingHeadingLevel, topHeadingLevel },
       });
     }
 

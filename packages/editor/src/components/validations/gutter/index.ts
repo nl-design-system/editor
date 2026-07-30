@@ -3,6 +3,7 @@ import { consume } from '@lit/context';
 import { localized } from '@lit/localize';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
+import srOnly from '@nl-design-system-community/clippy-components/lib/sr-only';
 import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -18,7 +19,8 @@ import {
   type FocusValidationItemInListDetail,
   type OpenValidationGroupDetail,
 } from '@/events';
-import { type ValidationKey, validationMessages } from '@/messages';
+import { renderSolution, type ValidationKey, validationMessages } from '@/messages';
+import { renderMarkdown } from '@/utils/markdown';
 import { getOverlappingRanges } from '@/utils/ranges';
 import gutterStyles from './styles';
 
@@ -54,7 +56,7 @@ declare global {
 @localized()
 @safeCustomElement(tag)
 export class Gutter extends LitElement {
-  static override readonly styles = [gutterStyles, unsafeCSS(paragraphStyle)];
+  static override readonly styles = [gutterStyles, unsafeCSS(paragraphStyle), srOnly];
 
   /**
    * Display mode for validation interactions.
@@ -231,14 +233,13 @@ export class Gutter extends LitElement {
     range: Range,
     correct: ValidationResult['correct'],
     severity: ValidationResult['severity'],
-    tipPayload: ValidationResult['tipPayload'],
+    solutionPayload: ValidationResult['solutionPayload'],
     validatorKey: ValidationResult['validatorKey'],
   ) {
     const position = this.#getIndicatorPosition(range);
     if (!position) return nothing;
     const valKey = validatorKey as ValidationKey;
-    const { customCorrectLabel, description, href, tip } = validationMessages()[valKey];
-    const tipHtml = tip?.(tipPayload) ?? null;
+    const { customCorrectLabel, heading, href, solution } = validationMessages()[valKey];
     const isActive = this.activeRange === range;
     return html`<li
       class="clippy-validations-gutter__indicator"
@@ -251,9 +252,10 @@ export class Gutter extends LitElement {
           'clippy-validations-gutter__toggle--active': isActive,
         })}"
         aria-expanded=${isActive ? 'true' : 'false'}
-        aria-label=${description}
         @click=${() => this.#handleIndicatorClick(range)}
-      ></button>
+      >
+        <span class="sr-only">${renderMarkdown(heading)}</span>
+      </button>
       <div
         class="${classMap({
           'clippy-validation-gutter__tooltip': true,
@@ -264,12 +266,12 @@ export class Gutter extends LitElement {
           .mode=${this.mode}
           .range=${range}
           .severity=${severity}
-          .description=${description}
+          .heading=${heading}
           .href=${href}
           .customCorrectLabel=${customCorrectLabel}
           .correct=${correct}
         >
-          ${tipHtml ? html`<p slot="tip-html" class="nl-paragraph">${tipHtml}</p>` : nothing}
+          ${renderSolution(solution, solutionPayload)}
         </clippy-validation-item>
       </div>
     </li>`;
@@ -285,8 +287,8 @@ export class Gutter extends LitElement {
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
         ${[...map.entries()]
           .filter(([range]) => range !== undefined)
-          .map(([range, { correct, severity, tipPayload, validatorKey }]) =>
-            this.#renderIndicator(range, correct, severity, tipPayload, validatorKey),
+          .map(([range, { correct, severity, solutionPayload, validatorKey }]) =>
+            this.#renderIndicator(range, correct, severity, solutionPayload, validatorKey),
           )}
       </ol>
     `;

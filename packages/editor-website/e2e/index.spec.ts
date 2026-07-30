@@ -104,8 +104,11 @@ test.describe('Text formatting', () => {
       .click();
     await page.keyboard.type('test heading');
 
-    await clippyEditor.getByRole('combobox').first().clear();
-    await clippyEditor.getByRole('option', { name: 'Kopniveau 3' }).click();
+    const formatCombobox = clippyEditor.getByRole('combobox').first();
+    await formatCombobox.clear();
+    await formatCombobox.pressSequentially('Kopniveau 3');
+    await formatCombobox.press('ArrowDown');
+    await formatCombobox.press('Enter');
 
     await expect(editor.getByRole('heading', { name: 'test heading', level: 3 })).toBeVisible();
   });

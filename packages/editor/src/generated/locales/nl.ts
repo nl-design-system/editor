@@ -16,6 +16,7 @@
 'h61200cf48b93f338': html`<strong>Kopniveau ${0}</strong> mag niet direct volgen op een
           <strong>kopniveau ${1}</strong>. Gebruik kopniveau ${2}.`,
 'h8fb14075251fbc85': html`Verwijder de lege <strong>${0}</strong> of voeg tekst toe.`,
+'s00eeaddf72988f08': `Vermijd het vetgedrukt maken van een hele alinea`,
 's05e9759cfd99c48f': `Uitvullen`,
 's0628c840adfd38af': `Links naar rechts`,
 's086f8585af43643f': `Beschrijf de afbeelding voor schermlezers`,
@@ -137,6 +138,7 @@
 'se44dd3f2702d6bdb': `Link verwijderen`,
 'se6c7473600624125': `Ongeordende lijst`,
 'se750d38689a2c65b': `Alt-tekst:`,
+'se9e64884fac361d1': `Verwijder de vetgedrukte opmaak uit de alinea.`,
 'seadaff3e4a442e77': `Geen links gevonden in dit document.`,
 'sece974fe6c94a259': `Geen taalwijzigingen gevonden in dit document.`,
 'sf21fb4f4b9e8911f': `Breedte`,

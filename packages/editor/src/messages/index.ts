@@ -1,8 +1,48 @@
 import { msg, str } from '@lit/localize';
-import { html, type TemplateResult } from 'lit';
+import paragraphStrongError from '@nl-design-system-unstable/documentation/componenten/paragraph/_issues/strong/editor-error.md?raw';
+import paragraphStrongSolution from '@nl-design-system-unstable/documentation/componenten/paragraph/_issues/strong/solution.md?raw';
+import { html, nothing, type TemplateResult } from 'lit';
 import { blockValidations, documentValidations, inlineValidations } from '@/constants';
+import { renderMarkdown } from '@/utils/markdown';
 
-type TipFn = (args?: Record<string, number | string | boolean>) => string | TemplateResult | null;
+/**
+ * Strips HTML comments (e.g. the `<!-- @license -->` header the documentation
+ * snippets ship with) from imported markdown so they are not emitted into the
+ * DOM.
+ */
+const stripHtmlComments = (markdown: string): string => markdown.replace(/<!--[\s\S]*?-->/g, '').trim();
+
+const paragraphStrongErrorText = stripHtmlComments(paragraphStrongError);
+const paragraphStrongSolutionText = stripHtmlComments(paragraphStrongSolution);
+
+type SolutionFn = (args?: Record<string, number | string | boolean>) => string | TemplateResult | null;
+
+/**
+ * A solution is either a static markdown snippet or a function that builds
+ * contextual guidance from a validation payload.
+ */
+type Solution = string | SolutionFn;
+
+/**
+ * Renders a validation solution into the `solution-html` slot of a
+ * `<clippy-validation-item>`. Both static markdown snippets and dynamic
+ * solutions are rendered as a paragraph.
+ */
+export const renderSolution = (
+  solution: Solution | undefined,
+  payload?: Record<string, number | string | boolean>,
+): TemplateResult | typeof nothing => {
+  if (typeof solution === 'string') {
+    return html`<p class="nl-paragraph" slot="solution-html">${renderMarkdown(solution)}</p>`;
+  }
+
+  const content = solution?.(payload) ?? null;
+  if (!content) {
+    return nothing;
+  }
+
+  return html`<p class="nl-paragraph" slot="solution-html">${content}</p>`;
+};
 
 type BlockValidationKey = (typeof blockValidations)[keyof typeof blockValidations];
 type InlineValidationKey = (typeof inlineValidations)[keyof typeof inlineValidations];
@@ -10,7 +50,7 @@ type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentV
 export type ValidationKey = BlockValidationKey | DocumentValidationKey | InlineValidationKey;
 
 type ValidationMessages = {
-  [K in ValidationKey]: { customCorrectLabel?: string; description: string; href?: string; tip?: TipFn };
+  [K in ValidationKey]: { customCorrectLabel?: string; heading: string; href?: string; solution?: Solution };
 };
 
 export type { ValidationMessages };
@@ -33,27 +73,27 @@ export const nodeTypesTranslations = (): Record<string, string> => ({
 export const validationMessages = (): ValidationMessages =>
   ({
     [blockValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM]: {
-      description: msg('Definition description must follow a definition term'),
+      heading: msg('Definition description must follow a definition term'),
     },
     [blockValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM]: {
-      description: msg('Definition list must contain a definition term'),
+      heading: msg('Definition list must contain a definition term'),
     },
     [blockValidations.HEADING_MUST_NOT_BE_EMPTY]: {
-      description: msg('Heading must not be empty'),
+      heading: msg('Heading must not be empty'),
       href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#voor-wie-zijn-toegankelijke-koppen-belangrijk',
     },
     [blockValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: {
-      description: msg('Heading should not contain bold or italic text'),
-      tip: () => msg('Remove the bold or italic formatting from the text in the heading.'),
+      heading: msg('Heading should not contain bold or italic text'),
+      solution: () => msg('Remove the bold or italic formatting from the text in the heading.'),
     },
     [blockValidations.IMAGE_MUST_HAVE_ALT_TEXT]: {
       customCorrectLabel: msg('Edit'),
-      description: msg('Image must have alternative text'),
-      tip: () => msg('Edit the image to supply an alt text'),
+      heading: msg('Image must have alternative text'),
+      solution: () => msg('Edit the image to supply an alt text'),
     },
     [blockValidations.NODE_SHOULD_NOT_BE_EMPTY]: {
-      description: msg('Avoid empty elements'),
-      tip: (params) => {
+      heading: msg('Avoid empty elements'),
+      solution: (params) => {
         const { nodeType } = params || {};
         if (!nodeType || typeof nodeType !== 'string') {
           return null;
@@ -61,14 +101,19 @@ export const validationMessages = (): ValidationMessages =>
         return msg(html`Remove the empty <strong>${nodeTypesTranslations()[nodeType]}</strong> or add text.`);
       },
     },
+    [blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD]: {
+      heading: paragraphStrongErrorText || msg('Avoid making an entire paragraph bold'),
+      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/tekst-benadrukken/',
+      solution: paragraphStrongSolutionText || (() => msg('Remove the bold formatting from the paragraph.')),
+    },
     [blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING]: {
-      description: msg('Avoid paragraphs that resemble headings'),
+      heading: msg('Avoid paragraphs that resemble headings'),
       href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#opmaak-van-koppen',
     },
     [blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST]: {
-      description: msg('List must be a semantic list'),
+      heading: msg('List must be a semantic list'),
       href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/opsommingen/#genummerde-en-ongenummerde-lijsten',
-      tip: (params) => {
+      solution: (params) => {
         const { prefix } = params || {};
         if (!prefix) {
           return null;
@@ -77,15 +122,15 @@ export const validationMessages = (): ValidationMessages =>
       },
     },
     [blockValidations.TABLE_MUST_HAVE_HEADINGS]: {
-      description: msg('Table must contain headings'),
+      heading: msg('Table must contain headings'),
     },
     [blockValidations.TABLE_MUST_HAVE_MULTIPLE_ROWS]: {
-      description: msg('Table must contain multiple rows'),
+      heading: msg('Table must contain multiple rows'),
     },
     [documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: {
-      description: msg(str`Document must have correct heading order`),
+      heading: msg(str`Document must have correct heading order`),
       href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#kopniveaus',
-      tip: (params) => {
+      solution: (params) => {
         const { headingLevel, precedingHeadingLevel, topHeadingLevel } = params || {};
 
         if (headingLevel < topHeadingLevel) {
@@ -123,15 +168,15 @@ export const validationMessages = (): ValidationMessages =>
       },
     },
     [documentValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE]: {
-      description: msg('Document must have only one heading level 1'),
+      heading: msg('Document must have only one heading level 1'),
       href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen',
     },
     [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE]: {
-      description: msg('Document must start with heading level 1'),
+      heading: msg('Document must start with heading level 1'),
     },
     [inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY]: {
-      description: msg('Element must not be empty'),
-      tip: (params) => {
+      heading: msg('Element must not be empty'),
+      solution: (params) => {
         const { nodeType } = params || {};
         if (!nodeType || typeof nodeType !== 'string') {
           return null;
@@ -140,12 +185,12 @@ export const validationMessages = (): ValidationMessages =>
       },
     },
     [inlineValidations.INLINE_SHOULD_NOT_BE_UNDERLINED]: {
-      description: msg(str`Text should not be underlined. This looks too much like a link.`),
+      heading: msg(str`Text should not be underlined. This looks too much like a link.`),
       href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/tekst-benadrukken/#onderstrepen',
-      tip: () => msg(`Remove the underline from the text.`),
+      solution: () => msg(`Remove the underline from the text.`),
     },
     [inlineValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC]: {
-      description: msg('Link text should not be too generic'),
+      heading: msg('Link text should not be too generic'),
       href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/linkteksten/',
     },
   }) as const;

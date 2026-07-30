@@ -76,10 +76,10 @@ describe('<clippy-validations-dialog>', () => {
     const entry = (
       validatorKey: string,
       severity: ValidationResult['severity'],
-      tipPayload?: ValidationResult['tipPayload'],
+      solutionPayload?: ValidationResult['solutionPayload'],
     ): [Range, ValidationResult] => {
       const range = document.createRange();
-      return [range, { severity, tipPayload, validatorKey }];
+      return [range, { severity, solutionPayload, validatorKey }];
     };
 
     const validationsMap: Map<Range, ValidationResult> = new Map([
@@ -127,15 +127,15 @@ describe('<clippy-validations-dialog>', () => {
       await validationItems[0].updateComplete;
     }
 
-    const firstItem = validationItems?.[0] as (Element & { description?: string }) | undefined;
+    const firstItem = validationItems?.[0] as (Element & { heading?: string }) | undefined;
 
-    // Assert the description property is populated (locale-agnostic — avoids shadow DOM piercing)
-    expect(firstItem?.description).toBeTruthy();
+    // Assert the heading property is populated (locale-agnostic — avoids shadow DOM piercing)
+    expect(firstItem?.heading).toBeTruthy();
 
-    // Verify the h4 in the shadow DOM renders the description text
+    // Verify the h4 in the shadow DOM renders the heading text
     const heading = firstItem?.shadowRoot?.querySelector('h4');
     expect(heading).not.toBeNull();
-    expect(heading?.textContent?.trim()).toBe(firstItem?.description);
+    expect(heading?.textContent?.trim()).toBe(firstItem?.heading);
   });
 
   it('shows only the focused group and hides the filters on OPEN_VALIDATION_GROUP', async () => {

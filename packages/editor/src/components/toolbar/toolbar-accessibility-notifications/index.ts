@@ -3,6 +3,7 @@ import { localized, msg, str } from '@lit/localize';
 import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
+import srOnly from '@nl-design-system-community/clippy-components/lib/sr-only';
 import AccessibleIcon from '@tabler/icons/outline/accessible.svg?raw';
 import ChevronDownIcon from '@tabler/icons/outline/chevron-down.svg?raw';
 import { LitElement, html, nothing, unsafeCSS } from 'lit';
@@ -34,7 +35,7 @@ declare global {
 @localized()
 @safeCustomElement(tag)
 export class AccessibilityNotifications extends LitElement {
-  static override readonly styles = [notificationsStyles, unsafeCSS(numberBadgeStyles), unsafeCSS(buttonCss)];
+  static override readonly styles = [notificationsStyles, unsafeCSS(numberBadgeStyles), unsafeCSS(buttonCss), srOnly];
 
   /** @internal Consumed from the nearest {@link validationsContext} provider. */
   @consume({ context: validationsContext, subscribe: true })
@@ -137,7 +138,7 @@ export class AccessibilityNotifications extends LitElement {
             : nothing
         }
       </span>
-      <div class="clippy-screen-reader-text" aria-live=${size > 0 ? 'polite' : 'off'}>
+      <div class="sr-only" aria-live=${size > 0 ? 'polite' : 'off'}>
         ${msg(str`Total ${size} accessibility notifications found.`)}
       </div>
     `;

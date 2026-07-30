@@ -460,7 +460,8 @@ export class Toolbar extends LitElement {
 
   override render() {
     const renderers = this.#itemRenderers;
-    const visibleGroups = this.config.filter((group) => group.some((id) => renderers.has(id)));
+    const config = this.config ?? defaultToolbarConfig;
+    const visibleGroups = config.filter((group) => group.some((id) => renderers.has(id)));
     return html`
       <div class="clippy-toolbar__wrapper" role="toolbar" aria-label=${msg('Text editor toolbar')}>
         <div class="clippy-toolbar__start">

@@ -39,7 +39,7 @@ describe('Inline validations', () => {
 
         expect(validation).toBeDefined();
         expect(validation!.severity).toBe('info');
-        expect(validation!.tipPayload!['nodeType']).toBe(nodeType);
+        expect(validation!.solutionPayload!['nodeType']).toBe(nodeType);
       });
     });
 
@@ -115,7 +115,7 @@ describe('Inline validations', () => {
       });
       const mapArg = callback.mock.calls[0][0];
       expect(mapArg).toBeInstanceOf(Map);
-      expect(byKey(mapArg, inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY)?.tipPayload?.['nodeType']).toBe('link');
+      expect(byKey(mapArg, inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY)?.solutionPayload?.['nodeType']).toBe('link');
     });
 
     it('should notify of empty link or generic link', async () => {

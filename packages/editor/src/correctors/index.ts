@@ -175,6 +175,15 @@ export const correctHeadingWithFormatting =
   };
 
 /**
+ * Removes the bold marks that wrap the entire content of a paragraph node.
+ */
+export const correctEntirelyBoldParagraph =
+  (node: Element): CorrectValidationFunction =>
+  () => {
+    node.querySelectorAll('strong, b').forEach(unwrapElement);
+  };
+
+/**
  * Fills the first empty definition term in a definition list with a placeholder.
  */
 export const correctDefinitionListMissingTerm =
