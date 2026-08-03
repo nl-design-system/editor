@@ -21,6 +21,7 @@
       "types": "./dist/src/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./content-classes.json": "./dist/content-classes.json",
     "./styles": {
       "types": "./dist/clippy.css.d.ts",
       "default": "./dist/clippy.css"

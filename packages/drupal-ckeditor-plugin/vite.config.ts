@@ -1,9 +1,11 @@
-import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { cpSync, copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 import { defineConfig, type Plugin } from 'vite';
 
 const moduleOut = resolve(import.meta.dirname, '../../app/drupal/modules/clippy');
+
+const packageRequire = createRequire(import.meta.url);
 
 // TEMP: tokens bundled into the module so the drupal demo is self-contained.
 const editorRequire = createRequire(resolve(import.meta.dirname, '../editor/package.json'));
@@ -18,9 +20,14 @@ function copyModuleAssets(): Plugin {
     name: 'copy-module-assets',
     closeBundle() {
       mkdirSync(moduleOut, { recursive: true });
-      for (const file of ['clippy.ckeditor5.yml', 'clippy.info.yml', 'clippy.libraries.yml']) {
-        copyFileSync(resolve(import.meta.dirname, file), resolve(moduleOut, file));
-      }
+      // The Drupal module itself (info/libraries/plugin YAML, PHP, config schema).
+      cpSync(resolve(import.meta.dirname, 'module'), moduleOut, { recursive: true });
+
+      // The editable content classes, so the PHP settings form and plugin share defaults
+      copyFileSync(
+        packageRequire.resolve('@nl-design-system-community/ckeditor-plugin/content-classes.json'),
+        resolve(moduleOut, 'dist/content-classes.json'),
+      );
       // Ship the editor's clippy theme tokens (--clippy-*) as the module stylesheet.
       copyFileSync(resolve(import.meta.dirname, '../editor/theme.css'), resolve(moduleOut, 'dist/clippy.css'));
 
