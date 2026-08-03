@@ -2,7 +2,12 @@
  * Content classes ensure identical markup between editors (e.g. Tiptap and CKEditor)
  */
 
-export const headingClasses = (level: number): string => `nl-heading nl-heading--level-${level}`;
+export const HEADING_LEVEL_TOKEN = '{level}';
+
+export const headingClassPattern = `nl-heading nl-heading--level-${HEADING_LEVEL_TOKEN}`;
+
+export const headingClasses = (level: number): string =>
+  headingClassPattern.replaceAll(HEADING_LEVEL_TOKEN, String(level));
 
 export const contentClasses = {
   blockquote: 'utrecht-blockquote utrecht-blockquote--html-blockquote',
