@@ -1,4 +1,5 @@
 export const CustomEvents = {
+  CLOSE_VALIDATIONS_DRAWER: 'CLOSE_VALIDATIONS_DRAWER',
   CORRECT_VALIDATION_ISSUE: 'CORRECT_VALIDATION_ISSUE',
   FILTER_CHANGE: 'FILTER_CHANGE',
   FOCUS_BUBBLE_MENU: 'FOCUS_BUBBLE_MENU',
@@ -66,6 +67,12 @@ export interface CorrectValidationIssueDetail {
 }
 
 export type CorrectValidationIssueEvent = CustomEvent<CorrectValidationIssueDetail>;
+
+export interface CloseValidationsDrawerDetail {
+  identifier?: string;
+}
+
+export type CloseValidationsDrawerEvent = CustomEvent<CloseValidationsDrawerDetail>;
 
 export interface OpenValidationsDialogDetail {
   identifier?: string;

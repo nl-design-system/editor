@@ -1,5 +1,6 @@
 import {
   type AccessibilityNotifications,
+  type CloseValidationsDrawerDetail,
   type ValidationsDrawer,
 } from '@nl-design-system-community/editor/accessibility-notifications';
 import { EditorContentWrapper, EditorWrapper } from '@nl-design-system-community/editor/editor-wrapper';
@@ -10,7 +11,7 @@ import {
   validationInteractionMode,
 } from '@nl-design-system-community/editor/gutter';
 import { debouncedValidate, runValidation, type ValidationsMap } from '@nl-design-system-community/editor/validators';
-import { Plugin, View, type Locale, type ToolbarView } from 'ckeditor5';
+import { Plugin, View, type Locale, type ObservableChangeEvent, type ToolbarView } from 'ckeditor5';
 import { DEFAULT_SETTINGS } from '../constants/';
 import { adoptClippyStyles } from '../styles/';
 import { findMatchingCorrection, findOccurrenceIndex, runValidations } from '../utils/correction.ts';
@@ -41,6 +42,7 @@ export class ClippyPlugin extends Plugin {
 
   init(): void {
     this._registerNotificationsToolbarItem();
+    this._observeSourceEditingMode();
     this.editor.on('ready', () => {
       this._setupUI();
       this._validate();
@@ -102,6 +104,37 @@ export class ClippyPlugin extends Plugin {
     }
 
     toolbar.items.add(this.editor.ui.componentFactory.create('clippyAccessibilityNotifications'));
+  }
+
+  // SourceEditing plugin freezes the raw HTML view when entered. Disable clippy while it's active.
+  private _observeSourceEditingMode(): void {
+    if (!this.editor.plugins.has('SourceEditing')) {
+      return;
+    }
+
+    const sourceEditing = this.editor.plugins.get('SourceEditing') as Plugin & { isSourceEditingMode: boolean };
+    sourceEditing.on<ObservableChangeEvent<boolean>>(
+      'change:isSourceEditingMode',
+      (_evt, _name, isSourceEditingMode) => {
+        this._setNotificationsDisabled(isSourceEditingMode);
+        this._closeValidationsDrawer();
+      },
+    );
+  }
+
+  private _setNotificationsDisabled(disabled: boolean): void {
+    const button = this._notificationsView?.element as AccessibilityNotifications | null;
+    if (button) {
+      button.disabled = disabled;
+    }
+  }
+
+  private _closeValidationsDrawer(): void {
+    globalThis.dispatchEvent(
+      new CustomEvent<CloseValidationsDrawerDetail>(CustomEvents.CLOSE_VALIDATIONS_DRAWER, {
+        detail: { identifier: this._identifier },
+      }),
+    );
   }
 
   private _validate(): void {
