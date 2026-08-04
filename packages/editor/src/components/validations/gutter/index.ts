@@ -96,7 +96,16 @@ export class Gutter extends LitElement {
   /** @internal Identifier of the owning editor, used to scope drawer events. */
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })
-  private readonly identifier?: string;
+  private readonly identifierContextValue?: string;
+
+  /** Standalone identifier for use outside `<clippy-context>` */
+  @property({ attribute: false })
+  identifier?: string;
+
+  /** Coalesced identifier: standalone prop wins, else the consumed context. */
+  get #identifier(): string | undefined {
+    return this.identifier ?? this.identifierContextValue;
+  }
 
   readonly #closeValidationItem = () => {
     this.activeRange = null;
@@ -116,7 +125,7 @@ export class Gutter extends LitElement {
     } else if (this.mode === validationInteractionMode.DRAWER) {
       globalThis.dispatchEvent(
         new CustomEvent<OpenValidationGroupDetail>(CustomEvents.OPEN_VALIDATION_GROUP, {
-          detail: { identifier: this.identifier, ranges: this.#getOverlappingRanges(range) },
+          detail: { identifier: this.#identifier, ranges: this.#getOverlappingRanges(range) },
         }),
       );
     }
