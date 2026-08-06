@@ -1,11 +1,10 @@
-import type { ContentValidator } from '@/types/validation';
-import { inlineValidations, validationSeverity } from '@/constants';
-import { correctEmptyMark, correctGenericLinkText, correctUnderlinedMark } from '@/correctors';
-import { getElementRange, isEmptyOrWhitespace } from '@/validators/helpers';
+import type { ContentValidator } from '../types';
+import { inlineValidations, validationSeverity } from '../constants';
+import { isEmptyOrWhitespace } from '../helpers';
 
 // ── Inline-type mappings ──────────────────────────────────────────────────────
 
-/** Maps HTML tag names to the inline-type name used in solutionPayload. */
+/** Maps HTML tag names to the inline-type name used in tipPayload. */
 const INLINE_TYPES: Partial<Record<string, string>> = {
   a: 'link',
   b: 'bold',
@@ -29,8 +28,7 @@ const linkShouldNotBeTooGeneric: ContentValidator = (_dom, node) => {
   const text = (node.textContent ?? '').trim().toLowerCase();
   if (!genericLinkTexts.has(text)) return null;
   return {
-    correct: correctGenericLinkText(getElementRange(node)),
-    range: getElementRange(node),
+    element: node,
     scope: 'inline',
     severity: validationSeverity.INFO,
   };
@@ -42,19 +40,17 @@ const inlineShouldNotBeEmpty: ContentValidator = (_dom, node) => {
   if (!inlineType) return null;
   if (!isEmptyOrWhitespace(node.textContent ?? '')) return null;
   return {
-    correct: correctEmptyMark(node),
-    range: getElementRange(node),
+    element: node,
     scope: 'inline',
     severity: validationSeverity.INFO,
-    solutionPayload: { nodeType: inlineType },
+    tipPayload: { nodeType: inlineType },
   };
 };
 
 const inlineShouldNotBeUnderlined: ContentValidator = (_dom, node) => {
   if (node.tagName !== 'U') return null;
   return {
-    correct: correctUnderlinedMark(node),
-    range: getElementRange(node),
+    element: node,
     scope: 'inline',
     severity: validationSeverity.INFO,
   };

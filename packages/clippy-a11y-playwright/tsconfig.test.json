@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "extends": "./tsconfig.app.json",
+  "include": ["src/**/*.test.ts", "tests/**/*.ts", "examples/**/*.ts"],
+  "exclude": []
+}

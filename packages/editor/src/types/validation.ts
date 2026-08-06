@@ -1,11 +1,4 @@
 import type { validationInteractionMode } from '@/constants';
-import type { EditorSettings } from '@/types/settings';
-
-export type DocumentValidator = (dom: HTMLElement, settings: EditorSettings) => ValidationResult[];
-
-export type ContentValidator = (dom: HTMLElement, element: Element) => ValidationResult | null;
-
-export type ValidationEntry = readonly [range: Range, value: ValidationResult];
 
 export type CorrectValidationFunction = () => void;
 
