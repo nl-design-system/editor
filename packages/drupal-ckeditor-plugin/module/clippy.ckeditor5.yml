@@ -1,0 +1,43 @@
+clippy_validation:
+  ckeditor5:
+    plugins:
+      - clippyCkeditor.ClippyPlugin
+  drupal:
+    label: "Clippy"
+    library: "clippy/plugin"
+    elements: false
+    toolbar_items: {}
+    # ckeditor5_essentials is present in every CKEditor5 text format, so this condition is
+    # always satisfied and Drupal enables the plugin without per-format configuration.
+    conditions:
+      plugins:
+        - ckeditor5_essentials
+
+clippy_content_classes:
+  ckeditor5:
+    plugins:
+      - clippyCkeditor.ContentClasses
+  drupal:
+    label: "Content classes"
+    library: "clippy/plugin"
+    class: Drupal\clippy\Plugin\CKEditor5Plugin\ContentClasses
+    # The tags in dist/content-classes.json, minus ContentClasses::NON_CREATABLE_TAGS;
+    # ContentClasses::getElementsSubset() narrows it to the configured values. Keep in sync —
+    # a subset outside this list throws.
+    # @see README.md, "Allowed HTML"
+    elements:
+      - <p class>
+      - <h2 class>
+      - <h3 class>
+      - <h4 class>
+      - <h5 class>
+      - <h6 class>
+      - <ul class>
+      - <ol class>
+      - <blockquote class>
+      - <code class>
+      - <img class>
+    toolbar_items: {}
+    conditions:
+      plugins:
+        - ckeditor5_essentials

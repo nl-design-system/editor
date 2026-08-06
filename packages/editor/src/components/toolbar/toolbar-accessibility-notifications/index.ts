@@ -6,7 +6,7 @@ import { safeCustomElement } from '@nl-design-system-community/clippy-components
 import srOnly from '@nl-design-system-community/clippy-components/lib/sr-only';
 import AccessibleIcon from '@tabler/icons/outline/accessible.svg?raw';
 import ChevronDownIcon from '@tabler/icons/outline/chevron-down.svg?raw';
-import { LitElement, html, nothing, unsafeCSS } from 'lit';
+import { LitElement, html, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
@@ -64,9 +64,23 @@ export class AccessibilityNotifications extends LitElement {
   @property({ attribute: false })
   identifier?: string;
 
+  /**
+   * Disables the trigger and closes any open panel.
+   */
+  @property({ reflect: true, type: Boolean })
+  disabled = false;
+
   @state() private _expanded = false;
 
+  override updated(changed: PropertyValues): void {
+    super.updated(changed);
+    if (changed.has('disabled') && this.disabled) {
+      this._expanded = false;
+    }
+  }
+
   readonly #togglePanel = () => {
+    if (this.disabled) return;
     this._expanded = !this._expanded;
   };
 
@@ -106,6 +120,7 @@ export class AccessibilityNotifications extends LitElement {
           @click=${this.#togglePanel}
           aria-expanded=${this._expanded}
           .pressed=${this._expanded}
+          .disabled=${this.disabled}
           icon-only
           size="small"
           purpose="subtle"

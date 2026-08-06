@@ -1,5 +1,6 @@
 import {
   type AccessibilityNotifications,
+  type CloseValidationsDrawerDetail,
   type ValidationsDrawer,
 } from '@nl-design-system-community/editor/accessibility-notifications';
 import { EditorContentWrapper, EditorWrapper } from '@nl-design-system-community/editor/editor-wrapper';
@@ -9,12 +10,18 @@ import {
   type Gutter,
   validationInteractionMode,
 } from '@nl-design-system-community/editor/gutter';
-import { debouncedValidate, runValidation, type ValidationsMap } from '@nl-design-system-community/editor/validators';
-import { Plugin, View, type Locale, type ToolbarView } from 'ckeditor5';
+import {
+  debouncedValidate,
+  runValidation,
+  type EditorSettings,
+  type ValidationsMap,
+} from '@nl-design-system-community/editor/validators';
+import { Plugin, View, type Locale, type ObservableChangeEvent, type ToolbarView } from 'ckeditor5';
 import { DEFAULT_SETTINGS } from '../constants/';
 import { adoptClippyStyles } from '../styles/';
 import { findMatchingCorrection, findOccurrenceIndex, runValidations } from '../utils/correction.ts';
-import { NldsContentClasses } from './NldsContentClasses.ts';
+import { resolveTopHeadingLevel } from '../utils/heading.ts';
+import { ContentClasses } from './ContentClasses.ts';
 
 export class ClippyPlugin extends Plugin {
   static get pluginName() {
@@ -23,7 +30,7 @@ export class ClippyPlugin extends Plugin {
 
   static get requires() {
     // Ensure the design-system classes are applied to CKEditor content
-    return [NldsContentClasses] as const;
+    return [ContentClasses] as const;
   }
 
   private _editableEl: HTMLElement | null = null;
@@ -33,6 +40,7 @@ export class ClippyPlugin extends Plugin {
   private _drawerEl: ValidationsDrawer | null = null;
   private _notificationsView: View | null = null;
   private _validationsMap: ValidationsMap = new Map();
+  private _settings: EditorSettings = DEFAULT_SETTINGS;
 
   // Scope drawer events to this editor so multiple CKEditors on one page don't open each other's drawer.
   private get _identifier(): string {
@@ -40,7 +48,9 @@ export class ClippyPlugin extends Plugin {
   }
 
   init(): void {
+    this._settings = { ...DEFAULT_SETTINGS, topHeadingLevel: resolveTopHeadingLevel(this.editor) };
     this._registerNotificationsToolbarItem();
+    this._observeSourceEditingMode();
     this.editor.on('ready', () => {
       this._setupUI();
       this._validate();
@@ -69,7 +79,8 @@ export class ClippyPlugin extends Plugin {
     wrapper.append(contentWrapper);
 
     const gutter = document.createElement('clippy-validations-gutter') as Gutter;
-    gutter.mode = validationInteractionMode.READONLY;
+    gutter.mode = validationInteractionMode.DRAWER;
+    gutter.identifier = this._identifier;
     contentWrapper.append(gutter);
     this._gutterEl = gutter;
 
@@ -103,12 +114,43 @@ export class ClippyPlugin extends Plugin {
     toolbar.items.add(this.editor.ui.componentFactory.create('clippyAccessibilityNotifications'));
   }
 
+  // SourceEditing plugin freezes the raw HTML view when entered. Disable clippy while it's active.
+  private _observeSourceEditingMode(): void {
+    if (!this.editor.plugins.has('SourceEditing')) {
+      return;
+    }
+
+    const sourceEditing = this.editor.plugins.get('SourceEditing') as Plugin & { isSourceEditingMode: boolean };
+    sourceEditing.on<ObservableChangeEvent<boolean>>(
+      'change:isSourceEditingMode',
+      (_evt, _name, isSourceEditingMode) => {
+        this._setNotificationsDisabled(isSourceEditingMode);
+        this._closeValidationsDrawer();
+      },
+    );
+  }
+
+  private _setNotificationsDisabled(disabled: boolean): void {
+    const button = this._notificationsView?.element as AccessibilityNotifications | null;
+    if (button) {
+      button.disabled = disabled;
+    }
+  }
+
+  private _closeValidationsDrawer(): void {
+    globalThis.dispatchEvent(
+      new CustomEvent<CloseValidationsDrawerDetail>(CustomEvents.CLOSE_VALIDATIONS_DRAWER, {
+        detail: { identifier: this._identifier },
+      }),
+    );
+  }
+
   private _validate(): void {
     if (!this._editableEl) {
       return;
     }
 
-    runValidation(this._editableEl, DEFAULT_SETTINGS, (validationsMap: ValidationsMap) => {
+    runValidation(this._editableEl, this._settings, (validationsMap: ValidationsMap) => {
       this._validationsMap = validationsMap;
       this._render();
     });
@@ -119,7 +161,7 @@ export class ClippyPlugin extends Plugin {
       return;
     }
 
-    debouncedValidate(this._editableEl, DEFAULT_SETTINGS, (validationsMap: ValidationsMap) => {
+    debouncedValidate(this._editableEl, this._settings, (validationsMap: ValidationsMap) => {
       this._validationsMap = validationsMap;
       this._render();
     });
@@ -174,7 +216,7 @@ export class ClippyPlugin extends Plugin {
       // create a clean HTML copy via this.editor.getData()
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = this.editor.getData();
-      const modelDataValidationsMap = runValidations(tempDiv, DEFAULT_SETTINGS);
+      const modelDataValidationsMap = runValidations(tempDiv, this._settings);
 
       // A validator can flag multiple spots, get the range's position among correctable results sharing its validatorKey
       const occurrenceIndex = findOccurrenceIndex(this._validationsMap, range, validatorKey);

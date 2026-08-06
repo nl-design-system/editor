@@ -10,8 +10,8 @@ const CLIPPY_STYLES = css`
     border-color: var(--ck-color-base-border);
   }
 
-  /* Make sure the accessibility button aligns to the right - CKEditor does not support such a setting natively */
-  clippy-accessibility-notifications {
+  /* Push the accessibility button to the right edge when it's the last toolbar item */
+  clippy-accessibility-notifications:last-child {
     margin-inline-start: auto !important;
   }
 `;

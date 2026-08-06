@@ -23,6 +23,7 @@ import { tiptapContext } from '@/context/tiptapContext';
 import { validationsContext } from '@/context/validationsContext';
 import {
   CustomEvents,
+  type CloseValidationsDrawerEvent,
   type CorrectValidationIssueEvent,
   type DocumentOverviewMode,
   type FilterChangeEvent,
@@ -141,6 +142,7 @@ export class ValidationsDrawer extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
+    globalThis.addEventListener(CustomEvents.CLOSE_VALIDATIONS_DRAWER, this.#handleCloseDrawer);
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
     globalThis.addEventListener(CustomEvents.FILTER_CHANGE, this.#handleFilterChange);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
@@ -150,6 +152,7 @@ export class ValidationsDrawer extends LitElement {
   }
 
   override disconnectedCallback() {
+    globalThis.removeEventListener(CustomEvents.CLOSE_VALIDATIONS_DRAWER, this.#handleCloseDrawer);
     globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
     globalThis.removeEventListener(CustomEvents.FILTER_CHANGE, this.#handleFilterChange);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
@@ -192,6 +195,12 @@ export class ValidationsDrawer extends LitElement {
   readonly #closeDrawer = () => {
     this.open = false;
     this.focusedValidationGroup = null;
+  };
+
+  readonly #handleCloseDrawer = (event: Event) => {
+    const { identifier } = (event as CloseValidationsDrawerEvent).detail;
+    if (identifier !== this.#identifier) return;
+    this.#closeDrawer();
   };
 
   // Clears the focused group so the full, filterable validation list is shown.

@@ -1,1 +1,1 @@
-export { HEADING_LEVELS, contentClasses, headingClasses } from '../constants';
+export { HEADING_LEVELS, HEADING_LEVEL_TOKEN, contentClasses, headingClassPattern, headingClasses } from '../constants';
