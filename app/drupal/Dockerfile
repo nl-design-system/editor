@@ -2,7 +2,6 @@ FROM drupal:11-apache
 
 RUN composer require drush/drush --no-interaction --working-dir=/opt/drupal
 
-COPY modules/ /var/www/html/modules/custom/
 COPY settings.php /var/www/html/sites/default/settings.php
 COPY setup.sh /usr/local/bin/setup.sh
 COPY wait-for-db.php /usr/local/bin/wait-for-db.php
@@ -15,6 +14,8 @@ RUN chmod +x /usr/local/bin/setup.sh \
     && chown -R www-data:www-data /var/log/apache2 /var/run/apache2 \
     && mkdir -p /opt/drupal/config/sync \
     && chown -R www-data:www-data /opt/drupal/config
+
+COPY modules/ /var/www/html/modules/custom/
 
 USER www-data
 
