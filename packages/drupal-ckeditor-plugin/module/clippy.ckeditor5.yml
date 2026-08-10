@@ -21,7 +21,7 @@ clippy_content_classes:
     label: "Content classes"
     library: "clippy/plugin"
     class: Drupal\clippy\Plugin\CKEditor5Plugin\ContentClasses
-    # The tags in dist/content-classes.json, minus ContentClasses::NON_CREATABLE_TAGS;
+    # The tags in content-classes.json, minus ContentClasses::NON_CREATABLE_TAGS;
     # ContentClasses::getElementsSubset() narrows it to the configured values. Keep in sync —
     # a subset outside this list throws.
     # @see README.md, "Allowed HTML"
