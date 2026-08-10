@@ -39,7 +39,7 @@ jobs:
           pnpm audit --audit-level critical
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
       # The clippy module in app/drupal/modules is generated, not committed, so it has to be
       # built before the image is built.
