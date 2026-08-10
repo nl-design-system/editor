@@ -56,6 +56,6 @@ docker compose exec drupal /opt/drupal/vendor/bin/drush --root=/opt/drupal/web c
 
 ### Available modules
 
-| Module   | Description                                                                                                                   |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `clippy` | Registers the ClippyPlugin with Drupal's CKEditor 5. Build it first with `pnpm build` from `packages/drupal-ckeditor-plugin`. |
+| Module   | Description                                                                                                     |
+| -------- | --------------------------------------------------------------------------------------------------------------- |
+| `clippy` | Registers the ClippyPlugin with Drupal's CKEditor 5. Build it first with `pnpm build` from the repository root. |
