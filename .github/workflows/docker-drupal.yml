@@ -24,6 +24,27 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Install pnpm package manager
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
+      - name: Set up Node.js version and cache
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Check for known security issues with npm packages
+        run: |
+          echo "Auditing npm dependencies before installing them. For more information, see: https://nldesignsystem.nl/pnpm-audit"
+          pnpm audit --audit-level critical
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # The clippy module in app/drupal/modules is generated, not committed, so it has to be
+      # built before the image is built.
+      - name: Build the Drupal module
+        run: pnpm run build
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
