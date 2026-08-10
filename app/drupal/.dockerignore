@@ -16,15 +16,15 @@ tmp/
 
 # Ignore archives
 
-*.7z
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.tgz
-*.zip
+**/*.7z
+**/*.dmg
+**/*.gz
+**/*.iso
+**/*.jar
+**/*.rar
+**/*.tar
+**/*.tgz
+**/*.zip
 
 # Cache
 
@@ -48,8 +48,8 @@ tsconfig.tsbuildinfo
 
 # Operating system files
 
-.DS_Store
-Thumbs.db
+**/.DS_Store
+**/Thumbs.db
 
 # Files that (sometimes) contain secrets
 
