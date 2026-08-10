@@ -1,12 +1,12 @@
 plugin:
   js:
-    dist/clippy.js:
+    clippy.js:
       preprocess: false
   css:
     component:
-      dist/clippy.css: {}
+      clippy.css: {}
       # TEMP: inject tokens from --basis / --utrecht --nl; to be discussed
-      dist/clippy-tokens.css: {}
+      clippy-tokens.css: {}
   dependencies:
     - core/drupal
     - core/ckeditor5
