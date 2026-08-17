@@ -1,0 +1,45 @@
+services:
+  typo3:
+    build: .
+    ports:
+      - 8082:8080
+    environment:
+      TYPO3_DB_DRIVER: postgres
+      TYPO3_DB_HOST: postgres
+      TYPO3_DB_PORT: 5432
+      TYPO3_DB_DBNAME: ${POSTGRES_DB:-typo3}
+      TYPO3_DB_USERNAME: ${POSTGRES_USER:-typo3}
+      TYPO3_DB_PASSWORD: ${POSTGRES_PASSWORD:-typo3}
+      TYPO3_SETUP_ADMIN_USERNAME: ${TYPO3_SETUP_ADMIN_USERNAME:-admin}
+      TYPO3_SETUP_ADMIN_PASSWORD: ${TYPO3_SETUP_ADMIN_PASSWORD:-Password.1}
+      TYPO3_SETUP_ADMIN_EMAIL: ${TYPO3_SETUP_ADMIN_EMAIL:-admin@example.com}
+      TYPO3_SETUP_CREATE_SITE: ${TYPO3_BASE_URL:-http://localhost:8082}
+      TYPO3_PROJECT_NAME: ${TYPO3_PROJECT_NAME:-TYPO3}
+      TYPO3_CONTEXT: Development
+    volumes:
+      - typo3_config:/var/www/html/config
+      - typo3_fileadmin:/var/www/html/public/fileadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-typo3}
+      POSTGRES_USER: ${POSTGRES_USER:-typo3}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-typo3}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  typo3_config:
+  typo3_fileadmin:
+  postgres_data:
