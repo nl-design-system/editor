@@ -43,9 +43,25 @@ To reset completely and start from scratch:
 docker compose down -v
 ```
 
+## Extensions
+
+Extensions live in `./packages/`, the folder TYPO3 uses for local extensions, and are activated on startup. Each one is a Composer package, so it also has to be named in the `composer require` in the `Dockerfile`. Add the extension, add it to that line, and rebuild:
+
+```shell
+docker compose up --build
+```
+
+Edits under `Resources/Public/` are reflected immediately on page reload. Changes to PHP files need a cache flush, and a newly added `Resources/Public/` needs another rebuild to publish its assets.
+
+### Available extensions
+
+| Extension | Description                                                      |
+| --------- | ---------------------------------------------------------------- |
+| `example` | Logs "Hello World" to the browser console on every backend page. |
+
 ## Clearing the cache
 
-After changing configuration inside the container:
+After changing configuration or PHP inside the container:
 
 ```shell
 docker compose exec typo3 php vendor/bin/typo3 cache:flush
