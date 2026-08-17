@@ -19,6 +19,7 @@ services:
     volumes:
       - typo3_config:/var/www/html/config
       - typo3_fileadmin:/var/www/html/public/fileadmin
+      - ./packages:/var/www/html/packages
     depends_on:
       postgres:
         condition: service_healthy
