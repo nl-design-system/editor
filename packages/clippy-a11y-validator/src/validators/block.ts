@@ -9,7 +9,7 @@ import {
 
 // ── Tag → semantic-type mappings ──────────────────────────────────────────────
 
-/** Maps HTML tag names to the ProseMirror node-type name used in tipPayload. */
+/** Maps HTML tag names to the ProseMirror node-type name used in solutionPayload. */
 const BLOCK_NODE_TYPES: Partial<Record<string, string>> = {
   caption: 'tableCaption',
   dd: 'definitionDescription',
@@ -93,7 +93,7 @@ const nodeShouldNotBeEmpty: ContentValidator = (_dom, node) => {
     element: node,
     scope: 'block',
     severity: validationSeverity.INFO,
-    tipPayload: { nodeType },
+    solutionPayload: { nodeType },
   };
 };
 
@@ -150,7 +150,7 @@ export const paragraphMustUseSemanticList: ContentValidator = (_dom, node) => {
         element: node,
         scope: 'block',
         severity: validationSeverity.INFO,
-        tipPayload: { isOrdered, prefix: firstPrefix.trim() },
+        solutionPayload: { isOrdered, prefix: firstPrefix.trim() },
       };
     }
   }
@@ -162,7 +162,7 @@ export const paragraphMustUseSemanticList: ContentValidator = (_dom, node) => {
       element: node,
       scope: 'block',
       severity: validationSeverity.INFO,
-      tipPayload: { isOrdered, prefix: firstPrefix.trim() },
+      solutionPayload: { isOrdered, prefix: firstPrefix.trim() },
     };
   }
 

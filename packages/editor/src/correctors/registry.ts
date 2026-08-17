@@ -23,7 +23,7 @@ import {
 
 type CorrectorBuilder = (
   element: Element,
-  tipPayload: DetectionResult['tipPayload'],
+  solutionPayload: DetectionResult['solutionPayload'],
   range: Range | undefined,
 ) => CorrectValidationFunction | undefined;
 
@@ -32,7 +32,7 @@ type CorrectorBuilder = (
  *
  * Detection (in `@nl-design-system-community/clippy-a11y-validator`) is
  * intentionally free of editor concerns, so the `correct` action is re-attached
- * here from the detected `element` plus the structured `tipPayload` the
+ * here from the detected `element` plus the structured `solutionPayload` the
  * validator emitted (e.g. `targetLevel`, `isOrdered`, `nodeType`).
  */
 const correctorBuilders: Record<string, CorrectorBuilder> = {
@@ -76,5 +76,5 @@ export const buildCorrector = (
 ): CorrectValidationFunction | undefined => {
   if (!result.validatorKey) return undefined;
   const builder = correctorBuilders[result.validatorKey];
-  return builder?.(result.element, result.tipPayload, range);
+  return builder?.(result.element, result.solutionPayload, range);
 };

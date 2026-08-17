@@ -4,7 +4,7 @@ import { isEmptyOrWhitespace } from '../helpers';
 
 // ── Inline-type mappings ──────────────────────────────────────────────────────
 
-/** Maps HTML tag names to the inline-type name used in tipPayload. */
+/** Maps HTML tag names to the inline-type name used in solutionPayload. */
 const INLINE_TYPES: Partial<Record<string, string>> = {
   a: 'link',
   b: 'bold',
@@ -43,7 +43,7 @@ const inlineShouldNotBeEmpty: ContentValidator = (_dom, node) => {
     element: node,
     scope: 'inline',
     severity: validationSeverity.WARNING,
-    tipPayload: { nodeType: inlineType },
+    solutionPayload: { nodeType: inlineType },
   };
 };
 

@@ -42,7 +42,7 @@ describe('block detection', () => {
       blockValidations.NODE_SHOULD_NOT_BE_EMPTY,
     );
     expect(result).toBeDefined();
-    expect(result!.tipPayload?.['nodeType']).toBe('tableCell');
+    expect(result!.solutionPayload?.['nodeType']).toBe('tableCell');
   });
 
   it('flags a fully-bold short paragraph resembling a heading', () => {
@@ -51,10 +51,10 @@ describe('block detection', () => {
     );
   });
 
-  it('flags an ordered list-like paragraph and records the order in tipPayload', () => {
+  it('flags an ordered list-like paragraph and records the order in solutionPayload', () => {
     const result = first('<p>1. one<br>2. two</p>', blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST);
     expect(result).toBeDefined();
-    expect(result!.tipPayload?.['isOrdered']).toBe(true);
+    expect(result!.solutionPayload?.['isOrdered']).toBe(true);
   });
 
   it('flags list-like sibling paragraphs', () => {
@@ -103,7 +103,7 @@ describe('inline detection', () => {
     ['<a href="#">&nbsp;</a>', 'link'],
   ])('flags empty inline %s as %s', (html, nodeType) => {
     const result = first(`<p>text ${html}</p>`, inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY);
-    expect(result?.tipPayload?.['nodeType']).toBe(nodeType);
+    expect(result?.solutionPayload?.['nodeType']).toBe(nodeType);
   });
 
   it('does not flag inline elements with text', () => {
@@ -137,14 +137,14 @@ describe('document detection', () => {
     const body = new DOMParser().parseFromString('<h1>a</h1><h3>b</h3>', 'text/html').body;
     const [result] = documentMustHaveCorrectHeadingOrder(body);
     expect(result.severity).toBe('warning');
-    expect(result.tipPayload).toMatchObject({ headingLevel: 3, precedingHeadingLevel: 1, targetLevel: 2 });
+    expect(result.solutionPayload).toMatchObject({ headingLevel: 3, precedingHeadingLevel: 1, targetLevel: 2 });
   });
 
   it('returns an error when a heading is below topHeadingLevel', () => {
     const body = new DOMParser().parseFromString('<h1>a</h1><h2>b</h2>', 'text/html').body;
     const results = documentMustHaveCorrectHeadingOrder(body, { enableRules: ['*'], topHeadingLevel: 2 });
     expect(results[0].severity).toBe('error');
-    expect(results[0].tipPayload).toMatchObject({ targetLevel: 2, topHeadingLevel: 2 });
+    expect(results[0].solutionPayload).toMatchObject({ targetLevel: 2, topHeadingLevel: 2 });
   });
 
   it('detects duplicate heading ones', () => {

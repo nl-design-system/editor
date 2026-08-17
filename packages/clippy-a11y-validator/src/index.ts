@@ -23,7 +23,7 @@ export type {
   ContentValidator,
   DocumentValidator,
   HeadingLevel,
-  TipPayload,
+  SolutionPayload,
   ValidationResult,
   ValidationScope,
   ValidationSeverity,

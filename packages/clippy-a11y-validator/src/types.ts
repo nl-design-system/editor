@@ -3,13 +3,13 @@ export type ValidationSeverity = 'info' | 'warning' | 'error';
 export type ValidationScope = 'block' | 'inline';
 
 /** Extra structured context a validator can attach for messages / corrections. */
-export type TipPayload = Record<string, number | string | boolean>;
+export type SolutionPayload = Record<string, number | string | boolean>;
 
 /**
  * A single detected accessibility issue.
  *
  * Detection is intentionally decoupled from correction: the result points at the
- * offending {@link Element} and carries structured context in {@link TipPayload},
+ * offending {@link Element} and carries structured context in {@link SolutionPayload},
  * but knows nothing about how (or whether) the issue is fixed. Consumers derive
  * their own location representation from `element` — a `Range` in a live editor,
  * a CSS selector + HTML snippet for static reporting.
@@ -19,7 +19,7 @@ export type ValidationResult = {
   element: Element;
   scope: ValidationScope;
   severity: ValidationSeverity;
-  tipPayload?: TipPayload;
+  solutionPayload?: SolutionPayload;
 };
 
 /** Settings subset that steers which rules run. Structurally compatible with the editor's `EditorSettings`. */

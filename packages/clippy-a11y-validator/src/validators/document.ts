@@ -20,7 +20,7 @@ export const documentMustHaveCorrectHeadingOrder = (
         element: heading,
         scope: 'block',
         severity: validationSeverity.ERROR,
-        tipPayload: { headingLevel, precedingHeadingLevel, targetLevel, topHeadingLevel },
+        solutionPayload: { headingLevel, precedingHeadingLevel, targetLevel, topHeadingLevel },
       });
     }
 
@@ -30,7 +30,7 @@ export const documentMustHaveCorrectHeadingOrder = (
         element: heading,
         scope: 'block',
         severity: validationSeverity.WARNING,
-        tipPayload: { headingLevel, precedingHeadingLevel, targetLevel, topHeadingLevel },
+        solutionPayload: { headingLevel, precedingHeadingLevel, targetLevel, topHeadingLevel },
       });
     }
 

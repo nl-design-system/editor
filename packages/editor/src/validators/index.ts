@@ -32,7 +32,7 @@ export const runValidation = (
       range,
       scope: result.scope,
       severity: result.severity,
-      solutionPayload: result.tipPayload,
+      solutionPayload: result.solutionPayload,
       validatorKey: result.validatorKey,
     });
   }
