@@ -30,6 +30,11 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer create-project typo3/cms-base-distribution:^14.3 /var/www/html --no-interaction --no-progress \
     && composer clear-cache
 
+COPY packages/ /var/www/html/packages/
+RUN composer --working-dir=/var/www/html require --no-interaction --no-progress \
+        nl-design-system-community/example:@dev \
+    && composer clear-cache
+
 COPY setup.sh /usr/local/bin/setup.sh
 COPY wait-for-db.php /usr/local/bin/wait-for-db.php
 # Apache runs on 8080 so the process needs no root, and FallbackResource replaces the .htaccess the
