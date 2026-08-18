@@ -55,9 +55,11 @@ export type ValidatorSettings = {
   disableRules?: string[];
 };
 
+/** Runs against a single element during the DOM walk (e.g. one paragraph, one link). */
 export type ContentValidator = (dom: HTMLElement, element: Element) => ValidationResult | null;
 
-export type DocumentValidator = (dom: HTMLElement, settings?: ValidatorSettings) => ValidationResult[];
+/** Runs once against the whole content tree (e.g. heading order across all headings). */
+export type TreeValidator = (dom: HTMLElement, settings?: ValidatorSettings) => ValidationResult[];
 
 export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 

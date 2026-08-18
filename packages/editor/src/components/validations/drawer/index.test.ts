@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { page } from 'vitest/browser';
 import type { Context } from '@/components/context';
 import type { ValidationResult } from '@/types/validation';
-import { blockValidations, documentValidations, inlineValidations } from '@/constants';
+import { validations } from '@/constants';
 import '@/components/context';
 import './index';
 import { CustomEvents } from '@/events';
@@ -83,19 +83,19 @@ describe('<clippy-validations-dialog>', () => {
     };
 
     const validationsMap: Map<Range, ValidationResult> = new Map([
-      entry(blockValidations.HEADING_MUST_NOT_BE_EMPTY, 'error'),
-      entry(blockValidations.IMAGE_MUST_HAVE_ALT_TEXT, 'error'),
-      entry(inlineValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC, 'warning'),
-      entry(blockValidations.NODE_SHOULD_NOT_BE_EMPTY, 'warning', { nodeType: 'paragraph' }),
-      entry(inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY, 'error', { nodeType: 'link' }),
-      entry(documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER, 'error', {
+      entry(validations.HEADING_MUST_NOT_BE_EMPTY, 'error'),
+      entry(validations.IMAGE_MUST_HAVE_ALT_TEXT, 'error'),
+      entry(validations.LINK_SHOULD_NOT_BE_TOO_GENERIC, 'warning'),
+      entry(validations.NODE_SHOULD_NOT_BE_EMPTY, 'warning', { nodeType: 'paragraph' }),
+      entry(validations.INLINE_SHOULD_NOT_BE_EMPTY, 'error', { nodeType: 'link' }),
+      entry(validations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER, 'error', {
         headingLevel: 3,
         precedingHeadingLevel: 1,
       }),
-      entry(blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST, 'warning', { prefix: '-' }),
-      entry(blockValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC, 'warning'),
-      entry(inlineValidations.INLINE_SHOULD_NOT_BE_UNDERLINED, 'warning'),
-      entry(documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE, 'error', { topHeadingLevel: 1 }),
+      entry(validations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST, 'warning', { prefix: '-' }),
+      entry(validations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC, 'warning'),
+      entry(validations.INLINE_SHOULD_NOT_BE_UNDERLINED, 'warning'),
+      entry(validations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE, 'error', { topHeadingLevel: 1 }),
     ]);
 
     // Set validationsContext on the context provider, which will provide it to children
@@ -149,9 +149,9 @@ describe('<clippy-validations-dialog>', () => {
     const r2 = document.createRange();
     const r3 = document.createRange();
     const validationsMap: Map<Range, ValidationResult> = new Map([
-      [r1, { severity: 'error', validatorKey: blockValidations.HEADING_MUST_NOT_BE_EMPTY }],
-      [r2, { severity: 'warning', validatorKey: inlineValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC }],
-      [r3, { severity: 'error', validatorKey: blockValidations.IMAGE_MUST_HAVE_ALT_TEXT }],
+      [r1, { severity: 'error', validatorKey: validations.HEADING_MUST_NOT_BE_EMPTY }],
+      [r2, { severity: 'warning', validatorKey: validations.LINK_SHOULD_NOT_BE_TOO_GENERIC }],
+      [r3, { severity: 'error', validatorKey: validations.IMAGE_MUST_HAVE_ALT_TEXT }],
     ]);
 
     if (contextElement) {

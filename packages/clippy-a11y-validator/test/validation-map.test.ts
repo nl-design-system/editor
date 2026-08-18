@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { blockValidations } from '@/constants';
+import { headingValidations } from '@/constants';
 import { buildValidationMap } from '@/validation-map';
 
 const ALL = { enableRules: ['*'] };
@@ -15,7 +15,7 @@ describe('buildValidationMap', () => {
     const [range, entry] = [...map.entries()][0];
     expect(range).toBeInstanceOf(Range);
     expect(entry.range).toBe(range);
-    expect(entry.validatorKey).toBe(blockValidations.HEADING_MUST_NOT_BE_EMPTY);
+    expect(entry.validatorKey).toBe(headingValidations.HEADING_MUST_NOT_BE_EMPTY);
     expect(entry.severity).toBe('error');
     expect(entry.correct).toBeTypeOf('function');
   });

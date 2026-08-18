@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { blockValidations, documentValidations, inlineValidations } from '@/constants';
+import { validations } from '@/constants';
 import { nodeTypesTranslations, validationMessages, type ValidationMessages } from './index';
 
 const messages = validationMessages();
@@ -12,11 +12,7 @@ const callSolution = (solution: SolutionValue, params?: Record<string, number | 
 
 describe('validationMessages', () => {
   it('provides a description for every rule key', () => {
-    for (const key of [
-      ...Object.values(blockValidations),
-      ...Object.values(inlineValidations),
-      ...Object.values(documentValidations),
-    ]) {
+    for (const key of Object.values(validations)) {
       expect(messages[key].heading.length).toBeGreaterThan(0);
     }
   });
@@ -31,31 +27,31 @@ describe('validationMessages', () => {
 
 describe('solution functions', () => {
   it('NODE_SHOULD_NOT_BE_EMPTY renders a solution for a known node type and null otherwise', () => {
-    const { solution } = messages[blockValidations.NODE_SHOULD_NOT_BE_EMPTY];
+    const { solution } = messages[validations.NODE_SHOULD_NOT_BE_EMPTY];
     expect(callSolution(solution, { nodeType: 'paragraph' })).not.toBeNull();
     expect(callSolution(solution)).toBeNull();
     expect(callSolution(solution, { nodeType: 42 })).toBeNull();
   });
 
   it('PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST renders a solution only with a prefix', () => {
-    const { solution } = messages[blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST];
+    const { solution } = messages[validations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST];
     expect(callSolution(solution, { prefix: '-' })).not.toBeNull();
     expect(callSolution(solution)).toBeNull();
   });
 
   it('INLINE_SHOULD_NOT_BE_EMPTY renders a solution only with a node type', () => {
-    const { solution } = messages[inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY];
+    const { solution } = messages[validations.INLINE_SHOULD_NOT_BE_EMPTY];
     expect(callSolution(solution, { nodeType: 'bold' })).not.toBeNull();
     expect(callSolution(solution, {})).toBeNull();
   });
 
   it('HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC and INLINE_SHOULD_NOT_BE_UNDERLINED have static tips', () => {
-    expect(callSolution(messages[blockValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC].solution)).not.toBeNull();
-    expect(callSolution(messages[inlineValidations.INLINE_SHOULD_NOT_BE_UNDERLINED].solution)).not.toBeNull();
+    expect(callSolution(messages[validations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC].solution)).not.toBeNull();
+    expect(callSolution(messages[validations.INLINE_SHOULD_NOT_BE_UNDERLINED].solution)).not.toBeNull();
   });
 
   describe('DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER', () => {
-    const { solution } = messages[documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER];
+    const { solution } = messages[validations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER];
 
     it('explains a heading that exceeds the highest allowed level', () => {
       expect(callSolution(solution, { headingLevel: 1, precedingHeadingLevel: 2, topHeadingLevel: 2 })).not.toBeNull();

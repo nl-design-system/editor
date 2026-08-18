@@ -2,7 +2,16 @@ import { msg, str } from '@lit/localize';
 import paragraphStrongError from '@nl-design-system-unstable/documentation/componenten/paragraph/_issues/strong/editor-error.md?raw';
 import paragraphStrongSolution from '@nl-design-system-unstable/documentation/componenten/paragraph/_issues/strong/solution.md?raw';
 import { html, nothing, type TemplateResult } from 'lit';
-import { blockValidations, documentValidations, inlineValidations } from '@/constants';
+import {
+  definitionListValidations,
+  headingValidations,
+  imageValidations,
+  linkValidations,
+  paragraphValidations,
+  richTextContentValidations,
+  tableValidations,
+  validations,
+} from '@/constants';
 import { renderMarkdown } from '@/utils/markdown';
 
 /**
@@ -44,10 +53,7 @@ export const renderSolution = (
   return html`<p class="nl-paragraph" slot="solution-html">${content}</p>`;
 };
 
-type BlockValidationKey = (typeof blockValidations)[keyof typeof blockValidations];
-type InlineValidationKey = (typeof inlineValidations)[keyof typeof inlineValidations];
-type DocumentValidationKey = (typeof documentValidations)[keyof typeof documentValidations];
-export type ValidationKey = BlockValidationKey | DocumentValidationKey | InlineValidationKey;
+export type ValidationKey = (typeof validations)[keyof typeof validations];
 
 type ValidationMessages = {
   [K in ValidationKey]: { customCorrectLabel?: string; heading: string; href?: string; solution?: Solution };
@@ -72,62 +78,13 @@ export const nodeTypesTranslations = (): Record<string, string> => ({
 
 export const validationMessages = (): ValidationMessages =>
   ({
-    [blockValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM]: {
+    [definitionListValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM]: {
       heading: msg('Definition description must follow a definition term'),
     },
-    [blockValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM]: {
+    [definitionListValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM]: {
       heading: msg('Definition list must contain a definition term'),
     },
-    [blockValidations.HEADING_MUST_NOT_BE_EMPTY]: {
-      heading: msg('Heading must not be empty'),
-      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#voor-wie-zijn-toegankelijke-koppen-belangrijk',
-    },
-    [blockValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: {
-      heading: msg('Heading should not contain bold or italic text'),
-      solution: () => msg('Remove the bold or italic formatting from the text in the heading.'),
-    },
-    [blockValidations.IMAGE_MUST_HAVE_ALT_TEXT]: {
-      customCorrectLabel: msg('Edit'),
-      heading: msg('Image must have alternative text'),
-      solution: () => msg('Edit the image to supply an alt text'),
-    },
-    [blockValidations.NODE_SHOULD_NOT_BE_EMPTY]: {
-      heading: msg('Avoid empty elements'),
-      solution: (params) => {
-        const { nodeType } = params || {};
-        if (!nodeType || typeof nodeType !== 'string') {
-          return null;
-        }
-        return msg(html`Remove the empty <strong>${nodeTypesTranslations()[nodeType]}</strong> or add text.`);
-      },
-    },
-    [blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD]: {
-      heading: paragraphStrongErrorText || msg('Avoid making an entire paragraph bold'),
-      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/tekst-benadrukken/',
-      solution: paragraphStrongSolutionText || (() => msg('Remove the bold formatting from the paragraph.')),
-    },
-    [blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING]: {
-      heading: msg('Avoid paragraphs that resemble headings'),
-      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#opmaak-van-koppen',
-    },
-    [blockValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST]: {
-      heading: msg('List must be a semantic list'),
-      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/opsommingen/#genummerde-en-ongenummerde-lijsten',
-      solution: (params) => {
-        const { prefix } = params || {};
-        if (!prefix) {
-          return null;
-        }
-        return msg(html`Use a semantic list instead of lines starting with "<strong>${prefix}</strong>"`);
-      },
-    },
-    [blockValidations.TABLE_MUST_HAVE_HEADINGS]: {
-      heading: msg('Table must contain headings'),
-    },
-    [blockValidations.TABLE_MUST_HAVE_MULTIPLE_ROWS]: {
-      heading: msg('Table must contain multiple rows'),
-    },
-    [documentValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: {
+    [headingValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: {
       heading: msg(str`Document must have correct heading order`),
       href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#kopniveaus',
       solution: (params) => {
@@ -167,14 +124,51 @@ export const validationMessages = (): ValidationMessages =>
         );
       },
     },
-    [documentValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE]: {
+    [headingValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE]: {
       heading: msg('Document must have only one heading level 1'),
       href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen',
     },
-    [documentValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE]: {
+    [headingValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE]: {
       heading: msg('Document must start with heading level 1'),
     },
-    [inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY]: {
+    [headingValidations.HEADING_MUST_NOT_BE_EMPTY]: {
+      heading: msg('Heading must not be empty'),
+      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#voor-wie-zijn-toegankelijke-koppen-belangrijk',
+    },
+    [headingValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: {
+      heading: msg('Heading should not contain bold or italic text'),
+      solution: () => msg('Remove the bold or italic formatting from the text in the heading.'),
+    },
+    [imageValidations.IMAGE_MUST_HAVE_ALT_TEXT]: {
+      customCorrectLabel: msg('Edit'),
+      heading: msg('Image must have alternative text'),
+      solution: () => msg('Edit the image to supply an alt text'),
+    },
+    [linkValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC]: {
+      heading: msg('Link text should not be too generic'),
+      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/linkteksten/',
+    },
+    [paragraphValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD]: {
+      heading: paragraphStrongErrorText || msg('Avoid making an entire paragraph bold'),
+      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/tekst-benadrukken/',
+      solution: paragraphStrongSolutionText || (() => msg('Remove the bold formatting from the paragraph.')),
+    },
+    [paragraphValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING]: {
+      heading: msg('Avoid paragraphs that resemble headings'),
+      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#opmaak-van-koppen',
+    },
+    [paragraphValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST]: {
+      heading: msg('List must be a semantic list'),
+      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/opsommingen/#genummerde-en-ongenummerde-lijsten',
+      solution: (params) => {
+        const { prefix } = params || {};
+        if (!prefix) {
+          return null;
+        }
+        return msg(html`Use a semantic list instead of lines starting with "<strong>${prefix}</strong>"`);
+      },
+    },
+    [richTextContentValidations.INLINE_SHOULD_NOT_BE_EMPTY]: {
       heading: msg('Element must not be empty'),
       solution: (params) => {
         const { nodeType } = params || {};
@@ -184,13 +178,25 @@ export const validationMessages = (): ValidationMessages =>
         return msg(html`Remove the empty <strong>${nodeTypesTranslations()[nodeType]}</strong>.`);
       },
     },
-    [inlineValidations.INLINE_SHOULD_NOT_BE_UNDERLINED]: {
+    [richTextContentValidations.INLINE_SHOULD_NOT_BE_UNDERLINED]: {
       heading: msg(str`Text should not be underlined. This looks too much like a link.`),
       href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/tekst-benadrukken/#onderstrepen',
       solution: () => msg(`Remove the underline from the text.`),
     },
-    [inlineValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC]: {
-      heading: msg('Link text should not be too generic'),
-      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/linkteksten/',
+    [richTextContentValidations.NODE_SHOULD_NOT_BE_EMPTY]: {
+      heading: msg('Avoid empty elements'),
+      solution: (params) => {
+        const { nodeType } = params || {};
+        if (!nodeType || typeof nodeType !== 'string') {
+          return null;
+        }
+        return msg(html`Remove the empty <strong>${nodeTypesTranslations()[nodeType]}</strong> or add text.`);
+      },
+    },
+    [tableValidations.TABLE_MUST_HAVE_HEADINGS]: {
+      heading: msg('Table must contain headings'),
+    },
+    [tableValidations.TABLE_MUST_HAVE_MULTIPLE_ROWS]: {
+      heading: msg('Table must contain multiple rows'),
     },
   }) as const;

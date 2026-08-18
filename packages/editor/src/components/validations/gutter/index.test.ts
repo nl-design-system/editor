@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { page } from 'vitest/browser';
 import type { ValidationsMap } from '@/types/validation';
-import { blockValidations, inlineValidations, validationInteractionMode } from '@/constants';
+import { validationInteractionMode, validations } from '@/constants';
 import { CustomEvents, type OpenValidationGroupEvent } from '@/events';
 import { VALIDATION_HOVER_HIGHLIGHT_NAMES } from '@/utils/highlights';
 import type { Gutter } from './index';
@@ -73,10 +73,7 @@ describe('<clippy-validations-gutter>', () => {
     await validate(
       gutter,
       new Map([
-        [
-          rangeOver(content),
-          { severity: 'warning', validatorKey: blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD },
-        ],
+        [rangeOver(content), { severity: 'warning', validatorKey: validations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD }],
       ]),
     );
 
@@ -93,7 +90,7 @@ describe('<clippy-validations-gutter>', () => {
     const range = rangeOver(content);
     await validate(
       gutter,
-      new Map([[range, { severity: 'warning', validatorKey: blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD }]]),
+      new Map([[range, { severity: 'warning', validatorKey: validations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD }]]),
     );
 
     const detail = await openedBy(BOLD_PARAGRAPH_HEADING);
@@ -108,14 +105,14 @@ describe('<clippy-validations-gutter>', () => {
       new Map([
         [
           rangeOver(content.querySelector('u')!),
-          { scope: 'inline', severity: 'info', validatorKey: inlineValidations.INLINE_SHOULD_NOT_BE_UNDERLINED },
+          { scope: 'inline', severity: 'info', validatorKey: validations.INLINE_SHOULD_NOT_BE_UNDERLINED },
         ],
         [
           rangeOver(content),
           {
             scope: 'block',
             severity: 'warning',
-            validatorKey: blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD,
+            validatorKey: validations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD,
           },
         ],
       ]),
@@ -139,7 +136,7 @@ describe('<clippy-validations-gutter>', () => {
           {
             scope: 'block',
             severity: 'error',
-            validatorKey: blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD,
+            validatorKey: validations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD,
           },
         ],
       ]),
@@ -155,7 +152,7 @@ describe('<clippy-validations-gutter>', () => {
     await validate(
       gutter,
       new Map([
-        [range, { scope: 'inline', severity: 'info', validatorKey: inlineValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC }],
+        [range, { scope: 'inline', severity: 'info', validatorKey: validations.LINK_SHOULD_NOT_BE_TOO_GENERIC }],
       ]),
     );
 

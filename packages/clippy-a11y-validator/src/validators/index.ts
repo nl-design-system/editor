@@ -1,8 +1,34 @@
-import type { ContentValidator, DocumentValidator, ValidationResult, ValidatorSettings } from '@/types';
+import type { ContentValidator, TreeValidator, ValidationResult, ValidatorSettings } from '@/types';
 import { walkElements } from '@/helpers';
-import { blockValidatorMap } from './block';
-import { documentValidatorObject } from './document';
-import { inlineValidatorMap } from './inline';
+import { definitionListContentValidators } from './definition-list';
+import { headingContentValidators, headingTreeValidators } from './heading';
+import { imageContentValidators } from './image';
+import { linkContentValidators } from './link';
+import { paragraphContentValidators } from './paragraph';
+import { richTextContentValidators } from './rich-text-content';
+import { tableContentValidators } from './table';
+
+/**
+ * Every per-element validator, keyed by rule id and grouped by the NL Design
+ * System component it applies to. Run against each element during the DOM walk.
+ */
+export const contentValidators: Record<string, ContentValidator> = {
+  ...headingContentValidators,
+  ...paragraphContentValidators,
+  ...linkContentValidators,
+  ...imageContentValidators,
+  ...tableContentValidators,
+  ...definitionListContentValidators,
+  ...richTextContentValidators,
+};
+
+/**
+ * Every whole-tree validator, keyed by rule id. These inspect the content as a
+ * whole rather than a single element (currently only heading-order rules).
+ */
+export const treeValidators: Record<string, TreeValidator> = {
+  ...headingTreeValidators,
+};
 
 /**
  * Normalise a rule identifier to the canonical SCREAMING_SNAKE_CASE format
@@ -49,8 +75,8 @@ export const getActiveValidators = <V>(
  * produced it, and isolates failures so a single faulty validator cannot abort
  * the rest.
  *
- * Generic over the validator's arguments, so document validators (which take the
- * document and the settings) and content validators (which take the document and
+ * Generic over the validator's arguments, so tree validators (which take the
+ * content root and the settings) and content validators (which take the root and
  * one element) share this one implementation. A validator may return a single
  * result, several, or `null`.
  */
@@ -74,8 +100,8 @@ export const runValidators = <Args extends unknown[]>(
 };
 
 /**
- * Recurse the DOM depth-first, running every content (block + inline) validator
- * on each element. Returns results in document order.
+ * Recurse the DOM depth-first, running every content validator on each element.
+ * Returns results in document order.
  */
 export const collectContentValidations = (
   dom: HTMLElement,
@@ -84,13 +110,13 @@ export const collectContentValidations = (
   [...walkElements(dom)].flatMap((element) => runValidators<[HTMLElement, Element]>(validators, dom, element));
 
 /**
- * Run every document-level validator. Each does its own internal DOM queries,
+ * Run every whole-tree validator. Each does its own internal DOM queries,
  * so no walk is needed. Failures are isolated per validator.
  */
-export const collectDocumentValidations = (
+export const collectTreeValidations = (
   dom: HTMLElement,
   settings: ValidatorSettings,
-  validators: [string, DocumentValidator][],
+  validators: [string, TreeValidator][],
 ): ValidationResult[] => runValidators<[HTMLElement, ValidatorSettings]>(validators, dom, settings);
 
 /**
@@ -101,14 +127,11 @@ export const collectDocumentValidations = (
  */
 export const runValidation = (dom: HTMLElement, settings: ValidatorSettings): ValidationResult[] => {
   // Pre-compute active validators once — avoids re-filtering on every node during the walk.
-  const activeDocumentValidators = getActiveValidators<DocumentValidator>(documentValidatorObject, settings);
-  const activeContentValidators = [
-    ...getActiveValidators<ContentValidator>(blockValidatorMap, settings),
-    ...getActiveValidators<ContentValidator>(inlineValidatorMap, settings),
-  ];
+  const activeTreeValidators = getActiveValidators<TreeValidator>(treeValidators, settings);
+  const activeContentValidators = getActiveValidators<ContentValidator>(contentValidators, settings);
 
   return [
-    ...collectDocumentValidations(dom, settings, activeDocumentValidators),
+    ...collectTreeValidations(dom, settings, activeTreeValidators),
     ...collectContentValidations(dom, activeContentValidators),
   ];
 };

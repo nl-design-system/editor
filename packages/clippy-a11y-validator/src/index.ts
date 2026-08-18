@@ -12,23 +12,38 @@ export {
 export {
   runValidation,
   getActiveValidators,
+  contentValidators,
+  treeValidators,
   collectContentValidations,
-  collectDocumentValidations,
+  collectTreeValidations,
   runValidators,
 } from './validators';
-export { blockValidatorMap } from './validators/block';
-export { inlineValidatorMap } from './validators/inline';
-export {
-  documentValidatorObject,
-  documentMustHaveCorrectHeadingOrder,
-  documentMustHaveSingleHeadingOne,
-  documentMustHaveTopLevelHeadingOne,
-} from './validators/document';
 
+// ── Per-component validators ───────────────────────────────────────────────────
 export {
-  blockValidations,
-  documentValidations,
-  inlineValidations,
+  headingContentValidators,
+  headingTreeValidators,
+  headingMustHaveCorrectOrder,
+  headingOneMustBeUnique,
+  headingOneMustBeFirst,
+} from './validators/heading';
+export { paragraphContentValidators, paragraphMustUseSemanticList } from './validators/paragraph';
+export { linkContentValidators } from './validators/link';
+export { imageContentValidators } from './validators/image';
+export { tableContentValidators } from './validators/table';
+export { definitionListContentValidators } from './validators/definition-list';
+export { richTextContentValidators } from './validators/rich-text-content';
+
+// ── Rule ids, grouped by NL Design System component ────────────────────────────
+export {
+  headingValidations,
+  paragraphValidations,
+  linkValidations,
+  imageValidations,
+  tableValidations,
+  definitionListValidations,
+  richTextContentValidations,
+  validations,
   validationSeverity,
   validatorEvents,
 } from './constants';
@@ -50,10 +65,10 @@ export type {
   ValidationReport,
   ContentValidator,
   CorrectValidationFunction,
-  DocumentValidator,
   HeadingLevel,
   ImageAltTextRequest,
   SolutionPayload,
+  TreeValidator,
   ValidationMapResult,
   ValidationResult,
   ValidationScope,
