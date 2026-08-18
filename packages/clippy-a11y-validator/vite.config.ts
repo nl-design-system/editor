@@ -2,15 +2,9 @@ import { builtinModules } from 'node:module';
 import { defineConfig } from 'vite';
 import alias from './vite.alias';
 
-/**
- * Each public entry is built in its own single-entry pass so that shared code
- * (e.g. `src/helpers.ts`) is inlined into every output instead of hoisted into
- * a shared chunk. This keeps `dist/index.js` a fully self-contained ES module —
- * the Playwright integration injects that single file into the page, so it must
- * not import sibling chunks. Select the entry with `BUILD_ENTRY`; the default
- * `index` pass cleans `dist`, later passes append to it. Declarations are emitted
- * separately by `tsc` (see `build:ts`), so Vite only produces JavaScript here.
- */
+// One single-entry pass per entry (via BUILD_ENTRY) so shared code is inlined,
+// not split into a shared chunk — `dist/index.js` must stay self-contained for
+// page injection. `index` cleans dist; later passes append. `tsc` emits the .d.ts.
 const ENTRIES: Record<string, Record<string, string>> = {
   correctors: { 'correctors/index': 'src/correctors/index.ts' },
   index: { index: 'src/index.ts' },
@@ -20,9 +14,7 @@ const ENTRIES: Record<string, Record<string, string>> = {
 const entry = process.env['BUILD_ENTRY'] ?? 'index';
 const isPlaywright = entry === 'playwright';
 
-// The Playwright entry is a thin Node-side wrapper: keep the validator core
-// (self-referenced by name, resolved at runtime), Playwright, and Node built-ins
-// external rather than re-bundling them.
+// Playwright entry is a thin wrapper — keep peers and Node built-ins external.
 const external = [
   '@nl-design-system-community/clippy-a11y-validator',
   '@playwright/test',

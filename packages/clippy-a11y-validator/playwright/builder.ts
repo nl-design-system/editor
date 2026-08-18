@@ -7,11 +7,7 @@ const VALIDATOR_PACKAGE = '@nl-design-system-community/clippy-a11y-validator';
 
 let validatorSource: Promise<string> | undefined;
 
-/**
- * Reads the validator's built ESM bundle so it can be injected into the page.
- * The bundle is dependency-free, so a single file is all that needs to reach
- * the browser. The result is memoised for the lifetime of the process.
- */
+// Read the validator's dependency-free ESM bundle for page injection (memoised).
 const loadValidatorSource = (): Promise<string> => {
   validatorSource ??= (async (): Promise<string> => {
     let resolved: string;
@@ -48,11 +44,8 @@ type RunArgs = {
   topHeadingLevel: number;
 };
 
-/**
- * Runs inside the browser page. Imports the injected validator bundle as an
- * object-URL module and analyzes the (optionally scoped) live DOM. Declared at
- * module scope so Playwright serializes it without capturing any closure.
- */
+// Runs in the page: imports the injected bundle as an object-URL module and
+// analyzes the (scoped) live DOM. Module-scoped so Playwright can serialize it.
 const runInPage = async ({
   disableRules,
   enableRules,

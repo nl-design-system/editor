@@ -32,21 +32,12 @@ type CorrectorBuilder = (
   range: Range | undefined,
 ) => CorrectValidationFunction | undefined;
 
-/** Hands an image off to the editor's alt-text dialog — the editor-specific side of `correctImageMissingAltText`. */
 const requestAltText = (request: ImageAltTextRequest): void => {
   globalThis.dispatchEvent(new CustomEvent(CustomEvents.OPEN_IMAGE_DIALOG, { detail: request }));
 };
 
-/**
- * Maps a validator rule key to the interactive correction it should offer.
- *
- * Detection and the DOM corrections both live in
- * `@nl-design-system-community/clippy-a11y-validator`; this registry wires each
- * rule to its correction and injects the editor-specific bits the corrections
- * leave open — the localized definition-term placeholder and how the "add alt
- * text" request is surfaced — plus the structured `solutionPayload` the
- * validator emitted (e.g. `targetLevel`, `isOrdered`, `nodeType`).
- */
+// Wires each rule to its correction, injecting the editor-specific bits the
+// validator's corrections leave open (localized label, alt-text dialog).
 const correctorBuilders: Record<string, CorrectorBuilder> = {
   [blockValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM]: (element) =>
     correctDefinitionTermMissingDescription(element, msg('definition term')),

@@ -1,17 +1,8 @@
 import type { CorrectValidationFunction, ImageAltTextRequest } from '../types';
 import { getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from '../helpers';
 
-/**
- * Framework-agnostic corrections for detected accessibility issues.
- *
- * Each `correct*` function returns a {@link CorrectValidationFunction} — a
- * deferred action that mutates the DOM in place when invoked. They operate on
- * plain DOM only, so they work in a live editor, a static document, or a
- * Playwright page alike. The two host-specific concerns — the localized
- * placeholder for empty definition terms, and how the "add alt text" request is
- * surfaced — are injected by the caller rather than hard-wired, keeping this
- * module free of any editor, localisation, or event-bus dependency.
- */
+// Each `correct*` returns a deferred DOM mutation. Plain DOM only — the localized
+// definition-term label and the alt-text request handler are injected by the caller.
 
 const DEFAULT_DEFINITION_TERM_LABEL = 'definition term';
 
@@ -27,18 +18,11 @@ const unwrapElement = (element: Element): void => {
   element.remove();
 };
 
-/**
- * Select a Range in the browser's selection and ensure keyboard focus moves to
- * the element that contains the range.  When operating outside a TipTap editor
- * (e.g. standalone / readonly mode) the browser does not automatically move
- * focus to the contenteditable container, so we walk up the ancestor chain to
- * find the nearest focusable element and call `.focus()` explicitly.
- */
+// Select the range and move focus to it. Outside an editor the browser won't
+// focus the contenteditable itself, so walk up to the nearest focusable ancestor.
 const selectRange = (range: Range | undefined): void => {
   if (!range) return;
 
-  // Move keyboard focus to the nearest contenteditable ancestor (TipTap or
-  // standalone), falling back to the direct parent element.
   const startNode = range.startContainer;
   const startElement = startNode instanceof HTMLElement ? startNode : startNode.parentElement;
   const focusTarget =
@@ -110,11 +94,7 @@ const convertParagraphsToList = (startParagraph: Element, isOrdered: boolean): v
 
 // ── Content correctors ────────────────────────────────────────────────────────
 
-/**
- * Selects the image node and asks the host to collect alt text via
- * `onRequestAltText`, pre-filling the current src and (empty) alt. The host
- * decides how to surface that request (e.g. the editor opens its image dialog).
- */
+// Select the image, then hand it to the host's alt-text UI (prefilled src).
 export const correctImageMissingAltText =
   (
     node: HTMLImageElement,
@@ -126,11 +106,8 @@ export const correctImageMissingAltText =
     onRequestAltText({ files: [{ name: node.alt, type: 'image/*', url: node.src }], replace: true });
   };
 
-/**
- * Removes an empty node from the document.
- * For table cells/captions the cursor is placed inside instead because
- * deleting a cell would break the table structure.
- */
+// Remove an empty node — but select table cells/captions instead of removing
+// them, since deleting a cell would break the table structure.
 export const correctEmptyNode =
   (node: Element, nodeType: string, range: Range | undefined): CorrectValidationFunction =>
   () => {
@@ -141,64 +118,47 @@ export const correctEmptyNode =
     }
   };
 
-/**
- * Removes an empty inline mark element from the document.
- */
 export const correctEmptyMark =
   (node: Element): CorrectValidationFunction =>
   () => {
     node.remove();
   };
 
-/**
- * Selects the generic link text so the user can replace it with something
- * more descriptive.
- */
+// Select the generic link text so the user can rewrite it.
 export const correctGenericLinkText =
   (range: Range | undefined): CorrectValidationFunction =>
   () => {
     selectRange(range);
   };
 
-/**
- * Removes the underline mark by unwrapping the <u> element in-place.
- */
+// Unwrap the <u>, keeping its text.
 export const correctUnderlinedMark =
   (node: Element): CorrectValidationFunction =>
   () => {
     unwrapElement(node);
   };
 
-/**
- * Deletes an empty heading node.
- */
 export const correctEmptyHeading =
   (node: Element): CorrectValidationFunction =>
   () => {
     node.remove();
   };
 
-/**
- * Removes bold and italic marks from the content of a heading node.
- */
+// Strip bold/italic from a heading.
 export const correctHeadingWithFormatting =
   (node: Element): CorrectValidationFunction =>
   () => {
     node.querySelectorAll('strong, b, em, i').forEach(unwrapElement);
   };
 
-/**
- * Removes the bold marks that wrap the entire content of a paragraph node.
- */
+// Unwrap the bold marks wrapping a whole paragraph.
 export const correctEntirelyBoldParagraph =
   (node: Element): CorrectValidationFunction =>
   () => {
     node.querySelectorAll('strong, b').forEach(unwrapElement);
   };
 
-/**
- * Fills the first empty definition term in a definition list with a placeholder.
- */
+// Fill the first empty <dt> with the placeholder label.
 export const correctDefinitionListMissingTerm =
   (node: Element, termLabel: string = DEFAULT_DEFINITION_TERM_LABEL): CorrectValidationFunction =>
   () => {
@@ -206,9 +166,7 @@ export const correctDefinitionListMissingTerm =
     if (emptyDt) emptyDt.textContent = termLabel;
   };
 
-/**
- * Fills an empty definition term with a placeholder so the description has a matching term.
- */
+// Fill an empty term with the placeholder label.
 export const correctDefinitionTermMissingDescription =
   (node: Element, termLabel: string = DEFAULT_DEFINITION_TERM_LABEL): CorrectValidationFunction =>
   () => {
@@ -217,51 +175,31 @@ export const correctDefinitionTermMissingDescription =
 
 // ── Document correctors ───────────────────────────────────────────────────────
 
-/**
- * Corrects a heading's level to `targetLevel` by replacing the element tag.
- * Used for both "exceeds top level" and "skipped heading level" violations.
- */
 export const correctHeadingLevel =
   (heading: Element, targetLevel: number): CorrectValidationFunction =>
   () => {
     changeTagName(heading, `h${targetLevel}`);
   };
 
-/**
- * Converts a sequence of list-like paragraphs starting at `startParagraph`
- * into a proper ordered or unordered list node.
- */
 export const correctConvertToList =
   (paragraph: Element, isOrdered: boolean): CorrectValidationFunction =>
   () => {
     convertParagraphsToList(paragraph, isOrdered);
   };
 
-/**
- * Demotes a duplicate <h1> to <h2>.
- */
 export const correctDuplicateHeadingOne =
   (h1: Element): CorrectValidationFunction =>
   () => {
     changeTagName(h1, 'h2');
   };
 
-/**
- * Promotes the first block in the document to <h1> when the document
- * is expected to start with a top-level heading.
- */
 export const correctMissingTopLevelHeading =
   (target: Element): CorrectValidationFunction =>
   () => {
     changeTagName(target, 'h1');
   };
 
-/**
- * Converts a fully-bold short paragraph into the appropriate heading level,
- * stripping the bold and italic marks from the converted heading.
- * The target level is derived at correct-time by inspecting the nearest
- * preceding heading sibling.
- */
+// Retag to one level below the nearest preceding heading (derived at correct-time).
 export const correctHeadingResemblingParagraph =
   (child: Element, text: string): CorrectValidationFunction =>
   () => {
@@ -281,10 +219,7 @@ export const correctHeadingResemblingParagraph =
     child.replaceWith(newHeading);
   };
 
-/**
- * Adds a header row to a table that has neither a header row nor a header
- * column by converting the first row's <td> cells to <th>.
- */
+// Convert the first row's <td> cells to <th>.
 export const correctTableMissingHeadings =
   (table: HTMLTableElement): CorrectValidationFunction =>
   () => {
@@ -301,10 +236,7 @@ export const correctTableMissingHeadings =
     }
   };
 
-/**
- * Adds a new empty row after the first row of a table that contains only
- * a single row.
- */
+// Append an empty row matching the first row's cell count.
 export const correctTableMissingRows =
   (table: HTMLTableElement): CorrectValidationFunction =>
   () => {

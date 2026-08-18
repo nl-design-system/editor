@@ -2,14 +2,10 @@ export type ValidationSeverity = 'info' | 'warning' | 'error';
 
 export type ValidationScope = 'block' | 'inline';
 
-/** A deferred fix for a detected issue: calling it mutates the DOM in place. */
+/** A deferred DOM fix for a detected issue. */
 export type CorrectValidationFunction = () => void;
 
-/**
- * Payload a host supplies to `correctImageMissingAltText` so it can hand the
- * image off to whatever alt-text UI the host provides. Matches the editor's
- * `OPEN_IMAGE_DIALOG` event detail, but carries no editor/event coupling.
- */
+/** What `correctImageMissingAltText` passes to the host's alt-text UI. */
 export type ImageAltTextRequest = {
   files: { name: string; type: string; url: string }[];
   replace: boolean;
