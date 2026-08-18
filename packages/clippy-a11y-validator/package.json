@@ -21,6 +21,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./correctors": {
+      "types": "./dist/correctors/index.d.ts",
+      "default": "./dist/correctors/index.js"
     }
   },
   "files": [
@@ -30,7 +34,7 @@
   "scripts": {
     "build": "pnpm run build:ts && pnpm run build:vite",
     "build:ts": "tsc --build",
-    "build:vite": "vite build",
+    "build:vite": "vite build && cross-env BUILD_ENTRY=correctors vite build",
     "test": "vitest --run",
     "test:vitest": "vitest --run",
     "test-coverage": "vitest run --coverage"
@@ -40,6 +44,7 @@
     "@nl-design-system/tsconfig": "1.0.5",
     "@types/node": "22.20.0",
     "@vitest/browser-playwright": "4.1.10",
+    "cross-env": "10.1.0",
     "@vitest/coverage-v8": "4.1.9",
     "typescript": "6.0.3",
     "vite": "8.1.3",

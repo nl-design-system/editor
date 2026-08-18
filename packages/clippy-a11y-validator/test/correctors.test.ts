@@ -1,6 +1,4 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { CustomEvents } from '@/events';
-import { getElementRange } from '@/validators/helpers';
 import {
   correctConvertToList,
   correctDefinitionListMissingTerm,
@@ -18,7 +16,7 @@ import {
   correctTableMissingHeadings,
   correctTableMissingRows,
   correctUnderlinedMark,
-} from './index';
+} from '@/correctors';
 
 let container: HTMLElement | undefined;
 
@@ -29,6 +27,13 @@ const mount = (html: string): HTMLElement => {
   container.innerHTML = html;
   document.body.appendChild(container);
   return container;
+};
+
+/** A Range spanning a single element, mirroring how a host locates a detected node. */
+const rangeOf = (element: Element): Range => {
+  const range = document.createRange();
+  range.selectNode(element);
+  return range;
 };
 
 afterEach(() => {
@@ -67,42 +72,44 @@ describe('content correctors', () => {
   it('correctEmptyNode removes a non-table node', () => {
     const root = mount('<p>keep</p><p></p>');
     const empty = root.querySelectorAll('p')[1];
-    correctEmptyNode(empty, 'paragraph', getElementRange(empty))();
+    correctEmptyNode(empty, 'paragraph', rangeOf(empty))();
     expect(root.querySelectorAll('p')).toHaveLength(1);
   });
 
   it('correctEmptyNode keeps a table cell and selects it instead of removing', () => {
     const root = mount('<table><tr><td id="c"></td><td>x</td></tr></table>');
     const cell = root.querySelector('#c')!;
-    correctEmptyNode(cell, 'tableCell', getElementRange(cell))();
+    correctEmptyNode(cell, 'tableCell', rangeOf(cell))();
     expect(root.querySelector('#c')).not.toBeNull();
   });
 
-  it('correctImageMissingAltText dispatches the open-image-dialog event', () => {
-    const root = mount('<p>x</p><img src="cat.png">');
+  it('correctImageMissingAltText requests alt text with the current src', () => {
+    const root = mount('<p>x</p><img src="cat.png" alt="">');
     const img = root.querySelector('img') as HTMLImageElement;
-    const listener = vi.fn();
-    globalThis.addEventListener(CustomEvents.OPEN_IMAGE_DIALOG, listener, { once: true });
-    correctImageMissingAltText(img, getElementRange(img))();
-    expect(listener).toHaveBeenCalledOnce();
+    const onRequestAltText = vi.fn();
+    correctImageMissingAltText(img, rangeOf(img), onRequestAltText)();
+    expect(onRequestAltText).toHaveBeenCalledOnce();
+    const request = onRequestAltText.mock.calls[0][0];
+    expect(request.replace).toBe(true);
+    expect(request.files[0].url).toContain('cat.png');
   });
 
   it('correctGenericLinkText selects the link range without throwing', () => {
     const root = mount('<p><a href="https://example.com">Lees meer</a></p>');
     const link = root.querySelector('a')!;
-    expect(() => correctGenericLinkText(getElementRange(link))()).not.toThrow();
+    expect(() => correctGenericLinkText(rangeOf(link))()).not.toThrow();
   });
 
-  it('correctDefinitionListMissingTerm fills the empty term with a placeholder', () => {
+  it('correctDefinitionListMissingTerm fills the empty term with the default placeholder', () => {
     const root = mount('<dl><dt></dt><dd>description</dd></dl>');
     correctDefinitionListMissingTerm(root.querySelector('dl')!)();
     expect(root.querySelector('dt')!.textContent?.trim().length).toBeGreaterThan(0);
   });
 
-  it('correctDefinitionTermMissingDescription fills the term with a placeholder', () => {
+  it('correctDefinitionTermMissingDescription fills the term with a supplied label', () => {
     const root = mount('<dl><dt id="t"></dt><dd>description</dd></dl>');
-    correctDefinitionTermMissingDescription(root.querySelector('#t')!)();
-    expect(root.querySelector('#t')!.textContent?.trim().length).toBeGreaterThan(0);
+    correctDefinitionTermMissingDescription(root.querySelector('#t')!, 'definitieterm')();
+    expect(root.querySelector('#t')!.textContent).toBe('definitieterm');
   });
 });
 

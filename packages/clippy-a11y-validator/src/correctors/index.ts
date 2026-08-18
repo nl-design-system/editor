@@ -1,7 +1,19 @@
-import { msg } from '@lit/localize';
-import type { CorrectValidationFunction } from '@/types/validation';
-import { CustomEvents } from '@/events';
-import { getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from './helpers';
+import type { CorrectValidationFunction, ImageAltTextRequest } from '../types';
+import { getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from '../helpers';
+
+/**
+ * Framework-agnostic corrections for detected accessibility issues.
+ *
+ * Each `correct*` function returns a {@link CorrectValidationFunction} — a
+ * deferred action that mutates the DOM in place when invoked. They operate on
+ * plain DOM only, so they work in a live editor, a static document, or a
+ * Playwright page alike. The two host-specific concerns — the localized
+ * placeholder for empty definition terms, and how the "add alt text" request is
+ * surfaced — are injected by the caller rather than hard-wired, keeping this
+ * module free of any editor, localisation, or event-bus dependency.
+ */
+
+const DEFAULT_DEFINITION_TERM_LABEL = 'definition term';
 
 // ── DOM helpers ───────────────────────────────────────────────────────────────
 
@@ -99,18 +111,19 @@ const convertParagraphsToList = (startParagraph: Element, isOrdered: boolean): v
 // ── Content correctors ────────────────────────────────────────────────────────
 
 /**
- * Selects the image node and opens the image dialog so the user can supply
- * alt text. The existing src and (empty) alt are pre-filled in the dialog.
+ * Selects the image node and asks the host to collect alt text via
+ * `onRequestAltText`, pre-filling the current src and (empty) alt. The host
+ * decides how to surface that request (e.g. the editor opens its image dialog).
  */
 export const correctImageMissingAltText =
-  (node: HTMLImageElement, range: Range | undefined): CorrectValidationFunction =>
+  (
+    node: HTMLImageElement,
+    range: Range | undefined,
+    onRequestAltText: (request: ImageAltTextRequest) => void,
+  ): CorrectValidationFunction =>
   () => {
     selectRange(range);
-    globalThis.dispatchEvent(
-      new CustomEvent(CustomEvents.OPEN_IMAGE_DIALOG, {
-        detail: { files: [{ name: node.alt, type: 'image/*', url: node.src }], replace: true },
-      }),
-    );
+    onRequestAltText({ files: [{ name: node.alt, type: 'image/*', url: node.src }], replace: true });
   };
 
 /**
@@ -187,19 +200,19 @@ export const correctEntirelyBoldParagraph =
  * Fills the first empty definition term in a definition list with a placeholder.
  */
 export const correctDefinitionListMissingTerm =
-  (node: Element): CorrectValidationFunction =>
+  (node: Element, termLabel: string = DEFAULT_DEFINITION_TERM_LABEL): CorrectValidationFunction =>
   () => {
     const emptyDt = Array.from(node.querySelectorAll('dt')).find((dt) => !dt.textContent?.trim());
-    if (emptyDt) emptyDt.textContent = msg('definition term');
+    if (emptyDt) emptyDt.textContent = termLabel;
   };
 
 /**
  * Fills an empty definition term with a placeholder so the description has a matching term.
  */
 export const correctDefinitionTermMissingDescription =
-  (node: Element): CorrectValidationFunction =>
+  (node: Element, termLabel: string = DEFAULT_DEFINITION_TERM_LABEL): CorrectValidationFunction =>
   () => {
-    node.textContent = msg('definition term');
+    node.textContent = termLabel;
   };
 
 // ── Document correctors ───────────────────────────────────────────────────────

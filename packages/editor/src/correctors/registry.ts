@@ -1,6 +1,9 @@
-import type { ValidationResult as DetectionResult } from '@nl-design-system-community/clippy-a11y-validator';
-import type { CorrectValidationFunction } from '@/types/validation';
-import { blockValidations, documentValidations, inlineValidations } from '@/constants';
+import type {
+  CorrectValidationFunction,
+  ValidationResult as DetectionResult,
+  ImageAltTextRequest,
+} from '@nl-design-system-community/clippy-a11y-validator';
+import { msg } from '@lit/localize';
 import {
   correctConvertToList,
   correctDefinitionListMissingTerm,
@@ -19,7 +22,9 @@ import {
   correctTableMissingHeadings,
   correctTableMissingRows,
   correctUnderlinedMark,
-} from '@/correctors';
+} from '@nl-design-system-community/clippy-a11y-validator/correctors';
+import { blockValidations, documentValidations, inlineValidations } from '@/constants';
+import { CustomEvents } from '@/events';
 
 type CorrectorBuilder = (
   element: Element,
@@ -27,22 +32,30 @@ type CorrectorBuilder = (
   range: Range | undefined,
 ) => CorrectValidationFunction | undefined;
 
+/** Hands an image off to the editor's alt-text dialog — the editor-specific side of `correctImageMissingAltText`. */
+const requestAltText = (request: ImageAltTextRequest): void => {
+  globalThis.dispatchEvent(new CustomEvent(CustomEvents.OPEN_IMAGE_DIALOG, { detail: request }));
+};
+
 /**
  * Maps a validator rule key to the interactive correction it should offer.
  *
- * Detection (in `@nl-design-system-community/clippy-a11y-validator`) is
- * intentionally free of editor concerns, so the `correct` action is re-attached
- * here from the detected `element` plus the structured `solutionPayload` the
+ * Detection and the DOM corrections both live in
+ * `@nl-design-system-community/clippy-a11y-validator`; this registry wires each
+ * rule to its correction and injects the editor-specific bits the corrections
+ * leave open — the localized definition-term placeholder and how the "add alt
+ * text" request is surfaced — plus the structured `solutionPayload` the
  * validator emitted (e.g. `targetLevel`, `isOrdered`, `nodeType`).
  */
 const correctorBuilders: Record<string, CorrectorBuilder> = {
   [blockValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM]: (element) =>
-    correctDefinitionTermMissingDescription(element),
-  [blockValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM]: (element) => correctDefinitionListMissingTerm(element),
+    correctDefinitionTermMissingDescription(element, msg('definition term')),
+  [blockValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM]: (element) =>
+    correctDefinitionListMissingTerm(element, msg('definition term')),
   [blockValidations.HEADING_MUST_NOT_BE_EMPTY]: (element) => correctEmptyHeading(element),
   [blockValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: (element) => correctHeadingWithFormatting(element),
   [blockValidations.IMAGE_MUST_HAVE_ALT_TEXT]: (element, _tip, range) =>
-    correctImageMissingAltText(element as HTMLImageElement, range),
+    correctImageMissingAltText(element as HTMLImageElement, range, requestAltText),
   [blockValidations.NODE_SHOULD_NOT_BE_EMPTY]: (element, tip, range) => {
     const nodeType = tip?.['nodeType'];
     if (typeof nodeType !== 'string') return undefined;

@@ -21,8 +21,10 @@ export { validationMessages } from './messages';
 export type {
   AnalysisResult,
   ContentValidator,
+  CorrectValidationFunction,
   DocumentValidator,
   HeadingLevel,
+  ImageAltTextRequest,
   SolutionPayload,
   ValidationResult,
   ValidationScope,
