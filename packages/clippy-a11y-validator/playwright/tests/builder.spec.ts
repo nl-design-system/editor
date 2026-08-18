@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import ClippyBuilder, { assertNoViolations, countBySeverity, formatViolations } from '../src';
+import ClippyBuilder, { assertNoViolations, countBySeverity, formatViolations } from '../index';
 
 /** HTML with several deliberate content-accessibility problems. */
 const INACCESSIBLE = `

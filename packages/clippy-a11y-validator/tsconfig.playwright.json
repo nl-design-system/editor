@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./dist/playwright",
+    "rootDir": "./playwright",
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.playwright.tsbuildinfo",
+    "types": ["node"],
+    "paths": {
+      "@nl-design-system-community/clippy-a11y-validator": ["./dist/index"]
+    }
+  },
+  "extends": "./tsconfig.app.json",
+  "references": [{ "path": "./tsconfig.app.json" }],
+  "include": ["playwright/index.ts", "playwright/builder.ts"],
+  "exclude": ["**/*.spec.ts"]
+}

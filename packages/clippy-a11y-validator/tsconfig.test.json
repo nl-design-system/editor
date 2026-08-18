@@ -1,14 +1,17 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
+    "composite": false,
     "noEmit": true,
     "rootDir": ".",
+    "types": ["node", "vite/client"],
     "paths": {
       "@/*": ["./src/*"],
-      "@test/*": ["./test/*"]
+      "@test/*": ["./test/*"],
+      "@nl-design-system-community/clippy-a11y-validator": ["./dist/index"]
     }
   },
   "extends": "./tsconfig.app.json",
-  "include": ["src/**/*.test.ts", "test/**/*.ts"],
+  "include": ["src/**/*.test.ts", "test/**/*.ts", "playwright/**/*.spec.ts"],
   "exclude": []
 }

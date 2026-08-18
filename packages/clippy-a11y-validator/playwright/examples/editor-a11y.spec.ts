@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import ClippyBuilder, { assertNoViolations, formatViolations } from '../src';
+import ClippyBuilder, { assertNoViolations, formatViolations } from '../index';
 
 const fixture = fileURLToPath(new URL('./fixture.html', import.meta.url));
 

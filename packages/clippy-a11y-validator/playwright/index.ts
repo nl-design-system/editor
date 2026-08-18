@@ -2,7 +2,7 @@
 export { ClippyBuilder, default } from './builder';
 export type { ClippyBuilderOptions } from './builder';
 
-// ── Reporting helpers (re-exported from the validator; DOM-free, run in Node) ──
+// ── Reporting helpers (re-exported from the validator core; DOM-free, run in Node) ──
 export {
   SEVERITY_ORDER,
   assertNoViolations,

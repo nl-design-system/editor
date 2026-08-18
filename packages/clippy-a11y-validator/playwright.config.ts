@@ -7,6 +7,6 @@ export default defineConfig({
   fullyParallel: true,
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   reporter: 'list',
-  testDir: '.',
+  testDir: './playwright',
   testMatch: ['tests/**/*.spec.ts', 'examples/**/*.spec.ts'],
 });

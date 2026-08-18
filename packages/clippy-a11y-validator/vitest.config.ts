@@ -16,7 +16,7 @@ export default defineConfig({
       viewport: { height: 1280, width: 1024 },
     },
     coverage: {
-      exclude: ['**/*.css.ts', ...coverageConfigDefaults.exclude],
+      exclude: ['**/*.css.ts', 'playwright/**', ...coverageConfigDefaults.exclude],
       thresholds: {
         branches: 80,
         lines: 80,

@@ -18,13 +18,15 @@ const loadValidatorSource = (): Promise<string> => {
     try {
       resolved = import.meta.resolve(VALIDATOR_PACKAGE);
     } catch (cause) {
-      throw new Error(`clippy-a11y-playwright: could not resolve "${VALIDATOR_PACKAGE}"; is it installed?`, { cause });
+      throw new Error(`clippy-a11y-validator/playwright: could not resolve "${VALIDATOR_PACKAGE}"; is it installed?`, {
+        cause,
+      });
     }
     try {
       return await readFile(fileURLToPath(resolved), 'utf8');
     } catch (cause) {
       throw new Error(
-        `clippy-a11y-playwright: could not read the validator bundle at "${resolved}". ` +
+        `clippy-a11y-validator/playwright: could not read the validator bundle at "${resolved}". ` +
           `Build it first with \`pnpm --filter ${VALIDATOR_PACKAGE} run build\`.`,
         { cause },
       );
@@ -63,7 +65,7 @@ const runInPage = async ({
     const module = await import(/* @vite-ignore */ objectUrl);
     const root = selector ? document.querySelector(selector) : document.body;
     if (!root) {
-      throw new Error(`clippy-a11y-playwright: no element matches selector "${selector}".`);
+      throw new Error(`clippy-a11y-validator/playwright: no element matches selector "${selector}".`);
     }
     return new module.ClippyValidations()
       .enableRules(enableRules)
@@ -83,7 +85,7 @@ const runInPage = async ({
  * @example
  * ```ts
  * import { test, expect } from '@playwright/test';
- * import ClippyBuilder from '@nl-design-system-community/clippy-a11y-playwright';
+ * import ClippyBuilder from '@nl-design-system-community/clippy-a11y-validator/playwright';
  *
  * test('editor output is accessible', async ({ page }) => {
  *   await page.goto('/editor-preview');

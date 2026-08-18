@@ -25,6 +25,10 @@
     "./correctors": {
       "types": "./dist/correctors/index.d.ts",
       "default": "./dist/correctors/index.js"
+    },
+    "./playwright": {
+      "types": "./dist/playwright/index.d.ts",
+      "default": "./dist/playwright/index.js"
     }
   },
   "files": [
@@ -32,20 +36,27 @@
   ],
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "pnpm run build:ts && pnpm run build:vite",
+    "build": "pnpm run clean && pnpm run build:vite && pnpm run build:ts",
     "build:ts": "tsc --build",
-    "build:vite": "vite build && cross-env BUILD_ENTRY=correctors vite build",
-    "test": "vitest --run",
+    "build:vite": "vite build && cross-env BUILD_ENTRY=correctors vite build && cross-env BUILD_ENTRY=playwright vite build",
+    "clean": "rm -rf dist node_modules/.tmp",
+    "pretest": "pnpm run build",
+    "test": "vitest --run && playwright test",
     "test:vitest": "vitest --run",
+    "test:playwright": "playwright test",
     "test-coverage": "vitest run --coverage"
   },
   "dependencies": {},
+  "peerDependencies": {
+    "@playwright/test": ">=1.50.0"
+  },
   "devDependencies": {
     "@nl-design-system/tsconfig": "1.0.5",
+    "@playwright/test": "1.62.1",
     "@types/node": "22.20.0",
     "@vitest/browser-playwright": "4.1.10",
-    "cross-env": "10.1.0",
     "@vitest/coverage-v8": "4.1.9",
+    "cross-env": "10.1.0",
     "typescript": "6.0.3",
     "vite": "8.1.3",
     "vite-plugin-dts": "5.0.3",
