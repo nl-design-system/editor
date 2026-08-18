@@ -1,6 +1,6 @@
 import { msg } from '@lit/localize';
 import { runValidation as detect, type ImageAltTextRequest } from '@nl-design-system-community/clippy-a11y-validator';
-import { buildCorrection } from '@nl-design-system-community/clippy-a11y-validator/correctors';
+import { buildCorrection, type CorrectionHost } from '@nl-design-system-community/clippy-a11y-validator/correctors';
 import type { EditorSettings } from '@/types/settings';
 import type { ValidationResult } from '@/types/validation';
 import { CustomEvents } from '@/events';
@@ -25,14 +25,17 @@ export const runValidation = (
 ): void => {
   const resultMap = new Map<Range, ValidationResult>();
 
+  // Built once per run so `msg()` reflects the active locale without re-resolving per result.
+  const correctionHost: CorrectionHost = {
+    definitionTermLabel: msg('definition term'),
+    onRequestAltText: requestAltText,
+  };
+
   for (const result of detect(dom, settings)) {
     const range = getElementRange(result.element);
     if (!range) continue;
     resultMap.set(range, {
-      correct: buildCorrection(result, {
-        definitionTermLabel: msg('definition term'),
-        onRequestAltText: requestAltText,
-      }),
+      correct: buildCorrection(result, correctionHost),
       range,
       scope: result.scope,
       severity: result.severity,
