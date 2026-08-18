@@ -1,22 +1,23 @@
-import { runValidation as detect } from '@nl-design-system-community/clippy-a11y-validator';
+import { msg } from '@lit/localize';
+import { runValidation as detect, type ImageAltTextRequest } from '@nl-design-system-community/clippy-a11y-validator';
+import { buildCorrection } from '@nl-design-system-community/clippy-a11y-validator/correctors';
 import type { EditorSettings } from '@/types/settings';
 import type { ValidationResult } from '@/types/validation';
-import { buildCorrector } from '@/correctors/registry';
+import { CustomEvents } from '@/events';
 import { debounce } from '@/utils/debounce';
 import { getElementRange } from '@/validators/helpers';
 
 const VALIDATION_TIMEOUT = 500;
 
-/**
- * Runs the framework-agnostic detection rules and adapts the results into the
- * editor's `Range`-keyed shape, re-attaching the interactive `correct` action
- * for each issue.
- *
- * The pure detection logic lives in
- * `@nl-design-system-community/clippy-a11y-validator`; everything editor-specific
- * (DOM `Range`s, corrections that dispatch events / move the selection) is layered
- * on here.
- */
+// Hands an image off to the editor's alt-text dialog — the editor's side of the
+// validator's `correctImageMissingAltText`.
+const requestAltText = (request: ImageAltTextRequest): void => {
+  globalThis.dispatchEvent(new CustomEvent(CustomEvents.OPEN_IMAGE_DIALOG, { detail: request }));
+};
+
+// Detection and corrections both live in the validator package; here we adapt the
+// results into the editor's `Range`-keyed shape and supply the editor-specific
+// hooks the corrections need (the localized label, the alt-text dialog).
 export const runValidation = (
   dom: HTMLElement,
   settings: EditorSettings,
@@ -28,7 +29,10 @@ export const runValidation = (
     const range = getElementRange(result.element);
     if (!range) continue;
     resultMap.set(range, {
-      correct: buildCorrector(result, range),
+      correct: buildCorrection(result, {
+        definitionTermLabel: msg('definition term'),
+        onRequestAltText: requestAltText,
+      }),
       range,
       scope: result.scope,
       severity: result.severity,
