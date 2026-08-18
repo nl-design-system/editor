@@ -1,0 +1,11 @@
+imports:
+  - { resource: "EXT:rte_ckeditor/Configuration/RTE/Default.yaml" }
+  - { resource: "EXT:clippy/Configuration/RTE/ContentClasses.yaml" }
+
+editor:
+  config:
+    importModules:
+      - { module: "@nl-design-system-community/clippy/clippy.js", exports: ["ClippyPlugin", "ContentClasses"] }
+    contentsCss:
+      - "EXT:clippy/Resources/Public/Css/clippy-tokens.css"
+      - "EXT:clippy/Resources/Public/Css/clippy.css"
