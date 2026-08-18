@@ -69,28 +69,30 @@ describe('ClippyValidations.analyze', () => {
 });
 
 describe('rule filtering', () => {
-  it('withRules limits analysis to the given rules', () => {
+  it('enableRules limits analysis to the given rules', () => {
     const html = '<h1></h1><img src="x.png">';
-    const { violations } = new ClippyValidations().withRules(['image-must-have-alt-text']).analyze(html);
+    const { violations } = new ClippyValidations().enableRules(['image-must-have-alt-text']).analyze(html);
     expect(violations.map((v) => v.id)).toStrictEqual(['image-must-have-alt-text']);
   });
 
-  it('withRules accepts SCREAMING_SNAKE_CASE keys', () => {
-    const { violations } = new ClippyValidations().withRules(['HEADING_MUST_NOT_BE_EMPTY']).analyze('<h1></h1>');
+  it('enableRules accepts SCREAMING_SNAKE_CASE keys', () => {
+    const { violations } = new ClippyValidations().enableRules(['HEADING_MUST_NOT_BE_EMPTY']).analyze('<h1></h1>');
     expect(violations.map((v) => v.id)).toStrictEqual(['heading-must-not-be-empty']);
   });
 
-  it('withoutRules excludes the given rules', () => {
+  it('disableRules excludes the given rules', () => {
     const html = '<h1></h1><img src="x.png">';
-    const { violations } = new ClippyValidations().withoutRules(['image-must-have-alt-text']).analyze(html);
+    const { violations } = new ClippyValidations().disableRules(['image-must-have-alt-text']).analyze(html);
     const reported = violations.map((v) => v.id);
     expect(reported).toContain('heading-must-not-be-empty');
     expect(reported).not.toContain('image-must-have-alt-text');
   });
 
-  it('withTopHeadingLevel changes the expected starting level', () => {
+  it('settings({ topHeadingLevel }) changes the expected starting level', () => {
     // Starting at h2 is fine when topHeadingLevel is 2
-    const { violations } = new ClippyValidations().withTopHeadingLevel(2).analyze('<h2>Title</h2><p>Text</p>');
+    const { violations } = new ClippyValidations()
+      .settings({ topHeadingLevel: 2 })
+      .analyze('<h2>Title</h2><p>Text</p>');
     expect(violations.some((v) => v.id === 'document-must-have-top-level-heading-one')).toBe(false);
   });
 });

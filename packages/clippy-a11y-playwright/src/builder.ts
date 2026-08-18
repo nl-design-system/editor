@@ -1,4 +1,4 @@
-import type { AnalysisResult } from '@nl-design-system-community/clippy-a11y-validator';
+import type { AnalysisResult, ValidatorSettings } from '@nl-design-system-community/clippy-a11y-validator';
 import type { Page } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -66,9 +66,9 @@ const runInPage = async ({
       throw new Error(`clippy-a11y-playwright: no element matches selector "${selector}".`);
     }
     return new module.ClippyValidations()
-      .withRules(enableRules)
-      .withoutRules(disableRules)
-      .withTopHeadingLevel(topHeadingLevel)
+      .enableRules(enableRules)
+      .disableRules(disableRules)
+      .settings({ topHeadingLevel })
       .analyze(root);
   } finally {
     URL.revokeObjectURL(objectUrl);
@@ -110,20 +110,22 @@ export class ClippyBuilder {
   }
 
   /** Limit analysis to the given rules (kebab-case or SCREAMING_SNAKE_CASE). Defaults to all rules. */
-  withRules(rules: string[]): this {
+  enableRules(rules: string[]): this {
     this.#enableRules = rules;
     return this;
   }
 
   /** Exclude the given rules from analysis. */
-  withoutRules(rules: string[]): this {
+  disableRules(rules: string[]): this {
     this.#disableRules = rules;
     return this;
   }
 
-  /** Set the highest heading level the document is allowed to start at (default 1). */
-  withTopHeadingLevel(level: number): this {
-    this.#topHeadingLevel = level;
+  /** Apply non-rule analysis settings, e.g. `{ topHeadingLevel: 2 }` (highest allowed starting heading level, default 1). */
+  settings(settings: Partial<Pick<ValidatorSettings, 'topHeadingLevel'>>): this {
+    if (settings.topHeadingLevel !== undefined) {
+      this.#topHeadingLevel = settings.topHeadingLevel;
+    }
     return this;
   }
 

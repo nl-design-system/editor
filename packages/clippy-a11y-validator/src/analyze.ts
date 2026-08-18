@@ -1,4 +1,4 @@
-import type { AnalysisResult, ValidationResult, Violation } from './types';
+import type { AnalysisResult, ValidationResult, ValidatorSettings, Violation } from './types';
 import { validationMessages, type ValidationKey } from './messages';
 import { runValidation } from './validators';
 
@@ -80,7 +80,7 @@ const groupViolations = (results: ValidationResult[], root: Element): Violation[
  * @example
  * ```ts
  * const { violations } = new ClippyValidations()
- *   .withRules(['image-must-have-alt-text'])
+ *   .enableRules(['image-must-have-alt-text'])
  *   .analyze('<img src="cat.png">');
  * ```
  */
@@ -90,20 +90,22 @@ export class ClippyValidations {
   #topHeadingLevel = 1;
 
   /** Limit analysis to the given rules (kebab-case or SCREAMING_SNAKE_CASE). Defaults to all rules. */
-  withRules(rules: string[]): this {
+  enableRules(rules: string[]): this {
     this.#enableRules = rules;
     return this;
   }
 
   /** Exclude the given rules from analysis. */
-  withoutRules(rules: string[]): this {
+  disableRules(rules: string[]): this {
     this.#disableRules = rules;
     return this;
   }
 
-  /** Set the highest heading level the document is allowed to start at (default 1). */
-  withTopHeadingLevel(level: number): this {
-    this.#topHeadingLevel = level;
+  /** Apply non-rule analysis settings, e.g. `{ topHeadingLevel: 2 }` (highest allowed starting heading level, default 1). */
+  settings(settings: Partial<Pick<ValidatorSettings, 'topHeadingLevel'>>): this {
+    if (settings.topHeadingLevel !== undefined) {
+      this.#topHeadingLevel = settings.topHeadingLevel;
+    }
     return this;
   }
 

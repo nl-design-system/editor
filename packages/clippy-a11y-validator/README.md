@@ -40,9 +40,9 @@ Each violation is grouped per rule and lists the offending nodes:
 
 ```ts
 new ClippyValidations()
-  .withRules(['image-must-have-alt-text']) // only these rules (default: all)
-  .withoutRules(['paragraph-should-not-resemble-list']) // exclude rules
-  .withTopHeadingLevel(2) // highest allowed starting heading level (default: 1)
+  .enableRules(['image-must-have-alt-text']) // only these rules (default: all)
+  .disableRules(['paragraph-should-not-resemble-list']) // exclude rules
+  .settings({ topHeadingLevel: 2 }) // highest allowed starting heading level (default: 1)
   .analyze(html);
 ```
 

@@ -52,9 +52,9 @@ axe-core's results:
 ```ts
 const results = await new ClippyBuilder({ page })
   .include('.clippy-content') // audit only this region (default: document.body)
-  .withRules(['image-must-have-alt-text']) // only these rules (default: all)
-  .withoutRules(['paragraph-should-not-resemble-list']) // exclude rules
-  .withTopHeadingLevel(2) // highest allowed starting heading level (default: 1)
+  .enableRules(['image-must-have-alt-text']) // only these rules (default: all)
+  .disableRules(['paragraph-should-not-resemble-list']) // exclude rules
+  .settings({ topHeadingLevel: 2 }) // highest allowed starting heading level (default: 1)
   .analyze();
 ```
 
@@ -88,13 +88,13 @@ assertNoViolations(results, { failOn: 'error' });
 
 `new ClippyBuilder({ page })` returns a fluent builder:
 
-| Method                    | Description                                                            |
-| ------------------------- | ---------------------------------------------------------------------- |
-| `.include(selector)`      | Scope analysis to the first matching element (default `document.body`) |
-| `.withRules(rules)`       | Run only these rules (default: all)                                    |
-| `.withoutRules(rules)`    | Exclude these rules                                                    |
-| `.withTopHeadingLevel(n)` | Highest heading level the document may start at (default `1`)          |
-| `.analyze()`              | `Promise<AnalysisResult>` — inject, run, and return grouped violations |
+| Method                           | Description                                                            |
+| -------------------------------- | ---------------------------------------------------------------------- |
+| `.include(selector)`             | Scope analysis to the first matching element (default `document.body`) |
+| `.enableRules(rules)`            | Run only these rules (default: all)                                    |
+| `.disableRules(rules)`           | Exclude these rules                                                    |
+| `.settings({ topHeadingLevel })` | Highest heading level the document may start at (default `1`)          |
+| `.analyze()`                     | `Promise<AnalysisResult>` — inject, run, and return grouped violations |
 
 ## How it works
 

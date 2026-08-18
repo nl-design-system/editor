@@ -51,15 +51,15 @@ test('scopes analysis to an included selector', async ({ page }) => {
   expect(scoped.violations).toEqual([]);
 });
 
-test('honours withRules / withoutRules', async ({ page }) => {
+test('honours enableRules / disableRules', async ({ page }) => {
   await page.setContent(INACCESSIBLE);
 
-  const onlyImages = await new ClippyBuilder({ page }).withRules(['image-must-have-alt-text']).analyze();
+  const onlyImages = await new ClippyBuilder({ page }).enableRules(['image-must-have-alt-text']).analyze();
   const ids = onlyImages.violations.map((violation) => violation.id);
 
   expect(ids).toEqual(['image-must-have-alt-text']);
 
-  const withoutImages = await new ClippyBuilder({ page }).withoutRules(['image-must-have-alt-text']).analyze();
+  const withoutImages = await new ClippyBuilder({ page }).disableRules(['image-must-have-alt-text']).analyze();
   expect(withoutImages.violations.map((violation) => violation.id)).not.toContain('image-must-have-alt-text');
 });
 
