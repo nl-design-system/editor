@@ -20,6 +20,8 @@ services:
       - typo3_config:/var/www/html/config
       - typo3_fileadmin:/var/www/html/public/fileadmin
       - ./packages:/var/www/html/packages
+      # Typo3/composer does not recursively go through the folders, so the generated dist/ is the package root.
+      - ./packages/clippy/dist:/var/www/html/packages/clippy
     depends_on:
       postgres:
         condition: service_healthy

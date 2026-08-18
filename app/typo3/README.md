@@ -55,9 +55,20 @@ Edits under `Resources/Public/` are reflected immediately on page reload. Change
 
 ### Available extensions
 
-| Extension | Description                                                      |
-| --------- | ---------------------------------------------------------------- |
-| `example` | Logs "Hello World" to the browser console on every backend page. |
+| Extension | Description                                                              |
+| --------- | ------------------------------------------------------------------------ |
+| `example` | Logs "Hello World" to the browser console on every backend page.         |
+| `clippy`  | Accessibility feedback and the design-system content classes in the RTE. |
+
+`clippy` is not a source folder: it is generated into `./packages/clippy/dist/` by `packages/typo3-ckeditor-plugin`, and that `dist/` is the extension root. Build it before the first `docker compose up --build`:
+
+### Editing the content classes
+
+The classes `clippy` adds to the editor's output ship as defaults in the extension's RTE preset. To override them per site in the backend, add the `Clippy` site set to the site once:
+
+_Sites → Setup →_ edit the site _→ Sets →_ add **Clippy**.
+
+_Sites → Setup →_ the site's **Settings** then lists every class under _Content classes_, and the values are stored in `config/sites/<site>/settings.yaml`. A field left empty outputs that element without a class. Without the set nothing changes: the defaults from the preset apply.
 
 ## Clearing the cache
 

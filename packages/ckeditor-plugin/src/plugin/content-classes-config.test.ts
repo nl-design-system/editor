@@ -13,10 +13,28 @@ describe('CONTENT_CLASS_FIELDS', () => {
     expect(new Set(keys).size).toBe(keys.length);
   });
 
-  it('names at least one tag and a label per field', () => {
-    for (const { key, label, tags } of CONTENT_CLASS_FIELDS) {
+  it('names at least one tag, a label and a description per field', () => {
+    for (const { description, key, label, tags } of CONTENT_CLASS_FIELDS) {
       expect(tags.length, key).toBeGreaterThan(0);
       expect(label, key).not.toBe('');
+      expect(description, key).not.toBe('');
+    }
+  });
+
+  // Drupal renders a description as markup and TYPO3 renders it as markdown, so the one shared
+  // string has to be plain text to survive both.
+  it('keeps every description free of markup', () => {
+    for (const { description, key } of CONTENT_CLASS_FIELDS) {
+      expect(description, key).not.toMatch(/[<>`]/u);
+    }
+  });
+
+  // The token appears verbatim in the heading default, so its description has to explain it.
+  it('explains the level token wherever a default contains it', () => {
+    for (const { defaultValue, description, key } of CONTENT_CLASS_FIELDS) {
+      if (defaultValue.includes(HEADING_LEVEL_TOKEN)) {
+        expect(description, key).toContain(HEADING_LEVEL_TOKEN);
+      }
     }
   });
 

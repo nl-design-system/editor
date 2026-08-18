@@ -616,6 +616,31 @@ importers:
         specifier: 5.1.0
         version: 5.1.0(esbuild@0.28.2)(rolldown@1.2.6)(supports-color@10.2.2)(typescript@6.0.3)(vite@8.2.2(@types/node@22.20.1)(esbuild@0.28.2)(yaml@2.9.0))
 
+  packages/typo3-ckeditor-plugin:
+    dependencies:
+      '@nl-design-system-community/ckeditor-plugin':
+        specifier: workspace:*
+        version: link:../ckeditor-plugin
+    devDependencies:
+      '@nl-design-system/tsconfig':
+        specifier: 1.0.5
+        version: 1.0.5(typescript@6.0.3)
+      '@types/node':
+        specifier: 22.20.1
+        version: 22.20.1
+      ckeditor5:
+        specifier: 48.4.0
+        version: 48.4.0(supports-color@10.2.2)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: 8.2.1
+        version: 8.2.1(@types/node@22.20.1)(esbuild@0.28.2)(yaml@2.9.0)
+      yaml:
+        specifier: 2.9.0
+        version: 2.9.0
+
   proprietary/assets: {}
 
   proprietary/design-tokens:
