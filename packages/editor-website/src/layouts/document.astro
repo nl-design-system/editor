@@ -22,7 +22,8 @@ const locale = (Astro.currentLocale ?? 'nl') as Locale;
       (function () {
         try {
           var stored = localStorage.getItem('ma-color-scheme');
-          var dark = stored === 'dark' || (stored === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var dark =
+            stored === 'dark' || (stored === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
           document.documentElement.classList.toggle('ma-theme--color-scheme-dark', dark);
         } catch (error) {
           /* localStorage/matchMedia unavailable — fall back to the default light theme. */
