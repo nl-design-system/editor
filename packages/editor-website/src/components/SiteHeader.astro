@@ -51,7 +51,7 @@ const localeRoot = locale === 'en' ? '/en' : '/';
     <button
       type="button"
       id="ma-color-scheme-toggle"
-      class="nl-button nl-button--secondary nl-button--icon-only"
+      class="nl-button nl-button--secondary nl-button--icon-only ma-theme-toggle"
       aria-pressed="false"
     >
       <span
@@ -165,12 +165,26 @@ const localeRoot = locale === 'en' ? '/en' : '/';
     padding-inline: var(--basis-space-inline-xl);
   }
 
-  /* The outlined button sits on the accent header, so inherit its inverse
-     colour to keep the outline and icon visible against the dark background. */
-  #ma-color-scheme-toggle {
-    background-color: transparent;
-    border-color: currentColor;
-    color: inherit;
+  /* The outlined button sits on the accent header. Override the nl-button
+     colour tokens (defined on the ancestor .ma-theme, so an element-level value
+     wins) to inherit the header's inverse colour, keeping the outline and icon
+     visible against the dark background in every state. */
+  .ma-theme-toggle {
+    --nl-button-secondary-background-color: transparent;
+    --nl-button-secondary-color: currentColor;
+    --nl-button-secondary-border-color: currentColor;
+    --nl-button-secondary-hover-background-color: var(--basis-color-accent-1-inverse-bg-hover);
+    --nl-button-secondary-hover-color: currentColor;
+    --nl-button-secondary-hover-border-color: currentColor;
+    --nl-button-secondary-active-background-color: var(--basis-color-accent-1-inverse-bg-active);
+    --nl-button-secondary-active-color: currentColor;
+    --nl-button-secondary-active-border-color: currentColor;
+    --nl-button-secondary-pressed-background-color: var(--basis-color-accent-1-inverse-bg-active);
+    --nl-button-secondary-pressed-color: currentColor;
+    --nl-button-secondary-pressed-border-color: currentColor;
+    --nl-button-secondary-pressed-hover-background-color: var(--basis-color-accent-1-inverse-bg-hover);
+    --nl-button-secondary-pressed-hover-color: currentColor;
+    --nl-button-secondary-pressed-hover-border-color: currentColor;
   }
 
   /* Show the outline moon in light mode and the filled moon in dark mode.
@@ -186,18 +200,6 @@ const localeRoot = locale === 'en' ? '/en' : '/';
 
   :global(.ma-theme--color-scheme-dark) .ma-theme-toggle__icon--filled {
     display: inline-flex;
-  }
-
-  #ma-color-scheme-toggle:hover {
-    background-color: var(--basis-color-accent-1-inverse-bg-hover);
-    border-color: currentColor;
-    color: inherit;
-  }
-
-  #ma-color-scheme-toggle.nl-button--pressed {
-    background-color: var(--basis-color-accent-1-inverse-bg-active);
-    border-color: currentColor;
-    color: inherit;
   }
 
   .ma-site-header__lang-nav {

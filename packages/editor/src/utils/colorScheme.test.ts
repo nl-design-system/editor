@@ -11,8 +11,11 @@ import {
 
 /** A `MediaQueryList` stand-in whose match can be flipped, firing a real `change` event. */
 class MockMediaQueryList extends EventTarget {
-  constructor(public matches: boolean) {
+  matches: boolean;
+
+  constructor(matches: boolean) {
     super();
+    this.matches = matches;
   }
 
   setMatches(matches: boolean): void {
