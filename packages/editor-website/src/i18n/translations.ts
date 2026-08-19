@@ -44,6 +44,7 @@ const translations = {
     'site.logo.label': 'NL Design System Editor – home',
 
     'site.title': 'Rich-text Editor - NL Design System',
+    'theme.toggle': 'Dark mode',
   },
   nl: {
     'alt-text-wizard.title': 'Alt-tekst wizard - Rich-text Editor - NL Design System',
@@ -90,6 +91,7 @@ const translations = {
     'react.title': 'React integratie - Rich-text Editor - NL Design System',
     'site.logo.label': 'NL Design System Editor – home',
     'site.title': 'Rich-text Editor - NL Design System',
+    'theme.toggle': 'Donkere modus',
   },
 } as const;
 

@@ -17,12 +17,25 @@ const locale = (Astro.currentLocale ?? 'nl') as Locale;
     <title>{title}</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    {/* Apply the stored/preferred color scheme before first paint to avoid a flash of the wrong theme. */}
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('ma-color-scheme');
+          var dark = stored === 'dark' || (stored === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.classList.toggle('ma-theme--color-scheme-dark', dark);
+        } catch (error) {
+          /* localStorage/matchMedia unavailable — fall back to the default light theme. */
+        }
+      })();
+    </script>
     <script>
       import '@fontsource/fira-sans/400.css';
       import '@fontsource/fira-sans/700.css';
       import '@fontsource/source-sans-pro/400.css';
       import '@fontsource/source-sans-pro/700.css';
       import '@nl-design-system-community/ma-design-tokens/dist/theme.css';
+      import '@nl-design-system-community/ma-design-tokens/dist/color-scheme-dark/theme.css';
       import '@utrecht/design-tokens/dist/theme.css';
       import '@utrecht/component-library-css/dist/index.css';
       import '@nl-design-system-community/editor';
