@@ -99,7 +99,9 @@ const localeRoot = locale === 'en' ? '/en' : '/';
 
 <style>
   .ma-site-header {
-    background-color: var(--basis-color-accent-1-color-default);
+    /* Use the inverse-bg/inverse-color pair so the bar stays a dark accent surface
+       with legible light text in both the light and dark color schemes. */
+    background-color: var(--basis-color-accent-1-inverse-bg-default);
     color: var(--basis-color-accent-1-inverse-color-document);
     align-items: stretch;
     justify-content: space-between;
@@ -144,11 +146,11 @@ const localeRoot = locale === 'en' ? '/en' : '/';
   }
 
   .ma-site-header__nav-link:hover {
-    background-color: var(--basis-color-accent-1-color-hover);
+    background-color: var(--basis-color-accent-1-inverse-bg-hover);
   }
 
   .ma-site-header__nav-link--active {
-    background-color: var(--basis-color-accent-1-color-active);
+    background-color: var(--basis-color-accent-1-inverse-bg-active);
     border-block-end: var(--basis-border-width-md) solid var(--basis-color-default-inverse-border-default);
   }
 
@@ -169,13 +171,13 @@ const localeRoot = locale === 'en' ? '/en' : '/';
   }
 
   #ma-color-scheme-toggle:hover {
-    background-color: var(--basis-color-accent-1-color-hover);
+    background-color: var(--basis-color-accent-1-inverse-bg-hover);
     border-color: currentColor;
     color: inherit;
   }
 
   #ma-color-scheme-toggle.nl-button--pressed {
-    background-color: var(--basis-color-accent-1-color-active);
+    background-color: var(--basis-color-accent-1-inverse-bg-active);
     border-color: currentColor;
     color: inherit;
   }
