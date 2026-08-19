@@ -1,4 +1,5 @@
 ---
+import iconMoon from '@tabler/icons/outline/moon.svg?raw';
 import SiteLogo from './SiteLogo.astro';
 import type { Locale } from '../i18n/translations.ts';
 import { useTranslations } from '../i18n/translations.ts';
@@ -46,14 +47,14 @@ const localeRoot = locale === 'en' ? '/en' : '/';
     </ul>
   </nav>
   <div class="ma-site-header__actions">
-    <button type="button" id="ma-color-scheme-toggle" class="ma-site-header__theme-toggle" aria-pressed="false">
-      <svg class="ma-site-header__theme-toggle-icon" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20">
-        <path
-          fill="currentColor"
-          d="M12.74 2.03a.75.75 0 0 1 .2.78 7.5 7.5 0 0 0 9.47 9.47.75.75 0 0 1 .95.98A9.5 9.5 0 1 1 11.76 1.6a.75.75 0 0 1 .98.43Z"
-        ></path>
-      </svg>
-      <span class="ma-site-header__theme-toggle-label">{t('theme.toggle')}</span>
+    <button
+      type="button"
+      id="ma-color-scheme-toggle"
+      class="nl-button nl-button--subtle nl-button--icon-only"
+      aria-pressed="false"
+    >
+      <span class="nl-button__icon-start" aria-hidden="true" set:html={iconMoon} />
+      <span class="nl-button__label">{t('theme.toggle')}</span>
     </button>
     <nav class="ma-site-header__lang-nav" aria-label={t('nav.language.label')}>
       <a class="ma-site-header__lang-link" href={t('nav.href.language')} hreflang={locale === 'en' ? 'nl' : 'en'}>
@@ -72,23 +73,26 @@ const localeRoot = locale === 'en' ? '/en' : '/';
   const media = window.matchMedia('(prefers-color-scheme: dark)');
 
   const isDark = () => root.classList.contains(DARK_CLASS);
-  const syncPressed = () => toggle?.setAttribute('aria-pressed', String(isDark()));
+  const syncState = () => {
+    toggle?.setAttribute('aria-pressed', String(isDark()));
+    toggle?.classList.toggle('nl-button--pressed', isDark());
+  };
 
   // The pre-paint inline script has already set the class; reflect it on the button.
-  syncPressed();
+  syncState();
 
   toggle?.addEventListener('click', () => {
     const next = !isDark();
     root.classList.toggle(DARK_CLASS, next);
     localStorage.setItem(STORAGE_KEY, next ? 'dark' : 'light');
-    syncPressed();
+    syncState();
   });
 
   // Follow the system preference only while the user hasn't made an explicit choice.
   media.addEventListener('change', (event) => {
     if (localStorage.getItem(STORAGE_KEY) === null) {
       root.classList.toggle(DARK_CLASS, event.matches);
-      syncPressed();
+      syncState();
     }
   });
 </script>
@@ -154,37 +158,6 @@ const localeRoot = locale === 'en' ? '/en' : '/';
     align-items: center;
     gap: var(--basis-space-inline-lg);
     padding-inline: var(--basis-space-inline-xl);
-  }
-
-  .ma-site-header__theme-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--basis-space-inline-sm);
-    box-sizing: border-box;
-    background-color: transparent;
-    border: var(--basis-border-width-md) solid currentColor;
-    border-radius: var(--basis-border-radius-md);
-    color: inherit;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: var(--basis-text-font-size-md);
-    font-weight: var(--basis-text-font-weight-bold);
-    padding-block: var(--basis-space-block-sm);
-    padding-inline: var(--basis-space-inline-md);
-  }
-
-  .ma-site-header__theme-toggle:hover {
-    background-color: var(--basis-color-accent-1-color-hover);
-  }
-
-  .ma-site-header__theme-toggle[aria-pressed='true'] {
-    background-color: var(--basis-color-accent-1-color-active);
-  }
-
-  .ma-site-header__theme-toggle-icon {
-    flex-shrink: 0;
-    inline-size: 1.25em;
-    block-size: 1.25em;
   }
 
   .ma-site-header__lang-nav {
