@@ -12,11 +12,16 @@ const syncColorScheme = (root: HTMLElement, matches: boolean): void => {
  * user's preferred color scheme.
  *
  * @param root - Element to toggle the class on (defaults to the `.ma-theme` element).
- * @returns The observed `MediaQueryList`.
+ * @returns The observed `MediaQueryList`, or `undefined` in environments without
+ *   `matchMedia` (e.g. server-side rendering or jsdom).
  */
 export const applyColorScheme = (
   root: HTMLElement = document.querySelector<HTMLElement>(`.${THEME_CLASS}`) ?? document.documentElement,
-): MediaQueryList => {
+): MediaQueryList | undefined => {
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+    return undefined;
+  }
+
   const query = window.matchMedia(DARK_COLOR_SCHEME_QUERY);
 
   syncColorScheme(root, query.matches);

@@ -11,6 +11,7 @@ const packageRequire = createRequire(import.meta.url);
 const editorRequire = createRequire(resolve(import.meta.dirname, '../editor/package.json'));
 const TOKENS_CSS = [
   '@nl-design-system-community/ma-design-tokens/dist/theme.css',
+  '@nl-design-system-community/ma-design-tokens/dist/color-scheme-dark/theme.css',
   '@utrecht/design-tokens/dist/theme.css',
   '@nl-design-system-candidate/button-css/button.css',
 ];
