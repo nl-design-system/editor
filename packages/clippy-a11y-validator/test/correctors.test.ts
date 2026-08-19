@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { validatorEvents } from '@/constants';
 import {
   correctConvertToList,
   correctDefinitionListMissingTerm,
@@ -83,15 +84,16 @@ describe('content correctors', () => {
     expect(root.querySelector('#c')).not.toBeNull();
   });
 
-  it('correctImageMissingAltText requests alt text with the current src', () => {
+  it('correctImageMissingAltText dispatches an alt-text request with the current src', () => {
     const root = mount('<p>x</p><img src="cat.png" alt="">');
     const img = root.querySelector('img') as HTMLImageElement;
-    const onRequestAltText = vi.fn();
-    correctImageMissingAltText(img, rangeOf(img), onRequestAltText)();
-    expect(onRequestAltText).toHaveBeenCalledOnce();
-    const request = onRequestAltText.mock.calls[0][0];
-    expect(request.replace).toBe(true);
-    expect(request.files[0].url).toContain('cat.png');
+    const listener = vi.fn();
+    globalThis.addEventListener(validatorEvents.OPEN_IMAGE_DIALOG, listener, { once: true });
+    correctImageMissingAltText(img, rangeOf(img))();
+    expect(listener).toHaveBeenCalledOnce();
+    const { detail } = listener.mock.calls[0][0];
+    expect(detail.replace).toBe(true);
+    expect(detail.files[0].url).toContain('cat.png');
   });
 
   it('correctGenericLinkText selects the link range without throwing', () => {

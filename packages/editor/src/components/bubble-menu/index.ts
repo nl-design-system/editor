@@ -10,7 +10,7 @@ import { state } from 'lit/decorators.js';
 import { createRef, type Ref, ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { editor } from '@/decorators/TipTapDecorator';
-import { CustomEvents } from '@/events';
+import { CustomEvents, GlobalEvents } from '@/events';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import bubbleMenuStyles from './styles';
@@ -53,7 +53,7 @@ export class ImageBubbleMenu extends LitElement {
     if (!selection) return;
     const { alt, src } = selection.node.attrs;
     globalThis.dispatchEvent(
-      new CustomEvent(CustomEvents.OPEN_IMAGE_DIALOG, {
+      new CustomEvent(GlobalEvents.OPEN_IMAGE_DIALOG, {
         bubbles: true,
         composed: true,
         detail: {

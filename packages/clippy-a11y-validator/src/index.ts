@@ -13,7 +13,13 @@ export {
   documentMustHaveTopLevelHeadingOne,
 } from './validators/document';
 
-export { blockValidations, documentValidations, inlineValidations, validationSeverity } from './constants';
+export {
+  blockValidations,
+  documentValidations,
+  inlineValidations,
+  validationSeverity,
+  validatorEvents,
+} from './constants';
 export { isEmptyOrWhitespace, getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from './helpers';
 export { validationMessages } from './messages';
 

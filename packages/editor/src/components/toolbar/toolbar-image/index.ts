@@ -20,7 +20,7 @@ import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ImageUpload } from '@/types/image';
 import { editor } from '@/decorators/TipTapDecorator';
-import { CustomEvents } from '@/events';
+import { GlobalEvents } from '@/events';
 import { imageDialogStyles } from './styles';
 
 const tag = 'clippy-toolbar-image';
@@ -236,11 +236,11 @@ export class ToolbarImageUpload extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    globalThis.addEventListener(CustomEvents.OPEN_IMAGE_DIALOG, this.#onOpenImageDialog);
+    globalThis.addEventListener(GlobalEvents.OPEN_IMAGE_DIALOG, this.#onOpenImageDialog);
   }
 
   override disconnectedCallback() {
-    globalThis.removeEventListener(CustomEvents.OPEN_IMAGE_DIALOG, this.#onOpenImageDialog);
+    globalThis.removeEventListener(GlobalEvents.OPEN_IMAGE_DIALOG, this.#onOpenImageDialog);
     super.disconnectedCallback();
   }
 

@@ -59,14 +59,60 @@ Rule ids are accepted in `kebab-case` or `SCREAMING_SNAKE_CASE`.
 
 The DOM fixes that back each rule are available separately, so a host can offer
 a one-click "fix this" alongside detection. They mutate plain DOM and take no
-editor or event-bus dependency — host-specific bits (a localized placeholder,
-how an "add alt text" request is surfaced) are passed in:
+editor dependency. The one interactive fix — "add alt text" — surfaces its
+request as a generic `clippy:open-image-dialog` event on `globalThis`, so any
+host can listen without the corrector holding a reference to it:
+
+```ts
+import { buildCorrection } from '@nl-design-system-community/clippy-a11y-validator/correctors';
+import { validatorEvents } from '@nl-design-system-community/clippy-a11y-validator';
+
+// Host opens its own alt-text UI when a fix asks for one.
+globalThis.addEventListener(validatorEvents.OPEN_IMAGE_DIALOG, (event) => openAltTextDialog(event.detail));
+
+// `buildCorrection` returns the deferred fix for a detection result, or undefined.
+const correct = buildCorrection(result);
+correct?.();
+```
+
+Individual `correct*` functions can also be called directly:
 
 ```ts
 import { correctEmptyHeading } from '@nl-design-system-community/clippy-a11y-validator/correctors';
 
 correctEmptyHeading(document.querySelector('h1')!)(); // removes the empty heading
 ```
+
+> **Note:** the definition-term placeholder is currently hard-coded (`"definition term"`) and not localized — see the `TODO` in `src/correctors/functions.ts`.
+
+### Custom rules
+
+The correction registry is extensible. `extendCorrections` merges your own
+`rule → fix` entries onto the built-in `baseCorrections` map, and
+`buildCorrection` resolves a result's fix from whichever map you pass it:
+
+```ts
+import {
+  buildCorrection,
+  extendCorrections,
+  type Correction,
+} from '@nl-design-system-community/clippy-a11y-validator/correctors';
+
+const correctLinkNewTabWarning: Correction = (element) => () => {
+  const name = (element.getAttribute('aria-label') ?? element.textContent ?? '').trim();
+  element.setAttribute('aria-label', `${name} (opens in a new tab)`.trim());
+};
+
+const corrections = extendCorrections([['LINK_NEW_TAB_SHOULD_WARN', correctLinkNewTabWarning]]);
+
+buildCorrection(result, corrections)?.(); // custom keys win over the built-ins
+```
+
+Detection stays yours to drive — the built-in `runValidation` only walks the
+shipped validator maps, so run a custom `ContentValidator` yourself and tag each
+result with your rule id before building its fix. A full, runnable end-to-end
+example (detector + fix + wiring) lives in
+[`test/examples/customValidation.ts`](./test/examples/customValidation.ts).
 
 ## Playwright integration (`/playwright`)
 

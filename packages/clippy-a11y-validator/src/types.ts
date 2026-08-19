@@ -5,7 +5,7 @@ export type ValidationScope = 'block' | 'inline';
 /** A deferred DOM fix for a detected issue. */
 export type CorrectValidationFunction = () => void;
 
-/** What `correctImageMissingAltText` passes to the host's alt-text UI. */
+/** Detail of the `clippy:open-image-dialog` event the alt-text correction dispatches. */
 export type ImageAltTextRequest = {
   files: { name: string; type: string; url: string }[];
   replace: boolean;

@@ -1,6 +1,6 @@
 import FileHandler from '@tiptap/extension-file-handler';
 import type { ImageUpload } from '@/types/image';
-import { CustomEvents } from '@/events';
+import { GlobalEvents } from '@/events';
 
 export const CustomFileHandler = FileHandler.configure({
   allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
@@ -15,7 +15,7 @@ export const CustomFileHandler = FileHandler.configure({
       });
     }
     globalThis.dispatchEvent(
-      new CustomEvent(CustomEvents.OPEN_IMAGE_DIALOG, {
+      new CustomEvent(GlobalEvents.OPEN_IMAGE_DIALOG, {
         bubbles: true,
         composed: true,
         detail: { files: filesToUpload, position },
@@ -37,7 +37,7 @@ export const CustomFileHandler = FileHandler.configure({
     }
 
     globalThis.dispatchEvent(
-      new CustomEvent(CustomEvents.OPEN_IMAGE_DIALOG, {
+      new CustomEvent(GlobalEvents.OPEN_IMAGE_DIALOG, {
         bubbles: true,
         composed: true,
         detail: { files: filesToUpload, position: editor.state.selection.anchor },

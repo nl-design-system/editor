@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { blockValidations } from '@/constants';
+import { blockValidations, validatorEvents } from '@/constants';
 import { baseCorrections, buildCorrection, extendCorrections, type Correction } from '@/correctors';
 
 const el = (html: string): Element => {
@@ -22,24 +22,21 @@ describe('correction registry', () => {
     expect(buildCorrection({ element: el('<p></p>') })).toBeUndefined();
   });
 
-  it('passes the host definition-term label through', () => {
+  it('fills a missing term with the hard-coded default label', () => {
     const list = el('<dl><dt></dt><dd>x</dd></dl>');
-    buildCorrection(
-      { element: list, validatorKey: blockValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM },
-      {
-        definitionTermLabel: 'definitieterm',
-      },
-    )!();
-    expect(list.querySelector('dt')!.textContent).toBe('definitieterm');
+    buildCorrection({ element: list, validatorKey: blockValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM })!();
+    expect(list.querySelector('dt')!.textContent?.trim().length).toBeGreaterThan(0);
   });
 
-  it('only offers the image fix when the host can collect alt text', () => {
+  it('surfaces the image fix through a global event', () => {
     const img = el('<img src="x.png" alt="">');
-    expect(buildCorrection({ element: img, validatorKey: blockValidations.IMAGE_MUST_HAVE_ALT_TEXT })).toBeUndefined();
+    const correct = buildCorrection({ element: img, validatorKey: blockValidations.IMAGE_MUST_HAVE_ALT_TEXT });
+    expect(correct).toBeTypeOf('function');
 
-    const onRequestAltText = vi.fn();
-    buildCorrection({ element: img, validatorKey: blockValidations.IMAGE_MUST_HAVE_ALT_TEXT }, { onRequestAltText })!();
-    expect(onRequestAltText).toHaveBeenCalledOnce();
+    const listener = vi.fn();
+    globalThis.addEventListener(validatorEvents.OPEN_IMAGE_DIALOG, listener, { once: true });
+    correct!();
+    expect(listener).toHaveBeenCalledOnce();
   });
 
   it('extends the base set with a custom correction', () => {
@@ -48,7 +45,7 @@ describe('correction registry', () => {
     const corrections = extendCorrections([['CUSTOM_RULE', custom]]);
 
     expect(corrections.size).toBe(baseCorrections.size + 1);
-    buildCorrection({ element: el('<p></p>'), validatorKey: 'CUSTOM_RULE' }, {}, corrections)!();
+    buildCorrection({ element: el('<p></p>'), validatorKey: 'CUSTOM_RULE' }, corrections)!();
     expect(marker).toEqual(['fixed']);
   });
 });

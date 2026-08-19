@@ -1,23 +1,16 @@
-import { msg } from '@lit/localize';
-import { runValidation as detect, type ImageAltTextRequest } from '@nl-design-system-community/clippy-a11y-validator';
-import { buildCorrection, type CorrectionHost } from '@nl-design-system-community/clippy-a11y-validator/correctors';
+import { runValidation as detect } from '@nl-design-system-community/clippy-a11y-validator';
+import { buildCorrection } from '@nl-design-system-community/clippy-a11y-validator/correctors';
 import type { EditorSettings } from '@/types/settings';
 import type { ValidationResult } from '@/types/validation';
-import { CustomEvents } from '@/events';
 import { debounce } from '@/utils/debounce';
 import { getElementRange } from '@/validators/helpers';
 
 const VALIDATION_TIMEOUT = 500;
 
-// Hands an image off to the editor's alt-text dialog — the editor's side of the
-// validator's `correctImageMissingAltText`.
-const requestAltText = (request: ImageAltTextRequest): void => {
-  globalThis.dispatchEvent(new CustomEvent(CustomEvents.OPEN_IMAGE_DIALOG, { detail: request }));
-};
-
 // Detection and corrections both live in the validator package; here we adapt the
-// results into the editor's `Range`-keyed shape and supply the editor-specific
-// hooks the corrections need (the localized label, the alt-text dialog).
+// results into the editor's `Range`-keyed shape. The alt-text correction surfaces
+// its request through the global `clippy:open-image-dialog` event (see the editor's
+// `toolbar-image`, which listens for `GlobalEvents.OPEN_IMAGE_DIALOG`).
 export const runValidation = (
   dom: HTMLElement,
   settings: EditorSettings,
@@ -25,17 +18,11 @@ export const runValidation = (
 ): void => {
   const resultMap = new Map<Range, ValidationResult>();
 
-  // Built once per run so `msg()` reflects the active locale without re-resolving per result.
-  const correctionHost: CorrectionHost = {
-    definitionTermLabel: msg('definition term'),
-    onRequestAltText: requestAltText,
-  };
-
   for (const result of detect(dom, settings)) {
     const range = getElementRange(result.element);
     if (!range) continue;
     resultMap.set(range, {
-      correct: buildCorrection(result, correctionHost),
+      correct: buildCorrection(result),
       range,
       scope: result.scope,
       severity: result.severity,

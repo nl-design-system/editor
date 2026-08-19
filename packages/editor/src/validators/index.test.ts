@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { EditorSettings } from '@/types/settings';
 import type { ValidationResult } from '@/types/validation';
 import { blockValidations, documentValidations, inlineValidations } from '@/constants';
-import { CustomEvents } from '@/events';
+import { GlobalEvents } from '@/events';
 
 type ResultMap = Map<Range, ValidationResult>;
 
@@ -127,7 +127,7 @@ describe('correct actions mutate the document', () => {
     const { map } = await validate('<h1>Title</h1><p>Text</p><img src="cat.png">');
     const entry = byKey(map, blockValidations.IMAGE_MUST_HAVE_ALT_TEXT)!;
     const listener = vi.fn();
-    globalThis.addEventListener(CustomEvents.OPEN_IMAGE_DIALOG, listener, { once: true });
+    globalThis.addEventListener(GlobalEvents.OPEN_IMAGE_DIALOG, listener, { once: true });
     entry.correct!();
     expect(listener).toHaveBeenCalledOnce();
   });

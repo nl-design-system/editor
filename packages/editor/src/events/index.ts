@@ -9,11 +9,19 @@ export const CustomEvents = {
   FOCUS_VALIDATION_ITEM_IN_GUTTER: 'FOCUS_VALIDATION_ITEM_IN_GUTTER',
   FOCUS_VALIDATION_ITEM_IN_LIST: 'FOCUS_VALIDATION_ITEM_IN_LIST',
   OPEN_DOCUMENT_OVERVIEW: 'OPEN_DOCUMENT_OVERVIEW',
-  OPEN_IMAGE_DIALOG: 'OPEN_IMAGE_DIALOG',
   OPEN_VALIDATION_GROUP: 'OPEN_VALIDATION_GROUP',
   OPEN_VALIDATIONS_DIALOG: 'OPEN_VALIDATIONS_DIALOG',
   TEXT_FORMAT_CHANGE: 'TEXT_FORMAT_CHANGE',
   VALIDATION_ERROR: 'VALIDATION_ERROR',
+} as const;
+
+/**
+ * Namespaced events that cross package boundaries — dispatched on `globalThis`
+ * by the clippy-a11y-validator (its alt-text correction fires OPEN_IMAGE_DIALOG),
+ * so the value must stay in sync with the validator's `validatorEvents`.
+ */
+export const GlobalEvents = {
+  OPEN_IMAGE_DIALOG: 'clippy:open-image-dialog',
 } as const;
 
 export type DocumentOverviewMode = 'heading-structure' | 'language-changes' | 'link-list' | 'validations';

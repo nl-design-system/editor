@@ -29,3 +29,7 @@ export const validationSeverity = {
   INFO: 'info',
   WARNING: 'warning',
 } as const;
+
+export const validatorEvents = {
+  OPEN_IMAGE_DIALOG: 'clippy:open-image-dialog',
+} as const;

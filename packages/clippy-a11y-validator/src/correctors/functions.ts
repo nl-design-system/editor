@@ -1,9 +1,11 @@
-import type { CorrectValidationFunction, ImageAltTextRequest } from '../types';
-import { getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from '../helpers';
+import type { CorrectValidationFunction, ImageAltTextRequest } from '@/types';
+import { validatorEvents } from '@/constants';
+import { getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from '@/helpers';
 
-// Each `correct*` returns a deferred DOM mutation. Plain DOM only — the localized
-// definition-term label and the alt-text request handler are injected by the caller.
+// Each `correct*` returns a deferred DOM mutation. Plain DOM only — the alt-text
+// correction surfaces its request through a global event rather than a host callback.
 
+// TODO: this placeholder is not localized
 const DEFAULT_DEFINITION_TERM_LABEL = 'definition term';
 
 // ── DOM helpers ───────────────────────────────────────────────────────────────
@@ -94,16 +96,14 @@ const convertParagraphsToList = (startParagraph: Element, isOrdered: boolean): v
 
 // ── Content correctors ────────────────────────────────────────────────────────
 
-// Select the image, then hand it to the host's alt-text UI (prefilled src).
+// Select the image, then dispatch a generic global event so a host can open its
+// alt-text UI (prefilled src). No direct host reference needed.
 export const correctImageMissingAltText =
-  (
-    node: HTMLImageElement,
-    range: Range | undefined,
-    onRequestAltText: (request: ImageAltTextRequest) => void,
-  ): CorrectValidationFunction =>
+  (node: HTMLImageElement, range: Range | undefined): CorrectValidationFunction =>
   () => {
     selectRange(range);
-    onRequestAltText({ files: [{ name: node.alt, type: 'image/*', url: node.src }], replace: true });
+    const request: ImageAltTextRequest = { files: [{ name: node.alt, type: 'image/*', url: node.src }], replace: true };
+    globalThis.dispatchEvent(new CustomEvent(validatorEvents.OPEN_IMAGE_DIALOG, { detail: request }));
   };
 
 // Remove an empty node — but select table cells/captions instead of removing
