@@ -75,33 +75,28 @@ const localeRoot = locale === 'en' ? '/en' : '/';
 </header>
 
 <script>
-  const STORAGE_KEY = 'ma-color-scheme';
-  const DARK_CLASS = 'ma-theme--color-scheme-dark';
+  import { hasStoredColorScheme, isDarkColorScheme, setDarkColorScheme } from '../utils/theme';
 
-  const root = document.documentElement;
   const toggle = document.getElementById('ma-color-scheme-toggle');
   const media = window.matchMedia('(prefers-color-scheme: dark)');
 
-  const isDark = () => root.classList.contains(DARK_CLASS);
   const syncState = () => {
-    toggle?.setAttribute('aria-pressed', String(isDark()));
-    toggle?.classList.toggle('nl-button--pressed', isDark());
+    toggle?.setAttribute('aria-pressed', String(isDarkColorScheme()));
+    toggle?.classList.toggle('nl-button--pressed', isDarkColorScheme());
   };
 
   // The pre-paint inline script has already set the class; reflect it on the button.
   syncState();
 
   toggle?.addEventListener('click', () => {
-    const next = !isDark();
-    root.classList.toggle(DARK_CLASS, next);
-    localStorage.setItem(STORAGE_KEY, next ? 'dark' : 'light');
+    setDarkColorScheme(!isDarkColorScheme());
     syncState();
   });
 
   // Follow the system preference only while the user hasn't made an explicit choice.
   media.addEventListener('change', (event) => {
-    if (localStorage.getItem(STORAGE_KEY) === null) {
-      root.classList.toggle(DARK_CLASS, event.matches);
+    if (!hasStoredColorScheme()) {
+      setDarkColorScheme(event.matches, false);
       syncState();
     }
   });
