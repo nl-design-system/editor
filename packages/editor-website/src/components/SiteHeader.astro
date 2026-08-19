@@ -1,5 +1,6 @@
 ---
-import iconMoon from '@tabler/icons/outline/moon.svg?raw';
+import iconMoonOutline from '@tabler/icons/outline/moon.svg?raw';
+import iconMoonFilled from '@tabler/icons/filled/moon.svg?raw';
 import SiteLogo from './SiteLogo.astro';
 import type { Locale } from '../i18n/translations.ts';
 import { useTranslations } from '../i18n/translations.ts';
@@ -53,7 +54,16 @@ const localeRoot = locale === 'en' ? '/en' : '/';
       class="nl-button nl-button--secondary nl-button--icon-only"
       aria-pressed="false"
     >
-      <span class="nl-button__icon-start" aria-hidden="true" set:html={iconMoon} />
+      <span
+        class="nl-button__icon-start ma-theme-toggle__icon ma-theme-toggle__icon--outline"
+        aria-hidden="true"
+        set:html={iconMoonOutline}
+      />
+      <span
+        class="nl-button__icon-start ma-theme-toggle__icon ma-theme-toggle__icon--filled"
+        aria-hidden="true"
+        set:html={iconMoonFilled}
+      />
       <span class="nl-button__label">{t('theme.toggle')}</span>
     </button>
     <nav class="ma-site-header__lang-nav" aria-label={t('nav.language.label')}>
@@ -168,6 +178,21 @@ const localeRoot = locale === 'en' ? '/en' : '/';
     background-color: transparent;
     border-color: currentColor;
     color: inherit;
+  }
+
+  /* Show the outline moon in light mode and the filled moon in dark mode.
+     Keyed off the root scheme class, which the pre-paint script sets, so the
+     correct icon is shown on first paint without a flash. */
+  .ma-theme-toggle__icon--filled {
+    display: none;
+  }
+
+  :global(.ma-theme--color-scheme-dark) .ma-theme-toggle__icon--outline {
+    display: none;
+  }
+
+  :global(.ma-theme--color-scheme-dark) .ma-theme-toggle__icon--filled {
+    display: inline-flex;
   }
 
   #ma-color-scheme-toggle:hover {
