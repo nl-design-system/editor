@@ -4,11 +4,10 @@ export default css`
   :host {
     block-size: 100%;
     inset-block-start: 0;
-    inset-inline-end: 0;
+    inset-inline: 0;
     position: absolute;
-    align-items: flex-end;
-    display: flex;
-    inline-size: 1rem;
+    display: block;
+    pointer-events: none;
     z-index: 1;
   }
 
@@ -21,18 +20,40 @@ export default css`
   .clippy-validations-gutter__indicator {
     block-size: 30px;
     inline-size: 100%;
-    inset-inline-end: 0;
+    inset-inline-start: 0;
     position: absolute;
+
+    &[data-scope='block']::before {
+      content: '';
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      block-size: 100%;
+      inline-size: 100%;
+      pointer-events: none;
+    }
+
+    &[data-scope='block'][data-severity='error']::before {
+      background-color: color-mix(in srgb, var(--basis-color-negative-bg-default), transparent 50%);
+    }
+    &[data-scope='block'][data-severity='warning']::before {
+      background-color: color-mix(in srgb, var(--basis-color-warning-bg-default), transparent 50%);
+    }
+    &[data-scope='block'][data-severity='info']::before {
+      background-color: color-mix(in srgb, var(--basis-color-info-bg-default), transparent 50%);
+    }
   }
   .clippy-validations-gutter__toggle {
     background: none;
     border: none;
     block-size: 100%;
-    inline-size: 100%;
+    inline-size: 1rem;
     inset-block-start: 0;
-    inset-inline-start: 0;
+    inset-inline-end: 0;
     padding: 0;
     position: absolute;
+    cursor: pointer;
+    pointer-events: auto;
     transition: filter 0.5s 0s;
 
     &::before {
@@ -76,12 +97,17 @@ export default css`
       background-color: CanvasText !important;
       color: Canvas !important;
     }
+    .clippy-validations-gutter__indicator[data-scope='block']::before {
+      background-color: transparent !important;
+    }
   }
   .clippy-validation-gutter__tooltip {
     display: none;
     position: absolute;
-    inset-inline-end: 100%;
+    inset-inline-end: 1rem;
     inset-block-start: 0;
+    pointer-events: auto;
+    z-index: 2;
   }
   .clippy-validation-gutter__tooltip--active {
     display: block;

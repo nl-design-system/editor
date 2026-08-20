@@ -1,8 +1,9 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { page } from 'vitest/browser';
 import type { ValidationsMap } from '@/types/validation';
-import { blockValidations, validationInteractionMode } from '@/constants';
+import { blockValidations, inlineValidations, validationInteractionMode } from '@/constants';
 import { CustomEvents, type OpenValidationGroupEvent } from '@/events';
+import { VALIDATION_HIGHLIGHT_NAMES, VALIDATION_HOVER_HIGHLIGHT_NAMES } from '@/utils/highlights';
 import type { Gutter } from './index';
 import './index';
 
@@ -16,6 +17,7 @@ const rangeOver = (element: Element): Range => {
 describe('<clippy-validations-gutter>', () => {
   afterEach(() => {
     document.body.innerHTML = '';
+    CSS.highlights.clear();
   });
 
   it('labels the indicator button via aria-labelledby, without announcing the heading markdown comment', async () => {
@@ -79,5 +81,55 @@ describe('<clippy-validations-gutter>', () => {
     const { detail } = onOpen.mock.calls[0][0] as OpenValidationGroupEvent;
     expect(detail.identifier).toBe('clippy-ckeditor-1');
     expect(detail.ranges).toEqual([range]);
+  });
+
+  it('marks a block-level indicator with its scope and severity so the band can be tinted', async () => {
+    const content = document.createElement('p');
+    content.textContent = 'Deze hele alinea is dikgedrukt.';
+    document.body.append(content);
+
+    const gutter = document.createElement('clippy-validations-gutter') as Gutter;
+    document.body.append(gutter);
+    gutter.validationsMap = new Map([
+      [
+        rangeOver(content),
+        { scope: 'block', severity: 'warning', validatorKey: blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD },
+      ],
+    ]) satisfies ValidationsMap;
+    await gutter.updateComplete;
+
+    const indicator = gutter.shadowRoot?.querySelector('.clippy-validations-gutter__indicator');
+    expect(indicator?.getAttribute('data-scope')).toBe('block');
+    expect(indicator?.getAttribute('data-severity')).toBe('warning');
+  });
+
+  it('highlights the text of inline validations and emphasises the hovered one', async () => {
+    const content = document.createElement('p');
+    content.innerHTML = 'Ga naar <a href="#">lees meer</a>.';
+    document.body.append(content);
+
+    const gutter = document.createElement('clippy-validations-gutter') as Gutter;
+    document.body.append(gutter);
+
+    const link = content.querySelector('a')!;
+    const range = rangeOver(link);
+    gutter.validationsMap = new Map([
+      [range, { scope: 'inline', severity: 'info', validatorKey: inlineValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC }],
+    ]) satisfies ValidationsMap;
+    await gutter.updateComplete;
+
+    const highlight = CSS.highlights.get(VALIDATION_HIGHLIGHT_NAMES.info);
+    expect(highlight && [...highlight]).toEqual([range]);
+
+    const button = gutter.shadowRoot?.querySelector<HTMLButtonElement>('.clippy-validations-gutter__toggle');
+    button?.dispatchEvent(new MouseEvent('mouseenter'));
+    const hover = CSS.highlights.get(VALIDATION_HOVER_HIGHLIGHT_NAMES.info);
+    expect(hover && [...hover]).toEqual([range]);
+
+    button?.dispatchEvent(new MouseEvent('mouseleave'));
+    expect(CSS.highlights.has(VALIDATION_HOVER_HIGHLIGHT_NAMES.info)).toBe(false);
+
+    gutter.remove();
+    expect(CSS.highlights.has(VALIDATION_HIGHLIGHT_NAMES.info)).toBe(false);
   });
 });

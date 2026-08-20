@@ -20,6 +20,12 @@ import {
   type OpenValidationGroupDetail,
 } from '@/events';
 import { renderSolution, type ValidationKey, validationMessages } from '@/messages';
+import {
+  applyHoverHighlight,
+  applyValidationHighlights,
+  clearHoverHighlight,
+  clearValidationHighlights,
+} from '@/utils/highlights';
 import { renderMarkdown } from '@/utils/markdown';
 import { getOverlappingRanges } from '@/utils/ranges';
 import gutterStyles from './styles';
@@ -165,6 +171,10 @@ export class Gutter extends LitElement {
   override updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
 
+    if (changedProperties.has('validationsMap') || changedProperties.has('validationsContext')) {
+      applyValidationHighlights(this, this.validationsMap ?? this.validationsContext);
+    }
+
     if (changedProperties.has('editor')) {
       this.#handleEditorChanged(changedProperties.get('editor'));
     }
@@ -209,6 +219,8 @@ export class Gutter extends LitElement {
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
     globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
     this.editor?.off('create', this.#attachResizeObserver);
+    clearHoverHighlight();
+    clearValidationHighlights(this);
   }
 
   readonly #attachResizeObserver = () => {
@@ -238,13 +250,13 @@ export class Gutter extends LitElement {
     }
   }
 
-  #renderIndicator(
-    range: Range,
-    correct: ValidationResult['correct'],
-    severity: ValidationResult['severity'],
-    solutionPayload: ValidationResult['solutionPayload'],
-    validatorKey: ValidationResult['validatorKey'],
-  ) {
+  #highlightRange(range: Range, result: ValidationResult): void {
+    if (result.scope !== 'inline') return;
+    applyHoverHighlight(result.severity, range);
+  }
+
+  #renderIndicator(range: Range, result: ValidationResult) {
+    const { correct, scope, severity, solutionPayload, validatorKey } = result;
     const position = this.#getIndicatorPosition(range);
     if (!position) return nothing;
     const valKey = validatorKey as ValidationKey;
@@ -252,6 +264,8 @@ export class Gutter extends LitElement {
     const isActive = this.activeRange === range;
     return html`<li
       class="clippy-validations-gutter__indicator"
+      data-scope=${scope ?? 'block'}
+      data-severity=${severity}
       style="inset-block-start: ${position.top}px; block-size: ${position.height}px"
     >
       <button
@@ -262,6 +276,10 @@ export class Gutter extends LitElement {
         })}"
         aria-expanded=${isActive ? 'true' : 'false'}
         @click=${() => this.#handleIndicatorClick(range)}
+        @mouseenter=${() => this.#highlightRange(range, result)}
+        @mouseleave=${() => clearHoverHighlight()}
+        @focus=${() => this.#highlightRange(range, result)}
+        @blur=${() => clearHoverHighlight()}
       >
         <span class="sr-only">${renderMarkdown(heading)}</span>
       </button>
@@ -296,9 +314,7 @@ export class Gutter extends LitElement {
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
         ${[...map.entries()]
           .filter(([range]) => range !== undefined)
-          .map(([range, { correct, severity, solutionPayload, validatorKey }]) =>
-            this.#renderIndicator(range, correct, severity, solutionPayload, validatorKey),
-          )}
+          .map(([range, result]) => this.#renderIndicator(range, result))}
       </ol>
     `;
   }
