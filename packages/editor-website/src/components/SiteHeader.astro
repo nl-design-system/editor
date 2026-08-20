@@ -88,8 +88,6 @@ const localeRoot = locale === 'en' ? '/en' : '/';
     toggle?.classList.toggle('nl-button--pressed', isDarkColorScheme());
   };
 
-  // Keep the scheme in sync with the stored/OS preference (following live system
-  // changes when no explicit choice is stored) and reflect the state on the button.
   const query = applyColorScheme();
   syncState();
   query?.addEventListener('change', syncState);
@@ -102,8 +100,6 @@ const localeRoot = locale === 'en' ? '/en' : '/';
 
 <style>
   .ma-site-header {
-    /* Use the inverse-bg/inverse-color pair so the bar stays a dark accent surface
-       with legible light text in both the light and dark color schemes. */
     background-color: var(--basis-color-accent-1-inverse-bg-default);
     color: var(--basis-color-accent-1-inverse-color-document);
     align-items: stretch;
@@ -165,10 +161,6 @@ const localeRoot = locale === 'en' ? '/en' : '/';
     padding-inline: var(--basis-space-inline-xl);
   }
 
-  /* The outlined button sits on the accent header. Override the nl-button
-     colour tokens (defined on the ancestor .ma-theme, so an element-level value
-     wins) to inherit the header's inverse colour, keeping the outline and icon
-     visible against the dark background in every state. */
   .ma-theme-toggle {
     --nl-button-secondary-background-color: transparent;
     --nl-button-secondary-color: currentColor;
@@ -187,9 +179,6 @@ const localeRoot = locale === 'en' ? '/en' : '/';
     --nl-button-secondary-pressed-hover-border-color: currentColor;
   }
 
-  /* Show the outline moon in light mode and the filled moon in dark mode.
-     Keyed off the root scheme class, which the pre-paint script sets, so the
-     correct icon is shown on first paint without a flash. */
   .ma-theme-toggle__icon--filled {
     display: none;
   }
