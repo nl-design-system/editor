@@ -2,6 +2,8 @@ import { css } from 'lit';
 
 export default css`
   :host {
+    --_clippy-gutter-indicator-size: 1.25rem;
+
     block-size: 100%;
     inset-block-start: 0;
     inset-inline: 0;
@@ -136,8 +138,12 @@ export default css`
     border: none;
     border-radius: var(--basis-border-radius-sm);
     padding: var(--basis-space-inline-sm);
+    box-sizing: content-box;
+    block-size: var(--_clippy-gutter-indicator-size);
+    inline-size: var(--_clippy-gutter-indicator-size);
     display: flex;
     align-items: center;
+    justify-content: center;
     line-height: 1;
     cursor: pointer;
     pointer-events: auto;
@@ -155,8 +161,8 @@ export default css`
   .clippy-validations-gutter__icon {
     display: flex;
     align-items: center;
-    block-size: 1rem;
-    inline-size: 1rem;
+    block-size: var(--_clippy-gutter-indicator-size);
+    inline-size: var(--_clippy-gutter-indicator-size);
 
     svg {
       block-size: 100%;
@@ -174,16 +180,25 @@ export default css`
     color: var(--basis-color-info-color-default);
   }
 
+  .clippy-validations-gutter__badge {
+    --nl-number-badge-background-color: transparent;
+    --nl-number-badge-border-radius: 50%;
+    --nl-number-badge-min-block-size: var(--_clippy-gutter-indicator-size);
+    --nl-number-badge-min-inline-size: var(--_clippy-gutter-indicator-size);
+    --nl-number-badge-padding-block: 0;
+    --nl-number-badge-padding-inline: var(--basis-space-inline-xs);
+  }
+
   .clippy-validations-gutter__badge--error {
-    --nl-number-badge-background-color: var(--basis-color-negative-bg-default);
+    --nl-number-badge-border-color: var(--basis-color-negative-color-default);
     --nl-number-badge-color: var(--basis-color-negative-color-default);
   }
   .clippy-validations-gutter__badge--warning {
-    --nl-number-badge-background-color: var(--basis-color-warning-bg-default);
+    --nl-number-badge-border-color: var(--basis-color-warning-color-default);
     --nl-number-badge-color: var(--basis-color-warning-color-default);
   }
   .clippy-validations-gutter__badge--info {
-    --nl-number-badge-background-color: var(--basis-color-info-bg-default);
+    --nl-number-badge-border-color: var(--basis-color-info-color-default);
     --nl-number-badge-color: var(--basis-color-info-color-default);
   }
 
