@@ -138,7 +138,6 @@ export default css`
     padding: var(--basis-space-inline-sm);
     display: flex;
     align-items: center;
-    gap: var(--basis-space-inline-sm);
     line-height: 1;
     cursor: pointer;
     pointer-events: auto;

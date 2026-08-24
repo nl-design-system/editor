@@ -17,7 +17,7 @@ export default css`
     background: var(--basis-color-default-bg-document);
     position: relative;
     isolation: isolate;
-    padding-inline-end: var(--basis-space-inline-6xl);
+    padding-inline-end: var(--basis-space-inline-5xl);
   }
 
   p.is-editor-empty:first-child::before {

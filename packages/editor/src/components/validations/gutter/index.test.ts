@@ -134,6 +134,7 @@ describe('<clippy-validations-gutter>', () => {
     expect(meta.classList.contains('clippy-validations-gutter__meta--warning')).toBe(true);
     expect(meta.closest('.clippy-validations-gutter__indicator')?.getAttribute('data-severity')).toBe('warning');
     expect(meta.querySelector('.nl-number-badge')?.textContent).toBe('2');
+    expect(meta.querySelector('.clippy-validations-gutter__icon')).toBeNull();
 
     expect(meta.getAttribute('aria-label')).toContain('2');
     expect(meta.querySelector('.nl-number-badge')?.getAttribute('aria-hidden')).toBe('true');
@@ -149,7 +150,7 @@ describe('<clippy-validations-gutter>', () => {
     expect(detail.ranges).toHaveLength(2);
   });
 
-  it('omits the count badge when a line holds a single validation', async () => {
+  it('shows the severity icon when a line holds a single validation', async () => {
     const content = document.createElement('p');
     content.textContent = 'Deze hele alinea is dikgedrukt.';
     document.body.append(content);
