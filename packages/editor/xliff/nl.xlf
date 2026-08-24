@@ -558,6 +558,14 @@
         <source>Remove the bold formatting from the paragraph.</source>
         <target>Verwijder de vetgedrukte opmaak uit de alinea.</target>
       </trans-unit>
+      <trans-unit id="sbf61820a44f73942">
+        <source>Open <x id="0" equiv-text="${count}"/> validations on this line</source>
+        <target><x id="0" equiv-text="${count}"/> validatiemeldingen op deze regel openen</target>
+      </trans-unit>
+      <trans-unit id="sc584f530aeeee4dc">
+        <source>Open validation</source>
+        <target>Validatiemelding openen</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

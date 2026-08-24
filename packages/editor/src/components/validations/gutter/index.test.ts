@@ -103,6 +103,73 @@ describe('<clippy-validations-gutter>', () => {
     expect(indicator?.getAttribute('data-severity')).toBe('warning');
   });
 
+  it('carries one icon button per validated line, on the highest severity, counting the rest', async () => {
+    const content = document.createElement('p');
+    content.innerHTML = 'Deze <u>alinea</u> is dikgedrukt.';
+    document.body.append(content);
+
+    const gutter = document.createElement('clippy-validations-gutter') as Gutter;
+    gutter.mode = validationInteractionMode.DRAWER;
+    gutter.identifier = 'clippy-editor-1';
+    document.body.append(gutter);
+
+    const blockRange = rangeOver(content);
+    const inlineRange = rangeOver(content.querySelector('u')!);
+    gutter.validationsMap = new Map([
+      [
+        inlineRange,
+        { scope: 'inline', severity: 'info', validatorKey: inlineValidations.INLINE_SHOULD_NOT_BE_UNDERLINED },
+      ],
+      [
+        blockRange,
+        { scope: 'block', severity: 'warning', validatorKey: blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD },
+      ],
+    ]) satisfies ValidationsMap;
+    await gutter.updateComplete;
+
+    const metas = gutter.shadowRoot?.querySelectorAll<HTMLButtonElement>('.clippy-validations-gutter__meta');
+    expect(metas?.length).toBe(1);
+
+    const meta = metas![0];
+    expect(meta.classList.contains('clippy-validations-gutter__meta--warning')).toBe(true);
+    expect(meta.closest('.clippy-validations-gutter__indicator')?.getAttribute('data-severity')).toBe('warning');
+    expect(meta.querySelector('.nl-number-badge')?.textContent).toBe('2');
+
+    expect(meta.getAttribute('aria-label')).toContain('2');
+    expect(meta.querySelector('.nl-number-badge')?.getAttribute('aria-hidden')).toBe('true');
+
+    const onOpen = vi.fn();
+    globalThis.addEventListener(CustomEvents.OPEN_VALIDATION_GROUP, onOpen);
+    meta.click();
+    globalThis.removeEventListener(CustomEvents.OPEN_VALIDATION_GROUP, onOpen);
+
+    expect(onOpen).toHaveBeenCalledOnce();
+    const { detail } = onOpen.mock.calls[0][0] as OpenValidationGroupEvent;
+    expect(detail.identifier).toBe('clippy-editor-1');
+    expect(detail.ranges).toHaveLength(2);
+  });
+
+  it('omits the count badge when a line holds a single validation', async () => {
+    const content = document.createElement('p');
+    content.textContent = 'Deze hele alinea is dikgedrukt.';
+    document.body.append(content);
+
+    const gutter = document.createElement('clippy-validations-gutter') as Gutter;
+    document.body.append(gutter);
+    gutter.validationsMap = new Map([
+      [
+        rangeOver(content),
+        { scope: 'block', severity: 'error', validatorKey: blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD },
+      ],
+    ]) satisfies ValidationsMap;
+    await gutter.updateComplete;
+
+    const meta = gutter.shadowRoot?.querySelector<HTMLButtonElement>('.clippy-validations-gutter__meta');
+    expect(meta).not.toBeNull();
+    expect(meta?.querySelector('.nl-number-badge')).toBeNull();
+    expect(meta?.querySelector('.clippy-validations-gutter__icon svg')).not.toBeNull();
+  });
+
   it('highlights the text of inline validations and emphasises the hovered one', async () => {
     const content = document.createElement('p');
     content.innerHTML = 'Ga naar <a href="#">lees meer</a>.';
