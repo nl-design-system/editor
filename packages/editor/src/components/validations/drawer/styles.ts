@@ -42,6 +42,7 @@ export default css`
 
   .clippy-drawer__title {
     margin-block: var(--basis-space-none);
+    color: var(--basis-color-default-color-document);
     font-family: var(--nl-paragraph-font-family, inherit);
   }
 

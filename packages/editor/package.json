@@ -20,6 +20,10 @@
       "types": "./dist/entries/accessibility-notifications.d.ts",
       "default": "./dist/accessibility-notifications.js"
     },
+    "./color-scheme": {
+      "types": "./dist/entries/color-scheme.d.ts",
+      "default": "./dist/color-scheme.js"
+    },
     "./content-classes": {
       "types": "./dist/entries/content-classes.d.ts",
       "default": "./dist/content-classes.js"

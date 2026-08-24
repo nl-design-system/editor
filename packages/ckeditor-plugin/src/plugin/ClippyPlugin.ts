@@ -3,6 +3,7 @@ import {
   type CloseValidationsDrawerDetail,
   type ValidationsDrawer,
 } from '@nl-design-system-community/editor/accessibility-notifications';
+import { applyColorScheme } from '@nl-design-system-community/editor/color-scheme';
 import { EditorContentWrapper, EditorWrapper } from '@nl-design-system-community/editor/editor-wrapper';
 import {
   CustomEvents,
@@ -68,6 +69,8 @@ export class ClippyPlugin extends Plugin {
 
     // add theme token scoping for the drupal environment.
     this._editorEl.classList.add('ma-theme', 'clippy-theme', 'utrecht-theme');
+    // follow the user's preferred color scheme by toggling the dark modifier on this editor.
+    applyColorScheme(this._editorEl);
     adoptClippyStyles();
 
     const wrapper = document.createElement('clippy-editor-wrapper') as EditorWrapper;
