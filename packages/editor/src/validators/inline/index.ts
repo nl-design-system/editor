@@ -45,7 +45,7 @@ const inlineShouldNotBeEmpty: ContentValidator = (_dom, node) => {
     correct: correctEmptyMark(node),
     range: getElementRange(node),
     scope: 'inline',
-    severity: validationSeverity.INFO,
+    severity: validationSeverity.WARNING,
     solutionPayload: { nodeType: inlineType },
   };
 };

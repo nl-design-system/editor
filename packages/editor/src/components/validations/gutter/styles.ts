@@ -138,12 +138,10 @@ export default css`
     border: none;
     border-radius: var(--basis-border-radius-sm);
     padding: var(--basis-space-inline-sm);
-    box-sizing: content-box;
-    block-size: var(--_clippy-gutter-indicator-size);
-    inline-size: var(--_clippy-gutter-indicator-size);
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
+    gap: var(--basis-space-inline-sm);
     line-height: 1;
     cursor: pointer;
     pointer-events: auto;
@@ -182,23 +180,20 @@ export default css`
 
   .clippy-validations-gutter__badge {
     --nl-number-badge-background-color: transparent;
-    --nl-number-badge-border-radius: 50%;
-    --nl-number-badge-min-block-size: var(--_clippy-gutter-indicator-size);
-    --nl-number-badge-min-inline-size: var(--_clippy-gutter-indicator-size);
+    --nl-number-badge-border-width: 0;
+    --nl-number-badge-min-block-size: auto;
+    --nl-number-badge-min-inline-size: auto;
     --nl-number-badge-padding-block: 0;
-    --nl-number-badge-padding-inline: var(--basis-space-inline-xs);
+    --nl-number-badge-padding-inline: 0;
   }
 
   .clippy-validations-gutter__badge--error {
-    --nl-number-badge-border-color: var(--basis-color-negative-color-default);
     --nl-number-badge-color: var(--basis-color-negative-color-default);
   }
   .clippy-validations-gutter__badge--warning {
-    --nl-number-badge-border-color: var(--basis-color-warning-color-default);
     --nl-number-badge-color: var(--basis-color-warning-color-default);
   }
   .clippy-validations-gutter__badge--info {
-    --nl-number-badge-border-color: var(--basis-color-info-color-default);
     --nl-number-badge-color: var(--basis-color-info-color-default);
   }
 

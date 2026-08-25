@@ -1,10 +1,17 @@
 import type { ValidationSeverity, ValidationsMap } from '@/types/validation';
 import { validationSeverity } from '@/constants';
+import { isEmptyOrWhitespace } from '@/validators/helpers';
 
 export const VALIDATION_HIGHLIGHT_NAMES = {
   [validationSeverity.ERROR]: 'clippy-validation-error',
   [validationSeverity.INFO]: 'clippy-validation-info',
   [validationSeverity.WARNING]: 'clippy-validation-warning',
+} as const satisfies Record<ValidationSeverity, string>;
+
+export const VALIDATION_BLANK_HIGHLIGHT_NAMES = {
+  [validationSeverity.ERROR]: 'clippy-validation-blank-error',
+  [validationSeverity.INFO]: 'clippy-validation-blank-info',
+  [validationSeverity.WARNING]: 'clippy-validation-blank-warning',
 } as const satisfies Record<ValidationSeverity, string>;
 
 export const VALIDATION_HOVER_HIGHLIGHT_NAMES = {
@@ -31,26 +38,56 @@ const HIGHLIGHT_CSS = `
   ::highlight(${VALIDATION_HIGHLIGHT_NAMES.error}) {
     color: inherit;
     background-color: color-mix(in srgb, var(--basis-color-negative-border-default) 20%, transparent);
+    text-decoration-line: overline;
+    text-decoration-style: double;
+    text-decoration-color: var(--basis-color-negative-border-default);
   }
   ::highlight(${VALIDATION_HIGHLIGHT_NAMES.warning}) {
     color: inherit;
     background-color: color-mix(in srgb, var(--basis-color-warning-border-default) 20%, transparent);
+    text-decoration-line: overline;
+    text-decoration-style: solid;
+    text-decoration-color: var(--basis-color-warning-border-default);
   }
   ::highlight(${VALIDATION_HIGHLIGHT_NAMES.info}) {
     color: inherit;
     background-color: color-mix(in srgb, var(--basis-color-info-border-default) 20%, transparent);
+    text-decoration-line: overline;
+    text-decoration-style: dotted;
+    text-decoration-color: var(--basis-color-info-border-default);
   }
   ::highlight(${VALIDATION_HOVER_HIGHLIGHT_NAMES.error}) {
     color: inherit;
     background-color: color-mix(in srgb, var(--basis-color-negative-border-default) 40%, transparent);
+    text-decoration-line: overline;
+    text-decoration-style: double;
+    text-decoration-color: var(--basis-color-negative-border-default);
   }
   ::highlight(${VALIDATION_HOVER_HIGHLIGHT_NAMES.warning}) {
     color: inherit;
     background-color: color-mix(in srgb, var(--basis-color-warning-border-default) 40%, transparent);
+    text-decoration-line: overline;
+    text-decoration-style: solid;
+    text-decoration-color: var(--basis-color-warning-border-default);
   }
   ::highlight(${VALIDATION_HOVER_HIGHLIGHT_NAMES.info}) {
     color: inherit;
     background-color: color-mix(in srgb, var(--basis-color-info-border-default) 40%, transparent);
+    text-decoration-line: overline;
+    text-decoration-style: dotted;
+    text-decoration-color: var(--basis-color-info-border-default);
+  }
+  ::highlight(${VALIDATION_BLANK_HIGHLIGHT_NAMES.error}) {
+    color: inherit;
+    background-color: var(--basis-color-negative-border-default);
+  }
+  ::highlight(${VALIDATION_BLANK_HIGHLIGHT_NAMES.warning}) {
+    color: inherit;
+    background-color: var(--basis-color-warning-border-default);
+  }
+  ::highlight(${VALIDATION_BLANK_HIGHLIGHT_NAMES.info}) {
+    color: inherit;
+    background-color: var(--basis-color-info-border-default);
   }
 `;
 
@@ -76,38 +113,54 @@ const ensureHighlightStyles = (range: Range): void => {
 const isSupported = (): boolean =>
   typeof CSS !== 'undefined' && 'highlights' in CSS && typeof Highlight !== 'undefined';
 
-const rangesByOwner = new Map<object, Map<ValidationSeverity, Range[]>>();
+export const isBlankRange = (range: Range): boolean => {
+  try {
+    return isEmptyOrWhitespace(range.toString());
+  } catch {
+    return false;
+  }
+};
+
+type OwnedRanges = { blank: Map<ValidationSeverity, Range[]>; text: Map<ValidationSeverity, Range[]> };
+
+const rangesByOwner = new Map<object, OwnedRanges>();
 
 const syncRegistry = (): void => {
   for (const severity of SEVERITIES) {
-    const ranges = [...rangesByOwner.values()].flatMap((bySeverity) => bySeverity.get(severity) ?? []);
-    const name = VALIDATION_HIGHLIGHT_NAMES[severity];
-    if (ranges.length === 0) {
-      CSS.highlights.delete(name);
-      continue;
+    for (const [bucket, names] of [
+      ['text', VALIDATION_HIGHLIGHT_NAMES],
+      ['blank', VALIDATION_BLANK_HIGHLIGHT_NAMES],
+    ] as const) {
+      const ranges = [...rangesByOwner.values()].flatMap((owned) => owned[bucket].get(severity) ?? []);
+      const name = names[severity];
+      if (ranges.length === 0) {
+        CSS.highlights.delete(name);
+        continue;
+      }
+      const highlight = new Highlight(...ranges);
+      highlight.priority = HIGHLIGHT_PRIORITY[severity];
+      CSS.highlights.set(name, highlight);
     }
-    const highlight = new Highlight(...ranges);
-    highlight.priority = HIGHLIGHT_PRIORITY[severity];
-    CSS.highlights.set(name, highlight);
   }
 };
 
 export const applyValidationHighlights = (owner: object, validationsMap: ValidationsMap | undefined): void => {
   if (!isSupported()) return;
 
-  const bySeverity = new Map<ValidationSeverity, Range[]>();
+  const owned: OwnedRanges = { blank: new Map(), text: new Map() };
   for (const [range, result] of validationsMap ?? []) {
     if (result.scope !== 'inline') continue;
     ensureHighlightStyles(range);
-    const ranges = bySeverity.get(result.severity) ?? [];
+    const bucket = isBlankRange(range) ? owned.blank : owned.text;
+    const ranges = bucket.get(result.severity) ?? [];
     ranges.push(range);
-    bySeverity.set(result.severity, ranges);
+    bucket.set(result.severity, ranges);
   }
 
-  if (bySeverity.size === 0) {
+  if (owned.blank.size === 0 && owned.text.size === 0) {
     rangesByOwner.delete(owner);
   } else {
-    rangesByOwner.set(owner, bySeverity);
+    rangesByOwner.set(owner, owned);
   }
   syncRegistry();
 };
@@ -120,6 +173,7 @@ export const clearValidationHighlights = (owner: object): void => {
 
 export const applyHoverHighlight = (severity: ValidationSeverity, range: Range): void => {
   if (!isSupported()) return;
+  if (isBlankRange(range)) return;
   ensureHighlightStyles(range);
   clearHoverHighlight();
   const highlight = new Highlight(range);

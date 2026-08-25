@@ -38,7 +38,7 @@ describe('Inline validations', () => {
         const validation = byKey(validationMap, inlineValidations.INLINE_SHOULD_NOT_BE_EMPTY);
 
         expect(validation).toBeDefined();
-        expect(validation!.severity).toBe('info');
+        expect(validation!.severity).toBe('warning');
         expect(validation!.solutionPayload!['nodeType']).toBe(nodeType);
       });
     });

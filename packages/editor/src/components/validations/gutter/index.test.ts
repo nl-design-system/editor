@@ -133,11 +133,14 @@ describe('<clippy-validations-gutter>', () => {
     const meta = metas![0];
     expect(meta.classList.contains('clippy-validations-gutter__meta--warning')).toBe(true);
     expect(meta.closest('.clippy-validations-gutter__indicator')?.getAttribute('data-severity')).toBe('warning');
-    const badge = meta.querySelector('.nl-number-badge');
-    expect(badge?.textContent).toBe('2');
-    expect(meta.querySelector('.clippy-validations-gutter__icon')).toBeNull();
+    const badge = meta.querySelector('.nl-number-badge')!;
+    const icon = meta.querySelector('.clippy-validations-gutter__icon')!;
+    expect(badge.textContent).toBe('2');
+    expect(icon.querySelector('svg')).not.toBeNull();
 
-    expect(badge?.classList.contains('clippy-validations-gutter__badge')).toBe(true);
+    expect(badge.compareDocumentPosition(icon) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+
+    expect(badge.classList.contains('clippy-validations-gutter__badge')).toBe(true);
 
     expect(meta.getAttribute('aria-label')).toContain('2');
     expect(meta.querySelector('.nl-number-badge')?.getAttribute('aria-hidden')).toBe('true');

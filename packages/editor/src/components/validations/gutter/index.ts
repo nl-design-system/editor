@@ -331,10 +331,9 @@ export class Gutter extends LitElement {
                 aria-hidden="true"
                 >${count}</span
               >`
-            : html`<span class="clippy-validations-gutter__icon" aria-hidden="true"
-                >${unsafeSVG(severityIcon(severity))}</span
-              >`
+            : nothing
         }
+        <span class="clippy-validations-gutter__icon" aria-hidden="true">${unsafeSVG(severityIcon(severity))}</span>
       </button>
     </div>`;
   }

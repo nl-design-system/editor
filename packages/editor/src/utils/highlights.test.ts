@@ -5,6 +5,7 @@ import {
   applyValidationHighlights,
   clearHoverHighlight,
   clearValidationHighlights,
+  VALIDATION_BLANK_HIGHLIGHT_NAMES,
   VALIDATION_HIGHLIGHT_NAMES,
   VALIDATION_HOVER_HIGHLIGHT_NAMES,
 } from './highlights';
@@ -74,6 +75,74 @@ describe('applyValidationHighlights', () => {
       [...sheet.cssRules].some((rule) => rule.cssText.includes(`::highlight(${VALIDATION_HIGHLIGHT_NAMES.error})`)),
     );
     expect(hasHighlightRule).toBe(true);
+
+    clearValidationHighlights(owner);
+  });
+
+  it('distinguishes the severities by the line above the text, not by colour alone', () => {
+    const container = setupContent();
+    const owner = {};
+    applyValidationHighlights(
+      owner,
+      new Map([[rangeOf(container.querySelector('p')!), { scope: 'inline', severity: 'error' }]]),
+    );
+
+    const rules = document.adoptedStyleSheets
+      .flatMap((sheet) => [...sheet.cssRules])
+      .filter((rule): rule is CSSStyleRule => rule instanceof CSSStyleRule && rule.cssText.includes('::highlight('));
+
+    const decorationFor = (name: string) => {
+      const rule = rules.find((r) => r.selectorText === `::highlight(${name})`);
+      return `${rule?.style.textDecorationLine} ${rule?.style.textDecorationStyle}`;
+    };
+
+    expect(decorationFor(VALIDATION_HIGHLIGHT_NAMES.error)).toBe('overline double');
+    expect(decorationFor(VALIDATION_HIGHLIGHT_NAMES.warning)).toBe('overline solid');
+    expect(decorationFor(VALIDATION_HIGHLIGHT_NAMES.info)).toBe('overline dotted');
+    expect(decorationFor(VALIDATION_HOVER_HIGHLIGHT_NAMES.error)).toBe('overline double');
+    expect(decorationFor(VALIDATION_HOVER_HIGHLIGHT_NAMES.warning)).toBe('overline solid');
+    expect(decorationFor(VALIDATION_HOVER_HIGHLIGHT_NAMES.info)).toBe('overline dotted');
+
+    clearValidationHighlights(owner);
+  });
+
+  it('marks a validation on an element with no text with a solid bar instead', () => {
+    const container = setupContent();
+    const paragraph = container.querySelector('p')!;
+    paragraph.innerHTML = 'Ga naar <em> </em>de site';
+    const owner = {};
+    const blankRange = rangeOf(paragraph.querySelector('em')!);
+
+    applyValidationHighlights(owner, new Map([[blankRange, { scope: 'inline', severity: 'warning' }]]));
+
+    expect(registeredRanges(VALIDATION_BLANK_HIGHLIGHT_NAMES.warning)).toEqual([blankRange]);
+    expect(CSS.highlights.has(VALIDATION_HIGHLIGHT_NAMES.warning)).toBe(false);
+
+    applyHoverHighlight('warning', blankRange);
+    expect(CSS.highlights.has(VALIDATION_HOVER_HIGHLIGHT_NAMES.warning)).toBe(false);
+
+    clearValidationHighlights(owner);
+    expect(CSS.highlights.has(VALIDATION_BLANK_HIGHLIGHT_NAMES.warning)).toBe(false);
+  });
+
+  it('keeps a text-bearing range on the tinted style when a blank one is present', () => {
+    const container = setupContent();
+    const paragraph = container.querySelector('p')!;
+    paragraph.innerHTML = 'Ga naar <em> </em><a href="#">lees meer</a>';
+    const owner = {};
+    const blankRange = rangeOf(paragraph.querySelector('em')!);
+    const textRange = rangeOf(paragraph.querySelector('a')!);
+
+    applyValidationHighlights(
+      owner,
+      new Map([
+        [blankRange, { scope: 'inline', severity: 'warning' }],
+        [textRange, { scope: 'inline', severity: 'warning' }],
+      ]),
+    );
+
+    expect(registeredRanges(VALIDATION_HIGHLIGHT_NAMES.warning)).toEqual([textRange]);
+    expect(registeredRanges(VALIDATION_BLANK_HIGHLIGHT_NAMES.warning)).toEqual([blankRange]);
 
     clearValidationHighlights(owner);
   });
