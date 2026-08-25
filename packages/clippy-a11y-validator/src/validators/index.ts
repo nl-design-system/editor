@@ -1,4 +1,5 @@
-import type { ContentValidator, DocumentValidator, ValidationResult, ValidatorSettings } from '../types';
+import type { ContentValidator, DocumentValidator, ValidationResult, ValidatorSettings } from '@/types';
+import { walkElements } from '@/helpers';
 import { blockValidatorMap } from './block';
 import { documentValidatorObject } from './document';
 import { inlineValidatorMap } from './inline';
@@ -74,11 +75,9 @@ export const collectContentValidations = (
   validators: [string, ContentValidator][],
 ): ValidationResult[] => {
   const results: ValidationResult[] = [];
-  const walk = (element: Element): void => {
+  walkElements(dom, (element) => {
     results.push(...runContentValidators(dom, element, validators));
-    for (const child of element.children) walk(child);
-  };
-  for (const child of dom.children) walk(child);
+  });
   return results;
 };
 

@@ -3,7 +3,12 @@ export { ClippyValidations, toKebabId } from './analyze';
 export { SEVERITY_ORDER, assertNoViolations, countBySeverity, formatViolations, hasSeverityAtLeast } from './reporter';
 
 // ── Low-level detection API (framework-agnostic) ───────────────────────────────
-export { runValidation, getActiveValidators } from './validators';
+export {
+  runValidation,
+  getActiveValidators,
+  collectContentValidations,
+  collectDocumentValidations,
+} from './validators';
 export { blockValidatorMap } from './validators/block';
 export { inlineValidatorMap } from './validators/inline';
 export {
@@ -20,8 +25,18 @@ export {
   validationSeverity,
   validatorEvents,
 } from './constants';
-export { isEmptyOrWhitespace, getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from './helpers';
+export {
+  isEmptyOrWhitespace,
+  getElementRange,
+  getParagraphLinesFromDOM,
+  orderedListIndicator,
+  unorderedListIndicator,
+  walkElements,
+} from './helpers';
 export { validationMessages } from './messages';
+
+// ── Editor/browser adapter (Range-keyed map + corrections) ─────────────────────
+export { buildValidationMap } from './validation-map';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 export type {
@@ -32,6 +47,7 @@ export type {
   HeadingLevel,
   ImageAltTextRequest,
   SolutionPayload,
+  ValidationMapResult,
   ValidationResult,
   ValidationScope,
   ValidationSeverity,

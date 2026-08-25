@@ -31,6 +31,21 @@ export type ValidationResult = {
   solutionPayload?: SolutionPayload;
 };
 
+/**
+ * A detection result enriched for a live editor: keyed by a DOM {@link Range},
+ * with a deferred {@link CorrectValidationFunction} attached. This is the shape
+ * `buildValidationMap` produces; it is structurally compatible with the editor's
+ * own `ValidationResult`.
+ */
+export type ValidationMapResult = {
+  validatorKey?: string;
+  range?: Range;
+  scope?: ValidationScope;
+  severity: ValidationSeverity;
+  solutionPayload?: SolutionPayload;
+  correct?: CorrectValidationFunction;
+};
+
 /** Settings subset that steers which rules run. Structurally compatible with the editor's `EditorSettings`. */
 export type ValidatorSettings = {
   topHeadingLevel?: number;
