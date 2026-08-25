@@ -1,0 +1,15 @@
+rootPageId: 1
+base: "%env(TYPO3_BASE_URL)%"
+languages:
+  - title: English
+    enabled: true
+    languageId: 0
+    base: /
+    locale: en_US.UTF-8
+    navigationTitle: English
+    flag: us
+errorHandling: []
+routes: []
+dependencies:
+  - typo3/fluid-styled-content
+  - typo3/fluid-styled-content-css

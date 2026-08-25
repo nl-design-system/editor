@@ -2,7 +2,7 @@ services:
   typo3:
     build: .
     ports:
-      - 8082:8080
+      - ${TYPO3_PORT:-8082}:8080
     environment:
       TYPO3_DB_DRIVER: postgres
       TYPO3_DB_HOST: postgres
@@ -13,8 +13,11 @@ services:
       TYPO3_SETUP_ADMIN_USERNAME: ${TYPO3_SETUP_ADMIN_USERNAME:-admin}
       TYPO3_SETUP_ADMIN_PASSWORD: ${TYPO3_SETUP_ADMIN_PASSWORD:-Password.1}
       TYPO3_SETUP_ADMIN_EMAIL: ${TYPO3_SETUP_ADMIN_EMAIL:-admin@example.com}
-      TYPO3_SETUP_CREATE_SITE: ${TYPO3_BASE_URL:-http://localhost:8082}
+      TYPO3_BASE_URL: ${TYPO3_BASE_URL:-http://localhost:8082}
       TYPO3_PROJECT_NAME: ${TYPO3_PROJECT_NAME:-TYPO3}
+      TYPO3_ENCRYPTION_KEY: ${TYPO3_ENCRYPTION_KEY:-insecure-local-dev-encryption-key}
+      TYPO3_TRUSTED_HOSTS_PATTERN: ${TYPO3_TRUSTED_HOSTS_PATTERN:-}
+      TYPO3_INSTALL_TOOL_PASSWORD_HASH: ${TYPO3_INSTALL_TOOL_PASSWORD_HASH:-}
       TYPO3_CONTEXT: Development
     volumes:
       - typo3_config:/var/www/html/config
@@ -36,7 +39,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-typo3} -d ${POSTGRES_DB:-typo3}"]
       interval: 10s
       timeout: 5s
       retries: 5
