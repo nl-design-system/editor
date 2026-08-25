@@ -17,11 +17,12 @@ export type SolutionPayload = Record<string, number | string | boolean>;
 /**
  * A single detected accessibility issue.
  *
- * Detection is intentionally decoupled from correction: the result points at the
- * offending {@link Element} and carries structured context in {@link SolutionPayload},
- * but knows nothing about how (or whether) the issue is fixed. Consumers derive
- * their own location representation from `element` — a `Range` in a live editor,
- * a CSS selector + HTML snippet for static reporting.
+ * The result points at the offending {@link Element}, carries structured context
+ * in {@link SolutionPayload}, and — when the rule knows how to fix itself — a
+ * deferred {@link CorrectValidationFunction} the detecting validator built. Nothing
+ * is mutated until `correct` is called. Consumers derive their own location
+ * representation from `element` — a `Range` in a live editor, a CSS selector +
+ * HTML snippet for static reporting.
  */
 export type ValidationResult = {
   validatorKey?: string;
@@ -29,13 +30,14 @@ export type ValidationResult = {
   scope: ValidationScope;
   severity: ValidationSeverity;
   solutionPayload?: SolutionPayload;
+  correct?: CorrectValidationFunction;
 };
 
 /**
  * A detection result enriched for a live editor: keyed by a DOM {@link Range},
- * with a deferred {@link CorrectValidationFunction} attached. This is the shape
- * `buildValidationMap` produces; it is structurally compatible with the editor's
- * own `ValidationResult`.
+ * carrying the deferred {@link CorrectValidationFunction} its validator produced.
+ * This is the shape `buildValidationMap` produces; it is structurally compatible
+ * with the editor's own `ValidationResult`.
  */
 export type ValidationMapResult = {
   validatorKey?: string;

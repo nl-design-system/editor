@@ -11,11 +11,11 @@ describe('custom validation example', () => {
   it('detects a new-tab link that does not warn, and its fix annotates the link', () => {
     const root = mount('<p><a href="https://example.com" target="_blank">Read more</a></p>');
 
-    const [entry, ...rest] = analyzeWithCustomRule(root);
+    const [result, ...rest] = analyzeWithCustomRule(root);
     expect(rest).toHaveLength(0);
-    expect(entry.result.validatorKey).toBe(LINK_NEW_TAB_SHOULD_WARN);
+    expect(result.validatorKey).toBe(LINK_NEW_TAB_SHOULD_WARN);
 
-    entry.correct!();
+    result.correct!();
     expect(root.querySelector('a')!.getAttribute('aria-label')).toBe('Read more (opens in a new tab)');
   });
 

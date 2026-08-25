@@ -1,5 +1,6 @@
-import type { DocumentValidator, HeadingLevel, ValidationResult, ValidatorSettings } from '../types';
-import { documentValidations, validationSeverity } from '../constants';
+import type { DocumentValidator, HeadingLevel, ValidationResult, ValidatorSettings } from '@/types';
+import { documentValidations, validationSeverity } from '@/constants';
+import { correctDuplicateHeadingOne, correctHeadingLevel, correctMissingTopLevelHeading } from '@/correctors';
 
 // ── Document validators ───────────────────────────────────────────────────────
 
@@ -17,6 +18,7 @@ export const documentMustHaveCorrectHeadingOrder = (
     if (headingLevel < topHeadingLevel) {
       const targetLevel = topHeadingLevel as HeadingLevel;
       errors.push({
+        correct: correctHeadingLevel(heading, targetLevel),
         element: heading,
         scope: 'block',
         severity: validationSeverity.ERROR,
@@ -27,6 +29,7 @@ export const documentMustHaveCorrectHeadingOrder = (
     if (headingLevel > precedingHeadingLevel + 1) {
       const targetLevel = (precedingHeadingLevel + 1) as HeadingLevel;
       errors.push({
+        correct: correctHeadingLevel(heading, targetLevel),
         element: heading,
         scope: 'block',
         severity: validationSeverity.WARNING,
@@ -45,6 +48,7 @@ export const documentMustHaveSingleHeadingOne = (dom: HTMLElement): ValidationRe
   if (h1s.length <= 1) return [];
 
   return h1s.slice(1).map((h1) => ({
+    correct: correctDuplicateHeadingOne(h1),
     element: h1,
     scope: 'block' as const,
     severity: validationSeverity.ERROR,
@@ -64,6 +68,7 @@ export const documentMustHaveTopLevelHeadingOne = (
   const target = firstChild ?? dom;
   return [
     {
+      correct: correctMissingTopLevelHeading(target),
       element: target,
       scope: 'block',
       severity: validationSeverity.INFO,

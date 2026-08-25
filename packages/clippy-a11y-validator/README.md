@@ -55,27 +55,31 @@ Rule ids are accepted in `kebab-case` or `SCREAMING_SNAKE_CASE`.
 - `hasSeverityAtLeast(result, 'warning')` — boolean gate.
 - `assertNoViolations(result, { failOn })` — throws the formatted report when the threshold is met.
 
-## Corrections (`/correctors`)
+## Corrections
 
-The DOM fixes that back each rule are available separately, so a host can offer
-a one-click "fix this" alongside detection. They mutate plain DOM and take no
-editor dependency. The one interactive fix — "add alt text" — surfaces its
-request as a generic `clippy:open-image-dialog` event on `globalThis`, so any
-host can listen without the corrector holding a reference to it:
+Every validator attaches its own DOM fix to the result it returns, as a deferred
+`correct` function — nothing is mutated until you call it. That lets a host offer
+a one-click "fix this" alongside detection:
 
 ```ts
-import { buildCorrection } from '@nl-design-system-community/clippy-a11y-validator/correctors';
-import { validatorEvents } from '@nl-design-system-community/clippy-a11y-validator';
+import { runValidation, validatorEvents } from '@nl-design-system-community/clippy-a11y-validator';
 
 // Host opens its own alt-text UI when a fix asks for one.
 globalThis.addEventListener(validatorEvents.OPEN_IMAGE_DIALOG, (event) => openAltTextDialog(event.detail));
 
-// `buildCorrection` returns the deferred fix for a detection result, or undefined.
-const correct = buildCorrection(result);
-correct?.();
+for (const result of runValidation(document.body, { enableRules: ['*'] })) {
+  result.correct?.(); // not every rule ships a fix
+}
 ```
 
-Individual `correct*` functions can also be called directly:
+The fixes mutate plain DOM and take no editor dependency. The one interactive fix
+— "add alt text" — surfaces its request as a generic `clippy:open-image-dialog`
+event on `globalThis`, so any host can listen without the corrector holding a
+reference to it.
+
+### Calling a fix directly (`/correctors`)
+
+The underlying `correct*` functions are also exported on their own:
 
 ```ts
 import { correctEmptyHeading } from '@nl-design-system-community/clippy-a11y-validator/correctors';
@@ -87,31 +91,26 @@ correctEmptyHeading(document.querySelector('h1')!)(); // removes the empty headi
 
 ### Custom rules
 
-The correction registry is extensible. `extendCorrections` merges your own
-`rule → fix` entries onto the built-in `baseCorrections` map, and
-`buildCorrection` resolves a result's fix from whichever map you pass it:
+A custom rule is just a `ContentValidator` that returns its own `correct` — the
+same shape the built-ins use, with no registry to register against:
 
 ```ts
-import {
-  buildCorrection,
-  extendCorrections,
-  type Correction,
-} from '@nl-design-system-community/clippy-a11y-validator/correctors';
-
-const correctLinkNewTabWarning: Correction = (element) => () => {
-  const name = (element.getAttribute('aria-label') ?? element.textContent ?? '').trim();
-  element.setAttribute('aria-label', `${name} (opens in a new tab)`.trim());
+const linkNewTabShouldWarn: ContentValidator = (_dom, node) => {
+  if (node.tagName !== 'A' || (node as HTMLAnchorElement).target !== '_blank') return null;
+  const name = (node.getAttribute('aria-label') ?? node.textContent ?? '').trim();
+  if (/new (tab|window)|opens in/i.test(name)) return null;
+  return {
+    correct: () => node.setAttribute('aria-label', `${name} (opens in a new tab)`.trim()),
+    element: node,
+    scope: 'inline',
+    severity: 'warning',
+  };
 };
-
-const corrections = extendCorrections([['LINK_NEW_TAB_SHOULD_WARN', correctLinkNewTabWarning]]);
-
-buildCorrection(result, corrections)?.(); // custom keys win over the built-ins
 ```
 
 Detection stays yours to drive — the built-in `runValidation` only walks the
-shipped validator maps, so run a custom `ContentValidator` yourself and tag each
-result with your rule id before building its fix. A full, runnable end-to-end
-example (detector + fix + wiring) lives in
+shipped validator maps, so run your validator yourself and tag each result with
+your rule id. A full, runnable end-to-end example lives in
 [`test/examples/customValidation.ts`](./test/examples/customValidation.ts).
 
 ## Playwright integration (`/playwright`)
