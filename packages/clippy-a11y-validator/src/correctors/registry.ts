@@ -39,8 +39,8 @@ const elementRange = (element: Element): Range | undefined => {
 // Built-in rule → correction map. Extend via `extendCorrections(...)` or a plain
 // `new Map([...baseCorrections, ...custom])`.
 export const baseCorrections: ReadonlyMap<string, Correction> = new Map<string, Correction>([
-  [blockValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM, (el) => correctDefinitionTermMissingDescription(el)],
-  [blockValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM, (el) => correctDefinitionListMissingTerm(el)],
+  [blockValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM, correctDefinitionTermMissingDescription],
+  [blockValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM, correctDefinitionListMissingTerm],
   [blockValidations.HEADING_MUST_NOT_BE_EMPTY, correctEmptyHeading],
   [blockValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC, correctHeadingWithFormatting],
   [

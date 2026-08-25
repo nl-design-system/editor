@@ -108,10 +108,10 @@ describe('content correctors', () => {
     expect(root.querySelector('dt')!.textContent?.trim().length).toBeGreaterThan(0);
   });
 
-  it('correctDefinitionTermMissingDescription fills the term with a supplied label', () => {
+  it('correctDefinitionTermMissingDescription fills the term with the default placeholder', () => {
     const root = mount('<dl><dt id="t"></dt><dd>description</dd></dl>');
-    correctDefinitionTermMissingDescription(root.querySelector('#t')!, 'definitieterm')();
-    expect(root.querySelector('#t')!.textContent).toBe('definitieterm');
+    correctDefinitionTermMissingDescription(root.querySelector('#t')!)();
+    expect(root.querySelector('#t')!.textContent?.trim().length).toBeGreaterThan(0);
   });
 });
 

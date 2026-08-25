@@ -160,17 +160,17 @@ export const correctEntirelyBoldParagraph =
 
 // Fill the first empty <dt> with the placeholder label.
 export const correctDefinitionListMissingTerm =
-  (node: Element, termLabel: string = DEFAULT_DEFINITION_TERM_LABEL): CorrectValidationFunction =>
+  (node: Element): CorrectValidationFunction =>
   () => {
     const emptyDt = Array.from(node.querySelectorAll('dt')).find((dt) => !dt.textContent?.trim());
-    if (emptyDt) emptyDt.textContent = termLabel;
+    if (emptyDt) emptyDt.textContent = DEFAULT_DEFINITION_TERM_LABEL;
   };
 
 // Fill an empty term with the placeholder label.
 export const correctDefinitionTermMissingDescription =
-  (node: Element, termLabel: string = DEFAULT_DEFINITION_TERM_LABEL): CorrectValidationFunction =>
+  (node: Element): CorrectValidationFunction =>
   () => {
-    node.textContent = termLabel;
+    node.textContent = DEFAULT_DEFINITION_TERM_LABEL;
   };
 
 // ── Document correctors ───────────────────────────────────────────────────────
