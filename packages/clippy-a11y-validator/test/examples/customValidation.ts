@@ -13,6 +13,7 @@
 import type { ContentValidator, ValidationResult } from '@/types';
 import { validationSeverity } from '@/constants';
 import { type Correction, buildCorrection, extendCorrections } from '@/correctors';
+import { walkElements } from '@/helpers';
 
 /** Rule id. kebab-case or SCREAMING_SNAKE_CASE both work throughout the pipeline. */
 export const LINK_NEW_TAB_SHOULD_WARN = 'LINK_NEW_TAB_SHOULD_WARN';
@@ -52,15 +53,13 @@ export const correctionsWithCustomRule = extendCorrections([[LINK_NEW_TAB_SHOULD
 export const analyzeWithCustomRule = (root: HTMLElement): { result: ValidationResult; correct?: () => void }[] => {
   const found: ValidationResult[] = [];
 
-  const walk = (element: Element): void => {
+  walkElements(root, (element) => {
     const result = linkNewTabShouldWarn(root, element);
     if (result) {
       result.validatorKey = LINK_NEW_TAB_SHOULD_WARN;
       found.push(result);
     }
-    for (const child of element.children) walk(child);
-  };
-  for (const child of root.children) walk(child);
+  });
 
   return found.map((result) => ({ correct: buildCorrection(result, correctionsWithCustomRule), result }));
 };
