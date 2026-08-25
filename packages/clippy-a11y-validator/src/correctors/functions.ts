@@ -1,6 +1,6 @@
 import type { CorrectValidationFunction, ImageAltTextRequest } from '@/types';
 import { validatorEvents } from '@/constants';
-import { getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from '@/helpers';
+import { getElementRange, getParagraphLinesFromDOM, orderedListIndicator, unorderedListIndicator } from '@/helpers';
 
 // Each `correct*` returns a deferred DOM mutation. Plain DOM only — the alt-text
 // correction surfaces its request through a global event rather than a host callback.
@@ -20,17 +20,18 @@ const unwrapElement = (element: Element): void => {
   element.remove();
 };
 
-// Select the range and move focus to it. Outside an editor the browser won't
+// Select the element and move focus to it. Outside an editor the browser won't
 // focus the contenteditable itself, so walk up to the nearest focusable ancestor.
-const selectRange = (range: Range | undefined): void => {
+// The `Range` is derived here, at correct-time, so an earlier correction moving
+// the element can't leave us selecting a stale position.
+const selectElement = (element: Element): void => {
+  const range = getElementRange(element);
   if (!range) return;
 
-  const startNode = range.startContainer;
-  const startElement = startNode instanceof HTMLElement ? startNode : startNode.parentElement;
   const focusTarget =
-    startElement?.closest<HTMLElement>('[contenteditable]') ??
-    startElement?.closest<HTMLElement>('[tabindex]') ??
-    startElement;
+    element.closest<HTMLElement>('[contenteditable]') ??
+    element.closest<HTMLElement>('[tabindex]') ??
+    element.parentElement;
   focusTarget?.focus();
 
   const selection = globalThis.getSelection();
@@ -99,9 +100,9 @@ const convertParagraphsToList = (startParagraph: Element, isOrdered: boolean): v
 // Select the image, then dispatch a generic global event so a host can open its
 // alt-text UI (prefilled src). No direct host reference needed.
 export const correctImageMissingAltText =
-  (node: HTMLImageElement, range: Range | undefined): CorrectValidationFunction =>
+  (node: HTMLImageElement): CorrectValidationFunction =>
   () => {
-    selectRange(range);
+    selectElement(node);
     const request: ImageAltTextRequest = { files: [{ name: node.alt, type: 'image/*', url: node.src }], replace: true };
     globalThis.dispatchEvent(new CustomEvent(validatorEvents.OPEN_IMAGE_DIALOG, { detail: request }));
   };
@@ -109,10 +110,10 @@ export const correctImageMissingAltText =
 // Remove an empty node — but select table cells/captions instead of removing
 // them, since deleting a cell would break the table structure.
 export const correctEmptyNode =
-  (node: Element, nodeType: string, range: Range | undefined): CorrectValidationFunction =>
+  (node: Element, nodeType: string): CorrectValidationFunction =>
   () => {
     if (nodeType === 'tableCell' || nodeType === 'tableHeader' || nodeType === 'tableCaption') {
-      selectRange(range);
+      selectElement(node);
     } else {
       node.remove();
     }
@@ -126,9 +127,9 @@ export const correctEmptyMark =
 
 // Select the generic link text so the user can rewrite it.
 export const correctGenericLinkText =
-  (range: Range | undefined): CorrectValidationFunction =>
+  (link: Element): CorrectValidationFunction =>
   () => {
-    selectRange(range);
+    selectElement(link);
   };
 
 // Unwrap the <u>, keeping its text.

@@ -1,7 +1,7 @@
 import type { ContentValidator } from '@/types';
 import { inlineValidations, validationSeverity } from '@/constants';
 import { correctEmptyMark, correctGenericLinkText, correctUnderlinedMark } from '@/correctors';
-import { getElementRange, isEmptyOrWhitespace } from '@/helpers';
+import { isEmptyOrWhitespace } from '@/helpers';
 
 // ── Inline-type mappings ──────────────────────────────────────────────────────
 
@@ -29,7 +29,7 @@ const linkShouldNotBeTooGeneric: ContentValidator = (_dom, node) => {
   const text = (node.textContent ?? '').trim().toLowerCase();
   if (!genericLinkTexts.has(text)) return null;
   return {
-    correct: correctGenericLinkText(getElementRange(node)),
+    correct: correctGenericLinkText(node),
     element: node,
     scope: 'inline',
     severity: validationSeverity.INFO,

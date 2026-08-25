@@ -30,13 +30,6 @@ const mount = (html: string): HTMLElement => {
   return container;
 };
 
-/** A Range spanning a single element, mirroring how a host locates a detected node. */
-const rangeOf = (element: Element): Range => {
-  const range = document.createRange();
-  range.selectNode(element);
-  return range;
-};
-
 afterEach(() => {
   container?.remove();
   container = undefined;
@@ -73,14 +66,14 @@ describe('content correctors', () => {
   it('correctEmptyNode removes a non-table node', () => {
     const root = mount('<p>keep</p><p></p>');
     const empty = root.querySelectorAll('p')[1];
-    correctEmptyNode(empty, 'paragraph', rangeOf(empty))();
+    correctEmptyNode(empty, 'paragraph')();
     expect(root.querySelectorAll('p')).toHaveLength(1);
   });
 
   it('correctEmptyNode keeps a table cell and selects it instead of removing', () => {
     const root = mount('<table><tr><td id="c"></td><td>x</td></tr></table>');
     const cell = root.querySelector('#c')!;
-    correctEmptyNode(cell, 'tableCell', rangeOf(cell))();
+    correctEmptyNode(cell, 'tableCell')();
     expect(root.querySelector('#c')).not.toBeNull();
   });
 
@@ -89,7 +82,7 @@ describe('content correctors', () => {
     const img = root.querySelector('img') as HTMLImageElement;
     const listener = vi.fn();
     globalThis.addEventListener(validatorEvents.OPEN_IMAGE_DIALOG, listener, { once: true });
-    correctImageMissingAltText(img, rangeOf(img))();
+    correctImageMissingAltText(img)();
     expect(listener).toHaveBeenCalledOnce();
     const { detail } = listener.mock.calls[0][0];
     expect(detail.replace).toBe(true);
@@ -99,7 +92,7 @@ describe('content correctors', () => {
   it('correctGenericLinkText selects the link range without throwing', () => {
     const root = mount('<p><a href="https://example.com">Lees meer</a></p>');
     const link = root.querySelector('a')!;
-    expect(() => correctGenericLinkText(rangeOf(link))()).not.toThrow();
+    expect(() => correctGenericLinkText(link)()).not.toThrow();
   });
 
   it('correctDefinitionListMissingTerm fills the empty term with the default placeholder', () => {

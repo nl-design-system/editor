@@ -12,9 +12,8 @@ import {
   correctImageMissingAltText,
   correctTableMissingHeadings,
   correctTableMissingRows,
-} from '../correctors';
+} from '@/correctors';
 import {
-  getElementRange,
   getParagraphLinesFromDOM,
   isEmptyOrWhitespace,
   orderedListIndicator,
@@ -96,7 +95,7 @@ const imageMustHaveAltText: ContentValidator = (_dom, node) => {
   const alt = (node as HTMLImageElement).alt;
   if (alt && !isEmptyOrWhitespace(alt)) return null;
   return {
-    correct: correctImageMissingAltText(node as HTMLImageElement, getElementRange(node)),
+    correct: correctImageMissingAltText(node as HTMLImageElement),
     element: node,
     scope: 'block',
     severity: validationSeverity.INFO,
@@ -109,7 +108,7 @@ const nodeShouldNotBeEmpty: ContentValidator = (_dom, node) => {
   if (!nodeType) return null;
   if (!isEmptyOrWhitespace(node.textContent ?? '')) return null;
   return {
-    correct: correctEmptyNode(node, nodeType, getElementRange(node)),
+    correct: correctEmptyNode(node, nodeType),
     element: node,
     scope: 'block',
     severity: validationSeverity.INFO,
