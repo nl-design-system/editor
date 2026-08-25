@@ -28,7 +28,7 @@ services:
     restart: unless-stopped
 
   postgres:
-    image: postgres:16
+    image: postgres:16-alpine
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-typo3}
       POSTGRES_USER: ${POSTGRES_USER:-typo3}
