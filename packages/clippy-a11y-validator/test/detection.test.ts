@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest';
-import type { ValidationResult } from '@/types';
-import { blockValidations, inlineValidations } from '@/constants';
-import { runValidation } from '@/validators';
+import { describe, expect, it, vi } from 'vitest';
+import type { ContentValidator, DocumentValidator, ValidationResult } from '@/types';
+import { blockValidations, inlineValidations, validationSeverity } from '@/constants';
+import { collectContentValidations, collectDocumentValidations, runValidation } from '@/validators';
 import {
   documentMustHaveCorrectHeadingOrder,
   documentMustHaveSingleHeadingOne,
@@ -124,6 +124,72 @@ describe('inline detection', () => {
     expect(keys('<p><a href="https://example.com">Read the annual report</a></p>')).not.toContain(
       inlineValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC,
     );
+  });
+});
+
+describe('collectContentValidations', () => {
+  const parse = (html: string): HTMLElement => new DOMParser().parseFromString(html, 'text/html').body;
+
+  // Flags every element it sees, tagging the result with the element's id for ordering assertions.
+  const flagEvery: ContentValidator = (_dom, el) => ({
+    element: el,
+    scope: 'block',
+    severity: validationSeverity.INFO,
+  });
+
+  it('recurses depth-first, visiting nested elements in document order', () => {
+    const dom = parse('<section id="a"><p id="b">x</p></section><div id="c">y</div>');
+    const ids = collectContentValidations(dom, [['FLAG', flagEvery]]).map((r) => r.element.id);
+    expect(ids).toEqual(['a', 'b', 'c']);
+  });
+
+  it('runs every provided validator on each element', () => {
+    const dom = parse('<p id="a">x</p>');
+    const keys = collectContentValidations(dom, [
+      ['ONE', flagEvery],
+      ['TWO', flagEvery],
+    ]).map((r) => r.validatorKey);
+    expect(keys).toEqual(['ONE', 'TWO']);
+  });
+
+  it('isolates a throwing validator so the others still produce results', () => {
+    const boom: ContentValidator = () => {
+      throw new Error('boom');
+    };
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const dom = parse('<p id="a">x</p>');
+
+    const results = collectContentValidations(dom, [
+      ['BOOM', boom],
+      ['FLAG', flagEvery],
+    ]);
+
+    expect(results.map((r) => r.validatorKey)).toEqual(['FLAG']);
+    expect(spy).toHaveBeenCalledWith('Validator "BOOM" error:', expect.any(Error));
+    spy.mockRestore();
+  });
+});
+
+describe('collectDocumentValidations', () => {
+  const parse = (html: string): HTMLElement => new DOMParser().parseFromString(html, 'text/html').body;
+  const settings = { enableRules: ['*'] };
+
+  it('isolates a throwing document validator so the others still produce results', () => {
+    const boom: DocumentValidator = () => {
+      throw new Error('boom');
+    };
+    const ok: DocumentValidator = (dom) => [{ element: dom, scope: 'block', severity: validationSeverity.INFO }];
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const dom = parse('<p>x</p>');
+
+    const results = collectDocumentValidations(dom, settings, [
+      ['BOOM', boom],
+      ['OK', ok],
+    ]);
+
+    expect(results.map((r) => r.validatorKey)).toEqual(['OK']);
+    expect(spy).toHaveBeenCalledWith('Document validator "BOOM" error:', expect.any(Error));
+    spy.mockRestore();
   });
 });
 

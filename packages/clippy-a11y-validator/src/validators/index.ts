@@ -43,6 +43,68 @@ export const getActiveValidators = <V>(
   return entries.filter(([key]) => enabled.has(key) && !disabled.has(key));
 };
 
+// Run each validator on one element, isolating failures so a single faulty
+// validator can't abort the rest.
+const runContentValidators = (
+  dom: HTMLElement,
+  element: Element,
+  validators: [string, ContentValidator][],
+): ValidationResult[] => {
+  const results: ValidationResult[] = [];
+  for (const [key, validator] of validators) {
+    try {
+      const result = validator(dom, element);
+      if (result) {
+        result.validatorKey = key;
+        results.push(result);
+      }
+    } catch (err) {
+      console.error(`Validator "${key}" error:`, err);
+    }
+  }
+  return results;
+};
+
+/**
+ * Recurse the DOM depth-first, running every content (block + inline) validator
+ * on each element. Returns results in document order.
+ */
+export const collectContentValidations = (
+  dom: HTMLElement,
+  validators: [string, ContentValidator][],
+): ValidationResult[] => {
+  const results: ValidationResult[] = [];
+  const walk = (element: Element): void => {
+    results.push(...runContentValidators(dom, element, validators));
+    for (const child of element.children) walk(child);
+  };
+  for (const child of dom.children) walk(child);
+  return results;
+};
+
+/**
+ * Run every document-level validator. Each does its own internal DOM queries,
+ * so no walk is needed. Failures are isolated per validator.
+ */
+export const collectDocumentValidations = (
+  dom: HTMLElement,
+  settings: ValidatorSettings,
+  validators: [string, DocumentValidator][],
+): ValidationResult[] => {
+  const results: ValidationResult[] = [];
+  for (const [key, validator] of validators) {
+    try {
+      for (const result of validator(dom, settings)) {
+        result.validatorKey = key;
+        results.push(result);
+      }
+    } catch (err) {
+      console.error(`Document validator "${key}" error:`, err);
+    }
+  }
+  return results;
+};
+
 /**
  * Runs every active validator against `dom` and returns the raw detection
  * results in document order. This is the framework-agnostic core: it performs
@@ -50,53 +112,15 @@ export const getActiveValidators = <V>(
  * derive whatever location representation they need from `result.element`.
  */
 export const runValidation = (dom: HTMLElement, settings: ValidatorSettings): ValidationResult[] => {
-  const results: ValidationResult[] = [];
-
-  // Pre-compute active validators once — avoids re-filtering on every node during the walk
+  // Pre-compute active validators once — avoids re-filtering on every node during the walk.
   const activeDocumentValidators = getActiveValidators<DocumentValidator>(documentValidatorObject, settings);
-  const activeBlockValidators = getActiveValidators<ContentValidator>(blockValidatorMap, settings);
-  const activeInlineValidators = getActiveValidators<ContentValidator>(inlineValidatorMap, settings);
+  const activeContentValidators = [
+    ...getActiveValidators<ContentValidator>(blockValidatorMap, settings),
+    ...getActiveValidators<ContentValidator>(inlineValidatorMap, settings),
+  ];
 
-  // Run document-level validators (each does its own internal DOM queries)
-  for (const [key, validator] of activeDocumentValidators) {
-    try {
-      for (const result of validator(dom, settings)) {
-        result.validatorKey = key;
-        results.push(result);
-      }
-    } catch (err) {
-      console.error('Document validator error:', err);
-    }
-  }
-
-  // Single depth-first DOM walk for block and inline validators
-  const walk = (element: Element): void => {
-    for (const [key, validator] of activeBlockValidators) {
-      const result = validator(dom, element);
-      if (result) {
-        result.validatorKey = key;
-        results.push(result);
-      }
-    }
-    for (const [key, validator] of activeInlineValidators) {
-      const result = validator(dom, element);
-      if (result) {
-        result.validatorKey = key;
-        results.push(result);
-      }
-    }
-    for (const child of element.children) {
-      walk(child);
-    }
-  };
-
-  try {
-    for (const child of dom.children) {
-      walk(child);
-    }
-  } catch (err) {
-    console.error('Block/inline validator error:', err);
-  }
-
-  return results;
+  return [
+    ...collectDocumentValidations(dom, settings, activeDocumentValidators),
+    ...collectContentValidations(dom, activeContentValidators),
+  ];
 };
