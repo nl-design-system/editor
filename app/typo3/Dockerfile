@@ -36,7 +36,11 @@ RUN composer --working-dir=/var/www/html require --no-interaction --no-progress 
         nl-design-system-community/clippy:@dev \
     && composer clear-cache
 
+ENV TYPO3_CONTEXT=Production
+ENV TYPO3_BASE_URL=http://localhost:8082
+
 COPY setup.sh /usr/local/bin/setup.sh
+COPY check-install.php /usr/local/bin/check-install.php
 COPY wait-for-db.php /usr/local/bin/wait-for-db.php
 # Apache runs on 8080 so the process needs no root, and FallbackResource replaces the .htaccess the
 # installer writes into public/, which is not a volume and so does not survive a new container.
@@ -52,6 +56,14 @@ RUN chmod +x /usr/local/bin/setup.sh \
     # Docker creates a missing mount point as root, which www-data may not write to.
     && mkdir -p /var/www/html/config /var/www/html/public/fileadmin \
     && chown -R www-data:www-data /var/log/apache2 /var/run/apache2 /var/www/html
+
+# settings.php stays writable because `typo3 setup` rewrites it; additional.php holds what must not
+# drift and stays root-owned. sites/ is kept outside config/ so startup can restore it after install.
+COPY config/ /var/www/html/config/
+COPY config/sites/ /usr/local/share/typo3/sites/
+RUN chown -R www-data:www-data /var/www/html/config \
+    && chown root:root /var/www/html/config/system/additional.php \
+    && chmod 444 /var/www/html/config/system/additional.php
 
 USER www-data
 
