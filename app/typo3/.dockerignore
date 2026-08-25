@@ -56,8 +56,8 @@ tsconfig.tsbuildinfo
 *.der
 *.env
 *.key
-_.pem
-.env._
+*.pem
+.env.*
 
 # Example file exceptions
 
