@@ -66,7 +66,7 @@ a rule's presentation lives — everything a reporter or a host UI shows:
 ```ts
 IMAGE_MUST_HAVE_ALT_TEXT: {
   correctLabel: 'Edit',                      // label for a host's one-click fix
-  description: 'Image must have alternative text',
+  heading: 'Image must have alternative text',
   href: 'https://nldesignsystem.nl/...',     // NL Design System guidance
   solution: 'Edit the image to supply an alt text',
 },
@@ -83,15 +83,22 @@ Dutch-language originals, so they appear in `nl.ts` only; the English table keep
 its own text. The markdown is inlined at build time, so it costs the published
 bundle a string rather than a runtime dependency.
 
-`validationMessages(locale)` resolves the whole catalogue; `solution` is not part
-of it, because it depends on the offending node and is attached per result instead:
+One entry is a `ValidationEntryTranslations`; a whole locale is a `ValidationTranslations`.
+`validationMessages(locale)` resolves the table into a `ValidationMessage` per rule;
+`solution` is not part of that, because it depends on the offending node and is
+attached per result instead:
 
 ```ts
 const [result] = runValidation(dom, { enableRules: ['*'], locale: 'nl' });
 result.solution; // 'Verwijder de lege **tabelcel** of voeg tekst toe.'
 
+<<<<<<< HEAD
 validationMessages('nl')[imageValidations.IMAGE_MUST_HAVE_ALT_TEXT];
 // { correctLabel: 'Bewerken', description: 'Afbeelding moet alternatieve tekst hebben', href: '…' }
+=======
+validationMessages('nl')[blockValidations.IMAGE_MUST_HAVE_ALT_TEXT];
+// { correctLabel: 'Bewerken', heading: 'Afbeelding moet alternatieve tekst hebben', href: '…' }
+>>>>>>> 4f7801e (chore: rename types and description to heading)
 ```
 
 Plain strings use rosetta's `{{param}}` interpolation. Where wording has to branch

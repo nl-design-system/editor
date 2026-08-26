@@ -61,7 +61,7 @@ const groupValidationItems = (results: ValidationResult[], root: Element, locale
       const key = result.validatorKey as ValidationKey;
       item = {
         id,
-        description: t(`${key}.description`) ?? id,
+        description: t(`${key}.heading`) ?? id,
         href: t(`${key}.href`),
         nodes: [],
         severity: result.severity,

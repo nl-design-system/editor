@@ -22,7 +22,7 @@ export type ValidationKey =
 
 /** A rule's presentation text in one language — the resolved form of a locale-table entry. */
 export type ValidationMessage = {
-  description: string;
+  heading: string;
   href?: string;
   correctLabel?: string;
 };
@@ -44,7 +44,7 @@ export const validationMessages = (locale?: Locale): Record<ValidationKey, Valid
       key,
       {
         correctLabel: t(`${key}.correctLabel`),
-        description: t(`${key}.description`) ?? key,
+        heading: t(`${key}.heading`) ?? key,
         href: t(`${key}.href`),
       },
     ]),

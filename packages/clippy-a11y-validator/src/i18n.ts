@@ -1,12 +1,12 @@
 import rosetta from 'rosetta';
-import type { Locale, MessageTable, Translate } from './locales/types';
+import type { Locale, ValidationTranslations, Translate } from './locales/types';
 import type { ValidationContext, ValidatorSettings } from './types';
 import { en } from './locales/en';
 import { nl } from './locales/nl';
 
 export const DEFAULT_LOCALE: Locale = 'en';
 
-const i18n = rosetta<MessageTable>({ en, nl });
+const i18n = rosetta<ValidationTranslations>({ en, nl });
 i18n.locale(DEFAULT_LOCALE);
 
 /**

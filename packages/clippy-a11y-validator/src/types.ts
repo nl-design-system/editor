@@ -1,6 +1,13 @@
 import type { Locale, Translate } from './locales/types';
 
-export type { Locale, MessageTable, RuleMessage, Solution, SolutionParams, Translate } from './locales/types';
+export type {
+  Locale,
+  Solution,
+  SolutionParams,
+  Translate,
+  ValidationEntryTranslations,
+  ValidationTranslations,
+} from './locales/types';
 
 export type ValidationSeverity = 'info' | 'warning' | 'error';
 

@@ -13,20 +13,16 @@ const renderedText = (solution: string | undefined): string => {
 const allKeys = Object.values(validations);
 
 describe('validationMessages', () => {
-  it('provides a description for every rule key', () => {
+  it('provides a heading for every rule key', () => {
     const messages = validationMessages('en');
     for (const key of allKeys) {
-      expect(messages[key].description.length, key).toBeGreaterThan(0);
+      expect(messages[key].heading.length, key).toBeGreaterThan(0);
     }
   });
 
   it('reads its wording from the validator catalogue, in the requested language', () => {
-    expect(validationMessages('en')[validations.HEADING_MUST_NOT_BE_EMPTY].description).toBe(
-      'Heading must not be empty',
-    );
-    expect(validationMessages('nl')[validations.HEADING_MUST_NOT_BE_EMPTY].description).toBe(
-      'Koptekst mag niet leeg zijn',
-    );
+    expect(validationMessages('en')[validations.HEADING_MUST_NOT_BE_EMPTY].heading).toBe('Heading must not be empty');
+    expect(validationMessages('nl')[validations.HEADING_MUST_NOT_BE_EMPTY].heading).toBe('Koptekst mag niet leeg zijn');
   });
 
   it('carries the guidance link and correct-button label from the catalogue', () => {
@@ -37,15 +33,15 @@ describe('validationMessages', () => {
 
   it('follows the document language when none is given', () => {
     document.documentElement.lang = 'nl';
-    expect(validationMessages()[validations.HEADING_MUST_NOT_BE_EMPTY].description).toBe('Koptekst mag niet leeg zijn');
+    expect(validationMessages()[validations.HEADING_MUST_NOT_BE_EMPTY].heading).toBe('Koptekst mag niet leeg zijn');
     document.documentElement.lang = 'en';
   });
 
   it('shows the NL Design System prose in Dutch and our own wording in English', () => {
-    expect(validationMessages('nl')[validations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD].description).toBe(
+    expect(validationMessages('nl')[validations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD].heading).toBe(
       'De hele alinea is dikgedrukt.',
     );
-    expect(validationMessages('en')[validations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD].description).toBe(
+    expect(validationMessages('en')[validations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD].heading).toBe(
       'Avoid making an entire paragraph bold',
     );
   });

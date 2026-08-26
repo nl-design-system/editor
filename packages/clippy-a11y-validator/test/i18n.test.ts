@@ -10,19 +10,17 @@ const solutionOf = (html: string, key: string, locale?: 'en' | 'nl') =>
   runValidation(body(html), { enableRules: ['*'], locale }).find((r) => r.validatorKey === key)?.solution;
 
 describe('catalogue', () => {
-  it('has an English and a Dutch description for every rule', () => {
+  it('has an English and a Dutch heading for every rule', () => {
     const en = translator('en');
     const nl = translator('nl');
     for (const key of validationKeys) {
-      expect(en(`${key}.description`), key).toBeTruthy();
-      expect(nl(`${key}.description`), key).toBeTruthy();
+      expect(en(`${key}.heading`), key).toBeTruthy();
+      expect(nl(`${key}.heading`), key).toBeTruthy();
     }
   });
 
   it('falls back to English when no locale is given', () => {
-    expect(translator()(`${headingValidations.HEADING_MUST_NOT_BE_EMPTY}.description`)).toBe(
-      'Heading must not be empty',
-    );
+    expect(translator()(`${headingValidations.HEADING_MUST_NOT_BE_EMPTY}.heading`)).toBe('Heading must not be empty');
   });
 
   it('returns undefined for a rule that ships no solution', () => {
@@ -33,9 +31,9 @@ describe('catalogue', () => {
     expect(translator('en')('nodeTypes.somethingElse')).toBeUndefined();
   });
 
-  it('keeps the untranslated guidance link alongside the translated description', () => {
+  it('keeps the untranslated guidance link alongside the translated heading', () => {
     const nl = validationMessages('nl')[headingValidations.HEADING_MUST_NOT_BE_EMPTY];
-    expect(nl.description).toBe('Koptekst mag niet leeg zijn');
+    expect(nl.heading).toBe('Koptekst mag niet leeg zijn');
     expect(nl.href).toContain('nldesignsystem.nl');
   });
 });

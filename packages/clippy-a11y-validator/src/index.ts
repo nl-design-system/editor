@@ -103,7 +103,7 @@ export type {
   ValidationItem,
   ValidationItemNode,
   Locale,
-  MessageTable,
+  ValidationTranslations,
   Solution,
   SolutionParams,
   Translate,

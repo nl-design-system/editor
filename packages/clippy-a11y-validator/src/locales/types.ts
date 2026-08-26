@@ -24,9 +24,9 @@ export type Translate = (key: string, params?: SolutionParams) => string | undef
 export type Solution = string | ((params: SolutionParams) => string);
 
 /** Everything a host needs to present one rule, in one language. */
-export type RuleMessage = {
-  /** One-line summary of what is wrong. */
-  description: string;
+export type ValidationEntryTranslations = {
+  /** One-line summary of what is wrong, shown as the issue's title. */
+  heading: string;
   /**
    * Link to the NL Design System guidance for this rule.
    *
@@ -42,7 +42,7 @@ export type RuleMessage = {
 };
 
 /** One locale's catalogue: a message per rule, plus the node names those messages interpolate. */
-export type MessageTable = Record<ValidationKey, RuleMessage> & {
+export type ValidationTranslations = Record<ValidationKey, ValidationEntryTranslations> & {
   /** Localised names for the node/mark types named in `solution` strings. */
   nodeTypes: Record<string, string>;
 };
