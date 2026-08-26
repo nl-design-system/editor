@@ -12,19 +12,19 @@ Learn more about NL Design System at [nldesignsystem.nl](https://nldesignsystem.
 ```ts
 import {
   ClippyValidator,
-  formatViolations,
-  assertNoViolations,
+  formatValidationItems,
+  assertNoValidationItems,
 } from '@nl-design-system-community/clippy-a11y-validator';
 
-const { violations } = new ClippyValidator().validate('<h1></h1><img src="cat.png">');
+const { validationItems } = new ClippyValidator().validate('<h1></h1><img src="cat.png">');
 
-console.log(formatViolations(violations));
+console.log(formatValidationItems(validationItems));
 
 // Fail a CI check when any error-level issue is present:
-assertNoViolations(violations, { failOn: 'error' });
+assertNoValidationItems(validationItems, { failOn: 'error' });
 ```
 
-Each violation is grouped per rule and lists the offending nodes:
+Each item is grouped per rule and lists the offending nodes:
 
 ```ts
 {
@@ -50,10 +50,10 @@ Rule ids are accepted in `kebab-case` or `SCREAMING_SNAKE_CASE`.
 
 ## Reporting helpers
 
-- `formatViolations(result)` — a terminal-friendly report grouped by severity.
+- `formatValidationItems(result)` — a terminal-friendly report grouped by severity.
 - `countBySeverity(result)` — `{ error, warning, info }` node counts.
 - `hasSeverityAtLeast(result, 'warning')` — boolean gate.
-- `assertNoViolations(result, { failOn })` — throws the formatted report when the threshold is met.
+- `assertNoValidationItems(result, { failOn })` — throws the formatted report when the threshold is met.
 
 ## Corrections
 
@@ -135,7 +135,7 @@ test('editor output is accessible', async ({ page }) => {
     .settings({ topHeadingLevel: 2 }) // highest allowed starting heading level (default: 1)
     .validate();
 
-  expect(results.violations).toEqual([]);
+  expect(results.validationItems).toEqual([]);
 });
 ```
 

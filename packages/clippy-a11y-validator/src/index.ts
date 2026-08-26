@@ -1,6 +1,12 @@
 // ── Static validation entry point (AxeBuilder-style) ─────────────────────────────
 export { ClippyValidator, toKebabId } from './validator';
-export { SEVERITY_ORDER, assertNoViolations, countBySeverity, formatViolations, hasSeverityAtLeast } from './reporter';
+export {
+  SEVERITY_ORDER,
+  assertNoValidationItems,
+  countBySeverity,
+  formatValidationItems,
+  hasSeverityAtLeast,
+} from './reporter';
 
 // ── Low-level detection API (framework-agnostic) ───────────────────────────────
 export {
@@ -53,7 +59,7 @@ export type {
   ValidationScope,
   ValidationSeverity,
   ValidatorSettings,
-  Violation,
-  ViolationNode,
+  ValidationItem,
+  ValidationItemNode,
 } from './types';
 export type { ValidationKey, ValidationMessage } from './messages';

@@ -5,9 +5,9 @@ export type { ClippyBuilderOptions } from './builder';
 // ── Reporting helpers (re-exported from the validator core; DOM-free, run in Node) ──
 export {
   SEVERITY_ORDER,
-  assertNoViolations,
+  assertNoValidationItems,
   countBySeverity,
-  formatViolations,
+  formatValidationItems,
   hasSeverityAtLeast,
 } from '@nl-design-system-community/clippy-a11y-validator';
 
@@ -15,6 +15,6 @@ export {
 export type {
   ValidationReport,
   ValidationSeverity,
-  Violation,
-  ViolationNode,
+  ValidationItem,
+  ValidationItemNode,
 } from '@nl-design-system-community/clippy-a11y-validator';

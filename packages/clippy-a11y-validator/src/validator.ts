@@ -1,4 +1,4 @@
-import type { ValidationReport, ValidationResult, ValidatorSettings, Violation } from './types';
+import type { ValidationReport, ValidationResult, ValidatorSettings, ValidationItem } from './types';
 import { validationMessages, type ValidationKey } from './messages';
 import { runValidation } from './validators';
 
@@ -39,34 +39,34 @@ const htmlSnippet = (element: Element): string => {
 const parseHtml = (html: string): HTMLElement => new DOMParser().parseFromString(html, 'text/html').body;
 
 /**
- * Groups raw detection results into per-rule violations.
+ * Groups raw detection results into one validation item per rule.
  *
  * Results are keyed by rule id *and* severity, so a rule that can report at
- * more than one severity (e.g. heading order) yields one violation entry per
+ * more than one severity (e.g. heading order) yields one item entry per
  * severity rather than silently collapsing to the first.
  */
-const groupViolations = (results: ValidationResult[], root: Element): Violation[] => {
-  const byKey = new Map<string, Violation>();
+const groupValidationItems = (results: ValidationResult[], root: Element): ValidationItem[] => {
+  const byKey = new Map<string, ValidationItem>();
 
   for (const result of results) {
     if (!result.validatorKey) continue;
     const id = toKebabId(result.validatorKey);
     const groupKey = `${id}::${result.severity}`;
 
-    let violation = byKey.get(groupKey);
-    if (!violation) {
+    let item = byKey.get(groupKey);
+    if (!item) {
       const message = validationMessages[result.validatorKey as ValidationKey];
-      violation = {
+      item = {
         id,
         description: message?.description ?? id,
         href: message?.href,
         nodes: [],
         severity: result.severity,
       };
-      byKey.set(groupKey, violation);
+      byKey.set(groupKey, item);
     }
 
-    violation.nodes.push({ html: htmlSnippet(result.element), target: cssSelector(result.element, root) });
+    item.nodes.push({ html: htmlSnippet(result.element), target: cssSelector(result.element, root) });
   }
 
   return [...byKey.values()];
@@ -79,7 +79,7 @@ const groupViolations = (results: ValidationResult[], root: Element): Violation[
  *
  * @example
  * ```ts
- * const { violations } = new ClippyValidator()
+ * const { validationItems } = new ClippyValidator()
  *   .enableRules(['image-must-have-alt-text'])
  *   .validate('<img src="cat.png">');
  * ```
@@ -109,7 +109,7 @@ export class ClippyValidator {
     return this;
   }
 
-  /** Validate an HTML string or a live element and return grouped violations. */
+  /** Validate an HTML string or a live element and return grouped validation items. */
   validate(input: string | HTMLElement): ValidationReport {
     const root = typeof input === 'string' ? parseHtml(input) : input;
     const results = runValidation(root, {
@@ -117,6 +117,6 @@ export class ClippyValidator {
       enableRules: this.#enableRules,
       topHeadingLevel: this.#topHeadingLevel,
     });
-    return { violations: groupViolations(results, root) };
+    return { validationItems: groupValidationItems(results, root) };
   }
 }

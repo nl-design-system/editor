@@ -1,27 +1,27 @@
-import type { ValidationReport, ValidationSeverity, Violation } from './types';
+import type { ValidationReport, ValidationSeverity, ValidationItem } from './types';
 
 /** Severities from most to least severe. */
 export const SEVERITY_ORDER: readonly ValidationSeverity[] = ['error', 'warning', 'info'];
 
-const toViolations = (input: ValidationReport | Violation[]): Violation[] =>
-  Array.isArray(input) ? input : input.violations;
+const toValidationItems = (input: ValidationReport | ValidationItem[]): ValidationItem[] =>
+  Array.isArray(input) ? input : input.validationItems;
 
-/** Count offending nodes per severity across all violations. */
-export const countBySeverity = (input: ValidationReport | Violation[]): Record<ValidationSeverity, number> => {
+/** Count flagged nodes per severity across all validation items. */
+export const countBySeverity = (input: ValidationReport | ValidationItem[]): Record<ValidationSeverity, number> => {
   const counts: Record<ValidationSeverity, number> = { error: 0, info: 0, warning: 0 };
-  for (const violation of toViolations(input)) {
-    counts[violation.severity] += violation.nodes.length;
+  for (const item of toValidationItems(input)) {
+    counts[item.severity] += item.nodes.length;
   }
   return counts;
 };
 
-/** Whether any violation is at or above `threshold` (default `'error'`). */
+/** Whether any validation item is at or above `threshold` (default `'error'`). */
 export const hasSeverityAtLeast = (
-  input: ValidationReport | Violation[],
+  input: ValidationReport | ValidationItem[],
   threshold: ValidationSeverity = 'error',
 ): boolean => {
   const max = SEVERITY_ORDER.indexOf(threshold);
-  return toViolations(input).some((violation) => SEVERITY_ORDER.indexOf(violation.severity) <= max);
+  return toValidationItems(input).some((item) => SEVERITY_ORDER.indexOf(item.severity) <= max);
 };
 
 const SEVERITY_LABEL: Record<ValidationSeverity, string> = {
@@ -30,10 +30,10 @@ const SEVERITY_LABEL: Record<ValidationSeverity, string> = {
   warning: 'warning',
 };
 
-/** Render violations as a human-readable, terminal-friendly report. */
-export const formatViolations = (input: ValidationReport | Violation[]): string => {
-  const violations = toViolations(input);
-  const counts = countBySeverity(violations);
+/** Render validation items as a human-readable, terminal-friendly report. */
+export const formatValidationItems = (input: ValidationReport | ValidationItem[]): string => {
+  const validationItems = toValidationItems(input);
+  const counts = countBySeverity(validationItems);
   const total = counts.error + counts.warning + counts.info;
 
   if (total === 0) {
@@ -42,14 +42,14 @@ export const formatViolations = (input: ValidationReport | Violation[]): string 
 
   const summary = `Clippy a11y validation — ${total} issue${total === 1 ? '' : 's'} (${counts.error} error, ${counts.warning} warning, ${counts.info} info)`;
 
-  const ordered = [...violations].sort(
+  const ordered = [...validationItems].sort(
     (a, b) => SEVERITY_ORDER.indexOf(a.severity) - SEVERITY_ORDER.indexOf(b.severity),
   );
 
-  const lines = ordered.flatMap((violation) => {
-    const head = `  ${SEVERITY_LABEL[violation.severity]}  ${violation.id} — ${violation.description}`;
-    const nodeLines = violation.nodes.flatMap((node) => [`         at: ${node.target}`, `         ${node.html}`]);
-    const href = violation.href ? [`         see: ${violation.href}`] : [];
+  const lines = ordered.flatMap((item) => {
+    const head = `  ${SEVERITY_LABEL[item.severity]}  ${item.id} — ${item.description}`;
+    const nodeLines = item.nodes.flatMap((node) => [`         at: ${node.target}`, `         ${node.html}`]);
+    const href = item.href ? [`         see: ${item.href}`] : [];
     return [head, ...nodeLines, ...href];
   });
 
@@ -57,14 +57,14 @@ export const formatViolations = (input: ValidationReport | Violation[]): string 
 };
 
 /**
- * Throws when any violation is at or above `failOn` (default `'error'`),
+ * Throws when any validation item is at or above `failOn` (default `'error'`),
  * for use as a CI gate. The thrown error's message is the formatted report.
  */
-export const assertNoViolations = (
-  input: ValidationReport | Violation[],
+export const assertNoValidationItems = (
+  input: ValidationReport | ValidationItem[],
   { failOn = 'error' }: { failOn?: ValidationSeverity } = {},
 ): void => {
   if (hasSeverityAtLeast(input, failOn)) {
-    throw new Error(formatViolations(input));
+    throw new Error(formatValidationItems(input));
   }
 };

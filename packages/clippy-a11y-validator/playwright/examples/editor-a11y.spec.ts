@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import ClippyBuilder, { assertNoViolations, formatViolations } from '../index';
+import ClippyBuilder, { assertNoValidationItems, formatValidationItems } from '../index';
 
 const fixture = fileURLToPath(new URL('./fixture.html', import.meta.url));
 
@@ -22,10 +22,10 @@ test('published editor content has no accessibility errors', async ({ page }) =>
     .validate();
 
   // A readable report is printed when the assertion below fails.
-  console.info(formatViolations(results));
+  console.info(formatValidationItems(results));
 
-  // Gate the build: throws (failing the test) on any error-level violation.
-  assertNoViolations(results, { failOn: 'error' });
+  // Gate the build: throws (failing the test) on any error-level item.
+  assertNoValidationItems(results, { failOn: 'error' });
 
-  expect(results.violations).toEqual([]);
+  expect(results.validationItems).toEqual([]);
 });

@@ -61,25 +61,25 @@ export type DocumentValidator = (dom: HTMLElement, settings?: ValidatorSettings)
 
 export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
-/** One offending DOM location, in a form usable outside a browser context. */
-export type ViolationNode = {
+/** One flagged DOM location, in a form usable outside a browser context. */
+export type ValidationItemNode = {
   /** A CSS selector that locates the element relative to the validated root. */
   target: string;
   /** The element's `outerHTML`, truncated for readability. */
   html: string;
 };
 
-/** A reported rule violation, grouped by rule — modelled after axe-core's results. */
-export type Violation = {
+/** What one rule found, with every place it applies — modelled after axe-core's results. */
+export type ValidationItem = {
   /** kebab-case rule id, e.g. `image-must-have-alt-text`. */
   id: string;
   severity: ValidationSeverity;
   description: string;
   /** Optional link to NL Design System guidance. */
   href?: string;
-  nodes: ViolationNode[];
+  nodes: ValidationItemNode[];
 };
 
 export type ValidationReport = {
-  violations: Violation[];
+  validationItems: ValidationItem[];
 };

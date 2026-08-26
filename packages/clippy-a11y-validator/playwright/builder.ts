@@ -83,7 +83,7 @@ const runInPage = async ({
  * test('editor output is accessible', async ({ page }) => {
  *   await page.goto('/editor-preview');
  *   const results = await new ClippyBuilder({ page }).include('.clippy-content').validate();
- *   expect(results.violations).toEqual([]);
+ *   expect(results.validationItems).toEqual([]);
  * });
  * ```
  */
@@ -124,7 +124,7 @@ export class ClippyBuilder {
     return this;
   }
 
-  /** Inject the validator, run it against the (scoped) live DOM, and return grouped violations. */
+  /** Inject the validator, run it against the (scoped) live DOM, and return grouped validation items. */
   async validate(): Promise<ValidationReport> {
     const source = await loadValidatorSource();
     return this.#page.evaluate(runInPage, {
