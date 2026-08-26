@@ -63,7 +63,7 @@ export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
 /** One offending DOM location, in a form usable outside a browser context. */
 export type ViolationNode = {
-  /** A CSS selector that locates the element relative to the analyzed root. */
+  /** A CSS selector that locates the element relative to the validated root. */
   target: string;
   /** The element's `outerHTML`, truncated for readability. */
   html: string;
@@ -80,6 +80,6 @@ export type Violation = {
   nodes: ViolationNode[];
 };
 
-export type AnalysisResult = {
+export type ValidationReport = {
   violations: Violation[];
 };

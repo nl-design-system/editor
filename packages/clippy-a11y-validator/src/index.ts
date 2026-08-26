@@ -1,5 +1,5 @@
-// ── Static-analysis entry point (AxeBuilder-style) ─────────────────────────────
-export { ClippyValidations, toKebabId } from './analyze';
+// ── Static validation entry point (AxeBuilder-style) ─────────────────────────────
+export { ClippyValidator, toKebabId } from './validator';
 export { SEVERITY_ORDER, assertNoViolations, countBySeverity, formatViolations, hasSeverityAtLeast } from './reporter';
 
 // ── Low-level detection API (framework-agnostic) ───────────────────────────────
@@ -8,6 +8,7 @@ export {
   getActiveValidators,
   collectContentValidations,
   collectDocumentValidations,
+  runValidators,
 } from './validators';
 export { blockValidatorMap } from './validators/block';
 export { inlineValidatorMap } from './validators/inline';
@@ -40,7 +41,7 @@ export { buildValidationMap } from './validation-map';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 export type {
-  AnalysisResult,
+  ValidationReport,
   ContentValidator,
   CorrectValidationFunction,
   DocumentValidator,

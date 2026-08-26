@@ -1,13 +1,13 @@
-import type { AnalysisResult, ValidationSeverity, Violation } from './types';
+import type { ValidationReport, ValidationSeverity, Violation } from './types';
 
 /** Severities from most to least severe. */
 export const SEVERITY_ORDER: readonly ValidationSeverity[] = ['error', 'warning', 'info'];
 
-const toViolations = (input: AnalysisResult | Violation[]): Violation[] =>
+const toViolations = (input: ValidationReport | Violation[]): Violation[] =>
   Array.isArray(input) ? input : input.violations;
 
 /** Count offending nodes per severity across all violations. */
-export const countBySeverity = (input: AnalysisResult | Violation[]): Record<ValidationSeverity, number> => {
+export const countBySeverity = (input: ValidationReport | Violation[]): Record<ValidationSeverity, number> => {
   const counts: Record<ValidationSeverity, number> = { error: 0, info: 0, warning: 0 };
   for (const violation of toViolations(input)) {
     counts[violation.severity] += violation.nodes.length;
@@ -17,7 +17,7 @@ export const countBySeverity = (input: AnalysisResult | Violation[]): Record<Val
 
 /** Whether any violation is at or above `threshold` (default `'error'`). */
 export const hasSeverityAtLeast = (
-  input: AnalysisResult | Violation[],
+  input: ValidationReport | Violation[],
   threshold: ValidationSeverity = 'error',
 ): boolean => {
   const max = SEVERITY_ORDER.indexOf(threshold);
@@ -31,7 +31,7 @@ const SEVERITY_LABEL: Record<ValidationSeverity, string> = {
 };
 
 /** Render violations as a human-readable, terminal-friendly report. */
-export const formatViolations = (input: AnalysisResult | Violation[]): string => {
+export const formatViolations = (input: ValidationReport | Violation[]): string => {
   const violations = toViolations(input);
   const counts = countBySeverity(violations);
   const total = counts.error + counts.warning + counts.info;
@@ -61,7 +61,7 @@ export const formatViolations = (input: AnalysisResult | Violation[]): string =>
  * for use as a CI gate. The thrown error's message is the formatted report.
  */
 export const assertNoViolations = (
-  input: AnalysisResult | Violation[],
+  input: ValidationReport | Violation[],
   { failOn = 'error' }: { failOn?: ValidationSeverity } = {},
 ): void => {
   if (hasSeverityAtLeast(input, failOn)) {

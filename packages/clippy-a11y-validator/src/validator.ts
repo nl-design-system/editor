@@ -1,4 +1,4 @@
-import type { AnalysisResult, ValidationResult, ValidatorSettings, Violation } from './types';
+import type { ValidationReport, ValidationResult, ValidatorSettings, Violation } from './types';
 import { validationMessages, type ValidationKey } from './messages';
 import { runValidation } from './validators';
 
@@ -35,7 +35,7 @@ const htmlSnippet = (element: Element): string => {
   return html.length > SNIPPET_MAX_LENGTH ? `${html.slice(0, SNIPPET_MAX_LENGTH)}…` : html;
 };
 
-/** Parse an HTML string into a detached `<body>` element for analysis. */
+/** Parse an HTML string into a detached `<body>` element for validation. */
 const parseHtml = (html: string): HTMLElement => new DOMParser().parseFromString(html, 'text/html').body;
 
 /**
@@ -73,35 +73,35 @@ const groupViolations = (results: ValidationResult[], root: Element): Violation[
 };
 
 /**
- * Fluent, `AxeBuilder`-style entry point for static accessibility analysis of
+ * Fluent, `AxeBuilder`-style entry point for static accessibility validation of
  * HTML. Runs the same detection rules the Clippy editor uses, but with no
  * editor, ProseMirror, or localisation dependencies.
  *
  * @example
  * ```ts
- * const { violations } = new ClippyValidations()
+ * const { violations } = new ClippyValidator()
  *   .enableRules(['image-must-have-alt-text'])
- *   .analyze('<img src="cat.png">');
+ *   .validate('<img src="cat.png">');
  * ```
  */
-export class ClippyValidations {
+export class ClippyValidator {
   #enableRules: string[] = ['*'];
   #disableRules: string[] = [];
   #topHeadingLevel = 1;
 
-  /** Limit analysis to the given rules (kebab-case or SCREAMING_SNAKE_CASE). Defaults to all rules. */
+  /** Limit validation to the given rules (kebab-case or SCREAMING_SNAKE_CASE). Defaults to all rules. */
   enableRules(rules: string[]): this {
     this.#enableRules = rules;
     return this;
   }
 
-  /** Exclude the given rules from analysis. */
+  /** Exclude the given rules from validation. */
   disableRules(rules: string[]): this {
     this.#disableRules = rules;
     return this;
   }
 
-  /** Apply non-rule analysis settings, e.g. `{ topHeadingLevel: 2 }` (highest allowed starting heading level, default 1). */
+  /** Apply non-rule validation settings, e.g. `{ topHeadingLevel: 2 }` (highest allowed starting heading level, default 1). */
   settings(settings: Partial<Pick<ValidatorSettings, 'topHeadingLevel'>>): this {
     if (settings.topHeadingLevel !== undefined) {
       this.#topHeadingLevel = settings.topHeadingLevel;
@@ -109,8 +109,8 @@ export class ClippyValidations {
     return this;
   }
 
-  /** Analyze an HTML string or a live element and return grouped violations. */
-  analyze(input: string | HTMLElement): AnalysisResult {
+  /** Validate an HTML string or a live element and return grouped violations. */
+  validate(input: string | HTMLElement): ValidationReport {
     const root = typeof input === 'string' ? parseHtml(input) : input;
     const results = runValidation(root, {
       disableRules: this.#disableRules,

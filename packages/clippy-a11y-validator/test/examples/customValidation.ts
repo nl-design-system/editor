@@ -13,6 +13,7 @@
 import type { ContentValidator, ValidationResult } from '@/types';
 import { validationSeverity } from '@/constants';
 import { walkElements } from '@/helpers';
+import { runValidators } from '@/validators';
 
 /** Rule id. kebab-case or SCREAMING_SNAKE_CASE both work throughout the pipeline. */
 export const LINK_NEW_TAB_SHOULD_WARN = 'LINK_NEW_TAB_SHOULD_WARN';
@@ -51,19 +52,10 @@ export const linkNewTabShouldWarn: ContentValidator = (_dom, node) => {
 
 /**
  * 3. Wiring — the built-in `runValidation` only walks the shipped validator maps,
- *    so run a custom detector yourself. The result shape is identical to the
- *    built-in pipeline's, fix included.
+ *    so run a custom detector yourself, over the same walker and result collector
+ *    the built-in pipeline uses. The result shape is identical, fix included.
  */
-export const analyzeWithCustomRule = (root: HTMLElement): ValidationResult[] => {
-  const found: ValidationResult[] = [];
-
-  walkElements(root, (element) => {
-    const result = linkNewTabShouldWarn(root, element);
-    if (result) {
-      result.validatorKey = LINK_NEW_TAB_SHOULD_WARN;
-      found.push(result);
-    }
-  });
-
-  return found;
-};
+export const validateWithCustomRule = (root: HTMLElement): ValidationResult[] =>
+  [...walkElements(root)].flatMap((element) =>
+    runValidators<[HTMLElement, Element]>([[LINK_NEW_TAB_SHOULD_WARN, linkNewTabShouldWarn]], root, element),
+  );

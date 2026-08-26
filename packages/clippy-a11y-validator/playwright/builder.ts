@@ -1,4 +1,4 @@
-import type { AnalysisResult, ValidatorSettings } from '@nl-design-system-community/clippy-a11y-validator';
+import type { ValidationReport, ValidatorSettings } from '@nl-design-system-community/clippy-a11y-validator';
 import type { Page } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -32,7 +32,7 @@ const loadValidatorSource = (): Promise<string> => {
 };
 
 export type ClippyBuilderOptions = {
-  /** The Playwright page whose live DOM is analyzed. */
+  /** The Playwright page whose live DOM is validated. */
   page: Page;
 };
 
@@ -45,14 +45,14 @@ type RunArgs = {
 };
 
 // Runs in the page: imports the injected bundle as an object-URL module and
-// analyzes the (scoped) live DOM. Module-scoped so Playwright can serialize it.
+// validates the (scoped) live DOM. Module-scoped so Playwright can serialize it.
 const runInPage = async ({
   disableRules,
   enableRules,
   selector,
   source,
   topHeadingLevel,
-}: RunArgs): Promise<AnalysisResult> => {
+}: RunArgs): Promise<ValidationReport> => {
   const objectUrl = URL.createObjectURL(new Blob([source], { type: 'text/javascript' }));
   try {
     const module = await import(/* @vite-ignore */ objectUrl);
@@ -60,11 +60,11 @@ const runInPage = async ({
     if (!root) {
       throw new Error(`clippy-a11y-validator/playwright: no element matches selector "${selector}".`);
     }
-    return new module.ClippyValidations()
+    return new module.ClippyValidator()
       .enableRules(enableRules)
       .disableRules(disableRules)
       .settings({ topHeadingLevel })
-      .analyze(root);
+      .validate(root);
   } finally {
     URL.revokeObjectURL(objectUrl);
   }
@@ -82,7 +82,7 @@ const runInPage = async ({
  *
  * test('editor output is accessible', async ({ page }) => {
  *   await page.goto('/editor-preview');
- *   const results = await new ClippyBuilder({ page }).include('.clippy-content').analyze();
+ *   const results = await new ClippyBuilder({ page }).include('.clippy-content').validate();
  *   expect(results.violations).toEqual([]);
  * });
  * ```
@@ -98,25 +98,25 @@ export class ClippyBuilder {
     this.#page = page;
   }
 
-  /** Scope analysis to the first element matching `selector` (default: `document.body`). */
+  /** Scope validation to the first element matching `selector` (default: `document.body`). */
   include(selector: string): this {
     this.#selector = selector;
     return this;
   }
 
-  /** Limit analysis to the given rules (kebab-case or SCREAMING_SNAKE_CASE). Defaults to all rules. */
+  /** Limit validation to the given rules (kebab-case or SCREAMING_SNAKE_CASE). Defaults to all rules. */
   enableRules(rules: string[]): this {
     this.#enableRules = rules;
     return this;
   }
 
-  /** Exclude the given rules from analysis. */
+  /** Exclude the given rules from validation. */
   disableRules(rules: string[]): this {
     this.#disableRules = rules;
     return this;
   }
 
-  /** Apply non-rule analysis settings, e.g. `{ topHeadingLevel: 2 }` (highest allowed starting heading level, default 1). */
+  /** Apply non-rule validation settings, e.g. `{ topHeadingLevel: 2 }` (highest allowed starting heading level, default 1). */
   settings(settings: Partial<Pick<ValidatorSettings, 'topHeadingLevel'>>): this {
     if (settings.topHeadingLevel !== undefined) {
       this.#topHeadingLevel = settings.topHeadingLevel;
@@ -125,7 +125,7 @@ export class ClippyBuilder {
   }
 
   /** Inject the validator, run it against the (scoped) live DOM, and return grouped violations. */
-  async analyze(): Promise<AnalysisResult> {
+  async validate(): Promise<ValidationReport> {
     const source = await loadValidatorSource();
     return this.#page.evaluate(runInPage, {
       disableRules: this.#disableRules,

@@ -19,7 +19,7 @@ const ACCESSIBLE = `
 test('reports violations found in the live DOM', async ({ page }) => {
   await page.setContent(INACCESSIBLE);
 
-  const results = await new ClippyBuilder({ page }).analyze();
+  const results = await new ClippyBuilder({ page }).validate();
   const ids = results.violations.map((violation) => violation.id);
 
   expect(ids).toContain('heading-must-not-be-empty');
@@ -30,42 +30,42 @@ test('reports violations found in the live DOM', async ({ page }) => {
 test('reports no violations for accessible content', async ({ page }) => {
   await page.setContent(ACCESSIBLE);
 
-  const results = await new ClippyBuilder({ page }).analyze();
+  const results = await new ClippyBuilder({ page }).validate();
 
   expect(results.violations).toEqual([]);
   expect(countBySeverity(results)).toEqual({ error: 0, info: 0, warning: 0 });
 });
 
-test('scopes analysis to an included selector', async ({ page }) => {
+test('scopes validation to an included selector', async ({ page }) => {
   await page.setContent(`
     <header><img src="logo.png"></header>
     <main id="content"><h1>Titel</h1><p>Alles goed hier.</p></main>
   `);
 
   // Without scoping, the alt-less logo in the header is reported.
-  const wholePage = await new ClippyBuilder({ page }).analyze();
+  const wholePage = await new ClippyBuilder({ page }).validate();
   expect(wholePage.violations.map((violation) => violation.id)).toContain('image-must-have-alt-text');
 
-  // Scoped to #content, the header image is outside the analyzed root.
-  const scoped = await new ClippyBuilder({ page }).include('#content').analyze();
+  // Scoped to #content, the header image is outside the validated root.
+  const scoped = await new ClippyBuilder({ page }).include('#content').validate();
   expect(scoped.violations).toEqual([]);
 });
 
 test('honours enableRules / disableRules', async ({ page }) => {
   await page.setContent(INACCESSIBLE);
 
-  const onlyImages = await new ClippyBuilder({ page }).enableRules(['image-must-have-alt-text']).analyze();
+  const onlyImages = await new ClippyBuilder({ page }).enableRules(['image-must-have-alt-text']).validate();
   const ids = onlyImages.violations.map((violation) => violation.id);
 
   expect(ids).toEqual(['image-must-have-alt-text']);
 
-  const withoutImages = await new ClippyBuilder({ page }).disableRules(['image-must-have-alt-text']).analyze();
+  const withoutImages = await new ClippyBuilder({ page }).disableRules(['image-must-have-alt-text']).validate();
   expect(withoutImages.violations.map((violation) => violation.id)).not.toContain('image-must-have-alt-text');
 });
 
 test('formatViolations and assertNoViolations act as CI gates', async ({ page }) => {
   await page.setContent(INACCESSIBLE);
-  const results = await new ClippyBuilder({ page }).analyze();
+  const results = await new ClippyBuilder({ page }).validate();
 
   expect(formatViolations(results)).toContain('heading-must-not-be-empty');
   expect(() => assertNoViolations(results, { failOn: 'error' })).toThrow();

@@ -188,7 +188,7 @@ describe('collectDocumentValidations', () => {
     ]);
 
     expect(results.map((r) => r.validatorKey)).toEqual(['OK']);
-    expect(spy).toHaveBeenCalledWith('Document validator "BOOM" error:', expect.any(Error));
+    expect(spy).toHaveBeenCalledWith('Validator "BOOM" error:', expect.any(Error));
     spy.mockRestore();
   });
 });

@@ -16,13 +16,12 @@ export const getElementRange = (element: Element): Range | undefined => {
  * Depth-first pre-order traversal over every descendant element of `root`
  * (`root` itself is not visited). Reusable walker for element-scoped passes.
  */
-export const walkElements = (root: Element, visit: (element: Element) => void): void => {
-  const walk = (element: Element): void => {
-    visit(element);
-    for (const child of element.children) walk(child);
-  };
-  for (const child of root.children) walk(child);
-};
+export function* walkElements(root: Element): Generator<Element> {
+  for (const child of root.children) {
+    yield child;
+    yield* walkElements(child);
+  }
+}
 
 /** Matches a 2-character ordered-list prefix such as `"1."`, `"2)"`, `"3 "`. */
 export const orderedListIndicator = /^\d+[.)\]/ ]$/;

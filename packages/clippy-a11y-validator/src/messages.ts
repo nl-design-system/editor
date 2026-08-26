@@ -11,7 +11,7 @@ export type ValidationMessage = {
 };
 
 /**
- * Default English descriptions used for static-analysis reporting.
+ * Default English descriptions used for static-validation reporting.
  *
  * These mirror the wording of the editor's localised UI messages, but are plain
  * strings with no Lit / localisation dependency so they can be printed from a

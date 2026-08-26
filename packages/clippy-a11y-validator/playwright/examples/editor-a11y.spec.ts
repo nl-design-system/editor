@@ -6,7 +6,7 @@ import ClippyBuilder, { assertNoViolations, formatViolations } from '../index';
 const fixture = fileURLToPath(new URL('./fixture.html', import.meta.url));
 
 /**
- * End-to-end example: analyze rendered editor output and fail the test when any
+ * End-to-end example: validate rendered editor output and fail the test when any
  * error-level accessibility issue is present.
  *
  * In a real project you would replace the `setContent` call with a navigation
@@ -19,7 +19,7 @@ test('published editor content has no accessibility errors', async ({ page }) =>
 
   const results = await new ClippyBuilder({ page })
     .include('.clippy-content') // only audit the editor's content region
-    .analyze();
+    .validate();
 
   // A readable report is printed when the assertion below fails.
   console.info(formatViolations(results));

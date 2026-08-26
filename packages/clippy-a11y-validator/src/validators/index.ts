@@ -13,7 +13,7 @@ import { inlineValidatorMap } from './inline';
  * (`'NODE_SHOULD_NOT_BE_EMPTY'`) as used in TypeScript constants — both are
  * normalised to uppercase before comparison.
  */
-const toUpperKey = (key: string): string => key.toUpperCase().replaceAll('-', '_');
+const toScreamingSnakeCase = (key: string): string => key.toUpperCase().replaceAll('-', '_');
 
 /**
  * Filters a validator map to only the entries active under the given settings.
@@ -29,13 +29,13 @@ export const getActiveValidators = <V>(
   validators: Record<string, V>,
   { disableRules = [], enableRules }: ValidatorSettings,
 ): [string, V][] => {
-  const normalisedDisable = disableRules.map(toUpperKey);
+  const normalisedDisable = disableRules.map(toScreamingSnakeCase);
   if (normalisedDisable.includes('*')) return [];
 
   const entries = Object.entries(validators) as [string, V][];
   const disabled = new Set(normalisedDisable);
 
-  const normalisedEnable = enableRules.map(toUpperKey);
+  const normalisedEnable = enableRules.map(toScreamingSnakeCase);
   if (normalisedEnable.includes('*')) {
     return entries.filter(([key]) => !disabled.has(key));
   }
@@ -44,18 +44,25 @@ export const getActiveValidators = <V>(
   return entries.filter(([key]) => enabled.has(key) && !disabled.has(key));
 };
 
-// Run each validator on one element, isolating failures so a single faulty
-// validator can't abort the rest.
-const runContentValidators = (
-  dom: HTMLElement,
-  element: Element,
-  validators: [string, ContentValidator][],
+/**
+ * Runs a set of validators over one target, tags each result with the rule that
+ * produced it, and isolates failures so a single faulty validator cannot abort
+ * the rest.
+ *
+ * Generic over the validator's arguments, so document validators (which take the
+ * document and the settings) and content validators (which take the document and
+ * one element) share this one implementation. A validator may return a single
+ * result, several, or `null`.
+ */
+export const runValidators = <Args extends unknown[]>(
+  validators: [string, (...args: Args) => ValidationResult | ValidationResult[] | null][],
+  ...args: Args
 ): ValidationResult[] => {
   const results: ValidationResult[] = [];
   for (const [key, validator] of validators) {
     try {
-      const result = validator(dom, element);
-      if (result) {
+      const produced = validator(...args);
+      for (const result of produced === null ? [] : [produced].flat()) {
         result.validatorKey = key;
         results.push(result);
       }
@@ -73,13 +80,8 @@ const runContentValidators = (
 export const collectContentValidations = (
   dom: HTMLElement,
   validators: [string, ContentValidator][],
-): ValidationResult[] => {
-  const results: ValidationResult[] = [];
-  walkElements(dom, (element) => {
-    results.push(...runContentValidators(dom, element, validators));
-  });
-  return results;
-};
+): ValidationResult[] =>
+  [...walkElements(dom)].flatMap((element) => runValidators<[HTMLElement, Element]>(validators, dom, element));
 
 /**
  * Run every document-level validator. Each does its own internal DOM queries,
@@ -89,20 +91,7 @@ export const collectDocumentValidations = (
   dom: HTMLElement,
   settings: ValidatorSettings,
   validators: [string, DocumentValidator][],
-): ValidationResult[] => {
-  const results: ValidationResult[] = [];
-  for (const [key, validator] of validators) {
-    try {
-      for (const result of validator(dom, settings)) {
-        result.validatorKey = key;
-        results.push(result);
-      }
-    } catch (err) {
-      console.error(`Document validator "${key}" error:`, err);
-    }
-  }
-  return results;
-};
+): ValidationResult[] => runValidators<[HTMLElement, ValidatorSettings]>(validators, dom, settings);
 
 /**
  * Runs every active validator against `dom` and returns the raw detection

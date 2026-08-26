@@ -1,6 +1,6 @@
 # Clippy A11y Validator for NL Design System
 
-Static accessibility analysis for HTML, using the same content rules as the
+Static accessibility validation for HTML, using the same content rules as the
 [Clippy Editor](../editor). Runs anywhere a DOM is available (browser, Vitest
 browser mode, Playwright) with no editor, ProseMirror, or localisation
 dependencies.
@@ -11,12 +11,12 @@ Learn more about NL Design System at [nldesignsystem.nl](https://nldesignsystem.
 
 ```ts
 import {
-  ClippyValidations,
+  ClippyValidator,
   formatViolations,
   assertNoViolations,
 } from '@nl-design-system-community/clippy-a11y-validator';
 
-const { violations } = new ClippyValidations().analyze('<h1></h1><img src="cat.png">');
+const { violations } = new ClippyValidator().validate('<h1></h1><img src="cat.png">');
 
 console.log(formatViolations(violations));
 
@@ -39,11 +39,11 @@ Each violation is grouped per rule and lists the offending nodes:
 ### Selecting rules
 
 ```ts
-new ClippyValidations()
+new ClippyValidator()
   .enableRules(['image-must-have-alt-text']) // only these rules (default: all)
   .disableRules(['paragraph-should-not-resemble-list']) // exclude rules
   .settings({ topHeadingLevel: 2 }) // highest allowed starting heading level (default: 1)
-  .analyze(html);
+  .validate(html);
 ```
 
 Rule ids are accepted in `kebab-case` or `SCREAMING_SNAKE_CASE`.
@@ -133,7 +133,7 @@ test('editor output is accessible', async ({ page }) => {
     .enableRules(['image-must-have-alt-text']) // only these rules (default: all)
     .disableRules(['paragraph-should-not-resemble-list']) // exclude rules
     .settings({ topHeadingLevel: 2 }) // highest allowed starting heading level (default: 1)
-    .analyze();
+    .validate();
 
   expect(results.violations).toEqual([]);
 });
@@ -142,8 +142,8 @@ test('editor output is accessible', async ({ page }) => {
 The reporting helpers above are re-exported from `/playwright` too, so a single
 import covers both running and reporting.
 
-`analyze()` reads the validator's dependency-free ESM bundle in Node, injects it
-into the page as an object-URL module, and runs `ClippyValidations` against the
+`validate()` reads the validator's dependency-free ESM bundle in Node, injects it
+into the page as an object-URL module, and runs `ClippyValidator` against the
 scoped element in the browser.
 
 > **Content Security Policy:** injection uses a `blob:` module. Pages that forbid
@@ -157,6 +157,6 @@ editor output.
 
 ## Running in the terminal
 
-The analyzer needs a DOM. The package's own tests run under Vitest in browser
+The validator needs a DOM. The package's own tests run under Vitest in browser
 mode (Playwright/Chromium); point Vitest at a spec that reads your HTML fixtures
-and calls `analyze()`, then run `pnpm test`.
+and calls `validate()`, then run `pnpm test`.

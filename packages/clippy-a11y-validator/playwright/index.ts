@@ -13,7 +13,7 @@ export {
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 export type {
-  AnalysisResult,
+  ValidationReport,
   ValidationSeverity,
   Violation,
   ViolationNode,
