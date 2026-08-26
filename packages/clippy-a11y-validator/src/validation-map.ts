@@ -1,6 +1,6 @@
 import type { ValidationMapResult, ValidatorSettings } from './types';
+import { runValidation } from './detection';
 import { getElementRange } from './helpers';
-import { runValidation } from './validators';
 
 /**
  * Runs detection and returns a `Range`-keyed map, each entry carrying the

@@ -1,14 +1,10 @@
 import type { ContentValidator } from '@/types';
 import { definitionListValidations, validationSeverity } from '@/constants';
-import { correctDefinitionListMissingTerm, correctDefinitionTermMissingDescription } from '@/correctors';
-import { isEmptyOrWhitespace } from '@/helpers';
+import { correctDefinitionListMissingTerm, correctDefinitionTermMissingDescription } from './corrector';
+import { hasOnlyEmptyTerms, isEmptyTermWithDescription } from './rules';
 
 const definitionDescriptionMustFollowTerm: ContentValidator = (_dom, node) => {
-  if (node.tagName !== 'DT') return null;
-  if (!isEmptyOrWhitespace(node.textContent ?? '')) return null;
-  const dd = node.nextElementSibling;
-  if (dd?.tagName !== 'DD') return null;
-  if (isEmptyOrWhitespace(dd.textContent ?? '')) return null;
+  if (!isEmptyTermWithDescription(node)) return null;
   return {
     correct: correctDefinitionTermMissingDescription(node),
     element: node,
@@ -18,10 +14,7 @@ const definitionDescriptionMustFollowTerm: ContentValidator = (_dom, node) => {
 };
 
 const descriptionListMustContainTerm: ContentValidator = (_dom, node) => {
-  if (node.tagName !== 'DL') return null;
-  const terms = Array.from(node.querySelectorAll('dt')).filter((dt) => dt.closest('dl') === node);
-  if (terms.length === 0) return null;
-  if (terms.some((dt) => !isEmptyOrWhitespace(dt.textContent ?? ''))) return null;
+  if (!hasOnlyEmptyTerms(node)) return null;
   return {
     correct: correctDefinitionListMissingTerm(node),
     element: node,

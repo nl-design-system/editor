@@ -12,12 +12,11 @@ export {
 export {
   runValidation,
   getActiveValidators,
-  contentValidators,
-  treeValidators,
   collectContentValidations,
   collectTreeValidations,
   runValidators,
-} from './validators';
+} from './detection';
+export { contentValidators, treeValidators } from './components';
 
 // ── Per-component validators ───────────────────────────────────────────────────
 export {
@@ -26,13 +25,35 @@ export {
   headingMustHaveCorrectOrder,
   headingOneMustBeUnique,
   headingOneMustBeFirst,
-} from './validators/heading';
-export { paragraphContentValidators, paragraphMustUseSemanticList } from './validators/paragraph';
-export { linkContentValidators } from './validators/link';
-export { imageContentValidators } from './validators/image';
-export { tableContentValidators } from './validators/table';
-export { definitionListContentValidators } from './validators/definition-list';
-export { richTextContentValidators } from './validators/rich-text-content';
+} from './components/heading';
+export { paragraphContentValidators, paragraphMustUseSemanticList } from './components/paragraph';
+export { linkContentValidators } from './components/link';
+export { imageContentValidators } from './components/image';
+export { tableContentValidators } from './components/table';
+export { definitionListContentValidators } from './components/definition-list';
+export { richTextContentValidators } from './components/rich-text-content';
+
+// ── Per-component rules (pure predicates, reusable in custom validators) ───────
+export {
+  findHeadingOrderOffenses,
+  findMisplacedTopLevelHeading,
+  findRepeatedHeadingOnes,
+  hasFormattingInsideHeading,
+  headingLevelOf,
+  isEmptyHeading,
+  isHeading,
+} from './components/heading/rules';
+export {
+  detectListLikeParagraph,
+  isEntirelyBoldParagraph,
+  isParagraph,
+  resemblesHeading,
+} from './components/paragraph/rules';
+export { hasGenericLinkText } from './components/link/rules';
+export { isMissingAltText } from './components/image/rules';
+export { hasHeaderColumn, hasHeaderRow, hasSingleRow, isTable, lacksTableHeaders } from './components/table/rules';
+export { hasOnlyEmptyTerms, isEmptyTermWithDescription } from './components/definition-list/rules';
+export { emptyBlockNodeType, emptyInlineType, isUnderlined } from './components/rich-text-content/rules';
 
 // ── Rule ids, grouped by NL Design System component ────────────────────────────
 export {
@@ -77,4 +98,6 @@ export type {
   ValidationItem,
   ValidationItemNode,
 } from './types';
+export type { HeadingOrderOffense, HeadingOrderProblem } from './components/heading/rules';
+export type { ListLikeParagraph } from './components/paragraph/rules';
 export type { ValidationKey, ValidationMessage } from './messages';

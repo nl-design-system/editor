@@ -1,34 +1,6 @@
-import type { ContentValidator, TreeValidator, ValidationResult, ValidatorSettings } from '@/types';
-import { walkElements } from '@/helpers';
-import { definitionListContentValidators } from './definition-list';
-import { headingContentValidators, headingTreeValidators } from './heading';
-import { imageContentValidators } from './image';
-import { linkContentValidators } from './link';
-import { paragraphContentValidators } from './paragraph';
-import { richTextContentValidators } from './rich-text-content';
-import { tableContentValidators } from './table';
-
-/**
- * Every per-element validator, keyed by rule id and grouped by the NL Design
- * System component it applies to. Run against each element during the DOM walk.
- */
-export const contentValidators: Record<string, ContentValidator> = {
-  ...headingContentValidators,
-  ...paragraphContentValidators,
-  ...linkContentValidators,
-  ...imageContentValidators,
-  ...tableContentValidators,
-  ...definitionListContentValidators,
-  ...richTextContentValidators,
-};
-
-/**
- * Every whole-tree validator, keyed by rule id. These inspect the content as a
- * whole rather than a single element (currently only heading-order rules).
- */
-export const treeValidators: Record<string, TreeValidator> = {
-  ...headingTreeValidators,
-};
+import type { ContentValidator, TreeValidator, ValidationResult, ValidatorSettings } from './types';
+import { contentValidators, treeValidators } from './components';
+import { walkElements } from './helpers';
 
 /**
  * Normalise a rule identifier to the canonical SCREAMING_SNAKE_CASE format

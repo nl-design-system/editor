@@ -1,13 +1,10 @@
 import type { ContentValidator } from '@/types';
 import { linkValidations, validationSeverity } from '@/constants';
-import { correctGenericLinkText } from '@/correctors';
-
-const genericLinkTexts = new Set(['lees meer', 'klik hier']);
+import { correctGenericLinkText } from './corrector';
+import { hasGenericLinkText } from './rules';
 
 const linkShouldNotBeTooGeneric: ContentValidator = (_dom, node) => {
-  if (node.tagName !== 'A') return null;
-  const text = (node.textContent ?? '').trim().toLowerCase();
-  if (!genericLinkTexts.has(text)) return null;
+  if (!hasGenericLinkText(node)) return null;
   return {
     correct: correctGenericLinkText(node),
     element: node,

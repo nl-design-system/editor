@@ -1,6 +1,6 @@
 import type { ValidationReport, ValidationResult, ValidatorSettings, ValidationItem } from './types';
+import { runValidation } from './detection';
 import { validationMessages, type ValidationKey } from './messages';
-import { runValidation } from './validators';
 
 const SNIPPET_MAX_LENGTH = 160;
 

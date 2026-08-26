@@ -1,12 +1,10 @@
 import type { ContentValidator } from '@/types';
 import { imageValidations, validationSeverity } from '@/constants';
-import { correctImageMissingAltText } from '@/correctors';
-import { isEmptyOrWhitespace } from '@/helpers';
+import { correctImageMissingAltText } from './corrector';
+import { isMissingAltText } from './rules';
 
 const imageMustHaveAltText: ContentValidator = (_dom, node) => {
-  if (node.tagName !== 'IMG') return null;
-  const alt = (node as HTMLImageElement).alt;
-  if (alt && !isEmptyOrWhitespace(alt)) return null;
+  if (!isMissingAltText(node)) return null;
   return {
     correct: correctImageMissingAltText(node as HTMLImageElement),
     element: node,

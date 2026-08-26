@@ -87,7 +87,26 @@ import { correctEmptyHeading } from '@nl-design-system-community/clippy-a11y-val
 correctEmptyHeading(document.querySelector('h1')!)(); // removes the empty heading
 ```
 
-> **Note:** the definition-term placeholder is currently hard-coded (`"definition term"`) and not localized — see the `TODO` in `src/correctors/functions.ts`.
+> **Note:** the definition-term placeholder is currently hard-coded (`"definition term"`) and not localized — see the `TODO` in `src/components/definition-list/corrector.ts`.
+
+## Package layout
+
+One folder per [NL Design System component](https://nldesignsystem.nl/componenten),
+each owning its whole vertical slice:
+
+```text
+src/components/heading/
+  rules.ts      pure predicates — "does this element break the guideline?"
+  corrector.ts  the deferred DOM fixes for those rules
+  index.ts      binds rule + correction into validators, keyed by rule id
+```
+
+Rules take DOM and return a verdict: no severity, no correction, no
+`ValidationResult`. That keeps them unit-testable on a detached document
+(`rules.test.ts` next to each one) and reusable inside custom validators.
+
+`src/detection.ts` holds the engine that filters the active rules and runs them;
+`src/components/index.ts` is the only module that knows every component.
 
 ### Custom rules
 

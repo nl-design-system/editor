@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { ContentValidator, TreeValidator, ValidationResult } from '@/types';
+import { headingMustHaveCorrectOrder, headingOneMustBeUnique, headingOneMustBeFirst } from '@/components/heading';
 import {
   definitionListValidations,
   headingValidations,
@@ -10,8 +11,7 @@ import {
   tableValidations,
   validationSeverity,
 } from '@/constants';
-import { collectContentValidations, collectTreeValidations, runValidation } from '@/validators';
-import { headingMustHaveCorrectOrder, headingOneMustBeUnique, headingOneMustBeFirst } from '@/validators/heading';
+import { collectContentValidations, collectTreeValidations, runValidation } from '@/detection';
 
 const ALL: { enableRules: string[] } = { enableRules: ['*'] };
 

@@ -12,8 +12,8 @@
  */
 import type { ContentValidator, ValidationResult } from '@/types';
 import { validationSeverity } from '@/constants';
+import { runValidators } from '@/detection';
 import { walkElements } from '@/helpers';
-import { runValidators } from '@/validators';
 
 /** Rule id. kebab-case or SCREAMING_SNAKE_CASE both work throughout the pipeline. */
 export const LINK_NEW_TAB_SHOULD_WARN = 'LINK_NEW_TAB_SHOULD_WARN';

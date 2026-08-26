@@ -1,15 +1,10 @@
 import type { ContentValidator } from '@/types';
 import { tableValidations, validationSeverity } from '@/constants';
-import { correctTableMissingHeadings, correctTableMissingRows } from '@/correctors';
+import { correctTableMissingHeadings, correctTableMissingRows } from './corrector';
+import { hasSingleRow, lacksTableHeaders } from './rules';
 
 const tableMustHaveHeadings: ContentValidator = (_dom, node) => {
-  if (node.tagName !== 'TABLE') return null;
-  const firstRow = node.querySelector('tr');
-  if (!firstRow) return null;
-  const hasHeaderRow = Array.from(firstRow.children).every((cell) => cell.tagName === 'TH');
-  const hasHeaderColumn =
-    !hasHeaderRow && Array.from(node.querySelectorAll('tr')).every((row) => row.firstElementChild?.tagName === 'TH');
-  if (hasHeaderRow || hasHeaderColumn) return null;
+  if (!lacksTableHeaders(node)) return null;
   return {
     correct: correctTableMissingHeadings(node as HTMLTableElement),
     element: node,
@@ -19,8 +14,7 @@ const tableMustHaveHeadings: ContentValidator = (_dom, node) => {
 };
 
 const tableMustHaveMultipleRows: ContentValidator = (_dom, node) => {
-  if (node.tagName !== 'TABLE') return null;
-  if (node.querySelectorAll('tr').length >= 2) return null;
+  if (!hasSingleRow(node)) return null;
   return {
     correct: correctTableMissingRows(node as HTMLTableElement),
     element: node,
