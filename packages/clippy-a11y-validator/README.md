@@ -174,25 +174,28 @@ A custom rule is just a `ContentValidator` that returns its own `correct` — th
 same shape the built-ins use, with no registry to register against:
 
 ```ts
-const linkNewTabShouldWarn: ContentValidator = (_dom, node, settings) => {
-  if (node.tagName !== 'A' || (node as HTMLAnchorElement).target !== '_blank') return null;
-  const name = (node.getAttribute('aria-label') ?? node.textContent ?? '').trim();
-  if (/new (tab|window)|opens in/i.test(name)) return null;
-  return {
-    correct: () => node.setAttribute('aria-label', `${name} (opens in a new tab)`.trim()),
-    element: node,
-    scope: 'inline',
-    severity: 'warning',
-    solution:
-      settings?.locale === 'nl'
-        ? 'Zeg in de linktekst dat de link in een nieuw tabblad opent.'
-        : 'Say in the link text that it opens in a new tab.',
+const linkNewTabShouldWarn =
+  ({ locale }: ValidationContext): ContentValidator =>
+  (_dom, node) => {
+    if (node.tagName !== 'A' || (node as HTMLAnchorElement).target !== '_blank') return null;
+    const name = (node.getAttribute('aria-label') ?? node.textContent ?? '').trim();
+    if (/new (tab|window)|opens in/i.test(name)) return null;
+    return {
+      correct: () => node.setAttribute('aria-label', `${name} (opens in a new tab)`.trim()),
+      element: node,
+      scope: 'inline',
+      severity: 'warning',
+      solution: SOLUTIONS[locale ?? 'en'],
+    };
   };
-};
 ```
 
-A validator receives the run's `settings`, so a custom rule can localise its own
-`solution` the same way the built-ins do.
+Validators are _built_ from a `ValidationContext` rather than handed one per call:
+a rule needing the run's translator or `topHeadingLevel` closes over them in a
+factory, so the detection function itself stays a plain `(dom, element)`. The
+built-ins localise the same way — `blockValidators(context)`,
+`inlineValidators(context)` and `documentValidators(context)` each build their map
+from a context.
 
 Detection stays yours to drive — the built-in `runValidation` only walks the
 shipped validator maps, so run your validator yourself and tag each result with

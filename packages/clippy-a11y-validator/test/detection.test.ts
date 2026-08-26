@@ -178,7 +178,6 @@ describe('collectContentValidations', () => {
 
 describe('collectTreeValidations', () => {
   const parse = (html: string): HTMLElement => new DOMParser().parseFromString(html, 'text/html').body;
-  const settings = { enableRules: ['*'] };
 
   it('isolates a throwing tree validator so the others still produce results', () => {
     const boom: TreeValidator = () => {
@@ -188,7 +187,7 @@ describe('collectTreeValidations', () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const dom = parse('<p>x</p>');
 
-    const results = collectTreeValidations(dom, validationContext(settings), [
+    const results = collectTreeValidations(dom, [
       ['BOOM', boom],
       ['OK', ok],
     ]);
@@ -202,12 +201,12 @@ describe('collectTreeValidations', () => {
 describe('heading order detection', () => {
   it('returns no error for a correct heading order', () => {
     const body = new DOMParser().parseFromString('<h1>a</h1><h2>b</h2>', 'text/html').body;
-    expect(headingMustHaveCorrectOrder(body)).toStrictEqual([]);
+    expect(headingMustHaveCorrectOrder()(body)).toStrictEqual([]);
   });
 
   it('returns a warning naming the allowed levels for a skipped level', () => {
     const body = new DOMParser().parseFromString('<h1>a</h1><h3>b</h3>', 'text/html').body;
-    const [result] = headingMustHaveCorrectOrder(body);
+    const [result] = headingMustHaveCorrectOrder()(body);
     expect(result.severity).toBe('warning');
     expect(result.solution).toBe(
       '**Heading level 3** must not directly follow a **heading level 1**. Use heading level 2.',
@@ -216,7 +215,7 @@ describe('heading order detection', () => {
 
   it('returns an error when a heading is below topHeadingLevel', () => {
     const body = new DOMParser().parseFromString('<h1>a</h1><h2>b</h2>', 'text/html').body;
-    const results = headingMustHaveCorrectOrder(body, validationContext({ enableRules: ['*'], topHeadingLevel: 2 }));
+    const results = headingMustHaveCorrectOrder(validationContext({ enableRules: ['*'], topHeadingLevel: 2 }))(body);
     expect(results[0].severity).toBe('error');
     expect(results[0].solution).toBe(
       '**Heading level 1** exceeds the highest allowed heading level (2) in this document.',
@@ -225,17 +224,17 @@ describe('heading order detection', () => {
 
   it('detects duplicate heading ones', () => {
     const body = new DOMParser().parseFromString('<h1>a</h1><h1>b</h1><h1>c</h1>', 'text/html').body;
-    expect(headingOneMustBeUnique(body)).toHaveLength(2);
+    expect(headingOneMustBeUnique()(body)).toHaveLength(2);
   });
 
   it('flags a document not starting with an h1', () => {
     const body = new DOMParser().parseFromString('<h2>a</h2>', 'text/html').body;
-    expect(headingOneMustBeFirst(body)).toHaveLength(1);
+    expect(headingOneMustBeFirst()(body)).toHaveLength(1);
   });
 
   it('does not flag when topHeadingLevel is not 1', () => {
     const body = new DOMParser().parseFromString('<h2>a</h2>', 'text/html').body;
-    expect(headingOneMustBeFirst(body, validationContext({ enableRules: ['*'], topHeadingLevel: 2 }))).toStrictEqual(
+    expect(headingOneMustBeFirst(validationContext({ enableRules: ['*'], topHeadingLevel: 2 }))(body)).toStrictEqual(
       [],
     );
   });

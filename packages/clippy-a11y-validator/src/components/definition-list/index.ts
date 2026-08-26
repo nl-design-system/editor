@@ -25,7 +25,8 @@ const descriptionListMustContainTerm: ContentValidator = (_dom, node) => {
 
 // ── Validator map ─────────────────────────────────────────────────────────────
 
-export const definitionListContentValidators: Record<string, ContentValidator> = {
+/** Build the definition-list validators for one run. No rule here words its own `solution` yet. */
+export const definitionListContentValidators = (): Record<string, ContentValidator> => ({
   [definitionListValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM]: definitionDescriptionMustFollowTerm,
   [definitionListValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM]: descriptionListMustContainTerm,
-};
+});

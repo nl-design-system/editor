@@ -1,4 +1,4 @@
-import type { ContentValidator, TreeValidator } from '@/types';
+import type { ContentValidator, TreeValidator, ValidationContext } from '@/types';
 import { definitionListContentValidators } from './definition-list';
 import { headingContentValidators, headingTreeValidators } from './heading';
 import { imageContentValidators } from './image';
@@ -13,23 +13,26 @@ import { tableContentValidators } from './table';
 // only place that knows about all of them.
 
 /**
- * Every per-element validator, keyed by rule id and grouped by the NL Design
- * System component it applies to. Run against each element during the DOM walk.
+ * Build every per-element validator for one run, keyed by rule id and grouped by
+ * the NL Design System component it applies to. Run against each element during
+ * the DOM walk. Rules that word their own `solution` close over `context`'s
+ * translator, so detection itself only ever takes the DOM it inspects.
  */
-export const contentValidators: Record<string, ContentValidator> = {
-  ...headingContentValidators,
-  ...paragraphContentValidators,
-  ...linkContentValidators,
-  ...imageContentValidators,
-  ...tableContentValidators,
-  ...definitionListContentValidators,
-  ...richTextContentValidators,
-};
+export const contentValidators = (context: ValidationContext): Record<string, ContentValidator> => ({
+  ...headingContentValidators(context),
+  ...paragraphContentValidators(context),
+  ...linkContentValidators(),
+  ...imageContentValidators(context),
+  ...tableContentValidators(),
+  ...definitionListContentValidators(),
+  ...richTextContentValidators(context),
+});
 
 /**
- * Every whole-tree validator, keyed by rule id. These inspect the content as a
- * whole rather than a single element (currently only heading-order rules).
+ * Build every whole-tree validator for one run, keyed by rule id. These inspect
+ * the content as a whole rather than a single element (currently only
+ * heading-order rules).
  */
-export const treeValidators: Record<string, TreeValidator> = {
-  ...headingTreeValidators,
-};
+export const treeValidators = (context: ValidationContext): Record<string, TreeValidator> => ({
+  ...headingTreeValidators(context),
+});

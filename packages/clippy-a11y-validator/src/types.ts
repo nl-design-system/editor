@@ -67,28 +67,20 @@ export type ValidatorSettings = {
 };
 
 /**
- * What a validator is handed for one run: the settings, plus a {@link Translate}
- * already bound to `settings.locale`. Validators name a message key and nothing
- * else — the locale never has to be threaded through call by call.
+ * What a run is configured with: the settings, plus a {@link Translate} already
+ * bound to `settings.locale`.
  *
- * Build one with `validationContext(settings)`.
+ * Validators are *built* from a context rather than handed one per call, so a
+ * detection function takes only the DOM it inspects. Build one with
+ * `validationContext(settings)`.
  */
 export type ValidationContext = ValidatorSettings & { t: Translate };
 
 /** Runs against a single element during the DOM walk (e.g. one paragraph, one link). */
-export type ContentValidator = (
-  dom: HTMLElement,
-  element: Element,
-  context: ValidationContext,
-) => ValidationResult | null;
+export type ContentValidator = (dom: HTMLElement, element: Element) => ValidationResult | null;
 
-/**
- * Runs once against the whole content tree (e.g. heading order across all headings).
- *
- * Tree validators are exported individually and are useful standalone, so the
- * context is optional here and defaulted by each implementation.
- */
-export type TreeValidator = (dom: HTMLElement, context?: ValidationContext) => ValidationResult[];
+/** Runs once against the whole content tree (e.g. heading order across all headings). */
+export type TreeValidator = (dom: HTMLElement) => ValidationResult[];
 
 export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 

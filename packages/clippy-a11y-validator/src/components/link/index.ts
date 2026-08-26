@@ -15,6 +15,7 @@ const linkShouldNotBeTooGeneric: ContentValidator = (_dom, node) => {
 
 // ── Validator map ─────────────────────────────────────────────────────────────
 
-export const linkContentValidators: Record<string, ContentValidator> = {
+/** Build the link validators for one run. No rule here words its own `solution` yet. */
+export const linkContentValidators = (): Record<string, ContentValidator> => ({
   [linkValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC]: linkShouldNotBeTooGeneric,
-};
+});

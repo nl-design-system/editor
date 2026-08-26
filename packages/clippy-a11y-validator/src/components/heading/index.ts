@@ -1,4 +1,4 @@
-import type { ContentValidator, TreeValidator } from '@/types';
+import type { ContentValidator, TreeValidator, ValidationContext } from '@/types';
 import { headingValidations, validationSeverity } from '@/constants';
 import { validationContext } from '@/i18n';
 import {
@@ -29,16 +29,18 @@ const headingMustNotBeEmpty: ContentValidator = (_dom, node) => {
   };
 };
 
-const headingShouldNotContainBoldOrItalic: ContentValidator = (_dom, node, { t }) => {
-  if (!hasFormattingInsideHeading(node)) return null;
-  return {
-    correct: correctHeadingWithFormatting(node),
-    element: node,
-    scope: 'block',
-    severity: validationSeverity.INFO,
-    solution: t(`${headingValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC}.solution`),
+const headingShouldNotContainBoldOrItalic =
+  ({ t }: ValidationContext): ContentValidator =>
+  (_dom, node) => {
+    if (!hasFormattingInsideHeading(node)) return null;
+    return {
+      correct: correctHeadingWithFormatting(node),
+      element: node,
+      scope: 'block',
+      severity: validationSeverity.INFO,
+      solution: t(`${headingValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC}.solution`),
+    };
   };
-};
 
 // ── Tree validators (heading order across the whole content) ──────────────────
 
@@ -48,26 +50,25 @@ const ORDER_SEVERITY = {
   'skipped-level': validationSeverity.WARNING,
 } as const;
 
-export const headingMustHaveCorrectOrder: TreeValidator = (dom, context = validationContext()) => {
-  const { t, topHeadingLevel = 1 } = context;
-
-  return findHeadingOrderOffenses(dom, topHeadingLevel).map(
-    ({ heading, headingLevel, precedingHeadingLevel, problem, targetLevel }) => ({
-      correct: correctHeadingLevel(heading, targetLevel),
-      element: heading,
-      scope: 'block' as const,
-      severity: ORDER_SEVERITY[problem],
-      solution: t(`${headingValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER}.solution`, {
-        aboveTopLevel: problem === 'above-top-level',
-        allowedLevels: problem === 'above-top-level' ? [] : allowedHeadingLevels(topHeadingLevel, targetLevel),
-        headingLevel,
-        precedingHeadingLevel,
+export const headingMustHaveCorrectOrder =
+  ({ t, topHeadingLevel = 1 }: ValidationContext = validationContext()): TreeValidator =>
+  (dom) =>
+    findHeadingOrderOffenses(dom, topHeadingLevel).map(
+      ({ heading, headingLevel, precedingHeadingLevel, problem, targetLevel }) => ({
+        correct: correctHeadingLevel(heading, targetLevel),
+        element: heading,
+        scope: 'block' as const,
+        severity: ORDER_SEVERITY[problem],
+        solution: t(`${headingValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER}.solution`, {
+          aboveTopLevel: problem === 'above-top-level',
+          allowedLevels: problem === 'above-top-level' ? [] : allowedHeadingLevels(topHeadingLevel, targetLevel),
+          headingLevel,
+          precedingHeadingLevel,
+        }),
       }),
-    }),
-  );
-};
+    );
 
-export const headingOneMustBeUnique: TreeValidator = (dom) =>
+export const headingOneMustBeUnique = (): TreeValidator => (dom) =>
   findRepeatedHeadingOnes(dom).map((h1) => ({
     correct: correctDuplicateHeadingOne(h1),
     element: h1,
@@ -75,29 +76,36 @@ export const headingOneMustBeUnique: TreeValidator = (dom) =>
     severity: validationSeverity.ERROR,
   }));
 
-export const headingOneMustBeFirst: TreeValidator = (dom, context) => {
-  const target = findMisplacedTopLevelHeading(dom, context?.topHeadingLevel ?? 1);
-  if (!target) return [];
+export const headingOneMustBeFirst =
+  ({ topHeadingLevel = 1 }: ValidationContext = validationContext()): TreeValidator =>
+  (dom) => {
+    const target = findMisplacedTopLevelHeading(dom, topHeadingLevel);
+    if (!target) return [];
 
-  return [
-    {
-      correct: correctMissingTopLevelHeading(target),
-      element: target,
-      scope: 'block',
-      severity: validationSeverity.INFO,
-    },
-  ];
-};
+    return [
+      {
+        correct: correctMissingTopLevelHeading(target),
+        element: target,
+        scope: 'block',
+        severity: validationSeverity.INFO,
+      },
+    ];
+  };
 
 // ── Validator maps ────────────────────────────────────────────────────────────
 
-export const headingContentValidators: Record<string, ContentValidator> = {
+/**
+ * Build the heading validators for one run. Rules that word their own `solution`
+ * close over the context's translator here, so detection itself only ever takes
+ * the DOM it inspects.
+ */
+export const headingContentValidators = (context: ValidationContext): Record<string, ContentValidator> => ({
   [headingValidations.HEADING_MUST_NOT_BE_EMPTY]: headingMustNotBeEmpty,
-  [headingValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: headingShouldNotContainBoldOrItalic,
-};
+  [headingValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: headingShouldNotContainBoldOrItalic(context),
+});
 
-export const headingTreeValidators: Record<string, TreeValidator> = {
-  [headingValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: headingMustHaveCorrectOrder,
-  [headingValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE]: headingOneMustBeUnique,
-  [headingValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE]: headingOneMustBeFirst,
-};
+export const headingTreeValidators = (context: ValidationContext): Record<string, TreeValidator> => ({
+  [headingValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: headingMustHaveCorrectOrder(context),
+  [headingValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE]: headingOneMustBeUnique(),
+  [headingValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE]: headingOneMustBeFirst(context),
+});

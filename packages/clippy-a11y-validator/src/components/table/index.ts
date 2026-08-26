@@ -25,7 +25,8 @@ const tableMustHaveMultipleRows: ContentValidator = (_dom, node) => {
 
 // ── Validator map ─────────────────────────────────────────────────────────────
 
-export const tableContentValidators: Record<string, ContentValidator> = {
+/** Build the table validators for one run. No rule here words its own `solution` yet. */
+export const tableContentValidators = (): Record<string, ContentValidator> => ({
   [tableValidations.TABLE_MUST_HAVE_HEADINGS]: tableMustHaveHeadings,
   [tableValidations.TABLE_MUST_HAVE_MULTIPLE_ROWS]: tableMustHaveMultipleRows,
-};
+});

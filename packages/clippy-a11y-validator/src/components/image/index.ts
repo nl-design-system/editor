@@ -1,21 +1,24 @@
-import type { ContentValidator } from '@/types';
+import type { ContentValidator, ValidationContext } from '@/types';
 import { imageValidations, validationSeverity } from '@/constants';
 import { correctImageMissingAltText } from './corrector';
 import { isMissingAltText } from './rules';
 
-const imageMustHaveAltText: ContentValidator = (_dom, node, { t }) => {
-  if (!isMissingAltText(node)) return null;
-  return {
-    correct: correctImageMissingAltText(node as HTMLImageElement),
-    element: node,
-    scope: 'block',
-    severity: validationSeverity.INFO,
-    solution: t(`${imageValidations.IMAGE_MUST_HAVE_ALT_TEXT}.solution`),
+const imageMustHaveAltText =
+  ({ t }: ValidationContext): ContentValidator =>
+  (_dom, node) => {
+    if (!isMissingAltText(node)) return null;
+    return {
+      correct: correctImageMissingAltText(node as HTMLImageElement),
+      element: node,
+      scope: 'block',
+      severity: validationSeverity.INFO,
+      solution: t(`${imageValidations.IMAGE_MUST_HAVE_ALT_TEXT}.solution`),
+    };
   };
-};
 
 // ── Validator map ─────────────────────────────────────────────────────────────
 
-export const imageContentValidators: Record<string, ContentValidator> = {
-  [imageValidations.IMAGE_MUST_HAVE_ALT_TEXT]: imageMustHaveAltText,
-};
+/** Build the image validators for one run, closing over the context's translator. */
+export const imageContentValidators = (context: ValidationContext): Record<string, ContentValidator> => ({
+  [imageValidations.IMAGE_MUST_HAVE_ALT_TEXT]: imageMustHaveAltText(context),
+});
