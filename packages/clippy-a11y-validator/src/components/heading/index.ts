@@ -1,5 +1,6 @@
 import type { ContentValidator, TreeValidator } from '@/types';
 import { headingValidations, validationSeverity } from '@/constants';
+import { validationContext } from '@/i18n';
 import {
   correctDuplicateHeadingOne,
   correctEmptyHeading,
@@ -8,6 +9,7 @@ import {
   correctMissingTopLevelHeading,
 } from './corrector';
 import {
+  allowedHeadingLevels,
   findHeadingOrderOffenses,
   findMisplacedTopLevelHeading,
   findRepeatedHeadingOnes,
@@ -27,13 +29,14 @@ const headingMustNotBeEmpty: ContentValidator = (_dom, node) => {
   };
 };
 
-const headingShouldNotContainBoldOrItalic: ContentValidator = (_dom, node) => {
+const headingShouldNotContainBoldOrItalic: ContentValidator = (_dom, node, { t }) => {
   if (!hasFormattingInsideHeading(node)) return null;
   return {
     correct: correctHeadingWithFormatting(node),
     element: node,
     scope: 'block',
     severity: validationSeverity.INFO,
+    solution: t(`${headingValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC}.solution`),
   };
 };
 
@@ -45,8 +48,8 @@ const ORDER_SEVERITY = {
   'skipped-level': validationSeverity.WARNING,
 } as const;
 
-export const headingMustHaveCorrectOrder: TreeValidator = (dom, settings) => {
-  const topHeadingLevel = settings?.topHeadingLevel ?? 1;
+export const headingMustHaveCorrectOrder: TreeValidator = (dom, context = validationContext()) => {
+  const { t, topHeadingLevel = 1 } = context;
 
   return findHeadingOrderOffenses(dom, topHeadingLevel).map(
     ({ heading, headingLevel, precedingHeadingLevel, problem, targetLevel }) => ({
@@ -54,7 +57,12 @@ export const headingMustHaveCorrectOrder: TreeValidator = (dom, settings) => {
       element: heading,
       scope: 'block' as const,
       severity: ORDER_SEVERITY[problem],
-      solutionPayload: { headingLevel, precedingHeadingLevel, targetLevel, topHeadingLevel },
+      solution: t(`${headingValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER}.solution`, {
+        aboveTopLevel: problem === 'above-top-level',
+        allowedLevels: problem === 'above-top-level' ? [] : allowedHeadingLevels(topHeadingLevel, targetLevel),
+        headingLevel,
+        precedingHeadingLevel,
+      }),
     }),
   );
 };
@@ -67,8 +75,8 @@ export const headingOneMustBeUnique: TreeValidator = (dom) =>
     severity: validationSeverity.ERROR,
   }));
 
-export const headingOneMustBeFirst: TreeValidator = (dom, settings) => {
-  const target = findMisplacedTopLevelHeading(dom, settings?.topHeadingLevel ?? 1);
+export const headingOneMustBeFirst: TreeValidator = (dom, context) => {
+  const target = findMisplacedTopLevelHeading(dom, context?.topHeadingLevel ?? 1);
   if (!target) return [];
 
   return [

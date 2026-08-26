@@ -10,16 +10,23 @@
  * It's referenced from the package README and exercised by
  * `test/examples/customValidation.test.ts`, so it stays runnable.
  */
-import type { ContentValidator, ValidationResult } from '@/types';
+import type { ContentValidator, Locale, ValidationContext, ValidationResult } from '@/types';
 import { validationSeverity } from '@/constants';
 import { runValidators } from '@/detection';
 import { walkElements } from '@/helpers';
+import { validationContext } from '@/i18n';
 
 /** Rule id. kebab-case or SCREAMING_SNAKE_CASE both work throughout the pipeline. */
 export const LINK_NEW_TAB_SHOULD_WARN = 'LINK_NEW_TAB_SHOULD_WARN';
 
 const NEW_TAB_MENTIONED = /new (tab|window)|opens in/i;
 const NEW_TAB_SUFFIX = '(opens in a new tab)';
+
+/** A rule outside the shipped catalogue brings its own wording, keyed by locale. */
+const SOLUTIONS: Record<Locale, string> = {
+  en: 'Say in the link text that the link opens in a new tab.',
+  nl: 'Zeg in de linktekst dat de link in een nieuw tabblad opent.',
+};
 
 /**
  * 1. Correction — annotate the link so assistive tech announces the behaviour.
@@ -36,9 +43,11 @@ export const correctLinkNewTabWarning =
 /**
  * 2. Detection — a `ContentValidator` flags an `<a target="_blank">` whose
  *    accessible name never mentions that it opens a new tab/window (WCAG G201),
- *    and hands back its own fix on the result.
+ *    and hands back its own fix and remediation text on the result. The run's
+ *    `settings` carry the locale, so a custom rule localises exactly like a
+ *    built-in one.
  */
-export const linkNewTabShouldWarn: ContentValidator = (_dom, node) => {
+export const linkNewTabShouldWarn: ContentValidator = (_dom, node, { locale }) => {
   if (node.tagName !== 'A' || (node as HTMLAnchorElement).target !== '_blank') return null;
   const accessibleName = node.getAttribute('aria-label') ?? node.textContent ?? '';
   if (NEW_TAB_MENTIONED.test(accessibleName)) return null;
@@ -47,6 +56,7 @@ export const linkNewTabShouldWarn: ContentValidator = (_dom, node) => {
     element: node,
     scope: 'inline',
     severity: validationSeverity.WARNING,
+    solution: SOLUTIONS[locale ?? 'en'],
   };
 };
 
@@ -55,7 +65,15 @@ export const linkNewTabShouldWarn: ContentValidator = (_dom, node) => {
  *    so run a custom detector yourself, over the same walker and result collector
  *    the built-in pipeline uses. The result shape is identical, fix included.
  */
-export const validateWithCustomRule = (root: HTMLElement): ValidationResult[] =>
-  [...walkElements(root)].flatMap((element) =>
-    runValidators<[HTMLElement, Element]>([[LINK_NEW_TAB_SHOULD_WARN, linkNewTabShouldWarn]], root, element),
+export const validateWithCustomRule = (root: HTMLElement, locale?: Locale): ValidationResult[] => {
+  const context = validationContext({ enableRules: ['*'], locale });
+
+  return [...walkElements(root)].flatMap((element) =>
+    runValidators<[HTMLElement, Element, ValidationContext]>(
+      [[LINK_NEW_TAB_SHOULD_WARN, linkNewTabShouldWarn]],
+      root,
+      element,
+      context,
+    ),
   );
+};

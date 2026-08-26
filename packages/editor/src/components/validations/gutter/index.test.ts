@@ -64,11 +64,15 @@ describe('<clippy-validations-gutter>', () => {
 
   afterEach(() => {
     document.documentElement.className = rootClasses;
+    document.documentElement.lang = '';
     document.body.innerHTML = '';
     CSS.highlights.clear();
   });
 
   it('names the indicator after the validation, without the markdown license comment', async () => {
+    // The NL Design System snippet this covers is Dutch-language, so it only
+    // appears in the Dutch catalogue.
+    document.documentElement.lang = 'nl';
     const { content, gutter } = renderGutter('Deze hele alinea is dikgedrukt.');
     await validate(
       gutter,
@@ -86,6 +90,7 @@ describe('<clippy-validations-gutter>', () => {
   });
 
   it('opens the validation it names, for the editor it belongs to', async () => {
+    document.documentElement.lang = 'nl';
     const { content, gutter } = renderGutter('Deze hele alinea is dikgedrukt.');
     const range = rangeOver(content);
     await validate(

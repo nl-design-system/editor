@@ -47,9 +47,17 @@ describe('runValidation adapter', () => {
     expect(byKey(map, validations.LINK_SHOULD_NOT_BE_TOO_GENERIC)).toBeDefined();
   });
 
-  it('carries solutionPayload through to the result', async () => {
+  it('carries the validator\u2019s translated solution through to the result', async () => {
+    document.documentElement.lang = 'en';
     const { map } = await validate('<h1>Title</h1><p>Text with <b>&nbsp;</b> here</p>');
-    expect(byKey(map, validations.INLINE_SHOULD_NOT_BE_EMPTY)?.solutionPayload?.['nodeType']).toBe('bold');
+    expect(byKey(map, validations.INLINE_SHOULD_NOT_BE_EMPTY)?.solution).toBe('Remove the empty **bold**.');
+  });
+
+  it('asks the validator for solutions in the document language', async () => {
+    document.documentElement.lang = 'nl';
+    const { map } = await validate('<h1>Title</h1><p>Text with <b>&nbsp;</b> here</p>');
+    expect(byKey(map, validations.INLINE_SHOULD_NOT_BE_EMPTY)?.solution).toBe('Verwijder de lege **vetgedrukt**.');
+    document.documentElement.lang = 'en';
   });
 
   it('reports every duplicate heading-one as its own entry', async () => {

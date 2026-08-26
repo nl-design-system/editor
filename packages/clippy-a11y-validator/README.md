@@ -42,11 +42,63 @@ Each item is grouped per rule and lists the offending nodes:
 new ClippyValidator()
   .enableRules(['image-must-have-alt-text']) // only these rules (default: all)
   .disableRules(['paragraph-should-not-resemble-list']) // exclude rules
-  .settings({ topHeadingLevel: 2 }) // highest allowed starting heading level (default: 1)
+  .settings({ topHeadingLevel: 2, locale: 'nl' }) // starting heading level (default: 1), language (default: 'en')
   .validate(html);
 ```
 
 Rule ids are accepted in `kebab-case` or `SCREAMING_SNAKE_CASE`.
+
+## Translations
+
+Message text is translated with [rosetta](https://www.npmjs.com/package/rosetta).
+English and Dutch ship in the bundle; `locale` picks between them, per call:
+
+```ts
+runValidation(dom, { enableRules: ['*'], locale: 'nl' });
+```
+
+The locale is always an argument, never instance state, so one run cannot change
+the language a later run reads and two editors on a page may differ.
+
+Each locale table lives in [`src/locales`](./src/locales) and is the single place
+a rule's presentation lives — everything a reporter or a host UI shows:
+
+```ts
+IMAGE_MUST_HAVE_ALT_TEXT: {
+  correctLabel: 'Edit',                      // label for a host's one-click fix
+  description: 'Image must have alternative text',
+  href: 'https://nldesignsystem.nl/...',     // NL Design System guidance
+  solution: 'Edit the image to supply an alt text',
+},
+```
+
+`href` sits inside the locale even though every entry currently points at the same
+Dutch page, so an English guidance URL can be swapped in later without disturbing
+the Dutch one.
+
+Where NL Design System publishes its own prose for a rule,
+[`src/locales/documentation.ts`](./src/locales/documentation.ts) imports the
+markdown and the locale table uses it in place of our wording. Those snippets are
+Dutch-language originals, so they appear in `nl.ts` only; the English table keeps
+its own text. The markdown is inlined at build time, so it costs the published
+bundle a string rather than a runtime dependency.
+
+`validationMessages(locale)` resolves the whole catalogue; `solution` is not part
+of it, because it depends on the offending node and is attached per result instead:
+
+```ts
+const [result] = runValidation(dom, { enableRules: ['*'], locale: 'nl' });
+result.solution; // 'Verwijder de lege **tabelcel** of voeg tekst toe.'
+
+validationMessages('nl')[imageValidations.IMAGE_MUST_HAVE_ALT_TEXT];
+// { correctLabel: 'Bewerken', description: 'Afbeelding moet alternatieve tekst hebben', href: '…' }
+```
+
+Plain strings use rosetta's `{{param}}` interpolation. Where wording has to branch
+or build a list, the entry is a function receiving the params instead — each locale
+writes its own, so grammar stays in the translation rather than being glued
+together in the validator. Solutions are markdown: hosts render the emphasis,
+terminals print it as-is.
 
 ## Reporting helpers
 
@@ -58,8 +110,9 @@ Rule ids are accepted in `kebab-case` or `SCREAMING_SNAKE_CASE`.
 ## Corrections
 
 Every validator attaches its own DOM fix to the result it returns, as a deferred
-`correct` function — nothing is mutated until you call it. That lets a host offer
-a one-click "fix this" alongside detection:
+`correct` function — nothing is mutated until you call it. Together with the
+translated `solution` text, that lets a host explain and offer a one-click
+"fix this" alongside detection:
 
 ```ts
 import { runValidation, validatorEvents } from '@nl-design-system-community/clippy-a11y-validator';
@@ -114,7 +167,7 @@ A custom rule is just a `ContentValidator` that returns its own `correct` — th
 same shape the built-ins use, with no registry to register against:
 
 ```ts
-const linkNewTabShouldWarn: ContentValidator = (_dom, node) => {
+const linkNewTabShouldWarn: ContentValidator = (_dom, node, settings) => {
   if (node.tagName !== 'A' || (node as HTMLAnchorElement).target !== '_blank') return null;
   const name = (node.getAttribute('aria-label') ?? node.textContent ?? '').trim();
   if (/new (tab|window)|opens in/i.test(name)) return null;
@@ -123,9 +176,16 @@ const linkNewTabShouldWarn: ContentValidator = (_dom, node) => {
     element: node,
     scope: 'inline',
     severity: 'warning',
+    solution:
+      settings?.locale === 'nl'
+        ? 'Zeg in de linktekst dat de link in een nieuw tabblad opent.'
+        : 'Say in the link text that it opens in a new tab.',
   };
 };
 ```
+
+A validator receives the run's `settings`, so a custom rule can localise its own
+`solution` the same way the built-ins do.
 
 Detection stays yours to drive — the built-in `runValidation` only walks the
 shipped validator maps, so run your validator yourself and tag each result with

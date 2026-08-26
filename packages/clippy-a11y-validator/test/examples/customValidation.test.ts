@@ -19,6 +19,12 @@ describe('custom validation example', () => {
     expect(root.querySelector('a')!.getAttribute('aria-label')).toBe('Read more (opens in a new tab)');
   });
 
+  it('localises its own solution from the run settings', () => {
+    const root = mount('<p><a href="https://example.com" target="_blank">Lees verder</a></p>');
+    const [result] = validateWithCustomRule(root, 'nl');
+    expect(result.solution).toBe('Zeg in de linktekst dat de link in een nieuw tabblad opent.');
+  });
+
   it('passes a link whose text already mentions the new tab', () => {
     const root = mount('<p><a href="https://example.com" target="_blank">Read more (opens in a new window)</a></p>');
     expect(validateWithCustomRule(root)).toHaveLength(0);

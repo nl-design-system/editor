@@ -5,13 +5,14 @@ import { detectListLikeParagraph, isEntirelyBoldParagraph, resemblesHeading } fr
 
 // ── Element validators ────────────────────────────────────────────────────────
 
-const paragraphShouldNotBeEntirelyBold: ContentValidator = (_dom, node) => {
+const paragraphShouldNotBeEntirelyBold: ContentValidator = (_dom, node, { t }) => {
   if (!isEntirelyBoldParagraph(node)) return null;
   return {
     correct: correctEntirelyBoldParagraph(node),
     element: node,
     scope: 'block',
     severity: validationSeverity.WARNING,
+    solution: t(`${paragraphValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD}.solution`),
   };
 };
 
@@ -25,7 +26,7 @@ const paragraphShouldNotResembleHeading: ContentValidator = (_dom, node) => {
   };
 };
 
-export const paragraphMustUseSemanticList: ContentValidator = (_dom, node) => {
+export const paragraphMustUseSemanticList: ContentValidator = (_dom, node, { t }) => {
   const listLike = detectListLikeParagraph(node);
   if (!listLike) return null;
 
@@ -34,7 +35,7 @@ export const paragraphMustUseSemanticList: ContentValidator = (_dom, node) => {
     element: node,
     scope: 'block',
     severity: validationSeverity.INFO,
-    solutionPayload: { ...listLike },
+    solution: t(`${paragraphValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST}.solution`, { prefix: listLike.prefix }),
   };
 };
 

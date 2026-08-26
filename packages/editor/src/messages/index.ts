@@ -1,202 +1,39 @@
-import { msg, str } from '@lit/localize';
-import paragraphStrongError from '@nl-design-system-unstable/documentation/componenten/paragraph/_issues/strong/editor-error.md?raw';
-import paragraphStrongSolution from '@nl-design-system-unstable/documentation/componenten/paragraph/_issues/strong/solution.md?raw';
-import { html, nothing, type TemplateResult } from 'lit';
 import {
-  definitionListValidations,
-  headingValidations,
-  imageValidations,
-  linkValidations,
-  paragraphValidations,
-  richTextContentValidations,
-  tableValidations,
-  validations,
-} from '@/constants';
+  type Locale,
+  type ValidationKey,
+  type ValidationMessage,
+  validationMessages as catalogue,
+} from '@nl-design-system-community/clippy-a11y-validator';
+import { html, nothing, type TemplateResult } from 'lit';
+import { getDocumentLang } from '@/localization';
 import { renderMarkdown } from '@/utils/markdown';
 
-/**
- * Strips HTML comments (e.g. the `<!-- @license -->` header the documentation
- * snippets ship with) from imported markdown so they are not emitted into the
- * DOM.
- */
-const stripHtmlComments = (markdown: string): string => markdown.replace(/<!--[\s\S]*?-->/g, '').trim();
-
-const paragraphStrongErrorText = stripHtmlComments(paragraphStrongError);
-const paragraphStrongSolutionText = stripHtmlComments(paragraphStrongSolution);
-
-type SolutionFn = (args?: Record<string, number | string | boolean>) => string | TemplateResult | null;
+export type { ValidationKey, ValidationMessage };
 
 /**
- * A solution is either a static markdown snippet or a function that builds
- * contextual guidance from a validation payload.
+ * The validator's rule catalogue in the document's language.
+ *
+ * All rule text — description, guidance link, correct-button label, and the
+ * per-occurrence solution — lives in the validator package, including the prose
+ * NL Design System publishes for individual rules. The editor UI and the
+ * static-analysis tool therefore cannot drift apart. This wrapper only supplies
+ * the locale, which `@lit/localize` resolves from the same source.
  */
-type Solution = string | SolutionFn;
+export const validationMessages = (
+  locale: Locale = getDocumentLang() as Locale,
+): Record<ValidationKey, ValidationMessage> => catalogue(locale);
 
 /**
  * Renders a validation solution into the `solution-html` slot of a
- * `<clippy-validation-item>`. Both static markdown snippets and dynamic
- * solutions are rendered as a paragraph.
+ * `<clippy-validation-item>`.
+ *
+ * The text comes from the detection result, already translated with this
+ * occurrence's values filled in. It is markdown.
  */
-export const renderSolution = (
-  solution: Solution | undefined,
-  payload?: Record<string, number | string | boolean>,
-): TemplateResult | typeof nothing => {
-  if (typeof solution === 'string') {
-    return html`<p class="nl-paragraph" slot="solution-html">${renderMarkdown(solution)}</p>`;
-  }
-
-  const content = solution?.(payload) ?? null;
-  if (!content) {
+export const renderSolution = (solution: string | undefined): TemplateResult | typeof nothing => {
+  if (!solution) {
     return nothing;
   }
 
-  return html`<p class="nl-paragraph" slot="solution-html">${content}</p>`;
+  return html`<p class="nl-paragraph" slot="solution-html">${renderMarkdown(solution)}</p>`;
 };
-
-export type ValidationKey = (typeof validations)[keyof typeof validations];
-
-type ValidationMessages = {
-  [K in ValidationKey]: { customCorrectLabel?: string; heading: string; href?: string; solution?: Solution };
-};
-
-export type { ValidationMessages };
-
-export const nodeTypesTranslations = (): Record<string, string> => ({
-  bold: msg('bold'),
-  definitionDescription: msg('definition description'),
-  definitionTerm: msg('definition term'),
-  highlight: msg('highlight'),
-  italic: msg('italic text'),
-  link: msg('link text'),
-  listItem: msg('list item'),
-  paragraph: msg('paragraph'),
-  strike: msg('strike'),
-  tableCell: msg('table cell'),
-  tableHeader: msg('table header'),
-  underline: msg('underline'),
-});
-
-export const validationMessages = (): ValidationMessages =>
-  ({
-    [definitionListValidations.DEFINITION_DESCRIPTION_MUST_FOLLOW_TERM]: {
-      heading: msg('Definition description must follow a definition term'),
-    },
-    [definitionListValidations.DESCRIPTION_LIST_MUST_CONTAIN_TERM]: {
-      heading: msg('Definition list must contain a definition term'),
-    },
-    [headingValidations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER]: {
-      heading: msg(str`Document must have correct heading order`),
-      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#kopniveaus',
-      solution: (params) => {
-        const { headingLevel, precedingHeadingLevel, topHeadingLevel } = params || {};
-
-        if (headingLevel < topHeadingLevel) {
-          return msg(
-            html`<strong>Heading level ${headingLevel}</strong> exceeds the highest allowed heading level
-              (${precedingHeadingLevel}) in this document.`,
-          );
-        }
-
-        if (typeof precedingHeadingLevel !== 'number' || typeof topHeadingLevel !== 'number' || !headingLevel) {
-          return null;
-        }
-
-        const min = topHeadingLevel === 1 ? 2 : topHeadingLevel;
-        const max = precedingHeadingLevel + 1;
-        const levels = Array.from({ length: max - min + 1 }, (_, i) => min + i);
-
-        let levelsTemplate: TemplateResult;
-        if (levels.length === 1) {
-          levelsTemplate = html`<strong>${levels[0]}</strong>`;
-        } else if (levels.length === 2) {
-          levelsTemplate = html`<strong>${levels[0]}</strong> ${msg('or')} <strong>${levels[1]}</strong>`;
-        } else {
-          const head = levels.slice(0, -1);
-          const last = levels[levels.length - 1];
-          levelsTemplate = html`${head.map(
-              (l, i) => html`<strong>${l}</strong>${i < head.length - 1 ? ', ' : ' '}`,
-            )}${msg('or')} <strong>${last}</strong>`;
-        }
-
-        return msg(
-          html`<strong>Heading level ${headingLevel}</strong> must not directly follow a
-            <strong>heading level ${precedingHeadingLevel}</strong>. Use heading level ${levelsTemplate}.`,
-        );
-      },
-    },
-    [headingValidations.DOCUMENT_MUST_HAVE_SINGLE_HEADING_ONE]: {
-      heading: msg('Document must have only one heading level 1'),
-      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen',
-    },
-    [headingValidations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE]: {
-      heading: msg('Document must start with heading level 1'),
-    },
-    [headingValidations.HEADING_MUST_NOT_BE_EMPTY]: {
-      heading: msg('Heading must not be empty'),
-      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#voor-wie-zijn-toegankelijke-koppen-belangrijk',
-    },
-    [headingValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: {
-      heading: msg('Heading should not contain bold or italic text'),
-      solution: () => msg('Remove the bold or italic formatting from the text in the heading.'),
-    },
-    [imageValidations.IMAGE_MUST_HAVE_ALT_TEXT]: {
-      customCorrectLabel: msg('Edit'),
-      heading: msg('Image must have alternative text'),
-      solution: () => msg('Edit the image to supply an alt text'),
-    },
-    [linkValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC]: {
-      heading: msg('Link text should not be too generic'),
-      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/linkteksten/',
-    },
-    [paragraphValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD]: {
-      heading: paragraphStrongErrorText || msg('Avoid making an entire paragraph bold'),
-      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/tekst-benadrukken/',
-      solution: paragraphStrongSolutionText || (() => msg('Remove the bold formatting from the paragraph.')),
-    },
-    [paragraphValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING]: {
-      heading: msg('Avoid paragraphs that resemble headings'),
-      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#opmaak-van-koppen',
-    },
-    [paragraphValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST]: {
-      heading: msg('List must be a semantic list'),
-      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/opsommingen/#genummerde-en-ongenummerde-lijsten',
-      solution: (params) => {
-        const { prefix } = params || {};
-        if (!prefix) {
-          return null;
-        }
-        return msg(html`Use a semantic list instead of lines starting with "<strong>${prefix}</strong>"`);
-      },
-    },
-    [richTextContentValidations.INLINE_SHOULD_NOT_BE_EMPTY]: {
-      heading: msg('Element must not be empty'),
-      solution: (params) => {
-        const { nodeType } = params || {};
-        if (!nodeType || typeof nodeType !== 'string') {
-          return null;
-        }
-        return msg(html`Remove the empty <strong>${nodeTypesTranslations()[nodeType]}</strong>.`);
-      },
-    },
-    [richTextContentValidations.INLINE_SHOULD_NOT_BE_UNDERLINED]: {
-      heading: msg(str`Text should not be underlined. This looks too much like a link.`),
-      href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/tekst-benadrukken/#onderstrepen',
-      solution: () => msg(`Remove the underline from the text.`),
-    },
-    [richTextContentValidations.NODE_SHOULD_NOT_BE_EMPTY]: {
-      heading: msg('Avoid empty elements'),
-      solution: (params) => {
-        const { nodeType } = params || {};
-        if (!nodeType || typeof nodeType !== 'string') {
-          return null;
-        }
-        return msg(html`Remove the empty <strong>${nodeTypesTranslations()[nodeType]}</strong> or add text.`);
-      },
-    },
-    [tableValidations.TABLE_MUST_HAVE_HEADINGS]: {
-      heading: msg('Table must contain headings'),
-    },
-    [tableValidations.TABLE_MUST_HAVE_MULTIPLE_ROWS]: {
-      heading: msg('Table must contain multiple rows'),
-    },
-  }) as const;

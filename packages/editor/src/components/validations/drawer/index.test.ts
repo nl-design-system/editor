@@ -76,26 +76,31 @@ describe('<clippy-validations-dialog>', () => {
     const entry = (
       validatorKey: string,
       severity: ValidationResult['severity'],
-      solutionPayload?: ValidationResult['solutionPayload'],
+      solution?: ValidationResult['solution'],
     ): [Range, ValidationResult] => {
       const range = document.createRange();
-      return [range, { severity, solutionPayload, validatorKey }];
+      return [range, { severity, solution, validatorKey }];
     };
 
     const validationsMap: Map<Range, ValidationResult> = new Map([
       entry(validations.HEADING_MUST_NOT_BE_EMPTY, 'error'),
       entry(validations.IMAGE_MUST_HAVE_ALT_TEXT, 'error'),
       entry(validations.LINK_SHOULD_NOT_BE_TOO_GENERIC, 'warning'),
-      entry(validations.NODE_SHOULD_NOT_BE_EMPTY, 'warning', { nodeType: 'paragraph' }),
-      entry(validations.INLINE_SHOULD_NOT_BE_EMPTY, 'error', { nodeType: 'link' }),
-      entry(validations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER, 'error', {
-        headingLevel: 3,
-        precedingHeadingLevel: 1,
-      }),
-      entry(validations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST, 'warning', { prefix: '-' }),
+      entry(validations.NODE_SHOULD_NOT_BE_EMPTY, 'warning', 'Verwijder de lege **paragraaf** of voeg tekst toe.'),
+      entry(validations.INLINE_SHOULD_NOT_BE_EMPTY, 'error', 'Verwijder de lege **linktekst**.'),
+      entry(
+        validations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER,
+        'error',
+        '**Kopniveau 3** mag niet direct volgen op een **kopniveau 1**. Gebruik kopniveau 2.',
+      ),
+      entry(
+        validations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST,
+        'warning',
+        'Gebruik een semantische lijst in plaats van regels die beginnen met "**-**"',
+      ),
       entry(validations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC, 'warning'),
       entry(validations.INLINE_SHOULD_NOT_BE_UNDERLINED, 'warning'),
-      entry(validations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE, 'error', { topHeadingLevel: 1 }),
+      entry(validations.DOCUMENT_MUST_HAVE_TOP_LEVEL_HEADING_ONE, 'error'),
     ]);
 
     // Set validationsContext on the context provider, which will provide it to children

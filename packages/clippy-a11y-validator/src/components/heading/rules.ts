@@ -72,6 +72,16 @@ export const findHeadingOrderOffenses = (root: HTMLElement, topHeadingLevel = 1)
   return offenses;
 };
 
+/**
+ * Every heading level that would be valid in place of an offending one: from the
+ * shallowest allowed level (never `1` when the document starts at `1` — that slot
+ * is the document title) up to the level the heading should carry.
+ */
+export const allowedHeadingLevels = (topHeadingLevel: number, targetLevel: number): number[] => {
+  const min = topHeadingLevel === 1 ? 2 : topHeadingLevel;
+  return Array.from({ length: Math.max(targetLevel - min + 1, 0) }, (_, index) => min + index);
+};
+
 /** Every `<h1>` after the first — a document has exactly one top-level heading. */
 export const findRepeatedHeadingOnes = (root: HTMLElement): HTMLHeadingElement[] =>
   Array.from(root.querySelectorAll<HTMLHeadingElement>('h1')).slice(1);

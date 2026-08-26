@@ -1,6 +1,6 @@
 import { isEmptyOrWhitespace } from '@/helpers';
 
-/** Maps block-level HTML tags to the ProseMirror node-type name used in solutionPayload. */
+/** Maps block-level HTML tags to the ProseMirror node-type name named in `solution` text. */
 const BLOCK_NODE_TYPES: Partial<Record<string, string>> = {
   caption: 'tableCaption',
   dd: 'definitionDescription',
@@ -11,7 +11,7 @@ const BLOCK_NODE_TYPES: Partial<Record<string, string>> = {
   th: 'tableHeader',
 };
 
-/** Maps inline-markup HTML tags to the inline-type name used in solutionPayload. */
+/** Maps inline-markup HTML tags to the inline-type name named in `solution` text. */
 const INLINE_TYPES: Partial<Record<string, string>> = {
   a: 'link',
   b: 'bold',

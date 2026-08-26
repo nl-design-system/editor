@@ -76,7 +76,12 @@ export {
   unorderedListIndicator,
   walkElements,
 } from './helpers';
-export { validationMessages } from './messages';
+export { validationKeys, validationMessages } from './messages';
+
+// ── Translations (rosetta) ─────────────────────────────────────────────────────
+export { DEFAULT_LOCALE, translator, validationContext } from './i18n';
+export { en } from './locales/en';
+export { nl } from './locales/nl';
 
 // ── Editor/browser adapter (Range-keyed map + corrections) ─────────────────────
 export { buildValidationMap } from './validation-map';
@@ -88,15 +93,20 @@ export type {
   CorrectValidationFunction,
   HeadingLevel,
   ImageAltTextRequest,
-  SolutionPayload,
   TreeValidator,
   ValidationMapResult,
   ValidationResult,
+  ValidationContext,
   ValidationScope,
   ValidationSeverity,
   ValidatorSettings,
   ValidationItem,
   ValidationItemNode,
+  Locale,
+  MessageTable,
+  Solution,
+  SolutionParams,
+  Translate,
 } from './types';
 export type { HeadingOrderOffense, HeadingOrderProblem } from './components/heading/rules';
 export type { ListLikeParagraph } from './components/paragraph/rules';

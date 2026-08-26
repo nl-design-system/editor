@@ -11,7 +11,7 @@ export type ValidationResult = {
   range?: Range;
   scope?: ValidationScope;
   severity: ValidationSeverity;
-  solutionPayload?: Record<string, number | string | boolean>;
+  solution?: string;
   correct?: CorrectValidationFunction;
 };
 

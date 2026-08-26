@@ -1,6 +1,8 @@
+import type { Locale } from './locales/types';
+import type { ValidationKey } from './messages';
 import type { ValidationReport, ValidationResult, ValidatorSettings, ValidationItem } from './types';
 import { runValidation } from './detection';
-import { validationMessages, type ValidationKey } from './messages';
+import { translator } from './i18n';
 
 const SNIPPET_MAX_LENGTH = 160;
 
@@ -45,8 +47,9 @@ const parseHtml = (html: string): HTMLElement => new DOMParser().parseFromString
  * more than one severity (e.g. heading order) yields one item entry per
  * severity rather than silently collapsing to the first.
  */
-const groupValidationItems = (results: ValidationResult[], root: Element): ValidationItem[] => {
+const groupValidationItems = (results: ValidationResult[], root: Element, locale?: Locale): ValidationItem[] => {
   const byKey = new Map<string, ValidationItem>();
+  const t = translator(locale);
 
   for (const result of results) {
     if (!result.validatorKey) continue;
@@ -55,11 +58,11 @@ const groupValidationItems = (results: ValidationResult[], root: Element): Valid
 
     let item = byKey.get(groupKey);
     if (!item) {
-      const message = validationMessages[result.validatorKey as ValidationKey];
+      const key = result.validatorKey as ValidationKey;
       item = {
         id,
-        description: message?.description ?? id,
-        href: message?.href,
+        description: t(`${key}.description`) ?? id,
+        href: t(`${key}.href`),
         nodes: [],
         severity: result.severity,
       };
@@ -88,6 +91,7 @@ export class ClippyValidator {
   #enableRules: string[] = ['*'];
   #disableRules: string[] = [];
   #topHeadingLevel = 1;
+  #locale: Locale | undefined;
 
   /** Limit validation to the given rules (kebab-case or SCREAMING_SNAKE_CASE). Defaults to all rules. */
   enableRules(rules: string[]): this {
@@ -101,10 +105,16 @@ export class ClippyValidator {
     return this;
   }
 
-  /** Apply non-rule validation settings, e.g. `{ topHeadingLevel: 2 }` (highest allowed starting heading level, default 1). */
-  settings(settings: Partial<Pick<ValidatorSettings, 'topHeadingLevel'>>): this {
+  /**
+   * Apply non-rule validation settings: `topHeadingLevel` (highest allowed starting
+   * heading level, default 1) and `locale` for the reported text (default `'en'`).
+   */
+  settings(settings: Partial<Pick<ValidatorSettings, 'locale' | 'topHeadingLevel'>>): this {
     if (settings.topHeadingLevel !== undefined) {
       this.#topHeadingLevel = settings.topHeadingLevel;
+    }
+    if (settings.locale !== undefined) {
+      this.#locale = settings.locale;
     }
     return this;
   }
@@ -115,8 +125,9 @@ export class ClippyValidator {
     const results = runValidation(root, {
       disableRules: this.#disableRules,
       enableRules: this.#enableRules,
+      locale: this.#locale,
       topHeadingLevel: this.#topHeadingLevel,
     });
-    return { validationItems: groupValidationItems(results, root) };
+    return { validationItems: groupValidationItems(results, root, this.#locale) };
   }
 }

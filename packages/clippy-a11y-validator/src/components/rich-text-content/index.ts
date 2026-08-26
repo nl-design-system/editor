@@ -3,7 +3,7 @@ import { richTextContentValidations, validationSeverity } from '@/constants';
 import { correctEmptyMark, correctEmptyNode, correctUnderlinedMark } from './corrector';
 import { emptyBlockNodeType, emptyInlineType, isUnderlined } from './rules';
 
-const nodeShouldNotBeEmpty: ContentValidator = (_dom, node) => {
+const nodeShouldNotBeEmpty: ContentValidator = (_dom, node, { t }) => {
   const nodeType = emptyBlockNodeType(node);
   if (!nodeType) return null;
   return {
@@ -11,11 +11,13 @@ const nodeShouldNotBeEmpty: ContentValidator = (_dom, node) => {
     element: node,
     scope: 'block',
     severity: validationSeverity.INFO,
-    solutionPayload: { nodeType },
+    solution: t(`${richTextContentValidations.NODE_SHOULD_NOT_BE_EMPTY}.solution`, {
+      nodeType: t(`nodeTypes.${nodeType}`) ?? nodeType,
+    }),
   };
 };
 
-const inlineShouldNotBeEmpty: ContentValidator = (_dom, node) => {
+const inlineShouldNotBeEmpty: ContentValidator = (_dom, node, { t }) => {
   const inlineType = emptyInlineType(node);
   if (!inlineType) return null;
   return {
@@ -23,17 +25,20 @@ const inlineShouldNotBeEmpty: ContentValidator = (_dom, node) => {
     element: node,
     scope: 'inline',
     severity: validationSeverity.WARNING,
-    solutionPayload: { nodeType: inlineType },
+    solution: t(`${richTextContentValidations.INLINE_SHOULD_NOT_BE_EMPTY}.solution`, {
+      nodeType: t(`nodeTypes.${inlineType}`) ?? inlineType,
+    }),
   };
 };
 
-const inlineShouldNotBeUnderlined: ContentValidator = (_dom, node) => {
+const inlineShouldNotBeUnderlined: ContentValidator = (_dom, node, { t }) => {
   if (!isUnderlined(node)) return null;
   return {
     correct: correctUnderlinedMark(node),
     element: node,
     scope: 'inline',
     severity: validationSeverity.INFO,
+    solution: t(`${richTextContentValidations.INLINE_SHOULD_NOT_BE_UNDERLINED}.solution`),
   };
 };
 

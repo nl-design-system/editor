@@ -1,3 +1,7 @@
+import type { Locale, Translate } from './locales/types';
+
+export type { Locale, MessageTable, RuleMessage, Solution, SolutionParams, Translate } from './locales/types';
+
 export type ValidationSeverity = 'info' | 'warning' | 'error';
 
 export type ValidationScope = 'block' | 'inline';
@@ -11,16 +15,15 @@ export type ImageAltTextRequest = {
   replace: boolean;
 };
 
-/** Extra structured context a validator can attach for messages / corrections. */
-export type SolutionPayload = Record<string, number | string | boolean>;
-
 /**
  * A single detected accessibility issue.
  *
- * The result points at the offending {@link Element}, carries structured context
- * in {@link SolutionPayload}, and — when the rule knows how to fix itself — a
- * deferred {@link CorrectValidationFunction} the detecting validator built. Nothing
- * is mutated until `correct` is called. Consumers derive their own location
+ * The result points at the offending {@link Element} and carries everything a host
+ * needs to act on it: `solution`, already translated into the run's locale with
+ * this occurrence's values filled in (markdown, so hosts can render emphasis), and
+ * — when the rule knows how to fix itself — a deferred
+ * {@link CorrectValidationFunction} the detecting validator built. Nothing is
+ * mutated until `correct` is called. Consumers derive their own location
  * representation from `element` — a `Range` in a live editor, a CSS selector +
  * HTML snippet for static reporting.
  */
@@ -29,7 +32,7 @@ export type ValidationResult = {
   element: Element;
   scope: ValidationScope;
   severity: ValidationSeverity;
-  solutionPayload?: SolutionPayload;
+  solution?: string;
   correct?: CorrectValidationFunction;
 };
 
@@ -44,7 +47,7 @@ export type ValidationMapResult = {
   range?: Range;
   scope?: ValidationScope;
   severity: ValidationSeverity;
-  solutionPayload?: SolutionPayload;
+  solution?: string;
   correct?: CorrectValidationFunction;
 };
 
@@ -53,13 +56,32 @@ export type ValidatorSettings = {
   topHeadingLevel?: number;
   enableRules: string[];
   disableRules?: string[];
+  locale?: Locale;
 };
 
-/** Runs against a single element during the DOM walk (e.g. one paragraph, one link). */
-export type ContentValidator = (dom: HTMLElement, element: Element) => ValidationResult | null;
+/**
+ * What a validator is handed for one run: the settings, plus a {@link Translate}
+ * already bound to `settings.locale`. Validators name a message key and nothing
+ * else — the locale never has to be threaded through call by call.
+ *
+ * Build one with `validationContext(settings)`.
+ */
+export type ValidationContext = ValidatorSettings & { t: Translate };
 
-/** Runs once against the whole content tree (e.g. heading order across all headings). */
-export type TreeValidator = (dom: HTMLElement, settings?: ValidatorSettings) => ValidationResult[];
+/** Runs against a single element during the DOM walk (e.g. one paragraph, one link). */
+export type ContentValidator = (
+  dom: HTMLElement,
+  element: Element,
+  context: ValidationContext,
+) => ValidationResult | null;
+
+/**
+ * Runs once against the whole content tree (e.g. heading order across all headings).
+ *
+ * Tree validators are exported individually and are useful standalone, so the
+ * context is optional here and defaulted by each implementation.
+ */
+export type TreeValidator = (dom: HTMLElement, context?: ValidationContext) => ValidationResult[];
 
 export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 

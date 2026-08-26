@@ -1,79 +1,62 @@
+import { render } from 'lit';
 import { describe, expect, it } from 'vitest';
 import { validations } from '@/constants';
-import { nodeTypesTranslations, validationMessages, type ValidationMessages } from './index';
+import { renderSolution, validationMessages } from './index';
 
-const messages = validationMessages();
+/** Renders a solution into a detached host and returns its text, mirroring the components. */
+const renderedText = (solution: string | undefined): string => {
+  const host = document.createElement('div');
+  render(renderSolution(solution), host);
+  return host.textContent?.trim() ?? '';
+};
 
-type SolutionValue = ValidationMessages[keyof ValidationMessages]['solution'];
-
-/** Invokes a dynamic solution, mirroring how `renderSolution` narrows the string | function union. */
-const callSolution = (solution: SolutionValue, params?: Record<string, number | string | boolean>) =>
-  typeof solution === 'function' ? solution(params) : null;
+const allKeys = Object.values(validations);
 
 describe('validationMessages', () => {
   it('provides a description for every rule key', () => {
-    for (const key of Object.values(validations)) {
-      expect(messages[key].heading.length).toBeGreaterThan(0);
+    const messages = validationMessages('en');
+    for (const key of allKeys) {
+      expect(messages[key].description.length, key).toBeGreaterThan(0);
     }
   });
 
-  it('nodeTypesTranslations covers the known node types', () => {
-    const translations = nodeTypesTranslations();
-    expect(translations['paragraph']).toBeTruthy();
-    expect(translations['tableCell']).toBeTruthy();
-    expect(translations['link']).toBeTruthy();
+  it('reads its wording from the validator catalogue, in the requested language', () => {
+    expect(validationMessages('en')[validations.HEADING_MUST_NOT_BE_EMPTY].description).toBe(
+      'Heading must not be empty',
+    );
+    expect(validationMessages('nl')[validations.HEADING_MUST_NOT_BE_EMPTY].description).toBe(
+      'Koptekst mag niet leeg zijn',
+    );
+  });
+
+  it('carries the guidance link and correct-button label from the catalogue', () => {
+    const messages = validationMessages('nl');
+    expect(messages[validations.HEADING_MUST_NOT_BE_EMPTY].href).toContain('nldesignsystem.nl');
+    expect(messages[validations.IMAGE_MUST_HAVE_ALT_TEXT].correctLabel).toBe('Bewerken');
+  });
+
+  it('follows the document language when none is given', () => {
+    document.documentElement.lang = 'nl';
+    expect(validationMessages()[validations.HEADING_MUST_NOT_BE_EMPTY].description).toBe('Koptekst mag niet leeg zijn');
+    document.documentElement.lang = 'en';
+  });
+
+  it('shows the NL Design System prose in Dutch and our own wording in English', () => {
+    expect(validationMessages('nl')[validations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD].description).toBe(
+      'De hele alinea is dikgedrukt.',
+    );
+    expect(validationMessages('en')[validations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD].description).toBe(
+      'Avoid making an entire paragraph bold',
+    );
   });
 });
 
-describe('solution functions', () => {
-  it('NODE_SHOULD_NOT_BE_EMPTY renders a solution for a known node type and null otherwise', () => {
-    const { solution } = messages[validations.NODE_SHOULD_NOT_BE_EMPTY];
-    expect(callSolution(solution, { nodeType: 'paragraph' })).not.toBeNull();
-    expect(callSolution(solution)).toBeNull();
-    expect(callSolution(solution, { nodeType: 42 })).toBeNull();
+describe('renderSolution', () => {
+  it('renders markdown emphasis coming from the validator', () => {
+    expect(renderedText('Remove the empty **paragraph** or add text.')).toBe('Remove the empty paragraph or add text.');
   });
 
-  it('PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST renders a solution only with a prefix', () => {
-    const { solution } = messages[validations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST];
-    expect(callSolution(solution, { prefix: '-' })).not.toBeNull();
-    expect(callSolution(solution)).toBeNull();
-  });
-
-  it('INLINE_SHOULD_NOT_BE_EMPTY renders a solution only with a node type', () => {
-    const { solution } = messages[validations.INLINE_SHOULD_NOT_BE_EMPTY];
-    expect(callSolution(solution, { nodeType: 'bold' })).not.toBeNull();
-    expect(callSolution(solution, {})).toBeNull();
-  });
-
-  it('HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC and INLINE_SHOULD_NOT_BE_UNDERLINED have static tips', () => {
-    expect(callSolution(messages[validations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC].solution)).not.toBeNull();
-    expect(callSolution(messages[validations.INLINE_SHOULD_NOT_BE_UNDERLINED].solution)).not.toBeNull();
-  });
-
-  describe('DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER', () => {
-    const { solution } = messages[validations.DOCUMENT_MUST_HAVE_CORRECT_HEADING_ORDER];
-
-    it('explains a heading that exceeds the highest allowed level', () => {
-      expect(callSolution(solution, { headingLevel: 1, precedingHeadingLevel: 2, topHeadingLevel: 2 })).not.toBeNull();
-    });
-
-    it('returns null when required numbers are missing', () => {
-      expect(callSolution(solution, { headingLevel: 3 })).toBeNull();
-    });
-
-    it('renders a single allowed level', () => {
-      // preceding 1, top 1 → min 2, max 2 → one level
-      expect(callSolution(solution, { headingLevel: 3, precedingHeadingLevel: 1, topHeadingLevel: 1 })).not.toBeNull();
-    });
-
-    it('renders two allowed levels', () => {
-      // preceding 2, top 1 → min 2, max 3 → two levels
-      expect(callSolution(solution, { headingLevel: 5, precedingHeadingLevel: 2, topHeadingLevel: 1 })).not.toBeNull();
-    });
-
-    it('renders three or more allowed levels', () => {
-      // preceding 3, top 1 → min 2, max 4 → three levels
-      expect(callSolution(solution, { headingLevel: 6, precedingHeadingLevel: 3, topHeadingLevel: 1 })).not.toBeNull();
-    });
+  it('renders nothing when a rule has no solution', () => {
+    expect(renderedText(undefined)).toBe('');
   });
 });

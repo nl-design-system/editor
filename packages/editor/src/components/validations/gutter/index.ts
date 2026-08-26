@@ -344,9 +344,9 @@ export class Gutter extends LitElement {
     position: { top: number; height: number },
     metaCount: number | undefined,
   ) {
-    const { correct, scope, severity, solutionPayload, validatorKey } = result;
+    const { correct, scope, severity, solution, validatorKey } = result;
     const valKey = validatorKey as ValidationKey;
-    const { customCorrectLabel, heading, href, solution } = validationMessages()[valKey];
+    const { correctLabel, description, href } = validationMessages()[valKey];
     const isActive = this.activeRange === range;
     return html`<li
       class="clippy-validations-gutter__indicator"
@@ -367,7 +367,7 @@ export class Gutter extends LitElement {
         @focus=${() => this.#highlightRange(range, result)}
         @blur=${() => clearHoverHighlight()}
       >
-        <span class="sr-only">${renderMarkdown(heading)}</span>
+        <span class="sr-only">${renderMarkdown(description)}</span>
       </button>
       ${metaCount === undefined ? nothing : this.#renderMeta(range, result, metaCount)}
       <div
@@ -380,12 +380,12 @@ export class Gutter extends LitElement {
           .mode=${this.mode}
           .range=${range}
           .severity=${severity}
-          .heading=${heading}
+          .heading=${description}
           .href=${href}
-          .customCorrectLabel=${customCorrectLabel}
+          .customCorrectLabel=${correctLabel}
           .correct=${correct}
         >
-          ${renderSolution(solution, solutionPayload)}
+          ${renderSolution(solution)}
         </clippy-validation-item>
       </div>
     </li>`;

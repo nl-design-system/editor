@@ -12,6 +12,7 @@ import {
   validationSeverity,
 } from '@/constants';
 import { collectContentValidations, collectTreeValidations, runValidation } from '@/detection';
+import { validationContext } from '@/i18n';
 
 const ALL: { enableRules: string[] } = { enableRules: ['*'] };
 
@@ -41,13 +42,13 @@ describe('content detection', () => {
     expect(keys('<p>x</p><img src="a.png" alt="a cat">')).not.toContain(imageValidations.IMAGE_MUST_HAVE_ALT_TEXT);
   });
 
-  it('flags an empty block node with its node type', () => {
+  it('flags an empty block node, naming the node type in its solution', () => {
     const result = first(
       '<table><tr><td></td><td>x</td></tr><tr><td>y</td><td>z</td></tr></table>',
       richTextContentValidations.NODE_SHOULD_NOT_BE_EMPTY,
     );
     expect(result).toBeDefined();
-    expect(result!.solutionPayload?.['nodeType']).toBe('tableCell');
+    expect(result!.solution).toBe('Remove the empty **table cell** or add text.');
   });
 
   it('flags a fully-bold short paragraph resembling a heading', () => {
@@ -56,10 +57,10 @@ describe('content detection', () => {
     );
   });
 
-  it('flags an ordered list-like paragraph and records the order in solutionPayload', () => {
+  it('flags an ordered list-like paragraph, quoting its prefix in the solution', () => {
     const result = first('<p>1. one<br>2. two</p>', paragraphValidations.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST);
     expect(result).toBeDefined();
-    expect(result!.solutionPayload?.['isOrdered']).toBe(true);
+    expect(result!.solution).toBe('Use a semantic list instead of lines starting with "**1.**"');
   });
 
   it('flags list-like sibling paragraphs', () => {
@@ -100,15 +101,15 @@ describe('content detection', () => {
 describe('inline content detection', () => {
   it.each([
     ['<b>&nbsp;</b>', 'bold'],
-    ['<i>&nbsp;</i>', 'italic'],
+    ['<i>&nbsp;</i>', 'italic text'],
     ['<s>&nbsp;</s>', 'strike'],
     ['<u>&nbsp;</u>', 'underline'],
     ['<mark>&nbsp;</mark>', 'highlight'],
     ['<code>&nbsp;</code>', 'code'],
-    ['<a href="#">&nbsp;</a>', 'link'],
-  ])('flags empty inline %s as %s', (html, nodeType) => {
+    ['<a href="#">&nbsp;</a>', 'link text'],
+  ])('flags empty inline %s and names it "%s" in the solution', (html, nodeType) => {
     const result = first(`<p>text ${html}</p>`, richTextContentValidations.INLINE_SHOULD_NOT_BE_EMPTY);
-    expect(result?.solutionPayload?.['nodeType']).toBe(nodeType);
+    expect(result?.solution).toBe(`Remove the empty **${nodeType}**.`);
   });
 
   it('does not flag inline elements with text', () => {
@@ -187,7 +188,7 @@ describe('collectTreeValidations', () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const dom = parse('<p>x</p>');
 
-    const results = collectTreeValidations(dom, settings, [
+    const results = collectTreeValidations(dom, validationContext(settings), [
       ['BOOM', boom],
       ['OK', ok],
     ]);
@@ -204,18 +205,22 @@ describe('heading order detection', () => {
     expect(headingMustHaveCorrectOrder(body)).toStrictEqual([]);
   });
 
-  it('returns a warning with targetLevel for a skipped level', () => {
+  it('returns a warning naming the allowed levels for a skipped level', () => {
     const body = new DOMParser().parseFromString('<h1>a</h1><h3>b</h3>', 'text/html').body;
     const [result] = headingMustHaveCorrectOrder(body);
     expect(result.severity).toBe('warning');
-    expect(result.solutionPayload).toMatchObject({ headingLevel: 3, precedingHeadingLevel: 1, targetLevel: 2 });
+    expect(result.solution).toBe(
+      '**Heading level 3** must not directly follow a **heading level 1**. Use heading level 2.',
+    );
   });
 
   it('returns an error when a heading is below topHeadingLevel', () => {
     const body = new DOMParser().parseFromString('<h1>a</h1><h2>b</h2>', 'text/html').body;
-    const results = headingMustHaveCorrectOrder(body, { enableRules: ['*'], topHeadingLevel: 2 });
+    const results = headingMustHaveCorrectOrder(body, validationContext({ enableRules: ['*'], topHeadingLevel: 2 }));
     expect(results[0].severity).toBe('error');
-    expect(results[0].solutionPayload).toMatchObject({ targetLevel: 2, topHeadingLevel: 2 });
+    expect(results[0].solution).toBe(
+      '**Heading level 1** exceeds the highest allowed heading level (2) in this document.',
+    );
   });
 
   it('detects duplicate heading ones', () => {
@@ -230,6 +235,8 @@ describe('heading order detection', () => {
 
   it('does not flag when topHeadingLevel is not 1', () => {
     const body = new DOMParser().parseFromString('<h2>a</h2>', 'text/html').body;
-    expect(headingOneMustBeFirst(body, { enableRules: ['*'], topHeadingLevel: 2 })).toStrictEqual([]);
+    expect(headingOneMustBeFirst(body, validationContext({ enableRules: ['*'], topHeadingLevel: 2 }))).toStrictEqual(
+      [],
+    );
   });
 });

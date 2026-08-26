@@ -1,6 +1,7 @@
-import type { ContentValidator, TreeValidator, ValidationResult, ValidatorSettings } from './types';
+import type { ContentValidator, TreeValidator, ValidationContext, ValidationResult, ValidatorSettings } from './types';
 import { contentValidators, treeValidators } from './components';
 import { walkElements } from './helpers';
+import { validationContext } from './i18n';
 
 /**
  * Normalise a rule identifier to the canonical SCREAMING_SNAKE_CASE format
@@ -48,9 +49,9 @@ export const getActiveValidators = <V>(
  * the rest.
  *
  * Generic over the validator's arguments, so tree validators (which take the
- * content root and the settings) and content validators (which take the root and
- * one element) share this one implementation. A validator may return a single
- * result, several, or `null`.
+ * content root and the run's context) and content validators (which take the root,
+ * one element and the context) share this one implementation. A validator may
+ * return a single result, several, or `null`.
  */
 export const runValidators = <Args extends unknown[]>(
   validators: [string, (...args: Args) => ValidationResult | ValidationResult[] | null][],
@@ -78,8 +79,11 @@ export const runValidators = <Args extends unknown[]>(
 export const collectContentValidations = (
   dom: HTMLElement,
   validators: [string, ContentValidator][],
+  context: ValidationContext = validationContext(),
 ): ValidationResult[] =>
-  [...walkElements(dom)].flatMap((element) => runValidators<[HTMLElement, Element]>(validators, dom, element));
+  [...walkElements(dom)].flatMap((element) =>
+    runValidators<[HTMLElement, Element, ValidationContext]>(validators, dom, element, context),
+  );
 
 /**
  * Run every whole-tree validator. Each does its own internal DOM queries,
@@ -87,23 +91,27 @@ export const collectContentValidations = (
  */
 export const collectTreeValidations = (
   dom: HTMLElement,
-  settings: ValidatorSettings,
+  context: ValidationContext,
   validators: [string, TreeValidator][],
-): ValidationResult[] => runValidators<[HTMLElement, ValidatorSettings]>(validators, dom, settings);
+): ValidationResult[] => runValidators<[HTMLElement, ValidationContext]>(validators, dom, context);
 
 /**
- * Runs every active validator against `dom` and returns the raw detection
- * results in document order. This is the framework-agnostic core: it performs
- * no correction, dispatches no events, and produces no `Range` — consumers
- * derive whatever location representation they need from `result.element`.
+ * Runs every active validator against `dom` and returns the detection results in
+ * document order, each with its `solution` text translated into `settings.locale`.
+ * This is the framework-agnostic core: it applies no correction, dispatches no
+ * events, and produces no `Range` — consumers derive whatever location
+ * representation they need from `result.element`.
  */
 export const runValidation = (dom: HTMLElement, settings: ValidatorSettings): ValidationResult[] => {
+  // Bind the translator to this run's locale once, so no validator has to thread it.
+  const context = validationContext(settings);
+
   // Pre-compute active validators once — avoids re-filtering on every node during the walk.
   const activeTreeValidators = getActiveValidators<TreeValidator>(treeValidators, settings);
   const activeContentValidators = getActiveValidators<ContentValidator>(contentValidators, settings);
 
   return [
-    ...collectTreeValidations(dom, settings, activeTreeValidators),
-    ...collectContentValidations(dom, activeContentValidators),
+    ...collectTreeValidations(dom, context, activeTreeValidators),
+    ...collectContentValidations(dom, activeContentValidators, context),
   ];
 };

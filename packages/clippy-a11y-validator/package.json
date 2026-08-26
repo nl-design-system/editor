@@ -46,11 +46,14 @@
     "test:playwright": "playwright test",
     "test-coverage": "vitest run --coverage"
   },
-  "dependencies": {},
+  "dependencies": {
+    "rosetta": "1.1.0"
+  },
   "peerDependencies": {
     "@playwright/test": ">=1.50.0"
   },
   "devDependencies": {
+    "@nl-design-system-unstable/documentation": "1.11.0",
     "@nl-design-system/tsconfig": "1.0.5",
     "@playwright/test": "1.62.1",
     "@types/node": "22.20.0",
