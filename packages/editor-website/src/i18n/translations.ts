@@ -40,6 +40,7 @@ const translations = {
     'nav.language': 'Nederlands',
     'nav.language.label': 'Schakel naar Nederlands',
     'nav.react': 'React',
+    'playwright.title': 'Playwright integration - Rich-text Editor - NL Design System',
     'react.title': 'React integration - Rich-text Editor - NL Design System',
     'site.logo.label': 'NL Design System Editor – home',
 
@@ -88,6 +89,7 @@ const translations = {
     'nav.language': 'English',
     'nav.language.label': 'Switch to English',
     'nav.react': 'React',
+    'playwright.title': 'Playwright integratie - Rich-text Editor - NL Design System',
     'react.title': 'React integratie - Rich-text Editor - NL Design System',
     'site.logo.label': 'NL Design System Editor – home',
     'site.title': 'Rich-text Editor - NL Design System',

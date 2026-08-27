@@ -1,0 +1,26 @@
+---
+import Document from '../layouts/document.astro';
+import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import {
+  Content as PlaywrightContent,
+  frontmatter as playwrightFrontmatter,
+} from '../../../../docs/playwright/playwright.md';
+import { useTranslations } from '../i18n/translations.ts';
+
+const t = useTranslations('nl');
+---
+
+<Document title={t('playwright.title')}>
+  <main>
+    <Hero title={playwrightFrontmatter['title']} intro={playwrightFrontmatter['intro']}>
+      <Fragment slot="badges">
+        <a href="https://github.com/nl-design-system/editor">
+          <img src="https://img.shields.io/badge/github-repo-blue?logo=github" alt="GitHub repository" />
+        </a>
+      </Fragment>
+    </Hero>
+
+    <Section content={PlaywrightContent} />
+  </main>
+</Document>
