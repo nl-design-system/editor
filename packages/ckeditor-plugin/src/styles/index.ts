@@ -2,7 +2,7 @@ const css = (strings: TemplateStringsArray) => strings.join('');
 
 const CLIPPY_STYLES = css`
   /* Re-apply basic CKEditor theme inside the clippy-editor-content-wrapper component */
-  clippy-editor-content-wrapper > .ck-editor__editable {
+  clippy-editor-content-wrapper {
     background: var(--ck-color-base-background);
   }
 

@@ -16,7 +16,8 @@ export default css`
   .clippy-editor-container {
     background: var(--basis-color-default-bg-document);
     position: relative;
-    padding-inline-end: 1rem;
+    isolation: isolate;
+    padding-inline-end: var(--basis-space-inline-5xl);
   }
 
   p.is-editor-empty:first-child::before {
