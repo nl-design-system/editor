@@ -75,7 +75,7 @@ type PositionedIndicator = {
 const metaCountByRange = (indicators: PositionedIndicator[]): Map<Range, number> => {
   const lines = new Map<number, PositionedIndicator[]>();
   for (const indicator of indicators) {
-    const top = Math.round(indicator.position.top);
+    const top = Math.floor(indicator.position.top);
     const line = lines.get(top);
     if (line) {
       line.push(indicator);
