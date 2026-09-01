@@ -55,6 +55,9 @@
       "accessibility-notifications": [
         "./dist/entries/accessibility-notifications.d.ts"
       ],
+      "color-scheme": [
+        "./dist/entries/color-scheme.d.ts"
+      ],
       "content-classes": [
         "./dist/entries/content-classes.d.ts"
       ],
