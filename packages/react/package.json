@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@nl-design-system-community/editor": "workspace:*",
-    "@utrecht/component-library-css": "9.0.14",
+    "@utrecht/component-library-css": "9.0.15",
     "@utrecht/design-tokens": "6.2.1"
   },
   "devDependencies": {

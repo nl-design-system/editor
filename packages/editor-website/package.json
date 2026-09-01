@@ -21,9 +21,9 @@
   },
   "dependencies": {
     "@astrojs/mdx": "7.0.5",
-    "@astrojs/react": "6.0.2",
-    "@astrojs/sitemap": "3.7.3",
-    "@astrojs/ts-plugin": "1.10.10",
+    "@astrojs/react": "6.0.5",
+    "@astrojs/sitemap": "3.7.4",
+    "@astrojs/ts-plugin": "1.10.11",
     "@fontsource/fira-sans": "5.3.0",
     "@fontsource/source-sans-pro": "5.3.0",
     "@nl-design-system-candidate/button-css": "1.1.0",
@@ -35,15 +35,15 @@
     "@tabler/icons": "3.46.0",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
-    "@utrecht/component-library-css": "9.0.14",
+    "@utrecht/component-library-css": "9.0.15",
     "@utrecht/design-tokens": "6.2.1",
     "astro": "7.2.0",
     "ckeditor5": "48.4.0",
-    "mermaid": "11.16.1",
+    "mermaid": "11.17.2",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "remark-custom-header-id": "1.0.0",
-    "xstate": "5.32.5"
+    "xstate": "5.32.6"
   },
   "devDependencies": {
     "@nl-design-system/tsconfig": "1.0.5",
