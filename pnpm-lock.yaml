@@ -122,6 +122,27 @@ importers:
         specifier: 4.1.11
         version: 4.1.11(@types/node@22.20.1)(@vitest/browser-playwright@4.1.11)(@vitest/coverage-v8@4.1.11)(jsdom@30.0.1)(vite@8.2.2(@types/node@22.20.1)(esbuild@0.28.2)(yaml@2.9.0))
 
+  packages/clippy-a11y-validator:
+    devDependencies:
+      '@nl-design-system/tsconfig':
+        specifier: 1.0.5
+        version: 1.0.5(typescript@6.0.3)
+      '@types/node':
+        specifier: 22.20.1
+        version: 22.20.1
+      playwright:
+        specifier: 1.62.1
+        version: 1.62.1
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: 8.2.1
+        version: 8.2.1(@types/node@22.20.1)(esbuild@0.28.2)(yaml@2.9.0)
+      vite-plugin-dts:
+        specifier: 5.0.3
+        version: 5.0.3(esbuild@0.28.2)(rolldown@1.2.3)(supports-color@10.2.2)(typescript@6.0.3)(vite@8.2.1(@types/node@22.20.1)(esbuild@0.28.2)(yaml@2.9.0))
+
   packages/clippy-alt-text-wizard:
     dependencies:
       '@lit/localize':
