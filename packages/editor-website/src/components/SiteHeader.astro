@@ -79,22 +79,21 @@ const localeRoot = locale === 'en' ? '/en' : '/';
     applyColorScheme,
     isDarkColorScheme,
     setDarkColorScheme,
+    storeColorScheme,
   } from '@nl-design-system-community/editor/color-scheme';
 
   const toggle = document.getElementById('ma-color-scheme-toggle');
 
-  const syncState = () => {
-    toggle?.setAttribute('aria-pressed', String(isDarkColorScheme()));
-    toggle?.classList.toggle('nl-button--pressed', isDarkColorScheme());
-  };
-
-  const query = applyColorScheme();
-  syncState();
-  query?.addEventListener('change', syncState);
+  applyColorScheme((colorScheme) => {
+    const dark = colorScheme === 'dark';
+    toggle?.setAttribute('aria-pressed', String(dark));
+    toggle?.classList.toggle('nl-button--pressed', dark);
+  });
 
   toggle?.addEventListener('click', () => {
-    setDarkColorScheme(!isDarkColorScheme());
-    syncState();
+    const dark = !isDarkColorScheme();
+    setDarkColorScheme(dark);
+    storeColorScheme(dark ? 'dark' : 'light');
   });
 </script>
 
