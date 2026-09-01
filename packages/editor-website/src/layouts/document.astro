@@ -2,6 +2,11 @@
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import type { Locale } from '../i18n/translations.ts';
+import {
+  COLOR_SCHEME_STORAGE_KEY,
+  DARK_COLOR_SCHEME_CLASS,
+  DARK_COLOR_SCHEME_QUERY,
+} from '@nl-design-system-community/editor/color-scheme';
 
 interface Props {
   title?: string;
@@ -18,13 +23,19 @@ const locale = (Astro.currentLocale ?? 'nl') as Locale;
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     {/* Apply the stored/preferred color scheme before first paint to avoid a flash of the wrong theme. */}
-    <script is:inline>
+    <script
+      is:inline
+      define:vars={{
+        storageKey: COLOR_SCHEME_STORAGE_KEY,
+        darkClass: DARK_COLOR_SCHEME_CLASS,
+        darkQuery: DARK_COLOR_SCHEME_QUERY,
+      }}
+    >
       (function () {
         try {
-          var stored = localStorage.getItem('ma-color-scheme');
-          var dark =
-            stored === 'dark' || (stored === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
-          document.documentElement.classList.toggle('ma-theme--color-scheme-dark', dark);
+          var stored = localStorage.getItem(storageKey);
+          var dark = stored === 'dark' || (stored === null && window.matchMedia(darkQuery).matches);
+          document.documentElement.classList.toggle(darkClass, dark);
         } catch (error) {
           /* localStorage/matchMedia unavailable — fall back to the default light theme. */
         }
