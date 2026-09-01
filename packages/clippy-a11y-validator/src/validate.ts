@@ -1,16 +1,25 @@
 import type { ValidationResult } from './types.ts';
 import { paragraphValidators } from './nlds-components/paragraph';
 
-const bindValidatorsToTag =
-  <TTag extends keyof HTMLElementTagNameMap>(
-    tag: TTag,
-    validators: ((element: HTMLElementTagNameMap[TTag]) => ValidationResult | null)[],
-  ) =>
-  (root: ParentNode): ValidationResult[] =>
-    [...root.querySelectorAll(tag)].flatMap((element) =>
-      validators.map((validate) => validate(element)).filter((result) => result !== null),
-    );
+type HTMLElementValidators = (element: Element) => ValidationResult[];
 
-const validators = [bindValidatorsToTag('p', paragraphValidators)];
+const bindValidatorsToTag = <TTag extends keyof HTMLElementTagNameMap>(
+  tag: TTag,
+  validators: ((element: HTMLElementTagNameMap[TTag]) => ValidationResult | null)[],
+): [string, HTMLElementValidators] => [
+  tag.toUpperCase(),
+  (element) =>
+    validators.map((validate) => validate(element as HTMLElementTagNameMap[TTag])).filter((result) => result !== null),
+];
 
-export const validate = (root: ParentNode): ValidationResult[] => validators.flatMap((validate) => validate(root));
+const validatorRegistry = new Map<string, HTMLElementValidators>([bindValidatorsToTag('p', paragraphValidators)]);
+
+export const validate = (root: ParentNode): ValidationResult[] => {
+  return [...root.querySelectorAll('*')].flatMap((element) => {
+    const validator = validatorRegistry.get(element.tagName);
+    if (validator) {
+      return validator(element);
+    }
+    return [];
+  });
+};
