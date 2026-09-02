@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@nl-design-system-community/editor": "workspace:*",
-    "@utrecht/component-library-css": "9.0.14",
+    "@utrecht/component-library-css": "9.0.15",
     "@utrecht/design-tokens": "6.2.1"
   },
   "devDependencies": {
@@ -46,8 +46,8 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "typescript": "6.0.3",
-    "vite": "8.2.1",
-    "vite-plugin-dts": "5.0.3"
+    "vite": "8.2.2",
+    "vite-plugin-dts": "5.1.0"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
