@@ -4,11 +4,11 @@ import dts from 'vite-plugin-dts';
 export default defineConfig({
   build: {
     lib: {
-      entry: 'src/validate.ts',
-      fileName: 'validate',
+      entry: 'src/index.ts',
+      fileName: 'index',
       formats: ['es'],
     },
     minify: false,
   },
-  plugins: [dts({ include: ['src'] })],
+  plugins: [dts({ exclude: ['src/**/*.test.ts', 'src/test-helpers/**'], include: ['src'] })],
 });

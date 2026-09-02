@@ -8,7 +8,7 @@ import { chromium } from 'playwright';
 const ORIGIN = 'http://localhost:5174';
 
 /** The ES module built by `pnpm build`. */
-const BUNDLE = fileURLToPath(new URL('../dist/validate.js', import.meta.url));
+const BUNDLE = fileURLToPath(new URL('../dist/index.js', import.meta.url));
 
 function help(): string {
   return `
@@ -61,14 +61,16 @@ try {
     async ({ fix, source }) => {
       // Import the bundle as a module, so it needs no global to hand its exports back.
       const moduleUrl = URL.createObjectURL(new Blob([source], { type: 'text/javascript' }));
-      const { validate } = (await import(moduleUrl)) as typeof import('../src/validate.ts');
+      const { coreValidations, Validator } = (await import(moduleUrl)) as typeof import('../src/index.ts');
       URL.revokeObjectURL(moduleUrl);
 
-      return validate(document.body).map(({ correct, element, severity, validatorKey }) => {
+      const validator = new Validator({ validations: coreValidations });
+
+      return validator.validate(document.body).map(({ code, correct, element, messages, severity }) => {
         const before = element.outerHTML;
         if (fix) correct?.();
 
-        return { after: fix ? element.outerHTML : undefined, before, severity, validatorKey };
+        return { after: fix ? element.outerHTML : undefined, before, code, message: messages.error, severity };
       });
     },
     { fix: values['fix'], source: readFileSync(BUNDLE, 'utf8') },
@@ -76,8 +78,8 @@ try {
 
   console.log(`${url}\n`);
 
-  for (const { after, before, severity, validatorKey } of findings) {
-    console.log(`${severity}: ${validatorKey}\n  ${before}`);
+  for (const { after, before, code, message, severity } of findings) {
+    console.log(`${severity}: ${code} — ${message}\n  ${before}`);
     if (after !== undefined) console.log(`  → ${after}`);
   }
 
