@@ -180,8 +180,8 @@ importers:
         specifier: 22.20.1
         version: 22.20.1
       '@utrecht/design-tokens':
-        specifier: 6.2.1
-        version: 6.2.1
+        specifier: 7.0.0
+        version: 7.0.0
       '@utrecht/form-field-css':
         specifier: 3.0.1
         version: 3.0.1
@@ -446,8 +446,8 @@ importers:
         specifier: 1.0.4
         version: 1.0.4
       '@utrecht/design-tokens':
-        specifier: 6.2.1
-        version: 6.2.1
+        specifier: 7.0.0
+        version: 7.0.0
       '@vitest/browser-playwright':
         specifier: 4.1.10
         version: 4.1.10(playwright@1.62.1)(vite@8.2.2(@types/node@22.20.1)(esbuild@0.28.2)(yaml@2.9.0))(vitest@4.1.11)
@@ -530,8 +530,8 @@ importers:
         specifier: 9.0.14
         version: 9.0.14(@babel/runtime@7.29.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@utrecht/design-tokens':
-        specifier: 6.2.1
-        version: 6.2.1
+        specifier: 7.0.0
+        version: 7.0.0
       astro:
         specifier: 7.2.10
         version: 7.2.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@22.20.1)(yaml@2.9.0)
@@ -573,8 +573,8 @@ importers:
         specifier: 9.0.14
         version: 9.0.14(@babel/runtime@7.29.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@utrecht/design-tokens':
-        specifier: 6.2.1
-        version: 6.2.1
+        specifier: 7.0.0
+        version: 7.0.0
     devDependencies:
       '@fontsource/fira-sans':
         specifier: 5.3.0
@@ -2947,8 +2947,8 @@ packages:
   '@utrecht/data-placeholder-css@3.0.1':
     resolution: {integrity: sha512-gXQ3Qrp+EUagVFaz8XWS7I014uVJe9Zq0uy9srVpOrkFfFeZsVtejddE/+AKSCxohNZYWl40wTu3V5GhdgYCEQ==}
 
-  '@utrecht/design-tokens@6.2.1':
-    resolution: {integrity: sha512-wSh0/uT8FfHM/J3fcN7ZJ80OoJpOXjEdSqLu1higSW6AHW4LYm5ZyeQFFsGcIhGlIYPSjds8ksDpizdgjoab/g==}
+  '@utrecht/design-tokens@7.0.0':
+    resolution: {integrity: sha512-UKYQ04oYTCX+7MC7jjgThKZNvXNCjG0Bt1zWFGbTMsVcucXZRG5ktZMcfD/dR76WkPgbmg/2wXdZEn9DwLxkqg==}
 
   '@utrecht/digid-button-css@2.0.1':
     resolution: {integrity: sha512-LuC8znD4upb25wOtQIbHB/1LeJ3eCAheoit0pp8DOKEETJ6CUVi1sWwRY/BFKD6VmzEM6Daw3civPlErzXpbHQ==}
@@ -10012,7 +10012,7 @@ snapshots:
 
   '@utrecht/data-placeholder-css@3.0.1': {}
 
-  '@utrecht/design-tokens@6.2.1':
+  '@utrecht/design-tokens@7.0.0':
     dependencies:
       '@fontsource-variable/noto-sans': 5.2.10
 
