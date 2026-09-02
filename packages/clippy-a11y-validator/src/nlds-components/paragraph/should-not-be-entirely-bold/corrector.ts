@@ -3,7 +3,7 @@ import { unwrapElement } from '../../../helpers.ts';
 import { BOLD_SELECTOR } from '../rules.ts';
 
 export const correctEntirelyBoldParagraph =
-  (paragraph: HTMLParagraphElement): CorrectValidationFunction =>
+  (paragraph: HTMLElement): CorrectValidationFunction =>
   () => {
     paragraph.querySelectorAll(BOLD_SELECTOR).forEach(unwrapElement);
   };
