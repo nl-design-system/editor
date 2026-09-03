@@ -128,3 +128,39 @@ import Document from '../layouts/document.astro';
     `,
   });
 </script>
+
+<style is:global>
+  :root.ma-theme--color-scheme-dark {
+    --ck-color-base-background: var(--basis-color-default-bg-document);
+    --ck-color-base-foreground: var(--basis-color-default-bg-default);
+    --ck-color-base-border: var(--basis-color-default-border-subtle);
+    --ck-color-base-text: var(--basis-color-default-color-document);
+    --ck-color-base-error: var(--basis-color-negative-color-default);
+    --ck-color-button-default-hover-background: var(--basis-color-default-bg-hover);
+    --ck-color-button-default-active-background: var(--basis-color-default-bg-active);
+    --ck-color-button-on-background: var(--basis-color-selected-bg-default);
+    --ck-color-button-on-hover-background: var(--basis-color-selected-bg-hover);
+    --ck-color-button-on-active-background: var(--basis-color-selected-bg-active);
+    --ck-color-button-on-disabled-background: var(--basis-color-disabled-bg-default);
+    --ck-color-button-on-color: var(--basis-color-selected-color-document);
+    --ck-color-list-button-on-background: var(--basis-color-selected-bg-active);
+    --ck-color-list-button-on-background-focus: var(--basis-color-selected-bg-hover);
+    --ck-color-list-button-on-text: var(--basis-color-selected-color-document);
+    --ck-color-dialog-background: var(--basis-color-default-bg-document);
+    --ck-color-dialog-form-header-border: var(--basis-color-default-border-subtle);
+    --ck-color-input-disabled-background: var(--basis-color-disabled-bg-default);
+    --ck-color-input-disabled-border: var(--basis-color-disabled-border-default);
+    --ck-color-input-disabled-text: var(--basis-color-disabled-color-default);
+    --ck-color-engine-placeholder-text: var(--basis-color-default-color-subtle);
+    --ck-color-tooltip-background: var(--basis-color-default-inverse-bg-document);
+    --ck-color-tooltip-text: var(--basis-color-default-inverse-color-document);
+  }
+
+  :root.ma-theme--color-scheme-dark .ck.ck-editor__editable {
+    color: var(--basis-color-default-color-document);
+  }
+
+  :root.ma-theme--color-scheme-dark .ck.ck-editor__editable a {
+    color: var(--basis-color-info-color-default);
+  }
+</style>
