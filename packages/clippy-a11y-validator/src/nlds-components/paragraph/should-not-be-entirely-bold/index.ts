@@ -1,16 +1,16 @@
-import type { ValidationResult } from '../../../types.ts';
-import { validationSeverity } from '../../../constants.ts';
-import { paragraphValidations } from '../constants.ts';
-import { correctEntirelyBoldParagraph } from './corrector.ts';
-import { isEntirelyBoldParagraph } from './rules.ts';
+import { isNotEntirelyBold } from '../../../conditions/index.ts';
+import { selectors, validationSeverity } from '../../../consts/index.ts';
+import { defineValidation } from '../../../define-validation.ts';
+import { unwrapElement } from '../../../utils/dom.ts';
+import { paragraphValidationRules } from '../constants.ts';
+import { messages } from './messages.ts';
 
-export const paragraphShouldNotBeEntirelyBold = (element: HTMLParagraphElement): ValidationResult | null => {
-  if (!isEntirelyBoldParagraph(element)) return null;
-  return {
-    correct: correctEntirelyBoldParagraph(element),
-    element,
-    scope: 'block',
-    severity: validationSeverity.WARNING,
-    validatorKey: paragraphValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD,
-  };
-};
+export const paragraphShouldNotBeEntirelyBold = defineValidation({
+  condition: isNotEntirelyBold,
+  correct: (paragraph) => () => paragraph.querySelectorAll(selectors.BOLD).forEach(unwrapElement),
+  messages,
+  rule: paragraphValidationRules.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD,
+  scope: 'block',
+  selector: selectors.PARAGRAPH,
+  severity: validationSeverity.WARNING,
+});
