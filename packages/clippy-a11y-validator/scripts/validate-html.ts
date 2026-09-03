@@ -64,7 +64,7 @@ try {
       const { coreValidations, Validator } = (await import(moduleUrl)) as typeof import('../src/index.ts');
       URL.revokeObjectURL(moduleUrl);
 
-      const validator = new Validator({ validations: coreValidations });
+      const validator = new Validator({ validations: Object.values(coreValidations) });
 
       return validator.validate(document.body).map(({ correct, element, messages, rule, severity }) => {
         const before = element.outerHTML;
