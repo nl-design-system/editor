@@ -66,11 +66,11 @@ try {
 
       const validator = new Validator({ validations: coreValidations });
 
-      return validator.validate(document.body).map(({ code, correct, element, messages, severity }) => {
+      return validator.validate(document.body).map(({ correct, element, key, messages, severity }) => {
         const before = element.outerHTML;
         if (fix) correct?.();
 
-        return { after: fix ? element.outerHTML : undefined, before, code, message: messages.error, severity };
+        return { after: fix ? element.outerHTML : undefined, before, key, message: messages.error, severity };
       });
     },
     { fix: values['fix'], source: readFileSync(BUNDLE, 'utf8') },
@@ -78,8 +78,8 @@ try {
 
   console.log(`${url}\n`);
 
-  for (const { after, before, code, message, severity } of findings) {
-    console.log(`${severity}: ${code} — ${message}\n  ${before}`);
+  for (const { after, before, key, message, severity } of findings) {
+    console.log(`${severity}: ${key} — ${message}\n  ${before}`);
     if (after !== undefined) console.log(`  → ${after}`);
   }
 

@@ -3,10 +3,10 @@ import type { Validation } from './types/validation.ts';
 import { defineValidation } from './define-validation.ts';
 import { Validator } from './validator.ts';
 
-const alwaysFails = (code: string, severity: Validation['severity'], selector = 'p'): Validation =>
+const alwaysFails = (key: string, severity: Validation['severity'], selector = 'p'): Validation =>
   defineValidation({
-    code,
-    messages: { nl: { error: `${code} fout.` } },
+    key,
+    messages: { nl: { error: `${key} fout.` } },
     rule: () => false,
     scope: 'block',
     selector,
@@ -57,12 +57,12 @@ describe('Validator', () => {
       validations: [alwaysFails('A', 'warning'), alwaysFails('B', 'error')],
     });
 
-    expect(validator.validate(root, { severities: ['error'] }).map(({ code }) => code)).toEqual(['B', 'B']);
+    expect(validator.validate(root, { severities: ['error'] }).map(({ key }) => key)).toEqual(['B', 'B']);
   });
 
   it('resolves messages in the configured locale', () => {
     const validation = defineValidation({
-      code: 'A',
+      key: 'A',
       messages: { en: { error: 'English.' }, nl: { error: 'Nederlands.' } },
       rule: () => false,
       scope: 'block',
@@ -77,7 +77,7 @@ describe('Validator', () => {
 
   it('exposes the payload and interpolates it into the message', () => {
     const validation = defineValidation({
-      code: 'A',
+      key: 'A',
       messages: { nl: { error: 'De {nodeType} is fout.' } },
       payload: () => ({ nodeType: 'alinea' }),
       rule: () => false,
@@ -93,7 +93,7 @@ describe('Validator', () => {
 
   it('does not report an element that satisfies its rule', () => {
     const validation = defineValidation({
-      code: 'A',
+      key: 'A',
       messages: { nl: { error: 'Fout.' } },
       rule: () => true,
       scope: 'block',

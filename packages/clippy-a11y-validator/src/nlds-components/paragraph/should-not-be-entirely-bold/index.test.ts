@@ -19,7 +19,7 @@ describe('paragraphShouldNotBeEntirelyBold', () => {
   it('flags a paragraph that is entirely bold', () => {
     const [violation] = validate('<p><strong>Alles dik</strong></p>');
 
-    expect(violation?.code).toBe('PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD');
+    expect(violation?.key).toBe('PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD');
     expect(violation?.severity).toBe('warning');
     expect(violation?.scope).toBe('block');
     expect(violation?.messages.error).toBe('De hele alinea is dikgedrukt.');

@@ -12,8 +12,8 @@ export type CorrectValidationFunction = () => void;
 export type ValidationRule<E extends HTMLElement = HTMLElement> = (element: E) => boolean;
 
 export type ValidationDefinition<S extends Selector = Selector, E extends HTMLElement = ElementFor<S>> = {
-  code: string;
   correct?: (element: E) => CorrectValidationFunction;
+  key: string;
   messages: ValidationMessagesByLocale;
   payload?: (element: E) => ValidationPayload;
   rule: ValidationRule<E>;
@@ -25,9 +25,9 @@ export type ValidationDefinition<S extends Selector = Selector, E extends HTMLEl
 export type Validation = ValidationDefinition<Selector, HTMLElement>;
 
 export type Violation = {
-  code: string;
   correct?: CorrectValidationFunction;
   element: HTMLElement;
+  key: string;
   messages: ResolvedMessages;
   payload?: ValidationPayload;
   scope: ValidationScope;
