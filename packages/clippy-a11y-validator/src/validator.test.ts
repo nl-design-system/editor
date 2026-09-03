@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { coreValidationRules, coreValidations } from './nlds-components/index.ts';
+import { coreValidationRules, coreValidations } from './components/index.ts';
 import { Validator } from './validator.ts';
 
 const { PARAGRAPH_SHOULD_NOT_BE_EMPTY, PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD } = coreValidationRules;
