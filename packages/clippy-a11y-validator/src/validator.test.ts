@@ -3,11 +3,11 @@ import type { Validation } from './types/validation.ts';
 import { defineValidation } from './define-validation.ts';
 import { Validator } from './validator.ts';
 
-const alwaysFails = (key: string, severity: Validation['severity'], selector = 'p'): Validation =>
+const alwaysFails = (rule: string, severity: Validation['severity'], selector = 'p'): Validation =>
   defineValidation({
-    key,
-    messages: { nl: { error: `${key} fout.` } },
-    rule: () => false,
+    condition: () => false,
+    messages: { nl: { error: `${rule} fout.` } },
+    rule,
     scope: 'block',
     selector,
     severity,
@@ -27,7 +27,7 @@ describe('Validator', () => {
     expect(violations.map(({ element }) => element.textContent)).toEqual(['first', 'second']);
   });
 
-  it('replaces a validation registered under an existing key', () => {
+  it('replaces a validation registered under an existing rule', () => {
     const validator = new Validator({ validations: [alwaysFails('A', 'warning')] });
     validator.register(alwaysFails('A', 'error'));
 
@@ -57,14 +57,14 @@ describe('Validator', () => {
       validations: [alwaysFails('A', 'warning'), alwaysFails('B', 'error')],
     });
 
-    expect(validator.validate(root, { severities: ['error'] }).map(({ key }) => key)).toEqual(['B', 'B']);
+    expect(validator.validate(root, { severities: ['error'] }).map(({ rule }) => rule)).toEqual(['B', 'B']);
   });
 
   it('resolves messages in the configured locale', () => {
     const validation = defineValidation({
-      key: 'A',
+      condition: () => false,
       messages: { en: { error: 'English.' }, nl: { error: 'Nederlands.' } },
-      rule: () => false,
+      rule: 'A',
       scope: 'block',
       selector: 'p',
       severity: 'warning',
@@ -77,10 +77,10 @@ describe('Validator', () => {
 
   it('exposes the payload and interpolates it into the message', () => {
     const validation = defineValidation({
-      key: 'A',
+      condition: () => false,
       messages: { nl: { error: 'De {nodeType} is fout.' } },
       payload: () => ({ nodeType: 'alinea' }),
-      rule: () => false,
+      rule: 'A',
       scope: 'block',
       selector: 'p',
       severity: 'warning',
@@ -93,9 +93,9 @@ describe('Validator', () => {
 
   it('does not report an element that satisfies its rule', () => {
     const validation = defineValidation({
-      key: 'A',
+      condition: () => true,
       messages: { nl: { error: 'Fout.' } },
-      rule: () => true,
+      rule: 'A',
       scope: 'block',
       selector: 'p',
       severity: 'warning',

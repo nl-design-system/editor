@@ -24,11 +24,11 @@ export class Validator {
   }
 
   register(validation: Validation): () => void {
-    this.#validations.set(validation.key, validation);
+    this.#validations.set(validation.rule, validation);
 
     return () => {
-      if (this.#validations.get(validation.key) === validation) {
-        this.#validations.delete(validation.key);
+      if (this.#validations.get(validation.rule) === validation) {
+        this.#validations.delete(validation.rule);
       }
     };
   }

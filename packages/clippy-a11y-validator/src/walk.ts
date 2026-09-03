@@ -9,18 +9,18 @@ export type WalkOptions = {
 };
 
 const violate = (validation: Validation, element: HTMLElement, options: WalkOptions): Violation | null => {
-  const { correct, key, messages, payload, rule, scope, selector, severity } = validation;
+  const { condition, correct, messages, payload, rule, scope, selector, severity } = validation;
 
   if (!element.matches(selector)) return null;
-  if (rule(element)) return null;
+  if (condition(element)) return null;
 
   const violationPayload = payload?.(element);
 
   return {
     correct: correct?.(element),
     element,
-    key,
     messages: resolveMessages(messages, options.locale, options.fallbackLocale, violationPayload),
+    rule,
     scope,
     severity,
     ...(violationPayload === undefined ? {} : { payload: violationPayload }),

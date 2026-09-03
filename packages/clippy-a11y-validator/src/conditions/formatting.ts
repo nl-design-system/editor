@@ -1,9 +1,9 @@
-import type { ValidationRule } from '../types/validation.ts';
+import type { ValidationCondition } from '../types/validation.ts';
 import { selectors } from '../consts/selectors.ts';
 import { not } from '../utils/combinators.ts';
 import { visibleTextNodes } from '../utils/dom.ts';
 
-const isEntirelyBold: ValidationRule = (element) => {
+const isEntirelyBold: ValidationCondition = (element) => {
   const nodes = visibleTextNodes(element);
   if (nodes.length === 0) return false;
 
@@ -13,4 +13,4 @@ const isEntirelyBold: ValidationRule = (element) => {
   });
 };
 
-export const isNotEntirelyBold: ValidationRule = not(isEntirelyBold);
+export const isNotEntirelyBold: ValidationCondition = not(isEntirelyBold);

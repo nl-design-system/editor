@@ -9,14 +9,14 @@ export type ValidationPayload = Readonly<Record<string, boolean | number | strin
 
 export type CorrectValidationFunction = () => void;
 
-export type ValidationRule<E extends HTMLElement = HTMLElement> = (element: E) => boolean;
+export type ValidationCondition<E extends HTMLElement = HTMLElement> = (element: E) => boolean;
 
 export type ValidationDefinition<S extends Selector = Selector, E extends HTMLElement = ElementFor<S>> = {
+  condition: ValidationCondition<E>;
   correct?: (element: E) => CorrectValidationFunction;
-  key: string;
   messages: ValidationMessagesByLocale;
   payload?: (element: E) => ValidationPayload;
-  rule: ValidationRule<E>;
+  rule: string;
   scope: ValidationScope;
   selector: S;
   severity: ValidationSeverity;
@@ -27,9 +27,9 @@ export type Validation = ValidationDefinition<Selector, HTMLElement>;
 export type Violation = {
   correct?: CorrectValidationFunction;
   element: HTMLElement;
-  key: string;
   messages: ResolvedMessages;
   payload?: ValidationPayload;
+  rule: string;
   scope: ValidationScope;
   severity: ValidationSeverity;
 };
