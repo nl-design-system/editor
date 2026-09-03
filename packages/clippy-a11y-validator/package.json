@@ -1,0 +1,46 @@
+{
+  "name": "@nl-design-system-community/clippy-a11y-validator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nl-design-system/editor.git",
+    "directory": "packages/clippy-a11y-validator"
+  },
+  "keywords": [
+    "expertteam-digitale-toegankelijkheid",
+    "nl-design-system",
+    "wcag",
+    "validator"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "version": "0.1.0",
+  "description": "Accessibility validator provided by NL Design System",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "vite build",
+    "validate": "node scripts/validate-html.ts",
+    "test": "vitest --run"
+  },
+  "devDependencies": {
+    "@nl-design-system/tsconfig": "1.0.5",
+    "@types/node": "22.20.1",
+    "happy-dom": "20.0.11",
+    "playwright": "1.62.1",
+    "typescript": "6.0.3",
+    "vite": "8.2.1",
+    "vite-plugin-dts": "5.0.3",
+    "vitest": "4.1.11"
+  }
+}
