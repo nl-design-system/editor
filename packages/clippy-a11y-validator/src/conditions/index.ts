@@ -1,2 +1,2 @@
 export { hasTextContent } from './content.ts';
-export { isNotEntirelyBold } from './formatting.ts';
+export { isEntirelyBold } from './formatting.ts';
