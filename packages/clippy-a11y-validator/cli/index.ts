@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import type { Page } from 'playwright';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
+import { chromium, type Page } from 'playwright';
 
 const MANIFEST = join(import.meta.dirname, '..', 'package.json');
 
@@ -64,21 +64,8 @@ function fail(message: string): never {
   process.exit(EXIT_CODE.error);
 }
 
-async function launchBrowser() {
-  try {
-    const { chromium } = await import('playwright');
-    return await chromium.launch();
-  } catch (error) {
-    if (error instanceof Error && 'code' in error && error.code === 'ERR_MODULE_NOT_FOUND') {
-      fail(`playwright is needed to run this command — install it alongside ${PACKAGE_NAME}.`);
-    }
-
-    throw error;
-  }
-}
-
 async function collectViolations(files: readonly string[], source: string, fix: boolean, skip: readonly string[]) {
-  const browser = await launchBrowser();
+  const browser = await chromium.launch();
 
   try {
     const page = await browser.newPage();
