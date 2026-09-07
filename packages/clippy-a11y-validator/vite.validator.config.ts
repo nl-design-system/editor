@@ -10,5 +10,5 @@ export default defineConfig({
     },
     minify: false,
   },
-  plugins: [dts({ exclude: ['src/**/*.test.ts', 'src/test-helpers/**'], include: ['src'] })],
+  plugins: [dts({ exclude: ['src/**/*.test.ts', 'src/test-helpers'], include: ['src'] })],
 });

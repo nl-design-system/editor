@@ -20,7 +20,7 @@ export default defineConfig({
         test: {
           name: 'cli',
           environment: 'node',
-          include: ['scripts/**/*.test.ts'],
+          include: ['cli/**/*.test.ts'],
         },
       },
     ],

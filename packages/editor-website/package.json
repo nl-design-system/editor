@@ -17,7 +17,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "test": "pnpm run '/^test:.+$/'",
-    "test:playwright": "playwright test"
+    "test:playwright": "playwright test",
+    "test:validate-html": "clippy-validate-html dist --skip [slot=value]"
   },
   "dependencies": {
     "@astrojs/mdx": "8.0.0",
@@ -46,6 +47,7 @@
     "xstate": "5.32.6"
   },
   "devDependencies": {
+    "@nl-design-system-community/clippy-a11y-validator": "workspace:*",
     "@nl-design-system/tsconfig": "1.0.5",
     "@types/node": "22.20.1",
     "typescript": "6.0.3"

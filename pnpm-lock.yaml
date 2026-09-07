@@ -581,6 +581,9 @@ importers:
         specifier: 5.32.6
         version: 5.32.6
     devDependencies:
+      '@nl-design-system-community/clippy-a11y-validator':
+        specifier: workspace:*
+        version: link:../clippy-a11y-validator
       '@nl-design-system/tsconfig':
         specifier: 1.0.5
         version: 1.0.5(typescript@6.0.3)

@@ -1,14 +1,17 @@
 import { execFile } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
+import { relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { build } from 'vite';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-const CLI = fileURLToPath(new URL('./clippy-validate-html.ts', import.meta.url));
+const CLI = fileURLToPath(new URL('../dist/cli.js', import.meta.url));
 const FIXTURE = fileURLToPath(new URL('./fixtures/document.html', import.meta.url));
+const FIXTURE_DIRECTORY = fileURLToPath(new URL('./fixtures/', import.meta.url));
 const PACKAGE_ROOT = fileURLToPath(new URL('..', import.meta.url));
-const VALIDATOR_BUNDLE = fileURLToPath(new URL('../dist/index.js', import.meta.url));
+const VALIDATOR_CONFIG = fileURLToPath(new URL('../vite.validator.config.ts', import.meta.url));
+const CLI_CONFIG = fileURLToPath(new URL('../vite.cli.config.ts', import.meta.url));
 
 type Result = { code: number; stderr: string; stdout: string };
 
@@ -22,16 +25,17 @@ const run = async (...args: string[]): Promise<Result> => {
   }
 };
 
-// The CLI runs the build output, so the bundle has to exist before any of this means anything.
+// Both entry points are built, so the tests never run against a stale bin or a stale library.
 beforeAll(async () => {
-  if (!existsSync(VALIDATOR_BUNDLE)) await build({ logLevel: 'silent', root: PACKAGE_ROOT });
-}, 60_000);
+  await build({ configFile: VALIDATOR_CONFIG, logLevel: 'silent', root: PACKAGE_ROOT });
+  await build({ configFile: CLI_CONFIG, logLevel: 'silent', root: PACKAGE_ROOT });
+}, 120_000);
 
 describe('validate-html', () => {
   it('reports every violation in the fixture and exits with 1', async () => {
     const { code, stdout } = await run(FIXTURE);
 
-    expect(stdout).toContain('5 issue(s) found.');
+    expect(stdout).toContain('5 issue(s) found in 1 document(s).');
     expect(code).toBe(1);
   });
 
@@ -53,7 +57,7 @@ describe('validate-html', () => {
   it('exits with 0 when the corrections are applied', async () => {
     const { code, stdout } = await run(FIXTURE, '--fix');
 
-    expect(stdout).toContain('5 issue(s) found.');
+    expect(stdout).toContain('5 issue(s) found in 1 document(s).');
     expect(code).toBe(0);
   });
 
@@ -82,23 +86,65 @@ describe('validate-html', () => {
     expect(before).toContain('<p><strong>Wat neemt u mee?</strong></p>');
   });
 
-  it('prints the usage when no file is given', async () => {
+  it('prints the usage when no path is given', async () => {
     const { code, stderr } = await run();
 
-    expect(stderr).toContain('Missing file argument.');
-    expect(stderr).toContain('Usage: validate-html <file> [options]');
+    expect(stderr).toContain('Missing path argument.');
+    expect(stderr).toContain('Usage: clippy-validate-html <path...> [options]');
     expect(code).toBe(2);
   });
 
   it('prints the usage on --help', async () => {
     const { code, stdout } = await run('--help');
 
-    expect(stdout).toContain('Usage: validate-html <file> [options]');
+    expect(stdout).toContain('Usage: clippy-validate-html <path...> [options]');
     expect(code).toBe(0);
   });
 
+  it('walks a directory for HTML documents', async () => {
+    const { code, stdout } = await run(FIXTURE_DIRECTORY);
+
+    expect(stdout).toContain('5 issue(s) found in 1 document(s).');
+    expect(stdout).toContain(relative(process.cwd(), FIXTURE));
+    expect(code).toBe(1);
+  });
+
+  it('validates every path it is given', async () => {
+    const { stdout } = await run(FIXTURE, FIXTURE);
+
+    expect(stdout).toContain('10 issue(s) found in 2 document(s).');
+  });
+
+  it('drops the elements matching --skip before validating', async () => {
+    const { code, stdout } = await run(FIXTURE, '--skip', 'article');
+
+    expect(stdout).toContain('0 issue(s) found in 1 document(s).');
+    expect(code).toBe(0);
+  });
+
+  it('skips only what the selector matches', async () => {
+    const { stdout } = await run(FIXTURE, '--skip', 'section');
+
+    expect(stdout).toContain('4 issue(s) found in 1 document(s).');
+  });
+
+  it('refuses a --skip that is not a valid CSS selector', async () => {
+    const { code, stderr } = await run(FIXTURE, '--skip', '[[nonsense');
+
+    expect(stderr).toContain('[[nonsense is not a valid CSS selector.');
+    expect(stderr).not.toContain('at UtilityScript');
+    expect(code).toBe(2);
+  });
+
+  it('refuses a directory without HTML documents', async () => {
+    const { code, stderr } = await run(fileURLToPath(new URL('../src/utils', import.meta.url)));
+
+    expect(stderr).toContain('No HTML files found in');
+    expect(code).toBe(2);
+  });
+
   it('refuses a file that is not HTML', async () => {
-    const { code, stderr } = await run(CLI);
+    const { code, stderr } = await run(fileURLToPath(new URL('./index.ts', import.meta.url)));
 
     expect(stderr).toContain('is not an HTML file — expected .htm or .html.');
     expect(code).toBe(2);

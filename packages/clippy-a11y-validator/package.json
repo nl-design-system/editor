@@ -24,13 +24,18 @@
       "default": "./dist/index.js"
     }
   },
+  "bin": {
+    "clippy-validate-html": "./dist/cli.js"
+  },
   "files": [
     "dist"
   ],
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "vite build",
-    "validate": "node scripts/clippy-validate-html.ts",
+    "build": "pnpm build:validator && pnpm build:cli",
+    "build:validator": "vite build --config vite.validator.config.ts",
+    "build:cli": "vite build --config vite.cli.config.ts",
+    "validate": "node dist/cli.js",
     "test": "vitest --run"
   },
   "devDependencies": {
