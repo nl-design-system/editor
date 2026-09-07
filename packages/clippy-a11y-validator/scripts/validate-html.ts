@@ -1,30 +1,70 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { extname, resolve } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 import { chromium } from 'playwright';
 
-/** Matches `server.port` in the editor-website's astro.config.mjs. */
-const ORIGIN = 'http://localhost:5174';
+const FIXTURE = fileURLToPath(new URL('./fixtures/document.html', import.meta.url));
 
-/** The ES module built by `pnpm build`. */
-const BUNDLE = fileURLToPath(new URL('../dist/index.js', import.meta.url));
+const VALIDATOR_BUNDLE = fileURLToPath(new URL('../dist/index.js', import.meta.url));
 
 function help(): string {
   return `
-Usage: validate-html [path] [options]
+Usage: validate-html [file] [options]
 
-Validates a page of the running editor-website. Start it first with
-\`pnpm dev\` in packages/editor-website.
+Validates an HTML document with the core validations. Defaults to the fixture in
+scripts/fixtures/document.html, so it runs on its own without a dev server.
+Validates the build output, so run \`pnpm build\` first.
 
 Arguments:
-  path              Path to validate, e.g. /preview (default) or /en/guidelines
+  file              Path to an .html or .htm file (default: the fixture)
 
 Options:
-  --fix             Apply the available corrections and show the result
+  --fix             Apply the available corrections
   --help, -h        Show this help
   `.trim();
 }
+
+async function collectViolations(file: string, source: string, fix: boolean) {
+  const browser = await chromium.launch();
+
+  try {
+    const page = await browser.newPage();
+
+    await page.goto(pathToFileURL(file).href, { waitUntil: 'load' });
+
+    return await page.evaluate(
+      async ({ fix, source }) => {
+        const moduleUrl = URL.createObjectURL(new Blob([source], { type: 'text/javascript' }));
+        const { coreValidations, Validator } = (await import(
+          /* @vite-ignore */ moduleUrl
+        )) as typeof import('../dist/index.js');
+        URL.revokeObjectURL(moduleUrl);
+
+        const validator = new Validator({ validations: Object.values(coreValidations) });
+        const violations = validator.validate(document.body);
+
+        if (fix) violations.forEach(({ correct }) => correct?.());
+
+        return violations.map(({ element, ...violation }) => ({
+          ...violation,
+          html: element.outerHTML,
+        }));
+      },
+      { fix, source },
+    );
+  } finally {
+    await browser.close();
+  }
+}
+
+const SNIPPET_LENGTH = 100;
+
+const collapsedHtmlSnippet = (html: string): string => {
+  const collapsed = html.replace(/\s+/g, ' ').trim();
+  return collapsed.length > SNIPPET_LENGTH ? `${collapsed.slice(0, SNIPPET_LENGTH - 1)}…` : collapsed;
+};
 
 const { positionals, values } = parseArgs({
   allowPositionals: true,
@@ -39,52 +79,31 @@ if (values['help']) {
   process.exit(0);
 }
 
-const url = new URL(positionals[0] ?? '/preview', ORIGIN).href;
+const file = positionals[0] === undefined ? FIXTURE : resolve(positionals[0]);
 
-if (!existsSync(BUNDLE)) throw new Error(`${BUNDLE} is missing — run \`pnpm build\` first.`);
+const HTML_EXTENSIONS = ['.htm', '.html'];
 
-const browser = await chromium.launch();
+if (!HTML_EXTENSIONS.includes(extname(file).toLowerCase())) {
+  throw new Error(`${file} is not an HTML file — expected ${HTML_EXTENSIONS.join(' or ')}.`);
+}
 
 try {
-  const page = await browser.newPage();
-
-  try {
-    await page.goto(url, { waitUntil: 'networkidle' });
-  } catch (error) {
-    throw new Error(`Could not load ${url} — start the site with \`pnpm dev\` in packages/editor-website.`, {
-      cause: error,
-    });
-  }
-
-  // The validator only speaks DOM, so it runs in the page rather than in Node.
-  const findings = await page.evaluate(
-    async ({ fix, source }) => {
-      // Import the bundle as a module, so it needs no global to hand its exports back.
-      const moduleUrl = URL.createObjectURL(new Blob([source], { type: 'text/javascript' }));
-      const { coreValidations, Validator } = (await import(moduleUrl)) as typeof import('../src/index.ts');
-      URL.revokeObjectURL(moduleUrl);
-
-      const validator = new Validator({ validations: Object.values(coreValidations) });
-
-      return validator.validate(document.body).map(({ correct, element, messages, rule, severity }) => {
-        const before = element.outerHTML;
-        if (fix) correct?.();
-
-        return { after: fix ? element.outerHTML : undefined, before, message: messages.error, rule, severity };
-      });
-    },
-    { fix: values['fix'], source: readFileSync(BUNDLE, 'utf8') },
-  );
-
-  console.log(`${url}\n`);
-
-  for (const { after, before, message, rule, severity } of findings) {
-    console.log(`${severity}: ${rule} — ${message}\n  ${before}`);
-    if (after !== undefined) console.log(`  → ${after}`);
-  }
-
-  console.log(`\n${findings.length} issue(s) found.`);
-  process.exitCode = findings.length > 0 && !values['fix'] ? 1 : 0;
-} finally {
-  await browser.close();
+  readFileSync(file);
+} catch (error) {
+  throw new Error(`Could not read ${file}.`, { cause: error });
 }
+
+if (!existsSync(VALIDATOR_BUNDLE)) throw new Error(`${VALIDATOR_BUNDLE} is missing — run \`pnpm build\` first.`);
+
+const source = readFileSync(VALIDATOR_BUNDLE, 'utf8');
+const violations = await collectViolations(file, source, values['fix']);
+
+for (const { html, messages, rule, severity } of violations) {
+  console.log(`${severity}: ${rule} — ${messages.error}`);
+  if (messages.solution !== undefined) console.log(`  ${messages.solution}`);
+  console.log(`  ${collapsedHtmlSnippet(html)}`);
+  console.log('');
+}
+
+console.log(`${violations.length} issue(s) found.`);
+process.exitCode = violations.length > 0 && !values['fix'] ? 1 : 0;

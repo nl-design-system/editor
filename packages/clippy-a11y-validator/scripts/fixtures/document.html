@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <title>Fixture voor de accessibility validator</title>
+  </head>
+  <body>
+    <article>
+      <h1>Paspoort aanvragen</h1>
+
+      <!-- Valid: plain prose. -->
+      <p>U vraagt een paspoort aan bij de gemeente waar u staat ingeschreven.</p>
+
+      <!-- Valid: bold is used for emphasis inside the paragraph, not for all of it. -->
+      <p>Neem <strong>altijd</strong> een geldig identiteitsbewijs mee naar de balie.</p>
+
+      <!-- Violates PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD: a bold paragraph used as a heading. -->
+      <p><strong>Wat neemt u mee?</strong></p>
+
+      <ul>
+        <li>Uw huidige paspoort of identiteitskaart</li>
+        <li>Een recente pasfoto</li>
+      </ul>
+
+      <!-- Violates PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD: `b` counts as bold too. -->
+      <p><b>De aanvraag duurt vijf werkdagen.</b></p>
+
+      <!-- Violates PARAGRAPH_SHOULD_NOT_BE_EMPTY: an empty paragraph used as spacing. -->
+      <p></p>
+
+      <!-- Violates PARAGRAPH_SHOULD_NOT_BE_EMPTY: whitespace and a `br` carry no text. -->
+      <p>
+        <br />
+      </p>
+
+      <section>
+        <h2>Kosten</h2>
+
+        <!-- Valid: nested in a section, to check that the walk is not limited to direct children. -->
+        <p>Een paspoort kost € 83,85 en is tien jaar geldig.</p>
+
+        <!-- Violates PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD: every text node sits inside a bold element. -->
+        <p><strong>Let op:</strong> <strong>u betaalt bij de aanvraag, niet bij het ophalen.</strong></p>
+      </section>
+    </article>
+  </body>
+</html>
