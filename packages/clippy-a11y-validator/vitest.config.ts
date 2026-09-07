@@ -3,12 +3,26 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    browser: {
-      enabled: true,
-      headless: true,
-      instances: [{ browser: 'chromium' }],
-      provider: playwright(),
-    },
-    include: ['src/**/*.test.ts'],
+    projects: [
+      {
+        test: {
+          name: 'unit',
+          browser: {
+            enabled: true,
+            headless: true,
+            instances: [{ browser: 'chromium' }],
+            provider: playwright(),
+          },
+          include: ['src/**/*.test.ts'],
+        },
+      },
+      {
+        test: {
+          name: 'cli',
+          environment: 'node',
+          include: ['scripts/**/*.test.ts'],
+        },
+      },
+    ],
   },
 });

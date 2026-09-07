@@ -1,29 +1,42 @@
 #!/usr/bin/env node
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { extname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 import { chromium } from 'playwright';
 
-const FIXTURE = fileURLToPath(new URL('./fixtures/document.html', import.meta.url));
-
 const VALIDATOR_BUNDLE = fileURLToPath(new URL('../dist/index.js', import.meta.url));
+
+const HTML_EXTENSIONS = ['.htm', '.html'];
+
+const SNIPPET_LENGTH = 100;
+
+const EXIT_CODE = { error: 2, ok: 0, violationsFound: 1 };
 
 function help(): string {
   return `
-Usage: validate-html [file] [options]
+Usage: validate-html <file> [options]
 
-Validates an HTML document with the core validations. Defaults to the fixture in
-scripts/fixtures/document.html, so it runs on its own without a dev server.
-Validates the build output, so run \`pnpm build\` first.
+Validates an HTML document with the core validations. Runs the build output, so
+run \`pnpm build\` first.
 
 Arguments:
-  file              Path to an .html or .htm file (default: the fixture)
+  file              Path to an .html or .htm file
 
 Options:
   --fix             Apply the available corrections
   --help, -h        Show this help
+
+Exit codes:
+  0                 No issues found, or --fix was given
+  1                 Issues found
+  2                 The arguments or the build output are unusable
   `.trim();
+}
+
+function fail(message: string): never {
+  process.stderr.write(`${message}\n`);
+  process.exit(EXIT_CODE.error);
 }
 
 async function collectViolations(file: string, source: string, fix: boolean) {
@@ -59,8 +72,6 @@ async function collectViolations(file: string, source: string, fix: boolean) {
   }
 }
 
-const SNIPPET_LENGTH = 100;
-
 const collapsedHtmlSnippet = (html: string): string => {
   const collapsed = html.replace(/\s+/g, ' ').trim();
   return collapsed.length > SNIPPET_LENGTH ? `${collapsed.slice(0, SNIPPET_LENGTH - 1)}…` : collapsed;
@@ -76,24 +87,22 @@ const { positionals, values } = parseArgs({
 
 if (values['help']) {
   process.stdout.write(help() + '\n');
-  process.exit(0);
+  process.exit(EXIT_CODE.ok);
 }
 
-const file = positionals[0] === undefined ? FIXTURE : resolve(positionals[0]);
+const [target] = positionals;
 
-const HTML_EXTENSIONS = ['.htm', '.html'];
+if (target === undefined) fail(`Missing file argument.\n\n${help()}`);
+
+const file = resolve(target);
 
 if (!HTML_EXTENSIONS.includes(extname(file).toLowerCase())) {
-  throw new Error(`${file} is not an HTML file — expected ${HTML_EXTENSIONS.join(' or ')}.`);
+  fail(`${file} is not an HTML file — expected ${HTML_EXTENSIONS.join(' or ')}.`);
 }
 
-try {
-  readFileSync(file);
-} catch (error) {
-  throw new Error(`Could not read ${file}.`, { cause: error });
-}
+if (statSync(file, { throwIfNoEntry: false })?.isFile() !== true) fail(`Could not read ${file}.`);
 
-if (!existsSync(VALIDATOR_BUNDLE)) throw new Error(`${VALIDATOR_BUNDLE} is missing — run \`pnpm build\` first.`);
+if (!existsSync(VALIDATOR_BUNDLE)) fail(`${VALIDATOR_BUNDLE} is missing — run \`pnpm build\` first.`);
 
 const source = readFileSync(VALIDATOR_BUNDLE, 'utf8');
 const violations = await collectViolations(file, source, values['fix']);
@@ -106,4 +115,4 @@ for (const { html, messages, rule, severity } of violations) {
 }
 
 console.log(`${violations.length} issue(s) found.`);
-process.exitCode = violations.length > 0 && !values['fix'] ? 1 : 0;
+process.exitCode = violations.length > 0 && !values['fix'] ? EXIT_CODE.violationsFound : EXIT_CODE.ok;

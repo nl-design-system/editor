@@ -30,7 +30,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "vite build",
-    "validate": "node scripts/validate-html.ts",
+    "validate": "node scripts/clippy-validate-html.ts",
     "test": "vitest --run"
   },
   "devDependencies": {
