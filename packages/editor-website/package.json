@@ -16,7 +16,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "test": "pnpm run '/^test:.+$/'",
+    "test": "pnpm run --sequential '/^test:.+$/'",
     "test:playwright": "playwright test",
     "test:validate-html": "clippy-validate-html dist --skip [slot=value]"
   },
