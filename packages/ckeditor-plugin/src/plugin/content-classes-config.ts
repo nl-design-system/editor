@@ -15,6 +15,7 @@ export interface ContentClassField {
   key: string;
   defaultValue: string;
   label: string;
+  description: string;
   tags: readonly string[];
   modelElements: readonly string[];
   listTypes: readonly string[];
@@ -26,6 +27,7 @@ const HEADING_MODEL_ELEMENTS = HEADING_LEVELS.map((level) => `heading${level}`);
 export const CONTENT_CLASS_FIELDS = [
   {
     defaultValue: contentClasses.paragraph,
+    description: 'Added to p tags.',
     key: 'paragraph',
     label: 'Paragraph',
     listTypes: [],
@@ -34,6 +36,7 @@ export const CONTENT_CLASS_FIELDS = [
   },
   {
     defaultValue: headingClassPattern,
+    description: 'Added to h1 to h6 tags. {level} is replaced by the heading level, 1 to 6.',
     key: 'heading',
     label: 'Heading',
     listTypes: [],
@@ -42,6 +45,7 @@ export const CONTENT_CLASS_FIELDS = [
   },
   {
     defaultValue: contentClasses.bulletList,
+    description: 'Added to ul tags.',
     key: 'bulletList',
     label: 'Bulleted list',
     listTypes: ['bulleted'],
@@ -50,6 +54,7 @@ export const CONTENT_CLASS_FIELDS = [
   },
   {
     defaultValue: contentClasses.orderedList,
+    description: 'Added to ol tags.',
     key: 'orderedList',
     label: 'Numbered list',
     listTypes: ['numbered'],
@@ -58,6 +63,7 @@ export const CONTENT_CLASS_FIELDS = [
   },
   {
     defaultValue: contentClasses.blockquote,
+    description: 'Added to blockquote tags.',
     key: 'blockquote',
     label: 'Block quote',
     listTypes: [],
@@ -66,6 +72,7 @@ export const CONTENT_CLASS_FIELDS = [
   },
   {
     defaultValue: contentClasses.codeBlock,
+    description: 'Added to code tags.',
     key: 'codeBlock',
     label: 'Code block',
     listTypes: [],
@@ -74,6 +81,7 @@ export const CONTENT_CLASS_FIELDS = [
   },
   {
     defaultValue: contentClasses.image,
+    description: 'Added to the figure tag around a block image, and to the img tag of an inline image.',
     key: 'image',
     label: 'Image',
     listTypes: [],
@@ -83,6 +91,7 @@ export const CONTENT_CLASS_FIELDS = [
   },
   {
     defaultValue: contentClasses.table,
+    description: 'Added to the figure tag around a table.',
     key: 'table',
     label: 'Table',
     listTypes: [],
