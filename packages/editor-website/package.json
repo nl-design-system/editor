@@ -18,7 +18,7 @@
     "preview": "astro preview",
     "test": "pnpm run --sequential '/^test:.+$/'",
     "test:playwright": "playwright test",
-    "test:validate-html": "node node_modules/@nl-design-system-community/clippy-a11y-validator/dist/cli.js dist --skip [slot=value]"
+    "test:validate-html": "clippy-validate-html dist --skip [slot=value]"
   },
   "dependencies": {
     "@astrojs/mdx": "8.0.0",
