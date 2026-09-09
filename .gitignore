@@ -68,3 +68,7 @@ components.d.ts
 .astro/
 
 .claude
+
+# Ignore vitest output
+__screenshots__
+.vitest-attachments
