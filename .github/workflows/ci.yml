@@ -156,10 +156,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build
+        run: pnpm run build
+
+      # The clippy-validate-html bin points at packages/clippy-a11y-validator/dist/cli.js,
+      # which does not exist yet during install on a clean checkout, so pnpm skips linking it.
+      # Relink now that the build has produced it, otherwise editor-website's
+      # test:validate-html script fails with "clippy-validate-html: not found".
+      - name: Link workspace bins produced by the build
+        run: pnpm rebuild --filter @nl-design-system-community/editor-website
+
       - name: Test
-        run: |
-          pnpm run build
-          pnpm run test
+        run: pnpm run test
 
       - name: Store Playwright artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
