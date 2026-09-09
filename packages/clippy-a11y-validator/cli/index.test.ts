@@ -35,7 +35,7 @@ describe('validate-html', () => {
   it('reports every violation in the fixture and exits with 1', async () => {
     const { code, stdout } = await run(FIXTURE);
 
-    expect(stdout).toContain('5 issue(s) found in 1 document(s).');
+    expect(stdout).toContain('23 issue(s) found in 1 document(s).');
     expect(code).toBe(1);
   });
 
@@ -44,7 +44,52 @@ describe('validate-html', () => {
 
     expect(stdout).toContain('warning: PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD — De hele alinea is dikgedrukt.');
     expect(stdout).toContain('<p><b>De aanvraag duurt vijf werkdagen.</b></p>');
+    expect(stdout).toContain('info: PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING');
     expect(stdout).toContain('info: PARAGRAPH_SHOULD_NOT_BE_EMPTY — Deze alinea is leeg.');
+  });
+
+  it('reports violations from every component the fixture exercises', async () => {
+    const { stdout } = await run(FIXTURE);
+
+    const reported = new Set(stdout.match(/[A-Z][A-Z_]{8,}/g) ?? []);
+
+    expect([...reported].sort()).toEqual([
+      'DESCRIPTION_LIST_MUST_CONTAIN_TERM',
+      'DESCRIPTION_SHOULD_NOT_BE_EMPTY',
+      'DESCRIPTION_TERM_MUST_HAVE_DESCRIPTION',
+      'DESCRIPTION_TERM_SHOULD_NOT_BE_EMPTY',
+      'EMPHASIS_SHOULD_NOT_BE_EMPTY',
+      'EMPHASIS_SHOULD_NOT_BE_UNDERLINED',
+      'HEADING_LEVEL_MUST_NOT_SKIP',
+      'HEADING_MUST_NOT_BE_EMPTY',
+      'HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC',
+      'IMAGE_MUST_HAVE_ALT_TEXT',
+      'LINK_SHOULD_NOT_BE_EMPTY',
+      'LINK_SHOULD_NOT_BE_TOO_GENERIC',
+      'LIST_ITEM_SHOULD_NOT_BE_EMPTY',
+      'PARAGRAPH_SHOULD_NOT_BE_EMPTY',
+      'PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD',
+      'PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING',
+      'PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST',
+      'TABLE_CAPTION_SHOULD_NOT_BE_EMPTY',
+      'TABLE_CELL_SHOULD_NOT_BE_EMPTY',
+      'TABLE_MUST_HAVE_HEADINGS',
+      'TABLE_MUST_HAVE_MULTIPLE_ROWS',
+    ]);
+  });
+
+  it('leaves the well-formed heading outline of the fixture alone', async () => {
+    const { stdout } = await run(FIXTURE);
+
+    expect(stdout).not.toContain('HEADING_MUST_START_AT_LEVEL_ONE');
+    expect(stdout).not.toContain('HEADING_LEVEL_ONE_MUST_BE_UNIQUE');
+  });
+
+  it('prints the severity, the rule and the message, but not the documentation link', async () => {
+    const { stdout } = await run(FIXTURE);
+
+    expect(stdout).toContain('error: HEADING_MUST_NOT_BE_EMPTY — Deze kop is leeg.');
+    expect(stdout).not.toContain('https://nldesignsystem.nl');
   });
 
   it('leaves the valid paragraphs of the fixture alone', async () => {
@@ -57,17 +102,15 @@ describe('validate-html', () => {
   it('exits with 0 when the corrections are applied', async () => {
     const { code, stdout } = await run(FIXTURE, '--fix');
 
-    expect(stdout).toContain('5 issue(s) found in 1 document(s).');
+    expect(stdout).toContain('23 issue(s) found in 1 document(s).');
     expect(code).toBe(0);
   });
 
   it('reports the corrected markup once the corrections are applied', async () => {
     const [reported, fixed] = await Promise.all([run(FIXTURE), run(FIXTURE, '--fix')]);
 
-    expect(reported.stdout).toContain('<p><strong>Wat neemt u mee?</strong></p>');
-    expect(fixed.stdout).toContain('<p>Wat neemt u mee?</p>');
-    expect(fixed.stdout).not.toContain('<strong>');
-    expect(fixed.stdout).not.toContain('<b>');
+    expect(reported.stdout).toContain('<p><strong>Let op:</strong> <strong>u betaalt');
+    expect(fixed.stdout).toContain('<p>Let op: u betaalt bij de aanvraag zelf en niet bij het ophalen.</p>');
   });
 
   it('reports the empty paragraphs unchanged, as they have no correction', async () => {
@@ -104,7 +147,7 @@ describe('validate-html', () => {
   it('walks a directory for HTML documents', async () => {
     const { code, stdout } = await run(FIXTURE_DIRECTORY);
 
-    expect(stdout).toContain('5 issue(s) found in 1 document(s).');
+    expect(stdout).toContain('23 issue(s) found in 1 document(s).');
     expect(stdout).toContain(relative(process.cwd(), FIXTURE));
     expect(code).toBe(1);
   });
@@ -112,7 +155,7 @@ describe('validate-html', () => {
   it('validates every path it is given', async () => {
     const { stdout } = await run(FIXTURE, FIXTURE);
 
-    expect(stdout).toContain('10 issue(s) found in 2 document(s).');
+    expect(stdout).toContain('46 issue(s) found in 2 document(s).');
   });
 
   it('drops the elements matching --skip before validating', async () => {

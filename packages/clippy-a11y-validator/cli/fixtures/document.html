@@ -14,7 +14,7 @@
       <!-- Valid: bold is used for emphasis inside the paragraph, not for all of it. -->
       <p>Neem <strong>altijd</strong> een geldig identiteitsbewijs mee naar de balie.</p>
 
-      <!-- Violates PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD: a bold paragraph used as a heading. -->
+      <!-- Violates PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING: a short bold paragraph used as a heading. -->
       <p><strong>Wat neemt u mee?</strong></p>
 
       <ul>
@@ -22,7 +22,7 @@
         <li>Een recente pasfoto</li>
       </ul>
 
-      <!-- Violates PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD: `b` counts as bold too. -->
+      <!-- Violates PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING: `b` counts as bold too. -->
       <p><b>De aanvraag duurt vijf werkdagen.</b></p>
 
       <!-- Violates PARAGRAPH_SHOULD_NOT_BE_EMPTY: an empty paragraph used as spacing. -->
@@ -40,7 +40,96 @@
         <p>Een paspoort kost € 83,85 en is tien jaar geldig.</p>
 
         <!-- Violates PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD: every text node sits inside a bold element. -->
-        <p><strong>Let op:</strong> <strong>u betaalt bij de aanvraag, niet bij het ophalen.</strong></p>
+        <p><strong>Let op:</strong> <strong>u betaalt bij de aanvraag zelf en niet bij het ophalen.</strong></p>
+      </section>
+
+      <section>
+        <h2>Legitimatie</h2>
+
+        <!-- Violates HEADING_MUST_NOT_BE_EMPTY. -->
+        <h3></h3>
+
+        <!-- Violates HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC. -->
+        <h3>Geldigheid <em>per document</em></h3>
+
+        <!-- Violates HEADING_LEVEL_MUST_NOT_SKIP: level 5 follows level 3. -->
+        <h5>Uitzonderingen</h5>
+
+        <!-- Violates LIST_ITEM_SHOULD_NOT_BE_EMPTY: the second item carries no text. -->
+        <ul>
+          <li>Een rijbewijs is geen reisdocument</li>
+          <li></li>
+        </ul>
+
+        <!-- Violates PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST: hand-written numbering instead of a list. -->
+        <p>1. Maak een afspraak<br />2. Neem uw pasfoto mee<br />3. Betaal aan de balie</p>
+
+        <!-- Violates LINK_SHOULD_NOT_BE_TOO_GENERIC: the link text says nothing about its target. -->
+        <p>Meer over reisdocumenten: <a href="/reisdocumenten">lees meer</a></p>
+
+        <!-- Violates LINK_SHOULD_NOT_BE_EMPTY: a link without link text. -->
+        <p>Zie ook<a href="/aanvraag"></a></p>
+
+        <!-- Violates EMPHASIS_SHOULD_NOT_BE_UNDERLINED: underlined text reads as a link. -->
+        <p>De aanvraag is <u>persoonlijk</u> en kan niet worden overgedragen.</p>
+
+        <!-- Violates EMPHASIS_SHOULD_NOT_BE_EMPTY: an inline element left behind without text. -->
+        <p>Neem contant geld mee<em></em>, de balie heeft geen pinautomaat.</p>
+
+        <!-- Violates IMAGE_MUST_HAVE_ALT_TEXT: no alt attribute at all. -->
+        <img src="paspoort.png" />
+
+        <!-- Valid: the image describes what it shows. -->
+        <img src="pasfoto.png" alt="Een pasfoto met een neutrale achtergrond" />
+
+        <!-- Violates TABLE_MUST_HAVE_HEADINGS and TABLE_MUST_HAVE_MULTIPLE_ROWS. -->
+        <table>
+          <tbody>
+            <tr>
+              <td>Paspoort</td>
+              <td>€ 83,85</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Violates TABLE_CAPTION_SHOULD_NOT_BE_EMPTY and TABLE_CELL_SHOULD_NOT_BE_EMPTY.
+             The header row and the second row keep the other two table rules satisfied. -->
+        <table>
+          <caption></caption>
+          <thead>
+            <tr>
+              <th>Document</th>
+              <th>Geldigheid</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Paspoort</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Violates DESCRIPTION_LIST_MUST_CONTAIN_TERM and DESCRIPTION_TERM_MUST_HAVE_DESCRIPTION:
+             a description without a term of its own. Both corrections fill the term in. -->
+        <dl>
+          <dt></dt>
+          <dd>Tien jaar geldig voor personen van 18 jaar en ouder.</dd>
+        </dl>
+
+        <!-- Violates DESCRIPTION_TERM_SHOULD_NOT_BE_EMPTY: an empty term with no description to pair
+             with, so removing it is the fix rather than filling it in. -->
+        <dl>
+          <dt></dt>
+          <dt>Geldigheid</dt>
+          <dd>Tien jaar</dd>
+        </dl>
+
+        <!-- Violates DESCRIPTION_SHOULD_NOT_BE_EMPTY: the term is fine, the description is not. -->
+        <dl>
+          <dt>Kosten</dt>
+          <dd></dd>
+        </dl>
       </section>
     </article>
   </body>
