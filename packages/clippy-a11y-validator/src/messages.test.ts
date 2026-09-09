@@ -36,4 +36,29 @@ describe('resolveMessages', () => {
   it('omits the solution when there is none', () => {
     expect(resolveMessages({ nl: { error: 'Fout.' } }, 'nl', 'nl').solution).toBeUndefined();
   });
+
+  it('passes the documentation link through', () => {
+    const withHref: ValidationMessagesByLocale = { nl: { error: 'Fout.', href: 'https://nldesignsystem.nl/heading' } };
+
+    expect(resolveMessages(withHref, 'nl', 'nl').href).toBe('https://nldesignsystem.nl/heading');
+  });
+
+  it('takes the documentation link from the resolved locale', () => {
+    const perLocale: ValidationMessagesByLocale = {
+      en: { error: 'Wrong.', href: 'https://example.org/en' },
+      nl: { error: 'Fout.', href: 'https://example.org/nl' },
+    };
+
+    expect(resolveMessages(perLocale, 'en', 'nl').href).toBe('https://example.org/en');
+  });
+
+  it('omits the documentation link when there is none', () => {
+    expect(resolveMessages({ nl: { error: 'Fout.' } }, 'nl', 'nl')).not.toHaveProperty('href');
+  });
+
+  it('does not interpolate the documentation link', () => {
+    const withHref: ValidationMessagesByLocale = { nl: { error: 'Fout.', href: 'https://example.org/{nodeType}' } };
+
+    expect(resolveMessages(withHref, 'nl', 'nl', { nodeType: 'alinea' }).href).toBe('https://example.org/{nodeType}');
+  });
 });
