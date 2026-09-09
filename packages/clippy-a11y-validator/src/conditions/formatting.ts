@@ -11,3 +11,6 @@ export const isEntirelyBold: ValidationCondition = (element) => {
     return bold !== null && bold !== undefined && element.contains(bold);
   });
 };
+
+export const containsEmphasis: ValidationCondition = (element) =>
+  element.querySelector(`${selectors.BOLD}, ${selectors.ITALIC}`) !== null;
