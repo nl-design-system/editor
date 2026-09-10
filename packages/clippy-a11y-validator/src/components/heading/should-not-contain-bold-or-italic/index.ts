@@ -11,7 +11,7 @@ export const headingShouldNotContainBoldOrItalic = defineValidation({
   correct: (heading) => () => heading.querySelectorAll(`${selectors.BOLD}, ${selectors.ITALIC}`).forEach(unwrapElement),
   messages,
   rule: headingValidationRules.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC,
-  scope: 'block',
+  scope: 'element',
   selector: selectors.HEADING,
   severity: validationSeverity.INFO,
 });

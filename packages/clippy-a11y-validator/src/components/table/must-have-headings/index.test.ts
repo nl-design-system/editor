@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [tableMustHaveHeadings] });
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -23,7 +23,7 @@ describe('tableMustHaveHeadings', () => {
 
     expect(violation?.rule).toBe('TABLE_MUST_HAVE_HEADINGS');
     expect(violation?.severity).toBe('warning');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze tabel heeft geen koprij en geen kopkolom.');
     expect(violation?.messages.solution).toContain('eerste rij of de eerste kolom');
   });
@@ -63,7 +63,7 @@ describe('tableMustHaveHeadings', () => {
     violation?.correct?.();
 
     expect([...root.querySelectorAll('tr:first-child > *')].map((cell) => cell.tagName)).toEqual(['TH', 'TH']);
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 
   it('keeps the cell content and attributes when corrected', () => {

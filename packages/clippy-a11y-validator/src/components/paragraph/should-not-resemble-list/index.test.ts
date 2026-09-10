@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [paragraphShouldNotResembleList] 
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('paragraphShouldNotResembleList', () => {
 
     expect(violation?.rule).toBe('PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('page');
     expect(violation?.messages.error).toContain('"-"');
     expect(violation?.messages.solution).toBe('Gebruik een echte opsomming in plaats van regels die met "-" beginnen.');
   });
@@ -31,7 +31,7 @@ describe('paragraphShouldNotResembleList', () => {
   });
 
   it('leaves the last paragraph of a run unflagged, as nothing continues it', () => {
-    expect(validate('<p>- een</p><p>- twee</p>')[0]?.element.textContent).toBe('- een');
+    expect(validate('<p>- een</p><p>- twee</p>')[0]?.element?.textContent).toBe('- een');
     expect(validate('<p>- een</p><p>- twee</p>')).toHaveLength(1);
   });
 
@@ -103,7 +103,7 @@ describe('paragraphShouldNotResembleList', () => {
     const [violation] = validate('<p>- een<br>- twee</p>');
     violation?.correct?.();
 
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 
   it('keeps surrounding content intact when corrected', () => {

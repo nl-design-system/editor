@@ -20,7 +20,7 @@ export const tableMustHaveMultipleRows = defineValidation({
   },
   messages,
   rule: tableValidationRules.TABLE_MUST_HAVE_MULTIPLE_ROWS,
-  scope: 'block',
+  scope: 'element',
   selector: selectors.TABLE,
   severity: validationSeverity.WARNING,
 });

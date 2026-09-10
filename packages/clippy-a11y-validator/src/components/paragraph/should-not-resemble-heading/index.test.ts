@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [paragraphShouldNotResembleHeadin
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('paragraphShouldNotResembleHeading', () => {
 
     expect(violation?.rule).toBe('PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('page');
     expect(violation?.messages.error).toBe('Deze korte, volledig dikgedrukte alinea lijkt op een kop.');
     expect(violation?.messages.solution).toContain('Gebruik een echte kop');
   });
@@ -69,7 +69,7 @@ describe('paragraphShouldNotResembleHeading', () => {
     violation?.correct?.();
 
     expect(root.innerHTML).toBe('<h2>Kosten</h2><h3>Wat neemt u mee?</h3>');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 
   it('converts to a level 1 when no heading precedes it', () => {

@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [descriptionListMustContainTerm] 
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('descriptionListMustContainTerm', () => {
 
     expect(violation?.rule).toBe('DESCRIPTION_LIST_MUST_CONTAIN_TERM');
     expect(violation?.severity).toBe('error');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze definitielijst heeft geen definitieterm.');
   });
 
@@ -60,6 +60,6 @@ describe('descriptionListMustContainTerm', () => {
     violation?.correct?.();
 
     expect(root.querySelector('dt')?.textContent).toBe('...');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 });

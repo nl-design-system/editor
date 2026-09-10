@@ -101,13 +101,13 @@ function validatePage(page: Page, source: string, fix: boolean, skip: readonly s
       URL.revokeObjectURL(moduleUrl);
 
       const validator = new Validator({ validations: Object.values(coreValidations) });
-      const violations = validator.validate(document.body);
+      const violations = validator.validate([document.body]);
 
       if (fix) violations.forEach(({ correct }) => correct?.());
 
       return violations.map(({ element, ...violation }) => ({
         ...violation,
-        html: element.outerHTML,
+        html: element?.outerHTML,
       }));
     },
     { fix, skip, source },
@@ -167,7 +167,7 @@ for (const { file, violations } of results) {
   for (const { html, messages, rule, severity } of violations) {
     console.log(`${severity}: ${rule} — ${messages.error}`);
     if (messages.solution !== undefined) console.log(`  ${messages.solution}`);
-    console.log(`  ${collapsedHtmlSnippet(html)}`);
+    if (html !== undefined) console.log(`  ${collapsedHtmlSnippet(html)}`);
     console.log('');
   }
 }

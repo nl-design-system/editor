@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [descriptionTermMustHaveDescripti
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -16,13 +16,16 @@ beforeEach(() => {
 });
 
 describe('descriptionTermMustHaveDescription', () => {
-  it('flags an empty term whose description has content', () => {
+  it('flags the list holding an empty term whose description has content', () => {
     const [violation] = validate('<dl><dt></dt><dd>beschrijving</dd></dl>');
 
+    expect(violation?.element.tagName).toBe('DL');
     expect(violation?.rule).toBe('DESCRIPTION_TERM_MUST_HAVE_DESCRIPTION');
     expect(violation?.severity).toBe('error');
-    expect(violation?.scope).toBe('block');
-    expect(violation?.messages.error).toBe('Deze definitiebeschrijving hoort bij een lege definitieterm.');
+    expect(violation?.scope).toBe('element');
+    expect(violation?.messages.error).toBe(
+      'Deze definitielijst heeft een definitiebeschrijving bij een lege definitieterm.',
+    );
   });
 
   it('flags a term holding only whitespace', () => {
@@ -49,15 +52,23 @@ describe('descriptionTermMustHaveDescription', () => {
     expect(validate('<dl><div class="item"><dt></dt><dd>beschrijving</dd></div></dl>')).toHaveLength(1);
   });
 
+  it('reports a list once, however many of its terms are empty', () => {
+    expect(validate('<dl><dt></dt><dd>een</dd><dt> </dt><dd>twee</dd></dl>')).toHaveLength(1);
+  });
+
+  it('ignores terms of a nested list', () => {
+    expect(validate('<dl><dt>term</dt><dd><dl><dt></dt><dd>genest</dd></dl></dd></dl>')).toHaveLength(1);
+  });
+
   it('ignores elements that are not terms', () => {
     expect(validate('<dl><dd>beschrijving</dd></dl>')).toHaveLength(0);
   });
 
-  it('marks the term as still to be written when corrected', () => {
-    const [violation] = validate('<dl><dt></dt><dd>beschrijving</dd></dl>');
+  it('marks every such term as still to be written when corrected', () => {
+    const [violation] = validate('<dl><dt></dt><dd>een</dd><dt>term</dt><dd>twee</dd><dt> </dt><dd>drie</dd></dl>');
     violation?.correct?.();
 
-    expect(root.querySelector('dt')?.textContent).toBe('...');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect([...root.querySelectorAll('dt')].map(({ textContent }) => textContent)).toEqual(['...', 'term', '...']);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 });

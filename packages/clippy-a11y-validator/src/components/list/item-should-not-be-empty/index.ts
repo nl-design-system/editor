@@ -9,7 +9,7 @@ export const listItemShouldNotBeEmpty = defineValidation({
   correct: (item) => () => item.remove(),
   messages,
   rule: listValidationRules.LIST_ITEM_SHOULD_NOT_BE_EMPTY,
-  scope: 'block',
+  scope: 'element',
   selector: selectors.LIST_ITEM,
   severity: validationSeverity.INFO,
 });

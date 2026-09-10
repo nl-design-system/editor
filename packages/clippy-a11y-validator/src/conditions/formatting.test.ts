@@ -4,12 +4,12 @@ import { containsEmphasis, isEntirelyBold } from './formatting.ts';
 
 const isBold = (html: string): boolean => {
   const element = render(html);
-  return isEntirelyBold(element, element.parentElement!);
+  return isEntirelyBold(element);
 };
 
 const hasEmphasis = (html: string): boolean => {
   const element = render(html);
-  return containsEmphasis(element, element.parentElement!);
+  return containsEmphasis(element);
 };
 
 describe('isEntirelyBold', () => {

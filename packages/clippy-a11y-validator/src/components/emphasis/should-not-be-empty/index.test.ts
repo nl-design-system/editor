@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [emphasisShouldNotBeEmpty] });
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('emphasisShouldNotBeEmpty', () => {
 
     expect(violation?.rule).toBe('EMPHASIS_SHOULD_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('warning');
-    expect(violation?.scope).toBe('inline');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Dit opmaakelement is leeg.');
   });
 
@@ -66,6 +66,6 @@ describe('emphasisShouldNotBeEmpty', () => {
     violation?.correct?.();
 
     expect(root.querySelector('p')?.innerHTML).toBe('Zie hier');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 });

@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [tableCellShouldNotBeEmpty] });
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('tableCellShouldNotBeEmpty', () => {
 
     expect(violation?.rule).toBe('TABLE_CELL_SHOULD_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze tabelcel is leeg.');
   });
 

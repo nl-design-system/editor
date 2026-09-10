@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [headingShouldNotContainBoldOrIta
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('headingShouldNotContainBoldOrItalic', () => {
 
     expect(violation?.rule).toBe('HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze kop bevat vetgedrukte of cursieve tekst.');
     expect(violation?.messages.solution).toContain('Verwijder de vetgedrukte of cursieve opmaak');
   });
@@ -57,6 +57,6 @@ describe('headingShouldNotContainBoldOrItalic', () => {
     violation?.correct?.();
 
     expect(root.querySelector('h2')?.innerHTML).toBe('Kop met nadruk en cursief');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 });

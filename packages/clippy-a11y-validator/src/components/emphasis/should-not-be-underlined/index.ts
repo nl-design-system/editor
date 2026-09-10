@@ -10,7 +10,7 @@ export const emphasisShouldNotBeUnderlined = defineValidation({
   correct: (underline) => () => unwrapElement(underline),
   messages,
   rule: emphasisValidationRules.EMPHASIS_SHOULD_NOT_BE_UNDERLINED,
-  scope: 'inline',
+  scope: 'element',
   selector: selectors.UNDERLINE,
   severity: validationSeverity.INFO,
 });

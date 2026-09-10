@@ -9,7 +9,7 @@ export const headingMustNotBeEmpty = defineValidation({
   correct: (heading) => () => heading.remove(),
   messages,
   rule: headingValidationRules.HEADING_MUST_NOT_BE_EMPTY,
-  scope: 'block',
+  scope: 'element',
   selector: selectors.HEADING,
   severity: validationSeverity.ERROR,
 });

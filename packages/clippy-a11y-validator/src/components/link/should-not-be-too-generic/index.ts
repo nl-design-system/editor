@@ -16,7 +16,7 @@ export const linkShouldNotBeTooGeneric = defineValidation({
   messages,
   payload: (link) => ({ text: linkText(link) }),
   rule: linkValidationRules.LINK_SHOULD_NOT_BE_TOO_GENERIC,
-  scope: 'inline',
+  scope: 'element',
   selector: selectors.LINK,
   severity: validationSeverity.INFO,
 });

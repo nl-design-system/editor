@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [listItemShouldNotBeEmpty] });
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('listItemShouldNotBeEmpty', () => {
 
     expect(violation?.rule).toBe('LIST_ITEM_SHOULD_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Dit lijstitem is leeg.');
     expect(violation?.messages.solution).toBe('Verwijder het lege lijstitem of voeg tekst toe.');
   });
@@ -55,6 +55,6 @@ describe('listItemShouldNotBeEmpty', () => {
     violation?.correct?.();
 
     expect(root.querySelectorAll('li')).toHaveLength(1);
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 });

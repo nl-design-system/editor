@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [emphasisShouldNotBeUnderlined] }
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('emphasisShouldNotBeUnderlined', () => {
 
     expect(violation?.rule).toBe('EMPHASIS_SHOULD_NOT_BE_UNDERLINED');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('inline');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze tekst is onderstreept. Dat lijkt te veel op een link.');
     expect(violation?.messages.solution).toBe('Verwijder de onderstreping van de tekst.');
   });
@@ -47,6 +47,6 @@ describe('emphasisShouldNotBeUnderlined', () => {
     violation?.correct?.();
 
     expect(root.querySelector('p')?.innerHTML).toBe('Zie onderstreept hier');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 });

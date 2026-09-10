@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [tableMustHaveMultipleRows] });
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('tableMustHaveMultipleRows', () => {
 
     expect(violation?.rule).toBe('TABLE_MUST_HAVE_MULTIPLE_ROWS');
     expect(violation?.severity).toBe('warning');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze tabel heeft minder dan twee rijen.');
   });
 
@@ -49,7 +49,7 @@ describe('tableMustHaveMultipleRows', () => {
 
     expect(root.querySelectorAll('tr')).toHaveLength(2);
     expect(root.querySelectorAll('tr:last-child > td')).toHaveLength(2);
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 
   it('offers no correction for a table without rows to copy', () => {

@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [tableCaptionShouldNotBeEmpty] })
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('tableCaptionShouldNotBeEmpty', () => {
 
     expect(violation?.rule).toBe('TABLE_CAPTION_SHOULD_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze tabel heeft een lege omschrijving.');
   });
 

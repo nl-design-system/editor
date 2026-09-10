@@ -12,7 +12,7 @@ export const imageMustHaveAltText = defineValidation({
   condition: hasAltText,
   messages,
   rule: imageValidationRules.IMAGE_MUST_HAVE_ALT_TEXT,
-  scope: 'block',
+  scope: 'element',
   selector: selectors.IMAGE,
   severity: validationSeverity.INFO,
 });

@@ -8,8 +8,6 @@ export {
   changeTagName,
   hasHeadingLength,
   headingLevel,
-  precedingHeading,
-  precedingMatch,
   textLines,
   trimmedText,
   unwrapElement,
@@ -22,7 +20,13 @@ export type { Locale, ResolvedMessages, ValidationMessages, ValidationMessagesBy
 export type { CoreSelector, ElementFor, Selector } from './types/selector.ts';
 export type {
   CorrectValidationFunction,
+  ElementValidation,
+  ElementValidationDefinition,
+  PageValidation,
+  PageValidationCondition,
+  PageValidationDefinition,
   ValidationCondition,
+  ValidationContext,
   Validation,
   ValidationDefinition,
   ValidationPayload,

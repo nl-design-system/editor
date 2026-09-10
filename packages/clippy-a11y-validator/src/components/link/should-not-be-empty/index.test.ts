@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [linkShouldNotBeEmpty] });
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('linkShouldNotBeEmpty', () => {
 
     expect(violation?.rule).toBe('LINK_SHOULD_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('warning');
-    expect(violation?.scope).toBe('inline');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze link heeft geen linktekst.');
     expect(violation?.messages.solution).toBe('Verwijder de lege link of voeg linktekst toe.');
   });
@@ -47,6 +47,6 @@ describe('linkShouldNotBeEmpty', () => {
     violation?.correct?.();
 
     expect(root.querySelector('p')?.innerHTML).toBe('Zie hier');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 });

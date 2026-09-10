@@ -12,7 +12,7 @@ export const tableCellShouldNotBeEmpty = defineValidation({
   condition: hasTextContent,
   messages,
   rule: tableValidationRules.TABLE_CELL_SHOULD_NOT_BE_EMPTY,
-  scope: 'block',
+  scope: 'element',
   selector: selectors.TABLE_CELL,
   severity: validationSeverity.INFO,
 });

@@ -8,11 +8,14 @@ import { messages } from './messages.ts';
 
 export const paragraphShouldNotResembleList = defineValidation({
   condition: not(resemblesListItem),
-  correct: (paragraph) => () => convertParagraphsToList(paragraph, isOrderedListItem(paragraph)),
+  correct:
+    (paragraph, { following }) =>
+    () =>
+      convertParagraphsToList(paragraph, isOrderedListItem(paragraph), following(paragraph.localName)),
   messages,
   payload: (paragraph) => ({ prefix: listPrefix(paragraph.textContent ?? '').trim() }),
   rule: paragraphValidationRules.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST,
-  scope: 'block',
+  scope: 'page',
   selector: selectors.PARAGRAPH,
   severity: validationSeverity.INFO,
 });

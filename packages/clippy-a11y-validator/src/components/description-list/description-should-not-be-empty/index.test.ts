@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [descriptionShouldNotBeEmpty] });
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('descriptionShouldNotBeEmpty', () => {
 
     expect(violation?.rule).toBe('DESCRIPTION_SHOULD_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze definitiebeschrijving is leeg.');
     expect(violation?.messages.solution).toBe('Verwijder de lege definitiebeschrijving of voeg tekst toe.');
   });
@@ -49,6 +49,6 @@ describe('descriptionShouldNotBeEmpty', () => {
     violation?.correct?.();
 
     expect(root.querySelector('dd')).toBeNull();
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 });

@@ -10,7 +10,7 @@ const validator = new Validator({ validations: [paragraphShouldNotBeEntirelyBold
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -24,7 +24,7 @@ describe('paragraphShouldNotBeEntirelyBold', () => {
 
     expect(violation?.rule).toBe('PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD');
     expect(violation?.severity).toBe('warning');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('De hele alinea is dikgedrukt.');
     expect(violation?.messages.solution).toContain('alleen voor de woorden');
   });
@@ -50,7 +50,7 @@ describe('paragraphShouldNotBeEntirelyBold', () => {
     violation?.correct?.();
 
     expect(root.querySelector('p')?.innerHTML).toBe(`${LONG} ${LONG}`);
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 
   describe('leaves the heading-like paragraphs to paragraphShouldNotResembleHeading', () => {
@@ -72,7 +72,7 @@ describe('paragraphShouldNotBeEntirelyBold', () => {
       });
       root.innerHTML = `<p><strong>Wat neemt u mee?</strong></p><p><strong>${LONG}</strong></p>`;
 
-      expect(both.validate(root).map((violation) => violation.rule)).toEqual([
+      expect(both.validate([root]).map((violation) => violation.rule)).toEqual([
         'PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING',
         'PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD',
       ]);

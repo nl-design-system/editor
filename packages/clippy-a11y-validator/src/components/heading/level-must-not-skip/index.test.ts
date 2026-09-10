@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [headingLevelMustNotSkip] });
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('headingLevelMustNotSkip', () => {
 
     expect(violation?.rule).toBe('HEADING_LEVEL_MUST_NOT_SKIP');
     expect(violation?.severity).toBe('warning');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('page');
     expect(violation?.messages.error).toBe('Kopniveau 3 volgt direct op kopniveau 1.');
     expect(violation?.messages.solution).toBe('Gebruik kopniveau 2, zodat er geen kopniveau wordt overgeslagen.');
   });
@@ -54,6 +54,14 @@ describe('headingLevelMustNotSkip', () => {
     expect(validate('<section><h2>Kosten</h2></section><h4>Kop</h4>')).toHaveLength(1);
   });
 
+  it('flags a level skipped between two roots', () => {
+    const title = document.createElement('div');
+    title.innerHTML = '<h1>Titel</h1>';
+    root.innerHTML = '<h3>Kop</h3>';
+
+    expect(validator.validate([title, root])).toHaveLength(1);
+  });
+
   it('flags each skip separately', () => {
     expect(validate('<h1>Een</h1><h3>Twee</h3><h5>Drie</h5>')).toHaveLength(2);
   });
@@ -64,7 +72,7 @@ describe('headingLevelMustNotSkip', () => {
     document.body.replaceChildren(outside, root);
     root.innerHTML = '<h4>Kop</h4>';
 
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 
   it('retags the heading to the expected level when corrected', () => {
@@ -72,10 +80,17 @@ describe('headingLevelMustNotSkip', () => {
     violation?.correct?.();
 
     expect(root.innerHTML).toBe('<h1>Titel</h1><h2 id="kop">Kop</h2>');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 
   it('does not propose a level beyond 6', () => {
     expect(validate('<h6>Diep</h6><h6>Nog dieper</h6>')).toHaveLength(0);
+  });
+
+  it('settles a run of skips in a single pass of corrections', () => {
+    validate('<h1>Een</h1><h3>Twee</h3><h5>Drie</h5>').forEach(({ correct }) => correct?.());
+
+    expect([...root.querySelectorAll('h1, h2, h3')].map(({ tagName }) => tagName)).toEqual(['H1', 'H2', 'H3']);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 });

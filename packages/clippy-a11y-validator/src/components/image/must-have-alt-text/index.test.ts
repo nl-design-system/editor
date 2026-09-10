@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [imageMustHaveAltText] });
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('imageMustHaveAltText', () => {
 
     expect(violation?.rule).toBe('IMAGE_MUST_HAVE_ALT_TEXT');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze afbeelding heeft geen alternatieve tekst.');
     expect(violation?.messages.solution).toContain('Beschrijf in de alternatieve tekst');
   });

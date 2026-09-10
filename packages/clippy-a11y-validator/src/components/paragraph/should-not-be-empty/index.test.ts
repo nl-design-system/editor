@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [paragraphShouldNotBeEmpty] });
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('paragraphShouldNotBeEmpty', () => {
 
     expect(violation?.rule).toBe('PARAGRAPH_SHOULD_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze alinea is leeg.');
     expect(violation?.messages.solution).toBe('Verwijder de lege alinea of voeg tekst toe.');
   });

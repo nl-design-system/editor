@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [headingMustStartAtLevelOne] });
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('headingMustStartAtLevelOne', () => {
 
     expect(violation?.rule).toBe('HEADING_MUST_START_AT_LEVEL_ONE');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('page');
     expect(violation?.messages.error).toBe('Het document begint met kopniveau 2 in plaats van kopniveau 1.');
     expect(violation?.messages.solution).toBe('Maak van deze kop een kopniveau 1.');
   });
@@ -29,7 +29,7 @@ describe('headingMustStartAtLevelOne', () => {
   it('reports the offending heading, not the first block', () => {
     const [violation] = validate('<p>inleiding</p><h3>Kop</h3>');
 
-    expect(violation?.element.tagName).toBe('H3');
+    expect(violation?.element?.tagName).toBe('H3');
   });
 
   it('interpolates the level of the offending heading', () => {
@@ -61,6 +61,6 @@ describe('headingMustStartAtLevelOne', () => {
     violation?.correct?.();
 
     expect(root.innerHTML).toBe('<h1 id="kop">Kop</h1><p>tekst</p>');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 });

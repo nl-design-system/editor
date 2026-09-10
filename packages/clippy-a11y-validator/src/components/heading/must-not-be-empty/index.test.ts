@@ -7,7 +7,7 @@ const validator = new Validator({ validations: [headingMustNotBeEmpty] });
 
 const validate = (html: string) => {
   root.innerHTML = html;
-  return validator.validate(root);
+  return validator.validate([root]);
 };
 
 beforeEach(() => {
@@ -21,7 +21,7 @@ describe('headingMustNotBeEmpty', () => {
 
     expect(violation?.rule).toBe('HEADING_MUST_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('error');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze kop is leeg.');
     expect(violation?.messages.solution).toBe('Verwijder de lege kop of voeg tekst toe.');
   });
@@ -63,6 +63,6 @@ describe('headingMustNotBeEmpty', () => {
     violation?.correct?.();
 
     expect(root.innerHTML).toBe('<p>tekst</p>');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([root])).toHaveLength(0);
   });
 });
