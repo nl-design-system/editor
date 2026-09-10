@@ -2,13 +2,15 @@ import type { Locale } from './types/messages.ts';
 import type { Validation, ValidationSeverity, Violation } from './types/validation.ts';
 import { walk } from './walk.ts';
 
-export type ValidatorOptions = {
+/** What a {@link Validator} is built with: the validations to register, and the defaults every run starts from. */
+export type ValidatorConstructorOptions = {
   fallbackLocale?: Locale;
   locale?: Locale;
   validations?: readonly Validation[];
 };
 
-export type ValidateOptions = {
+/** What a single {@link Validator.validate} call may change, for that run only. */
+export type ValidatorRunOptions = {
   severities?: readonly ValidationSeverity[];
 };
 
@@ -17,7 +19,7 @@ export class Validator {
   readonly #locale: Locale;
   readonly #fallbackLocale: Locale;
 
-  constructor({ fallbackLocale = 'nl', locale = 'nl', validations = [] }: ValidatorOptions = {}) {
+  constructor({ fallbackLocale = 'nl', locale = 'nl', validations = [] }: ValidatorConstructorOptions = {}) {
     this.#locale = locale;
     this.#fallbackLocale = fallbackLocale;
     validations.forEach((validation) => this.register(validation));
@@ -33,7 +35,7 @@ export class Validator {
     };
   }
 
-  validate(root: ParentNode, { severities }: ValidateOptions = {}): Violation[] {
+  validate(root: ParentNode, { severities }: ValidatorRunOptions = {}): Violation[] {
     return walk(root, [...this.#validations.values()], {
       fallbackLocale: this.#fallbackLocale,
       locale: this.#locale,
