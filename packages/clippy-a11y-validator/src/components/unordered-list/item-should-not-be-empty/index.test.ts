@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { initializeRuleTest } from '../../../test-helpers/initialize-rule-test.ts';
 import { unorderedListItemShouldNotBeEmpty } from './index.ts';
 
-const { root, validate, validator } = initializeRuleTest([unorderedListItemShouldNotBeEmpty]);
+const { fragment, validate, validator } = initializeRuleTest([unorderedListItemShouldNotBeEmpty]);
 
 describe('unorderedListItemShouldNotBeEmpty', () => {
   it('flags an empty item', () => {
@@ -34,7 +34,7 @@ describe('unorderedListItemShouldNotBeEmpty', () => {
     const [violation] = validate('<ul><li>een</li><li></li></ul>');
     violation?.correct?.();
 
-    expect(root.querySelectorAll('li')).toHaveLength(1);
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(fragment.querySelectorAll('li')).toHaveLength(1);
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 });

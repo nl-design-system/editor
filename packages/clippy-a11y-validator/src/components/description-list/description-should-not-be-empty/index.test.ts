@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { initializeRuleTest } from '../../../test-helpers/initialize-rule-test.ts';
 import { descriptionShouldNotBeEmpty } from './index.ts';
 
-const { root, validate, validator } = initializeRuleTest([descriptionShouldNotBeEmpty]);
+const { fragment, validate, validator } = initializeRuleTest([descriptionShouldNotBeEmpty]);
 
 describe('descriptionShouldNotBeEmpty', () => {
   it('flags an empty description', () => {
@@ -37,7 +37,7 @@ describe('descriptionShouldNotBeEmpty', () => {
     const [violation] = validate('<dl><dt>term</dt><dd></dd></dl>');
     violation?.correct?.();
 
-    expect(root.querySelector('dd')).toBeNull();
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(fragment.querySelector('dd')).toBeNull();
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 });

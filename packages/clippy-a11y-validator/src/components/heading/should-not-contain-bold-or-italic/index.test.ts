@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { initializeRuleTest } from '../../../test-helpers/initialize-rule-test.ts';
 import { headingShouldNotContainBoldOrItalic } from './index.ts';
 
-const { root, validate, validator } = initializeRuleTest([headingShouldNotContainBoldOrItalic]);
+const { fragment, validate, validator } = initializeRuleTest([headingShouldNotContainBoldOrItalic]);
 
 describe('headingShouldNotContainBoldOrItalic', () => {
   it('flags a heading that contains bold text', () => {
@@ -45,7 +45,7 @@ describe('headingShouldNotContainBoldOrItalic', () => {
     const [violation] = validate('<h2>Kop met <strong>nadruk</strong> en <em>cursief</em></h2>');
     violation?.correct?.();
 
-    expect(root.querySelector('h2')?.innerHTML).toBe('Kop met nadruk en cursief');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(fragment.querySelector('h2')?.innerHTML).toBe('Kop met nadruk en cursief');
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 });

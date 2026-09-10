@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { initializeRuleTest } from '../../../test-helpers/initialize-rule-test.ts';
 import { tableMustHaveHeadings } from './index.ts';
 
-const { root, validate, validator } = initializeRuleTest([tableMustHaveHeadings]);
+const { fragment, validate, validator } = initializeRuleTest([tableMustHaveHeadings]);
 
 describe('tableMustHaveHeadings', () => {
   it('flags a table without header cells', () => {
@@ -51,15 +51,15 @@ describe('tableMustHaveHeadings', () => {
     );
     violation?.correct?.();
 
-    expect([...root.querySelectorAll('tr:first-child > *')].map((cell) => cell.tagName)).toEqual(['TH', 'TH']);
-    expect(validator.validate(root)).toHaveLength(0);
+    expect([...fragment.querySelectorAll('tr:first-child > *')].map((cell) => cell.tagName)).toEqual(['TH', 'TH']);
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 
   it('keeps the cell content and attributes when corrected', () => {
     const [violation] = validate('<table><tbody><tr><td colspan="2">C1</td></tr><tr><td>C2</td></tr></tbody></table>');
     violation?.correct?.();
 
-    const header = root.querySelector('th');
+    const header = fragment.querySelector('th');
     expect(header?.textContent).toBe('C1');
     expect(header?.getAttribute('colspan')).toBe('2');
   });

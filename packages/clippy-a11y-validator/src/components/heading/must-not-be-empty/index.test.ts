@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { initializeRuleTest } from '../../../test-helpers/initialize-rule-test.ts';
 import { headingMustNotBeEmpty } from './index.ts';
 
-const { root, validate, validator } = initializeRuleTest([headingMustNotBeEmpty]);
+const { fragment, validate, validator } = initializeRuleTest([headingMustNotBeEmpty]);
 
 describe('headingMustNotBeEmpty', () => {
   it('flags an empty heading', () => {
@@ -51,7 +51,7 @@ describe('headingMustNotBeEmpty', () => {
     const [violation] = validate('<h1></h1><p>tekst</p>');
     violation?.correct?.();
 
-    expect(root.innerHTML).toBe('<p>tekst</p>');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(fragment.innerHTML).toBe('<p>tekst</p>');
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 });
