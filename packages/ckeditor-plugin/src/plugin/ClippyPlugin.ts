@@ -203,29 +203,29 @@ export class ClippyPlugin extends Plugin {
 
   private _patchCorrectionsForCKEditor(validationsMap: ValidationsMap): ValidationsMap {
     for (const [range, result] of validationsMap) {
-      const { correct, validatorKey } = result;
-      if (!correct || !validatorKey) {
+      const { correct, rule } = result;
+      if (!correct || !rule) {
         continue;
       }
 
       // replace correct functions with model-aware versions that go through editor.setData()
-      result.correct = this._modelCorrectionFactory(correct, validatorKey, range);
+      result.correct = this._modelCorrectionFactory(correct, rule, range);
     }
     return validationsMap;
   }
 
-  private _modelCorrectionFactory(originalCorrect: () => void, validatorKey: string, range: Range): () => void {
+  private _modelCorrectionFactory(originalCorrect: () => void, rule: string, range: Range): () => void {
     return () => {
       // create a clean HTML copy via this.editor.getData()
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = this.editor.getData();
       const modelDataValidationsMap = runValidations(tempDiv, this._settings);
 
-      // A validator can flag multiple spots, get the range's position among correctable results sharing its validatorKey
-      const occurrenceIndex = findOccurrenceIndex(this._validationsMap, range, validatorKey);
+      // A validator can flag multiple spots, get the range's position among correctable results sharing its rule
+      const occurrenceIndex = findOccurrenceIndex(this._validationsMap, range, rule);
 
       // locate the matching correction in the clean HTML copy
-      const target = findMatchingCorrection(modelDataValidationsMap, validatorKey, occurrenceIndex);
+      const target = findMatchingCorrection(modelDataValidationsMap, rule, occurrenceIndex);
 
       if (target?.correct) {
         // apply it and check whether it actually changed the DOM
