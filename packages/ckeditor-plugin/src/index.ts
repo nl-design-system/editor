@@ -1,6 +1,6 @@
 export { ClippyPlugin } from './plugin/ClippyPlugin.ts';
 export { ContentClasses } from './plugin/ContentClasses.ts';
-export type { ValidationResult, ValidationSeverity } from '@nl-design-system-community/editor/validators';
+export type { Violation, ValidationSeverity } from '@nl-design-system-community/editor/validators';
 // Re-exported so integration packages register into the same module instance this bundle inlines.
 export {
   DARK_COLOR_SCHEME_CLASS,

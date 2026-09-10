@@ -36,7 +36,7 @@ export default css`
       --_clippy-gutter-severity-bg: var(--basis-color-warning-bg-default);
     }
 
-    &[data-scope='block']::before {
+    &[data-display='block']::before {
       content: '';
       position: absolute;
       inset-block-start: 0;
@@ -202,7 +202,7 @@ export default css`
   }
 
   @media (forced-colors: active) {
-    .clippy-validations-gutter__indicator[data-scope='block']::before {
+    .clippy-validations-gutter__indicator[data-display='block']::before {
       background-color: transparent !important;
     }
 

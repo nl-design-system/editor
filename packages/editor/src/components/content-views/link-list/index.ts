@@ -8,7 +8,7 @@ import { safeCustomElement } from '@nl-design-system-community/clippy-components
 import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
-import type { ValidationsMap, ValidationResult } from '@/types/validation';
+import type { ViolationsMap, Violation } from '@/types/validation';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import { tiptapContext } from '@/context/tiptapContext';
 import { validationsContext } from '@/context/validationsContext';
@@ -21,7 +21,7 @@ interface LinkEntry {
   index: number;
   href: string;
   text: string;
-  validationEntry: [Range, ValidationResult] | null;
+  validationEntry: [Range, Violation] | null;
 }
 
 const tag = 'clippy-link-list';
@@ -52,7 +52,7 @@ export class LinkList extends LitElement {
 
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsMap?: ValidationsMap;
+  validationsMap?: ViolationsMap;
 
   get #links(): LinkEntry[] {
     if (!this.htmlDocument) return [];

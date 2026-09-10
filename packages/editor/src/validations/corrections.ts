@@ -1,6 +1,6 @@
 import { msg } from '@lit/localize';
 import { coreValidationRules, type CoreValidationRule } from '@nl-design-system-community/clippy-a11y-validator';
-import type { CorrectValidationFunction } from '@/types/validation';
+import type { CorrectViolationFunction } from '@/types/validation';
 import { CustomEvents } from '@/events';
 
 /**
@@ -12,7 +12,7 @@ import { CustomEvents } from '@/events';
 type EditorCorrection = {
   /** Replaces the default "Correct" label, when the action is not a correction but an edit. */
   customCorrectLabel?: () => string;
-  correct: (element: HTMLElement, range: Range | undefined) => CorrectValidationFunction;
+  correct: (element: HTMLElement, range: Range | undefined) => CorrectViolationFunction;
 };
 
 /**
