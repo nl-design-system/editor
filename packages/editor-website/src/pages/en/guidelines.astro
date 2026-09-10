@@ -14,7 +14,7 @@ const t = useTranslations('en');
     <Hero title={guidelinesFrontmatter['title']} intro={guidelinesFrontmatter['intro']} />
 
     <Section>
-      <clippy-context id="editor-1" enable-rules="node-should-not-be-empty">
+      <clippy-context id="editor-1" enable-rules="paragraph-should-not-be-empty">
         <div slot="value">
           <p>Hi,</p>
           <p>&nbsp;</p>
@@ -44,7 +44,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-2" enable-rules="inline-should-not-be-empty">
+      <clippy-context id="editor-2" enable-rules="emphasis-should-not-be-empty link-should-not-be-empty">
         <div slot="value">
           <h2>Bold</h2>
           <p>Empty Bold: <b>&nbsp;</b></p>
@@ -96,7 +96,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-3" enable-rules="inline-should-not-be-underlined">
+      <clippy-context id="editor-3" enable-rules="emphasis-should-not-be-underlined">
         <div slot="value">
           <p>
             There is insufficient difference between the underline of an <u>underline</u> and a <a href="#">link</a>.
@@ -125,7 +125,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-4" enable-rules="node-should-not-be-empty">
+      <clippy-context id="editor-4" enable-rules="list-item-should-not-be-empty">
         <div slot="value">
           <ul>
             <li>Option 1</li>
@@ -157,7 +157,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-5" enable-rules="node-should-not-be-empty">
+      <clippy-context id="editor-5" enable-rules="list-item-should-not-be-empty">
         <div slot="value">
           <ol>
             <li>Option 1</li>
@@ -243,7 +243,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-8" enable-rules="node-should-not-be-empty">
+      <clippy-context id="editor-8" enable-rules="description-term-should-not-be-empty description-should-not-be-empty">
         <div slot="value">
           <dl class="denhaag-description-list">
             <div class="denhaag-description-list-item">
@@ -279,7 +279,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-9" enable-rules="node-should-not-be-empty">
+      <clippy-context id="editor-9" enable-rules="table-cell-should-not-be-empty">
         <div slot="value">
           <table>
             <tbody>
@@ -379,7 +379,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-12" enable-rules="document-must-have-correct-heading-order">
+      <clippy-context id="editor-12" enable-rules="heading-level-must-not-skip">
         <div slot="value">
           <h1>Heading level 1</h1>
           <h3>Heading level 3</h3>
@@ -489,7 +489,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-15" enable-rules="document-must-have-single-heading-one">
+      <clippy-context id="editor-15" enable-rules="heading-level-one-must-be-unique">
         <div slot="value">
           <h1>Heading level 1</h1>
           <h1>Heading level 1 again</h1>
@@ -517,15 +517,16 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-16" enable-rules="document-must-have-top-level-heading-one">
+      <clippy-context id="editor-16" enable-rules="heading-must-start-at-level-one">
         <div slot="value">
-          <p>Text without a main heading</p>
+          <h2>Heading level 2</h2>
+          <p>The document does not start with a main heading.</p>
         </div>
         <div class="clippy-guideline clippy-guideline--negative">
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Don't: no main heading</span>
+              <span class="clippy-guideline__title">Don't: not starting with a main heading</span>
             </h2>
             <p>...</p>
           </div>
@@ -544,7 +545,7 @@ const t = useTranslations('en');
         </div>
       </clippy-context>
 
-      <clippy-context id="editor-17" enable-rules="definition-description-must-follow-term">
+      <clippy-context id="editor-17" enable-rules="description-term-must-have-description">
         <div slot="value">
           <dl class="denhaag-description-list">
             <div class="denhaag-description-list-item">
