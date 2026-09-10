@@ -1,4 +1,4 @@
-import type { CorrectValidationFunction, ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
+import type { CorrectViolationFunction, ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
@@ -32,7 +32,7 @@ declare global {
 const ariaDescribedBy = 'validation-item-header';
 
 /**
- * A single accessibility validation result card. Displays the severity icon,
+ * A single accessibility violation card. Displays the severity icon,
  * heading, optional solution, and action buttons (Focus, Correct).
  * The `mode` property controls which actions are visible.
  *
@@ -87,7 +87,7 @@ export class ValidationItem extends LitElement {
   /** Custom label for the auto-fix button. Falls back to "Correct". */
   @property({ type: String }) customCorrectLabel?: string;
   /** Optional function that applies the automatic fix for this issue. */
-  @property({ type: Function }) correct?: CorrectValidationFunction;
+  @property({ type: Function }) correct?: CorrectViolationFunction;
 
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })
