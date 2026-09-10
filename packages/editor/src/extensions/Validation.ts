@@ -1,6 +1,6 @@
 import { Extension } from '@tiptap/core';
 import { CustomEvents, type OpenDocumentOverviewDetail } from '@/events';
-import { debouncedValidate, runValidation } from '@/validators';
+import { debouncedValidate, runValidation } from '@/validations';
 
 export default Extension.create({
   name: 'validation',

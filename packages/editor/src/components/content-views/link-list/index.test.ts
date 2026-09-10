@@ -1,3 +1,4 @@
+import { validationResult } from '@test/validationResult';
 import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import type { Context } from '@/components/context';
@@ -159,7 +160,9 @@ describe('<clippy-link-list>', () => {
       const linkRange = document.createRange();
       linkRange.selectNode(linkEl);
 
-      const validationsMap: ValidationsMap = new Map([[linkRange, { range: linkRange, severity: 'warning' }]]);
+      const validationsMap: ValidationsMap = new Map([
+        [linkRange, validationResult({ range: linkRange, severity: 'warning' })],
+      ]);
 
       contextEl.updateValidationsContext(validationsMap);
       await contextEl.updateComplete;
@@ -185,8 +188,8 @@ describe('<clippy-link-list>', () => {
 
       // Two entries for the same element: error takes precedence over warning.
       const validationsMap: ValidationsMap = new Map([
-        [linkRange1, { range: linkRange1, severity: 'warning' }],
-        [linkRange2, { range: linkRange2, severity: 'error' }],
+        [linkRange1, validationResult({ range: linkRange1, severity: 'warning' })],
+        [linkRange2, validationResult({ range: linkRange2, severity: 'error' })],
       ]);
 
       contextEl.updateValidationsContext(validationsMap);

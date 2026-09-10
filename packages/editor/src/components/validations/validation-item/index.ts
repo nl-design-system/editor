@@ -1,3 +1,4 @@
+import type { CorrectValidationFunction, ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
@@ -10,10 +11,10 @@ import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
 import { LitElement, html, nothing, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
-import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
-import type { CorrectValidationFunction, ValidationInteractionMode, ValidationSeverity } from '@/types/validation';
+import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import type { ValidationInteractionMode } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';
 import { CustomEvents, type CorrectValidationIssueDetail, type FocusNodeDetail } from '@/events';
@@ -38,7 +39,7 @@ const ariaDescribedBy = 'validation-item-header';
  * @tag clippy-validation-item
  *
  * @slot solution-html - Optional HTML content rendered as guidance below
- *   the heading. Wrap content in a `<p>` element.
+ *   the heading, in place of the `solution` property. Wrap content in a `<p>` element.
  *
  * @fires {CustomEvent<FocusNodeDetail>} FOCUS_NODE - Dispatched when the user clicks "Focus",
  *   carrying `detail.range` so the editor can scroll to the relevant node.
@@ -78,6 +79,11 @@ export class ValidationItem extends LitElement {
   @property({ type: String }) heading!: string;
   /** Optional URL linking to a more extensive explanation of the WCAG criterion. */
   @property({ type: String }) href?: string;
+  /**
+   * Guidance on how to resolve the issue, rendered as markdown. Ignored when the
+   * `solution-html` slot is filled.
+   */
+  @property({ type: String }) solution?: string;
   /** Custom label for the auto-fix button. Falls back to "Correct". */
   @property({ type: String }) customCorrectLabel?: string;
   /** Optional function that applies the automatic fix for this issue. */
@@ -163,7 +169,9 @@ export class ValidationItem extends LitElement {
           <h4 class="nl-heading nl-heading--level-4" id=${ariaDescribedBy}>${renderMarkdown(this.heading)}</h4>
         </div>
         <div class="clippy-validation-item__message">
-          <slot name="solution-html"></slot>
+          <slot name="solution-html">
+            ${this.solution ? html`<p class="nl-paragraph">${renderMarkdown(this.solution)}</p>` : nothing}
+          </slot>
           ${
             this.href
               ? html`
