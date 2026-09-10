@@ -3,7 +3,7 @@ import { safeCustomElement } from '@nl-design-system-community/clippy-components
 import { Editor as TiptapEditor } from '@tiptap/core';
 import { LitElement, html, type PropertyValues } from 'lit';
 import { property, queryAssignedElements } from 'lit/decorators.js';
-import type { ValidationResult } from '@/types/validation';
+import type { Violation } from '@/types/validation';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import { identifierContext } from '@/context/identifierContext';
 import { tiptapContext } from '@/context/tiptapContext';
@@ -12,7 +12,7 @@ import { editorExtensions } from '@/extensions';
 import { initializeLocale } from '@/localization';
 import { sanitizeTopHeadingLevel } from '@/utils/sanitize';
 import { waitForMedia } from '@/utils/waitForMedia';
-import { runValidation } from '@/validators';
+import { runValidation } from '@/validations';
 import { editorContextStyles } from './styles';
 
 const tag = 'clippy-context';
@@ -137,8 +137,8 @@ export class Context extends LitElement {
   });
 
   /** @internal */
-  updateValidationsContext = (resultMap: Map<Range, ValidationResult>): void => {
-    this.validationsContext = resultMap;
+  updateValidationsContext = (violations: Map<Range, Violation>): void => {
+    this.validationsContext = violations;
     this.lightValidationsContext.setValue(this.validationsContext);
   };
 

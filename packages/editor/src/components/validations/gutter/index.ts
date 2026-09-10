@@ -12,12 +12,7 @@ import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import type {
-  ValidationInteractionMode,
-  ValidationResult,
-  ValidationSeverity,
-  ValidationsMap,
-} from '@/types/validation';
+import type { ValidationInteractionMode, Violation, ValidationSeverity, ViolationsMap } from '@/types/validation';
 import { validationInteractionMode, validationSeverity } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';
 import { tiptapContext } from '@/context/tiptapContext';
@@ -29,7 +24,6 @@ import {
   type FocusValidationItemInListDetail,
   type OpenValidationGroupDetail,
 } from '@/events';
-import { renderSolution, type ValidationKey, validationMessages } from '@/messages';
 import {
   applyHoverHighlight,
   applyValidationHighlights,
@@ -69,7 +63,7 @@ const severityIcon = (severity: ValidationSeverity): string => {
 type PositionedIndicator = {
   position: { top: number; height: number };
   range: Range;
-  result: ValidationResult;
+  violation: Violation;
 };
 
 const metaCountByRange = (indicators: PositionedIndicator[]): Map<Range, number> => {
@@ -88,7 +82,7 @@ const metaCountByRange = (indicators: PositionedIndicator[]): Map<Range, number>
   for (const line of lines.values()) {
     const lead = line.reduce(
       (best, current) =>
-        SEVERITY_RANK[current.result.severity] > SEVERITY_RANK[best.result.severity] ? current : best,
+        SEVERITY_RANK[current.violation.severity] > SEVERITY_RANK[best.violation.severity] ? current : best,
       line[0],
     );
     counts.set(lead.range, line.length);
@@ -148,13 +142,13 @@ export class Gutter extends LitElement {
   @property({ attribute: false })
   private readonly editor?: Editor;
 
-  /** Map of DOM ranges to their validation results, used to render indicators. */
+  /** Map of DOM ranges to their violations, used to render indicators. */
   @property({ attribute: false })
-  validationsMap?: ValidationsMap;
+  validationsMap?: ViolationsMap;
 
   @consume({ context: validationsContext, subscribe: true })
   @state()
-  private readonly validationsContext?: ValidationsMap;
+  private readonly validationsContext?: ViolationsMap;
 
   /** @internal Identifier of the owning editor, used to scope drawer events. */
   @consume({ context: identifierContext, subscribe: true })
@@ -307,21 +301,21 @@ export class Gutter extends LitElement {
     }
   }
 
-  #highlightRange(range: Range, result: ValidationResult): void {
-    if (result.scope !== 'inline') return;
-    applyHoverHighlight(result.severity, range);
+  #highlightRange(range: Range, violation: Violation): void {
+    if (violation.scope !== 'inline') return;
+    applyHoverHighlight(violation.severity, range);
   }
 
-  #renderMeta(range: Range, result: ValidationResult, count: number) {
-    const { severity } = result;
+  #renderMeta(range: Range, violation: Violation, count: number) {
+    const { severity } = violation;
     return html`<div class="clippy-validations-gutter__meta-anchor">
       <button
         class="clippy-validations-gutter__meta clippy-validations-gutter__meta--${severity}"
         aria-label=${count > 1 ? msg(str`Open ${count} validations on this line`) : msg('Open validation')}
         @click=${() => this.#handleIndicatorClick(range)}
-        @mouseenter=${() => this.#highlightRange(range, result)}
+        @mouseenter=${() => this.#highlightRange(range, violation)}
         @mouseleave=${() => clearHoverHighlight()}
-        @focus=${() => this.#highlightRange(range, result)}
+        @focus=${() => this.#highlightRange(range, violation)}
         @blur=${() => clearHoverHighlight()}
       >
         ${
@@ -340,13 +334,12 @@ export class Gutter extends LitElement {
 
   #renderIndicator(
     range: Range,
-    result: ValidationResult,
+    violation: Violation,
     position: { top: number; height: number },
     metaCount: number | undefined,
   ) {
-    const { correct, scope, severity, solutionPayload, validatorKey } = result;
-    const valKey = validatorKey as ValidationKey;
-    const { customCorrectLabel, heading, href, solution } = validationMessages()[valKey];
+    const { correct, customCorrectLabel, messages, scope, severity } = violation;
+    const { error: heading, href, solution } = messages;
     const isActive = this.activeRange === range;
     return html`<li
       class="clippy-validations-gutter__indicator"
@@ -362,14 +355,14 @@ export class Gutter extends LitElement {
         })}"
         aria-expanded=${isActive ? 'true' : 'false'}
         @click=${() => this.#handleIndicatorClick(range)}
-        @mouseenter=${() => this.#highlightRange(range, result)}
+        @mouseenter=${() => this.#highlightRange(range, violation)}
         @mouseleave=${() => clearHoverHighlight()}
-        @focus=${() => this.#highlightRange(range, result)}
+        @focus=${() => this.#highlightRange(range, violation)}
         @blur=${() => clearHoverHighlight()}
       >
         <span class="sr-only">${renderMarkdown(heading)}</span>
       </button>
-      ${metaCount === undefined ? nothing : this.#renderMeta(range, result, metaCount)}
+      ${metaCount === undefined ? nothing : this.#renderMeta(range, violation, metaCount)}
       <div
         class="${classMap({
           'clippy-validation-gutter__tooltip': true,
@@ -383,10 +376,9 @@ export class Gutter extends LitElement {
           .heading=${heading}
           .href=${href}
           .customCorrectLabel=${customCorrectLabel}
+          .solution=${solution}
           .correct=${correct}
-        >
-          ${renderSolution(solution, solutionPayload)}
-        </clippy-validation-item>
+        ></clippy-validation-item>
       </div>
     </li>`;
   }
@@ -399,15 +391,15 @@ export class Gutter extends LitElement {
 
     const indicators = [...map.entries()]
       .filter(([range]) => range !== undefined)
-      .map(([range, result]) => ({ position: this.#getIndicatorPosition(range), range, result }))
+      .map(([range, violation]) => ({ position: this.#getIndicatorPosition(range), range, violation }))
       .filter((indicator): indicator is PositionedIndicator => indicator.position !== null);
 
     const metaCounts = metaCountByRange(indicators);
 
     return html`
       <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
-        ${indicators.map(({ position, range, result }) =>
-          this.#renderIndicator(range, result, position, metaCounts.get(range)),
+        ${indicators.map(({ position, range, violation }) =>
+          this.#renderIndicator(range, violation, position, metaCounts.get(range)),
         )}
       </ol>
     `;

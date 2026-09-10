@@ -16,6 +16,8 @@ const SNIPPET_LENGTH = 100;
 
 const EXIT_CODE = { error: 2, ok: 0, violationsFound: 1 };
 
+const HEADING_LEVELS = [1, 2, 3, 4, 5, 6];
+
 function help(): string {
   return `
 Usage: clippy-validate-html <path...> [options]
@@ -30,6 +32,9 @@ Options:
   --skip <selector> Drop everything matching this CSS selector before validating,
                     for demo or example markup that is wrong on purpose.
                     Repeatable
+  --top-heading-level <1-6>
+                    Highest heading level the documents may use. Defaults to 1;
+                    raise it for fragments rendered under an existing outline
   --help, -h        Show this help
 
 Exit codes:
@@ -63,7 +68,13 @@ function fail(message: string): never {
   process.exit(EXIT_CODE.error);
 }
 
-async function collectViolations(files: readonly string[], source: string, fix: boolean, skip: readonly string[]) {
+type ValidateSettings = {
+  fix: boolean;
+  skip: readonly string[];
+  topHeadingLevel: number;
+};
+
+async function collectViolations(files: readonly string[], source: string, settings: ValidateSettings) {
   const browser = await chromium.launch();
 
   try {
@@ -72,7 +83,7 @@ async function collectViolations(files: readonly string[], source: string, fix: 
 
     for (const file of files) {
       await page.goto(pathToFileURL(file).href, { waitUntil: 'load' });
-      byFile.push({ file, violations: await validatePage(page, source, fix, skip) });
+      byFile.push({ file, violations: await validatePage(page, source, settings) });
     }
 
     return byFile;
@@ -83,9 +94,9 @@ async function collectViolations(files: readonly string[], source: string, fix: 
 
 type Violations = Awaited<ReturnType<typeof validatePage>>;
 
-function validatePage(page: Page, source: string, fix: boolean, skip: readonly string[]) {
+function validatePage(page: Page, source: string, settings: ValidateSettings) {
   return page.evaluate(
-    async ({ fix, skip, source }) => {
+    async ({ fix, skip, source, topHeadingLevel }) => {
       for (const selector of skip) {
         try {
           document.querySelectorAll(selector).forEach((element) => element.remove());
@@ -100,7 +111,7 @@ function validatePage(page: Page, source: string, fix: boolean, skip: readonly s
       )) as typeof import('@nl-design-system-community/clippy-a11y-validator');
       URL.revokeObjectURL(moduleUrl);
 
-      const validator = new Validator({ validations: Object.values(coreValidations) });
+      const validator = new Validator({ topHeadingLevel, validations: Object.values(coreValidations) });
       const violations = validator.validate(document.body);
 
       if (fix) violations.forEach(({ correct }) => correct?.());
@@ -110,7 +121,7 @@ function validatePage(page: Page, source: string, fix: boolean, skip: readonly s
         html: element.outerHTML,
       }));
     },
-    { fix, skip, source },
+    { ...settings, skip: [...settings.skip], source },
   );
 }
 
@@ -125,6 +136,7 @@ const { positionals, values } = parseArgs({
     fix: { default: false, type: 'boolean' },
     help: { default: false, short: 'h', type: 'boolean' },
     skip: { multiple: true, type: 'string' },
+    'top-heading-level': { type: 'string' },
   },
 });
 
@@ -134,6 +146,12 @@ if (values['help']) {
 }
 
 if (positionals.length === 0) fail(`Missing path argument.\n\n${help()}`);
+
+const topHeadingLevel = Number(values['top-heading-level'] ?? 1);
+
+if (!HEADING_LEVELS.includes(topHeadingLevel)) {
+  fail(`--top-heading-level must be one of ${HEADING_LEVELS.join(', ')}.`);
+}
 
 if (!existsSync(VALIDATOR_BUNDLE)) fail(`${PACKAGE_NAME} is not built — run \`pnpm build\` first.`);
 
@@ -152,9 +170,11 @@ if (files.length === 0) fail(`No HTML files found in ${positionals.join(', ')}.`
 
 const source = readFileSync(VALIDATOR_BUNDLE, 'utf8');
 
-const results = await collectViolations(files, source, values['fix'], values['skip'] ?? []).catch((error: unknown) =>
-  fail(firstLineOf(error)),
-);
+const results = await collectViolations(files, source, {
+  fix: values['fix'],
+  skip: values['skip'] ?? [],
+  topHeadingLevel,
+}).catch((error: unknown) => fail(firstLineOf(error)));
 
 let total = 0;
 

@@ -40,7 +40,7 @@ test.describe('Guideline examples are present', () => {
     { id: 'editor-12', title: 'Niet doen: Kopniveau overslaan' },
     { id: 'editor-13', title: 'Niet doen: Tabel zonder kopcellen' },
     { id: 'editor-15', title: 'Niet doen: Meer dan 1 hoofdkop' },
-    { id: 'editor-16', title: 'Niet doen: Geen hoofdkop' },
+    { id: 'editor-16', title: 'Niet doen: Niet beginnen met een hoofdkop' },
     { id: 'editor-17', title: 'Niet doen: Definitie zonder term' },
     { id: 'editor-19', title: 'Niet doen: Heading met bold' },
     { id: 'editor-20', title: 'Niet doen: Heading met italic' },
@@ -86,50 +86,51 @@ test.describe('Validation messages shown for bad content', () => {
 });
 
 /**
- * Each guideline editor enables exactly one validation rule via `enable-rules`.
- * The expected indicator count is derived from the content and the rule's behaviour:
+ * Each guideline editor enables the validation rules its content trips via `enable-rules`.
+ * The expected indicator count is derived from the content and the rule's selector: every
+ * validation of `@nl-design-system-community/clippy-a11y-validator` fires once per element
+ * matching its selector, in document order.
  *
- * - Block validators (`node-should-not-be-empty`) fire per matching element in a
- *   depth-first DOM walk.  TipTap wraps list-item / table-cell content in a `<p>`,
- *   so an empty `<li>` becomes `<li><p></p></li>` — both `li` and `p` are flagged.
- * - Inline validators fire per inline element.
- * - Document validators query the full document and return an array of results.
+ * TipTap wraps list-item and table-cell content in a `<p>`, so an empty `<li>` becomes
+ * `<li><p></p></li>`. Only the rule whose selector matches fires, so that counts once.
  */
 test.describe('Gutter indicators', () => {
   const gutterGuidelines: Array<{ id: string; title: string; expectedIndicators: number }> = [
-    // node-should-not-be-empty: 1 empty <p>
+    // paragraph-should-not-be-empty: 1 empty <p>
     { id: 'editor-1', expectedIndicators: 1, title: 'lege alinea' },
-    // inline-should-not-be-empty: 8 empty inline elements (b, a, u, strong, mark, em, s, i)
+    // emphasis-should-not-be-empty: 7 empty emphasis elements (b, u, strong, mark, em, s, i)
+    // link-should-not-be-empty: 1 empty <a>
     { id: 'editor-2', expectedIndicators: 8, title: 'lege inline elementen' },
-    // inline-should-not-be-underlined: 1 <u> element
+    // emphasis-should-not-be-underlined: 1 <u> element
     { id: 'editor-3', expectedIndicators: 1, title: 'tekst onderstrepen' },
-    // node-should-not-be-empty: 1 empty <li> → <li><p></p></li> = 2 empty nodes
-    { id: 'editor-4', expectedIndicators: 2, title: 'lege list items (ul)' },
-    // node-should-not-be-empty: 1 empty <li> → <li><p></p></li> = 2 empty nodes
-    { id: 'editor-5', expectedIndicators: 2, title: 'lege list items (ol)' },
+    // list-item-should-not-be-empty: 1 empty <li>
+    { id: 'editor-4', expectedIndicators: 1, title: 'lege list items (ul)' },
+    // list-item-should-not-be-empty: 1 empty <li>
+    { id: 'editor-5', expectedIndicators: 1, title: 'lege list items (ol)' },
     // paragraph-should-not-resemble-list: 1 numbered-list paragraph
     { id: 'editor-6', expectedIndicators: 1, title: 'geordende lijst zonder opmaak' },
     // paragraph-should-not-resemble-list: 1 bullet-list paragraph
     { id: 'editor-7', expectedIndicators: 1, title: 'lijst zonder opmaak' },
-    // node-should-not-be-empty: 1 empty <dt> + 1 empty <dd>
+    // description-term-should-not-be-empty: 1 empty <dt>
+    // description-should-not-be-empty: 1 empty <dd>
     { id: 'editor-8', expectedIndicators: 2, title: 'lege Definition List' },
-    // node-should-not-be-empty: 3 empty <td> cells, each wraps a <p> = 6 empty nodes
-    { id: 'editor-9', expectedIndicators: 6, title: 'lege rij in een tabel' },
+    // table-cell-should-not-be-empty: 3 empty <td> cells
+    { id: 'editor-9', expectedIndicators: 3, title: 'lege rij in een tabel' },
     // image-must-have-alt-text: 1 <img> without alt
     { id: 'editor-10', expectedIndicators: 1, title: 'afbeelding zonder alt-tekst' },
     // paragraph-should-not-resemble-heading: 1 bold-only paragraph
     { id: 'editor-11', expectedIndicators: 1, title: 'koptekst zonder opmaak' },
-    // document-must-have-correct-heading-order: h1 → h3 (skipped h2)
+    // heading-level-must-not-skip: h1 → h3 (skipped h2)
     { id: 'editor-12', expectedIndicators: 1, title: 'kopniveau overslaan' },
     // table-must-have-headings: 1 table without <th> cells
     { id: 'editor-13', expectedIndicators: 1, title: 'tabel zonder kopcellen' },
     // table-must-have-multiple-rows: 1 single-row table
     { id: 'editor-14', expectedIndicators: 1, title: 'tabel met één rij' },
-    // document-must-have-single-heading-one: 2 h1s → 1 extra flagged
+    // heading-level-one-must-be-unique: 2 h1s → 1 extra flagged
     { id: 'editor-15', expectedIndicators: 1, title: 'meer dan 1 hoofdkop' },
-    // document-must-have-top-level-heading-one: no h1
-    { id: 'editor-16', expectedIndicators: 1, title: 'geen hoofdkop' },
-    // definition-description-must-follow-term: empty <dt> paired with a non-empty <dd>
+    // heading-must-start-at-level-one: the first heading is an h2
+    { id: 'editor-16', expectedIndicators: 1, title: 'niet beginnen met een hoofdkop' },
+    // description-term-must-have-description: empty <dt> paired with a non-empty <dd>
     { id: 'editor-17', expectedIndicators: 1, title: 'definitie zonder term' },
     // description-list-must-contain-term: <dl> where every <dt> is empty
     { id: 'editor-18', expectedIndicators: 1, title: 'definitielijst zonder term' },

@@ -1,7 +1,9 @@
+import { coreValidationRules } from '@nl-design-system-community/clippy-a11y-validator';
+import { violation } from '@test/violation';
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { page } from 'vitest/browser';
-import type { ValidationsMap } from '@/types/validation';
-import { blockValidations, inlineValidations, validationInteractionMode } from '@/constants';
+import type { ValidationSeverity, ViolationsMap } from '@/types/validation';
+import { validationInteractionMode } from '@/constants';
 import { CustomEvents, type OpenValidationGroupEvent } from '@/events';
 import { VALIDATION_HOVER_HIGHLIGHT_NAMES } from '@/utils/highlights';
 import type { Gutter } from './index';
@@ -32,7 +34,7 @@ const renderGutter = (markup: string) => {
   return { content, gutter };
 };
 
-const validate = async (gutter: Gutter, validations: ValidationsMap): Promise<void> => {
+const validate = async (gutter: Gutter, validations: ViolationsMap): Promise<void> => {
   gutter.validationsMap = validations;
   await gutter.updateComplete;
 };
@@ -50,6 +52,16 @@ const openedBy = async (name: string | RegExp): Promise<OpenValidationGroupEvent
 };
 
 const BOLD_PARAGRAPH_HEADING = 'De hele alinea is dikgedrukt.';
+const GENERIC_LINK_HEADING = 'De linktekst "lees meer" zegt niet waar de link naartoe gaat.';
+
+/** An entirely-bold paragraph violation, named after the copy the validator package ships. */
+const boldParagraph = (severity: ValidationSeverity = 'warning') =>
+  violation({
+    messages: { error: BOLD_PARAGRAPH_HEADING },
+    rule: coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD,
+    scope: 'block',
+    severity,
+  });
 
 describe('<clippy-validations-gutter>', () => {
   let rootClasses = '';
@@ -68,33 +80,17 @@ describe('<clippy-validations-gutter>', () => {
     CSS.highlights.clear();
   });
 
-  it('names the indicator after the validation, without the markdown license comment', async () => {
+  it('names the indicator after the message of the validation', async () => {
     const { content, gutter } = renderGutter('Deze hele alinea is dikgedrukt.');
-    await validate(
-      gutter,
-      new Map([
-        [
-          rangeOver(content),
-          { severity: 'warning', validatorKey: blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD },
-        ],
-      ]),
-    );
+    await validate(gutter, new Map([[rangeOver(content), boldParagraph()]]));
 
     await expect.element(page.getByRole('button', { name: BOLD_PARAGRAPH_HEADING })).toBeInTheDocument();
-
-    // The imported editor-error.md ships with a `<!-- @license -->` comment that
-    // is stripped before rendering, so it may reach neither the name nor the DOM.
-    expect(page.getByRole('button', { name: /@license/ }).query()).toBeNull();
-    expect(gutter.shadowRoot?.innerHTML).not.toContain('@license');
   });
 
   it('opens the validation it names, for the editor it belongs to', async () => {
     const { content, gutter } = renderGutter('Deze hele alinea is dikgedrukt.');
     const range = rangeOver(content);
-    await validate(
-      gutter,
-      new Map([[range, { severity: 'warning', validatorKey: blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD }]]),
-    );
+    await validate(gutter, new Map([[range, boldParagraph()]]));
 
     const detail = await openedBy(BOLD_PARAGRAPH_HEADING);
     expect(detail.identifier).toBe('clippy-editor-1');
@@ -108,16 +104,14 @@ describe('<clippy-validations-gutter>', () => {
       new Map([
         [
           rangeOver(content.querySelector('u')!),
-          { scope: 'inline', severity: 'info', validatorKey: inlineValidations.INLINE_SHOULD_NOT_BE_UNDERLINED },
+          violation({
+            messages: { error: 'Deze tekst is onderstreept. Dat lijkt te veel op een link.' },
+            rule: coreValidationRules.EMPHASIS_SHOULD_NOT_BE_UNDERLINED,
+            scope: 'inline',
+            severity: 'info',
+          }),
         ],
-        [
-          rangeOver(content),
-          {
-            scope: 'block',
-            severity: 'warning',
-            validatorKey: blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD,
-          },
-        ],
+        [rangeOver(content), boldParagraph()],
       ]),
     );
 
@@ -131,19 +125,7 @@ describe('<clippy-validations-gutter>', () => {
 
   it('names the button for a lone validation without a count', async () => {
     const { content, gutter } = renderGutter('Deze hele alinea is dikgedrukt.');
-    await validate(
-      gutter,
-      new Map([
-        [
-          rangeOver(content),
-          {
-            scope: 'block',
-            severity: 'error',
-            validatorKey: blockValidations.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD,
-          },
-        ],
-      ]),
-    );
+    await validate(gutter, new Map([[rangeOver(content), boldParagraph('error')]]));
 
     await expect.element(page.getByRole('button', { name: 'Open validation' })).toBeInTheDocument();
     expect(page.getByRole('button', { name: /validations on this line/ }).query()).toBeNull();
@@ -155,11 +137,19 @@ describe('<clippy-validations-gutter>', () => {
     await validate(
       gutter,
       new Map([
-        [range, { scope: 'inline', severity: 'info', validatorKey: inlineValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC }],
+        [
+          range,
+          violation({
+            messages: { error: GENERIC_LINK_HEADING },
+            rule: coreValidationRules.LINK_SHOULD_NOT_BE_TOO_GENERIC,
+            scope: 'inline',
+            severity: 'info',
+          }),
+        ],
       ]),
     );
 
-    const indicator = page.getByRole('button', { name: 'Link text should not be too generic' });
+    const indicator = page.getByRole('button', { name: GENERIC_LINK_HEADING });
     await indicator.hover();
     const hovered = CSS.highlights.get(VALIDATION_HOVER_HIGHLIGHT_NAMES.info);
     expect(hovered && [...hovered]).toEqual([range]);

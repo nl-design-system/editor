@@ -21,7 +21,7 @@ export const resolveMessages = (
 
   return {
     error: interpolate(localised.error, payload),
-    href: localised.href,
+    ...(localised.href === undefined ? {} : { href: localised.href }),
     ...(solution === undefined ? {} : { solution: interpolate(solution, payload) }),
   };
 };

@@ -1,4 +1,4 @@
-import type { ValidationResult, ValidationSeverity, ValidationsMap } from '@/types/validation';
+import type { Violation, ValidationSeverity, ViolationsMap } from '@/types/validation';
 import { validationSeverity } from '@/constants';
 
 export const validationSeverityOrder: ValidationSeverity[] = [
@@ -11,22 +11,22 @@ export const validationSeverityOrder: ValidationSeverity[] = [
  * Returns the highest-severity validation entry whose range intersects the
  * given DOM element/node, or `null` when there are no matches.
  *
- * @param validationsMap - The map of all current validation results.
+ * @param validationsMap - The map of all current violations.
  * @param element - The DOM element or node to look up.
  */
 export function getHighestSeverityEntryByElement(
-  validationsMap: ValidationsMap | undefined,
+  validationsMap: ViolationsMap | undefined,
   element: Element | Node | null,
-): [Range, ValidationResult] | null {
+): [Range, Violation] | null {
   if (!validationsMap?.size || !element) return null;
   const target = element instanceof Element ? element : element.parentElement;
   if (!target) return null;
   return (
     [...validationsMap.entries()]
-      .filter(([, result]) => {
-        if (!result.range) return false;
+      .filter(([, violation]) => {
+        if (!violation.range) return false;
         try {
-          return result.range.intersectsNode(target);
+          return violation.range.intersectsNode(target);
         } catch {
           return false;
         }

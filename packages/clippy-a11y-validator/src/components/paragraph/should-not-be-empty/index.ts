@@ -6,6 +6,7 @@ import { messages } from './messages.ts';
 
 export const paragraphShouldNotBeEmpty = defineValidation({
   condition: hasTextContent,
+  correct: (paragraph) => () => paragraph.remove(),
   messages,
   rule: paragraphValidationRules.PARAGRAPH_SHOULD_NOT_BE_EMPTY,
   scope: 'block',

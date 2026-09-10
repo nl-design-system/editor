@@ -113,11 +113,33 @@ describe('validate-html', () => {
     expect(fixed.stdout).toContain('<p>Let op: u betaalt bij de aanvraag zelf en niet bij het ophalen.</p>');
   });
 
-  it('reports the empty paragraphs unchanged, as they have no correction', async () => {
+  it('reports the empty paragraphs it removed while correcting', async () => {
     const { stdout } = await run(FIXTURE, '--fix');
 
     expect(stdout).toContain('info: PARAGRAPH_SHOULD_NOT_BE_EMPTY');
     expect(stdout).toContain('<p></p>');
+  });
+
+  it('leaves the heading levels of the fixture alone at the default top heading level', async () => {
+    const { stdout } = await run(FIXTURE);
+
+    expect(stdout).not.toContain('HEADING_MUST_NOT_BE_ABOVE_TOP_LEVEL');
+  });
+
+  it('flags headings above the requested top heading level', async () => {
+    const { stdout } = await run(FIXTURE, '--top-heading-level', '2');
+
+    expect(stdout).toContain(
+      'error: HEADING_MUST_NOT_BE_ABOVE_TOP_LEVEL — Kopniveau 1 ligt boven het hoogste kopniveau dat dit document mag gebruiken.',
+    );
+    expect(stdout).toContain('HEADING_MUST_START_AT_LEVEL_ONE');
+  });
+
+  it('refuses a --top-heading-level outside 1-6', async () => {
+    const { code, stderr } = await run(FIXTURE, '--top-heading-level', '7');
+
+    expect(stderr).toContain('--top-heading-level must be one of 1, 2, 3, 4, 5, 6.');
+    expect(code).toBe(2);
   });
 
   it('corrects in memory and leaves the file on disk untouched', async () => {
