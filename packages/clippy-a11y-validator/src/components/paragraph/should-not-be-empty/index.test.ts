@@ -46,7 +46,11 @@ describe('paragraphShouldNotBeEmpty', () => {
     expect(validate('<div></div>')).toHaveLength(0);
   });
 
-  it('offers no correction', () => {
-    expect(validate('<p></p>')[0]?.correct).toBeUndefined();
+  it('removes the empty paragraph when corrected', () => {
+    const [violation] = validate('<p>tekst</p><p></p>');
+    violation?.correct?.();
+
+    expect(root.innerHTML).toBe('<p>tekst</p>');
+    expect(validator.validate(root)).toHaveLength(0);
   });
 });

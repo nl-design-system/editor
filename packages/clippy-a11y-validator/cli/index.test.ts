@@ -113,7 +113,7 @@ describe('validate-html', () => {
     expect(fixed.stdout).toContain('<p>Let op: u betaalt bij de aanvraag zelf en niet bij het ophalen.</p>');
   });
 
-  it('reports the empty paragraphs unchanged, as they have no correction', async () => {
+  it('reports the empty paragraphs it removed while correcting', async () => {
     const { stdout } = await run(FIXTURE, '--fix');
 
     expect(stdout).toContain('info: PARAGRAPH_SHOULD_NOT_BE_EMPTY');
