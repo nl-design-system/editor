@@ -6,7 +6,7 @@ import {
 } from '@nl-design-system-community/editor/validators';
 
 // A validator can flag the same issue in several spots. Check which validation triggers the range and return the position.
-export function findOccurrenceIndex(validationsMap: ValidationsMap, range: Range, validatorKey: string): number {
+export function findOccurrenceIndex(validationsMap: ValidationsMap, range: Range, rule: string): number {
   // Ordered [range, result] list
   const entries = [...validationsMap.entries()];
 
@@ -20,19 +20,19 @@ export function findOccurrenceIndex(validationsMap: ValidationsMap, range: Range
   const entriesBeforeRange = entries.slice(0, rangeIndex);
 
   // Filter how many correctable results for the same validator precede this range.
-  return entriesBeforeRange.filter(([, result]) => result.validatorKey === validatorKey && result.correct).length;
+  return entriesBeforeRange.filter(([, result]) => result.rule === rule && result.correct).length;
 }
 
-// Locates the occurrenceIndex-nth correctable result for the given validatorKey, if any.
+// Locates the occurrenceIndex-nth correctable result for the given rule, if any.
 export function findMatchingCorrection(
   validationsMap: ValidationsMap,
-  validatorKey: string,
+  rule: string,
   occurrenceIndex: number,
 ): ValidationResult | undefined {
   return (
     [...validationsMap.values()]
       // filter on validator keys with a correct function
-      .filter((result) => result.validatorKey === validatorKey && result.correct)
+      .filter((result) => result.rule === rule && result.correct)
       // return the target validation while keeping typing intact (can't use [occurrenceIndex])
       .at(occurrenceIndex)
   );

@@ -4,10 +4,13 @@ import { findMatchingCorrection, findOccurrenceIndex, runValidations } from './c
 
 const range = (): Range => document.createRange();
 
-const result = (validatorKey: string, correct?: () => void): ValidationResult => ({
+const result = (rule: string, correct?: () => void): ValidationResult => ({
   correct,
+  element: document.createElement('p'),
+  messages: { error: 'Deze alinea is leeg.' },
+  rule,
+  scope: 'block',
   severity: 'error',
-  validatorKey,
 });
 
 describe('findOccurrenceIndex', () => {
@@ -37,7 +40,7 @@ describe('findOccurrenceIndex', () => {
     expect(findOccurrenceIndex(map, r2, 'key')).toBe(0);
   });
 
-  it('does not count results with a different validatorKey', () => {
+  it('does not count results with a different rule', () => {
     const r1 = range();
     const r2 = range();
     const map: ValidationsMap = new Map([
