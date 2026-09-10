@@ -6,10 +6,10 @@ export type LocaleOptions = {
   locale?: Locale;
 };
 
-export type ValidatorOptions = LocaleOptions & {
+export type ValidatorConstructorOptions = LocaleOptions & {
   validations?: readonly Validation[];
 };
 
-export type ValidateOptions = {
+export type ValidatorRunOptions = {
   severities?: readonly ValidationSeverity[];
 };
