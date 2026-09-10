@@ -1,7 +1,7 @@
 import type { Fragment } from './types/fragment.ts';
 import type { Locale } from './types/messages.ts';
 import type { Validation, Violation } from './types/validation.ts';
-import type { ValidateOptions, ValidatorOptions } from './types/validator.ts';
+import type { ValidatorConstructorOptions, ValidatorRunOptions } from './types/validator.ts';
 import { runValidations } from './run-validations.ts';
 
 export class Validator {
@@ -9,7 +9,7 @@ export class Validator {
   readonly #locale: Locale;
   readonly #fallbackLocale: Locale;
 
-  constructor({ fallbackLocale = 'nl', locale = 'nl', validations = [] }: ValidatorOptions = {}) {
+  constructor({ fallbackLocale = 'nl', locale = 'nl', validations = [] }: ValidatorConstructorOptions = {}) {
     this.#locale = locale;
     this.#fallbackLocale = fallbackLocale;
     validations.forEach((validation) => this.register(validation));
@@ -25,7 +25,7 @@ export class Validator {
     };
   }
 
-  validate(documentContent: readonly Fragment[], { severities }: ValidateOptions = {}): Violation[] {
+  validate(documentContent: readonly Fragment[], { severities }: ValidatorRunOptions = {}): Violation[] {
     return runValidations(documentContent, [...this.#validations.values()], {
       fallbackLocale: this.#fallbackLocale,
       locale: this.#locale,
