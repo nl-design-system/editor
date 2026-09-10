@@ -1,7 +1,7 @@
 import { coreValidationRules } from '@nl-design-system-community/clippy-a11y-validator';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { EditorSettings } from '@/types/settings';
-import type { ValidationsMap } from '@/types/validation';
+import type { ViolationsMap } from '@/types/validation';
 import { CustomEvents } from '@/events';
 import { activeValidations, runValidation } from './index';
 
@@ -13,16 +13,16 @@ const settings = (overrides: Partial<EditorSettings> = {}): EditorSettings => ({
 
 let dom: HTMLElement;
 
-const validate = (markup: string, editorSettings = settings()): ValidationsMap => {
+const validate = (markup: string, editorSettings = settings()): ViolationsMap => {
   dom.innerHTML = markup;
-  let result: ValidationsMap = new Map();
-  runValidation(dom, editorSettings, (resultMap) => {
-    result = resultMap;
+  let violations: ViolationsMap = new Map();
+  runValidation(dom, editorSettings, (reported) => {
+    violations = reported;
   });
-  return result;
+  return violations;
 };
 
-const rulesIn = (map: ValidationsMap): string[] => [...map.values()].map(({ rule }) => rule);
+const rulesIn = (map: ViolationsMap): string[] => [...map.values()].map(({ rule }) => rule);
 
 beforeEach(() => {
   document.documentElement.lang = 'nl';

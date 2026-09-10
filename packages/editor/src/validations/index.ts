@@ -2,10 +2,10 @@ import {
   coreValidations,
   Validator,
   type Validation,
-  type Violation,
+  type Violation as CoreViolation,
 } from '@nl-design-system-community/clippy-a11y-validator';
 import type { EditorSettings } from '@/types/settings';
-import type { ValidationResult, ValidationsMap } from '@/types/validation';
+import type { Violation, ViolationsMap } from '@/types/validation';
 import { getDocumentLang } from '@/localization';
 import { debounce } from '@/utils/debounce';
 import { getElementRange } from '@/utils/ranges';
@@ -42,10 +42,11 @@ export const activeValidations = ({ disableRules = [], enableRules }: EditorSett
 };
 
 /**
- * Turns a violation into the editor's result shape: the same data keyed by the DOM `Range` the
- * gutter, the highlights and the content views position themselves on.
+ * Adds what the editor needs on top of a reported violation: the DOM `Range` the gutter, the
+ * highlights and the content views position themselves on, and the correction for the rules the
+ * validator package leaves to the editor.
  */
-const toValidationResult = (violation: Violation): ValidationResult => {
+const toEditorViolation = (violation: CoreViolation): Violation => {
   const range = getElementRange(violation.element);
   const override = editorCorrections[violation.rule as keyof typeof editorCorrections];
 
@@ -60,16 +61,16 @@ const toValidationResult = (violation: Violation): ValidationResult => {
 };
 
 /**
- * Validates `dom` with the validator package and hands the results to `callback`.
+ * Validates `dom` with the validator package and hands the violations to `callback`.
  *
- * Results without a range are dropped: every consumer addresses a validation by its range.
+ * A violation without a range is dropped: every consumer addresses a violation by its range.
  */
 export const runValidation = (
   dom: HTMLElement,
   settings: EditorSettings,
-  callback: (resultMap: ValidationsMap) => void,
+  callback: (violations: ViolationsMap) => void,
 ): void => {
-  const resultMap: ValidationsMap = new Map();
+  const violations: ViolationsMap = new Map();
 
   try {
     const validator = new Validator({
@@ -78,15 +79,15 @@ export const runValidation = (
       validations: activeValidations(settings),
     });
 
-    for (const violation of validator.validate(dom)) {
-      const result = toValidationResult(violation);
-      if (result.range) resultMap.set(result.range, result);
+    for (const reported of validator.validate(dom)) {
+      const violation = toEditorViolation(reported);
+      if (violation.range) violations.set(violation.range, violation);
     }
   } catch (err) {
     console.error('Validation error:', err);
   }
 
-  callback(resultMap);
+  callback(violations);
 };
 
 export const debouncedValidate = debounce(runValidation, VALIDATION_TIMEOUT);

@@ -1,5 +1,5 @@
 import { isEmptyOrWhitespace } from '@nl-design-system-community/clippy-a11y-validator';
-import type { ValidationSeverity, ValidationsMap } from '@/types/validation';
+import type { ValidationSeverity, ViolationsMap } from '@/types/validation';
 import { validationSeverity } from '@/constants';
 
 export const VALIDATION_HIGHLIGHT_NAMES = {
@@ -144,17 +144,17 @@ const syncRegistry = (): void => {
   }
 };
 
-export const applyValidationHighlights = (owner: object, validationsMap: ValidationsMap | undefined): void => {
+export const applyValidationHighlights = (owner: object, validationsMap: ViolationsMap | undefined): void => {
   if (!isSupported()) return;
 
   const owned: OwnedRanges = { blank: new Map(), text: new Map() };
-  for (const [range, result] of validationsMap ?? []) {
-    if (result.scope !== 'inline') continue;
+  for (const [range, violation] of validationsMap ?? []) {
+    if (violation.scope !== 'inline') continue;
     ensureHighlightStyles(range);
     const bucket = isBlankRange(range) ? owned.blank : owned.text;
-    const ranges = bucket.get(result.severity) ?? [];
+    const ranges = bucket.get(violation.severity) ?? [];
     ranges.push(range);
-    bucket.set(result.severity, ranges);
+    bucket.set(violation.severity, ranges);
   }
 
   if (owned.blank.size === 0 && owned.text.size === 0) {

@@ -7,7 +7,7 @@ import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import '@/components/validations/validation-item';
 import type { ValidationItem } from '@/components/validations/validation-item';
-import type { ValidationsMap, ValidationSeverity } from '@/types/validation';
+import type { ViolationsMap, ValidationSeverity } from '@/types/validation';
 import { validationsContext } from '@/context/validationsContext';
 import { CustomEvents, type FocusValidationItemInListEvent } from '@/events';
 import listStyles from './styles';
@@ -42,7 +42,7 @@ export class ValidationsList extends LitElement {
   /** @internal Consumed from the nearest {@link validationsContext} provider. */
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsContext?: ValidationsMap;
+  validationsContext?: ViolationsMap;
 
   /** Optional severity filter. When set, only items of this severity are rendered. */
   @property({ type: String }) severity: ValidationSeverity | null = null;

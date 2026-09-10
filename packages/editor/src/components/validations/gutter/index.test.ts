@@ -1,8 +1,8 @@
 import { coreValidationRules } from '@nl-design-system-community/clippy-a11y-validator';
-import { validationResult } from '@test/validationResult';
+import { violation } from '@test/violation';
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { page } from 'vitest/browser';
-import type { ValidationSeverity, ValidationsMap } from '@/types/validation';
+import type { ValidationSeverity, ViolationsMap } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
 import { CustomEvents, type OpenValidationGroupEvent } from '@/events';
 import { VALIDATION_HOVER_HIGHLIGHT_NAMES } from '@/utils/highlights';
@@ -34,7 +34,7 @@ const renderGutter = (markup: string) => {
   return { content, gutter };
 };
 
-const validate = async (gutter: Gutter, validations: ValidationsMap): Promise<void> => {
+const validate = async (gutter: Gutter, validations: ViolationsMap): Promise<void> => {
   gutter.validationsMap = validations;
   await gutter.updateComplete;
 };
@@ -56,7 +56,7 @@ const GENERIC_LINK_HEADING = 'De linktekst "lees meer" zegt niet waar de link na
 
 /** An entirely-bold paragraph violation, named after the copy the validator package ships. */
 const boldParagraph = (severity: ValidationSeverity = 'warning') =>
-  validationResult({
+  violation({
     messages: { error: BOLD_PARAGRAPH_HEADING },
     rule: coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD,
     scope: 'block',
@@ -104,7 +104,7 @@ describe('<clippy-validations-gutter>', () => {
       new Map([
         [
           rangeOver(content.querySelector('u')!),
-          validationResult({
+          violation({
             messages: { error: 'Deze tekst is onderstreept. Dat lijkt te veel op een link.' },
             rule: coreValidationRules.EMPHASIS_SHOULD_NOT_BE_UNDERLINED,
             scope: 'inline',
@@ -139,7 +139,7 @@ describe('<clippy-validations-gutter>', () => {
       new Map([
         [
           range,
-          validationResult({
+          violation({
             messages: { error: GENERIC_LINK_HEADING },
             rule: coreValidationRules.LINK_SHOULD_NOT_BE_TOO_GENERIC,
             scope: 'inline',

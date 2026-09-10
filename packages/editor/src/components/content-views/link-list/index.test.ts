@@ -1,8 +1,8 @@
-import { validationResult } from '@test/validationResult';
+import { violation } from '@test/violation';
 import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import type { Context } from '@/components/context';
-import type { ValidationsMap } from '@/types/validation';
+import type { ViolationsMap } from '@/types/validation';
 import type { LinkList } from './index';
 import '@/components/context';
 import '@/components/content';
@@ -160,8 +160,8 @@ describe('<clippy-link-list>', () => {
       const linkRange = document.createRange();
       linkRange.selectNode(linkEl);
 
-      const validationsMap: ValidationsMap = new Map([
-        [linkRange, validationResult({ range: linkRange, severity: 'warning' })],
+      const validationsMap: ViolationsMap = new Map([
+        [linkRange, violation({ range: linkRange, severity: 'warning' })],
       ]);
 
       contextEl.updateValidationsContext(validationsMap);
@@ -187,9 +187,9 @@ describe('<clippy-link-list>', () => {
       linkRange2.selectNode(linkEl);
 
       // Two entries for the same element: error takes precedence over warning.
-      const validationsMap: ValidationsMap = new Map([
-        [linkRange1, validationResult({ range: linkRange1, severity: 'warning' })],
-        [linkRange2, validationResult({ range: linkRange2, severity: 'error' })],
+      const validationsMap: ViolationsMap = new Map([
+        [linkRange1, violation({ range: linkRange1, severity: 'warning' })],
+        [linkRange2, violation({ range: linkRange2, severity: 'error' })],
       ]);
 
       contextEl.updateValidationsContext(validationsMap);

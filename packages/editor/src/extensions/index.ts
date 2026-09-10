@@ -24,7 +24,7 @@ import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
 import { Dropcursor, UndoRedo, Placeholder } from '@tiptap/extensions';
 import type { EditorSettings } from '@/types/settings';
-import type { ValidationResult } from '@/types/validation';
+import type { Violation } from '@/types/validation';
 import { HEADING_LEVELS, contentClasses, headingClasses } from '@/constants';
 import { CustomFileHandler } from '@/extensions/CustomFileHandler';
 import { DefinitionList } from '@/extensions/DefinitionList';
@@ -39,7 +39,7 @@ const globalAttributes = {
 
 export const editorExtensions = (
   settings: EditorSettings,
-  callback: (resultMap: Map<Range, ValidationResult>) => void,
+  callback: (violations: Map<Range, Violation>) => void,
   identifier?: string,
 ) => [
   Document,
