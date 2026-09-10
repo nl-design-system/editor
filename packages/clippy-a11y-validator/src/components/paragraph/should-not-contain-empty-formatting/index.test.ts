@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { initializeRuleTest } from '../../../test-helpers/initialize-rule-test.ts';
 import { paragraphShouldNotContainEmptyFormatting } from './index.ts';
 
-const { root, validate, validator } = initializeRuleTest([paragraphShouldNotContainEmptyFormatting]);
+const { fragment, validate, validator } = initializeRuleTest([paragraphShouldNotContainEmptyFormatting]);
 
 describe('paragraphShouldNotContainEmptyFormatting', () => {
   it('flags an empty bold element', () => {
@@ -50,7 +50,7 @@ describe('paragraphShouldNotContainEmptyFormatting', () => {
     const [violation] = validate('<p>Zie <strong></strong>hier</p>');
     violation?.correct?.();
 
-    expect(root.querySelector('p')?.innerHTML).toBe('Zie hier');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(fragment.querySelector('p')?.innerHTML).toBe('Zie hier');
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 });

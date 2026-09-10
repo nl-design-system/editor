@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { initializeRuleTest } from '../../../test-helpers/initialize-rule-test.ts';
 import { paragraphShouldNotContainUnderlinedText } from './index.ts';
 
-const { root, validate, validator } = initializeRuleTest([paragraphShouldNotContainUnderlinedText]);
+const { fragment, validate, validator } = initializeRuleTest([paragraphShouldNotContainUnderlinedText]);
 
 describe('paragraphShouldNotContainUnderlinedText', () => {
   it('flags underlined text', () => {
@@ -39,7 +39,7 @@ describe('paragraphShouldNotContainUnderlinedText', () => {
     const [violation] = validate('<p>Zie <u>onderstreept</u> hier</p>');
     violation?.correct?.();
 
-    expect(root.querySelector('p')?.innerHTML).toBe('Zie onderstreept hier');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(fragment.querySelector('p')?.innerHTML).toBe('Zie onderstreept hier');
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 });
