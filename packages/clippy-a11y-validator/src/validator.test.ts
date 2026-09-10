@@ -88,10 +88,24 @@ describe('Validator', () => {
     ]);
   });
 
-  it('falls back to the default locale when the requested locale has no messages', () => {
+  it('resolves the messages of the requested locale', () => {
     const validator = new Validator({ locale: 'en', validations: [coreValidations[PARAGRAPH_SHOULD_NOT_BE_EMPTY]] });
 
-    expect(validator.validate(root)[0]?.messages.error).toBe('Deze alinea is leeg.');
+    expect(validator.validate(root)[0]?.messages.error).toBe('This paragraph is empty.');
+  });
+
+  it('falls back to the default locale when the requested locale has no messages', () => {
+    const dutchOnly: Validation = {
+      condition: () => false,
+      messages: { nl: { error: 'Alleen Nederlands.' } },
+      rule: 'DUTCH_ONLY',
+      scope: 'block',
+      selector: 'p:first-child',
+      severity: 'info',
+    };
+    const validator = new Validator({ locale: 'en', validations: [dutchOnly] });
+
+    expect(validator.validate(root)[0]?.messages.error).toBe('Alleen Nederlands.');
   });
 
   it('hands the validated root to the condition', () => {
