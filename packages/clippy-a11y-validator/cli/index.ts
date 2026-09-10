@@ -1,8 +1,8 @@
+import type { Page } from 'playwright';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
-import { chromium, type Page } from 'playwright';
 
 const MANIFEST = join(import.meta.dirname, '..', 'package.json');
 
@@ -63,8 +63,27 @@ function fail(message: string): never {
   process.exit(EXIT_CODE.error);
 }
 
+/**
+ * playwright is an optional peer: the library itself never needs a browser, only this CLI does.
+ * Import it where it is used so installing the package stays cheap, and name what to install when
+ * it turns out not to be there.
+ */
+async function launchBrowser() {
+  try {
+    const { chromium } = await import('playwright');
+    return await chromium.launch();
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ERR_MODULE_NOT_FOUND') throw error;
+
+    return fail(
+      `${PACKAGE_NAME} needs playwright to validate a document, and it is not installed.\n\n` +
+        'Install it alongside this package:\n  npm install --save-dev playwright\n  npx playwright install chromium',
+    );
+  }
+}
+
 async function collectViolations(files: readonly string[], source: string, fix: boolean, skip: readonly string[]) {
-  const browser = await chromium.launch();
+  const browser = await launchBrowser();
 
   try {
     const page = await browser.newPage();
