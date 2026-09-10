@@ -6,17 +6,17 @@ import { expectedHeadingLevel, headingLevel, precedingHeading } from '../utils.t
 import { messages } from './messages.ts';
 
 export const headingLevelMustNotSkip = defineValidation({
-  condition: (heading, root) => {
-    const preceding = precedingHeading(heading, root);
+  condition: (heading, context) => {
+    const preceding = precedingHeading(context);
 
     return preceding === null || headingLevel(heading) <= headingLevel(preceding) + 1;
   },
-  correct: (heading, root) => () => changeTagName(heading, `h${expectedHeadingLevel(heading, root)}`),
+  correct: (heading, context) => () => changeTagName(heading, `h${expectedHeadingLevel(context)}`),
   messages,
-  payload: (heading, root) => ({
-    expectedHeadingLevel: expectedHeadingLevel(heading, root),
+  payload: (heading, context) => ({
+    expectedHeadingLevel: expectedHeadingLevel(context),
     headingLevel: headingLevel(heading),
-    precedingHeadingLevel: headingLevel(precedingHeading(heading, root) ?? heading),
+    precedingHeadingLevel: headingLevel(precedingHeading(context) ?? heading),
   }),
   rule: headingValidationRules.HEADING_LEVEL_MUST_NOT_SKIP,
   scope: 'page',

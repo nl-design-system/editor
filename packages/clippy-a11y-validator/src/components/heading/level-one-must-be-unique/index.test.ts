@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { initializeRuleTest } from '../../../test-helpers/initialize-rule-test.ts';
 import { headingLevelOneMustBeUnique } from './index.ts';
 
-const { root, validate, validator } = initializeRuleTest([headingLevelOneMustBeUnique]);
+const { fragment, validate, validator } = initializeRuleTest([headingLevelOneMustBeUnique]);
 
 describe('headingLevelOneMustBeUnique', () => {
   it('flags a second level 1 heading', () => {
@@ -39,20 +39,20 @@ describe('headingLevelOneMustBeUnique', () => {
     expect(validate('<h1>Titel</h1><section><h1>Nog een titel</h1></section>')).toHaveLength(1);
   });
 
-  it('ignores a level 1 outside the validated root', () => {
+  it('ignores a level 1 outside the validated fragment', () => {
     const outside = document.createElement('h1');
     outside.textContent = 'Paginatitel';
-    document.body.replaceChildren(outside, root);
-    root.innerHTML = '<h1>Titel</h1>';
+    document.body.replaceChildren(outside, fragment);
+    fragment.innerHTML = '<h1>Titel</h1>';
 
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 
   it('retags the duplicate to a level 2 when corrected', () => {
     const [violation] = validate('<h1>Eerste</h1><h1 id="tweede">Tweede</h1>');
     violation?.correct?.();
 
-    expect(root.innerHTML).toBe('<h1>Eerste</h1><h2 id="tweede">Tweede</h2>');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(fragment.innerHTML).toBe('<h1>Eerste</h1><h2 id="tweede">Tweede</h2>');
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 });

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { initializeRuleTest } from '../../../test-helpers/initialize-rule-test.ts';
 import { paragraphShouldNotResembleList } from './index.ts';
 
-const { root, validate, validator } = initializeRuleTest([paragraphShouldNotResembleList]);
+const { fragment, validate, validator } = initializeRuleTest([paragraphShouldNotResembleList]);
 
 describe('paragraphShouldNotResembleList', () => {
   it('flags a paragraph of line-broken bullets', () => {
@@ -10,7 +10,7 @@ describe('paragraphShouldNotResembleList', () => {
 
     expect(violation?.rule).toBe('PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('element');
+    expect(violation?.scope).toBe('page');
     expect(violation?.messages.error).toContain('"-"');
     expect(violation?.messages.solution).toBe('Gebruik een echte opsomming in plaats van regels die met "-" beginnen.');
   });
@@ -65,23 +65,27 @@ describe('paragraphShouldNotResembleList', () => {
     const [violation] = validate(`<h1>Titel</h1>${paragraphs}`);
     violation?.correct?.();
 
-    expect(root.querySelectorAll(`${tag} > li`)).toHaveLength(3);
-    expect([...root.querySelectorAll(`${tag} > li`)].map((item) => item.textContent)).toEqual(['Test', 'Test', 'Test']);
-    expect(root.querySelectorAll('p')).toHaveLength(0);
+    expect(fragment.querySelectorAll(`${tag} > li`)).toHaveLength(3);
+    expect([...fragment.querySelectorAll(`${tag} > li`)].map((item) => item.textContent)).toEqual([
+      'Test',
+      'Test',
+      'Test',
+    ]);
+    expect(fragment.querySelectorAll('p')).toHaveLength(0);
   });
 
   it('leaves the paragraph valid once corrected', () => {
     const [violation] = validate('<p>- een<br>- twee</p>');
     violation?.correct?.();
 
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 
   it('keeps surrounding content intact when corrected', () => {
     const [violation] = validate('<h1>Titel</h1><p>- een<br>- twee</p><p>Slot.</p>');
     violation?.correct?.();
 
-    expect(root.querySelector('h1')?.textContent).toBe('Titel');
-    expect(root.querySelector('p')?.textContent).toBe('Slot.');
+    expect(fragment.querySelector('h1')?.textContent).toBe('Titel');
+    expect(fragment.querySelector('p')?.textContent).toBe('Slot.');
   });
 });

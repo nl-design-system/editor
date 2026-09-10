@@ -28,17 +28,6 @@ export const changeTagName = (element: Element, tagName: string): void => {
   element.replaceWith(replacement);
 };
 
-export const precedingMatch = (element: Element, root: ParentNode, selector: string): HTMLElement | null => {
-  const preceding = [...root.querySelectorAll<HTMLElement>(selector)].filter(
-    (candidate) =>
-      candidate !== element &&
-      !candidate.contains(element) &&
-      (element.compareDocumentPosition(candidate) & Node.DOCUMENT_POSITION_PRECEDING) !== 0,
-  );
-
-  return preceding.at(-1) ?? null;
-};
-
 /**
  * Descendants matching `selector` that belong to `element` itself rather than to a nested `container`,
  * so a rule about a list does not trip over the contents of a list inside it.

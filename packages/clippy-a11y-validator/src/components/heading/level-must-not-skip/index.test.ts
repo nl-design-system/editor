@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { initializeRuleTest } from '../../../test-helpers/initialize-rule-test.ts';
 import { headingLevelMustNotSkip } from './index.ts';
 
-const { root, validate, validator } = initializeRuleTest([headingLevelMustNotSkip]);
+const { fragment, validate, validator } = initializeRuleTest([headingLevelMustNotSkip]);
 
 describe('headingLevelMustNotSkip', () => {
   it('flags a heading that skips a level', () => {
@@ -47,21 +47,21 @@ describe('headingLevelMustNotSkip', () => {
     expect(validate('<h1>Een</h1><h3>Twee</h3><h5>Drie</h5>')).toHaveLength(2);
   });
 
-  it('ignores headings outside the validated root', () => {
+  it('ignores headings outside the validated fragment', () => {
     const outside = document.createElement('h1');
     outside.textContent = 'Paginatitel';
-    document.body.replaceChildren(outside, root);
-    root.innerHTML = '<h4>Kop</h4>';
+    document.body.replaceChildren(outside, fragment);
+    fragment.innerHTML = '<h4>Kop</h4>';
 
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 
   it('retags the heading to the expected level when corrected', () => {
     const [violation] = validate('<h1>Titel</h1><h4 id="kop">Kop</h4>');
     violation?.correct?.();
 
-    expect(root.innerHTML).toBe('<h1>Titel</h1><h2 id="kop">Kop</h2>');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(fragment.innerHTML).toBe('<h1>Titel</h1><h2 id="kop">Kop</h2>');
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 
   it('does not propose a level beyond 6', () => {

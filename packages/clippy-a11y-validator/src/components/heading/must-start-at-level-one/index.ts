@@ -11,7 +11,7 @@ import { messages } from './messages.ts';
  * A document without any headings at all is therefore not reported.
  */
 export const headingMustStartAtLevelOne = defineValidation({
-  condition: (heading, root) => precedingHeading(heading, root) !== null || heading.tagName === 'H1',
+  condition: (heading, context) => precedingHeading(context) !== null || heading.tagName === 'H1',
   correct: (heading) => () => changeTagName(heading, 'h1'),
   messages,
   payload: (heading) => ({ headingLevel: headingLevel(heading) }),

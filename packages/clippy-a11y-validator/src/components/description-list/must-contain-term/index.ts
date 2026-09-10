@@ -6,14 +6,14 @@ import { ownTerms } from '../utils.ts';
 import { messages } from './messages.ts';
 
 export const descriptionListMustContainTerm = defineValidation({
-  condition: (list, root) => {
+  condition: (list) => {
     const terms = ownTerms(list);
 
-    return terms.length === 0 || terms.some((term) => hasTextContent(term, root));
+    return terms.length === 0 || terms.some((term) => hasTextContent(term));
   },
   // Marks the term as still to be written, rather than inventing copy for it.
-  correct: (list, root) => () => {
-    const empty = ownTerms(list).find((term) => !hasTextContent(term, root));
+  correct: (list) => () => {
+    const empty = ownTerms(list).find((term) => !hasTextContent(term));
     if (empty) empty.textContent = '...';
   },
   messages,

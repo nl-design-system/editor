@@ -6,7 +6,7 @@ import { paragraphShouldNotBeEntirelyBold } from './index.ts';
 
 const LONG = 'Deze alinea is volledig dikgedrukt en veel te lang om nog als een kop te kunnen doorgaan.';
 
-const { root, validate, validator } = initializeRuleTest([paragraphShouldNotBeEntirelyBold]);
+const { fragment, validate, validator } = initializeRuleTest([paragraphShouldNotBeEntirelyBold]);
 
 describe('paragraphShouldNotBeEntirelyBold', () => {
   it('flags a long paragraph that is entirely bold', () => {
@@ -39,8 +39,8 @@ describe('paragraphShouldNotBeEntirelyBold', () => {
     const [violation] = validate(`<p><strong>${LONG}</strong> <b>${LONG}</b></p>`);
     violation?.correct?.();
 
-    expect(root.querySelector('p')?.innerHTML).toBe(`${LONG} ${LONG}`);
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(fragment.querySelector('p')?.innerHTML).toBe(`${LONG} ${LONG}`);
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 
   describe('leaves the heading-like paragraphs to paragraphShouldNotResembleHeading', () => {
@@ -60,9 +60,9 @@ describe('paragraphShouldNotBeEntirelyBold', () => {
       const both = new Validator({
         validations: [paragraphShouldNotBeEntirelyBold, paragraphShouldNotResembleHeading],
       });
-      root.innerHTML = `<p><strong>Wat neemt u mee?</strong></p><p><strong>${LONG}</strong></p>`;
+      fragment.innerHTML = `<p><strong>Wat neemt u mee?</strong></p><p><strong>${LONG}</strong></p>`;
 
-      expect(both.validate(root).map((violation) => violation.rule)).toEqual([
+      expect(both.validate([fragment]).map((violation) => violation.rule)).toEqual([
         'PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING',
         'PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD',
       ]);

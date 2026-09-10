@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { initializeRuleTest } from '../../../test-helpers/initialize-rule-test.ts';
 import { paragraphShouldNotResembleHeading } from './index.ts';
 
-const { root, validate, validator } = initializeRuleTest([paragraphShouldNotResembleHeading]);
+const { fragment, validate, validator } = initializeRuleTest([paragraphShouldNotResembleHeading]);
 
 describe('paragraphShouldNotResembleHeading', () => {
   it('flags a short, entirely bold paragraph', () => {
@@ -10,7 +10,7 @@ describe('paragraphShouldNotResembleHeading', () => {
 
     expect(violation?.rule).toBe('PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('element');
+    expect(violation?.scope).toBe('page');
     expect(violation?.messages.error).toBe('Deze korte, volledig dikgedrukte alinea lijkt op een kop.');
     expect(violation?.messages.solution).toContain('Gebruik een echte kop');
   });
@@ -57,28 +57,28 @@ describe('paragraphShouldNotResembleHeading', () => {
     const [violation] = validate('<h2>Kosten</h2><p><strong>Wat neemt u mee?</strong></p>');
     violation?.correct?.();
 
-    expect(root.innerHTML).toBe('<h2>Kosten</h2><h3>Wat neemt u mee?</h3>');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(fragment.innerHTML).toBe('<h2>Kosten</h2><h3>Wat neemt u mee?</h3>');
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 
   it('converts to a level 1 when no heading precedes it', () => {
     const [violation] = validate('<p><strong>Paspoort aanvragen</strong></p>');
     violation?.correct?.();
 
-    expect(root.innerHTML).toBe('<h1>Paspoort aanvragen</h1>');
+    expect(fragment.innerHTML).toBe('<h1>Paspoort aanvragen</h1>');
   });
 
   it('does not propose a level beyond 6', () => {
     const [violation] = validate('<h6>Diep</h6><p><strong>Nog dieper</strong></p>');
     violation?.correct?.();
 
-    expect(root.innerHTML).toBe('<h6>Diep</h6><h6>Nog dieper</h6>');
+    expect(fragment.innerHTML).toBe('<h6>Diep</h6><h6>Nog dieper</h6>');
   });
 
   it('drops the bold formatting from the resulting heading', () => {
     const [violation] = validate('<p><strong>Wat neemt u mee?</strong></p>');
     violation?.correct?.();
 
-    expect(root.querySelector('strong')).toBeNull();
+    expect(fragment.querySelector('strong')).toBeNull();
   });
 });

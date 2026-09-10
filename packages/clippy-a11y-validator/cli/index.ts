@@ -101,7 +101,7 @@ function validatePage(page: Page, source: string, fix: boolean, skip: readonly s
       URL.revokeObjectURL(moduleUrl);
 
       const validator = new Validator({ validations: Object.values(coreValidations) });
-      const violations = validator.validate(document.body);
+      const violations = validator.validate([document.body]);
 
       if (fix) violations.forEach(({ correct }) => correct?.());
 

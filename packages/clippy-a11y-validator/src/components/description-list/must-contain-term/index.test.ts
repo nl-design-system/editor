@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { initializeRuleTest } from '../../../test-helpers/initialize-rule-test.ts';
 import { descriptionListMustContainTerm } from './index.ts';
 
-const { root, validate, validator } = initializeRuleTest([descriptionListMustContainTerm]);
+const { fragment, validate, validator } = initializeRuleTest([descriptionListMustContainTerm]);
 
 describe('descriptionListMustContainTerm', () => {
   it('flags a list whose only term is empty', () => {
@@ -48,7 +48,7 @@ describe('descriptionListMustContainTerm', () => {
     const [violation] = validate('<dl><dt></dt><dd>beschrijving</dd></dl>');
     violation?.correct?.();
 
-    expect(root.querySelector('dt')?.textContent).toBe('...');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(fragment.querySelector('dt')?.textContent).toBe('...');
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 });

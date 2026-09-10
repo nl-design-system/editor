@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { initializeRuleTest } from '../../../test-helpers/initialize-rule-test.ts';
 import { linkShouldNotBeEmpty } from './index.ts';
 
-const { root, validate, validator } = initializeRuleTest([linkShouldNotBeEmpty]);
+const { fragment, validate, validator } = initializeRuleTest([linkShouldNotBeEmpty]);
 
 describe('linkShouldNotBeEmpty', () => {
   it('flags a link without link text', () => {
@@ -52,7 +52,7 @@ describe('linkShouldNotBeEmpty', () => {
     const [violation] = validate('<p>Zie <a href="/paspoort"></a>hier</p>');
     violation?.correct?.();
 
-    expect(root.querySelector('p')?.innerHTML).toBe('Zie hier');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(fragment.querySelector('p')?.innerHTML).toBe('Zie hier');
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 });

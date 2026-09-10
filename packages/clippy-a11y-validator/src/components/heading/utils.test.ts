@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { PageContext } from '../../page-context.ts';
 import { render } from '../../test-helpers/render.ts';
 import { containsEmphasis, expectedHeadingLevel, hasHeadingLength, headingLevel, precedingHeading } from './utils.ts';
+
+/** The context a page validation would receive for the element `selector` matches inside `fragment`. */
+const contextFor = (fragment: Element, selector: string) =>
+  new PageContext([fragment]).for(fragment.querySelector<HTMLElement>(selector)!);
 
 describe('hasHeadingLength', () => {
   it('is true up to the maximum heading length', () => {
@@ -25,19 +30,19 @@ describe('headingLevel', () => {
 });
 
 describe('precedingHeading', () => {
-  let root: HTMLElement;
+  let fragment: HTMLElement;
 
   beforeEach(() => {
-    root = document.createElement('div');
-    document.body.replaceChildren(root);
+    fragment = document.createElement('div');
+    document.body.replaceChildren(fragment);
   });
 
   const headingBefore = (html: string, selector: string): string | null => {
-    root.innerHTML = html;
-    return precedingHeading(root.querySelector(selector)!, root)?.tagName ?? null;
+    fragment.innerHTML = html;
+    return precedingHeading(contextFor(fragment, selector))?.tagName ?? null;
   };
 
-  it('returns null for the first heading in the root', () => {
+  it('returns null for the first heading in the fragment', () => {
     expect(headingBefore('<h1>Titel</h1><h2>Kop</h2>', 'h1')).toBeNull();
   });
 
@@ -62,44 +67,44 @@ describe('precedingHeading', () => {
   });
 
   it('works for elements that are not headings themselves', () => {
-    root.innerHTML = '<h2>Kop</h2><p>tekst</p>';
-    expect(precedingHeading(root.querySelector('p')!, root)?.tagName).toBe('H2');
+    fragment.innerHTML = '<h2>Kop</h2><p>tekst</p>';
+    expect(precedingHeading(contextFor(fragment, 'p'))?.tagName).toBe('H2');
   });
 
-  it('stays inside the root and ignores headings elsewhere on the page', () => {
+  it('stays inside the fragment and ignores headings elsewhere on the page', () => {
     const outside = document.createElement('h1');
     outside.textContent = 'Paginatitel';
-    document.body.replaceChildren(outside, root);
-    root.innerHTML = '<h2>Kop</h2>';
+    document.body.replaceChildren(outside, fragment);
+    fragment.innerHTML = '<h2>Kop</h2>';
 
-    expect(precedingHeading(root.querySelector('h2')!, root)).toBeNull();
+    expect(precedingHeading(contextFor(fragment, 'h2'))).toBeNull();
   });
 
   it('works on a detached tree', () => {
     const detached = document.createElement('div');
     detached.innerHTML = '<h1>Titel</h1><h2>Kop</h2>';
 
-    expect(precedingHeading(detached.querySelector('h2')!, detached)?.tagName).toBe('H1');
+    expect(precedingHeading(contextFor(detached, 'h2'))?.tagName).toBe('H1');
   });
 
   it('does not treat an ancestor as preceding', () => {
-    root.innerHTML = '<h1>Titel<span>deel</span></h1>';
+    fragment.innerHTML = '<h1>Titel<span>deel</span></h1>';
 
-    expect(precedingHeading(root.querySelector('span')!, root)).toBeNull();
+    expect(precedingHeading(contextFor(fragment, 'span'))).toBeNull();
   });
 });
 
 describe('expectedHeadingLevel', () => {
-  let root: HTMLElement;
+  let fragment: HTMLElement;
 
   beforeEach(() => {
-    root = document.createElement('div');
-    document.body.replaceChildren(root);
+    fragment = document.createElement('div');
+    document.body.replaceChildren(fragment);
   });
 
   const levelFor = (html: string, selector: string): number => {
-    root.innerHTML = html;
-    return expectedHeadingLevel(root.querySelector(selector)!, root);
+    fragment.innerHTML = html;
+    return expectedHeadingLevel(contextFor(fragment, selector));
   };
 
   it('is level one without a preceding heading', () => {
@@ -118,7 +123,7 @@ describe('expectedHeadingLevel', () => {
 /** Renders `html` and runs the condition under test against the rendered element. */
 const containsEmphasisFor = (html: string): boolean => {
   const element = render(html);
-  return containsEmphasis(element, element.parentElement!);
+  return containsEmphasis(element);
 };
 
 describe('containsEmphasis', () => {
