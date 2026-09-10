@@ -1,3 +1,4 @@
+import { validationResult } from '@test/validationResult';
 import { afterEach, describe, expect, it } from 'vitest';
 import type { ValidationsMap } from '@/types/validation';
 import {
@@ -38,7 +39,7 @@ describe('applyValidationHighlights', () => {
     const container = setupContent();
     const owner = {};
     const infoRange = rangeOf(container.querySelector('p')!);
-    const map: ValidationsMap = new Map([[infoRange, { scope: 'inline', severity: 'info' }]]);
+    const map: ValidationsMap = new Map([[infoRange, validationResult({ scope: 'inline', severity: 'info' })]]);
 
     applyValidationHighlights(owner, map);
 
@@ -52,7 +53,7 @@ describe('applyValidationHighlights', () => {
     const container = setupContent();
     const owner = {};
     const map: ValidationsMap = new Map([
-      [rangeOf(container.querySelector('p')!), { scope: 'block', severity: 'error' }],
+      [rangeOf(container.querySelector('p')!), validationResult({ scope: 'block', severity: 'error' })],
     ]);
 
     applyValidationHighlights(owner, map);
@@ -66,7 +67,7 @@ describe('applyValidationHighlights', () => {
     const container = setupContent();
     const owner = {};
     const map: ValidationsMap = new Map([
-      [rangeOf(container.querySelector('p')!), { scope: 'inline', severity: 'error' }],
+      [rangeOf(container.querySelector('p')!), validationResult({ scope: 'inline', severity: 'error' })],
     ]);
 
     applyValidationHighlights(owner, map);
@@ -84,7 +85,7 @@ describe('applyValidationHighlights', () => {
     const owner = {};
     applyValidationHighlights(
       owner,
-      new Map([[rangeOf(container.querySelector('p')!), { scope: 'inline', severity: 'error' }]]),
+      new Map([[rangeOf(container.querySelector('p')!), validationResult({ scope: 'inline', severity: 'error' })]]),
     );
 
     const rules = document.adoptedStyleSheets
@@ -113,7 +114,10 @@ describe('applyValidationHighlights', () => {
     const owner = {};
     const blankRange = rangeOf(paragraph.querySelector('em')!);
 
-    applyValidationHighlights(owner, new Map([[blankRange, { scope: 'inline', severity: 'warning' }]]));
+    applyValidationHighlights(
+      owner,
+      new Map([[blankRange, validationResult({ scope: 'inline', severity: 'warning' })]]),
+    );
 
     expect(registeredRanges(VALIDATION_BLANK_HIGHLIGHT_NAMES.warning)).toEqual([blankRange]);
     expect(CSS.highlights.has(VALIDATION_HIGHLIGHT_NAMES.warning)).toBe(false);
@@ -136,8 +140,8 @@ describe('applyValidationHighlights', () => {
     applyValidationHighlights(
       owner,
       new Map([
-        [blankRange, { scope: 'inline', severity: 'warning' }],
-        [textRange, { scope: 'inline', severity: 'warning' }],
+        [blankRange, validationResult({ scope: 'inline', severity: 'warning' })],
+        [textRange, validationResult({ scope: 'inline', severity: 'warning' })],
       ]),
     );
 
@@ -159,8 +163,8 @@ describe('applyValidationHighlights', () => {
     const rangeA = rangeOf(first);
     const rangeB = rangeOf(second);
 
-    applyValidationHighlights(ownerA, new Map([[rangeA, { scope: 'inline', severity: 'info' }]]));
-    applyValidationHighlights(ownerB, new Map([[rangeB, { scope: 'inline', severity: 'info' }]]));
+    applyValidationHighlights(ownerA, new Map([[rangeA, validationResult({ scope: 'inline', severity: 'info' })]]));
+    applyValidationHighlights(ownerB, new Map([[rangeB, validationResult({ scope: 'inline', severity: 'info' })]]));
 
     expect(registeredRanges(VALIDATION_HIGHLIGHT_NAMES.info)).toEqual([rangeA, rangeB]);
 
@@ -180,8 +184,14 @@ describe('applyValidationHighlights', () => {
     const staleRange = rangeOf(paragraph);
     const freshRange = rangeOf(paragraph);
 
-    applyValidationHighlights(owner, new Map([[staleRange, { scope: 'inline', severity: 'warning' }]]));
-    applyValidationHighlights(owner, new Map([[freshRange, { scope: 'inline', severity: 'warning' }]]));
+    applyValidationHighlights(
+      owner,
+      new Map([[staleRange, validationResult({ scope: 'inline', severity: 'warning' })]]),
+    );
+    applyValidationHighlights(
+      owner,
+      new Map([[freshRange, validationResult({ scope: 'inline', severity: 'warning' })]]),
+    );
 
     expect(registeredRanges(VALIDATION_HIGHLIGHT_NAMES.warning)).toEqual([freshRange]);
 

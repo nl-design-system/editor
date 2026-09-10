@@ -29,7 +29,6 @@ import {
   type FocusValidationItemInListDetail,
   type OpenValidationGroupDetail,
 } from '@/events';
-import { renderSolution, type ValidationKey, validationMessages } from '@/messages';
 import {
   applyHoverHighlight,
   applyValidationHighlights,
@@ -344,9 +343,8 @@ export class Gutter extends LitElement {
     position: { top: number; height: number },
     metaCount: number | undefined,
   ) {
-    const { correct, scope, severity, solutionPayload, validatorKey } = result;
-    const valKey = validatorKey as ValidationKey;
-    const { customCorrectLabel, heading, href, solution } = validationMessages()[valKey];
+    const { correct, customCorrectLabel, messages, scope, severity } = result;
+    const { error: heading, href, solution } = messages;
     const isActive = this.activeRange === range;
     return html`<li
       class="clippy-validations-gutter__indicator"
@@ -383,10 +381,9 @@ export class Gutter extends LitElement {
           .heading=${heading}
           .href=${href}
           .customCorrectLabel=${customCorrectLabel}
+          .solution=${solution}
           .correct=${correct}
-        >
-          ${renderSolution(solution, solutionPayload)}
-        </clippy-validation-item>
+        ></clippy-validation-item>
       </div>
     </li>`;
   }

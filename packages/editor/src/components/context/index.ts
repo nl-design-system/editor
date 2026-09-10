@@ -12,7 +12,7 @@ import { editorExtensions } from '@/extensions';
 import { initializeLocale } from '@/localization';
 import { sanitizeTopHeadingLevel } from '@/utils/sanitize';
 import { waitForMedia } from '@/utils/waitForMedia';
-import { runValidation } from '@/validators';
+import { runValidation } from '@/validations';
 import { editorContextStyles } from './styles';
 
 const tag = 'clippy-context';
