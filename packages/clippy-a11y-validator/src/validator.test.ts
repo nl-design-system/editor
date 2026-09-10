@@ -136,4 +136,70 @@ describe('Validator', () => {
 
     expect(seen).toEqual([root, root]);
   });
+  it('hands the validation context to condition, payload and correct', () => {
+    const seen: (number | undefined)[] = [];
+    const spy: Validation = {
+      condition: (_element, _root, context) => {
+        seen.push(context?.topHeadingLevel);
+        return false;
+      },
+      correct: (_element, _root, context) => {
+        seen.push(context?.topHeadingLevel);
+        return () => {};
+      },
+      messages: { nl: { error: 'x' } },
+      payload: (_element, _root, context) => {
+        seen.push(context?.topHeadingLevel);
+        return {};
+      },
+      rule: 'SPY',
+      scope: 'block',
+      selector: 'p:first-child',
+      severity: 'info',
+    };
+
+    new Validator({ topHeadingLevel: 2, validations: [spy] }).validate(root);
+
+    expect(seen).toEqual([2, 2, 2]);
+  });
+
+  it('defaults the top heading level to 1', () => {
+    const seen: (number | undefined)[] = [];
+    const spy: Validation = {
+      condition: (_element, _root, context) => {
+        seen.push(context?.topHeadingLevel);
+        return true;
+      },
+      messages: { nl: { error: 'x' } },
+      rule: 'SPY',
+      scope: 'block',
+      selector: 'p:first-child',
+      severity: 'info',
+    };
+
+    new Validator({ validations: [spy] }).validate(root);
+
+    expect(seen).toEqual([1]);
+  });
+
+  it('lets validate override the top heading level for a single run', () => {
+    const seen: (number | undefined)[] = [];
+    const spy: Validation = {
+      condition: (_element, _root, context) => {
+        seen.push(context?.topHeadingLevel);
+        return true;
+      },
+      messages: { nl: { error: 'x' } },
+      rule: 'SPY',
+      scope: 'block',
+      selector: 'p:first-child',
+      severity: 'info',
+    };
+    const validator = new Validator({ topHeadingLevel: 2, validations: [spy] });
+
+    validator.validate(root, { topHeadingLevel: 4 });
+    validator.validate(root);
+
+    expect(seen).toEqual([4, 2]);
+  });
 });

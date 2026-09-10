@@ -1,8 +1,9 @@
 import type { Locale } from './types/messages.ts';
-import type { Validation, ValidationSeverity, Violation } from './types/validation.ts';
+import type { Validation, ValidationContext, ValidationSeverity, Violation } from './types/validation.ts';
 import { resolveMessages } from './messages.ts';
 
 export type WalkOptions = {
+  context: ValidationContext;
   fallbackLocale: Locale;
   locale: Locale;
   severities?: readonly ValidationSeverity[];
@@ -15,14 +16,15 @@ const violate = (
   options: WalkOptions,
 ): Violation | null => {
   const { condition, correct, messages, payload, rule, scope, selector, severity } = validation;
+  const { context } = options;
 
   if (!element.matches(selector)) return null;
-  if (condition(element, root)) return null;
+  if (condition(element, root, context)) return null;
 
-  const violationPayload = payload?.(element, root);
+  const violationPayload = payload?.(element, root, context);
 
   return {
-    correct: correct?.(element, root),
+    correct: correct?.(element, root, context),
     element,
     messages: resolveMessages(messages, options.locale, options.fallbackLocale, violationPayload),
     rule,

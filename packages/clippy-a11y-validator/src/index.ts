@@ -1,4 +1,10 @@
-export { selectors, validationSeverity } from './consts/index.ts';
+export {
+  DEFAULT_TOP_HEADING_LEVEL,
+  defaultValidationContext,
+  MAX_HEADING_LEVEL,
+  selectors,
+  validationSeverity,
+} from './consts/index.ts';
 export { defineValidation } from './define-validation.ts';
 export { coreValidationRules, coreValidations } from './components/index.ts';
 export type { CoreValidationRule } from './components/index.ts';
@@ -23,6 +29,7 @@ export type { CoreSelector, ElementFor, Selector } from './types/selector.ts';
 export type {
   CorrectValidationFunction,
   ValidationCondition,
+  ValidationContext,
   Validation,
   ValidationDefinition,
   ValidationPayload,
