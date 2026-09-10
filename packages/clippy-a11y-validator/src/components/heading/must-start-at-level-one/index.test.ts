@@ -56,6 +56,23 @@ describe('headingMustStartAtLevelOne', () => {
     expect(validate('<p>alleen tekst</p><ul><li>item</li></ul>')).toHaveLength(0);
   });
 
+  it('expects the document top heading level instead of a level 1 when the document is embedded', () => {
+    root.innerHTML = '<h3>Kop</h3><p>tekst</p>';
+    const [violation] = validator.validate(root, { topHeadingLevel: 2 });
+
+    expect(violation?.messages.error).toBe('Het document begint met kopniveau 3 in plaats van kopniveau 2.');
+    expect(violation?.messages.solution).toBe('Maak van deze kop een kopniveau 2.');
+
+    violation?.correct?.();
+    expect(root.innerHTML).toBe('<h2>Kop</h2><p>tekst</p>');
+  });
+
+  it('accepts a document that starts at the configured top heading level', () => {
+    root.innerHTML = '<h2>Kop</h2><h3>Subkop</h3>';
+
+    expect(validator.validate(root, { topHeadingLevel: 2 })).toHaveLength(0);
+  });
+
   it('retags the heading to a level 1 when corrected', () => {
     const [violation] = validate('<h2 id="kop">Kop</h2><p>tekst</p>');
     violation?.correct?.();

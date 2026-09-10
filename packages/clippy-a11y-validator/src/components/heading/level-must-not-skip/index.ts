@@ -1,10 +1,8 @@
-import { selectors, validationSeverity } from '../../../consts/index.ts';
+import { MAX_HEADING_LEVEL, selectors, validationSeverity } from '../../../consts/index.ts';
 import { defineValidation } from '../../../define-validation.ts';
 import { changeTagName, headingLevel, precedingHeading } from '../../../utils/dom.ts';
 import { headingValidationRules } from '../constants.ts';
 import { messages } from './messages.ts';
-
-const MAX_HEADING_LEVEL = 6;
 
 const expectedLevel = (heading: HTMLElement, root: ParentNode): number => {
   const preceding = precedingHeading(heading, root);
