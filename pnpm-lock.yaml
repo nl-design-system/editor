@@ -294,9 +294,6 @@ importers:
       '@nl-design-system-community/clippy-components':
         specifier: 3.2.0
         version: 3.2.0
-      '@nl-design-system-unstable/documentation':
-        specifier: 1.11.0
-        version: 1.11.0
       '@tabler/icons':
         specifier: 3.46.0
         version: 3.46.0
@@ -2082,9 +2079,6 @@ packages:
 
   '@nl-design-system-community/ma-design-tokens@7.0.0':
     resolution: {integrity: sha512-HN5e2Kcn0EtqVdXMiyTq9IfAgVtdFuyG4x+TcECqFi0XatCpEMPXZmSEGCQZ8KO2NuS6D9Hb8zrqROiQ3gBfQg==}
-
-  '@nl-design-system-unstable/documentation@1.11.0':
-    resolution: {integrity: sha512-v022m0x0m+kZ+t/KhcdrtzrqqMZIo2a4MQa4Pfbe6EcE2NMNJIxrzbbVD+xg8VkxyX9qv2W087dY+DzI94QigA==}
 
   '@nl-design-system/eslint-config@2.4.0':
     resolution: {integrity: sha512-IkPKcKDrHfRSXXIkKSZPW3/oldyTgGIU+icLKmIVM/1eGa8zE3cx4Lrb8N8bGCFDcnIN11PpiXGC3uqagByF4A==}
@@ -9034,8 +9028,6 @@ snapshots:
       - '@amsterdam/design-system-tokens'
 
   '@nl-design-system-community/ma-design-tokens@7.0.0': {}
-
-  '@nl-design-system-unstable/documentation@1.11.0': {}
 
   '@nl-design-system/eslint-config@2.4.0(eslint@10.12.0(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)':
     dependencies:
