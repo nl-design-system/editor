@@ -32,7 +32,7 @@ declare global {
 const ariaDescribedBy = 'validation-item-header';
 
 /**
- * A single accessibility validation result card. Displays the severity icon,
+ * A single accessibility violation card. Displays the severity icon,
  * heading, optional solution, and action buttons (Focus, Correct).
  * The `mode` property controls which actions are visible.
  *

@@ -1,8 +1,8 @@
-import { validationResult } from '@test/validationResult';
+import { violation } from '@test/violation';
 import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import type { Context } from '@/components/context';
-import type { ValidationsMap } from '@/types/validation';
+import type { ViolationsMap } from '@/types/validation';
 import { CustomEvents } from '@/events';
 import '@/components/context';
 import '@/components/content';
@@ -140,8 +140,8 @@ describe('<clippy-heading-structure>', () => {
       const headingRange = document.createRange();
       headingRange.selectNode(headingEl);
 
-      const validationsMap: ValidationsMap = new Map([
-        [headingRange, validationResult({ range: headingRange, severity: 'warning' })],
+      const validationsMap: ViolationsMap = new Map([
+        [headingRange, violation({ range: headingRange, severity: 'warning' })],
       ]);
 
       contextEl.updateValidationsContext(validationsMap);

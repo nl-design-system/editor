@@ -1,9 +1,9 @@
 import { coreValidationRules } from '@nl-design-system-community/clippy-a11y-validator';
-import { validationResult } from '@test/validationResult';
+import { violation } from '@test/violation';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { page } from 'vitest/browser';
 import type { Context } from '@/components/context';
-import type { ValidationResult } from '@/types/validation';
+import type { Violation } from '@/types/validation';
 import '@/components/context';
 import './index';
 import { CustomEvents } from '@/events';
@@ -73,22 +73,22 @@ describe('<clippy-validations-dialog>', () => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
 
-    /** Helper: create a ValidationResult keyed by a fresh Range. */
+    /** Helper: create a Violation keyed by a fresh Range. */
     const entry = (
       rule: string,
-      severity: ValidationResult['severity'],
-      payload?: ValidationResult['payload'],
-    ): [Range, ValidationResult] => {
+      severity: Violation['severity'],
+      payload?: Violation['payload'],
+    ): [Range, Violation] => {
       const range = document.createRange();
-      return [range, validationResult({ payload, range, rule, severity })];
+      return [range, violation({ payload, range, rule, severity })];
     };
 
-    const validationsMap: Map<Range, ValidationResult> = new Map([
+    const validationsMap: Map<Range, Violation> = new Map([
       entry(coreValidationRules.HEADING_MUST_NOT_BE_EMPTY, 'error'),
       entry(coreValidationRules.IMAGE_MUST_HAVE_ALT_TEXT, 'error'),
       entry(coreValidationRules.LINK_SHOULD_NOT_BE_TOO_GENERIC, 'warning'),
       entry(coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_EMPTY, 'warning'),
-      entry(coreValidationRules.EMPHASIS_SHOULD_NOT_BE_EMPTY, 'error', { variant: 'bold' }),
+      entry(coreValidationRules.PARAGRAPH_SHOULD_NOT_CONTAIN_EMPTY_FORMATTING, 'error', { tag: 'b' }),
       entry(coreValidationRules.HEADING_LEVEL_MUST_NOT_SKIP, 'error', {
         expectedHeadingLevel: 2,
         headingLevel: 3,
@@ -96,7 +96,7 @@ describe('<clippy-validations-dialog>', () => {
       }),
       entry(coreValidationRules.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST, 'warning', { prefix: '-' }),
       entry(coreValidationRules.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC, 'warning'),
-      entry(coreValidationRules.EMPHASIS_SHOULD_NOT_BE_UNDERLINED, 'warning'),
+      entry(coreValidationRules.PARAGRAPH_SHOULD_NOT_CONTAIN_UNDERLINED_TEXT, 'warning'),
       entry(coreValidationRules.HEADING_MUST_START_AT_LEVEL_ONE, 'error'),
     ]);
 
@@ -150,13 +150,10 @@ describe('<clippy-validations-dialog>', () => {
     const r1 = document.createRange();
     const r2 = document.createRange();
     const r3 = document.createRange();
-    const validationsMap: Map<Range, ValidationResult> = new Map([
-      [r1, validationResult({ range: r1, rule: coreValidationRules.HEADING_MUST_NOT_BE_EMPTY, severity: 'error' })],
-      [
-        r2,
-        validationResult({ range: r2, rule: coreValidationRules.LINK_SHOULD_NOT_BE_TOO_GENERIC, severity: 'warning' }),
-      ],
-      [r3, validationResult({ range: r3, rule: coreValidationRules.IMAGE_MUST_HAVE_ALT_TEXT, severity: 'error' })],
+    const validationsMap: Map<Range, Violation> = new Map([
+      [r1, violation({ range: r1, rule: coreValidationRules.HEADING_MUST_NOT_BE_EMPTY, severity: 'error' })],
+      [r2, violation({ range: r2, rule: coreValidationRules.LINK_SHOULD_NOT_BE_TOO_GENERIC, severity: 'warning' })],
+      [r3, violation({ range: r3, rule: coreValidationRules.IMAGE_MUST_HAVE_ALT_TEXT, severity: 'error' })],
     ]);
 
     if (contextElement) {

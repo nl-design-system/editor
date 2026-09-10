@@ -13,7 +13,7 @@ import '@/components/content-views/link-list';
 import '@/components/content-views/language-changes';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationItem } from '@/components/validations/validation-item';
-import type { ValidationsMap, ValidationSeverity } from '@/types/validation';
+import type { ViolationsMap, ValidationSeverity } from '@/types/validation';
 import '@/components/validation-filters';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import '@nl-design-system-community/clippy-components/clippy-button';
@@ -36,7 +36,7 @@ import drawerStyles from './styles';
 const tag = 'clippy-validations-drawer';
 
 /**
- * Inline drawer panel that lists all accessibility validation results and
+ * Inline drawer panel that lists all accessibility violations and
  * provides document overview panels (heading structure, link list, language
  * changes). Opens and closes in response to the global
  * `CustomEvents.OPEN_DOCUMENT_OVERVIEW` event, scoped to the current editor
@@ -86,7 +86,7 @@ export class ValidationsDrawer extends LitElement {
 
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsContext?: ValidationsMap;
+  validationsContext?: ViolationsMap;
 
   @consume({ context: htmlDocumentContext, subscribe: true })
   @property({ attribute: false })
@@ -100,7 +100,7 @@ export class ValidationsDrawer extends LitElement {
    * (in-editor use).
    */
   @property({ attribute: false })
-  validationsMap?: ValidationsMap;
+  validationsMap?: ViolationsMap;
 
   /** @see {@link validationsMap} */
   @property({ attribute: false })
