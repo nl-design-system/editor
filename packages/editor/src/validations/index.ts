@@ -23,22 +23,25 @@ const VALIDATION_TIMEOUT = 500;
 const toUpperKey = (key: string): string => key.toUpperCase().replaceAll('-', '_');
 
 /**
- * The validations active under the given settings.
+ * The validations active under the given settings, out of the pool the settings supply —
+ * every core validation unless `validations` names its own set.
  *
  * - `disableRules: ['*']` — disables everything.
- * - `enableRules: ['*']` — enables everything, minus anything explicitly disabled.
+ * - `enableRules: ['*']` — enables everything in the pool, minus anything explicitly disabled.
  * - Otherwise only rules explicitly listed in `enableRules` are active.
  */
-export const activeValidations = ({ disableRules = [], enableRules }: EditorSettings): Validation[] => {
+export const activeValidations = ({
+  disableRules = [],
+  enableRules,
+  validations = Object.values(coreValidations),
+}: EditorSettings): Validation[] => {
   const disabled = new Set(disableRules.map(toUpperKey));
   if (disabled.has('*')) return [];
-
-  const entries = Object.entries(coreValidations);
 
   const enabled = new Set(enableRules.map(toUpperKey));
   const isEnabled = enabled.has('*') ? () => true : (rule: string) => enabled.has(rule);
 
-  return entries.filter(([rule]) => isEnabled(rule) && !disabled.has(rule)).map(([, validation]) => validation);
+  return validations.filter(({ rule }) => isEnabled(rule) && !disabled.has(rule));
 };
 
 /**
