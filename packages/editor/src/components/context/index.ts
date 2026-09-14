@@ -4,12 +4,11 @@ import { safeCustomElement } from '@nl-design-system-community/clippy-components
 import { Editor as TiptapEditor } from '@tiptap/core';
 import { LitElement, html, type PropertyValues } from 'lit';
 import { property, queryAssignedElements } from 'lit/decorators.js';
-import type { EditorSettings } from '@/types/settings';
 import type { Violation } from '@/types/validation';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import { identifierContext } from '@/context/identifierContext';
 import { tiptapContext } from '@/context/tiptapContext';
-import { validationsContext } from '@/context/validationsContext';
+import { violationsContext } from '@/context/violationsContext';
 import { editorExtensions } from '@/extensions';
 import { initializeLocale } from '@/localization';
 import { waitForMedia } from '@/utils/waitForMedia';
@@ -20,9 +19,6 @@ const tag = 'clippy-context';
 
 /** Tracks all active identifier values to enforce uniqueness across instances. */
 const registeredIdentifiers = new Set<string>();
-
-/** Properties whose change makes the current violations stale. */
-const VALIDATION_SETTINGS = ['disableRules', 'enableRules', 'validations'] as const;
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -69,57 +65,21 @@ export class Context extends LitElement {
   override id = 'clippy-editor-id';
 
   /**
-   * Space-separated list of validation rule keys to enable.
-   * Use `'*'` (the default) to enable all rules.
-   * Reflected as `enable-rules`.
-   * @default ['*']
-   */
-  @property({
-    attribute: 'enable-rules',
-    converter: {
-      fromAttribute: (value: string) => {
-        return value.split(/\s+/g);
-      },
-      toAttribute: (value: string[]) => {
-        return value.join(' ');
-      },
-    },
-    reflect: true,
-  })
-  enableRules: string[] = ['*'];
-
-  /**
-   * Space-separated list of validation rule keys to disable.
-   * Takes precedence over `enable-rules`.
-   * Reflected as `disable-rules`.
-   * @default []
-   */
-  @property({
-    attribute: 'disable-rules',
-    converter: {
-      fromAttribute: (value: string) => {
-        return value.split(/\s+/g);
-      },
-      toAttribute: (value: string[]) => {
-        return value.join(' ');
-      },
-    },
-    reflect: true,
-  })
-  disableRules: string[] = [];
-
-  /**
-   * The validations to run, as objects rather than rule keys. Defaults to every core validation
-   * of `@nl-design-system-community/clippy-a11y-validator`; `enable-rules` and `disable-rules`
-   * filter whatever is set here.
+   * The validations to run. Defaults to every core validation of
+   * `@nl-design-system-community/clippy-a11y-validator`. Pass a subset to run only those, and
+   * validations built with `defineValidation` to add your own.
    *
-   * Property only — a validation is an object, so it has no attribute form. Use `enable-rules` /
-   * `disable-rules` to configure the editor declaratively, and this to pass validations built
-   * with `defineValidation`.
+   * Property only — a validation is an object, so it has no attribute form.
+   *
+   * Read once, when the editor is built: set it before the element upgrades, or alongside the
+   * markup it validates. Assigning it later leaves the running editor on the set it started with.
    *
    * @example
    * ```js
-   * editor.validations = [coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY, myOwnValidation];
+   * editor.validations = [
+   *   coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY,
+   *   coreValidations.HEADING_MUST_NOT_BE_EMPTY,
+   * ];
    * ```
    */
   @property({ attribute: false })
@@ -139,19 +99,19 @@ export class Context extends LitElement {
   contentSlot!: HTMLElement[];
 
   /** @internal */
-  @provide({ context: validationsContext })
-  validationsContext = new Map();
+  @provide({ context: violationsContext })
+  violationsContext = new Map();
 
   /** @internal */
-  lightValidationsContext = new ContextProvider(document.body, {
-    context: validationsContext,
+  lightViolationsContext = new ContextProvider(document.body, {
+    context: violationsContext,
     initialValue: new Map(),
   });
 
   /** @internal */
-  updateValidationsContext = (violations: Map<Range, Violation>): void => {
-    this.validationsContext = violations;
-    this.lightValidationsContext.setValue(this.validationsContext);
+  updateViolationsContext = (violations: Map<Range, Violation>): void => {
+    this.violationsContext = violations;
+    this.lightViolationsContext.setValue(this.violationsContext);
   };
 
   /** @internal */
@@ -161,38 +121,6 @@ export class Context extends LitElement {
   /** @internal */
   @provide({ context: htmlDocumentContext })
   htmlDocumentElement?: HTMLElement;
-
-  /**
-   * @internal The element readonly mode validates, kept so a settings change can re-run against
-   * the same target. Unset while an editor is present, which owns its own DOM.
-   */
-  private readonlyValidationTarget?: HTMLElement;
-
-  /**
-   * @internal The element to validate, or `undefined` while nothing is mounted. Reading
-   * `editor.view` throws rather than returning `undefined` before `clippy-content` mounts the
-   * editor, so it needs guarding rather than optional chaining.
-   */
-  private get validationTarget(): HTMLElement | undefined {
-    if (this.editor && !this.editor.isDestroyed) {
-      try {
-        return this.editor.view.dom as HTMLElement;
-      } catch {
-        return undefined;
-      }
-    }
-    return this.readonlyValidationTarget;
-  }
-
-  /** @internal */
-  protected get editorSettings(): EditorSettings {
-    return {
-      disableRules: this.disableRules,
-      enableRules: this.enableRules,
-      readonly: this.readonly,
-      ...(this.validations === undefined ? {} : { validations: this.validations }),
-    };
-  }
 
   /** @internal */
   protected createEditor(): void {
@@ -207,7 +135,11 @@ export class Context extends LitElement {
       },
       // Prevent auto-mounting during SSR; Content component calls moumountnt() client-side
       element: null,
-      extensions: editorExtensions(() => this.editorSettings, this.updateValidationsContext, this.id),
+      extensions: editorExtensions(
+        { readonly: this.readonly, validations: this.validations },
+        this.updateViolationsContext,
+        this.id,
+      ),
     });
   }
 
@@ -237,8 +169,7 @@ export class Context extends LitElement {
         const mediaEls = [...targetEl.querySelectorAll('img, video, audio')];
 
         Promise.all(mediaEls.map((el) => waitForMedia(el))).then(() => {
-          this.readonlyValidationTarget = targetEl;
-          runValidation(targetEl, this.editorSettings, this.updateValidationsContext);
+          runValidation(targetEl, this.validations, this.updateViolationsContext);
         });
       });
     } else {
@@ -253,13 +184,6 @@ export class Context extends LitElement {
     if (changedProperties.has('readonly') && this.editor) {
       this.editor.setEditable(!this.readonly);
     }
-    // The extension reads the settings afresh on every run, so re-running is enough to pick the
-    // new ones up. `updated` only fires after the first render, so this never doubles up with the
-    // initial run in `onCreate` or the readonly animation frame.
-    const target = this.validationTarget;
-    if (target && VALIDATION_SETTINGS.some((setting) => changedProperties.has(setting))) {
-      runValidation(target, this.editorSettings, this.updateValidationsContext);
-    }
   }
 
   /** @internal */
@@ -267,7 +191,7 @@ export class Context extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.lightValidationsContext.hostConnected();
+    this.lightViolationsContext.hostConnected();
     if (!this.isLocaleInitialized) {
       this.isLocaleInitialized = true;
       initializeLocale().then(() => {

@@ -145,11 +145,11 @@ const syncRegistry = (): void => {
   }
 };
 
-export const applyValidationHighlights = (owner: object, validationsMap: ViolationsMap | undefined): void => {
+export const applyValidationHighlights = (owner: object, violationsMap: ViolationsMap | undefined): void => {
   if (!isSupported()) return;
 
   const owned: OwnedRanges = { blank: new Map(), text: new Map() };
-  for (const [range, violation] of validationsMap ?? []) {
+  for (const [range, violation] of violationsMap ?? []) {
     if (!isInlineViolation(violation)) continue;
     ensureHighlightStyles(range);
     const bucket = isBlankRange(range) ? owned.blank : owned.text;

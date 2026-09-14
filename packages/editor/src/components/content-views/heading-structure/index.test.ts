@@ -140,11 +140,11 @@ describe('<clippy-heading-structure>', () => {
       const headingRange = document.createRange();
       headingRange.selectNode(headingEl);
 
-      const validationsMap: ViolationsMap = new Map([
+      const violationsMap: ViolationsMap = new Map([
         [headingRange, violation({ range: headingRange, severity: 'warning' })],
       ]);
 
-      contextEl.updateValidationsContext(validationsMap);
+      contextEl.updateViolationsContext(violationsMap);
       await contextEl.updateComplete;
       headingStructure.requestUpdate();
       await headingStructure.updateComplete;

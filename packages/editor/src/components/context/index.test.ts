@@ -1,4 +1,9 @@
-import { defineValidation, validationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
+import {
+  coreValidations,
+  defineValidation,
+  type Validation,
+  validationSeverity,
+} from '@nl-design-system-community/clippy-a11y-validator';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Context } from './index';
 import '@/components/content';
@@ -12,14 +17,21 @@ const paragraphMustNotShout = defineValidation({
   },
   messages: { nl: { error: 'Deze alinea staat volledig in hoofdletters.' } },
   rule: 'PARAGRAPH_MUST_NOT_SHOUT',
-  scope: 'block',
+  scope: 'element',
   selector: 'p',
   severity: validationSeverity.WARNING,
 });
 
 const CONTENT = '<h1>Titel</h1><p>LET OP</p><p></p>';
 
-const render = async (attributes = ''): Promise<Context> => {
+/** Longer than the validation debounce, so a re-run triggered by an edit has landed. */
+const VALIDATION_SETTLE_MS = 1500;
+
+/**
+ * `validations` is read once, when the editor is built, so it is assigned here before the first
+ * update rather than after — the same moment a host script gets, right after the markup parses.
+ */
+const render = async (attributes = '', validations?: readonly Validation[]): Promise<Context> => {
   document.body.innerHTML = `
     <clippy-context id="validations-property-test" ${attributes}>
       <div slot="value">${CONTENT}</div>
@@ -27,14 +39,15 @@ const render = async (attributes = ''): Promise<Context> => {
     </clippy-context>`;
 
   const context = document.querySelector('clippy-context') as Context;
+  if (validations) context.validations = validations;
   await context.updateComplete;
   return context;
 };
 
-const rulesOf = (context: Context): string[] => [...context.validationsContext.values()].map(({ rule }) => rule);
+const rulesOf = (context: Context): string[] => [...context.violationsContext.values()].map(({ rule }) => rule);
 
 const settled = async (context: Context): Promise<void> => {
-  await vi.waitFor(() => expect(context.validationsContext.size).toBeGreaterThan(0));
+  await vi.waitFor(() => expect(context.violationsContext.size).toBeGreaterThan(0));
 };
 
 beforeEach(() => {
@@ -46,7 +59,7 @@ afterEach(() => {
 });
 
 describe('<clippy-context> validations property', () => {
-  it('runs the core validations when none are given', async () => {
+  it('runs every core validation when none are given', async () => {
     const context = await render();
     await settled(context);
 
@@ -54,45 +67,57 @@ describe('<clippy-context> validations property', () => {
     expect(rulesOf(context)).not.toContain('PARAGRAPH_MUST_NOT_SHOUT');
   });
 
-  it('runs the validations set on the property instead of the core set', async () => {
-    const context = await render();
+  it('runs only the core validations it is given', async () => {
+    const context = await render('', [coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
     await settled(context);
 
-    context.validations = [paragraphMustNotShout];
-    await context.updateComplete;
-
-    await vi.waitFor(() => expect(rulesOf(context)).toEqual(['PARAGRAPH_MUST_NOT_SHOUT']));
+    expect(rulesOf(context)).toEqual(['PARAGRAPH_SHOULD_NOT_BE_EMPTY']);
   });
 
-  it('re-runs when the property is set after the editor exists', async () => {
-    const context = await render();
+  it('runs a validation the host wrote itself', async () => {
+    const context = await render('', [paragraphMustNotShout]);
     await settled(context);
-    const before = context.validationsContext;
 
-    context.validations = [paragraphMustNotShout];
-    await context.updateComplete;
-
-    await vi.waitFor(() => expect(context.validationsContext).not.toBe(before));
+    expect(rulesOf(context)).toEqual(['PARAGRAPH_MUST_NOT_SHOUT']);
   });
 
-  it('still filters a property-supplied set by disable-rules', async () => {
-    const context = await render();
+  it('keeps the validations it started with when the content is edited', async () => {
+    const context = await render('', [paragraphMustNotShout]);
     await settled(context);
 
-    context.validations = [paragraphMustNotShout];
-    context.disableRules = ['paragraph-must-not-shout'];
-    await context.updateComplete;
+    context.editor?.commands.insertContent('x');
+    await new Promise((resolve) => {
+      setTimeout(resolve, VALIDATION_SETTLE_MS);
+    });
 
-    await vi.waitFor(() => expect(context.validationsContext.size).toBe(0));
+    expect(rulesOf(context)).toEqual(['PARAGRAPH_MUST_NOT_SHOUT']);
   });
 
-  it('reacts to the property in readonly mode, where there is no editor', async () => {
-    const context = await render('readonly');
+  it('stays on the set it was built with when the property is assigned later', async () => {
+    const context = await render();
     await settled(context);
+    const before = rulesOf(context);
 
     context.validations = [paragraphMustNotShout];
     await context.updateComplete;
+    await new Promise((resolve) => {
+      setTimeout(resolve, VALIDATION_SETTLE_MS);
+    });
 
-    await vi.waitFor(() => expect(rulesOf(context)).toEqual(['PARAGRAPH_MUST_NOT_SHOUT']));
+    expect(rulesOf(context)).toEqual(before);
+  });
+
+  it('reports nothing when given an empty set', async () => {
+    const context = await render('', []);
+    await context.updateComplete;
+
+    expect(context.violationsContext.size).toBe(0);
+  });
+
+  it('reads the property in readonly mode, where there is no editor', async () => {
+    const context = await render('readonly', [paragraphMustNotShout]);
+    await settled(context);
+
+    expect(rulesOf(context)).toEqual(['PARAGRAPH_MUST_NOT_SHOUT']);
   });
 });

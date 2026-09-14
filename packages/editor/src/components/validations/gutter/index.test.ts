@@ -35,7 +35,7 @@ const renderGutter = (markup: string) => {
 };
 
 const validate = async (gutter: Gutter, validations: ViolationsMap): Promise<void> => {
-  gutter.validationsMap = validations;
+  gutter.violationsMap = validations;
   await gutter.updateComplete;
 };
 

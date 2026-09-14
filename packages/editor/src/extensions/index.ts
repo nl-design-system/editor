@@ -1,3 +1,4 @@
+import type { Validation as ValidationRule } from '@nl-design-system-community/clippy-a11y-validator';
 import { msg } from '@lit/localize';
 import { mergeAttributes } from '@tiptap/core';
 import Blockquote from '@tiptap/extension-blockquote';
@@ -23,7 +24,6 @@ import Text from '@tiptap/extension-text';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
 import { Dropcursor, UndoRedo, Placeholder } from '@tiptap/extensions';
-import type { EditorSettings } from '@/types/settings';
 import type { Violation } from '@/types/validation';
 import { HEADING_LEVELS, contentClasses, headingClasses } from '@/constants';
 import { CustomFileHandler } from '@/extensions/CustomFileHandler';
@@ -37,12 +37,15 @@ const globalAttributes = {
   lang: {},
 } as const;
 
+export type EditorExtensionOptions = {
+  /** Unset runs every core validation. Read once, when the extensions are built. */
+  validations?: readonly ValidationRule[];
+  /** Read once, when the extensions are built: the editor is recreated to change it. */
+  readonly?: boolean;
+};
+
 export const editorExtensions = (
-  /**
-   * Read whenever validation runs rather than captured once, so a change to the host's rules or
-   * heading level reaches the next run.
-   */
-  getSettings: () => EditorSettings,
+  { readonly, validations }: EditorExtensionOptions,
   callback: (violations: Map<Range, Violation>) => void,
   identifier?: string,
 ) => [
@@ -191,7 +194,7 @@ export const editorExtensions = (
     resize: {
       alwaysPreserveAspectRatio: true,
       directions: ['top', 'bottom', 'left', 'right', 'top-right', 'top-left', 'bottom-right', 'bottom-left'],
-      enabled: !getSettings().readonly,
+      enabled: !readonly,
       minHeight: 50,
       minWidth: 50,
     },
@@ -228,9 +231,9 @@ export const editorExtensions = (
   }),
   KeyboardShortcuts,
   Validation.configure({
-    getSettings,
     identifier,
-    updateValidationsContext: callback,
+    updateViolationsContext: callback,
+    validations,
   }),
   Highlight.configure({
     HTMLAttributes: {
