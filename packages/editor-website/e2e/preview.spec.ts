@@ -9,7 +9,7 @@ test.describe('Gutter indicators on preview page', () => {
   test('preview gutter renders validation indicators', async ({ page }) => {
     const indicators = page.locator('clippy-validations-gutter .clippy-validations-gutter__indicator');
 
-    // All validators are active (enableRules defaults to ['*']).
+    // The preview sets no `validations`, so every core validation runs.
     // The preview content triggers:
     //   - heading-level-must-not-skip: h1 → h3 (skipped h2)
     //   - heading-must-not-be-empty: empty <h2>
