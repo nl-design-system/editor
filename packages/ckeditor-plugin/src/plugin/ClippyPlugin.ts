@@ -14,11 +14,10 @@ import {
 import {
   debouncedValidate,
   runValidation,
-  type EditorSettings,
+  type Validation,
   type ViolationsMap,
 } from '@nl-design-system-community/editor/validators';
 import { Plugin, View, type Locale, type ObservableChangeEvent, type ToolbarView } from 'ckeditor5';
-import { DEFAULT_SETTINGS } from '../constants/';
 import { adoptClippyStyles } from '../styles/';
 import { findMatchingCorrection, findOccurrenceIndex, runValidations } from '../utils/correction.ts';
 import { ContentClasses } from './ContentClasses.ts';
@@ -40,7 +39,8 @@ export class ClippyPlugin extends Plugin {
   private _drawerEl: ValidationsDrawer | null = null;
   private _notificationsView: View | null = null;
   private _validationsMap: ViolationsMap = new Map();
-  private _settings: EditorSettings = DEFAULT_SETTINGS;
+  /** The validations this editor runs. Unset means every core validation. */
+  private _validations: readonly Validation[] | undefined;
   private _unwatchColorScheme: (() => void) | null = null;
 
   // Scope drawer events to this editor so multiple CKEditors on one page don't open each other's drawer.
@@ -49,7 +49,6 @@ export class ClippyPlugin extends Plugin {
   }
 
   init(): void {
-    this._settings = { ...DEFAULT_SETTINGS };
     this._registerNotificationsToolbarItem();
     this._observeSourceEditingMode();
     this.editor.on('ready', () => {
@@ -155,7 +154,7 @@ export class ClippyPlugin extends Plugin {
       return;
     }
 
-    runValidation(this._editableEl, this._settings, (validationsMap: ViolationsMap) => {
+    runValidation(this._editableEl, this._validations, (validationsMap: ViolationsMap) => {
       this._validationsMap = validationsMap;
       this._render();
     });
@@ -166,7 +165,7 @@ export class ClippyPlugin extends Plugin {
       return;
     }
 
-    debouncedValidate(this._editableEl, this._settings, (validationsMap: ViolationsMap) => {
+    debouncedValidate(this._editableEl, this._validations, (validationsMap: ViolationsMap) => {
       this._validationsMap = validationsMap;
       this._render();
     });
@@ -221,7 +220,7 @@ export class ClippyPlugin extends Plugin {
       // create a clean HTML copy via this.editor.getData()
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = this.editor.getData();
-      const modelDataValidationsMap = runValidations(tempDiv, this._settings);
+      const modelDataValidationsMap = runValidations(tempDiv, this._validations);
 
       // A validator can flag multiple spots, get the range's position among correctable violations sharing its rule
       const occurrenceIndex = findOccurrenceIndex(this._validationsMap, range, rule);

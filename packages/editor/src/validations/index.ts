@@ -1,10 +1,9 @@
 import {
   coreValidations,
-  Validator,
   type Validation,
+  Validator,
   type Violation as CoreViolation,
 } from '@nl-design-system-community/clippy-a11y-validator';
-import type { EditorSettings } from '@/types/settings';
 import type { Violation, ViolationsMap } from '@/types/validation';
 import { getDocumentLang } from '@/localization';
 import { debounce } from '@/utils/debounce';
@@ -12,37 +11,6 @@ import { getElementRange } from '@/utils/ranges';
 import { editorCorrections } from './corrections';
 
 const VALIDATION_TIMEOUT = 500;
-
-/**
- * Normalise a rule identifier to the canonical SCREAMING_SNAKE_CASE format used by the validator
- * package (e.g. `'PARAGRAPH_SHOULD_NOT_BE_EMPTY'`).
- *
- * Accepts both kebab-case (`'paragraph-should-not-be-empty'`) as used in HTML `enable-rules` /
- * `disable-rules` attributes, and SCREAMING_SNAKE_CASE as used in TypeScript constants.
- */
-const toUpperKey = (key: string): string => key.toUpperCase().replaceAll('-', '_');
-
-/**
- * The validations active under the given settings, out of the pool the settings supply —
- * every core validation unless `validations` names its own set.
- *
- * - `disableRules: ['*']` — disables everything.
- * - `enableRules: ['*']` — enables everything in the pool, minus anything explicitly disabled.
- * - Otherwise only rules explicitly listed in `enableRules` are active.
- */
-export const activeValidations = ({
-  disableRules = [],
-  enableRules,
-  validations = Object.values(coreValidations),
-}: EditorSettings): Validation[] => {
-  const disabled = new Set(disableRules.map(toUpperKey));
-  if (disabled.has('*')) return [];
-
-  const enabled = new Set(enableRules.map(toUpperKey));
-  const isEnabled = enabled.has('*') ? () => true : (rule: string) => enabled.has(rule);
-
-  return validations.filter(({ rule }) => isEnabled(rule) && !disabled.has(rule));
-};
 
 /**
  * Adds what the editor needs on top of a reported violation: the DOM `Range` the gutter, the
@@ -70,7 +38,7 @@ const toEditorViolation = (violation: CoreViolation): Violation => {
  */
 export const runValidation = (
   dom: HTMLElement,
-  settings: EditorSettings,
+  validations: readonly Validation[] | undefined,
   callback: (violations: ViolationsMap) => void,
 ): void => {
   const violations: ViolationsMap = new Map();
@@ -78,7 +46,7 @@ export const runValidation = (
   try {
     const validator = new Validator({
       locale: getDocumentLang(),
-      validations: activeValidations(settings),
+      validations: validations ?? Object.values(coreValidations),
     });
 
     for (const reported of validator.validate(dom)) {

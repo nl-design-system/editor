@@ -39,8 +39,8 @@ const globalAttributes = {
 
 export const editorExtensions = (
   /**
-   * Read whenever validation runs rather than captured once, so a change to the host's rules or
-   * heading level reaches the next run.
+   * Read whenever validation runs rather than captured once, so a change to the host's
+   * validations reaches the next run.
    */
   getSettings: () => EditorSettings,
   callback: (violations: Map<Range, Violation>) => void,
@@ -228,7 +228,7 @@ export const editorExtensions = (
   }),
   KeyboardShortcuts,
   Validation.configure({
-    getSettings,
+    getValidations: () => getSettings().validations,
     identifier,
     updateValidationsContext: callback,
   }),

@@ -22,7 +22,7 @@ const tag = 'clippy-context';
 const registeredIdentifiers = new Set<string>();
 
 /** Properties whose change makes the current violations stale. */
-const VALIDATION_SETTINGS = ['disableRules', 'enableRules', 'validations'] as const;
+const VALIDATION_SETTINGS = ['validations'] as const;
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -69,57 +69,18 @@ export class Context extends LitElement {
   override id = 'clippy-editor-id';
 
   /**
-   * Space-separated list of validation rule keys to enable.
-   * Use `'*'` (the default) to enable all rules.
-   * Reflected as `enable-rules`.
-   * @default ['*']
-   */
-  @property({
-    attribute: 'enable-rules',
-    converter: {
-      fromAttribute: (value: string) => {
-        return value.split(/\s+/g);
-      },
-      toAttribute: (value: string[]) => {
-        return value.join(' ');
-      },
-    },
-    reflect: true,
-  })
-  enableRules: string[] = ['*'];
-
-  /**
-   * Space-separated list of validation rule keys to disable.
-   * Takes precedence over `enable-rules`.
-   * Reflected as `disable-rules`.
-   * @default []
-   */
-  @property({
-    attribute: 'disable-rules',
-    converter: {
-      fromAttribute: (value: string) => {
-        return value.split(/\s+/g);
-      },
-      toAttribute: (value: string[]) => {
-        return value.join(' ');
-      },
-    },
-    reflect: true,
-  })
-  disableRules: string[] = [];
-
-  /**
-   * The validations to run, as objects rather than rule keys. Defaults to every core validation
-   * of `@nl-design-system-community/clippy-a11y-validator`; `enable-rules` and `disable-rules`
-   * filter whatever is set here.
+   * The validations to run. Defaults to every core validation of
+   * `@nl-design-system-community/clippy-a11y-validator`. Pass a subset to run only those, and
+   * validations built with `defineValidation` to add your own.
    *
-   * Property only — a validation is an object, so it has no attribute form. Use `enable-rules` /
-   * `disable-rules` to configure the editor declaratively, and this to pass validations built
-   * with `defineValidation`.
+   * Property only — a validation is an object, so it has no attribute form.
    *
    * @example
    * ```js
-   * editor.validations = [coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY, myOwnValidation];
+   * editor.validations = [
+   *   coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY,
+   *   coreValidations.HEADING_MUST_NOT_BE_EMPTY,
+   * ];
    * ```
    */
   @property({ attribute: false })
@@ -187,8 +148,6 @@ export class Context extends LitElement {
   /** @internal */
   protected get editorSettings(): EditorSettings {
     return {
-      disableRules: this.disableRules,
-      enableRules: this.enableRules,
       readonly: this.readonly,
       ...(this.validations === undefined ? {} : { validations: this.validations }),
     };
@@ -238,7 +197,7 @@ export class Context extends LitElement {
 
         Promise.all(mediaEls.map((el) => waitForMedia(el))).then(() => {
           this.readonlyValidationTarget = targetEl;
-          runValidation(targetEl, this.editorSettings, this.updateValidationsContext);
+          runValidation(targetEl, this.validations, this.updateValidationsContext);
         });
       });
     } else {
@@ -258,7 +217,7 @@ export class Context extends LitElement {
     // initial run in `onCreate` or the readonly animation frame.
     const target = this.validationTarget;
     if (target && VALIDATION_SETTINGS.some((setting) => changedProperties.has(setting))) {
-      runValidation(target, this.editorSettings, this.updateValidationsContext);
+      runValidation(target, this.validations, this.updateValidationsContext);
     }
   }
 

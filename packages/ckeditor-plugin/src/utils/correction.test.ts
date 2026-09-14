@@ -1,4 +1,4 @@
-import type { Violation, ViolationsMap } from '@nl-design-system-community/editor/validators';
+import { coreValidations, type Violation, type ViolationsMap } from '@nl-design-system-community/editor/validators';
 import { describe, expect, it, vi } from 'vitest';
 import { findMatchingCorrection, findOccurrenceIndex, runValidations } from './correction.ts';
 
@@ -9,7 +9,7 @@ const result = (rule: string, correct?: () => void): Violation => ({
   element: document.createElement('p'),
   messages: { error: 'Deze alinea is leeg.' },
   rule,
-  scope: 'block',
+  scope: 'element',
   severity: 'error',
 });
 
@@ -94,14 +94,14 @@ describe('findMatchingCorrection', () => {
 describe('runValidations', () => {
   it('returns a Map', () => {
     const dom = document.createElement('div');
-    const result = runValidations(dom, { enableRules: ['*'] });
+    const result = runValidations(dom);
     expect(result).toBeInstanceOf(Map);
   });
 
   it('returns an empty map for content with no issues', () => {
     const dom = document.createElement('div');
     dom.innerHTML = '<h1>Title</h1><p>Valid paragraph.</p>';
-    const result = runValidations(dom, { enableRules: ['*'] });
+    const result = runValidations(dom);
     expect(result.size).toBe(0);
   });
 
@@ -109,7 +109,7 @@ describe('runValidations', () => {
     const dom = document.createElement('div');
     dom.innerHTML = '<h2></h2>';
     document.body.appendChild(dom);
-    const result = runValidations(dom, { enableRules: ['HEADING_MUST_NOT_BE_EMPTY'] });
+    const result = runValidations(dom, [coreValidations.HEADING_MUST_NOT_BE_EMPTY]);
     document.body.removeChild(dom);
     expect(result.size).toBeGreaterThan(0);
   });

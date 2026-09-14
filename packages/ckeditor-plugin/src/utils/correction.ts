@@ -1,7 +1,7 @@
 import {
   type Violation,
   type ViolationsMap,
-  type EditorSettings,
+  type Validation,
   runValidation,
 } from '@nl-design-system-community/editor/validators';
 
@@ -39,9 +39,9 @@ export function findMatchingCorrection(
 }
 
 // runValidation hands its violations to a callback; this returns them instead.
-export function runValidations(dom: HTMLElement, settings: EditorSettings): ViolationsMap {
+export function runValidations(dom: HTMLElement, validations?: readonly Validation[]): ViolationsMap {
   let violations!: ViolationsMap;
-  runValidation(dom, settings, (map: ViolationsMap) => {
+  runValidation(dom, validations, (map: ViolationsMap) => {
     violations = map;
   });
   return violations;
