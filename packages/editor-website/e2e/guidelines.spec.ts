@@ -86,7 +86,8 @@ test.describe('Validation messages shown for bad content', () => {
 });
 
 /**
- * Each guideline editor enables the validation rules its content trips via `enable-rules`.
+ * Each guideline editor runs the validations its content trips, assigned by id in
+ * `src/scripts/guideline-validations.ts`.
  * The expected indicator count is derived from the content and the rule's selector: every
  * validation of `@nl-design-system-community/clippy-a11y-validator` fires once per element
  * matching its selector, in document order.
