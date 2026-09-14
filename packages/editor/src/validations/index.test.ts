@@ -2,25 +2,20 @@ import {
   coreValidationRules,
   coreValidations,
   defineValidation,
+  type Validation,
   validationSeverity,
 } from '@nl-design-system-community/clippy-a11y-validator';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { EditorSettings } from '@/types/settings';
 import type { ViolationsMap } from '@/types/validation';
 import { CustomEvents } from '@/events';
-import { activeValidations, runValidation } from './index';
-
-const settings = (overrides: Partial<EditorSettings> = {}): EditorSettings => ({
-  enableRules: ['*'],
-  ...overrides,
-});
+import { runValidation } from './index';
 
 let dom: HTMLElement;
 
-const validate = (markup: string, editorSettings = settings()): ViolationsMap => {
+const validate = (markup: string, validations?: readonly Validation[]): ViolationsMap => {
   dom.innerHTML = markup;
   let violations: ViolationsMap = new Map();
-  runValidation(dom, editorSettings, (reported) => {
+  runValidation(dom, validations, (reported) => {
     violations = reported;
   });
   return violations;
@@ -64,60 +59,6 @@ beforeEach(() => {
   document.body.replaceChildren(dom);
 });
 
-describe('activeValidations', () => {
-  it('enables every core validation on the wildcard', () => {
-    expect(activeValidations(settings({ enableRules: ['*'] })).length).toBe(Object.keys(coreValidationRules).length);
-  });
-
-  it('disables everything on a disable wildcard, whatever is enabled', () => {
-    expect(activeValidations(settings({ disableRules: ['*'], enableRules: ['*'] }))).toEqual([]);
-  });
-
-  it('enables only the rules that are listed', () => {
-    const active = activeValidations(settings({ enableRules: ['PARAGRAPH_SHOULD_NOT_BE_EMPTY'] }));
-
-    expect(active.map(({ rule }) => rule)).toEqual(['PARAGRAPH_SHOULD_NOT_BE_EMPTY']);
-  });
-
-  it('accepts rule identifiers in kebab-case, as the enable-rules attribute uses them', () => {
-    const active = activeValidations(settings({ enableRules: ['paragraph-should-not-be-empty'] }));
-
-    expect(active.map(({ rule }) => rule)).toEqual(['PARAGRAPH_SHOULD_NOT_BE_EMPTY']);
-  });
-
-  it('lets a disabled rule win over an enabled one', () => {
-    const active = activeValidations(
-      settings({
-        disableRules: ['paragraph-should-not-be-empty'],
-        enableRules: ['paragraph-should-not-be-empty', 'heading-must-not-be-empty'],
-      }),
-    );
-
-    expect(active.map(({ rule }) => rule)).toEqual(['HEADING_MUST_NOT_BE_EMPTY']);
-  });
-
-  it('takes the validations it is given instead of the core set', () => {
-    const active = activeValidations(settings({ validations: [paragraphMustNotShout] }));
-
-    expect(active).toEqual([paragraphMustNotShout]);
-  });
-
-  it('still filters a supplied set by the rule keys', () => {
-    const active = activeValidations(
-      settings({
-        disableRules: ['paragraph-must-not-shout'],
-        validations: [paragraphMustNotShout, coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY],
-      }),
-    );
-
-    expect(active.map(({ rule }) => rule)).toEqual(['PARAGRAPH_SHOULD_NOT_BE_EMPTY']);
-  });
-
-  it('disables a supplied set on the disable wildcard too', () => {
-    expect(activeValidations(settings({ disableRules: ['*'], validations: [paragraphMustNotShout] }))).toEqual([]);
-  });
-});
-
 describe('runValidation', () => {
   it('reports the violations of the validator package', () => {
     const map = validate('<h1>Titel</h1><p></p>');
@@ -140,12 +81,20 @@ describe('runValidation', () => {
     expect(rulesIn(map)).not.toContain(coreValidationRules.HEADING_MUST_START_AT_LEVEL_ONE);
   });
 
-  it('validates nothing when every rule is disabled', () => {
-    expect(validate('<p></p>', settings({ disableRules: ['*'] })).size).toBe(0);
+  it('validates nothing when given an empty set', () => {
+    expect(validate('<p></p>', []).size).toBe(0);
+  });
+
+  it('runs only the named core validations', () => {
+    const map = validate('<h1>Titel</h1><h1>Nog een titel</h1><p></p>', [
+      coreValidations.HEADING_LEVEL_ONE_MUST_BE_UNIQUE,
+    ]);
+
+    expect(rulesIn(map)).toEqual([coreValidationRules.HEADING_LEVEL_ONE_MUST_BE_UNIQUE]);
   });
 
   it('reports a validation the host brought itself', () => {
-    const map = validate('<h1>Titel</h1><p>LET OP</p>', settings({ validations: [paragraphMustNotShout] }));
+    const map = validate('<h1>Titel</h1><p>LET OP</p>', [paragraphMustNotShout]);
     const [violation] = [...map.values()];
 
     expect(rulesIn(map)).toEqual(['PARAGRAPH_MUST_NOT_SHOUT']);
@@ -155,14 +104,14 @@ describe('runValidation', () => {
 
   it('resolves the messages in the language of the document', () => {
     document.documentElement.lang = 'en';
-    const map = validate('<p></p>', settings({ validations: [paragraphMustNotBeEmpty] }));
+    const map = validate('<p></p>', [paragraphMustNotBeEmpty]);
 
     expect([...map.values()][0]?.messages.error).toBe('This paragraph is empty.');
   });
 
   it('runs only the given validations, not the core set as well', () => {
     // The empty paragraph would trip PARAGRAPH_SHOULD_NOT_BE_EMPTY if the core set were included.
-    const map = validate('<h1>Titel</h1><p></p>', settings({ validations: [paragraphMustNotShout] }));
+    const map = validate('<h1>Titel</h1><p></p>', [paragraphMustNotShout]);
 
     expect(map.size).toBe(0);
   });

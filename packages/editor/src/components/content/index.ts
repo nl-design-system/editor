@@ -7,7 +7,7 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import type { ViolationsMap } from '@/types/validation';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import { tiptapContext } from '@/context/tiptapContext';
-import { validationsContext } from '@/context/validationsContext';
+import { violationsContext } from '@/context/violationsContext';
 
 const tag = 'clippy-content';
 
@@ -88,9 +88,9 @@ export class Content extends LitElement {
   public htmlDocument?: HTMLElement;
 
   /** @internal Validations map consumed from context (used for reactive updates). */
-  @consume({ context: validationsContext, subscribe: true })
+  @consume({ context: violationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsContext?: ViolationsMap;
+  violationsContext?: ViolationsMap;
 
   /**
    * When present, mounts the ProseMirror view inside the Shadow DOM instead of

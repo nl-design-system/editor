@@ -16,7 +16,7 @@ import type { ValidationInteractionMode, Violation, ValidationSeverity, Violatio
 import { validationInteractionMode, validationSeverity } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';
 import { tiptapContext } from '@/context/tiptapContext';
-import { validationsContext } from '@/context/validationsContext';
+import { violationsContext } from '@/context/violationsContext';
 import { ResizeController } from '@/controllers/ResizeController';
 import {
   CustomEvents,
@@ -145,11 +145,11 @@ export class Gutter extends LitElement {
 
   /** Map of DOM ranges to their violations, used to render indicators. */
   @property({ attribute: false })
-  validationsMap?: ViolationsMap;
+  violationsMap?: ViolationsMap;
 
-  @consume({ context: validationsContext, subscribe: true })
+  @consume({ context: violationsContext, subscribe: true })
   @state()
-  private readonly validationsContext?: ViolationsMap;
+  private readonly violationsContext?: ViolationsMap;
 
   /** @internal Identifier of the owning editor, used to scope drawer events. */
   @consume({ context: identifierContext, subscribe: true })
@@ -192,7 +192,7 @@ export class Gutter extends LitElement {
 
   /** The clicked range plus every other validation range that overlaps it. */
   #getOverlappingRanges(target: Range): Range[] {
-    const map = this.validationsMap ?? this.validationsContext;
+    const map = this.violationsMap ?? this.violationsContext;
     if (!map) return [target];
     return getOverlappingRanges(target, map.keys());
   }
@@ -223,8 +223,8 @@ export class Gutter extends LitElement {
   override updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
 
-    if (changedProperties.has('validationsMap') || changedProperties.has('validationsContext')) {
-      applyValidationHighlights(this, this.validationsMap ?? this.validationsContext);
+    if (changedProperties.has('violationsMap') || changedProperties.has('violationsContext')) {
+      applyValidationHighlights(this, this.violationsMap ?? this.violationsContext);
     }
 
     if (changedProperties.has('editor')) {
@@ -385,7 +385,7 @@ export class Gutter extends LitElement {
   }
 
   override render() {
-    const map = this.validationsMap ?? this.validationsContext;
+    const map = this.violationsMap ?? this.violationsContext;
     if (!map || map.size === 0) {
       return nothing;
     }

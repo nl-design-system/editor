@@ -8,7 +8,7 @@ import { map } from 'lit/directives/map.js';
 import '@/components/validations/validation-item';
 import type { ValidationItem } from '@/components/validations/validation-item';
 import type { ViolationsMap, ValidationSeverity } from '@/types/validation';
-import { validationsContext } from '@/context/validationsContext';
+import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type FocusValidationItemInListEvent } from '@/events';
 import listStyles from './styles';
 
@@ -39,10 +39,10 @@ declare global {
 export class ValidationsList extends LitElement {
   static override readonly styles = [listStyles, unsafeCSS(paragraphStyle)];
 
-  /** @internal Consumed from the nearest {@link validationsContext} provider. */
-  @consume({ context: validationsContext, subscribe: true })
+  /** @internal Consumed from the nearest {@link violationsContext} provider. */
+  @consume({ context: violationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsContext?: ViolationsMap;
+  violationsContext?: ViolationsMap;
 
   /** Optional severity filter. When set, only items of this severity are rendered. */
   @property({ type: String }) severity: ValidationSeverity | null = null;
@@ -76,7 +76,7 @@ export class ValidationsList extends LitElement {
   };
 
   override render() {
-    const entries = [...(this.validationsContext?.entries() ?? [])].filter(([range, { severity }]) => {
+    const entries = [...(this.violationsContext?.entries() ?? [])].filter(([range, { severity }]) => {
       if (this.focusedValidationGroup) return this.focusedValidationGroup.includes(range);
       return !this.severity || severity === this.severity;
     });

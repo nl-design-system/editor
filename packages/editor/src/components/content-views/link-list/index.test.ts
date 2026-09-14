@@ -160,11 +160,9 @@ describe('<clippy-link-list>', () => {
       const linkRange = document.createRange();
       linkRange.selectNode(linkEl);
 
-      const validationsMap: ViolationsMap = new Map([
-        [linkRange, violation({ range: linkRange, severity: 'warning' })],
-      ]);
+      const violationsMap: ViolationsMap = new Map([[linkRange, violation({ range: linkRange, severity: 'warning' })]]);
 
-      contextEl.updateValidationsContext(validationsMap);
+      contextEl.updateViolationsContext(violationsMap);
       await contextEl.updateComplete;
       linkList.requestUpdate();
 
@@ -187,12 +185,12 @@ describe('<clippy-link-list>', () => {
       linkRange2.selectNode(linkEl);
 
       // Two entries for the same element: error takes precedence over warning.
-      const validationsMap: ViolationsMap = new Map([
+      const violationsMap: ViolationsMap = new Map([
         [linkRange1, violation({ range: linkRange1, severity: 'warning' })],
         [linkRange2, violation({ range: linkRange2, severity: 'error' })],
       ]);
 
-      contextEl.updateValidationsContext(validationsMap);
+      contextEl.updateViolationsContext(violationsMap);
       await contextEl.updateComplete;
       linkList.requestUpdate();
 

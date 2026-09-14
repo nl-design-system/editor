@@ -20,7 +20,7 @@ import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { identifierContext } from '@/context/identifierContext';
 import { tiptapContext } from '@/context/tiptapContext';
-import { validationsContext } from '@/context/validationsContext';
+import { violationsContext } from '@/context/violationsContext';
 import {
   CustomEvents,
   type CloseValidationsDrawerEvent,
@@ -84,9 +84,9 @@ export class ValidationsDrawer extends LitElement {
   @property({ attribute: false })
   public editor?: Editor;
 
-  @consume({ context: validationsContext, subscribe: true })
+  @consume({ context: violationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsContext?: ViolationsMap;
+  violationsContext?: ViolationsMap;
 
   @consume({ context: htmlDocumentContext, subscribe: true })
   @property({ attribute: false })
@@ -100,13 +100,13 @@ export class ValidationsDrawer extends LitElement {
    * (in-editor use).
    */
   @property({ attribute: false })
-  validationsMap?: ViolationsMap;
+  violationsMap?: ViolationsMap;
 
-  /** @see {@link validationsMap} */
+  /** @see {@link violationsMap} */
   @property({ attribute: false })
   htmlDocument?: HTMLElement;
 
-  /** @see {@link validationsMap} */
+  /** @see {@link violationsMap} */
   @property({ attribute: false })
   identifier?: string;
 
@@ -123,14 +123,14 @@ export class ValidationsDrawer extends LitElement {
    * standalone the prop flows down; in-editor the consumed value is relayed.
    * Scoped to our subtree — no `document.body` pollution or provider thrash.
    */
-  readonly #validationsProvider = new ContextProvider(this, { context: validationsContext, initialValue: new Map() });
+  readonly #violationsProvider = new ContextProvider(this, { context: violationsContext, initialValue: new Map() });
   readonly #htmlDocumentProvider = new ContextProvider(this, { context: htmlDocumentContext });
   readonly #identifierProvider = new ContextProvider(this, { context: identifierContext });
 
   override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
-    if (changed.has('validationsMap') || changed.has('validationsContext')) {
-      this.#validationsProvider.setValue(this.validationsMap ?? this.validationsContext ?? new Map());
+    if (changed.has('violationsMap') || changed.has('violationsContext')) {
+      this.#violationsProvider.setValue(this.violationsMap ?? this.violationsContext ?? new Map());
     }
     if (changed.has('htmlDocument') || changed.has('htmlDocumentContextValue')) {
       this.#htmlDocumentProvider.setValue(this.htmlDocument ?? this.htmlDocumentContextValue);
