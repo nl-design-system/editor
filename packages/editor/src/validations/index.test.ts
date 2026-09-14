@@ -1,4 +1,9 @@
-import { coreValidationRules } from '@nl-design-system-community/clippy-a11y-validator';
+import {
+  coreValidationRules,
+  coreValidations,
+  defineValidation,
+  validationSeverity,
+} from '@nl-design-system-community/clippy-a11y-validator';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { EditorSettings } from '@/types/settings';
 import type { ViolationsMap } from '@/types/validation';
@@ -22,6 +27,36 @@ const validate = (markup: string, editorSettings = settings()): ViolationsMap =>
 };
 
 const rulesIn = (map: ViolationsMap): string[] => [...map.values()].map(({ rule }) => rule);
+
+/**
+ * A rule with copy in both locales, so the locale the editor derives from the document is visible
+ * in the resolved message. No shipped validation carries English copy, hence a fixture of its own.
+ */
+const paragraphMustNotBeEmpty = defineValidation({
+  condition: () => false,
+  messages: {
+    en: { error: 'This paragraph is empty.' },
+    nl: { error: 'Deze alinea is leeg.' },
+  },
+  rule: 'PARAGRAPH_MUST_NOT_BE_EMPTY',
+  scope: 'element',
+  selector: 'p',
+  severity: validationSeverity.WARNING,
+});
+
+/** A rule no core validation covers, to prove a host can bring its own. */
+const paragraphMustNotShout = defineValidation({
+  condition: (paragraph) => {
+    const text = paragraph.textContent ?? '';
+    // An empty paragraph is trivially uppercase; that is the core set's business, not this rule's.
+    return text.trim() === '' || text !== text.toUpperCase();
+  },
+  messages: { nl: { error: 'Deze alinea staat volledig in hoofdletters.' } },
+  rule: 'PARAGRAPH_MUST_NOT_SHOUT',
+  scope: 'element',
+  selector: 'p',
+  severity: validationSeverity.WARNING,
+});
 
 beforeEach(() => {
   document.documentElement.lang = 'nl';
@@ -60,6 +95,27 @@ describe('activeValidations', () => {
 
     expect(active.map(({ rule }) => rule)).toEqual(['HEADING_MUST_NOT_BE_EMPTY']);
   });
+
+  it('takes the validations it is given instead of the core set', () => {
+    const active = activeValidations(settings({ validations: [paragraphMustNotShout] }));
+
+    expect(active).toEqual([paragraphMustNotShout]);
+  });
+
+  it('still filters a supplied set by the rule keys', () => {
+    const active = activeValidations(
+      settings({
+        disableRules: ['paragraph-must-not-shout'],
+        validations: [paragraphMustNotShout, coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY],
+      }),
+    );
+
+    expect(active.map(({ rule }) => rule)).toEqual(['PARAGRAPH_SHOULD_NOT_BE_EMPTY']);
+  });
+
+  it('disables a supplied set on the disable wildcard too', () => {
+    expect(activeValidations(settings({ disableRules: ['*'], validations: [paragraphMustNotShout] }))).toEqual([]);
+  });
 });
 
 describe('runValidation', () => {
@@ -86,6 +142,29 @@ describe('runValidation', () => {
 
   it('validates nothing when every rule is disabled', () => {
     expect(validate('<p></p>', settings({ disableRules: ['*'] })).size).toBe(0);
+  });
+
+  it('reports a validation the host brought itself', () => {
+    const map = validate('<h1>Titel</h1><p>LET OP</p>', settings({ validations: [paragraphMustNotShout] }));
+    const [violation] = [...map.values()];
+
+    expect(rulesIn(map)).toEqual(['PARAGRAPH_MUST_NOT_SHOUT']);
+    expect(violation?.messages.error).toBe('Deze alinea staat volledig in hoofdletters.');
+    expect(violation?.range).toBeInstanceOf(Range);
+  });
+
+  it('resolves the messages in the language of the document', () => {
+    document.documentElement.lang = 'en';
+    const map = validate('<p></p>', settings({ validations: [paragraphMustNotBeEmpty] }));
+
+    expect([...map.values()][0]?.messages.error).toBe('This paragraph is empty.');
+  });
+
+  it('runs only the given validations, not the core set as well', () => {
+    // The empty paragraph would trip PARAGRAPH_SHOULD_NOT_BE_EMPTY if the core set were included.
+    const map = validate('<h1>Titel</h1><p></p>', settings({ validations: [paragraphMustNotShout] }));
+
+    expect(map.size).toBe(0);
   });
 
   it('applies the correction of the validator package', () => {
