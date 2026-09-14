@@ -38,7 +38,11 @@ const globalAttributes = {
 } as const;
 
 export const editorExtensions = (
-  settings: EditorSettings,
+  /**
+   * Read whenever validation runs rather than captured once, so a change to the host's rules or
+   * heading level reaches the next run.
+   */
+  getSettings: () => EditorSettings,
   callback: (violations: Map<Range, Violation>) => void,
   identifier?: string,
 ) => [
@@ -187,7 +191,7 @@ export const editorExtensions = (
     resize: {
       alwaysPreserveAspectRatio: true,
       directions: ['top', 'bottom', 'left', 'right', 'top-right', 'top-left', 'bottom-right', 'bottom-left'],
-      enabled: !settings.readonly,
+      enabled: !getSettings().readonly,
       minHeight: 50,
       minWidth: 50,
     },
@@ -224,8 +228,8 @@ export const editorExtensions = (
   }),
   KeyboardShortcuts,
   Validation.configure({
+    getSettings,
     identifier,
-    settings,
     updateValidationsContext: callback,
   }),
   Highlight.configure({
