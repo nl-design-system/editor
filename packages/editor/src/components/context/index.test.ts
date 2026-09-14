@@ -1,4 +1,8 @@
-import { defineValidation, validationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
+import {
+  coreValidations,
+  defineValidation,
+  validationSeverity,
+} from '@nl-design-system-community/clippy-a11y-validator';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Context } from './index';
 import '@/components/content';
@@ -12,12 +16,15 @@ const paragraphMustNotShout = defineValidation({
   },
   messages: { nl: { error: 'Deze alinea staat volledig in hoofdletters.' } },
   rule: 'PARAGRAPH_MUST_NOT_SHOUT',
-  scope: 'block',
+  scope: 'element',
   selector: 'p',
   severity: validationSeverity.WARNING,
 });
 
 const CONTENT = '<h1>Titel</h1><p>LET OP</p><p></p>';
+
+/** Longer than the validation debounce, so a re-run triggered by an edit has landed. */
+const VALIDATION_SETTLE_MS = 1500;
 
 const render = async (attributes = ''): Promise<Context> => {
   document.body.innerHTML = `
@@ -46,7 +53,7 @@ afterEach(() => {
 });
 
 describe('<clippy-context> validations property', () => {
-  it('runs the core validations when none are given', async () => {
+  it('runs every core validation when none are given', async () => {
     const context = await render();
     await settled(context);
 
@@ -54,7 +61,17 @@ describe('<clippy-context> validations property', () => {
     expect(rulesOf(context)).not.toContain('PARAGRAPH_MUST_NOT_SHOUT');
   });
 
-  it('runs the validations set on the property instead of the core set', async () => {
+  it('runs only the core validations it is given', async () => {
+    const context = await render();
+    await settled(context);
+
+    context.validations = [coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY];
+    await context.updateComplete;
+
+    await vi.waitFor(() => expect(rulesOf(context)).toEqual(['PARAGRAPH_SHOULD_NOT_BE_EMPTY']));
+  });
+
+  it('runs a validation the host wrote itself', async () => {
     const context = await render();
     await settled(context);
 
@@ -75,12 +92,29 @@ describe('<clippy-context> validations property', () => {
     await vi.waitFor(() => expect(context.validationsContext).not.toBe(before));
   });
 
-  it('still filters a property-supplied set by disable-rules', async () => {
+  it('keeps the host validations when the content is edited afterwards', async () => {
     const context = await render();
     await settled(context);
 
     context.validations = [paragraphMustNotShout];
-    context.disableRules = ['paragraph-must-not-shout'];
+    await context.updateComplete;
+    await vi.waitFor(() => expect(rulesOf(context)).toEqual(['PARAGRAPH_MUST_NOT_SHOUT']));
+
+    // An edit re-validates through the Validation extension rather than through `updated`, so the
+    // extension has to read the property again instead of the value it was built with.
+    context.editor?.commands.insertContent('x');
+    await new Promise((resolve) => {
+      setTimeout(resolve, VALIDATION_SETTLE_MS);
+    });
+
+    expect(rulesOf(context)).toEqual(['PARAGRAPH_MUST_NOT_SHOUT']);
+  });
+
+  it('reports nothing when given an empty set', async () => {
+    const context = await render();
+    await settled(context);
+
+    context.validations = [];
     await context.updateComplete;
 
     await vi.waitFor(() => expect(context.validationsContext.size).toBe(0));

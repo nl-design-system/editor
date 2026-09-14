@@ -1,18 +1,19 @@
 import { Editor } from '@tiptap/core';
 import { vi } from 'vitest';
-import type { EditorSettings } from '@/types/settings';
+import type { EditorExtensionOptions } from '@/extensions';
 import { editorExtensions } from '@/extensions';
 
-const DEFAULT_EDITOR_SETTINGS: EditorSettings = { disableRules: [], enableRules: ['*'] };
+/** Stable reference, so every caller that omits the options gets the same object. */
+const DEFAULT_OPTIONS: EditorExtensionOptions = { getValidations: () => undefined };
 
 export async function createTestEditor(
   content: string,
   callback: (resultMap: Map<Range, unknown>) => void = vi.fn(),
-  settings: EditorSettings = DEFAULT_EDITOR_SETTINGS,
+  options: EditorExtensionOptions = DEFAULT_OPTIONS,
 ): Promise<Editor> {
   const editor = new Editor({
     content,
-    extensions: editorExtensions(() => settings, callback),
+    extensions: editorExtensions(options, callback),
   });
 
   if (editor.isInitialized) return editor;
