@@ -27,6 +27,7 @@ import Document from '../layouts/document.astro';
     Paragraph,
     Underline,
   } from 'ckeditor5';
+  import coreTranslations from 'ckeditor5/translations/nl.js';
   import { ClippyPlugin } from '@nl-design-system-community/ckeditor-plugin';
 
   const editorEl = document.querySelector<HTMLElement>('#ck-editor');
@@ -74,6 +75,8 @@ import Document from '../layouts/document.astro';
         { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' },
       ],
     },
+    language: 'nl',
+    translations: [coreTranslations],
     licenseKey: 'GPL',
     initialData: `
       <h1>NL Design System Editor kop 1</h1>
