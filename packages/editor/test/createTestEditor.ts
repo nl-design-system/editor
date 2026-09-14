@@ -12,7 +12,7 @@ export async function createTestEditor(
 ): Promise<Editor> {
   const editor = new Editor({
     content,
-    extensions: editorExtensions(settings, callback),
+    extensions: editorExtensions(() => settings, callback),
   });
 
   if (editor.isInitialized) return editor;
