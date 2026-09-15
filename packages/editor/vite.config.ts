@@ -12,6 +12,7 @@ export default defineConfig({
         'editor-wrapper': 'src/entries/editor-wrapper.ts',
         gutter: 'src/entries/gutter.ts',
         index: 'src/index.ts',
+        registry: 'src/entries/registry.ts',
         toolbar: 'src/entries/toolbar.ts',
         validators: 'src/entries/validators.ts',
       },
