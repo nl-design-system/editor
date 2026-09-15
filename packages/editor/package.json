@@ -28,6 +28,10 @@
       "types": "./dist/entries/content-classes.d.ts",
       "default": "./dist/content-classes.js"
     },
+    "./document": {
+      "types": "./dist/entries/document.d.ts",
+      "default": "./dist/document.js"
+    },
     "./editor-wrapper": {
       "types": "./dist/entries/editor-wrapper.d.ts",
       "default": "./dist/editor-wrapper.js"
@@ -60,6 +64,9 @@
       ],
       "content-classes": [
         "./dist/entries/content-classes.d.ts"
+      ],
+      "document": [
+        "./dist/entries/document.d.ts"
       ],
       "editor-wrapper": [
         "./dist/entries/editor-wrapper.d.ts"
@@ -103,6 +110,7 @@
     "@nl-design-system-candidate/data-badge-css": "1.0.5",
     "@nl-design-system-candidate/link-css": "2.0.3",
     "@nl-design-system-candidate/number-badge-css": "1.1.5",
+    "@nl-design-system-community/clippy-a11y-validator": "workspace:*",
     "@nl-design-system-community/clippy-alt-text-wizard": "workspace:*",
     "@nl-design-system-community/clippy-components": "3.2.0",
     "@nl-design-system-unstable/documentation": "1.11.0",

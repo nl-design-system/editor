@@ -286,6 +286,9 @@ importers:
       '@nl-design-system-candidate/number-badge-css':
         specifier: 1.1.5
         version: 1.1.5
+      '@nl-design-system-community/clippy-a11y-validator':
+        specifier: workspace:*
+        version: link:../clippy-a11y-validator
       '@nl-design-system-community/clippy-alt-text-wizard':
         specifier: workspace:*
         version: link:../clippy-alt-text-wizard

@@ -9,6 +9,7 @@ export default defineConfig({
         'accessibility-notifications': 'src/entries/accessibility-notifications.ts',
         'color-scheme': 'src/entries/color-scheme.ts',
         'content-classes': 'src/entries/content-classes.ts',
+        document: 'src/entries/document.ts',
         'editor-wrapper': 'src/entries/editor-wrapper.ts',
         gutter: 'src/entries/gutter.ts',
         index: 'src/index.ts',
