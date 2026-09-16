@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { tableCaptionShouldNotBeEmpty } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [tableCaptionShouldNotBeEmpty] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate(root);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('tableCaptionShouldNotBeEmpty', () => {
@@ -21,7 +21,7 @@ describe('tableCaptionShouldNotBeEmpty', () => {
 
     expect(violation?.rule).toBe('TABLE_CAPTION_SHOULD_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze tabel heeft een lege omschrijving.');
   });
 

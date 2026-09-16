@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
+import { pageContext } from '../context.ts';
 import { render } from '../test-helpers/render.ts';
 import { resemblesListItem } from './list.ts';
 
-/** Renders a container and tests its first paragraph, so sibling lookahead has something to find. */
 const looksLikeList = (html: string): boolean => {
   const container = render(`<div>${html}</div>`);
-  return resemblesListItem(container.querySelector('p')!, container);
+  const paragraph = container.querySelector('p')!;
+  return resemblesListItem(paragraph, pageContext([container])(paragraph));
 };
 
 describe('resemblesListItem', () => {
@@ -35,6 +36,10 @@ describe('resemblesListItem', () => {
 
   it('is false when the numbering does not continue', () => {
     expect(looksLikeList('<p>1. een<br>7. zeven</p>')).toBe(false);
+  });
+
+  it('is false when the next list-like paragraph is in another container', () => {
+    expect(looksLikeList('<p>- een</p><div><p>- twee</p></div>')).toBe(false);
   });
 
   it('is false when the next sibling is a different kind of element', () => {

@@ -8,7 +8,7 @@ export const paragraphShouldNotBeEmpty = defineValidation({
   condition: hasTextContent,
   messages,
   rule: paragraphValidationRules.PARAGRAPH_SHOULD_NOT_BE_EMPTY,
-  scope: 'block',
+  scope: 'element',
   selector: selectors.PARAGRAPH,
   severity: validationSeverity.INFO,
 });

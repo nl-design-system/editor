@@ -9,7 +9,7 @@ export const descriptionShouldNotBeEmpty = defineValidation({
   correct: (description) => () => description.remove(),
   messages,
   rule: descriptionListValidationRules.DESCRIPTION_SHOULD_NOT_BE_EMPTY,
-  scope: 'block',
+  scope: 'element',
   selector: selectors.DESCRIPTION_DETAILS,
   severity: validationSeverity.INFO,
 });

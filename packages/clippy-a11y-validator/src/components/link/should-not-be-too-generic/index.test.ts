@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { linkShouldNotBeTooGeneric } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [linkShouldNotBeTooGeneric] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate(root);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('linkShouldNotBeTooGeneric', () => {
@@ -21,7 +21,7 @@ describe('linkShouldNotBeTooGeneric', () => {
 
     expect(violation?.rule).toBe('LINK_SHOULD_NOT_BE_TOO_GENERIC');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('inline');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('De linktekst "lees meer" zegt niet waar de link naartoe gaat.');
     expect(violation?.messages.solution).toBe('Beschrijf in de linktekst waar de link naartoe gaat.');
   });

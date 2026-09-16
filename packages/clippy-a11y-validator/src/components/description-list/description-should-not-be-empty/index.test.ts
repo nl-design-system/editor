@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { descriptionShouldNotBeEmpty } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [descriptionShouldNotBeEmpty] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate(root);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('descriptionShouldNotBeEmpty', () => {
@@ -21,7 +21,7 @@ describe('descriptionShouldNotBeEmpty', () => {
 
     expect(violation?.rule).toBe('DESCRIPTION_SHOULD_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze definitiebeschrijving is leeg.');
     expect(violation?.messages.solution).toBe('Verwijder de lege definitiebeschrijving of voeg tekst toe.');
   });
@@ -48,7 +48,7 @@ describe('descriptionShouldNotBeEmpty', () => {
     const [violation] = validate('<dl><dt>term</dt><dd></dd></dl>');
     violation?.correct?.();
 
-    expect(root.querySelector('dd')).toBeNull();
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(contentRoot.querySelector('dd')).toBeNull();
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 });

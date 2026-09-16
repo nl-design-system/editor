@@ -9,7 +9,7 @@ export const linkShouldNotBeEmpty = defineValidation({
   correct: (link) => () => link.remove(),
   messages,
   rule: linkValidationRules.LINK_SHOULD_NOT_BE_EMPTY,
-  scope: 'inline',
+  scope: 'element',
   selector: selectors.LINK,
   severity: validationSeverity.WARNING,
 });

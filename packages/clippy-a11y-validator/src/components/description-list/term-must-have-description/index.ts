@@ -1,26 +1,19 @@
-import { hasTextContent } from '../../../conditions/index.ts';
 import { selectors, validationSeverity } from '../../../consts/index.ts';
 import { defineValidation } from '../../../define-validation.ts';
-import { isEmptyOrWhitespace } from '../../../utils/text.ts';
 import { descriptionListValidationRules } from '../constants.ts';
+import { emptyTerms, hasFilledDescription } from '../terms.ts';
 import { messages } from './messages.ts';
 
-/** A description with content but no term of its own leaves the pair unreadable. */
+const emptyTermsWithDescription = (list: HTMLElement): HTMLElement[] => emptyTerms(list).filter(hasFilledDescription);
+
 export const descriptionTermMustHaveDescription = defineValidation({
-  condition: (term, root) => {
-    if (hasTextContent(term, root)) return true;
-
-    const description = term.nextElementSibling;
-
-    return description?.tagName !== 'DD' || isEmptyOrWhitespace(description.textContent ?? '');
-  },
-  // Marks the term as still to be written, rather than inventing copy for it.
-  correct: (term) => () => {
-    term.textContent = '...';
+  condition: (list) => emptyTermsWithDescription(list).length === 0,
+  correct: (list) => () => {
+    for (const term of emptyTermsWithDescription(list)) term.textContent = '...';
   },
   messages,
   rule: descriptionListValidationRules.DESCRIPTION_TERM_MUST_HAVE_DESCRIPTION,
-  scope: 'block',
-  selector: selectors.DESCRIPTION_TERM,
+  scope: 'element',
+  selector: selectors.DESCRIPTION_LIST,
   severity: validationSeverity.ERROR,
 });

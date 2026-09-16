@@ -30,23 +30,18 @@ export const isOrderedListItem = (element: Element): boolean => isOrderedPrefix(
 export const stripListPrefix = (text: string, isOrdered: boolean): string =>
   text.replace(isOrdered ? ORDERED_PREFIX : UNORDERED_PREFIX, '');
 
-/**
- * Replaces a run of list-like paragraphs, starting at `startParagraph`, with a single `ul` or `ol`.
- * Every `<br>`-separated line becomes its own list item with the marker stripped.
- */
-export const convertParagraphsToList = (startParagraph: Element, isOrdered: boolean): void => {
-  const parent = startParagraph.parentNode;
-  if (!parent) return;
-
+export const convertParagraphsToList = (
+  startParagraph: Element,
+  isOrdered: boolean,
+  subsequentSiblings: readonly Element[],
+): void => {
   const list = startParagraph.ownerDocument.createElement(isOrdered ? 'ol' : 'ul');
   const paragraphs: Element[] = [startParagraph];
 
-  let next = startParagraph.nextElementSibling;
-  while (next?.tagName === startParagraph.tagName) {
+  for (const next of subsequentSiblings) {
     const prefix = listPrefix(next.textContent ?? '');
     if (!isOrderedPrefix(prefix) && !isUnorderedPrefix(prefix)) break;
     paragraphs.push(next);
-    next = next.nextElementSibling;
   }
 
   for (const paragraph of paragraphs) {

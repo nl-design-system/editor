@@ -2,27 +2,28 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { descriptionTermShouldNotBeEmpty } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [descriptionTermShouldNotBeEmpty] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate(root);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('descriptionTermShouldNotBeEmpty', () => {
-  it('flags an empty term whose description is also empty', () => {
+  it('flags the list holding an empty term whose description is also empty', () => {
     const [violation] = validate('<dl><dt></dt><dd></dd></dl>');
 
+    expect(violation?.element.tagName).toBe('DL');
     expect(violation?.rule).toBe('DESCRIPTION_TERM_SHOULD_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('block');
-    expect(violation?.messages.error).toBe('Deze definitieterm is leeg.');
+    expect(violation?.scope).toBe('element');
+    expect(violation?.messages.error).toBe('Deze definitielijst heeft een lege definitieterm.');
     expect(violation?.messages.solution).toBe('Verwijder de lege definitieterm of voeg tekst toe.');
   });
 
@@ -46,19 +47,23 @@ describe('descriptionTermShouldNotBeEmpty', () => {
     expect(validate('<dl><dt>term</dt><dd>beschrijving</dd></dl>')).toHaveLength(0);
   });
 
-  it('flags every empty term that has no description of its own', () => {
-    expect(validate('<dl><dt></dt><dd></dd><dt>term</dt><dd>twee</dd><dt> </dt><dd> </dd></dl>')).toHaveLength(2);
+  it('reports a list once, however many of its terms are empty', () => {
+    expect(validate('<dl><dt></dt><dd></dd><dt>term</dt><dd>twee</dd><dt> </dt><dd> </dd></dl>')).toHaveLength(1);
+  });
+
+  it('ignores terms of a nested list', () => {
+    expect(validate('<dl><dt>term</dt><dd><dl><dt></dt></dl></dd></dl>')).toHaveLength(1);
   });
 
   it('ignores descriptions', () => {
     expect(validate('<dl><dt>term</dt><dd></dd></dl>')).toHaveLength(0);
   });
 
-  it('removes the term when corrected', () => {
-    const [violation] = validate('<dl><dt></dt><dd></dd></dl>');
+  it('removes every such term when corrected', () => {
+    const [violation] = validate('<dl><dt></dt><dd></dd><dt>term</dt><dd>twee</dd><dt></dt></dl>');
     violation?.correct?.();
 
-    expect(root.querySelector('dt')).toBeNull();
-    expect(validator.validate(root)).toHaveLength(0);
+    expect([...contentRoot.querySelectorAll('dt')].map(({ textContent }) => textContent)).toEqual(['term']);
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 });

@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { headingMustStartAtLevelOne } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [headingMustStartAtLevelOne] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate(root);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('headingMustStartAtLevelOne', () => {
@@ -21,7 +21,7 @@ describe('headingMustStartAtLevelOne', () => {
 
     expect(violation?.rule).toBe('HEADING_MUST_START_AT_LEVEL_ONE');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('page');
     expect(violation?.messages.error).toBe('Het document begint met kopniveau 2 in plaats van kopniveau 1.');
     expect(violation?.messages.solution).toBe('Maak van deze kop een kopniveau 1.');
   });
@@ -29,7 +29,7 @@ describe('headingMustStartAtLevelOne', () => {
   it('reports the offending heading, not the first block', () => {
     const [violation] = validate('<p>inleiding</p><h3>Kop</h3>');
 
-    expect(violation?.element.tagName).toBe('H3');
+    expect(violation?.element?.tagName).toBe('H3');
   });
 
   it('interpolates the level of the offending heading', () => {
@@ -60,7 +60,7 @@ describe('headingMustStartAtLevelOne', () => {
     const [violation] = validate('<h2 id="kop">Kop</h2><p>tekst</p>');
     violation?.correct?.();
 
-    expect(root.innerHTML).toBe('<h1 id="kop">Kop</h1><p>tekst</p>');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(contentRoot.innerHTML).toBe('<h1 id="kop">Kop</h1><p>tekst</p>');
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 });

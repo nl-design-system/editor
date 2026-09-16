@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { pageContext } from '../context.ts';
 import { render } from '../test-helpers/render.ts';
 import {
   convertParagraphsToList,
@@ -90,46 +91,56 @@ describe('stripListPrefix', () => {
 
 describe('convertParagraphsToList', () => {
   const container = (html: string): HTMLElement => render(`<div>${html}</div>`);
+  const followingParagraphs = (contentRoot: HTMLElement): HTMLElement[] => [
+    ...pageContext([contentRoot])(contentRoot.querySelector('p')!).subsequentSiblingMatches('p'),
+  ];
 
   it('converts a run of numbered paragraphs into an ol', () => {
-    const root = container('<p>1. een</p><p>2. twee</p>');
-    convertParagraphsToList(root.querySelector('p')!, true);
+    const contentRoot = container('<p>1. een</p><p>2. twee</p>');
+    convertParagraphsToList(contentRoot.querySelector('p')!, true, followingParagraphs(contentRoot));
 
-    expect(root.innerHTML).toBe('<ol><li>een</li><li>twee</li></ol>');
+    expect(contentRoot.innerHTML).toBe('<ol><li>een</li><li>twee</li></ol>');
   });
 
   it('converts a run of bulleted paragraphs into a ul', () => {
-    const root = container('<p>- een</p><p>- twee</p>');
-    convertParagraphsToList(root.querySelector('p')!, false);
+    const contentRoot = container('<p>- een</p><p>- twee</p>');
+    convertParagraphsToList(contentRoot.querySelector('p')!, false, followingParagraphs(contentRoot));
 
-    expect(root.innerHTML).toBe('<ul><li>een</li><li>twee</li></ul>');
+    expect(contentRoot.innerHTML).toBe('<ul><li>een</li><li>twee</li></ul>');
   });
 
   it('splits a line-broken paragraph into separate items', () => {
-    const root = container('<p>- een<br>- twee<br>- drie</p>');
-    convertParagraphsToList(root.querySelector('p')!, false);
+    const contentRoot = container('<p>- een<br>- twee<br>- drie</p>');
+    convertParagraphsToList(contentRoot.querySelector('p')!, false, followingParagraphs(contentRoot));
 
-    expect(root.querySelectorAll('li')).toHaveLength(3);
+    expect(contentRoot.querySelectorAll('li')).toHaveLength(3);
   });
 
   it('stops at the first paragraph that is not list-like', () => {
-    const root = container('<p>- een</p><p>- twee</p><p>Gewone tekst.</p>');
-    convertParagraphsToList(root.querySelector('p')!, false);
+    const contentRoot = container('<p>- een</p><p>- twee</p><p>Gewone tekst.</p>');
+    convertParagraphsToList(contentRoot.querySelector('p')!, false, followingParagraphs(contentRoot));
 
-    expect(root.innerHTML).toBe('<ul><li>een</li><li>twee</li></ul><p>Gewone tekst.</p>');
+    expect(contentRoot.innerHTML).toBe('<ul><li>een</li><li>twee</li></ul><p>Gewone tekst.</p>');
   });
 
   it('inserts the list where the paragraphs were', () => {
-    const root = container('<h1>Titel</h1><p>- een</p><p>- twee</p><p>Slot.</p>');
-    convertParagraphsToList(root.querySelector('p')!, false);
+    const contentRoot = container('<h1>Titel</h1><p>- een</p><p>- twee</p><p>Slot.</p>');
+    convertParagraphsToList(contentRoot.querySelector('p')!, false, followingParagraphs(contentRoot));
 
-    expect(root.innerHTML).toBe('<h1>Titel</h1><ul><li>een</li><li>twee</li></ul><p>Slot.</p>');
+    expect(contentRoot.innerHTML).toBe('<h1>Titel</h1><ul><li>een</li><li>twee</li></ul><p>Slot.</p>');
+  });
+
+  it('stops at a paragraph that lives in another container', () => {
+    const contentRoot = container('<p>- een</p><div><p>- twee</p></div>');
+    convertParagraphsToList(contentRoot.querySelector('p')!, false, followingParagraphs(contentRoot));
+
+    expect(contentRoot.innerHTML).toBe('<ul><li>een</li></ul><div><p>- twee</p></div>');
   });
 
   it('does nothing for a detached paragraph', () => {
     const detached = document.createElement('p');
     detached.textContent = '- een';
 
-    expect(() => convertParagraphsToList(detached, false)).not.toThrow();
+    expect(() => convertParagraphsToList(detached, false, [])).not.toThrow();
   });
 });

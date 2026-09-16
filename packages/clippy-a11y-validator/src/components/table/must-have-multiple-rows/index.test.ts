@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { tableMustHaveMultipleRows } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [tableMustHaveMultipleRows] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate(root);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('tableMustHaveMultipleRows', () => {
@@ -21,7 +21,7 @@ describe('tableMustHaveMultipleRows', () => {
 
     expect(violation?.rule).toBe('TABLE_MUST_HAVE_MULTIPLE_ROWS');
     expect(violation?.severity).toBe('warning');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze tabel heeft minder dan twee rijen.');
   });
 
@@ -47,15 +47,15 @@ describe('tableMustHaveMultipleRows', () => {
     const [violation] = validate('<table><tbody><tr><td>C1</td><td>C2</td></tr></tbody></table>');
     violation?.correct?.();
 
-    expect(root.querySelectorAll('tr')).toHaveLength(2);
-    expect(root.querySelectorAll('tr:last-child > td')).toHaveLength(2);
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(contentRoot.querySelectorAll('tr')).toHaveLength(2);
+    expect(contentRoot.querySelectorAll('tr:last-child > td')).toHaveLength(2);
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 
   it('offers no correction for a table without rows to copy', () => {
     const [violation] = validate('<table></table>');
     violation?.correct?.();
 
-    expect(root.querySelectorAll('tr')).toHaveLength(0);
+    expect(contentRoot.querySelectorAll('tr')).toHaveLength(0);
   });
 });

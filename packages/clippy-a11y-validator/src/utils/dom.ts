@@ -1,4 +1,3 @@
-import { selectors } from '../consts/selectors.ts';
 import { isEmptyOrWhitespace } from './text.ts';
 
 export const visibleTextNodes = (element: Element): Text[] => {
@@ -35,19 +34,10 @@ export const changeTagName = (element: Element, tagName: string): void => {
 
 export const headingLevel = (element: Element): number => Number.parseInt(element.tagName.slice(1), 10);
 
-export const precedingMatch = (element: Element, root: ParentNode, selector: string): HTMLElement | null => {
-  const preceding = [...root.querySelectorAll<HTMLElement>(selector)].filter(
-    (candidate) =>
-      candidate !== element &&
-      !candidate.contains(element) &&
-      (element.compareDocumentPosition(candidate) & Node.DOCUMENT_POSITION_PRECEDING) !== 0,
-  );
+const MAX_HEADING_LEVEL = 6;
 
-  return preceding.at(-1) ?? null;
-};
-
-export const precedingHeading = (element: Element, root: ParentNode): HTMLElement | null =>
-  precedingMatch(element, root, selectors.HEADING);
+export const nextHeadingLevel = (heading: Element | null): number =>
+  heading === null ? 1 : Math.min(headingLevel(heading) + 1, MAX_HEADING_LEVEL);
 
 /** Splits an element into its `<br>`-separated text lines. */
 export const textLines = (element: Element): string[] => {

@@ -10,7 +10,7 @@ export const emphasisShouldNotBeEmpty = defineValidation({
   messages,
   payload: (emphasis) => ({ variant: emphasisVariant(emphasis) }),
   rule: emphasisValidationRules.EMPHASIS_SHOULD_NOT_BE_EMPTY,
-  scope: 'inline',
+  scope: 'element',
   selector: selectors.EMPHASIS,
   severity: validationSeverity.WARNING,
 });

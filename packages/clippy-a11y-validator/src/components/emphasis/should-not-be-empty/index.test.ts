@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { emphasisShouldNotBeEmpty } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [emphasisShouldNotBeEmpty] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate(root);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('emphasisShouldNotBeEmpty', () => {
@@ -21,7 +21,7 @@ describe('emphasisShouldNotBeEmpty', () => {
 
     expect(violation?.rule).toBe('EMPHASIS_SHOULD_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('warning');
-    expect(violation?.scope).toBe('inline');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Dit opmaakelement is leeg.');
   });
 
@@ -65,7 +65,7 @@ describe('emphasisShouldNotBeEmpty', () => {
     const [violation] = validate('<p>Zie <strong></strong>hier</p>');
     violation?.correct?.();
 
-    expect(root.querySelector('p')?.innerHTML).toBe('Zie hier');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(contentRoot.querySelector('p')?.innerHTML).toBe('Zie hier');
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 });

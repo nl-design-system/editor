@@ -5,17 +5,17 @@ import { paragraphShouldNotBeEntirelyBold } from './index.ts';
 
 const LONG = 'Deze alinea is volledig dikgedrukt en veel te lang om nog als een kop te kunnen doorgaan.';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [paragraphShouldNotBeEntirelyBold] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate(root);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('paragraphShouldNotBeEntirelyBold', () => {
@@ -24,7 +24,7 @@ describe('paragraphShouldNotBeEntirelyBold', () => {
 
     expect(violation?.rule).toBe('PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD');
     expect(violation?.severity).toBe('warning');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('De hele alinea is dikgedrukt.');
     expect(violation?.messages.solution).toContain('alleen voor de woorden');
   });
@@ -49,8 +49,8 @@ describe('paragraphShouldNotBeEntirelyBold', () => {
     const [violation] = validate(`<p><strong>${LONG}</strong> <b>${LONG}</b></p>`);
     violation?.correct?.();
 
-    expect(root.querySelector('p')?.innerHTML).toBe(`${LONG} ${LONG}`);
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(contentRoot.querySelector('p')?.innerHTML).toBe(`${LONG} ${LONG}`);
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 
   describe('leaves the heading-like paragraphs to paragraphShouldNotResembleHeading', () => {
@@ -70,9 +70,9 @@ describe('paragraphShouldNotBeEntirelyBold', () => {
       const both = new Validator({
         validations: [paragraphShouldNotBeEntirelyBold, paragraphShouldNotResembleHeading],
       });
-      root.innerHTML = `<p><strong>Wat neemt u mee?</strong></p><p><strong>${LONG}</strong></p>`;
+      contentRoot.innerHTML = `<p><strong>Wat neemt u mee?</strong></p><p><strong>${LONG}</strong></p>`;
 
-      expect(both.validate(root).map((violation) => violation.rule)).toEqual([
+      expect(both.validate([contentRoot]).map((violation) => violation.rule)).toEqual([
         'PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING',
         'PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD',
       ]);

@@ -12,7 +12,7 @@ export const paragraphShouldNotBeEntirelyBold = defineValidation({
   correct: (paragraph) => () => paragraph.querySelectorAll(selectors.BOLD).forEach(unwrapElement),
   messages,
   rule: paragraphValidationRules.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD,
-  scope: 'block',
+  scope: 'element',
   selector: selectors.PARAGRAPH,
   severity: validationSeverity.WARNING,
 });

@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { headingLevelOneMustBeUnique } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [headingLevelOneMustBeUnique] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate(root);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('headingLevelOneMustBeUnique', () => {
@@ -21,13 +21,13 @@ describe('headingLevelOneMustBeUnique', () => {
 
     expect(violation?.rule).toBe('HEADING_LEVEL_ONE_MUST_BE_UNIQUE');
     expect(violation?.severity).toBe('error');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('page');
     expect(violation?.messages.error).toBe('Dit document heeft meer dan één kopniveau 1.');
     expect(violation?.messages.solution).toContain('kopniveau 2');
   });
 
   it('reports the duplicate, not the first heading', () => {
-    expect(validate('<h1>Eerste</h1><h1>Tweede</h1>')[0]?.element.textContent).toBe('Tweede');
+    expect(validate('<h1>Eerste</h1><h1>Tweede</h1>')[0]?.element?.textContent).toBe('Tweede');
   });
 
   it('flags every duplicate beyond the first', () => {
@@ -50,20 +50,20 @@ describe('headingLevelOneMustBeUnique', () => {
     expect(validate('<h1>Titel</h1><section><h1>Nog een titel</h1></section>')).toHaveLength(1);
   });
 
-  it('ignores a level 1 outside the validated root', () => {
+  it('ignores a level 1 outside the validated content root', () => {
     const outside = document.createElement('h1');
     outside.textContent = 'Paginatitel';
-    document.body.replaceChildren(outside, root);
-    root.innerHTML = '<h1>Titel</h1>';
+    document.body.replaceChildren(outside, contentRoot);
+    contentRoot.innerHTML = '<h1>Titel</h1>';
 
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 
   it('retags the duplicate to a level 2 when corrected', () => {
     const [violation] = validate('<h1>Eerste</h1><h1 id="tweede">Tweede</h1>');
     violation?.correct?.();
 
-    expect(root.innerHTML).toBe('<h1>Eerste</h1><h2 id="tweede">Tweede</h2>');
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(contentRoot.innerHTML).toBe('<h1>Eerste</h1><h2 id="tweede">Tweede</h2>');
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 });

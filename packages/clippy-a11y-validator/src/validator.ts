@@ -33,8 +33,8 @@ export class Validator {
     };
   }
 
-  validate(root: ParentNode, { severities }: ValidateOptions = {}): Violation[] {
-    return walk(root, [...this.#validations.values()], {
+  validate(composedContent: readonly ParentNode[], { severities }: ValidateOptions = {}): Violation[] {
+    return walk(composedContent, [...this.#validations.values()], {
       fallbackLocale: this.#fallbackLocale,
       locale: this.#locale,
       ...(severities === undefined ? {} : { severities }),

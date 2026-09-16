@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { tableMustHaveHeadings } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [tableMustHaveHeadings] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate(root);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('tableMustHaveHeadings', () => {
@@ -23,7 +23,7 @@ describe('tableMustHaveHeadings', () => {
 
     expect(violation?.rule).toBe('TABLE_MUST_HAVE_HEADINGS');
     expect(violation?.severity).toBe('warning');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze tabel heeft geen koprij en geen kopkolom.');
     expect(violation?.messages.solution).toContain('eerste rij of de eerste kolom');
   });
@@ -62,15 +62,15 @@ describe('tableMustHaveHeadings', () => {
     );
     violation?.correct?.();
 
-    expect([...root.querySelectorAll('tr:first-child > *')].map((cell) => cell.tagName)).toEqual(['TH', 'TH']);
-    expect(validator.validate(root)).toHaveLength(0);
+    expect([...contentRoot.querySelectorAll('tr:first-child > *')].map((cell) => cell.tagName)).toEqual(['TH', 'TH']);
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 
   it('keeps the cell content and attributes when corrected', () => {
     const [violation] = validate('<table><tbody><tr><td colspan="2">C1</td></tr><tr><td>C2</td></tr></tbody></table>');
     violation?.correct?.();
 
-    const header = root.querySelector('th');
+    const header = contentRoot.querySelector('th');
     expect(header?.textContent).toBe('C1');
     expect(header?.getAttribute('colspan')).toBe('2');
   });

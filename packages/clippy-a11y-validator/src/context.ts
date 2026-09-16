@@ -1,0 +1,53 @@
+import type { Selector } from './types/selector.ts';
+import type { ValidationContext } from './types/validation.ts';
+
+export const matchingElements = (composedContent: readonly ParentNode[], selector: Selector): HTMLElement[] =>
+  composedContent.flatMap((contentRoot) =>
+    [...contentRoot.querySelectorAll(selector)].filter((element) => element instanceof HTMLElement),
+  );
+
+type Direction = 'after' | 'before';
+
+const siblingMatches = (element: HTMLElement, direction: Direction, selector: Selector): HTMLElement[] => {
+  const next = direction === 'before' ? 'previousElementSibling' : 'nextElementSibling';
+  const matches: HTMLElement[] = [];
+  let sibling = element[next];
+
+  while (sibling instanceof HTMLElement && sibling.matches(selector)) {
+    matches.push(sibling);
+    sibling = sibling[next];
+  }
+
+  return matches;
+};
+
+const pageMatches = (
+  composedContent: readonly ParentNode[],
+  element: HTMLElement,
+  direction: Direction,
+  selector: Selector,
+): HTMLElement[] => {
+  const page = matchingElements(composedContent, '*');
+  const position = page.indexOf(element);
+  if (position === -1) return [];
+
+  const side = direction === 'before' ? page.slice(0, position).reverse() : page.slice(position + 1);
+
+  return side.filter(
+    // exclude ancestors (before direction), descendants (after direction) and non-matching elements
+    (candidate) => !candidate.contains(element) && !element.contains(candidate) && candidate.matches(selector),
+  );
+};
+
+export const pageContext =
+  (composedContent: readonly ParentNode[]) =>
+  (element: HTMLElement): ValidationContext => ({
+    /** Every earlier match in the page, nearest first, excluding the element's ancestors. */
+    precedingMatches: (selector) => pageMatches(composedContent, element, 'before', selector),
+    /** The unbroken run of matching previous siblings, nearest first, stopping at the first non-match. */
+    precedingSiblingMatches: (selector) => siblingMatches(element, 'before', selector),
+    /** Every later match in the page, nearest first, excluding the element's descendants. */
+    subsequentMatches: (selector) => pageMatches(composedContent, element, 'after', selector),
+    /** The unbroken run of matching next siblings, nearest first, stopping at the first non-match. */
+    subsequentSiblingMatches: (selector) => siblingMatches(element, 'after', selector),
+  });

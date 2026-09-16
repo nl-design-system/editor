@@ -12,7 +12,7 @@ export const tableCaptionShouldNotBeEmpty = defineValidation({
   condition: hasTextContent,
   messages,
   rule: tableValidationRules.TABLE_CAPTION_SHOULD_NOT_BE_EMPTY,
-  scope: 'block',
+  scope: 'element',
   selector: selectors.TABLE_CAPTION,
   severity: validationSeverity.INFO,
 });

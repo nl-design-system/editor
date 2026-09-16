@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { imageMustHaveAltText } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [imageMustHaveAltText] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate(root);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('imageMustHaveAltText', () => {
@@ -21,7 +21,7 @@ describe('imageMustHaveAltText', () => {
 
     expect(violation?.rule).toBe('IMAGE_MUST_HAVE_ALT_TEXT');
     expect(violation?.severity).toBe('info');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('Deze afbeelding heeft geen alternatieve tekst.');
     expect(violation?.messages.solution).toContain('Beschrijf in de alternatieve tekst');
   });
