@@ -2,22 +2,22 @@ import { textLines } from './dom.ts';
 import { isEmptyOrWhitespace } from './text.ts';
 
 /** A hand-numbered marker: `1.`, `2)`, `3]`, `4/` or `5 `. Tested against the first two characters of a line. */
-const ORDERED_INDICATOR = /^\d+[.)\]/ ]$/;
+const ORDERED_PREFIX_REGEX = /^\d+[.)\]/ ]$/;
 
 /** A bullet marker: `•`, `-`, `*` or `+` followed by whitespace. */
-const UNORDERED_INDICATOR = /^\s*([•\-*+])\s+/;
+const UNORDERED_PREFIX_REGEX = /^\s*([•\-*+])\s+/;
 
-const ORDERED_PREFIX = /^\d+[.)\]/ ]-?\s*/;
+const ORDERED_MARKER_REGEX = /^\d+[.)\]/ ]-?\s*/;
 
-const UNORDERED_PREFIX = /^\s*[•\-*+]\s+/;
+const UNORDERED_MARKER_REGEX = /^\s*[•\-*+]\s+/;
 
 const PREFIX_LENGTH = 2;
 
 export const listPrefix = (text: string): string => text.substring(0, PREFIX_LENGTH);
 
-export const isOrderedPrefix = (prefix: string): boolean => ORDERED_INDICATOR.test(prefix);
+export const isOrderedPrefix = (prefix: string): boolean => ORDERED_PREFIX_REGEX.test(prefix);
 
-export const isUnorderedPrefix = (prefix: string): boolean => UNORDERED_INDICATOR.test(prefix);
+export const isUnorderedPrefix = (prefix: string): boolean => UNORDERED_PREFIX_REGEX.test(prefix);
 
 /**
  * A hand-numbered list continues when the next line's marker is one higher, so decrementing the second
@@ -28,7 +28,7 @@ export const decrementPrefix = (prefix: string): string => (prefix.startsWith('2
 export const isOrderedListItem = (element: Element): boolean => isOrderedPrefix(listPrefix(element.textContent ?? ''));
 
 export const stripListPrefix = (text: string, isOrdered: boolean): string =>
-  text.replace(isOrdered ? ORDERED_PREFIX : UNORDERED_PREFIX, '');
+  text.replace(isOrdered ? ORDERED_MARKER_REGEX : UNORDERED_MARKER_REGEX, '');
 
 /**
  * Replaces a run of list-like paragraphs, starting at `startParagraph`, with a single `ul` or `ol`.
