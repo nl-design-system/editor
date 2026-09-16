@@ -3,6 +3,8 @@ import { linkValidationRules } from './constants.ts';
 import { linkShouldNotBeEmpty } from './should-not-be-empty/index.ts';
 import { linkShouldNotBeTooGeneric } from './should-not-be-too-generic/index.ts';
 
+export { linkValidationRules };
+
 export type LinkValidationRule = keyof typeof linkValidationRules;
 
 export const linkValidations = {

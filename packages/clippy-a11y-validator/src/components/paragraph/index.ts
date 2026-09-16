@@ -5,6 +5,8 @@ import { paragraphShouldNotBeEntirelyBold } from './should-not-be-entirely-bold/
 import { paragraphShouldNotResembleHeading } from './should-not-resemble-heading/index.ts';
 import { paragraphShouldNotResembleList } from './should-not-resemble-list/index.ts';
 
+export { paragraphValidationRules };
+
 export type ParagraphValidationRule = keyof typeof paragraphValidationRules;
 
 export const paragraphValidations = {

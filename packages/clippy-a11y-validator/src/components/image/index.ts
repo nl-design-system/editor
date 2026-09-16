@@ -2,6 +2,8 @@ import type { Validation } from '../../types/validation.ts';
 import { imageValidationRules } from './constants.ts';
 import { imageMustHaveAltText } from './must-have-alt-text/index.ts';
 
+export { imageValidationRules };
+
 export type ImageValidationRule = keyof typeof imageValidationRules;
 
 export const imageValidations = {

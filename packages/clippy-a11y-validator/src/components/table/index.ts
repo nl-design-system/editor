@@ -5,6 +5,8 @@ import { tableValidationRules } from './constants.ts';
 import { tableMustHaveHeadings } from './must-have-headings/index.ts';
 import { tableMustHaveMultipleRows } from './must-have-multiple-rows/index.ts';
 
+export { tableValidationRules };
+
 export type TableValidationRule = keyof typeof tableValidationRules;
 
 export const tableValidations = {

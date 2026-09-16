@@ -5,6 +5,8 @@ import { descriptionListMustContainTerm } from './must-contain-term/index.ts';
 import { descriptionTermMustHaveDescription } from './term-must-have-description/index.ts';
 import { descriptionTermShouldNotBeEmpty } from './term-should-not-be-empty/index.ts';
 
+export { descriptionListValidationRules };
+
 export type DescriptionListValidationRule = keyof typeof descriptionListValidationRules;
 
 export const descriptionListValidations = {

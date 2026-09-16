@@ -3,6 +3,8 @@ import { emphasisValidationRules } from './constants.ts';
 import { emphasisShouldNotBeEmpty } from './should-not-be-empty/index.ts';
 import { emphasisShouldNotBeUnderlined } from './should-not-be-underlined/index.ts';
 
+export { emphasisValidationRules };
+
 export type EmphasisValidationRule = keyof typeof emphasisValidationRules;
 
 export const emphasisValidations = {

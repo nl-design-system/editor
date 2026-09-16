@@ -6,6 +6,8 @@ import { headingMustNotBeEmpty } from './must-not-be-empty/index.ts';
 import { headingMustStartAtLevelOne } from './must-start-at-level-one/index.ts';
 import { headingShouldNotContainBoldOrItalic } from './should-not-contain-bold-or-italic/index.ts';
 
+export { headingValidationRules };
+
 export type HeadingValidationRule = keyof typeof headingValidationRules;
 
 export const headingValidations = {
