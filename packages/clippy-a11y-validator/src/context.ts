@@ -9,19 +9,16 @@ export const matchingElements = (composedContent: readonly ParentNode[], selecto
 type Direction = 'after' | 'before';
 
 const siblingMatches = (element: HTMLElement, direction: Direction, selector: Selector): HTMLElement[] => {
-  const step = (from: Element): Element | null =>
-    direction === 'before' ? from.previousElementSibling : from.nextElementSibling;
-  const run: HTMLElement[] = [];
+  const next = direction === 'before' ? 'previousElementSibling' : 'nextElementSibling';
+  const matches: HTMLElement[] = [];
+  let sibling = element[next];
 
-  for (
-    let sibling = step(element);
-    sibling instanceof HTMLElement && sibling.matches(selector);
-    sibling = step(sibling)
-  ) {
-    run.push(sibling);
+  while (sibling instanceof HTMLElement && sibling.matches(selector)) {
+    matches.push(sibling);
+    sibling = sibling[next];
   }
 
-  return run;
+  return matches;
 };
 
 const pageMatches = (
