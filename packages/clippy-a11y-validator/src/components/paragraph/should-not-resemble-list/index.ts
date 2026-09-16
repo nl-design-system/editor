@@ -9,9 +9,9 @@ import { messages } from './messages.ts';
 export const paragraphShouldNotResembleList = defineValidation({
   condition: not(resemblesListItem),
   correct:
-    (paragraph, { following }) =>
+    (paragraph, { subsequentSiblingMatches }) =>
     () =>
-      convertParagraphsToList(paragraph, isOrderedListItem(paragraph), following(paragraph.localName)),
+      convertParagraphsToList(paragraph, isOrderedListItem(paragraph), subsequentSiblingMatches(paragraph.localName)),
   messages,
   payload: (paragraph) => ({ prefix: listPrefix(paragraph.textContent ?? '').trim() }),
   rule: paragraphValidationRules.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST,

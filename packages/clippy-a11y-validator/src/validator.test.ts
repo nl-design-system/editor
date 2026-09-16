@@ -118,8 +118,8 @@ describe('Validator', () => {
   it('lets a page validation read the nearest earlier match across roots, in the order the roots are given', () => {
     const seen: (string | undefined)[] = [];
     const spy: Validation = {
-      condition: (_heading, { previous }) => {
-        seen.push(previous('h1, h2')?.textContent ?? undefined);
+      condition: (_heading, { precedingMatches }) => {
+        seen.push(precedingMatches('h1, h2')[0]?.textContent ?? undefined);
         return true;
       },
       messages: { nl: { error: 'x' } },
@@ -141,13 +141,13 @@ describe('Validator', () => {
     const seen: (string | undefined)[] = [];
     const spy: Validation = {
       condition: () => false,
-      correct: (_paragraph, { previous }) => {
-        seen.push(previous('h1')?.textContent ?? undefined);
+      correct: (_paragraph, { precedingMatches }) => {
+        seen.push(precedingMatches('h1')[0]?.textContent ?? undefined);
         return () => {};
       },
       messages: { nl: { error: 'x' } },
-      payload: (_paragraph, { previous }) => {
-        seen.push(previous('h1')?.textContent ?? undefined);
+      payload: (_paragraph, { precedingMatches }) => {
+        seen.push(precedingMatches('h1')[0]?.textContent ?? undefined);
         return {};
       },
       rule: 'SPY',

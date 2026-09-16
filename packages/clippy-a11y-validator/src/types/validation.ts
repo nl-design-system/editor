@@ -10,8 +10,14 @@ export type ValidationPayload = Readonly<Record<string, boolean | number | strin
 export type CorrectValidationFunction = () => void;
 
 export type ValidationContext = {
-  following: (selector: Selector) => readonly HTMLElement[];
-  previous: (selector: Selector) => HTMLElement | null;
+  /** Every earlier match in the page, nearest first, excluding the element's ancestors. */
+  precedingMatches: (selector: Selector) => readonly HTMLElement[];
+  /** The unbroken run of matching previous siblings, nearest first, stopping at the first non-match. */
+  precedingSiblingMatches: (selector: Selector) => readonly HTMLElement[];
+  /** Every later match in the page, nearest first, excluding the element's descendants. */
+  subsequentMatches: (selector: Selector) => readonly HTMLElement[];
+  /** The unbroken run of matching next siblings, nearest first, stopping at the first non-match. */
+  subsequentSiblingMatches: (selector: Selector) => readonly HTMLElement[];
 };
 
 export type ValidationCondition<E extends HTMLElement = HTMLElement> = (element: E) => boolean;

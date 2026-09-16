@@ -92,7 +92,7 @@ describe('stripListPrefix', () => {
 describe('convertParagraphsToList', () => {
   const container = (html: string): HTMLElement => render(`<div>${html}</div>`);
   const followingParagraphs = (root: HTMLElement): HTMLElement[] => [
-    ...pageContext([root])(root.querySelector('p')!).following('p'),
+    ...pageContext([root])(root.querySelector('p')!).subsequentSiblingMatches('p'),
   ];
 
   it('converts a run of numbered paragraphs into an ol', () => {

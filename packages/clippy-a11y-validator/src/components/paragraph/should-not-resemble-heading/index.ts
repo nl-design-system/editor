@@ -13,9 +13,11 @@ export const resemblesHeading: ValidationCondition = (paragraph) =>
 export const paragraphShouldNotResembleHeading = defineValidation({
   condition: not(resemblesHeading),
   correct:
-    (paragraph, { previous }) =>
+    (paragraph, { precedingMatches }) =>
     () => {
-      const heading = paragraph.ownerDocument.createElement(`h${nextHeadingLevel(previous(selectors.HEADING))}`);
+      const heading = paragraph.ownerDocument.createElement(
+        `h${nextHeadingLevel(precedingMatches(selectors.HEADING)[0] ?? null)}`,
+      );
       heading.textContent = trimmedText(paragraph);
       paragraph.replaceWith(heading);
     },

@@ -5,7 +5,8 @@ import { changeTagName, headingLevel, nextHeadingLevel } from '../../../utils/do
 import { headingValidationRules } from '../constants.ts';
 import { messages } from './messages.ts';
 
-const precedingHeading = ({ previous }: ValidationContext): HTMLElement | null => previous(selectors.HEADING);
+const precedingHeading = ({ precedingMatches }: ValidationContext): HTMLElement | null =>
+  precedingMatches(selectors.HEADING)[0] ?? null;
 
 export const headingLevelMustNotSkip = defineValidation({
   condition: (heading, context) => {

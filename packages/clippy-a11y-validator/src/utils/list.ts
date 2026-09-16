@@ -33,12 +33,12 @@ export const stripListPrefix = (text: string, isOrdered: boolean): string =>
 export const convertParagraphsToList = (
   startParagraph: Element,
   isOrdered: boolean,
-  following: readonly Element[],
+  subsequentSiblings: readonly Element[],
 ): void => {
   const list = startParagraph.ownerDocument.createElement(isOrdered ? 'ol' : 'ul');
   const paragraphs: Element[] = [startParagraph];
 
-  for (const next of following) {
+  for (const next of subsequentSiblings) {
     const prefix = listPrefix(next.textContent ?? '');
     if (!isOrderedPrefix(prefix) && !isUnorderedPrefix(prefix)) break;
     paragraphs.push(next);
