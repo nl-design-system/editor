@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { headingLevelMustNotSkip } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [headingLevelMustNotSkip] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate([root]);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('headingLevelMustNotSkip', () => {
@@ -54,33 +54,33 @@ describe('headingLevelMustNotSkip', () => {
     expect(validate('<section><h2>Kosten</h2></section><h4>Kop</h4>')).toHaveLength(1);
   });
 
-  it('flags a level skipped between two roots', () => {
+  it('flags a level skipped between two content roots', () => {
     const title = document.createElement('div');
     title.innerHTML = '<h1>Titel</h1>';
-    root.innerHTML = '<h3>Kop</h3>';
+    contentRoot.innerHTML = '<h3>Kop</h3>';
 
-    expect(validator.validate([title, root])).toHaveLength(1);
+    expect(validator.validate([title, contentRoot])).toHaveLength(1);
   });
 
   it('flags each skip separately', () => {
     expect(validate('<h1>Een</h1><h3>Twee</h3><h5>Drie</h5>')).toHaveLength(2);
   });
 
-  it('ignores headings outside the validated root', () => {
+  it('ignores headings outside the validated content root', () => {
     const outside = document.createElement('h1');
     outside.textContent = 'Paginatitel';
-    document.body.replaceChildren(outside, root);
-    root.innerHTML = '<h4>Kop</h4>';
+    document.body.replaceChildren(outside, contentRoot);
+    contentRoot.innerHTML = '<h4>Kop</h4>';
 
-    expect(validator.validate([root])).toHaveLength(0);
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 
   it('retags the heading to the expected level when corrected', () => {
     const [violation] = validate('<h1>Titel</h1><h4 id="kop">Kop</h4>');
     violation?.correct?.();
 
-    expect(root.innerHTML).toBe('<h1>Titel</h1><h2 id="kop">Kop</h2>');
-    expect(validator.validate([root])).toHaveLength(0);
+    expect(contentRoot.innerHTML).toBe('<h1>Titel</h1><h2 id="kop">Kop</h2>');
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 
   it('does not propose a level beyond 6', () => {
@@ -90,7 +90,7 @@ describe('headingLevelMustNotSkip', () => {
   it('settles a run of skips in a single pass of corrections', () => {
     validate('<h1>Een</h1><h3>Twee</h3><h5>Drie</h5>').forEach(({ correct }) => correct?.());
 
-    expect([...root.querySelectorAll('h1, h2, h3')].map(({ tagName }) => tagName)).toEqual(['H1', 'H2', 'H3']);
-    expect(validator.validate([root])).toHaveLength(0);
+    expect([...contentRoot.querySelectorAll('h1, h2, h3')].map(({ tagName }) => tagName)).toEqual(['H1', 'H2', 'H3']);
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 });

@@ -2,25 +2,28 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { selectors } from './consts/selectors.ts';
 import { pageContext } from './context.ts';
 
-const nearestPreceding = (element: HTMLElement, roots: readonly ParentNode[], selector: string): HTMLElement | null =>
-  pageContext(roots)(element).precedingMatches(selector)[0] ?? null;
+const nearestPreceding = (
+  element: HTMLElement,
+  composedContent: readonly ParentNode[],
+  selector: string,
+): HTMLElement | null => pageContext(composedContent)(element).precedingMatches(selector)[0] ?? null;
 
 const texts = (elements: readonly HTMLElement[]): string[] => elements.map(({ textContent }) => textContent ?? '');
 
 describe('precedingMatches', () => {
-  let root: HTMLElement;
+  let contentRoot: HTMLElement;
 
   beforeEach(() => {
-    root = document.createElement('div');
-    document.body.replaceChildren(root);
+    contentRoot = document.createElement('div');
+    document.body.replaceChildren(contentRoot);
   });
 
   const headingBefore = (html: string, selector: string): string | null => {
-    root.innerHTML = html;
-    return nearestPreceding(root.querySelector(selector)!, [root], selectors.HEADING)?.tagName ?? null;
+    contentRoot.innerHTML = html;
+    return nearestPreceding(contentRoot.querySelector(selector)!, [contentRoot], selectors.HEADING)?.tagName ?? null;
   };
 
-  it('returns null for the first heading in the root', () => {
+  it('returns null for the first heading in the content root', () => {
     expect(headingBefore('<h1>Titel</h1><h2>Kop</h2>', 'h1')).toBeNull();
   });
 
@@ -45,26 +48,26 @@ describe('precedingMatches', () => {
   });
 
   it('works for elements that are not headings themselves', () => {
-    root.innerHTML = '<h2>Kop</h2><p>tekst</p>';
-    expect(nearestPreceding(root.querySelector('p')!, [root], selectors.HEADING)?.tagName).toBe('H2');
+    contentRoot.innerHTML = '<h2>Kop</h2><p>tekst</p>';
+    expect(nearestPreceding(contentRoot.querySelector('p')!, [contentRoot], selectors.HEADING)?.tagName).toBe('H2');
   });
 
-  it('stays inside the roots and ignores headings elsewhere on the page', () => {
+  it('stays inside the composed content and ignores headings elsewhere on the page', () => {
     const outside = document.createElement('h1');
     outside.textContent = 'Paginatitel';
-    document.body.replaceChildren(outside, root);
-    root.innerHTML = '<h2>Kop</h2>';
+    document.body.replaceChildren(outside, contentRoot);
+    contentRoot.innerHTML = '<h2>Kop</h2>';
 
-    expect(nearestPreceding(root.querySelector('h2')!, [root], selectors.HEADING)).toBeNull();
+    expect(nearestPreceding(contentRoot.querySelector('h2')!, [contentRoot], selectors.HEADING)).toBeNull();
   });
 
   it('does not treat an ancestor as preceding', () => {
-    root.innerHTML = '<h1>Titel<span>deel</span></h1>';
+    contentRoot.innerHTML = '<h1>Titel<span>deel</span></h1>';
 
-    expect(nearestPreceding(root.querySelector('span')!, [root], selectors.HEADING)).toBeNull();
+    expect(nearestPreceding(contentRoot.querySelector('span')!, [contentRoot], selectors.HEADING)).toBeNull();
   });
 
-  it('reads across roots in the order they are given, whatever their document position', () => {
+  it('reads across content roots in the order they are given, whatever their document position', () => {
     const [first, second] = [document.createElement('div'), document.createElement('div')];
     first.innerHTML = '<h1>Titel</h1>';
     second.innerHTML = '<h2>Kop</h2>';
@@ -74,35 +77,35 @@ describe('precedingMatches', () => {
   });
 
   it('lists every earlier match, nearest first', () => {
-    root.innerHTML = '<h1>Een</h1><section><h2>Twee</h2></section><h3>Drie</h3><p>tekst</p>';
+    contentRoot.innerHTML = '<h1>Een</h1><section><h2>Twee</h2></section><h3>Drie</h3><p>tekst</p>';
 
-    expect(texts(pageContext([root])(root.querySelector('p')!).precedingMatches(selectors.HEADING))).toEqual([
-      'Drie',
-      'Twee',
-      'Een',
-    ]);
+    expect(
+      texts(pageContext([contentRoot])(contentRoot.querySelector('p')!).precedingMatches(selectors.HEADING)),
+    ).toEqual(['Drie', 'Twee', 'Een']);
   });
 
-  it('reads a detached proxy root like any other', () => {
+  it('reads a detached proxy content root like any other', () => {
     const proxy = document.createElement('div');
     proxy.innerHTML = '<h1>Titel</h1>';
-    root.innerHTML = '<h2>Kop</h2>';
+    contentRoot.innerHTML = '<h2>Kop</h2>';
 
-    expect(nearestPreceding(root.querySelector('h2')!, [proxy, root], selectors.HEADING)?.textContent).toBe('Titel');
+    expect(
+      nearestPreceding(contentRoot.querySelector('h2')!, [proxy, contentRoot], selectors.HEADING)?.textContent,
+    ).toBe('Titel');
   });
 });
 
 describe('subsequentMatches', () => {
-  let root: HTMLElement;
+  let contentRoot: HTMLElement;
 
   beforeEach(() => {
-    root = document.createElement('div');
-    document.body.replaceChildren(root);
+    contentRoot = document.createElement('div');
+    document.body.replaceChildren(contentRoot);
   });
 
   const headingsAfter = (html: string, selector: string): string[] => {
-    root.innerHTML = html;
-    return texts(pageContext([root])(root.querySelector(selector)!).subsequentMatches(selectors.HEADING));
+    contentRoot.innerHTML = html;
+    return texts(pageContext([contentRoot])(contentRoot.querySelector(selector)!).subsequentMatches(selectors.HEADING));
   };
 
   it('lists every later match across containers, nearest first', () => {
@@ -121,14 +124,14 @@ describe('subsequentMatches', () => {
     expect(headingsAfter('<section><h2>Binnen</h2></section><h2>Buiten</h2>', 'section')).toEqual(['Buiten']);
   });
 
-  it('reads across roots in the order they are given', () => {
+  it('reads across content roots in the order they are given', () => {
     const proxy = document.createElement('div');
     proxy.innerHTML = '<h1>Titel</h1>';
-    root.innerHTML = '<h2>Kop</h2>';
+    contentRoot.innerHTML = '<h2>Kop</h2>';
 
-    expect(texts(pageContext([proxy, root])(proxy.querySelector('h1')!).subsequentMatches(selectors.HEADING))).toEqual([
-      'Kop',
-    ]);
+    expect(
+      texts(pageContext([proxy, contentRoot])(proxy.querySelector('h1')!).subsequentMatches(selectors.HEADING)),
+    ).toEqual(['Kop']);
   });
 
   it('is empty for the last match', () => {
@@ -136,9 +139,9 @@ describe('subsequentMatches', () => {
   });
 
   it('finds nothing after an element that has left the page', () => {
-    root.innerHTML = '<h1>Een</h1><h2>Twee</h2>';
-    const one = root.querySelector('h1')!;
-    const contextForOne = pageContext([root])(one);
+    contentRoot.innerHTML = '<h1>Een</h1><h2>Twee</h2>';
+    const one = contentRoot.querySelector('h1')!;
+    const contextForOne = pageContext([contentRoot])(one);
 
     one.remove();
 
@@ -147,17 +150,17 @@ describe('subsequentMatches', () => {
 });
 
 describe('precedingSiblingMatches', () => {
-  let root: HTMLElement;
+  let contentRoot: HTMLElement;
 
   beforeEach(() => {
-    root = document.createElement('div');
-    document.body.replaceChildren(root);
+    contentRoot = document.createElement('div');
+    document.body.replaceChildren(contentRoot);
   });
 
   const precedingTexts = (html: string, selector: string = selectors.PARAGRAPH): string[] => {
-    root.innerHTML = html;
-    const paragraphs = root.querySelectorAll<HTMLElement>(':scope > p');
-    return texts(pageContext([root])(paragraphs[paragraphs.length - 1]!).precedingSiblingMatches(selector));
+    contentRoot.innerHTML = html;
+    const paragraphs = contentRoot.querySelectorAll<HTMLElement>(':scope > p');
+    return texts(pageContext([contentRoot])(paragraphs[paragraphs.length - 1]!).precedingSiblingMatches(selector));
   };
 
   it('returns the unbroken run of matching previous siblings, nearest first', () => {
@@ -178,16 +181,16 @@ describe('precedingSiblingMatches', () => {
 });
 
 describe('subsequentSiblingMatches', () => {
-  let root: HTMLElement;
+  let contentRoot: HTMLElement;
 
   beforeEach(() => {
-    root = document.createElement('div');
-    document.body.replaceChildren(root);
+    contentRoot = document.createElement('div');
+    document.body.replaceChildren(contentRoot);
   });
 
   const subsequentTexts = (html: string, selector: string = selectors.PARAGRAPH): string[] => {
-    root.innerHTML = html;
-    return texts(pageContext([root])(root.querySelector('p')!).subsequentSiblingMatches(selector));
+    contentRoot.innerHTML = html;
+    return texts(pageContext([contentRoot])(contentRoot.querySelector('p')!).subsequentSiblingMatches(selector));
   };
 
   it('returns the unbroken run of matching next siblings', () => {
@@ -213,10 +216,10 @@ describe('subsequentSiblingMatches', () => {
 
 describe('a context', () => {
   it('answers from the page as it is now, after content has changed', () => {
-    const root = document.createElement('div');
-    root.innerHTML = '<h1>Een</h1><h3>Twee</h3><h5>Drie</h5>';
-    const contextFor = pageContext([root]);
-    const [, three, five] = root.querySelectorAll<HTMLElement>('h1, h3, h5');
+    const contentRoot = document.createElement('div');
+    contentRoot.innerHTML = '<h1>Een</h1><h3>Twee</h3><h5>Drie</h5>';
+    const contextFor = pageContext([contentRoot]);
+    const [, three, five] = contentRoot.querySelectorAll<HTMLElement>('h1, h3, h5');
 
     three!.replaceWith(document.createElement('h2'));
 
@@ -224,10 +227,10 @@ describe('a context', () => {
   });
 
   it('finds nothing before an element that has left the page', () => {
-    const root = document.createElement('div');
-    root.innerHTML = '<h1>Een</h1><h2>Twee</h2>';
-    const contextFor = pageContext([root]);
-    const two = root.querySelector('h2')!;
+    const contentRoot = document.createElement('div');
+    contentRoot.innerHTML = '<h1>Een</h1><h2>Twee</h2>';
+    const contextFor = pageContext([contentRoot]);
+    const two = contentRoot.querySelector('h2')!;
 
     two.remove();
 

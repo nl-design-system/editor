@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { listItemShouldNotBeEmpty } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [listItemShouldNotBeEmpty] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate([root]);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('listItemShouldNotBeEmpty', () => {
@@ -54,7 +54,7 @@ describe('listItemShouldNotBeEmpty', () => {
     const [violation] = validate('<ul><li></li><li>twee</li></ul>');
     violation?.correct?.();
 
-    expect(root.querySelectorAll('li')).toHaveLength(1);
-    expect(validator.validate([root])).toHaveLength(0);
+    expect(contentRoot.querySelectorAll('li')).toHaveLength(1);
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 });

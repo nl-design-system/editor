@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { paragraphShouldNotResembleList } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [paragraphShouldNotResembleList] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate([root]);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('paragraphShouldNotResembleList', () => {
@@ -68,49 +68,61 @@ describe('paragraphShouldNotResembleList', () => {
     const [violation] = validate('<h1>Titel</h1><p>1 - Test</p><p>2 - Test</p><p>3 - Test</p>');
     violation?.correct?.();
 
-    expect(root.querySelectorAll('ol > li')).toHaveLength(3);
-    expect([...root.querySelectorAll('ol > li')].map((item) => item.textContent)).toEqual(['Test', 'Test', 'Test']);
-    expect(root.querySelectorAll('p')).toHaveLength(0);
+    expect(contentRoot.querySelectorAll('ol > li')).toHaveLength(3);
+    expect([...contentRoot.querySelectorAll('ol > li')].map((item) => item.textContent)).toEqual([
+      'Test',
+      'Test',
+      'Test',
+    ]);
+    expect(contentRoot.querySelectorAll('p')).toHaveLength(0);
   });
 
   it('converts consecutive unordered paragraphs to a ul', () => {
     const [violation] = validate('<h1>Titel</h1><p>- Test</p><p>- Test</p><p>- Test</p>');
     violation?.correct?.();
 
-    expect(root.querySelectorAll('ul > li')).toHaveLength(3);
-    expect([...root.querySelectorAll('ul > li')].map((item) => item.textContent)).toEqual(['Test', 'Test', 'Test']);
-    expect(root.querySelectorAll('p')).toHaveLength(0);
+    expect(contentRoot.querySelectorAll('ul > li')).toHaveLength(3);
+    expect([...contentRoot.querySelectorAll('ul > li')].map((item) => item.textContent)).toEqual([
+      'Test',
+      'Test',
+      'Test',
+    ]);
+    expect(contentRoot.querySelectorAll('p')).toHaveLength(0);
   });
 
   it('converts a line-broken ordered paragraph to an ol', () => {
     const [violation] = validate('<h1>Titel</h1><p>1 - Test<br>2 - Test<br>3 - Test</p>');
     violation?.correct?.();
 
-    expect(root.querySelectorAll('ol > li')).toHaveLength(3);
-    expect([...root.querySelectorAll('ol > li')].map((item) => item.textContent)).toEqual(['Test', 'Test', 'Test']);
-    expect(root.querySelectorAll('p')).toHaveLength(0);
+    expect(contentRoot.querySelectorAll('ol > li')).toHaveLength(3);
+    expect([...contentRoot.querySelectorAll('ol > li')].map((item) => item.textContent)).toEqual([
+      'Test',
+      'Test',
+      'Test',
+    ]);
+    expect(contentRoot.querySelectorAll('p')).toHaveLength(0);
   });
 
   it('converts a line-broken unordered paragraph to a ul', () => {
     const [violation] = validate('<h1>Titel</h1><p>- Test<br>- Test<br>- Test</p>');
     violation?.correct?.();
 
-    expect(root.querySelectorAll('ul > li')).toHaveLength(3);
-    expect(root.querySelectorAll('p')).toHaveLength(0);
+    expect(contentRoot.querySelectorAll('ul > li')).toHaveLength(3);
+    expect(contentRoot.querySelectorAll('p')).toHaveLength(0);
   });
 
   it('leaves the paragraph valid once corrected', () => {
     const [violation] = validate('<p>- een<br>- twee</p>');
     violation?.correct?.();
 
-    expect(validator.validate([root])).toHaveLength(0);
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 
   it('keeps surrounding content intact when corrected', () => {
     const [violation] = validate('<h1>Titel</h1><p>- een<br>- twee</p><p>Slot.</p>');
     violation?.correct?.();
 
-    expect(root.querySelector('h1')?.textContent).toBe('Titel');
-    expect(root.querySelector('p')?.textContent).toBe('Slot.');
+    expect(contentRoot.querySelector('h1')?.textContent).toBe('Titel');
+    expect(contentRoot.querySelector('p')?.textContent).toBe('Slot.');
   });
 });

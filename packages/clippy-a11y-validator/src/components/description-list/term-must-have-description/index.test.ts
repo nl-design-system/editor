@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { descriptionTermMustHaveDescription } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [descriptionTermMustHaveDescription] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate([root]);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('descriptionTermMustHaveDescription', () => {
@@ -68,7 +68,11 @@ describe('descriptionTermMustHaveDescription', () => {
     const [violation] = validate('<dl><dt></dt><dd>een</dd><dt>term</dt><dd>twee</dd><dt> </dt><dd>drie</dd></dl>');
     violation?.correct?.();
 
-    expect([...root.querySelectorAll('dt')].map(({ textContent }) => textContent)).toEqual(['...', 'term', '...']);
-    expect(validator.validate([root])).toHaveLength(0);
+    expect([...contentRoot.querySelectorAll('dt')].map(({ textContent }) => textContent)).toEqual([
+      '...',
+      'term',
+      '...',
+    ]);
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 });

@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { headingShouldNotContainBoldOrItalic } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [headingShouldNotContainBoldOrItalic] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate([root]);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('headingShouldNotContainBoldOrItalic', () => {
@@ -56,7 +56,7 @@ describe('headingShouldNotContainBoldOrItalic', () => {
     const [violation] = validate('<h2>Kop met <strong>nadruk</strong> en <em>cursief</em></h2>');
     violation?.correct?.();
 
-    expect(root.querySelector('h2')?.innerHTML).toBe('Kop met nadruk en cursief');
-    expect(validator.validate([root])).toHaveLength(0);
+    expect(contentRoot.querySelector('h2')?.innerHTML).toBe('Kop met nadruk en cursief');
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 });

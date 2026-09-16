@@ -41,15 +41,15 @@ const validateElement = (
 };
 
 export const walk = (
-  roots: readonly ParentNode[],
+  composedContent: readonly ParentNode[],
   validations: readonly Validation[],
   options: WalkOptions,
 ): Violation[] => {
   const { severities } = options;
   const applicable = validations.filter(({ severity }) => severities === undefined || severities.includes(severity));
-  const contextFor = pageContext(roots);
+  const contextFor = pageContext(composedContent);
 
-  return matchingElements(roots, '*').flatMap((element) =>
+  return matchingElements(composedContent, '*').flatMap((element) =>
     applicable
       .filter(({ selector }) => element.matches(selector))
       .flatMap((validation): Violation[] => {

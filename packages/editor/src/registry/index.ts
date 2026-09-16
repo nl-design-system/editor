@@ -29,11 +29,11 @@ export class ClippyRegistry {
     return this.#violations;
   }
 
-  register({ anchor, label, root }: SourceRegistration): RegisteredSource {
+  register({ anchor, contentRoot, label }: SourceRegistration): RegisteredSource {
     const id = `clippy-source-${this.#nextSourceId++}`;
     const observer = new MutationObserver(() => this.#schedulePass());
-    observer.observe(root, { attributes: true, characterData: true, childList: true, subtree: true });
-    this.#sources = [...this.#sources, { id, anchor, label, root }].sort(byAnchor);
+    observer.observe(contentRoot, { attributes: true, characterData: true, childList: true, subtree: true });
+    this.#sources = [...this.#sources, { id, anchor, contentRoot, label }].sort(byAnchor);
     this.#schedulePass();
 
     return {
@@ -79,10 +79,12 @@ export class ClippyRegistry {
   }
 
   #validate() {
-    this.#violations = this.#validator.validate(this.#sources.map(({ root }) => root)).map((violation) => ({
-      ...violation,
-      source: this.#sources.find(({ root }) => root.contains(violation.element))!.id,
-    }));
+    this.#violations = this.#validator
+      .validate(this.#sources.map(({ contentRoot }) => contentRoot))
+      .map((violation) => ({
+        ...violation,
+        source: this.#sources.find(({ contentRoot }) => contentRoot.contains(violation.element))!.id,
+      }));
     this.#listeners.forEach((listener) => listener(this.#violations));
   }
 }

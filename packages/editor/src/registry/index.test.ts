@@ -14,7 +14,7 @@ const createSource = (html: string) => {
   const anchor = document.createElement('div');
   anchor.innerHTML = html;
   document.body.append(anchor);
-  return { anchor, label: 'Body', root: anchor };
+  return { anchor, contentRoot: anchor, label: 'Body' };
 };
 
 const validationPass = async () => {
@@ -31,7 +31,7 @@ beforeEach(() => {
 });
 
 describe('ClippyRegistry', () => {
-  it('reports violations in a registered source root', async () => {
+  it('reports violations in a registered content root', async () => {
     const { id } = registry.register(createSource('<p></p>'));
     await validationPass();
 
@@ -40,43 +40,43 @@ describe('ClippyRegistry', () => {
     ]);
   });
 
-  it('revalidates a source root when elements in it change', async () => {
+  it('revalidates a content root when elements in it change', async () => {
     const source = createSource('<p>Tekst</p>');
     registry.register(source);
 
-    source.root.innerHTML = '<p></p>';
+    source.contentRoot.innerHTML = '<p></p>';
     await validationPass();
 
     expect(registry.violations.map(({ rule }) => rule)).toEqual([PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
   });
 
-  it('revalidates a source root when text in it changes', async () => {
+  it('revalidates a content root when text in it changes', async () => {
     const source = createSource('<p>Tekst</p>');
     registry.register(source);
 
-    (source.root.querySelector('p')!.firstChild as Text).data = '';
+    (source.contentRoot.querySelector('p')!.firstChild as Text).data = '';
     await validationPass();
 
     expect(registry.violations.map(({ rule }) => rule)).toEqual([PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
   });
 
-  it('revalidates a source root when an attribute in it changes', async () => {
+  it('revalidates a content root when an attribute in it changes', async () => {
     registry.registerValidation(coreValidations[IMAGE_MUST_HAVE_ALT_TEXT]);
     const source = createSource('<img src="logo.png" alt="Logo">');
     registry.register(source);
 
-    source.root.querySelector('img')!.removeAttribute('alt');
+    source.contentRoot.querySelector('img')!.removeAttribute('alt');
     await validationPass();
 
     expect(registry.violations.map(({ rule }) => rule)).toEqual([IMAGE_MUST_HAVE_ALT_TEXT]);
   });
 
-  it('revalidates a detached source root when it changes', async () => {
-    const root = document.createElement('div');
-    root.innerHTML = '<p>Titel</p>';
-    registry.register({ anchor: document.body, label: 'Title', root });
+  it('revalidates a detached content root when it changes', async () => {
+    const contentRoot = document.createElement('div');
+    contentRoot.innerHTML = '<p>Titel</p>';
+    registry.register({ anchor: document.body, contentRoot, label: 'Title' });
 
-    root.querySelector('p')!.textContent = '';
+    contentRoot.querySelector('p')!.textContent = '';
     await validationPass();
 
     expect(registry.violations.map(({ rule }) => rule)).toEqual([PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
@@ -102,7 +102,7 @@ describe('ClippyRegistry', () => {
     expect(registry.violations.map(({ source }) => source)).toEqual([title, body, body]);
   });
 
-  it('stops observing a source root once the source unregisters', async () => {
+  it('stops observing a content root once the source unregisters', async () => {
     registry.register(createSource('<p>Tekst</p>'));
     const source = createSource('<p>Tekst</p>');
     const { unregister } = registry.register(source);
@@ -111,7 +111,7 @@ describe('ClippyRegistry', () => {
     const updates: unknown[] = [];
     registry.subscribe((violations) => updates.push(violations));
 
-    source.root.innerHTML = '<p></p>';
+    source.contentRoot.innerHTML = '<p></p>';
     await validationPass();
 
     expect(updates).toEqual([]);
@@ -177,19 +177,19 @@ describe('ClippyRegistry', () => {
       expect(registry.violations).toEqual([]);
     });
 
-    it('reads a detached proxy root in the place of its anchor', async () => {
+    it('reads a detached proxy content root in the place of its anchor', async () => {
       const input = document.createElement('input');
       document.body.append(input);
       const body = createSource('<h3>Kop</h3>');
       const { id } = registry.register(body);
-      const root = document.createElement('div');
-      root.innerHTML = '<h1>Titel</h1>';
+      const contentRoot = document.createElement('div');
+      contentRoot.innerHTML = '<h1>Titel</h1>';
 
-      registry.register({ anchor: input, label: 'Title', root });
+      registry.register({ anchor: input, contentRoot, label: 'Title' });
       await validationPass();
 
       expect(reportedViolations()).toEqual([
-        { element: body.root.querySelector('h3'), rule: HEADING_LEVEL_MUST_NOT_SKIP, source: id },
+        { element: body.contentRoot.querySelector('h3'), rule: HEADING_LEVEL_MUST_NOT_SKIP, source: id },
       ]);
     });
 
@@ -213,8 +213,8 @@ describe('ClippyRegistry', () => {
       await validationPass();
 
       expect(reportedViolations()).toEqual([
-        { element: intro.root.querySelector('h3'), rule: HEADING_LEVEL_MUST_NOT_SKIP, source: introId },
-        { element: body.root.querySelector('h5'), rule: HEADING_LEVEL_MUST_NOT_SKIP, source: bodyId },
+        { element: intro.contentRoot.querySelector('h3'), rule: HEADING_LEVEL_MUST_NOT_SKIP, source: introId },
+        { element: body.contentRoot.querySelector('h5'), rule: HEADING_LEVEL_MUST_NOT_SKIP, source: bodyId },
       ]);
     });
   });
@@ -240,8 +240,8 @@ describe('ClippyRegistry', () => {
       const updates: (readonly RegistryViolation[])[] = [];
       registry.subscribe((violations) => updates.push(violations));
 
-      title.root.innerHTML = '<p></p>';
-      body.root.innerHTML = '<p></p>';
+      title.contentRoot.innerHTML = '<p></p>';
+      body.contentRoot.innerHTML = '<p></p>';
       await validationPass();
 
       expect(updates.map((violations) => violations.length)).toEqual([2]);
@@ -254,7 +254,7 @@ describe('ClippyRegistry', () => {
       const updates: (readonly RegistryViolation[])[] = [];
       registry.subscribe((violations) => updates.push(violations));
 
-      body.root.innerHTML = '<p></p>';
+      body.contentRoot.innerHTML = '<p></p>';
       registry.register(createSource('<p></p>'));
       await validationPass();
 

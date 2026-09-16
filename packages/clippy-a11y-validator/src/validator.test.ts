@@ -12,25 +12,25 @@ const {
   TABLE_MUST_HAVE_MULTIPLE_ROWS,
 } = coreValidationRules;
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 
 beforeEach(() => {
-  root = document.createElement('div');
-  root.innerHTML = '<p><strong>Vetgedrukt</strong></p><p> </p>';
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  contentRoot.innerHTML = '<p><strong>Vetgedrukt</strong></p><p> </p>';
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('Validator', () => {
   it('only reports the cherry-picked validation', () => {
     const validator = new Validator({ validations: [coreValidations[PARAGRAPH_SHOULD_NOT_BE_EMPTY]] });
 
-    expect(validator.validate([root]).map(({ rule }) => rule)).toEqual([PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
+    expect(validator.validate([contentRoot]).map(({ rule }) => rule)).toEqual([PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
   });
 
   it('reports every core validation when all of them are registered', () => {
     const validator = new Validator({ validations: Object.values(coreValidations) });
 
-    expect(validator.validate([root]).map(({ rule }) => rule)).toEqual([
+    expect(validator.validate([contentRoot]).map(({ rule }) => rule)).toEqual([
       PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING,
       PARAGRAPH_SHOULD_NOT_BE_EMPTY,
     ]);
@@ -40,16 +40,16 @@ describe('Validator', () => {
     const validator = new Validator({
       validations: [coreValidations[HEADING_MUST_NOT_BE_EMPTY], coreValidations[PARAGRAPH_SHOULD_NOT_BE_EMPTY]],
     });
-    root.innerHTML = '<p></p><h1></h1><p></p>';
+    contentRoot.innerHTML = '<p></p><h1></h1><p></p>';
 
-    expect(validator.validate([root]).map(({ element }) => element.tagName)).toEqual(['P', 'H1', 'P']);
+    expect(validator.validate([contentRoot]).map(({ element }) => element.tagName)).toEqual(['P', 'H1', 'P']);
   });
 
   it('reports several violations on the same element in registration order', () => {
     const validator = new Validator({ validations: Object.values(coreValidations) });
-    root.innerHTML = '<table><tbody><tr><td>Paspoort</td></tr></tbody></table>';
+    contentRoot.innerHTML = '<table><tbody><tr><td>Paspoort</td></tr></tbody></table>';
 
-    expect(validator.validate([root]).map(({ rule }) => rule)).toEqual([
+    expect(validator.validate([contentRoot]).map(({ rule }) => rule)).toEqual([
       TABLE_MUST_HAVE_HEADINGS,
       TABLE_MUST_HAVE_MULTIPLE_ROWS,
     ]);
@@ -59,16 +59,16 @@ describe('Validator', () => {
     const validator = new Validator({ validations: [coreValidations[PARAGRAPH_SHOULD_NOT_BE_EMPTY]] });
     validator.register({ ...coreValidations[PARAGRAPH_SHOULD_NOT_BE_EMPTY], severity: 'error' });
 
-    expect(validator.validate([root]).map(({ severity }) => severity)).toEqual(['error']);
+    expect(validator.validate([contentRoot]).map(({ severity }) => severity)).toEqual(['error']);
   });
 
   it('stops reporting a validation after it is unregistered', () => {
     const validator = new Validator();
     const unregister = validator.register(coreValidations[PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
 
-    expect(validator.validate([root])).toHaveLength(1);
+    expect(validator.validate([contentRoot])).toHaveLength(1);
     unregister();
-    expect(validator.validate([root])).toHaveLength(0);
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 
   it('leaves a replacement in place when the replaced validation is unregistered', () => {
@@ -77,13 +77,13 @@ describe('Validator', () => {
     validator.register({ ...coreValidations[PARAGRAPH_SHOULD_NOT_BE_EMPTY], severity: 'error' });
     unregister();
 
-    expect(validator.validate([root]).map(({ severity }) => severity)).toEqual(['error']);
+    expect(validator.validate([contentRoot]).map(({ severity }) => severity)).toEqual(['error']);
   });
 
   it('skips validations outside the requested severities', () => {
     const validator = new Validator({ validations: Object.values(coreValidations) });
 
-    expect(validator.validate([root], { severities: ['info'] }).map(({ rule }) => rule)).toEqual([
+    expect(validator.validate([contentRoot], { severities: ['info'] }).map(({ rule }) => rule)).toEqual([
       PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING,
       PARAGRAPH_SHOULD_NOT_BE_EMPTY,
     ]);
@@ -92,7 +92,7 @@ describe('Validator', () => {
   it('falls back to the default locale when the requested locale has no messages', () => {
     const validator = new Validator({ locale: 'en', validations: [coreValidations[PARAGRAPH_SHOULD_NOT_BE_EMPTY]] });
 
-    expect(validator.validate([root])[0]?.messages.error).toBe('Deze alinea is leeg.');
+    expect(validator.validate([contentRoot])[0]?.messages.error).toBe('Deze alinea is leeg.');
   });
 
   it('hands an element validation nothing but its element', () => {
@@ -108,14 +108,14 @@ describe('Validator', () => {
       selector: 'h1',
       severity: 'info',
     };
-    root.innerHTML = '<h1>Een</h1>';
+    contentRoot.innerHTML = '<h1>Een</h1>';
 
-    new Validator({ validations: [spy] }).validate([root]);
+    new Validator({ validations: [spy] }).validate([contentRoot]);
 
-    expect(received).toEqual([[root.querySelector('h1')]]);
+    expect(received).toEqual([[contentRoot.querySelector('h1')]]);
   });
 
-  it('lets a page validation read the nearest earlier match across roots, in the order the roots are given', () => {
+  it('lets a page validation read the nearest earlier match across content roots, in the order they are given', () => {
     const seen: (string | undefined)[] = [];
     const spy: Validation = {
       condition: (_heading, { precedingMatches }) => {
@@ -130,9 +130,9 @@ describe('Validator', () => {
     };
     const title = document.createElement('div');
     title.innerHTML = '<h1>Titel</h1>';
-    root.innerHTML = '<h2>Kop</h2>';
+    contentRoot.innerHTML = '<h2>Kop</h2>';
 
-    new Validator({ validations: [spy] }).validate([title, root]);
+    new Validator({ validations: [spy] }).validate([title, contentRoot]);
 
     expect(seen).toEqual(['Titel']);
   });
@@ -155,14 +155,14 @@ describe('Validator', () => {
       selector: 'p',
       severity: 'info',
     };
-    root.innerHTML = '<h1>Titel</h1><p>tekst</p>';
+    contentRoot.innerHTML = '<h1>Titel</h1><p>tekst</p>';
 
-    new Validator({ validations: [spy] }).validate([root]);
+    new Validator({ validations: [spy] }).validate([contentRoot]);
 
     expect(seen).toEqual(['Titel', 'Titel']);
   });
 
-  it('reports violations across roots in the order the roots are given', () => {
+  it('reports violations across content roots in the order they are given', () => {
     const validator = new Validator({ validations: [coreValidations[PARAGRAPH_SHOULD_NOT_BE_EMPTY]] });
     const [first, second] = [document.createElement('div'), document.createElement('div')];
     first.innerHTML = '<p id="first"></p>';
@@ -172,28 +172,28 @@ describe('Validator', () => {
     expect(validator.validate([first, second]).map(({ element }) => element.id)).toEqual(['first', 'second']);
   });
 
-  it('runs page validations over the roots it is given', () => {
+  it('runs page validations over the composed content it is given', () => {
     const validator = new Validator({ validations: [coreValidations[HEADING_MUST_START_AT_LEVEL_ONE]] });
-    root.innerHTML = '<h2>Kop</h2>';
+    contentRoot.innerHTML = '<h2>Kop</h2>';
 
-    expect(validator.validate([root]).map(({ rule }) => rule)).toEqual([HEADING_MUST_START_AT_LEVEL_ONE]);
+    expect(validator.validate([contentRoot]).map(({ rule }) => rule)).toEqual([HEADING_MUST_START_AT_LEVEL_ONE]);
   });
 
-  it('judges content without its page against a proxy root holding the outline above it', () => {
+  it('judges content without its page against a proxy content root holding the outline above it', () => {
     const validator = new Validator({ validations: Object.values(coreValidations) });
     const outline = document.createElement('div');
     outline.innerHTML = '<h1>Titel</h1><h2>Sectie</h2>';
-    root.innerHTML = '<h3>Kop</h3><h4></h4>';
+    contentRoot.innerHTML = '<h3>Kop</h3><h4></h4>';
 
-    expect(validator.validate([outline, root]).map(({ rule }) => rule)).toEqual([HEADING_MUST_NOT_BE_EMPTY]);
+    expect(validator.validate([outline, contentRoot]).map(({ rule }) => rule)).toEqual([HEADING_MUST_NOT_BE_EMPTY]);
   });
 
   it('reports only element findings when the host leaves page validations out', () => {
     const validator = new Validator({
       validations: Object.values(coreValidations).filter(({ scope }) => scope === 'element'),
     });
-    root.innerHTML = '<h2>Kop</h2><h4></h4>';
+    contentRoot.innerHTML = '<h2>Kop</h2><h4></h4>';
 
-    expect(validator.validate([root]).map(({ rule }) => rule)).toEqual([HEADING_MUST_NOT_BE_EMPTY]);
+    expect(validator.validate([contentRoot]).map(({ rule }) => rule)).toEqual([HEADING_MUST_NOT_BE_EMPTY]);
   });
 });

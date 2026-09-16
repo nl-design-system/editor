@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { emphasisShouldNotBeUnderlined } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [emphasisShouldNotBeUnderlined] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate([root]);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('emphasisShouldNotBeUnderlined', () => {
@@ -46,7 +46,7 @@ describe('emphasisShouldNotBeUnderlined', () => {
     const [violation] = validate('<p>Zie <u>onderstreept</u> hier</p>');
     violation?.correct?.();
 
-    expect(root.querySelector('p')?.innerHTML).toBe('Zie onderstreept hier');
-    expect(validator.validate([root])).toHaveLength(0);
+    expect(contentRoot.querySelector('p')?.innerHTML).toBe('Zie onderstreept hier');
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 });

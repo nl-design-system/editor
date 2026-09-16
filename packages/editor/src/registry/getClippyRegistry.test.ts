@@ -7,10 +7,10 @@ const loadBundle = (name: string): Promise<typeof import('./getClippyRegistry')>
   import(/* @vite-ignore */ `./getClippyRegistry.ts?bundle=${name}`);
 
 const createSource = (html: string, label: string) => {
-  const root = document.createElement('div');
-  root.innerHTML = html;
-  document.body.append(root);
-  return { anchor: root, label, root };
+  const contentRoot = document.createElement('div');
+  contentRoot.innerHTML = html;
+  document.body.append(contentRoot);
+  return { anchor: contentRoot, contentRoot, label };
 };
 
 afterEach(() => {

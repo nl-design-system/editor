@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { descriptionListMustContainTerm } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [descriptionListMustContainTerm] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate([root]);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('descriptionListMustContainTerm', () => {
@@ -59,7 +59,7 @@ describe('descriptionListMustContainTerm', () => {
     const [violation] = validate('<dl><dt></dt><dd>beschrijving</dd></dl>');
     violation?.correct?.();
 
-    expect(root.querySelector('dt')?.textContent).toBe('...');
-    expect(validator.validate([root])).toHaveLength(0);
+    expect(contentRoot.querySelector('dt')?.textContent).toBe('...');
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 });

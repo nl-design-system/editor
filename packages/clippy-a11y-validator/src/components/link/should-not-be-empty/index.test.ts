@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
 import { linkShouldNotBeEmpty } from './index.ts';
 
-let root: HTMLElement;
+let contentRoot: HTMLElement;
 const validator = new Validator({ validations: [linkShouldNotBeEmpty] });
 
 const validate = (html: string) => {
-  root.innerHTML = html;
-  return validator.validate([root]);
+  contentRoot.innerHTML = html;
+  return validator.validate([contentRoot]);
 };
 
 beforeEach(() => {
-  root = document.createElement('div');
-  document.body.replaceChildren(root);
+  contentRoot = document.createElement('div');
+  document.body.replaceChildren(contentRoot);
 });
 
 describe('linkShouldNotBeEmpty', () => {
@@ -46,7 +46,7 @@ describe('linkShouldNotBeEmpty', () => {
     const [violation] = validate('<p>Zie <a href="/paspoort"></a>hier</p>');
     violation?.correct?.();
 
-    expect(root.querySelector('p')?.innerHTML).toBe('Zie hier');
-    expect(validator.validate([root])).toHaveLength(0);
+    expect(contentRoot.querySelector('p')?.innerHTML).toBe('Zie hier');
+    expect(validator.validate([contentRoot])).toHaveLength(0);
   });
 });
