@@ -34,6 +34,7 @@ describe('getClippyRegistry', () => {
 
     const { id: title } = titleField.getClippyRegistry().register(createSource('<p></p>', 'Title'));
     const { id: body } = editorPlugin.getClippyRegistry().register(createSource('<p></p>', 'Body'));
+    await new Promise((resolve) => setTimeout(resolve));
 
     expect(panel.getClippyRegistry().violations.map(({ source }) => source)).toEqual([title, body]);
   });

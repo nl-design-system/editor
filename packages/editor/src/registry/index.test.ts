@@ -1,6 +1,6 @@
 import { coreValidationRules, coreValidations } from '@nl-design-system-community/clippy-a11y-validator';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { SourceRegistration } from './types';
+import type { RegistryViolation, SourceRegistration } from './types';
 import { ClippyRegistry } from './index';
 
 const {
@@ -17,7 +17,10 @@ const createSource = (html: string) => {
   return { anchor, label: 'Body', root: anchor };
 };
 
-const mutationsDelivered = () => new Promise((resolve) => setTimeout(resolve));
+const validationPass = async () => {
+  await Promise.resolve();
+  await new Promise((resolve) => setTimeout(resolve));
+};
 
 let registry: ClippyRegistry;
 
@@ -28,8 +31,9 @@ beforeEach(() => {
 });
 
 describe('ClippyRegistry', () => {
-  it('reports violations in a registered source root', () => {
+  it('reports violations in a registered source root', async () => {
     const { id } = registry.register(createSource('<p></p>'));
+    await validationPass();
 
     expect(registry.violations.map(({ rule, source }) => ({ rule, source }))).toEqual([
       { rule: PARAGRAPH_SHOULD_NOT_BE_EMPTY, source: id },
@@ -41,7 +45,7 @@ describe('ClippyRegistry', () => {
     registry.register(source);
 
     source.root.innerHTML = '<p></p>';
-    await mutationsDelivered();
+    await validationPass();
 
     expect(registry.violations.map(({ rule }) => rule)).toEqual([PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
   });
@@ -51,7 +55,7 @@ describe('ClippyRegistry', () => {
     registry.register(source);
 
     (source.root.querySelector('p')!.firstChild as Text).data = '';
-    await mutationsDelivered();
+    await validationPass();
 
     expect(registry.violations.map(({ rule }) => rule)).toEqual([PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
   });
@@ -62,7 +66,7 @@ describe('ClippyRegistry', () => {
     registry.register(source);
 
     source.root.querySelector('img')!.removeAttribute('alt');
-    await mutationsDelivered();
+    await validationPass();
 
     expect(registry.violations.map(({ rule }) => rule)).toEqual([IMAGE_MUST_HAVE_ALT_TEXT]);
   });
@@ -73,23 +77,26 @@ describe('ClippyRegistry', () => {
     registry.register({ anchor: document.body, label: 'Title', root });
 
     root.querySelector('p')!.textContent = '';
-    await mutationsDelivered();
+    await validationPass();
 
     expect(registry.violations.map(({ rule }) => rule)).toEqual([PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
   });
 
-  it('drops the violations of an unregistered source', () => {
+  it('drops the violations of an unregistered source', async () => {
     const { id: kept } = registry.register(createSource('<p></p>'));
     const { unregister } = registry.register(createSource('<p></p>'));
+    await validationPass();
 
     unregister();
+    await validationPass();
 
     expect(registry.violations.map(({ source }) => source)).toEqual([kept]);
   });
 
-  it('records which source every violation came from', () => {
+  it('records which source every violation came from', async () => {
     const { id: title } = registry.register(createSource('<p></p>'));
     const { id: body } = registry.register(createSource('<p>Tekst</p><p></p><p></p>'));
+    await validationPass();
 
     // 1 empty paragraph error on the title, 2 empty paragraphs on the body
     expect(registry.violations.map(({ source }) => source)).toEqual([title, body, body]);
@@ -100,11 +107,12 @@ describe('ClippyRegistry', () => {
     const source = createSource('<p>Tekst</p>');
     const { unregister } = registry.register(source);
     unregister();
+    await validationPass();
     const updates: unknown[] = [];
     registry.subscribe((violations) => updates.push(violations));
 
     source.root.innerHTML = '<p></p>';
-    await mutationsDelivered();
+    await validationPass();
 
     expect(updates).toEqual([]);
   });
@@ -122,28 +130,33 @@ describe('ClippyRegistry', () => {
     expect(ids).not.toContain('body');
   });
 
-  it('validates registered sources against a validation registered afterwards', () => {
+  it('validates registered sources against a validation registered afterwards', async () => {
     registry.register(createSource('<h1></h1>'));
+    await validationPass();
 
     registry.registerValidation(coreValidations[HEADING_MUST_NOT_BE_EMPTY]);
+    await validationPass();
 
     expect(registry.violations.map(({ rule }) => rule)).toEqual([HEADING_MUST_NOT_BE_EMPTY]);
   });
 
-  it('drops the violations of an unregistered validation', () => {
+  it('drops the violations of an unregistered validation', async () => {
     const unregisterValidation = registry.registerValidation(coreValidations[HEADING_MUST_NOT_BE_EMPTY]);
     registry.register(createSource('<h1></h1><p></p>'));
+    await validationPass();
 
     unregisterValidation();
+    await validationPass();
 
     expect(registry.violations.map(({ rule }) => rule)).toEqual([PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
   });
 
-  it('notifies subscribers with the current violations when they change', () => {
+  it('notifies subscribers with the current violations when they change', async () => {
     const updates: string[][] = [];
     registry.subscribe((violations) => updates.push(violations.map(({ rule }) => rule)));
 
     registry.register(createSource('<p></p>'));
+    await validationPass();
 
     expect(updates).toEqual([[PARAGRAPH_SHOULD_NOT_BE_EMPTY]]);
   });
@@ -156,14 +169,15 @@ describe('ClippyRegistry', () => {
       registry.registerValidation(coreValidations[HEADING_LEVEL_MUST_NOT_SKIP]);
     });
 
-    it('accepts a heading sequence that continues correctly from one source into the next', () => {
+    it('accepts a heading sequence that continues correctly from one source into the next', async () => {
       registry.register(createSource('<h1>Titel</h1>'));
       registry.register(createSource('<h2>Kop</h2><h3>Subkop</h3>'));
+      await validationPass();
 
       expect(registry.violations).toEqual([]);
     });
 
-    it('reads a detached proxy root in the place of its anchor', () => {
+    it('reads a detached proxy root in the place of its anchor', async () => {
       const input = document.createElement('input');
       document.body.append(input);
       const body = createSource('<h3>Kop</h3>');
@@ -172,28 +186,31 @@ describe('ClippyRegistry', () => {
       root.innerHTML = '<h1>Titel</h1>';
 
       registry.register({ anchor: input, label: 'Title', root });
+      await validationPass();
 
       expect(reportedViolations()).toEqual([
         { element: body.root.querySelector('h3'), rule: HEADING_LEVEL_MUST_NOT_SKIP, source: id },
       ]);
     });
 
-    it('recomputes the order when a source registers between two others', () => {
+    it('recomputes the order when a source registers between two others', async () => {
       registry.register(createSource('<h1>Titel</h1>'));
       const intro = createSource('<h2>Intro</h2>');
       registry.register(createSource('<h3>Kop</h3>'));
 
       registry.register(intro);
+      await validationPass();
 
       expect(registry.violations).toEqual([]);
     });
 
-    it('records the source that owns each element, in page order', () => {
+    it('records the source that owns each element, in page order', async () => {
       const intro = createSource('<h1>Titel</h1><h3>Intro</h3>');
       const body = createSource('<h5>Kop</h5>');
 
       const { id: bodyId } = registry.register(body);
       const { id: introId } = registry.register(intro);
+      await validationPass();
 
       expect(reportedViolations()).toEqual([
         { element: intro.root.querySelector('h3'), rule: HEADING_LEVEL_MUST_NOT_SKIP, source: introId },
@@ -202,12 +219,56 @@ describe('ClippyRegistry', () => {
     });
   });
 
-  it('stops notifying a subscriber once it unsubscribes', () => {
+  describe('scheduling', () => {
+    it('emits one update for several registrations arriving together', async () => {
+      const updates: (readonly RegistryViolation[])[] = [];
+      registry.subscribe((violations) => updates.push(violations));
+
+      registry.register(createSource('<p></p>'));
+      registry.register(createSource('<p></p>'));
+      await validationPass();
+
+      expect(updates.map((violations) => violations.length)).toEqual([2]);
+    });
+
+    it('emits one update for mutations in several sources arriving together', async () => {
+      const title = createSource('<p>Titel</p>');
+      const body = createSource('<p>Tekst</p>');
+      registry.register(title);
+      registry.register(body);
+      await validationPass();
+      const updates: (readonly RegistryViolation[])[] = [];
+      registry.subscribe((violations) => updates.push(violations));
+
+      title.root.innerHTML = '<p></p>';
+      body.root.innerHTML = '<p></p>';
+      await validationPass();
+
+      expect(updates.map((violations) => violations.length)).toEqual([2]);
+    });
+
+    it('emits one update when a mutation and a registration arrive together', async () => {
+      const body = createSource('<p>Tekst</p>');
+      registry.register(body);
+      await validationPass();
+      const updates: (readonly RegistryViolation[])[] = [];
+      registry.subscribe((violations) => updates.push(violations));
+
+      body.root.innerHTML = '<p></p>';
+      registry.register(createSource('<p></p>'));
+      await validationPass();
+
+      expect(updates.map((violations) => violations.length)).toEqual([2]);
+    });
+  });
+
+  it('stops notifying a subscriber once it unsubscribes', async () => {
     const updates: unknown[] = [];
     const unsubscribe = registry.subscribe((violations) => updates.push(violations));
 
     unsubscribe();
     registry.register(createSource('<p></p>'));
+    await validationPass();
 
     expect(updates).toEqual([]);
   });

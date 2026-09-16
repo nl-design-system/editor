@@ -18,6 +18,7 @@ export class ClippyRegistry {
   #sources: readonly (SourceRegistration & { id: string })[] = [];
   readonly #validator: Validator;
   #nextSourceId = 1;
+  #scheduledPass: ReturnType<typeof setTimeout> | undefined;
   #violations: readonly RegistryViolation[] = [];
 
   constructor(options: ClippyRegistryOptions = {}) {
@@ -30,10 +31,10 @@ export class ClippyRegistry {
 
   register({ anchor, label, root }: SourceRegistration): RegisteredSource {
     const id = `clippy-source-${this.#nextSourceId++}`;
-    const observer = new MutationObserver(() => this.#validate());
+    const observer = new MutationObserver(() => this.#schedulePass());
     observer.observe(root, { attributes: true, characterData: true, childList: true, subtree: true });
     this.#sources = [...this.#sources, { id, anchor, label, root }].sort(byAnchor);
-    this.#validate();
+    this.#schedulePass();
 
     return {
       id,
@@ -43,18 +44,18 @@ export class ClippyRegistry {
         if (remaining.length === this.#sources.length) return;
 
         this.#sources = remaining;
-        this.#validate();
+        this.#schedulePass();
       },
     };
   }
 
   registerValidation(validation: Validation): () => void {
     const unregister = this.#validator.register(validation);
-    this.#validate();
+    this.#schedulePass();
 
     return () => {
       unregister();
-      this.#validate();
+      this.#schedulePass();
     };
   }
 
@@ -66,6 +67,15 @@ export class ClippyRegistry {
     return () => {
       this.#listeners.delete(listener);
     };
+  }
+
+  #schedulePass() {
+    if (this.#scheduledPass !== undefined) return;
+
+    this.#scheduledPass = setTimeout(() => {
+      this.#scheduledPass = undefined;
+      this.#validate();
+    });
   }
 
   #validate() {
