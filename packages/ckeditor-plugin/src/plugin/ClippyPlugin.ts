@@ -3,7 +3,7 @@ import {
   type CloseValidationsDrawerDetail,
   type ValidationsDrawer,
 } from '@nl-design-system-community/editor/accessibility-notifications';
-import { applyColorScheme } from '@nl-design-system-community/editor/color-scheme';
+import { setDarkColorScheme, watchHostColorScheme } from '@nl-design-system-community/editor/color-scheme';
 import { EditorContentWrapper, EditorWrapper } from '@nl-design-system-community/editor/editor-wrapper';
 import {
   CustomEvents,
@@ -42,6 +42,7 @@ export class ClippyPlugin extends Plugin {
   private _notificationsView: View | null = null;
   private _validationsMap: ValidationsMap = new Map();
   private _settings: EditorSettings = DEFAULT_SETTINGS;
+  private _unwatchColorScheme: (() => void) | null = null;
 
   // Scope drawer events to this editor so multiple CKEditors on one page don't open each other's drawer.
   private get _identifier(): string {
@@ -67,10 +68,12 @@ export class ClippyPlugin extends Plugin {
       return;
     }
 
+    const editorEl = this._editorEl;
     // add theme token scoping for the drupal environment.
-    this._editorEl.classList.add('ma-theme', 'clippy-theme', 'utrecht-theme');
-    // follow the user's preferred color scheme by toggling the dark modifier on this editor.
-    applyColorScheme(this._editorEl);
+    editorEl.classList.add('ma-theme', 'clippy-theme', 'utrecht-theme');
+    this._unwatchColorScheme = watchHostColorScheme(editorEl, (colorScheme) =>
+      setDarkColorScheme(colorScheme === 'dark', editorEl),
+    );
     adoptClippyStyles();
 
     const wrapper = document.createElement('clippy-editor-wrapper') as EditorWrapper;
@@ -263,6 +266,7 @@ export class ClippyPlugin extends Plugin {
 
   override destroy(): void {
     this._editorEl?.removeEventListener(CustomEvents.FOCUS_NODE, this._handleFocusNode);
+    this._unwatchColorScheme?.();
     this._drawerEl?.remove();
     this._gutterEl?.remove();
     // Restore the editable to its original parent so CKEditor's own teardown
