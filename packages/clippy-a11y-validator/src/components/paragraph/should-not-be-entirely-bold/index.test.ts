@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
+import { paragraphShouldNotResembleHeading } from '../should-not-resemble-heading/index.ts';
 import { paragraphShouldNotBeEntirelyBold } from './index.ts';
+
+const LONG = 'Deze alinea is volledig dikgedrukt en veel te lang om nog als een kop te kunnen doorgaan.';
 
 let root: HTMLElement;
 const validator = new Validator({ validations: [paragraphShouldNotBeEntirelyBold] });
@@ -16,8 +19,8 @@ beforeEach(() => {
 });
 
 describe('paragraphShouldNotBeEntirelyBold', () => {
-  it('flags a paragraph that is entirely bold', () => {
-    const [violation] = validate('<p><strong>Alles dik</strong></p>');
+  it('flags a long paragraph that is entirely bold', () => {
+    const [violation] = validate(`<p><strong>${LONG}</strong></p>`);
 
     expect(violation?.rule).toBe('PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD');
     expect(violation?.severity).toBe('warning');
@@ -27,7 +30,7 @@ describe('paragraphShouldNotBeEntirelyBold', () => {
   });
 
   it('accepts a paragraph with bold and plain text', () => {
-    expect(validate('<p><strong>Dik</strong> en gewoon</p>')).toHaveLength(0);
+    expect(validate(`<p><strong>Dik</strong> en gewoon, ${LONG}</p>`)).toHaveLength(0);
   });
 
   it('accepts an empty paragraph', () => {
@@ -35,18 +38,44 @@ describe('paragraphShouldNotBeEntirelyBold', () => {
   });
 
   it('flags a paragraph whose bold text is wrapped in another inline element', () => {
-    expect(validate('<p><em><strong>Alles dik</strong></em></p>')).toHaveLength(1);
+    expect(validate(`<p><em><strong>${LONG}</strong></em></p>`)).toHaveLength(1);
   });
 
   it('ignores elements that are not paragraphs', () => {
-    expect(validate('<div><strong>Alles dik</strong></div>')).toHaveLength(0);
+    expect(validate(`<div><strong>${LONG}</strong></div>`)).toHaveLength(0);
   });
 
   it('unwraps the bold children when corrected', () => {
-    const [violation] = validate('<p><strong>Alles</strong> <b>dik</b></p>');
+    const [violation] = validate(`<p><strong>${LONG}</strong> <b>${LONG}</b></p>`);
     violation?.correct?.();
 
-    expect(root.querySelector('p')?.innerHTML).toBe('Alles dik');
+    expect(root.querySelector('p')?.innerHTML).toBe(`${LONG} ${LONG}`);
     expect(validator.validate(root)).toHaveLength(0);
+  });
+
+  describe('leaves the heading-like paragraphs to paragraphShouldNotResembleHeading', () => {
+    it('accepts a short paragraph that is entirely bold', () => {
+      expect(validate('<p><strong>Wat neemt u mee?</strong></p>')).toHaveLength(0);
+    });
+
+    it('accepts a paragraph of exactly 60 characters', () => {
+      expect(validate(`<p><strong>${'a'.repeat(60)}</strong></p>`)).toHaveLength(0);
+    });
+
+    it('flags a paragraph of exactly 61 characters', () => {
+      expect(validate(`<p><strong>${'a'.repeat(61)}</strong></p>`)).toHaveLength(1);
+    });
+
+    it('reports one rule per bold paragraph when both rules run', () => {
+      const both = new Validator({
+        validations: [paragraphShouldNotBeEntirelyBold, paragraphShouldNotResembleHeading],
+      });
+      root.innerHTML = `<p><strong>Wat neemt u mee?</strong></p><p><strong>${LONG}</strong></p>`;
+
+      expect(both.validate(root).map((violation) => violation.rule)).toEqual([
+        'PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING',
+        'PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD',
+      ]);
+    });
   });
 });
