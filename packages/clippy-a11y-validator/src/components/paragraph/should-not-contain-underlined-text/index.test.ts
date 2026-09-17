@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Validator } from '../../../validator.ts';
-import { emphasisShouldNotBeUnderlined } from './index.ts';
+import { paragraphShouldNotContainUnderlinedText } from './index.ts';
 
 let root: HTMLElement;
-const validator = new Validator({ validations: [emphasisShouldNotBeUnderlined] });
+const validator = new Validator({ validations: [paragraphShouldNotContainUnderlinedText] });
 
 const validate = (html: string) => {
   root.innerHTML = html;
@@ -15,11 +15,11 @@ beforeEach(() => {
   document.body.replaceChildren(root);
 });
 
-describe('emphasisShouldNotBeUnderlined', () => {
+describe('paragraphShouldNotContainUnderlinedText', () => {
   it('flags underlined text', () => {
     const [violation] = validate('<p><u>onderstreept</u></p>');
 
-    expect(violation?.rule).toBe('EMPHASIS_SHOULD_NOT_BE_UNDERLINED');
+    expect(violation?.rule).toBe('PARAGRAPH_SHOULD_NOT_CONTAIN_UNDERLINED_TEXT');
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('inline');
     expect(violation?.messages.error).toBe('Deze tekst is onderstreept. Dat lijkt te veel op een link.');
@@ -34,8 +34,12 @@ describe('emphasisShouldNotBeUnderlined', () => {
     expect(validate('<p><u>een</u> en <u>twee</u></p>')).toHaveLength(2);
   });
 
-  it('ignores other kinds of emphasis', () => {
+  it('ignores other kinds of formatting', () => {
     expect(validate('<p><strong>dik</strong><em>cursief</em><s>door</s></p>')).toHaveLength(0);
+  });
+
+  it('only looks inside paragraphs', () => {
+    expect(validate('<h2><u>kop</u></h2><li><u>item</u></li><td><u>cel</u></td>')).toHaveLength(0);
   });
 
   it('links to the guidance on underlining', () => {

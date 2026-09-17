@@ -16,12 +16,11 @@ export const resolveMessages = (
   payload?: ValidationPayload,
 ): ResolvedMessages => {
   const localised = messages[locale] ?? messages[fallbackLocale] ?? messages.nl;
-  const variant = payload?.['variant'];
-  const solution = (typeof variant === 'string' ? localised.solutions?.[variant] : undefined) ?? localised.solution;
+  const { href, solution } = localised;
 
   return {
     error: interpolate(localised.error, payload),
-    href: localised.href,
+    ...(href === undefined ? {} : { href }),
     ...(solution === undefined ? {} : { solution: interpolate(solution, payload) }),
   };
 };

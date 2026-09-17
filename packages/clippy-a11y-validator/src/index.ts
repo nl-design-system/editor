@@ -6,15 +6,15 @@ export { containsEmphasis, hasAltText, hasTextContent, isEntirelyBold, resembles
 export { and, not, or } from './utils/combinators.ts';
 export {
   changeTagName,
-  hasHeadingLength,
-  headingLevel,
-  precedingHeading,
+  ownDescendants,
   precedingMatch,
   textLines,
   trimmedText,
   unwrapElement,
   visibleTextNodes,
 } from './utils/dom.ts';
+export { expectedHeadingLevel, hasHeadingLength, headingLevel, precedingHeading } from './utils/heading.ts';
+export { hasHeaderColumn, hasHeaderRow, tableRows } from './utils/table.ts';
 export { isEmptyOrWhitespace } from './utils/text.ts';
 export { Validator } from './validator.ts';
 export type { ValidateOptions, ValidatorOptions } from './validator.ts';

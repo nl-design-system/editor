@@ -1,4 +1,3 @@
-import { selectors } from '../consts/selectors.ts';
 import { isEmptyOrWhitespace } from './text.ts';
 
 export const visibleTextNodes = (element: Element): Text[] => {
@@ -15,10 +14,6 @@ export const visibleTextNodes = (element: Element): Text[] => {
 
 export const trimmedText = (element: Element): string => element.textContent?.trim() ?? '';
 
-/** Whether the text of an element is short enough to pass for a heading. Length is likely to become configurable */
-const MAX_HEADING_LENGTH = 60;
-export const hasHeadingLength = (element: Element): boolean => trimmedText(element).length <= MAX_HEADING_LENGTH;
-
 export const unwrapElement = (element: Element): void => {
   const parent = element.parentNode;
   if (!parent) return;
@@ -33,8 +28,6 @@ export const changeTagName = (element: Element, tagName: string): void => {
   element.replaceWith(replacement);
 };
 
-export const headingLevel = (element: Element): number => Number.parseInt(element.tagName.slice(1), 10);
-
 export const precedingMatch = (element: Element, root: ParentNode, selector: string): HTMLElement | null => {
   const preceding = [...root.querySelectorAll<HTMLElement>(selector)].filter(
     (candidate) =>
@@ -46,8 +39,12 @@ export const precedingMatch = (element: Element, root: ParentNode, selector: str
   return preceding.at(-1) ?? null;
 };
 
-export const precedingHeading = (element: Element, root: ParentNode): HTMLElement | null =>
-  precedingMatch(element, root, selectors.HEADING);
+/**
+ * Descendants matching `selector` that belong to `element` itself rather than to a nested `container`,
+ * so a rule about a list does not trip over the contents of a list inside it.
+ */
+export const ownDescendants = (element: Element, selector: string, container: string): HTMLElement[] =>
+  [...element.querySelectorAll<HTMLElement>(selector)].filter((candidate) => candidate.closest(container) === element);
 
 /** Splits an element into its `<br>`-separated text lines. */
 export const textLines = (element: Element): string[] => {

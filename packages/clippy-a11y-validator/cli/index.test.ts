@@ -35,7 +35,7 @@ describe('validate-html', () => {
   it('reports every violation in the fixture and exits with 1', async () => {
     const { code, stdout } = await run(FIXTURE);
 
-    expect(stdout).toContain('23 issue(s) found in 1 document(s).');
+    expect(stdout).toContain('24 issue(s) found in 1 document(s).');
     expect(code).toBe(1);
   });
 
@@ -58,23 +58,24 @@ describe('validate-html', () => {
       'DESCRIPTION_SHOULD_NOT_BE_EMPTY',
       'DESCRIPTION_TERM_MUST_HAVE_DESCRIPTION',
       'DESCRIPTION_TERM_SHOULD_NOT_BE_EMPTY',
-      'EMPHASIS_SHOULD_NOT_BE_EMPTY',
-      'EMPHASIS_SHOULD_NOT_BE_UNDERLINED',
       'HEADING_LEVEL_MUST_NOT_SKIP',
       'HEADING_MUST_NOT_BE_EMPTY',
       'HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC',
       'IMAGE_MUST_HAVE_ALT_TEXT',
       'LINK_SHOULD_NOT_BE_EMPTY',
       'LINK_SHOULD_NOT_BE_TOO_GENERIC',
-      'LIST_ITEM_SHOULD_NOT_BE_EMPTY',
+      'ORDERED_LIST_ITEM_SHOULD_NOT_BE_EMPTY',
       'PARAGRAPH_SHOULD_NOT_BE_EMPTY',
       'PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD',
+      'PARAGRAPH_SHOULD_NOT_CONTAIN_EMPTY_FORMATTING',
+      'PARAGRAPH_SHOULD_NOT_CONTAIN_UNDERLINED_TEXT',
       'PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING',
       'PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST',
       'TABLE_CAPTION_SHOULD_NOT_BE_EMPTY',
       'TABLE_CELL_SHOULD_NOT_BE_EMPTY',
       'TABLE_MUST_HAVE_HEADINGS',
       'TABLE_MUST_HAVE_MULTIPLE_ROWS',
+      'UNORDERED_LIST_ITEM_SHOULD_NOT_BE_EMPTY',
     ]);
   });
 
@@ -102,7 +103,7 @@ describe('validate-html', () => {
   it('exits with 0 when the corrections are applied', async () => {
     const { code, stdout } = await run(FIXTURE, '--fix');
 
-    expect(stdout).toContain('23 issue(s) found in 1 document(s).');
+    expect(stdout).toContain('24 issue(s) found in 1 document(s).');
     expect(code).toBe(0);
   });
 
@@ -147,7 +148,7 @@ describe('validate-html', () => {
   it('walks a directory for HTML documents', async () => {
     const { code, stdout } = await run(FIXTURE_DIRECTORY);
 
-    expect(stdout).toContain('23 issue(s) found in 1 document(s).');
+    expect(stdout).toContain('24 issue(s) found in 1 document(s).');
     expect(stdout).toContain(relative(process.cwd(), FIXTURE));
     expect(code).toBe(1);
   });
@@ -155,7 +156,7 @@ describe('validate-html', () => {
   it('validates every path it is given', async () => {
     const { stdout } = await run(FIXTURE, FIXTURE);
 
-    expect(stdout).toContain('46 issue(s) found in 2 document(s).');
+    expect(stdout).toContain('48 issue(s) found in 2 document(s).');
   });
 
   it('drops the elements matching --skip before validating', async () => {

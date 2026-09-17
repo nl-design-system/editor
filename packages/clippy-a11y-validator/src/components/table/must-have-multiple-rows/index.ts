@@ -1,14 +1,15 @@
 import { selectors, validationSeverity } from '../../../consts/index.ts';
 import { defineValidation } from '../../../define-validation.ts';
+import { tableRows } from '../../../utils/table.ts';
 import { tableValidationRules } from '../constants.ts';
 import { messages } from './messages.ts';
 
 const MINIMUM_ROWS = 2;
 
 export const tableMustHaveMultipleRows = defineValidation({
-  condition: (table) => table.querySelectorAll(selectors.TABLE_ROW).length >= MINIMUM_ROWS,
+  condition: (table) => tableRows(table).length >= MINIMUM_ROWS,
   correct: (table) => () => {
-    const firstRow = table.querySelector(selectors.TABLE_ROW);
+    const [firstRow] = tableRows(table);
     if (!firstRow) return;
 
     const row = table.ownerDocument.createElement('tr');

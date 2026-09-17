@@ -1,6 +1,7 @@
 import { selectors, validationSeverity } from '../../../consts/index.ts';
 import { defineValidation } from '../../../define-validation.ts';
-import { changeTagName, headingLevel, precedingHeading } from '../../../utils/dom.ts';
+import { changeTagName } from '../../../utils/dom.ts';
+import { headingLevel, precedingHeading } from '../../../utils/heading.ts';
 import { headingValidationRules } from '../constants.ts';
 import { messages } from './messages.ts';
 
