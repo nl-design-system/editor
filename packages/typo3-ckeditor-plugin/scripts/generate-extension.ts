@@ -15,7 +15,13 @@ const CATEGORY_LABEL = 'Content classes';
 const CATEGORY_DESCRIPTION =
   'Added to the HTML this editor produces. The defaults match the NL Design System. Leave a field empty to output that element without a class.';
 
+const TYPO3_VERSIONS = '12.4.0-14.99.99';
+
 const GENERATED = '# Generated from @nl-design-system-community/ckeditor-plugin/content-classes.json - do not edit.';
+
+interface ExtensionComposerJson {
+  description: string;
+}
 
 interface ContentClassesJson {
   fields: { defaultValue: string; description: string; key: string; label: string }[];
@@ -31,6 +37,12 @@ const TOKENS_CSS = [
   '@utrecht/design-tokens/dist/theme.css',
   '@nl-design-system-candidate/button-css/button.css',
 ];
+
+export const packageVersion = (): string =>
+  (JSON.parse(readFileSync(resolve(packageDir, 'package.json'), 'utf8')) as { version: string }).version;
+
+const phpString = (value: string): string =>
+  `'${value.replaceAll('\\', String.raw`\\`).replaceAll("'", String.raw`\'`)}'`;
 
 const writeYaml = (path: string, value: unknown): void =>
   writeFileSync(path, `${GENERATED}\n${stringify(value, { lineWidth: 0 })}`);
@@ -81,9 +93,40 @@ function writeSet(fields: ContentClassesJson['fields']): void {
   );
 }
 
+// The Extension Manager reads ext_emconf.php instead of composer.json, so both carry the version.
+function writeMetadata(): void {
+  const version = packageVersion();
+  const composerPath = resolve(extensionOut, 'composer.json');
+  const composer = JSON.parse(readFileSync(composerPath, 'utf8')) as ExtensionComposerJson;
+  writeFileSync(composerPath, `${JSON.stringify({ ...composer, version }, null, 2)}\n`);
+
+  writeFileSync(
+    resolve(extensionOut, 'ext_emconf.php'),
+    `<?php
+
+$EM_CONF[$_EXTKEY] = [
+    'title' => 'Clippy',
+    'description' => ${phpString(composer.description)},
+    'category' => 'be',
+    'state' => 'alpha',
+    'version' => ${phpString(version)},
+    'constraints' => [
+        'depends' => [
+            'typo3' => '${TYPO3_VERSIONS}',
+            'rte_ckeditor' => '${TYPO3_VERSIONS}',
+        ],
+        'conflicts' => [],
+        'suggests' => [],
+    ],
+];
+`,
+  );
+}
+
 export function generateExtension(): void {
   // The TYPO3 extension itself (composer.json, RTE preset, import map, page TSconfig, shim).
   cpSync(resolve(packageDir, 'extension'), extensionOut, { recursive: true });
+  writeMetadata();
 
   writeStyles();
 

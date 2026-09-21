@@ -38,3 +38,42 @@ Files under `Resources/Public/` are picked up on page reload. After changing `co
 ```sh
 docker compose exec typo3 php vendor/bin/typo3 cache:flush
 ```
+
+## Packaging
+
+```sh
+pnpm build-and-zip
+```
+
+This builds the extension and zips it into `dist/clippy_<version>.zip`, with the extension files at the root of the archive. The zip installs on TYPO3 12.4, 13.4 and 14.
+
+### Installing with Composer
+
+Unzip the archive into `packages/clippy/` of the TYPO3 project, so `composer.json` sits directly in that folder. The root `composer.json` needs a path repository for `packages/*`, which the TYPO3 base distribution already has:
+
+```json
+"repositories": [{ "type": "path", "url": "packages/*" }]
+```
+
+Then require and set up the extension:
+
+```sh
+composer require nl-design-system-community/clippy:@dev
+vendor/bin/typo3 extension:setup
+```
+
+### Installing without Composer
+
+Upload the zip under _Admin Tools → Extensions → Upload Extension_, then activate **Clippy** in the extension list. TYPO3 derives the extension key from the file name, so keep the `clippy_` prefix when renaming the file.
+
+TYPO3 activates a newly uploaded extension in the request that unpacked it, which it cannot do: the upload fails with `Extension clippy is not available` and is deleted again. This is TYPO3's own behaviour, unrelated to this extension, and unchanged from 12.4 through 14. Uploading and activating separately does work, so either turn off _automaticInstallation_ under _Admin Tools → Settings → Extension Configuration → extensionmanager_ before uploading, or skip the upload form and unpack the zip into `typo3conf/ext/clippy/` by hand before activating it.
+
+### Content classes
+
+On TYPO3 13.4 and 14, add the **Clippy** site set to edit the classes under the site's settings. TYPO3 12.4 has no site sets, so override them in the Page TSconfig of the root page instead:
+
+```text
+RTE.default.editor.config.contentClasses.paragraph = my-paragraph
+```
+
+The generated `Configuration/Sets/Clippy/page.tsconfig` lists every key.
