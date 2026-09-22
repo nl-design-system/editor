@@ -21,7 +21,7 @@ describe('paragraphShouldNotBeEntirelyBold', () => {
 
     expect(violation?.rule).toBe('PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD');
     expect(violation?.severity).toBe('warning');
-    expect(violation?.scope).toBe('block');
+    expect(violation?.scope).toBe('element');
     expect(violation?.messages.error).toBe('De hele alinea is dikgedrukt.');
     expect(violation?.messages.solution).toContain('alleen voor de woorden');
   });

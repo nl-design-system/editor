@@ -8,16 +8,21 @@ export type WalkOptions = {
   severities?: readonly ValidationSeverity[];
 };
 
-const violate = (validation: Validation, element: HTMLElement, options: WalkOptions): Violation | null => {
+const violate = (
+  validation: Validation,
+  element: HTMLElement,
+  root: ParentNode,
+  options: WalkOptions,
+): Violation | null => {
   const { condition, correct, messages, payload, rule, scope, selector, severity } = validation;
 
   if (!element.matches(selector)) return null;
-  if (condition(element)) return null;
+  if (condition(element, root)) return null;
 
-  const violationPayload = payload?.(element);
+  const violationPayload = payload?.(element, root);
 
   return {
-    correct: correct?.(element),
+    correct: correct?.(element, root),
     element,
     messages: resolveMessages(messages, options.locale, options.fallbackLocale, violationPayload),
     rule,
@@ -35,7 +40,7 @@ export const walk = (root: ParentNode, validations: readonly Validation[], optio
     if (!(element instanceof HTMLElement)) return [];
 
     return applicable
-      .map((validation) => violate(validation, element, options))
+      .map((validation) => violate(validation, element, root, options))
       .filter((violation) => violation !== null);
   });
 };
