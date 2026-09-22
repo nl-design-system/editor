@@ -3,7 +3,7 @@ export { defineValidation } from './define-validation.ts';
 export { coreValidationRules, coreValidations } from './components/index.ts';
 export type { CoreValidationRule } from './components/index.ts';
 export { hasTextContent } from './utils/content.ts';
-export { isEntirelyBold } from './conditions/index.ts';
+export { isEntirelyBold, resemblesListItem } from './components/paragraph/utils.ts';
 export { Validator } from './validator.ts';
 export type { ValidateOptions, ValidatorOptions } from './validator.ts';
 export type { Locale, ResolvedMessages, ValidationMessages, ValidationMessagesByLocale } from './types/messages.ts';
