@@ -10,7 +10,7 @@ import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import { map } from 'lit/directives/map.js';
-import type { ValidationsMap, ValidationResult } from '@/types/validation';
+import type { ViolationsMap, Violation } from '@/types/validation';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import { tiptapContext } from '@/context/tiptapContext';
 import { validationsContext } from '@/context/validationsContext';
@@ -23,7 +23,7 @@ interface HeadingEntry {
   index: number;
   level: number;
   text: string;
-  validationEntry: [Range, ValidationResult] | null;
+  validationEntry: [Range, Violation] | null;
 }
 
 const tag = 'clippy-heading-structure';
@@ -55,7 +55,7 @@ export class HeadingStructure extends LitElement {
 
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsMap?: ValidationsMap;
+  validationsMap?: ViolationsMap;
 
   get #headings(): HeadingEntry[] {
     if (!this.htmlDocument) return [];

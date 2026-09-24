@@ -11,7 +11,7 @@ import { property, state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
-import type { ValidationsMap } from '@/types/validation';
+import type { ViolationsMap } from '@/types/validation';
 import { identifierContext } from '@/context/identifierContext';
 import { validationsContext } from '@/context/validationsContext';
 import { CustomEvents, type DocumentOverviewMode, type OpenDocumentOverviewDetail } from '@/events';
@@ -40,7 +40,7 @@ export class AccessibilityNotifications extends LitElement {
   /** @internal Consumed from the nearest {@link validationsContext} provider. */
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsContext?: ValidationsMap;
+  validationsContext?: ViolationsMap;
 
   /** @internal Consumed from the nearest {@link identifierContext} provider. */
   @consume({ context: identifierContext, subscribe: true })
@@ -48,12 +48,12 @@ export class AccessibilityNotifications extends LitElement {
   private readonly identifierContextValue?: string;
 
   /**
-   * Validation results for standalone use (outside `<clippy-context>`, e.g.
+   * Violations for standalone use (outside `<clippy-context>`, e.g.
    * embedded in CKEditor). Takes precedence over {@link validationsContext} when
    * set; falls back to the consumed context otherwise (in-editor use).
    */
   @property({ attribute: false })
-  validationsMap?: ValidationsMap;
+  validationsMap?: ViolationsMap;
 
   /**
    * Identifier of the editor instance this trigger belongs to, for standalone

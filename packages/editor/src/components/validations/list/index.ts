@@ -7,10 +7,9 @@ import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import '@/components/validations/validation-item';
 import type { ValidationItem } from '@/components/validations/validation-item';
-import type { ValidationsMap, ValidationSeverity } from '@/types/validation';
+import type { ViolationsMap, ValidationSeverity } from '@/types/validation';
 import { validationsContext } from '@/context/validationsContext';
 import { CustomEvents, type FocusValidationItemInListEvent } from '@/events';
-import { renderSolution, type ValidationKey, validationMessages } from '@/messages';
 import listStyles from './styles';
 
 const tag = 'clippy-validations-list';
@@ -43,7 +42,7 @@ export class ValidationsList extends LitElement {
   /** @internal Consumed from the nearest {@link validationsContext} provider. */
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsContext?: ValidationsMap;
+  validationsContext?: ViolationsMap;
 
   /** Optional severity filter. When set, only items of this severity are rendered. */
   @property({ type: String }) severity: ValidationSeverity | null = null;
@@ -89,9 +88,8 @@ export class ValidationsList extends LitElement {
 
     return html`
       <ul class="clippy-validations-list" role="list">
-        ${map(entries, ([, { correct, range, severity, solutionPayload, validatorKey }]) => {
-          const valKey = validatorKey as ValidationKey;
-          const { customCorrectLabel, heading, href, solution } = validationMessages()[valKey];
+        ${map(entries, ([, { correct, customCorrectLabel, messages, range, severity }]) => {
+          const { error: heading, href, solution } = messages;
           return html`
             <li class="clippy-validations-list__item">
               <clippy-validation-item
@@ -100,10 +98,9 @@ export class ValidationsList extends LitElement {
                 .heading=${heading}
                 .href=${href}
                 .customCorrectLabel=${customCorrectLabel}
+                .solution=${solution}
                 .correct=${correct}
-              >
-                ${renderSolution(solution, solutionPayload)}
-              </clippy-validation-item>
+              ></clippy-validation-item>
             </li>
           `;
         })}

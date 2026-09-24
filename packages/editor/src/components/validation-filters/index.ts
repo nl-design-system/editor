@@ -11,7 +11,7 @@ import { property, state } from 'lit/decorators.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import { map } from 'lit/directives/map.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import type { ValidationsMap, ValidationSeverity } from '@/types/validation';
+import type { ViolationsMap, ValidationSeverity } from '@/types/validation';
 import { validationSeverity } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';
 import { validationsContext } from '@/context/validationsContext';
@@ -49,7 +49,7 @@ export class ValidationFilters extends LitElement {
 
   @consume({ context: validationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsContext?: ValidationsMap;
+  validationsContext?: ViolationsMap;
 
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })

@@ -24,7 +24,7 @@ import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
 import { Dropcursor, UndoRedo, Placeholder } from '@tiptap/extensions';
 import type { EditorSettings } from '@/types/settings';
-import type { ValidationResult } from '@/types/validation';
+import type { Violation } from '@/types/validation';
 import { HEADING_LEVELS, contentClasses, headingClasses } from '@/constants';
 import { CustomFileHandler } from '@/extensions/CustomFileHandler';
 import { DefinitionList } from '@/extensions/DefinitionList';
@@ -38,8 +38,12 @@ const globalAttributes = {
 } as const;
 
 export const editorExtensions = (
-  settings: EditorSettings,
-  callback: (resultMap: Map<Range, ValidationResult>) => void,
+  /**
+   * Read whenever validation runs rather than captured once, so a change to the host's
+   * validations reaches the next run.
+   */
+  getSettings: () => EditorSettings,
+  callback: (violations: Map<Range, Violation>) => void,
   identifier?: string,
 ) => [
   Document,
@@ -187,7 +191,7 @@ export const editorExtensions = (
     resize: {
       alwaysPreserveAspectRatio: true,
       directions: ['top', 'bottom', 'left', 'right', 'top-right', 'top-left', 'bottom-right', 'bottom-left'],
-      enabled: !settings.readonly,
+      enabled: !getSettings().readonly,
       minHeight: 50,
       minWidth: 50,
     },
@@ -224,8 +228,8 @@ export const editorExtensions = (
   }),
   KeyboardShortcuts,
   Validation.configure({
+    getValidations: () => getSettings().validations,
     identifier,
-    settings,
     updateValidationsContext: callback,
   }),
   Highlight.configure({

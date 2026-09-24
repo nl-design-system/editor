@@ -1,6 +1,6 @@
 import { Extension } from '@tiptap/core';
 import { CustomEvents, type OpenDocumentOverviewDetail } from '@/events';
-import { debouncedValidate, runValidation } from '@/validators';
+import { debouncedValidate, runValidation } from '@/validations';
 
 export default Extension.create({
   name: 'validation',
@@ -19,15 +19,15 @@ export default Extension.create({
   },
 
   onCreate({ editor }) {
-    const { settings, updateValidationsContext } = this.options;
-    runValidation(editor.view.dom, settings, updateValidationsContext);
+    const { getValidations, updateValidationsContext } = this.options;
+    runValidation(editor.view.dom, getValidations(), updateValidationsContext);
   },
 
   onUpdate({ editor }) {
-    const { settings, updateValidationsContext } = this.options;
+    const { getValidations, updateValidationsContext } = this.options;
     if (editor.isDestroyed || !editor.view) return;
     try {
-      debouncedValidate(editor.view.dom, settings, updateValidationsContext);
+      debouncedValidate(editor.view.dom, getValidations(), updateValidationsContext);
     } catch {
       // view may not be available during editor lifecycle transitions
     }

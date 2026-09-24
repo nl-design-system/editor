@@ -14,14 +14,12 @@ import {
 import {
   debouncedValidate,
   runValidation,
-  type EditorSettings,
-  type ValidationsMap,
+  type Validation,
+  type ViolationsMap,
 } from '@nl-design-system-community/editor/validators';
 import { Plugin, View, type Locale, type ObservableChangeEvent, type ToolbarView } from 'ckeditor5';
-import { DEFAULT_SETTINGS } from '../constants/';
 import { adoptClippyStyles } from '../styles/';
 import { findMatchingCorrection, findOccurrenceIndex, runValidations } from '../utils/correction.ts';
-import { resolveTopHeadingLevel } from '../utils/heading.ts';
 import { ContentClasses } from './ContentClasses.ts';
 
 export class ClippyPlugin extends Plugin {
@@ -40,8 +38,9 @@ export class ClippyPlugin extends Plugin {
   private _gutterEl: Gutter | null = null;
   private _drawerEl: ValidationsDrawer | null = null;
   private _notificationsView: View | null = null;
-  private _validationsMap: ValidationsMap = new Map();
-  private _settings: EditorSettings = DEFAULT_SETTINGS;
+  private _validationsMap: ViolationsMap = new Map();
+  /** The validations this editor runs. Unset means every core validation. */
+  private _validations: readonly Validation[] | undefined;
   private _unwatchColorScheme: (() => void) | null = null;
 
   // Scope drawer events to this editor so multiple CKEditors on one page don't open each other's drawer.
@@ -50,7 +49,6 @@ export class ClippyPlugin extends Plugin {
   }
 
   init(): void {
-    this._settings = { ...DEFAULT_SETTINGS, topHeadingLevel: resolveTopHeadingLevel(this.editor) };
     this._registerNotificationsToolbarItem();
     this._observeSourceEditingMode();
     this.editor.on('ready', () => {
@@ -156,7 +154,7 @@ export class ClippyPlugin extends Plugin {
       return;
     }
 
-    runValidation(this._editableEl, this._settings, (validationsMap: ValidationsMap) => {
+    runValidation(this._editableEl, this._validations, (validationsMap: ViolationsMap) => {
       this._validationsMap = validationsMap;
       this._render();
     });
@@ -167,7 +165,7 @@ export class ClippyPlugin extends Plugin {
       return;
     }
 
-    debouncedValidate(this._editableEl, this._settings, (validationsMap: ValidationsMap) => {
+    debouncedValidate(this._editableEl, this._validations, (validationsMap: ViolationsMap) => {
       this._validationsMap = validationsMap;
       this._render();
     });
@@ -183,7 +181,7 @@ export class ClippyPlugin extends Plugin {
     this._renderNotifications(validationsMap);
   }
 
-  private _renderNotifications(validationsMap: ValidationsMap): void {
+  private _renderNotifications(validationsMap: ViolationsMap): void {
     if (!this._editableEl) {
       return;
     }
@@ -204,31 +202,31 @@ export class ClippyPlugin extends Plugin {
     }
   }
 
-  private _patchCorrectionsForCKEditor(validationsMap: ValidationsMap): ValidationsMap {
-    for (const [range, result] of validationsMap) {
-      const { correct, validatorKey } = result;
-      if (!correct || !validatorKey) {
+  private _patchCorrectionsForCKEditor(validationsMap: ViolationsMap): ViolationsMap {
+    for (const [range, violation] of validationsMap) {
+      const { correct, rule } = violation;
+      if (!correct || !rule) {
         continue;
       }
 
       // replace correct functions with model-aware versions that go through editor.setData()
-      result.correct = this._modelCorrectionFactory(correct, validatorKey, range);
+      violation.correct = this._modelCorrectionFactory(correct, rule, range);
     }
     return validationsMap;
   }
 
-  private _modelCorrectionFactory(originalCorrect: () => void, validatorKey: string, range: Range): () => void {
+  private _modelCorrectionFactory(originalCorrect: () => void, rule: string, range: Range): () => void {
     return () => {
       // create a clean HTML copy via this.editor.getData()
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = this.editor.getData();
-      const modelDataValidationsMap = runValidations(tempDiv, this._settings);
+      const modelDataValidationsMap = runValidations(tempDiv, this._validations);
 
-      // A validator can flag multiple spots, get the range's position among correctable results sharing its validatorKey
-      const occurrenceIndex = findOccurrenceIndex(this._validationsMap, range, validatorKey);
+      // A validator can flag multiple spots, get the range's position among correctable violations sharing its rule
+      const occurrenceIndex = findOccurrenceIndex(this._validationsMap, range, rule);
 
       // locate the matching correction in the clean HTML copy
-      const target = findMatchingCorrection(modelDataValidationsMap, validatorKey, occurrenceIndex);
+      const target = findMatchingCorrection(modelDataValidationsMap, rule, occurrenceIndex);
 
       if (target?.correct) {
         // apply it and check whether it actually changed the DOM

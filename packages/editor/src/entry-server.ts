@@ -11,7 +11,7 @@
 export function render(): string {
   return `
     <h1>Clippy Editor SSR</h1>
-    <clippy-editor id="clippy-editor-ssr" top-heading-level="2">
+    <clippy-editor id="clippy-editor-ssr">
       <div slot="value">
         <p>
           Server rendered content. The editor is initialized

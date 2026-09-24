@@ -25,7 +25,7 @@ export {
 export { hasHeaderColumn, hasHeaderRow, tableRows } from './components/table/utils.ts';
 export { isEmptyOrWhitespace } from './utils/text.ts';
 export { Validator } from './validator.ts';
-export type { ValidateOptions, ValidatorOptions } from './validator.ts';
+export type { ValidatorConstructorOptions, ValidatorRunOptions } from './validator.ts';
 export type { Locale, ResolvedMessages, ValidationMessages, ValidationMessagesByLocale } from './types/messages.ts';
 export type { CoreSelector, ElementFor, Selector } from './types/selector.ts';
 export type {
