@@ -21,7 +21,6 @@ import { Plugin, View, type Locale, type ObservableChangeEvent, type ToolbarView
 import { DEFAULT_SETTINGS } from '../constants/';
 import { adoptClippyStyles } from '../styles/';
 import { findMatchingCorrection, findOccurrenceIndex, runValidations } from '../utils/correction.ts';
-import { resolveTopHeadingLevel } from '../utils/heading.ts';
 import { ContentClasses } from './ContentClasses.ts';
 
 export class ClippyPlugin extends Plugin {
@@ -50,7 +49,7 @@ export class ClippyPlugin extends Plugin {
   }
 
   init(): void {
-    this._settings = { ...DEFAULT_SETTINGS, topHeadingLevel: resolveTopHeadingLevel(this.editor) };
+    this._settings = { ...DEFAULT_SETTINGS };
     this._registerNotificationsToolbarItem();
     this._observeSourceEditingMode();
     this.editor.on('ready', () => {

@@ -91,14 +91,14 @@ describe('findMatchingCorrection', () => {
 describe('runValidations', () => {
   it('returns a Map', () => {
     const dom = document.createElement('div');
-    const result = runValidations(dom, { enableRules: ['*'], topHeadingLevel: 1 });
+    const result = runValidations(dom, { enableRules: ['*'] });
     expect(result).toBeInstanceOf(Map);
   });
 
   it('returns an empty map for content with no issues', () => {
     const dom = document.createElement('div');
     dom.innerHTML = '<h1>Title</h1><p>Valid paragraph.</p>';
-    const result = runValidations(dom, { enableRules: ['*'], topHeadingLevel: 1 });
+    const result = runValidations(dom, { enableRules: ['*'] });
     expect(result.size).toBe(0);
   });
 
@@ -106,7 +106,7 @@ describe('runValidations', () => {
     const dom = document.createElement('div');
     dom.innerHTML = '<h2></h2>';
     document.body.appendChild(dom);
-    const result = runValidations(dom, { enableRules: ['HEADING_MUST_NOT_BE_EMPTY'], topHeadingLevel: 1 });
+    const result = runValidations(dom, { enableRules: ['HEADING_MUST_NOT_BE_EMPTY'] });
     document.body.removeChild(dom);
     expect(result.size).toBeGreaterThan(0);
   });
