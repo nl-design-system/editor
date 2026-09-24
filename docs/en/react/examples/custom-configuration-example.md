@@ -17,7 +17,7 @@ import {
 
 export function ReactContextExample() {
   return (
-    <ClippyContext id="react-editor-2" topHeadingLevel={3}>
+    <ClippyContext id="react-editor-2">
       <div slot="value">
         <h1>Heading level 1 in React editor</h1>
         <p>
