@@ -7,7 +7,6 @@ import { activeValidations, runValidation } from './index';
 
 const settings = (overrides: Partial<EditorSettings> = {}): EditorSettings => ({
   enableRules: ['*'],
-  topHeadingLevel: 1,
   ...overrides,
 });
 
@@ -79,13 +78,7 @@ describe('runValidation', () => {
     expect(result.element.tagName).toBe('P');
   });
 
-  it('honours the top heading level of the settings', () => {
-    const map = validate('<h1>Titel</h1><p>tekst</p>', settings({ topHeadingLevel: 2 }));
-
-    expect(rulesIn(map)).toContain(coreValidationRules.HEADING_MUST_START_AT_LEVEL_ONE);
-  });
-
-  it('accepts a document that opens at the default top heading level', () => {
+  it('accepts a document that opens at heading level 1', () => {
     const map = validate('<h1>Titel</h1><p>tekst</p>');
 
     expect(rulesIn(map)).not.toContain(coreValidationRules.HEADING_MUST_START_AT_LEVEL_ONE);

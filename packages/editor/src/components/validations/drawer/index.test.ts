@@ -97,7 +97,7 @@ describe('<clippy-validations-dialog>', () => {
       entry(coreValidationRules.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST, 'warning', { prefix: '-' }),
       entry(coreValidationRules.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC, 'warning'),
       entry(coreValidationRules.EMPHASIS_SHOULD_NOT_BE_UNDERLINED, 'warning'),
-      entry(coreValidationRules.HEADING_MUST_START_AT_LEVEL_ONE, 'error', { topHeadingLevel: 1 }),
+      entry(coreValidationRules.HEADING_MUST_START_AT_LEVEL_ONE, 'error'),
     ]);
 
     // Set validationsContext on the context provider, which will provide it to children

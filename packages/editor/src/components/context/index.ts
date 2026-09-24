@@ -10,7 +10,6 @@ import { tiptapContext } from '@/context/tiptapContext';
 import { validationsContext } from '@/context/validationsContext';
 import { editorExtensions } from '@/extensions';
 import { initializeLocale } from '@/localization';
-import { sanitizeTopHeadingLevel } from '@/utils/sanitize';
 import { waitForMedia } from '@/utils/waitForMedia';
 import { runValidation } from '@/validations';
 import { editorContextStyles } from './styles';
@@ -63,15 +62,6 @@ export class Context extends LitElement {
   @provide({ context: identifierContext })
   @property({ reflect: true, type: String })
   override id = 'clippy-editor-id';
-
-  /**
-   * The highest heading level allowed in the document (1–6).
-   * Heading levels below this value are removed from the format-select options.
-   * Reflected as `top-heading-level`.
-   * @default 1
-   */
-  @property({ attribute: 'top-heading-level', reflect: true, type: Number })
-  topHeadingLevel = 1;
 
   /**
    * Space-separated list of validation rule keys to enable.
@@ -156,7 +146,6 @@ export class Context extends LitElement {
       disableRules: this.disableRules,
       enableRules: this.enableRules,
       readonly: this.readonly,
-      topHeadingLevel: sanitizeTopHeadingLevel(this.topHeadingLevel),
     };
   }
 
