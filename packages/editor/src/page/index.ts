@@ -10,7 +10,7 @@ import { byAnchor, hasChanges } from './utils';
 
 export class ClippyPage {
   readonly #listeners = new Set<ViolationsListener>();
-  #sources: readonly (SourceRegistration & { id: string })[] = [];
+  #sources: readonly (SourceRegistration & { id: string; observer: MutationObserver })[] = [];
   readonly #validator: Validator;
   #nextSourceId = 1;
   #scheduledPass: ReturnType<typeof setTimeout> | undefined;
@@ -28,7 +28,8 @@ export class ClippyPage {
     const id = `clippy-source-${this.#nextSourceId++}`;
     const observer = new MutationObserver(() => this.#schedulePass());
     observer.observe(fragment, { attributes: true, characterData: true, childList: true, subtree: true });
-    this.#sources = [...this.#sources, { id, anchor, fragment, label }].sort(byAnchor);
+    this.#dropDisconnectedSources();
+    this.#sources = [...this.#sources, { id, anchor, fragment, label, observer }].sort(byAnchor);
     this.#schedulePass();
 
     return {
@@ -62,6 +63,12 @@ export class ClippyPage {
     };
   }
 
+  #dropDisconnectedSources() {
+    const disconnected = this.#sources.filter(({ anchor }) => !anchor.isConnected);
+    disconnected.forEach(({ observer }) => observer.disconnect());
+    this.#sources = this.#sources.filter((source) => !disconnected.includes(source));
+  }
+
   #schedulePass() {
     if (this.#scheduledPass !== undefined) return;
 
@@ -72,6 +79,7 @@ export class ClippyPage {
   }
 
   #validate() {
+    this.#dropDisconnectedSources();
     const violations = this.#validator.validate(this.#sources.map(({ fragment }) => fragment)).map((violation) => ({
       ...violation,
       source: this.#sources.find(({ fragment }) => fragment.contains(violation.element))!.id,

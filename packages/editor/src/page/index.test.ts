@@ -357,6 +357,37 @@ describe('ClippyPage', () => {
     });
   });
 
+  describe('source lifecycle', () => {
+    it('revalidates the recomposed page when a source unregisters', async () => {
+      page.registerValidation(coreValidations[HEADING_LEVEL_MUST_NOT_SKIP]);
+      page.register(createSource('<h1>Titel</h1>'));
+      const { unregister } = page.register(createSource('<h2>Intro</h2>'));
+      const { id } = page.register(createSource('<h3>Kop</h3>'));
+      await validationPass();
+
+      unregister();
+      await validationPass();
+
+      expect(page.violations.map(({ rule, source }) => ({ rule, source }))).toEqual([
+        { rule: HEADING_LEVEL_MUST_NOT_SKIP, source: id },
+      ]);
+    });
+
+    it('drops a source whose anchor is disconnected without unregistering', async () => {
+      const removed = createSource('<p></p>');
+      page.register(removed);
+      const body = createSource('<p>Tekst</p>');
+      const { id } = page.register(body);
+      await validationPass();
+
+      removed.anchor.remove();
+      body.fragment.querySelector('p')!.textContent = '';
+      await validationPass();
+
+      expect(page.violations.map(({ source }) => source)).toEqual([id]);
+    });
+  });
+
   it('stops notifying a subscriber once it unsubscribes', async () => {
     const updates: unknown[] = [];
     const unsubscribe = page.subscribe((violations) => updates.push(violations));
