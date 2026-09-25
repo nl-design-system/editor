@@ -8,6 +8,5 @@ import { hasAltText } from '../image/utils.ts';
  * An image-only link whose image describes the destination carries a perfectly good accessible name,
  * so it must not be reported as empty.
  */
-export const hasLinkText: ValidationCondition = (link, root) =>
-  hasTextContent(link, root) ||
-  [...link.querySelectorAll<HTMLImageElement>(selectors.IMAGE)].some((image) => hasAltText(image, root));
+export const hasLinkText: ValidationCondition = (link) =>
+  hasTextContent(link) || [...link.querySelectorAll<HTMLImageElement>(selectors.IMAGE)].some(hasAltText);

@@ -6,15 +6,7 @@ export { hasTextContent } from './utils/content.ts';
 export { hasAltText } from './components/image/utils.ts';
 export { isEntirelyBold, resemblesListItem } from './components/paragraph/utils.ts';
 export { and, not, or } from './utils/combinators.ts';
-export {
-  changeTagName,
-  ownDescendants,
-  precedingMatch,
-  textLines,
-  trimmedText,
-  unwrapElement,
-  visibleTextNodes,
-} from './utils/dom.ts';
+export { changeTagName, ownDescendants, textLines, trimmedText, unwrapElement, visibleTextNodes } from './utils/dom.ts';
 export {
   containsEmphasis,
   expectedHeadingLevel,
@@ -25,12 +17,19 @@ export {
 export { hasHeaderColumn, hasHeaderRow, tableRows } from './components/table/utils.ts';
 export { isEmptyOrWhitespace } from './utils/text.ts';
 export { Validator } from './validator.ts';
-export type { ValidateOptions, ValidatorOptions } from './validator.ts';
+export type { LocaleOptions, ValidateOptions, ValidatorOptions } from './types/validator.ts';
 export type { Locale, ResolvedMessages, ValidationMessages, ValidationMessagesByLocale } from './types/messages.ts';
+export type { Fragment } from './types/fragment.ts';
 export type { CoreSelector, ElementFor, Selector } from './types/selector.ts';
 export type {
   CorrectValidationFunction,
+  ElementValidation,
+  ElementValidationDefinition,
+  PageValidation,
+  PageValidationCondition,
+  PageValidationDefinition,
   ValidationCondition,
+  ValidationContext,
   Validation,
   ValidationDefinition,
   ValidationPayload,

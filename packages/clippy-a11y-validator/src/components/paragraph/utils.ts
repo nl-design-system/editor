@@ -1,4 +1,4 @@
-import type { ValidationCondition } from '../../types/validation.ts';
+import type { PageValidationCondition, ValidationCondition } from '../../types/validation.ts';
 import { selectors } from '../../consts/selectors.ts';
 import { textLines, visibleTextNodes } from '../../utils/dom.ts';
 import { isEmptyOrWhitespace } from '../../utils/text.ts';
@@ -28,19 +28,21 @@ export const stripListPrefix = (text: string, isOrdered: boolean): string =>
  * Replaces a run of list-like paragraphs, starting at `startParagraph`, with a single `ul` or `ol`.
  * Every `<br>`-separated line becomes its own list item with the marker stripped.
  */
-export const convertParagraphsToList = (startParagraph: Element, isOrdered: boolean): void => {
+export const convertParagraphsToList = (
+  startParagraph: Element,
+  isOrdered: boolean,
+  subsequentSiblings: Iterable<Element>,
+): void => {
   const parent = startParagraph.parentNode;
   if (!parent) return;
 
   const list = startParagraph.ownerDocument.createElement(isOrdered ? 'ol' : 'ul');
   const paragraphs: Element[] = [startParagraph];
 
-  let next = startParagraph.nextElementSibling;
-  while (next?.tagName === startParagraph.tagName) {
+  for (const next of subsequentSiblings) {
     const prefix = listPrefix(next.textContent ?? '');
     if (!isOrderedPrefix(prefix) && !isUnorderedPrefix(prefix)) break;
     paragraphs.push(next);
-    next = next.nextElementSibling;
   }
 
   for (const paragraph of paragraphs) {
@@ -60,14 +62,12 @@ export const convertParagraphsToList = (startParagraph: Element, isOrdered: bool
  * True when the element opens a hand-written list: it starts with a list marker and the sequence continues,
  * either in the next sibling of the same kind or on a `<br>`-separated second line.
  */
-export const resemblesListItem: ValidationCondition = (element) => {
+export const resemblesListItem: PageValidationCondition = (element, { subsequentSiblingMatches }) => {
   const firstPrefix = listPrefix(element.textContent ?? '');
   if (!isOrderedPrefix(firstPrefix) && !isUnorderedPrefix(firstPrefix)) return false;
 
-  const next = element.nextElementSibling;
-  if (next?.tagName === element.tagName && decrementPrefix(listPrefix(next.textContent ?? '')) === firstPrefix) {
-    return true;
-  }
+  const [next] = subsequentSiblingMatches(element.localName);
+  if (next !== undefined && decrementPrefix(listPrefix(next.textContent ?? '')) === firstPrefix) return true;
 
   const lines = textLines(element);
 

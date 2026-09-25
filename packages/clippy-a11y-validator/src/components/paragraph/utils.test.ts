@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { PageContext } from '../../page-context.ts';
 import { render } from '../../test-helpers/render.ts';
 import {
   convertParagraphsToList,
@@ -90,6 +91,10 @@ describe('stripListPrefix', () => {
   });
 });
 
+/** The run of matching next siblings a page validation would hand the conversion. */
+const siblingRun = (fragment: Element, paragraph: HTMLElement): Iterable<Element> =>
+  new PageContext([fragment]).for(paragraph).subsequentSiblingMatches(paragraph.localName);
+
 describe('convertParagraphsToList', () => {
   const container = (html: string): HTMLElement => render(`<div>${html}</div>`);
 
@@ -122,37 +127,40 @@ describe('convertParagraphsToList', () => {
   ];
 
   it.each(conversions)('%s', (_name, html, isOrdered, expected) => {
-    const root = container(html);
-    convertParagraphsToList(root.querySelector('p')!, isOrdered);
+    const fragment = container(html);
+    const paragraph = fragment.querySelector('p')!;
+    convertParagraphsToList(paragraph, isOrdered, siblingRun(fragment, paragraph));
 
-    expect(root.innerHTML).toBe(expected);
+    expect(fragment.innerHTML).toBe(expected);
   });
 
   it('splits a line-broken paragraph into separate items', () => {
-    const root = container('<p>- een<br>- twee<br>- drie</p>');
-    convertParagraphsToList(root.querySelector('p')!, false);
+    const fragment = container('<p>- een<br>- twee<br>- drie</p>');
+    const paragraph = fragment.querySelector('p')!;
+    convertParagraphsToList(paragraph, false, siblingRun(fragment, paragraph));
 
-    expect(root.querySelectorAll('li')).toHaveLength(3);
+    expect(fragment.querySelectorAll('li')).toHaveLength(3);
   });
 
   it('does nothing for a detached paragraph', () => {
     const detached = document.createElement('p');
     detached.textContent = '- een';
 
-    expect(() => convertParagraphsToList(detached, false)).not.toThrow();
+    expect(() => convertParagraphsToList(detached, false, [])).not.toThrow();
   });
 });
 
 /** Renders a container and tests its first paragraph, so sibling lookahead has something to find. */
 const resemblesListItemFor = (html: string): boolean => {
   const container = render(`<div>${html}</div>`);
-  return resemblesListItem(container.querySelector('p')!, container);
+  const paragraph = container.querySelector('p')!;
+  return resemblesListItem(paragraph, new PageContext([container]).for(paragraph));
 };
 
 /** Renders `html` and runs the condition under test against the rendered element. */
 const isEntirelyBoldFor = (html: string): boolean => {
   const element = render(html);
-  return isEntirelyBold(element, element.parentElement!);
+  return isEntirelyBold(element);
 };
 
 describe('resemblesListItem', () => {

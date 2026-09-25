@@ -1,16 +1,8 @@
+import type { Fragment } from './types/fragment.ts';
 import type { Locale } from './types/messages.ts';
-import type { Validation, ValidationSeverity, Violation } from './types/validation.ts';
-import { walk } from './walk.ts';
-
-export type ValidatorOptions = {
-  fallbackLocale?: Locale;
-  locale?: Locale;
-  validations?: readonly Validation[];
-};
-
-export type ValidateOptions = {
-  severities?: readonly ValidationSeverity[];
-};
+import type { Validation, Violation } from './types/validation.ts';
+import type { ValidateOptions, ValidatorOptions } from './types/validator.ts';
+import { runValidations } from './run-validations.ts';
 
 export class Validator {
   readonly #validations = new Map<string, Validation>();
@@ -33,8 +25,8 @@ export class Validator {
     };
   }
 
-  validate(root: ParentNode, { severities }: ValidateOptions = {}): Violation[] {
-    return walk(root, [...this.#validations.values()], {
+  validate(pageContent: readonly Fragment[], { severities }: ValidateOptions = {}): Violation[] {
+    return runValidations(pageContent, [...this.#validations.values()], {
       fallbackLocale: this.#fallbackLocale,
       locale: this.#locale,
       ...(severities === undefined ? {} : { severities }),

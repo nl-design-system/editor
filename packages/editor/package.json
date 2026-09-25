@@ -40,6 +40,10 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./page": {
+      "types": "./dist/entries/page.d.ts",
+      "default": "./dist/page.js"
+    },
     "./toolbar": {
       "types": "./dist/entries/toolbar.d.ts",
       "default": "./dist/toolbar.js"
@@ -66,6 +70,9 @@
       ],
       "gutter": [
         "./dist/entries/gutter.d.ts"
+      ],
+      "page": [
+        "./dist/entries/page.d.ts"
       ],
       "toolbar": [
         "./dist/entries/toolbar.d.ts"
@@ -103,6 +110,7 @@
     "@nl-design-system-candidate/data-badge-css": "1.0.5",
     "@nl-design-system-candidate/link-css": "2.0.3",
     "@nl-design-system-candidate/number-badge-css": "1.1.5",
+    "@nl-design-system-community/clippy-a11y-validator": "workspace:*",
     "@nl-design-system-community/clippy-alt-text-wizard": "workspace:*",
     "@nl-design-system-community/clippy-components": "3.2.0",
     "@nl-design-system-unstable/documentation": "1.11.0",

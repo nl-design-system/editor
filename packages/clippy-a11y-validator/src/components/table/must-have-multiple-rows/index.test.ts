@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { initializeRuleTest } from '../../../test-helpers/initialize-rule-test.ts';
 import { tableMustHaveMultipleRows } from './index.ts';
 
-const { root, validate, validator } = initializeRuleTest([tableMustHaveMultipleRows]);
+const { fragment, validate, validator } = initializeRuleTest([tableMustHaveMultipleRows]);
 
 describe('tableMustHaveMultipleRows', () => {
   it('flags a table with a single row', () => {
@@ -36,15 +36,15 @@ describe('tableMustHaveMultipleRows', () => {
     const [violation] = validate('<table><tbody><tr><td>C1</td><td>C2</td></tr></tbody></table>');
     violation?.correct?.();
 
-    expect(root.querySelectorAll('tr')).toHaveLength(2);
-    expect(root.querySelectorAll('tr:last-child > td')).toHaveLength(2);
-    expect(validator.validate(root)).toHaveLength(0);
+    expect(fragment.querySelectorAll('tr')).toHaveLength(2);
+    expect(fragment.querySelectorAll('tr:last-child > td')).toHaveLength(2);
+    expect(validator.validate([fragment])).toHaveLength(0);
   });
 
   it('offers no correction for a table without rows to copy', () => {
     const [violation] = validate('<table></table>');
     violation?.correct?.();
 
-    expect(root.querySelectorAll('tr')).toHaveLength(0);
+    expect(fragment.querySelectorAll('tr')).toHaveLength(0);
   });
 });

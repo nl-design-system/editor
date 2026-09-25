@@ -9,19 +9,19 @@ import { isEntirelyBold } from '../utils.ts';
 import { messages } from './messages.ts';
 
 /** Short, entirely bold text reads as a heading rather than as prose. */
-export const resemblesHeading: ValidationCondition = (paragraph, root) =>
-  isEntirelyBold(paragraph, root) && hasHeadingLength(paragraph);
+export const resemblesHeading: ValidationCondition = (paragraph) =>
+  isEntirelyBold(paragraph) && hasHeadingLength(paragraph);
 
 export const paragraphShouldNotResembleHeading = defineValidation({
   condition: not(resemblesHeading),
-  correct: (paragraph, root) => () => {
-    const heading = paragraph.ownerDocument.createElement(`h${expectedHeadingLevel(paragraph, root)}`);
+  correct: (paragraph, context) => () => {
+    const heading = paragraph.ownerDocument.createElement(`h${expectedHeadingLevel(context)}`);
     heading.textContent = trimmedText(paragraph);
     paragraph.replaceWith(heading);
   },
   messages,
   rule: paragraphValidationRules.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING,
-  scope: 'element',
+  scope: 'page',
   selector: selectors.PARAGRAPH,
   severity: validationSeverity.INFO,
 });
