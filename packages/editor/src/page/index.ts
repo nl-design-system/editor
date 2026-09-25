@@ -6,12 +6,7 @@ import type {
   SourceRegistration,
   ViolationsListener,
 } from './types';
-
-const byAnchor = ({ anchor: a }: SourceRegistration, { anchor: b }: SourceRegistration): number => {
-  if (a === b) return 0;
-
-  return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_PRECEDING ? 1 : -1;
-};
+import { byAnchor, hasChanges } from './utils';
 
 export class ClippyPage {
   readonly #listeners = new Set<ViolationsListener>();
@@ -77,10 +72,13 @@ export class ClippyPage {
   }
 
   #validate() {
-    this.#violations = this.#validator.validate(this.#sources.map(({ fragment }) => fragment)).map((violation) => ({
+    const violations = this.#validator.validate(this.#sources.map(({ fragment }) => fragment)).map((violation) => ({
       ...violation,
       source: this.#sources.find(({ fragment }) => fragment.contains(violation.element))!.id,
     }));
+    if (!hasChanges(this.#violations, violations)) return;
+
+    this.#violations = violations;
     this.#listeners.forEach((listener) => listener(this.#violations));
   }
 }

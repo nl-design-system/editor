@@ -261,6 +261,102 @@ describe('ClippyPage', () => {
     });
   });
 
+  describe('mutations that are not content', () => {
+    it('does not update again when a view writes into an observed fragment', async () => {
+      const body = createSource('<p>Tekst</p>');
+      page.register(body);
+      await validationPass();
+      const updates: (readonly PageViolation[])[] = [];
+      page.subscribe((violations) => {
+        updates.push(violations);
+        violations.forEach(({ element }) => element.setAttribute('data-highlight', ''));
+        body.fragment.append(document.createElement('mark'));
+      });
+
+      body.fragment.querySelector('p')!.textContent = '';
+      await validationPass();
+      await validationPass();
+
+      expect(updates.map((violations) => violations.length)).toEqual([1]);
+    });
+
+    it('does not update when a mutation leaves the violations unchanged', async () => {
+      const body = createSource('<p></p><p>Tekst</p>');
+      page.register(body);
+      await validationPass();
+      const updates: unknown[] = [];
+      page.subscribe((violations) => updates.push(violations));
+
+      body.fragment.querySelectorAll('p')[1].textContent = 'Andere tekst';
+      await validationPass();
+
+      expect(updates).toEqual([]);
+    });
+
+    it('updates when the violations move to other elements without changing in number', async () => {
+      const body = createSource('<p></p><p>Tekst</p>');
+      page.register(body);
+      await validationPass();
+      const updates: (readonly PageViolation[])[] = [];
+      page.subscribe((violations) => updates.push(violations));
+
+      const [first, second] = body.fragment.querySelectorAll('p');
+      first.textContent = 'Tekst';
+      second.textContent = '';
+      await validationPass();
+
+      expect(updates.map((violations) => violations.map(({ element }) => element))).toEqual([[second]]);
+    });
+
+    it('updates when only the payload of a violation changes', async () => {
+      page.registerValidation(coreValidations[HEADING_LEVEL_MUST_NOT_SKIP]);
+      const body = createSource('<h1>Titel</h1><h4>Kop</h4>');
+      page.register(body);
+      await validationPass();
+      const updates: (readonly PageViolation[])[] = [];
+      page.subscribe((violations) => updates.push(violations));
+
+      body.fragment.querySelector('h1')!.outerHTML = '<h2>Titel</h2>';
+      await validationPass();
+
+      expect(updates).toHaveLength(1);
+    });
+
+    it('emits one update for a burst of editor mutations from one keystroke', async () => {
+      const body = createSource('<p>Tekst</p><p>Meer</p>');
+      page.register(body);
+      await validationPass();
+      const updates: (readonly PageViolation[])[] = [];
+      page.subscribe((violations) => updates.push(violations));
+
+      const [first, second] = body.fragment.querySelectorAll('p');
+      first.textContent = '';
+      first.classList.add('ck-placeholder');
+      first.setAttribute('data-placeholder', 'Typ hier');
+      second.append(document.createElement('br'));
+      body.fragment.setAttribute('aria-activedescendant', '');
+      await validationPass();
+
+      expect(updates.map((violations) => violations.length)).toEqual([1]);
+    });
+
+    it('revalidates a source whose fragment is a shadow root', async () => {
+      const host = document.createElement('div');
+      document.body.append(host);
+      const shadowRoot = host.attachShadow({ mode: 'open' });
+      shadowRoot.innerHTML = '<p>Tekst</p>';
+      const { id } = page.register({ anchor: host, fragment: shadowRoot, label: 'Component' });
+      await validationPass();
+
+      shadowRoot.querySelector('p')!.textContent = '';
+      await validationPass();
+
+      expect(page.violations.map(({ rule, source }) => ({ rule, source }))).toEqual([
+        { rule: PARAGRAPH_SHOULD_NOT_BE_EMPTY, source: id },
+      ]);
+    });
+  });
+
   it('stops notifying a subscriber once it unsubscribes', async () => {
     const updates: unknown[] = [];
     const unsubscribe = page.subscribe((violations) => updates.push(violations));
