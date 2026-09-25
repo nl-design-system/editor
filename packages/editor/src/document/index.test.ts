@@ -358,6 +358,37 @@ describe('ClippyDocument', () => {
     });
   });
 
+  describe('source lifecycle', () => {
+    it('revalidates the recomposed document when a source unregisters', async () => {
+      clippyDocument.registerValidation(coreValidations[HEADING_LEVEL_MUST_NOT_SKIP]);
+      clippyDocument.register(createSource('<h1>Titel</h1>'));
+      const { unregister } = clippyDocument.register(createSource('<h2>Intro</h2>'));
+      const { id } = clippyDocument.register(createSource('<h3>Kop</h3>'));
+      await validationPass();
+
+      unregister();
+      await validationPass();
+
+      expect(clippyDocument.violations.map(({ rule, source }) => ({ rule, source }))).toEqual([
+        { rule: HEADING_LEVEL_MUST_NOT_SKIP, source: id },
+      ]);
+    });
+
+    it('drops a source whose anchor is disconnected without unregistering', async () => {
+      const removed = createSource('<p></p>');
+      clippyDocument.register(removed);
+      const body = createSource('<p>Tekst</p>');
+      const { id } = clippyDocument.register(body);
+      await validationPass();
+
+      removed.anchor.remove();
+      body.fragment.querySelector('p')!.textContent = '';
+      await validationPass();
+
+      expect(clippyDocument.violations.map(({ source }) => source)).toEqual([id]);
+    });
+  });
+
   it('stops notifying a subscriber once it unsubscribes', async () => {
     const updates: unknown[] = [];
     const unsubscribe = clippyDocument.subscribe((violations) => updates.push(violations));
