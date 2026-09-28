@@ -1,11 +1,8 @@
 import { selectors, validationSeverity } from '../../../consts/index.ts';
 import { defineValidation } from '../../../define-validation.ts';
 import { descriptionListValidationRules } from '../constants.ts';
-import { hasFilledDescription, isEmptyTerm, ownTerms } from '../utils.ts';
+import { emptyTermsWithoutDescription } from '../utils.ts';
 import { messages } from './messages.ts';
-
-const emptyTermsWithoutDescription = (list: HTMLDListElement): HTMLElement[] =>
-  ownTerms(list).filter((term) => isEmptyTerm(term) && !hasFilledDescription(term));
 
 export const descriptionTermShouldNotBeEmpty = defineValidation({
   condition: (list) => emptyTermsWithoutDescription(list).length === 0,
