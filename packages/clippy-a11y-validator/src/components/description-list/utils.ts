@@ -12,10 +12,16 @@ const descriptionFor = (term: HTMLElement): HTMLElement | null => {
   return next instanceof HTMLElement && next.matches(selectors.DESCRIPTION_DETAILS) ? next : null;
 };
 
-export const isEmptyTerm = (term: HTMLElement): boolean => !hasTextContent(term);
+const isEmptyTerm = (term: HTMLElement): boolean => !hasTextContent(term);
 
-export const hasFilledDescription = (term: HTMLElement): boolean => {
+const hasFilledDescription = (term: HTMLElement): boolean => {
   const description = descriptionFor(term);
 
   return description !== null && hasTextContent(description);
 };
+
+export const emptyTermsWithDescription = (list: HTMLDListElement): HTMLElement[] =>
+  ownTerms(list).filter((term) => isEmptyTerm(term) && hasFilledDescription(term));
+
+export const emptyTermsWithoutDescription = (list: HTMLDListElement): HTMLElement[] =>
+  ownTerms(list).filter((term) => isEmptyTerm(term) && !hasFilledDescription(term));
