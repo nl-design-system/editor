@@ -5,11 +5,11 @@ export type ValidationSeverity = 'error' | 'info' | 'warning';
 
 export type ValidationScope = 'element' | 'document';
 
-export type ValidationPayload = Readonly<Record<string, boolean | number | string>>;
+export type ViolationPayload = Readonly<Record<string, boolean | number | string>>;
 
-export type CorrectValidationFunction = () => void;
+export type CorrectViolationFunction = () => void;
 
-export type FocusValidationFunction = () => void;
+export type FocusViolationFunction = () => void;
 
 export type ValidationContext = {
   /** Every earlier match in the document, nearest first, excluding the element's ancestors. */
@@ -41,9 +41,9 @@ export type ElementValidationDefinition<
   E extends HTMLElement = ElementFor<S>,
 > = SharedValidationDefinition<S> & {
   condition: ValidationCondition<E>;
-  correct?: (element: E) => CorrectValidationFunction;
-  focus?: (element: E) => FocusValidationFunction;
-  payload?: (element: E) => ValidationPayload;
+  correct?: (element: E) => CorrectViolationFunction;
+  focus?: (element: E) => FocusViolationFunction;
+  payload?: (element: E) => ViolationPayload;
   scope: 'element';
 };
 
@@ -52,9 +52,9 @@ export type DocumentValidationDefinition<
   E extends HTMLElement = ElementFor<S>,
 > = SharedValidationDefinition<S> & {
   condition: DocumentValidationCondition<E>;
-  correct?: (element: E, context: ValidationContext) => CorrectValidationFunction;
-  focus?: (element: E, context: ValidationContext) => FocusValidationFunction;
-  payload?: (element: E, context: ValidationContext) => ValidationPayload;
+  correct?: (element: E, context: ValidationContext) => CorrectViolationFunction;
+  focus?: (element: E, context: ValidationContext) => FocusViolationFunction;
+  payload?: (element: E, context: ValidationContext) => ViolationPayload;
   scope: 'document';
 };
 
@@ -68,11 +68,11 @@ export type DocumentValidation = DocumentValidationDefinition<Selector, HTMLElem
 export type Validation = ElementValidation | DocumentValidation;
 
 export type Violation = {
-  correct?: CorrectValidationFunction;
+  correct?: CorrectViolationFunction;
   element: HTMLElement;
-  focus?: FocusValidationFunction;
+  focus?: FocusViolationFunction;
   messages: ResolvedMessages;
-  payload?: ValidationPayload;
+  payload?: ViolationPayload;
   rule: string;
   scope: ValidationScope;
   severity: ValidationSeverity;

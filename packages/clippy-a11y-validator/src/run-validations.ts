@@ -1,5 +1,5 @@
 import type { Fragment } from './types/fragment.ts';
-import type { Validation, ValidationPayload, Violation } from './types/validation.ts';
+import type { Validation, Violation, ViolationPayload } from './types/validation.ts';
 import type { LocaleOptions, ValidateOptions } from './types/validator.ts';
 import { matchingElements, DocumentContext } from './document-context.ts';
 import { resolveMessages } from './messages.ts';
@@ -7,7 +7,7 @@ import { resolveMessages } from './messages.ts';
 type Verdict = {
   correct?: () => void;
   focus?: () => void;
-  payload?: ValidationPayload;
+  payload?: ViolationPayload;
   satisfied: boolean;
 };
 
