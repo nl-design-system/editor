@@ -9,6 +9,8 @@ export type ValidationPayload = Readonly<Record<string, boolean | number | strin
 
 export type CorrectValidationFunction = () => void;
 
+export type FocusValidationFunction = () => void;
+
 export type ValidationContext = {
   /** Every earlier match in the document, nearest first, excluding the element's ancestors. */
   precedingMatches: (selector: Selector) => HTMLElement[];
@@ -40,6 +42,7 @@ export type ElementValidationDefinition<
 > = SharedValidationDefinition<S> & {
   condition: ValidationCondition<E>;
   correct?: (element: E) => CorrectValidationFunction;
+  focus?: (element: E) => FocusValidationFunction;
   payload?: (element: E) => ValidationPayload;
   scope: 'element';
 };
@@ -50,6 +53,7 @@ export type DocumentValidationDefinition<
 > = SharedValidationDefinition<S> & {
   condition: DocumentValidationCondition<E>;
   correct?: (element: E, context: ValidationContext) => CorrectValidationFunction;
+  focus?: (element: E, context: ValidationContext) => FocusValidationFunction;
   payload?: (element: E, context: ValidationContext) => ValidationPayload;
   scope: 'document';
 };
@@ -66,6 +70,7 @@ export type Validation = ElementValidation | DocumentValidation;
 export type Violation = {
   correct?: CorrectValidationFunction;
   element: HTMLElement;
+  focus?: FocusValidationFunction;
   messages: ResolvedMessages;
   payload?: ValidationPayload;
   rule: string;

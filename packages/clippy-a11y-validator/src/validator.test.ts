@@ -137,11 +137,48 @@ describe('Validator', () => {
     expect(nearestPrecedingTexts).toEqual(['Titel']);
   });
 
-  it('hands a document validation the same context in payload and correct', () => {
+  it('binds the focus and correction a validation offers to the element each violation flagged', () => {
+    const acted: [string, Element][] = [];
+    const spy: Validation = {
+      condition: () => false,
+      correct: (paragraph) => () => acted.push(['correct', paragraph]),
+      focus: (paragraph) => () => acted.push(['focus', paragraph]),
+      messages: { nl: { error: 'x' } },
+      rule: 'SPY',
+      scope: 'element',
+      selector: 'p',
+      severity: 'info',
+    };
+    fragment.innerHTML = '<p>Een</p><p>Twee</p>';
+    const [first, second] = fragment.querySelectorAll('p');
+
+    const violations = new Validator({ validations: [spy] }).validate([fragment]);
+    violations[1]?.focus?.();
+    violations[0]?.correct?.();
+
+    expect(acted).toEqual([
+      ['focus', second],
+      ['correct', first],
+    ]);
+  });
+
+  it('offers no focus when the validation does not', () => {
+    const [violation] = new Validator({ validations: [coreValidations[PARAGRAPH_SHOULD_NOT_BE_EMPTY]] }).validate([
+      fragment,
+    ]);
+
+    expect(violation?.focus).toBeUndefined();
+  });
+
+  it('hands a document validation the same context in payload, focus and correct', () => {
     const nearestPrecedingTexts: (string | undefined)[] = [];
     const spy: Validation = {
       condition: () => false,
       correct: (_paragraph, { precedingMatches }) => {
+        nearestPrecedingTexts.push(precedingMatches('h1')[0]?.textContent ?? undefined);
+        return () => {};
+      },
+      focus: (_paragraph, { precedingMatches }) => {
         nearestPrecedingTexts.push(precedingMatches('h1')[0]?.textContent ?? undefined);
         return () => {};
       },
@@ -159,7 +196,7 @@ describe('Validator', () => {
 
     new Validator({ validations: [spy] }).validate([fragment]);
 
-    expect(nearestPrecedingTexts).toEqual(['Titel', 'Titel']);
+    expect(nearestPrecedingTexts).toEqual(['Titel', 'Titel', 'Titel']);
   });
 
   it('reports violations across fragments in the order they are given', () => {

@@ -28,6 +28,7 @@ export type {
   DocumentValidation,
   DocumentValidationCondition,
   DocumentValidationDefinition,
+  FocusValidationFunction,
   ValidationCondition,
   ValidationContext,
   Validation,
