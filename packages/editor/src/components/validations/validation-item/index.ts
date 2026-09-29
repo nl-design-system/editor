@@ -1,6 +1,7 @@
 import type { CorrectViolationFunction, ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
+import codeStyle from '@nl-design-system-candidate/code-css/code.css?inline';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
 import linkCss from '@nl-design-system-candidate/link-css/link.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
@@ -63,6 +64,8 @@ export class ValidationItem extends LitElement {
     unsafeCSS(paragraphStyle),
     unsafeCSS(headingStyle),
     unsafeCSS(linkCss),
+    // The heading and solution are markdown: a code span in them carries `nl-code`.
+    unsafeCSS(codeStyle),
   ];
 
   /**

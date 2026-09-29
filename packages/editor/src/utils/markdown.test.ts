@@ -28,6 +28,14 @@ describe('renderMarkdown', () => {
     expect(markup('**vet**')).toContain('<strong>vet</strong>');
   });
 
+  it('styles a code span like inline code in the editor content', () => {
+    expect(markup('Verwijder het lege `<em>`-element.')).toContain('<code class="nl-code">&lt;em&gt;</code>');
+  });
+
+  it('shows the element name a code span quotes', () => {
+    expect(rendered('Verwijder het lege `<em>`-element.')).toBe('Verwijder het lege <em>-element.');
+  });
+
   it('does not run markup a validation put in its own message', () => {
     expect(markup('<img src=x onerror=alert(1)>')).not.toContain('<img');
   });
