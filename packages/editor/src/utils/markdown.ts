@@ -2,7 +2,8 @@ import type { DirectiveResult } from 'lit/directive.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { Marked, type Tokens } from 'marked';
 
-const escapeHtml = (text: string): string => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const escapeHtml = (text: string): string =>
+  text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 
 /**
  * Validation copy is plain text, so a `<strong>` in a message names an element rather than opening
