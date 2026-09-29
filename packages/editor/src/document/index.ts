@@ -1,5 +1,6 @@
 import { type Validation, Validator } from '@nl-design-system-community/clippy-a11y-validator';
 import type {
+  Action,
   ClippyDocumentOptions,
   DocumentViolation,
   RegisteredSource,
@@ -22,6 +23,12 @@ export class ClippyDocument {
 
   get violations(): readonly DocumentViolation[] {
     return this.#violations;
+  }
+
+  dispatch({ type, violation }: Action): void {
+    if (!this.#violations.includes(violation)) return;
+
+    this.#sources.find(({ id }) => id === violation.source)?.[type]?.(violation);
   }
 
   register({ anchor, correct, focus, fragment, label }: SourceRegistration): RegisteredSource {

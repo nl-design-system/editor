@@ -23,6 +23,11 @@ export type DocumentViolation = Violation & {
 
 export type ActionHandler = (violation: DocumentViolation) => void;
 
+export type Action = {
+  type: 'correct' | 'focus';
+  violation: DocumentViolation;
+};
+
 export type ViolationsListener = (violations: readonly DocumentViolation[]) => void;
 
 export type ClippyDocumentOptions = Omit<ValidatorOptions, 'validations'>;

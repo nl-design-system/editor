@@ -93,4 +93,14 @@ describe('registerHeadingSource', () => {
 
     expect(clippyDocument.violations.map(({ focusable }) => focusable)).toEqual([true]);
   });
+
+  it('moves focus to its input when the heading it stands in for is focused', async () => {
+    const input = createInput('');
+    registerHeadingSource(clippyDocument, { input, label: 'Title', level: 1 });
+    await validationPass();
+
+    clippyDocument.dispatch({ type: 'focus', violation: clippyDocument.violations[0]! });
+
+    expect(document.activeElement).toBe(input);
+  });
 });

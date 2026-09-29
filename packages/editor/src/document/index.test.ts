@@ -406,6 +406,39 @@ describe('ClippyDocument', () => {
   });
 
   describe('actions', () => {
+    it('routes focus to the source that owns the violation when several sources violate the same validation', async () => {
+      const focused: [string, HTMLElement][] = [];
+      const intro = createSource('<p></p>');
+      const body = createSource('<p>Tekst</p><p></p>');
+      clippyDocument.register({ ...intro, focus: ({ element }) => focused.push(['intro', element]) });
+      clippyDocument.register({ ...body, focus: ({ element }) => focused.push(['body', element]) });
+      await validationPass();
+
+      clippyDocument.dispatch({ type: 'focus', violation: clippyDocument.violations[1]! });
+
+      expect(focused).toEqual([['body', body.fragment.querySelectorAll('p')[1]]]);
+    });
+
+    it('routes a correction to the owning source, which applies it to the element the violation flagged', async () => {
+      clippyDocument.registerValidation(coreValidations[PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD]);
+      const intro = createSource(bold('Een'));
+      const body = createSource(bold('Twee') + bold('Drie'));
+      const corrected: string[] = [];
+      const correctAs = (name: string) => (violation: DocumentViolation) => {
+        corrected.push(name);
+        violation.correct?.();
+      };
+      clippyDocument.register({ ...intro, correct: correctAs('intro') });
+      clippyDocument.register({ ...body, correct: correctAs('body') });
+      await validationPass();
+
+      clippyDocument.dispatch({ type: 'correct', violation: clippyDocument.violations[2]! });
+
+      expect(corrected).toEqual(['body']);
+      expect(intro.fragment.innerHTML).toBe(bold('Een'));
+      expect(body.fragment.innerHTML).toBe(`${bold('Twee')}<p>${prose('Drie')}</p>`);
+    });
+
     it('marks a violation correctable only when its validation offers a correction and its source handles one', async () => {
       clippyDocument.registerValidation(coreValidations[PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD]);
       clippyDocument.register({ ...createSource(`${bold('Een')}<p></p>`), correct: () => undefined });

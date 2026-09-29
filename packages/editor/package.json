@@ -44,6 +44,10 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./panel": {
+      "types": "./dist/entries/panel.d.ts",
+      "default": "./dist/panel.js"
+    },
     "./toolbar": {
       "types": "./dist/entries/toolbar.d.ts",
       "default": "./dist/toolbar.js"
@@ -73,6 +77,9 @@
       ],
       "gutter": [
         "./dist/entries/gutter.d.ts"
+      ],
+      "panel": [
+        "./dist/entries/panel.d.ts"
       ],
       "toolbar": [
         "./dist/entries/toolbar.d.ts"

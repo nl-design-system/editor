@@ -77,4 +77,25 @@ describe('registerProxySource', () => {
       { correctable: true, focusable: true },
     ]);
   });
+
+  it('hands focus and correction actions on its proxy content to the host', async () => {
+    const received: [string, HTMLElement][] = [];
+    registerProxySource(clippyDocument, {
+      anchor,
+      correct: ({ element }) => received.push(['correct', element]),
+      focus: ({ element }) => received.push(['focus', element]),
+      label: 'Summary',
+      render: (container) => container.replaceChildren(document.createElement('p')),
+    });
+    await new Promise((resolve) => setTimeout(resolve));
+    const [violation] = clippyDocument.violations;
+
+    clippyDocument.dispatch({ type: 'focus', violation: violation! });
+    clippyDocument.dispatch({ type: 'correct', violation: violation! });
+
+    expect(received).toEqual([
+      ['focus', violation!.element],
+      ['correct', violation!.element],
+    ]);
+  });
 });
