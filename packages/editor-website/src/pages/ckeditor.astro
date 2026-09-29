@@ -6,7 +6,10 @@ import Document from '../layouts/document.astro';
   <main>
     <div class="ma-page-section ma-page-section--with-space">
       <h1>CKEditor Clippy</h1>
-      <div id="ck-editor"></div>
+      <label for="ck-editor-content">Inhoud</label>
+      <textarea id="ck-editor-content"></textarea>
+      <label for="ck-editor-appendix">Bijlage</label>
+      <textarea id="ck-editor-appendix"></textarea>
     </div>
   </main>
 </Document>
@@ -26,17 +29,17 @@ import Document from '../layouts/document.astro';
     List,
     Paragraph,
     Underline,
+    type EditorConfig,
   } from 'ckeditor5';
   import coreTranslations from 'ckeditor5/translations/nl.js';
   import { ClippyPlugin } from '@nl-design-system-community/ckeditor-plugin';
+  import { coreValidations } from '@nl-design-system-community/clippy-a11y-validator';
+  import { getClippyDocument } from '@nl-design-system-community/editor/document';
 
-  const editorEl = document.querySelector<HTMLElement>('#ck-editor');
+  const clippyDocument = getClippyDocument();
+  Object.values(coreValidations).forEach((validation) => clippyDocument.registerValidation(validation));
 
-  if (!editorEl) {
-    throw new Error('Missing editor element');
-  }
-
-  await ClassicEditor.create(editorEl, {
+  const config: EditorConfig = {
     plugins: [
       Essentials,
       Heading,
@@ -78,7 +81,20 @@ import Document from '../layouts/document.astro';
     language: 'nl',
     translations: [coreTranslations],
     licenseKey: 'GPL',
-    initialData: `
+  };
+
+  const createEditor = (selector: string, initialData: string) => {
+    const element = document.querySelector<HTMLElement>(selector);
+    if (!element) {
+      throw new Error(`Missing editor element ${selector}`);
+    }
+
+    return ClassicEditor.create(element, { ...config, initialData });
+  };
+
+  await createEditor(
+    '#ck-editor-content',
+    `
       <h1>NL Design System Editor kop 1</h1>
       <h1>second h1</h1>
         <p>
@@ -128,8 +144,17 @@ import Document from '../layouts/document.astro';
         <h3>Incorrect genummerde lijst</h3>
         <p>1 - Test<br />2 - Test<br />3 - Test</p>
       </div>
+`,
+  );
+
+  await createEditor(
+    '#ck-editor-appendix',
+    `
+      <h4>Bijlage met een overgeslagen kopniveau</h4>
+      <p></p>
+      <p><strong>Deze paragraaf is volledig dikgedrukt en veel te lang om nog als een kop door te gaan.</strong></p>
     `,
-  });
+  );
 </script>
 
 <style is:global>

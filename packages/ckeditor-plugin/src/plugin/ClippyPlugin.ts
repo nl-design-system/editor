@@ -1,28 +1,12 @@
 import {
-  type AccessibilityNotifications,
-  type CloseValidationsDrawerDetail,
-  type ValidationsDrawer,
-} from '@nl-design-system-community/editor/accessibility-notifications';
-import { setDarkColorScheme, watchHostColorScheme } from '@nl-design-system-community/editor/color-scheme';
-import { EditorContentWrapper, EditorWrapper } from '@nl-design-system-community/editor/editor-wrapper';
-import {
-  CustomEvents,
-  type FocusNodeEvent,
-  type Gutter,
-  validationInteractionMode,
-} from '@nl-design-system-community/editor/gutter';
-import {
-  debouncedValidate,
-  runValidation,
-  type EditorSettings,
-  type ValidationsMap,
-} from '@nl-design-system-community/editor/validators';
-import { Plugin, View, type Locale, type ObservableChangeEvent, type ToolbarView } from 'ckeditor5';
-import { DEFAULT_SETTINGS } from '../constants/';
+  type DocumentViolation,
+  getClippyDocument,
+  type RegisteredSource,
+} from '@nl-design-system-community/editor/document';
+import { ButtonView, Plugin, type Locale, type ObservableChangeEvent } from 'ckeditor5';
 import { adoptClippyStyles } from '../styles/';
-import { findMatchingCorrection, findOccurrenceIndex, runValidations } from '../utils/correction.ts';
-import { resolveTopHeadingLevel } from '../utils/heading.ts';
 import { ContentClasses } from './ContentClasses.ts';
+import { attachSharedPanel, type SharedPanel } from './sharedPanel.ts';
 
 export class ClippyPlugin extends Plugin {
   static get pluginName() {
@@ -34,86 +18,89 @@ export class ClippyPlugin extends Plugin {
     return [ContentClasses] as const;
   }
 
-  private _editableEl: HTMLElement | null = null;
-  private _editorEl: HTMLElement | null = null;
-  private _wrapperEl: EditorWrapper | null = null;
-  private _gutterEl: Gutter | null = null;
-  private _drawerEl: ValidationsDrawer | null = null;
-  private _notificationsView: View | null = null;
-  private _validationsMap: ValidationsMap = new Map();
-  private _settings: EditorSettings = DEFAULT_SETTINGS;
-  private _unwatchColorScheme: (() => void) | null = null;
-
-  // Scope drawer events to this editor so multiple CKEditors on one page don't open each other's drawer.
-  private get _identifier(): string {
-    return `clippy-ckeditor-${this.editor.id}`;
-  }
+  private _source: RegisteredSource | null = null;
+  private _panel: SharedPanel | null = null;
+  private readonly _buttons = new Set<ButtonView>();
+  private _count = 0;
+  private _unsubscribe: (() => void) | null = null;
+  private _unlistenPanel: (() => void) | null = null;
 
   init(): void {
-    this._settings = { ...DEFAULT_SETTINGS, topHeadingLevel: resolveTopHeadingLevel(this.editor) };
-    this._registerNotificationsToolbarItem();
+    this._registerClippyButton();
     this._observeSourceEditingMode();
-    this.editor.on('ready', () => {
-      this._setupUI();
-      this._validate();
-      this.editor.model.document.on('change:data', () => this._debouncedValidate());
-    });
+    this.editor.on('ready', () => this._setup());
   }
 
-  private _setupUI(): void {
-    this._editableEl = this.editor.ui.getEditableElement() ?? null;
-    this._editorEl = this._editableEl?.closest<HTMLElement>('.ck-editor') ?? null;
-
-    if (!this._editorEl || !this._editableEl?.parentElement) {
+  private _setup(): void {
+    const editableEl = this.editor.ui.getEditableElement();
+    if (!editableEl) {
       return;
     }
 
-    const editorEl = this._editorEl;
-    // add theme token scoping for the drupal environment.
-    editorEl.classList.add('ma-theme', 'clippy-theme', 'utrecht-theme');
-    this._unwatchColorScheme = watchHostColorScheme(editorEl, (colorScheme) =>
-      setDarkColorScheme(colorScheme === 'dark', editorEl),
-    );
+    const clippyDocument = getClippyDocument();
+    this._source = clippyDocument.register({
+      anchor: this.editor.ui.element ?? editableEl,
+      correct: this._correct,
+      focus: this._focus,
+      fragment: editableEl,
+      label: this._label(),
+    });
+
     adoptClippyStyles();
 
-    const wrapper = document.createElement('clippy-editor-wrapper') as EditorWrapper;
-    this._editableEl.replaceWith(wrapper);
-    this._wrapperEl = wrapper;
+    this._panel = attachSharedPanel(clippyDocument, this._source.id);
+    this._unlistenPanel = this._panel.onChange(() => {
+      this._buttons.forEach((button) => {
+        button.isOn = this._panel?.isShowing() ?? false;
+      });
+    });
 
-    const contentWrapper = document.createElement('clippy-editor-content-wrapper') as EditorContentWrapper;
-    contentWrapper.append(this._editableEl);
-    wrapper.append(contentWrapper);
+    this._unsubscribe = clippyDocument.subscribe((violations) => {
+      this._count = violations.filter(({ source }) => source === this._source?.id).length;
+      this._buttons.forEach((button) => {
+        button.label = this._buttonLabel();
+      });
+    });
 
-    const gutter = document.createElement('clippy-validations-gutter') as Gutter;
-    gutter.mode = validationInteractionMode.DRAWER;
-    gutter.identifier = this._identifier;
-    contentWrapper.append(gutter);
-    this._gutterEl = gutter;
-
-    const drawer = document.createElement('clippy-validations-drawer') as ValidationsDrawer;
-    drawer.identifier = this._identifier;
-    wrapper.append(drawer);
-    this._drawerEl = drawer;
-
-    this._editorEl.addEventListener(CustomEvents.FOCUS_NODE, this._handleFocusNode);
-
-    this._addNotificationsToolbarItem();
+    this._addClippyButtonToToolbar();
   }
 
-  private _registerNotificationsToolbarItem(): void {
+  private _label(): string {
+    const sourceElement =
+      'sourceElement' in this.editor ? (this.editor.sourceElement as HTMLElement | undefined) : undefined;
+    const fieldLabel =
+      sourceElement && 'labels' in sourceElement
+        ? (sourceElement.labels as NodeListOf<HTMLLabelElement> | null)?.[0]?.textContent?.trim()
+        : undefined;
+
+    return fieldLabel || 'Editor';
+  }
+
+  private _buttonLabel(): string {
+    return this._count ? `Clippy (${this._count})` : 'Clippy';
+  }
+
+  private _registerClippyButton(): void {
     this.editor.ui.componentFactory.add('clippyAccessibilityNotifications', (locale: Locale) => {
-      const view = new View(locale);
-      view.setTemplate({
-        tag: 'clippy-accessibility-notifications',
+      const button = new ButtonView(locale);
+      button.set({
+        class: 'clippy-ckeditor-button',
+        isOn: this._panel?.isShowing() ?? false,
+        isToggleable: true,
+        label: this._buttonLabel(),
+        tooltip: true,
+        withText: true,
       });
-      this._notificationsView = view;
-      return view;
+      button.on('execute', () => this._panel?.toggle());
+      this._buttons.add(button);
+      return button;
     });
   }
 
-  private _addNotificationsToolbarItem(): void {
-    const toolbar = (this.editor.ui.view as Partial<{ toolbar: ToolbarView }>).toolbar;
-    if (!toolbar) {
+  private _addClippyButtonToToolbar(): void {
+    const toolbar = 'toolbar' in this.editor.ui.view ? this.editor.ui.view.toolbar : undefined;
+    const isConfigured = [...this._buttons].some((button) => button.element?.isConnected);
+    if (!toolbar || isConfigured) {
       return;
     }
 
@@ -130,150 +117,65 @@ export class ClippyPlugin extends Plugin {
     sourceEditing.on<ObservableChangeEvent<boolean>>(
       'change:isSourceEditingMode',
       (_evt, _name, isSourceEditingMode) => {
-        this._setNotificationsDisabled(isSourceEditingMode);
-        this._closeValidationsDrawer();
+        this._buttons.forEach((button) => {
+          button.isEnabled = !isSourceEditingMode;
+        });
+        if (isSourceEditingMode) {
+          this._panel?.close();
+        }
       },
     );
   }
 
-  private _setNotificationsDisabled(disabled: boolean): void {
-    const button = this._notificationsView?.element as AccessibilityNotifications | null;
-    if (button) {
-      button.disabled = disabled;
-    }
-  }
-
-  private _closeValidationsDrawer(): void {
-    globalThis.dispatchEvent(
-      new CustomEvent<CloseValidationsDrawerDetail>(CustomEvents.CLOSE_VALIDATIONS_DRAWER, {
-        detail: { identifier: this._identifier },
-      }),
-    );
-  }
-
-  private _validate(): void {
-    if (!this._editableEl) {
-      return;
-    }
-
-    runValidation(this._editableEl, this._settings, (validationsMap: ValidationsMap) => {
-      this._validationsMap = validationsMap;
-      this._render();
-    });
-  }
-
-  private _debouncedValidate(): void {
-    if (!this._editableEl) {
-      return;
-    }
-
-    debouncedValidate(this._editableEl, this._settings, (validationsMap: ValidationsMap) => {
-      this._validationsMap = validationsMap;
-      this._render();
-    });
-  }
-
-  private _render(): void {
-    if (!this._gutterEl || !this._editableEl) {
-      return;
-    }
-
-    const validationsMap = this._patchCorrectionsForCKEditor(this._validationsMap);
-    this._gutterEl.validationsMap = validationsMap;
-    this._renderNotifications(validationsMap);
-  }
-
-  private _renderNotifications(validationsMap: ValidationsMap): void {
-    if (!this._editableEl) {
-      return;
-    }
-
-    // Feed the toolbar button its validation count, `element` is created lazily by CKEditor when the toolbar item is rendered
-    const button = this._notificationsView?.element as AccessibilityNotifications | null;
-    if (button) {
-      button.identifier = this._identifier;
-      button.validationsMap = validationsMap;
-    }
-
-    // Forward the CKEditor DOM element and its validations so the drawer can match
-    // intersecting ranges to the correct validations. Both must reference the
-    // same DOM tree the ranges were created against for the intersection to work.
-    if (this._drawerEl) {
-      this._drawerEl.htmlDocument = this._editableEl;
-      this._drawerEl.validationsMap = validationsMap;
-    }
-  }
-
-  private _patchCorrectionsForCKEditor(validationsMap: ValidationsMap): ValidationsMap {
-    for (const [range, result] of validationsMap) {
-      const { correct, validatorKey } = result;
-      if (!correct || !validatorKey) {
-        continue;
-      }
-
-      // replace correct functions with model-aware versions that go through editor.setData()
-      result.correct = this._modelCorrectionFactory(correct, validatorKey, range);
-    }
-    return validationsMap;
-  }
-
-  private _modelCorrectionFactory(originalCorrect: () => void, validatorKey: string, range: Range): () => void {
-    return () => {
-      // create a clean HTML copy via this.editor.getData()
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = this.editor.getData();
-      const modelDataValidationsMap = runValidations(tempDiv, this._settings);
-
-      // A validator can flag multiple spots, get the range's position among correctable results sharing its validatorKey
-      const occurrenceIndex = findOccurrenceIndex(this._validationsMap, range, validatorKey);
-
-      // locate the matching correction in the clean HTML copy
-      const target = findMatchingCorrection(modelDataValidationsMap, validatorKey, occurrenceIndex);
-
-      if (target?.correct) {
-        // apply it and check whether it actually changed the DOM
-        const before = tempDiv.innerHTML;
-        target.correct();
-        if (tempDiv.innerHTML !== before) {
-          // setData uses CKEditor's model pipeline, keeping the undo/redo state valid.
-          this.editor.setData(tempDiv.innerHTML);
-          return;
-        }
-      }
-
-      // No matching correction, or it didn't modify the DOM (e.g. open dialog, select range), call original directly.
-      originalCorrect();
-    };
-  }
-
-  private readonly _handleFocusNode = (event: Event) => {
-    const { range } = (event as FocusNodeEvent).detail;
-    const domConverter = this.editor.editing.view.domConverter;
-
-    // from DOM to virtual view layer, without CKEditor injected DOM artifacts.
-    const viewRange = domConverter.domRangeToView(range);
+  private readonly _focus = ({ element }: DocumentViolation): void => {
+    const domRange = element.ownerDocument.createRange();
+    domRange.selectNodeContents(element);
+    const viewRange = this.editor.editing.view.domConverter.domRangeToView(domRange);
     if (!viewRange) {
       return;
     }
 
-    // map view range to model range
     const modelRange = this.editor.editing.mapper.toModelRange(viewRange);
-
-    // set the view selection, triggering a DOM render
     this.editor.model.change((writer) => writer.setSelection(modelRange));
+    this.editor.editing.view.scrollToTheSelection();
     this.editor.focus();
   };
 
-  override destroy(): void {
-    this._editorEl?.removeEventListener(CustomEvents.FOCUS_NODE, this._handleFocusNode);
-    this._unwatchColorScheme?.();
-    this._drawerEl?.remove();
-    this._gutterEl?.remove();
-    // Restore the editable to its original parent so CKEditor's own teardown
-    // doesn't have to deal with our extra wrapper elements.
-    if (this._wrapperEl && this._editableEl) {
-      this._wrapperEl.replaceWith(this._editableEl);
+  private readonly _correct = ({ correct }: DocumentViolation): void => {
+    const editableEl = this.editor.ui.getEditableElement();
+    const root = this.editor.model.document.getRoot();
+    if (!correct || !editableEl || !root) {
+      return;
     }
+
+    const before = editableEl.innerHTML;
+    correct();
+    if (editableEl.innerHTML === before) {
+      return;
+    }
+
+    const corrected = editableEl.ownerDocument.createDocumentFragment();
+    corrected.append(...editableEl.cloneNode(true).childNodes);
+    const viewContent = this.editor.editing.view.domConverter.domToView(corrected, { bind: false, withChildren: true });
+    if (!viewContent?.is('documentFragment')) {
+      return;
+    }
+
+    const modelContent = this.editor.data.toModel(viewContent);
+    this.editor.model.change((writer) => {
+      writer.remove(writer.createRangeIn(root));
+      writer.insert(modelContent, root, 0);
+    });
+  };
+
+  override destroy(): void {
+    this._unsubscribe?.();
+    this._source?.unregister();
+    this._source = null;
+    this._unlistenPanel?.();
+    this._panel?.release();
+    this._panel = null;
+    this._buttons.clear();
     super.destroy();
   }
 }

@@ -1,18 +1,23 @@
 const css = (strings: TemplateStringsArray) => strings.join('');
 
 const CLIPPY_STYLES = css`
-  /* Re-apply basic CKEditor theme inside the clippy-editor-content-wrapper component */
-  clippy-editor-content-wrapper {
-    background: var(--ck-color-base-background);
-  }
-
-  clippy-editor-content-wrapper > .ck-editor__editable:not(.ck-focused) {
-    border-color: var(--ck-color-base-border);
-  }
-
-  /* Push the accessibility button to the right edge when it's the last toolbar item */
-  clippy-accessibility-notifications:last-child {
+  .ck-toolbar__items > .clippy-ckeditor-button:last-child {
     margin-inline-start: auto !important;
+  }
+
+  clippy-panel.clippy-ckeditor-panel:not([hidden]) {
+    background: var(--ck-color-base-background);
+    border-inline-start: 1px solid var(--ck-color-base-border);
+    box-shadow: var(--ck-drop-shadow);
+    box-sizing: border-box;
+    display: block;
+    inline-size: min(24rem, 100vw);
+    inset-block: 0;
+    inset-inline-end: 0;
+    overflow-y: auto;
+    padding: var(--ck-spacing-large);
+    position: fixed;
+    z-index: var(--ck-z-panel);
   }
 `;
 
