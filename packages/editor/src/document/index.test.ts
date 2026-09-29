@@ -8,6 +8,7 @@ const {
   HEADING_MUST_NOT_BE_EMPTY,
   IMAGE_MUST_HAVE_ALT_TEXT,
   PARAGRAPH_SHOULD_NOT_BE_EMPTY,
+  PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD,
 } = coreValidationRules;
 
 const createSource = (html: string) => {
@@ -16,6 +17,9 @@ const createSource = (html: string) => {
   document.body.append(anchor);
   return { anchor, fragment: anchor, label: 'Body' };
 };
+
+const prose = (word: string) => `${word} is volledig dikgedrukt en veel te lang om nog als een kop door te gaan.`;
+const bold = (word: string) => `<p><strong>${prose(word)}</strong></p>`;
 
 const validationPass = async () => {
   await Promise.resolve();
@@ -204,6 +208,18 @@ describe('ClippyDocument', () => {
       expect(clippyDocument.violations).toEqual([]);
     });
 
+    it('records the label of the source that owns each element', async () => {
+      const body = { ...createSource('<p></p>'), label: 'Body' };
+      const title = { ...createSource('<p></p>'), label: 'Title' };
+      body.anchor.before(title.anchor);
+
+      clippyDocument.register(body);
+      clippyDocument.register(title);
+      await validationPass();
+
+      expect(clippyDocument.violations.map(({ label }) => label)).toEqual(['Title', 'Body']);
+    });
+
     it('records the source that owns each element, in document order', async () => {
       const intro = createSource('<h1>Titel</h1><h3>Intro</h3>');
       const body = createSource('<h5>Kop</h5>');
@@ -386,6 +402,29 @@ describe('ClippyDocument', () => {
       await validationPass();
 
       expect(clippyDocument.violations.map(({ source }) => source)).toEqual([id]);
+    });
+  });
+
+  describe('actions', () => {
+    it('marks a violation correctable only when its validation offers a correction and its source handles one', async () => {
+      clippyDocument.registerValidation(coreValidations[PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD]);
+      clippyDocument.register({ ...createSource(`${bold('Een')}<p></p>`), correct: () => undefined });
+      clippyDocument.register(createSource(bold('Twee')));
+      await validationPass();
+
+      expect(clippyDocument.violations.map(({ correctable, rule }) => ({ correctable, rule }))).toEqual([
+        { correctable: true, rule: PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD },
+        { correctable: false, rule: PARAGRAPH_SHOULD_NOT_BE_EMPTY },
+        { correctable: false, rule: PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD },
+      ]);
+    });
+
+    it('marks a violation focusable only when its source handles focus', async () => {
+      clippyDocument.register({ ...createSource('<p></p>'), focus: () => undefined });
+      clippyDocument.register(createSource('<p></p>'));
+      await validationPass();
+
+      expect(clippyDocument.violations.map(({ focusable }) => focusable)).toEqual([true, false]);
     });
   });
 

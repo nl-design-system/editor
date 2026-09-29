@@ -18,6 +18,7 @@ export const registerHeadingSource = (
   return registerProxySource(clippyDocument, {
     anchor: input,
     events: ['input', 'change'],
+    focus: () => input.focus(),
     label,
     render: (container) => {
       if (heading.parentNode !== container) container.replaceChildren(heading);

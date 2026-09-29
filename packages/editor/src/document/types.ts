@@ -3,6 +3,8 @@ import type { Fragment, ValidatorOptions, Violation } from '@nl-design-system-co
 /** `anchor` locates the source and must stay connected; `fragment` is validated and observed, and may be detached. */
 export type SourceRegistration = {
   anchor: Element;
+  correct?: ActionHandler;
+  focus?: ActionHandler;
   fragment: Fragment;
   label: string;
 };
@@ -13,8 +15,13 @@ export type RegisteredSource = {
 };
 
 export type DocumentViolation = Violation & {
+  correctable: boolean;
+  focusable: boolean;
+  label: string;
   source: string;
 };
+
+export type ActionHandler = (violation: DocumentViolation) => void;
 
 export type ViolationsListener = (violations: readonly DocumentViolation[]) => void;
 

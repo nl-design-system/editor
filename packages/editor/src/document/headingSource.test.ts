@@ -86,4 +86,11 @@ describe('registerHeadingSource', () => {
     await validationPass();
     expect(reported(clippyDocument)).toEqual([{ element: proxy, rule: HEADING_MUST_NOT_BE_EMPTY }]);
   });
+
+  it('makes the heading it stands in for focusable', async () => {
+    registerHeadingSource(clippyDocument, { input: createInput(''), label: 'Title', level: 1 });
+    await validationPass();
+
+    expect(clippyDocument.violations.map(({ focusable }) => focusable)).toEqual([true]);
+  });
 });

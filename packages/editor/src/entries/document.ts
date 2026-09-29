@@ -1,5 +1,6 @@
 export { ClippyDocument } from '../document/index';
 export type {
+  ActionHandler,
   ClippyDocumentOptions,
   DocumentViolation,
   RegisteredSource,

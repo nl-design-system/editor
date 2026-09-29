@@ -3,7 +3,10 @@ import type { DocumentViolation } from '../types';
 import { hasChanges } from './hasChanges';
 
 const violation = (overrides: Partial<DocumentViolation> = {}): DocumentViolation => ({
+  correctable: false,
   element: document.createElement('p'),
+  focusable: false,
+  label: 'Body',
   messages: { error: 'Lege alinea' },
   rule: 'paragraph-should-not-be-empty',
   scope: 'element',

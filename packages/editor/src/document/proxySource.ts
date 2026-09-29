@@ -1,11 +1,9 @@
 import type { ClippyDocument } from './index';
-import type { RegisteredSource } from './types';
+import type { RegisteredSource, SourceRegistration } from './types';
 
 /** `render` keeps the proxy markup in `container` current; reusing its elements keeps violations stable across passes. */
-export type ProxySourceRegistration = {
-  anchor: Element;
+export type ProxySourceRegistration = Omit<SourceRegistration, 'fragment'> & {
   events?: readonly string[];
-  label: string;
   render: (container: HTMLElement) => void;
 };
 
@@ -15,13 +13,13 @@ export type RegisteredProxySource = RegisteredSource & {
 
 export const registerProxySource = (
   clippyDocument: ClippyDocument,
-  { anchor, events = [], label, render }: ProxySourceRegistration,
+  { anchor, correct, events = [], focus, label, render }: ProxySourceRegistration,
 ): RegisteredProxySource => {
   const container = anchor.ownerDocument.createElement('div');
   const update = () => render(container);
   update();
   events.forEach((event) => anchor.addEventListener(event, update));
-  const { id, unregister } = clippyDocument.register({ anchor, fragment: container, label });
+  const { id, unregister } = clippyDocument.register({ anchor, correct, focus, fragment: container, label });
 
   return {
     id,

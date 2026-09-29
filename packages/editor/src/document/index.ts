@@ -24,12 +24,12 @@ export class ClippyDocument {
     return this.#violations;
   }
 
-  register({ anchor, fragment, label }: SourceRegistration): RegisteredSource {
+  register({ anchor, correct, focus, fragment, label }: SourceRegistration): RegisteredSource {
     const id = `clippy-source-${this.#nextSourceId++}`;
     const observer = new MutationObserver(() => this.#schedulePass());
     observer.observe(fragment, { attributes: true, characterData: true, childList: true, subtree: true });
     this.#dropDisconnectedSources();
-    this.#sources = [...this.#sources, { id, anchor, fragment, label, observer }].sort(byAnchor);
+    this.#sources = [...this.#sources, { id, anchor, correct, focus, fragment, label, observer }].sort(byAnchor);
     this.#schedulePass();
 
     return {
@@ -80,10 +80,16 @@ export class ClippyDocument {
 
   #validate() {
     this.#dropDisconnectedSources();
-    const violations = this.#validator.validate(this.#sources.map(({ fragment }) => fragment)).map((violation) => ({
-      ...violation,
-      source: this.#sources.find(({ fragment }) => fragment.contains(violation.element))!.id,
-    }));
+    const violations = this.#validator.validate(this.#sources.map(({ fragment }) => fragment)).map((violation) => {
+      const { id, correct, focus, label } = this.#sources.find(({ fragment }) => fragment.contains(violation.element))!;
+      return {
+        ...violation,
+        correctable: Boolean(violation.correct && correct),
+        focusable: Boolean(focus),
+        label,
+        source: id,
+      };
+    });
     if (!hasChanges(this.#violations, violations)) return;
 
     this.#violations = violations;

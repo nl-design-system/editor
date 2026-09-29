@@ -3,7 +3,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { ClippyDocument } from './index';
 import { registerProxySource } from './proxySource';
 
-const { PARAGRAPH_SHOULD_NOT_BE_EMPTY } = coreValidationRules;
+const { PARAGRAPH_SHOULD_NOT_BE_EMPTY, PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD } = coreValidationRules;
+const BOLD_PROSE = 'Deze samenvatting is volledig dikgedrukt en veel te lang om nog als een kop door te gaan.';
 
 let clippyDocument: ClippyDocument;
 let anchor: HTMLInputElement;
@@ -57,5 +58,23 @@ describe('registerProxySource', () => {
     anchor.dispatchEvent(new Event('input'));
 
     expect(renders).toBe(1);
+  });
+
+  it('hands its focus and correction handlers to the page', async () => {
+    clippyDocument.registerValidation(coreValidations[PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD]);
+    registerProxySource(clippyDocument, {
+      anchor,
+      correct: () => undefined,
+      focus: () => undefined,
+      label: 'Summary',
+      render: (container) => {
+        container.innerHTML = `<p><strong>${BOLD_PROSE}</strong></p>`;
+      },
+    });
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(clippyDocument.violations.map(({ correctable, focusable }) => ({ correctable, focusable }))).toEqual([
+      { correctable: true, focusable: true },
+    ]);
   });
 });
