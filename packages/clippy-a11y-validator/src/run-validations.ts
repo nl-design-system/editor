@@ -1,28 +1,34 @@
 import type { Fragment } from './types/fragment.ts';
-import type { Validation, ValidationPayload, Violation } from './types/validation.ts';
+import type { Validation, Violation, ViolationPayload } from './types/validation.ts';
 import type { LocaleOptions, ValidateOptions } from './types/validator.ts';
 import { matchingElements, DocumentContext } from './document-context.ts';
 import { resolveMessages } from './messages.ts';
 
 type Verdict = {
   correct?: () => void;
-  payload?: ValidationPayload;
+  focus?: () => void;
+  payload?: ViolationPayload;
   satisfied: boolean;
 };
 
 const validateElement = (validation: Validation, element: HTMLElement, documentContext: DocumentContext): Verdict => {
   if (validation.scope === 'element') {
-    const { condition, correct, payload } = validation;
+    const { condition, correct, focus, payload } = validation;
     if (condition(element)) return { satisfied: true };
 
-    return { correct: correct?.(element), payload: payload?.(element), satisfied: false };
+    return { correct: correct?.(element), focus: focus?.(element), payload: payload?.(element), satisfied: false };
   }
 
-  const { condition, correct, payload } = validation;
+  const { condition, correct, focus, payload } = validation;
   const context = documentContext.for(element);
   if (condition(element, context)) return { satisfied: true };
 
-  return { correct: correct?.(element, context), payload: payload?.(element, context), satisfied: false };
+  return {
+    correct: correct?.(element, context),
+    focus: focus?.(element, context),
+    payload: payload?.(element, context),
+    satisfied: false,
+  };
 };
 
 export const runValidations = (
@@ -38,7 +44,7 @@ export const runValidations = (
     applicable
       .filter(({ selector }) => element.matches(selector))
       .flatMap((validation): Violation[] => {
-        const { correct, payload, satisfied } = validateElement(validation, element, documentContext);
+        const { correct, focus, payload, satisfied } = validateElement(validation, element, documentContext);
         if (satisfied) return [];
 
         const { messages, rule, scope, severity } = validation;
@@ -47,6 +53,7 @@ export const runValidations = (
           {
             correct,
             element,
+            focus,
             messages: resolveMessages(messages, options.locale, options.fallbackLocale, payload),
             rule,
             scope,

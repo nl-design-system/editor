@@ -22,18 +22,19 @@ export type { Locale, ResolvedMessages, ValidationMessages, ValidationMessagesBy
 export type { Fragment } from './types/fragment.ts';
 export type { CoreSelector, ElementFor, Selector } from './types/selector.ts';
 export type {
-  CorrectValidationFunction,
+  CorrectViolationFunction,
   ElementValidation,
   ElementValidationDefinition,
   DocumentValidation,
   DocumentValidationCondition,
   DocumentValidationDefinition,
+  FocusViolationFunction,
   ValidationCondition,
   ValidationContext,
   Validation,
   ValidationDefinition,
-  ValidationPayload,
   ValidationScope,
   ValidationSeverity,
   Violation,
+  ViolationPayload,
 } from './types/validation.ts';
