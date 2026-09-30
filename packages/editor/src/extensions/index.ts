@@ -37,15 +37,11 @@ const globalAttributes = {
   lang: {},
 } as const;
 
-export type EditorExtensionOptions = {
-  /** Unset runs every core validation. Read once, when the extensions are built. */
-  validations?: readonly ValidationRule[];
-  /** Read once, when the extensions are built: the editor is recreated to change it. */
-  readonly?: boolean;
-};
-
 export const editorExtensions = (
-  { readonly, validations }: EditorExtensionOptions,
+  /** Unset runs every core validation. Read once, when the extensions are built. */
+  validations: readonly ValidationRule[] | undefined,
+  /** Read once, when the extensions are built: the editor is recreated to change it. */
+  readonly: boolean,
   callback: (violations: Map<Range, Violation>) => void,
   identifier?: string,
 ) => [
