@@ -1,19 +1,17 @@
+import type { Validation } from '@nl-design-system-community/clippy-a11y-validator';
 import { Editor } from '@tiptap/core';
 import { vi } from 'vitest';
-import type { EditorExtensionOptions } from '@/extensions';
 import { editorExtensions } from '@/extensions';
-
-/** Stable reference, so every caller that omits the options gets the same object. */
-const DEFAULT_OPTIONS: EditorExtensionOptions = {};
 
 export async function createTestEditor(
   content: string,
   callback: (resultMap: Map<Range, unknown>) => void = vi.fn(),
-  options: EditorExtensionOptions = DEFAULT_OPTIONS,
+  validations?: readonly Validation[],
+  readonly = false,
 ): Promise<Editor> {
   const editor = new Editor({
     content,
-    extensions: editorExtensions(options, callback),
+    extensions: editorExtensions(validations, readonly, callback),
   });
 
   if (editor.isInitialized) return editor;
