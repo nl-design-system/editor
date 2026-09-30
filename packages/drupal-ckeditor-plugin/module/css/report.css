@@ -1,0 +1,38 @@
+.clippy-drupal-report-layout {
+  align-items: start;
+  column-gap: 2rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 24rem);
+}
+
+.clippy-drupal-report-layout > * {
+  grid-column: 1 / -1;
+}
+
+.clippy-drupal-report-layout > .clippy-drupal-report-form {
+  grid-column: 1;
+}
+
+.clippy-drupal-report-layout > .clippy-drupal-report {
+  box-sizing: border-box;
+  grid-column: 2;
+  /* stylelint-disable custom-property-pattern */
+  inset-block-start: var(--drupal-displace-offset-top, 0);
+  max-block-size: calc(100vh - var(--drupal-displace-offset-top, 0px));
+  /* stylelint-enable custom-property-pattern */
+  overflow-y: auto;
+  padding-block: 1rem;
+  position: sticky;
+}
+
+@media (width < 60rem) {
+  .clippy-drupal-report-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .clippy-drupal-report-layout > .clippy-drupal-report {
+    grid-column: 1;
+    max-block-size: none;
+    position: static;
+  }
+}

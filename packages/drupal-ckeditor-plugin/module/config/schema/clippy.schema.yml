@@ -12,3 +12,17 @@ ckeditor5.plugin.clippy_content_classes:
         # No NotBlank: an empty class means "render this element without a class".
         type: string
         label: "Class"
+
+clippy.field_settings:
+  type: mapping
+  label: "Clippy"
+  mapping:
+    heading_level:
+      type: integer
+      label: "The heading level this field stands in for on the page"
+
+field.field.*.*.*.third_party.clippy:
+  type: clippy.field_settings
+
+core.base_field_override.*.*.*.third_party.clippy:
+  type: clippy.field_settings

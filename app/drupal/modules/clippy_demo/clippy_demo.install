@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * @file
+ * Install hooks for the Clippy demo module.
+ */
+
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\NodeType;
+use Drupal\paragraphs\Entity\ParagraphsType;
+
+/**
+ * Implements hook_install().
+ */
+function clippy_demo_install(): void {
+  $dependencies = ['enforced' => ['module' => ['clippy_demo']]];
+
+  ParagraphsType::create([
+    'id' => 'clippy_section',
+    'label' => 'Section',
+    'dependencies' => $dependencies,
+  ])->save();
+
+  NodeType::create([
+    'type' => 'clippy_demo',
+    'name' => 'Clippy demo',
+    'dependencies' => $dependencies,
+  ])->save();
+
+  $fields = [
+    [
+      'entity_type' => 'paragraph',
+      'bundle' => 'clippy_section',
+      'field_name' => 'field_clippy_heading',
+      'label' => 'Section title',
+      'type' => 'string',
+      'third_party_settings' => ['clippy' => ['heading_level' => 2]],
+      'widget' => ['type' => 'string_textfield'],
+      'formatter' => ['type' => 'string', 'label' => 'hidden'],
+    ],
+    [
+      'entity_type' => 'paragraph',
+      'bundle' => 'clippy_section',
+      'field_name' => 'field_clippy_text',
+      'label' => 'Text',
+      'type' => 'text_long',
+      'widget' => ['type' => 'text_textarea'],
+      'formatter' => ['type' => 'text_default', 'label' => 'hidden'],
+    ],
+    [
+      'entity_type' => 'node',
+      'bundle' => 'clippy_demo',
+      'field_name' => 'field_clippy_body',
+      'label' => 'Body',
+      'type' => 'text_long',
+      'widget' => ['type' => 'text_textarea'],
+      'formatter' => ['type' => 'text_default', 'label' => 'hidden'],
+    ],
+    [
+      'entity_type' => 'node',
+      'bundle' => 'clippy_demo',
+      'field_name' => 'field_clippy_appendix',
+      'label' => 'Appendix',
+      'type' => 'entity_reference_revisions',
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+      'storage_settings' => ['target_type' => 'paragraph'],
+      'settings' => [
+        'handler' => 'default:paragraph',
+        'handler_settings' => ['target_bundles' => ['clippy_section' => 'clippy_section']],
+      ],
+      'widget' => [
+        'type' => 'paragraphs',
+        'settings' => [
+          'edit_mode' => 'open',
+          'add_mode' => 'button',
+          'default_paragraph_type' => 'clippy_section',
+        ],
+      ],
+      'formatter' => ['type' => 'entity_reference_revisions_entity_view', 'label' => 'hidden'],
+    ],
+  ];
+
+  $repository = \Drupal::service('entity_display.repository');
+  foreach ($fields as $field) {
+    FieldStorageConfig::create([
+      'field_name' => $field['field_name'],
+      'entity_type' => $field['entity_type'],
+      'type' => $field['type'],
+      'cardinality' => $field['cardinality'] ?? 1,
+      'settings' => $field['storage_settings'] ?? [],
+      'dependencies' => $dependencies,
+    ])->save();
+    FieldConfig::create([
+      'field_name' => $field['field_name'],
+      'entity_type' => $field['entity_type'],
+      'bundle' => $field['bundle'],
+      'label' => $field['label'],
+      'settings' => $field['settings'] ?? [],
+      'third_party_settings' => $field['third_party_settings'] ?? [],
+    ])->save();
+
+    $repository->getFormDisplay($field['entity_type'], $field['bundle'])
+      ->setComponent($field['field_name'], $field['widget'])
+      ->save();
+    $repository->getViewDisplay($field['entity_type'], $field['bundle'])
+      ->setComponent($field['field_name'], $field['formatter'])
+      ->save();
+  }
+}

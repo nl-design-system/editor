@@ -1,6 +1,6 @@
 FROM drupal:11-apache
 
-RUN composer require drush/drush --no-interaction --working-dir=/opt/drupal
+RUN composer require drush/drush drupal/paragraphs --no-interaction --working-dir=/opt/drupal
 
 COPY settings.php /var/www/html/sites/default/settings.php
 COPY setup.sh /usr/local/bin/setup.sh

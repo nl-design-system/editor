@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Install hooks for the Clippy module.
+ */
+
+use Drupal\node\Entity\NodeType;
+
+/**
+ * Implements hook_install().
+ */
+function clippy_install(bool $is_syncing): void {
+  if ($is_syncing || !\Drupal::moduleHandler()->moduleExists('node')) {
+    return;
+  }
+
+  foreach (array_keys(NodeType::loadMultiple()) as $bundle) {
+    clippy_set_title_heading_level($bundle);
+  }
+}

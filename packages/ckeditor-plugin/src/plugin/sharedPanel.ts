@@ -1,7 +1,6 @@
 import type { ClippyDocument } from '@nl-design-system-community/editor/document';
 import type { Panel } from '@nl-design-system-community/editor/panel';
-import { setDarkColorScheme, watchHostColorScheme } from '@nl-design-system-community/editor/color-scheme';
-import '@nl-design-system-community/editor/panel';
+import { createReportPanel } from './reportPanel.ts';
 
 export type SharedPanel = {
   close: () => void;
@@ -21,11 +20,10 @@ type Shared = {
 let shared: Shared | null = null;
 
 const createShared = (clippyDocument: ClippyDocument): Shared => {
-  const panel = document.createElement('clippy-panel');
-  panel.classList.add('clippy-ckeditor-panel', 'ma-theme', 'clippy-theme', 'utrecht-theme');
+  const { panel, unwatchColorScheme } = createReportPanel(clippyDocument);
+  panel.classList.add('clippy-ckeditor-panel');
   panel.setAttribute('role', 'region');
   panel.setAttribute('aria-label', 'Clippy');
-  panel.clippyDocument = clippyDocument;
   panel.hidden = true;
   document.body.append(panel);
 
@@ -33,7 +31,7 @@ const createShared = (clippyDocument: ClippyDocument): Shared => {
     listeners: new Set(),
     panel,
     sources: new Set(),
-    unwatchColorScheme: watchHostColorScheme(panel, (colorScheme) => setDarkColorScheme(colorScheme === 'dark', panel)),
+    unwatchColorScheme,
   };
 };
 

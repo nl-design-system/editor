@@ -56,6 +56,22 @@ docker compose exec drupal /opt/drupal/vendor/bin/drush --root=/opt/drupal/web c
 
 ### Available modules
 
-| Module   | Description                                                                                                     |
-| -------- | --------------------------------------------------------------------------------------------------------------- |
-| `clippy` | Registers the ClippyPlugin with Drupal's CKEditor 5. Build it first with `pnpm build` from the repository root. |
+| Module        | Description                                                                                                                                                                   |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `clippy`      | Registers the ClippyPlugin with Drupal's CKEditor 5. Build it first with `pnpm build` from the repository root.                                                               |
+| `clippy_demo` | Adds the _Clippy demo_ content type: a title, a rich text _Body_ field and an _Appendix_ of repeatable sections, each a Paragraphs item with a _Section title_ and rich text. |
+
+### Trying the accessibility report
+
+Go to _Content → Add content → Clippy demo_. The report beside the form covers the title, the _Body_ editor and every appendix section in page order. A _Section title_ counts as an `<h2>`:
+
+- a `<h4>` in _Body_ after a `<h2>` is reported as a skipped level, and so is a `<h4>` in a section's _Text_ right after its _Section title_;
+- clearing the title or a _Section title_ reports an empty heading, labelled with that field;
+- _Add Section_ adds a section whose title and text join the report, and _Remove_ takes them out again.
+
+`clippy_demo` sets up its content type when it is installed. On a database that already has an older version of it, reinstall it:
+
+```shell
+docker compose exec drupal /opt/drupal/vendor/bin/drush --root=/opt/drupal/web pmu clippy_demo --yes
+docker compose exec drupal /opt/drupal/vendor/bin/drush --root=/opt/drupal/web en clippy_demo --yes
+```

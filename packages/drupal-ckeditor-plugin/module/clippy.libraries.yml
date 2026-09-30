@@ -7,7 +7,9 @@ plugin:
       clippy.css: {}
       # TEMP: inject tokens from --basis / --utrecht --nl; to be discussed
       clippy-tokens.css: {}
+      css/report.css: {}
   dependencies:
     - core/drupal
+    - core/once
     - core/ckeditor5
     - ckeditor5/internal.drupal.ckeditor5

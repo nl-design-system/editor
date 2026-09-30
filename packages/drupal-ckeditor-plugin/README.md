@@ -13,6 +13,28 @@ Two CKEditor 5 plugins are registered:
 | `clippy_validation`      | no           | Accessibility feedback in the editor.                       |
 | `clippy_content_classes` | yes          | The design-system classes CKEditor writes into the content. |
 
+## Accessibility report
+
+Every CKEditor on the page registers with one Clippy document, and the bundle registers the core validations with it. On a node form the bundle also places the accessibility report for the whole page beside the form. Below 60rem it moves under the form.
+
+A text field can stand in for a heading on the page, such as the title that the page template renders as the `<h1>`, or a section title that a paragraph's template renders as an `<h2>`. Only the site knows that level, so it is set on the field as a third-party setting:
+
+```yaml
+third_party_settings:
+  clippy:
+    heading_level: 2
+```
+
+A field added to a bundle keeps it in its `field.field.*` config. A base field such as the node title has no field config, so the setting goes on its per-bundle override, `core.base_field_override.node.<bundle>.title`. That also lets each content type decide whether its title is the page's `<h1>`.
+
+The module sets `heading_level: 1` on the title of every content type that exists when it is installed and of every content type created afterwards, except during a config import. Remove the setting from a content type's title override to stop its title from counting as the `<h1>`.
+
+The module marks that field's input with `data-clippy-heading-level`, and the bundle registers every marked input as a heading at that level, so heading structure is checked across those fields and every editor in page order, and an empty heading field is reported. The setting has no UI yet; the `clippy_demo` module in `app/drupal` sets it on its section title when it is installed.
+
+A field added by AJAX, such as a new paragraph, joins the report when its editor is created or its heading input attached, and leaves it when its editor is destroyed or its markup is removed.
+
+Where no field is set as the `<h1>`, nothing supplies the title, so the heading rules judge the content as if the first heading started the page.
+
 ## Editing the content classes
 
 Go to _Configuration → Content authoring → Text formats and editors_, edit a CKEditor 5 format and open the **Content classes** tab. Every class can be changed, and clearing a field outputs that element without a class.

@@ -93,6 +93,9 @@ importers:
 
   packages/ckeditor-plugin:
     dependencies:
+      '@nl-design-system-community/clippy-a11y-validator':
+        specifier: workspace:*
+        version: link:../clippy-a11y-validator
       '@nl-design-system-community/editor':
         specifier: workspace:*
         version: link:../editor

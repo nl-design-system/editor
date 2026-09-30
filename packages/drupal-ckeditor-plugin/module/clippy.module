@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Hooks for the Clippy module.
+ */
+
+use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\NodeTypeInterface;
+
+/**
+ * Implements hook_node_type_insert().
+ */
+function clippy_node_type_insert(NodeTypeInterface $node_type): void {
+  if (!$node_type->isSyncing()) {
+    clippy_set_title_heading_level($node_type->id());
+  }
+}
+
+/**
+ * Makes the title of a content type stand in for the page's h1.
+ */
+function clippy_set_title_heading_level(string $bundle): void {
+  $title = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions('node')['title']->getConfig($bundle);
+  if ($title->getThirdPartySetting('clippy', 'heading_level') === NULL) {
+    $title->setThirdPartySetting('clippy', 'heading_level', 1)->save();
+  }
+}
+
+/**
+ * Implements hook_field_widget_single_element_form_alter().
+ */
+function clippy_field_widget_single_element_form_alter(array &$element, FormStateInterface $form_state, array $context): void {
+  $field_definition = $context['items']->getFieldDefinition();
+  if (!$field_definition instanceof ThirdPartySettingsInterface || !isset($element['value'])) {
+    return;
+  }
+
+  $level = $field_definition->getThirdPartySetting('clippy', 'heading_level');
+  if ($level) {
+    $element['value']['#attributes']['data-clippy-heading-level'] = $level;
+  }
+}
