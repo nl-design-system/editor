@@ -135,11 +135,7 @@ export class Context extends LitElement {
       },
       // Prevent auto-mounting during SSR; Content component calls moumountnt() client-side
       element: null,
-      extensions: editorExtensions(
-        { readonly: this.readonly, validations: this.validations },
-        this.updateViolationsContext,
-        this.id,
-      ),
+      extensions: editorExtensions(this.validations, this.readonly, this.updateViolationsContext, this.id),
     });
   }
 
