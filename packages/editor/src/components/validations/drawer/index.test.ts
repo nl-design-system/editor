@@ -83,7 +83,7 @@ describe('<clippy-validations-dialog>', () => {
       return [range, violation({ payload, range, rule, severity })];
     };
 
-    const validationsMap: Map<Range, Violation> = new Map([
+    const violationsMap: Map<Range, Violation> = new Map([
       entry(coreValidationRules.HEADING_MUST_NOT_BE_EMPTY, 'error'),
       entry(coreValidationRules.IMAGE_MUST_HAVE_ALT_TEXT, 'error'),
       entry(coreValidationRules.LINK_SHOULD_NOT_BE_TOO_GENERIC, 'warning'),
@@ -100,9 +100,9 @@ describe('<clippy-validations-dialog>', () => {
       entry(coreValidationRules.HEADING_MUST_START_AT_LEVEL_ONE, 'error'),
     ]);
 
-    // Set validationsContext on the context provider, which will provide it to children
+    // Set violationsContext on the context provider, which will provide it to children
     if (contextElement) {
-      contextElement.updateValidationsContext(validationsMap);
+      contextElement.updateViolationsContext(violationsMap);
       await contextElement.updateComplete;
     }
 
@@ -150,14 +150,14 @@ describe('<clippy-validations-dialog>', () => {
     const r1 = document.createRange();
     const r2 = document.createRange();
     const r3 = document.createRange();
-    const validationsMap: Map<Range, Violation> = new Map([
+    const violationsMap: Map<Range, Violation> = new Map([
       [r1, violation({ range: r1, rule: coreValidationRules.HEADING_MUST_NOT_BE_EMPTY, severity: 'error' })],
       [r2, violation({ range: r2, rule: coreValidationRules.LINK_SHOULD_NOT_BE_TOO_GENERIC, severity: 'warning' })],
       [r3, violation({ range: r3, rule: coreValidationRules.IMAGE_MUST_HAVE_ALT_TEXT, severity: 'error' })],
     ]);
 
     if (contextElement) {
-      contextElement.updateValidationsContext(validationsMap);
+      contextElement.updateViolationsContext(violationsMap);
       await contextElement.updateComplete;
     }
 

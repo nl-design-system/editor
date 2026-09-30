@@ -38,17 +38,14 @@ const globalAttributes = {
 } as const;
 
 export type EditorExtensionOptions = {
-  /**
-   * Called on every validation run rather than read once, so a change to the host's validations
-   * reaches the next run.
-   */
-  getValidations: () => readonly ValidationRule[] | undefined;
+  /** Unset runs every core validation. Read once, when the extensions are built. */
+  validations?: readonly ValidationRule[];
   /** Read once, when the extensions are built: the editor is recreated to change it. */
   readonly?: boolean;
 };
 
 export const editorExtensions = (
-  { getValidations, readonly }: EditorExtensionOptions,
+  { readonly, validations }: EditorExtensionOptions,
   callback: (violations: Map<Range, Violation>) => void,
   identifier?: string,
 ) => [
@@ -234,9 +231,9 @@ export const editorExtensions = (
   }),
   KeyboardShortcuts,
   Validation.configure({
-    getValidations,
     identifier,
-    updateValidationsContext: callback,
+    updateViolationsContext: callback,
+    validations,
   }),
   Highlight.configure({
     HTMLAttributes: {

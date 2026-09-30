@@ -4,7 +4,7 @@ import type { EditorExtensionOptions } from '@/extensions';
 import { editorExtensions } from '@/extensions';
 
 /** Stable reference, so every caller that omits the options gets the same object. */
-const DEFAULT_OPTIONS: EditorExtensionOptions = { getValidations: () => undefined };
+const DEFAULT_OPTIONS: EditorExtensionOptions = {};
 
 export async function createTestEditor(
   content: string,

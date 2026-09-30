@@ -13,7 +13,7 @@ import { map } from 'lit/directives/map.js';
 import type { ViolationsMap, Violation } from '@/types/validation';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import { tiptapContext } from '@/context/tiptapContext';
-import { validationsContext } from '@/context/validationsContext';
+import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type FocusValidationItemInGutterDetail } from '@/events';
 import { getHighestSeverityEntryByElement } from '@/utils/validations';
 import headingStructureStyles from './styles';
@@ -53,9 +53,9 @@ export class HeadingStructure extends LitElement {
   @property({ attribute: false })
   editor?: Editor;
 
-  @consume({ context: validationsContext, subscribe: true })
+  @consume({ context: violationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsMap?: ViolationsMap;
+  violationsMap?: ViolationsMap;
 
   get #headings(): HeadingEntry[] {
     if (!this.htmlDocument) return [];
@@ -65,7 +65,7 @@ export class HeadingStructure extends LitElement {
         index,
         level: Number.parseInt(element.tagName[1], 10),
         text: element.textContent ?? '',
-        validationEntry: getHighestSeverityEntryByElement(this.validationsMap, element),
+        validationEntry: getHighestSeverityEntryByElement(this.violationsMap, element),
       }),
     );
   }
@@ -74,7 +74,7 @@ export class HeadingStructure extends LitElement {
     const renderedEl =
       this.editor?.view?.dom?.querySelectorAll<HTMLElement>('h1, h2, h3, h4, h5, h6')[index] ?? element;
     renderedEl.scrollIntoView({ block: 'start' });
-    const validationRange = getHighestSeverityEntryByElement(this.validationsMap, element)?.[0] ?? null;
+    const validationRange = getHighestSeverityEntryByElement(this.violationsMap, element)?.[0] ?? null;
     if (validationRange) {
       globalThis.dispatchEvent(
         new CustomEvent<FocusValidationItemInGutterDetail>(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, {

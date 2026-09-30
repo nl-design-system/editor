@@ -6,9 +6,9 @@ import {
 } from '@nl-design-system-community/editor/validators';
 
 // A validator can flag the same issue in several spots. Check which validation triggers the range and return the position.
-export function findOccurrenceIndex(validationsMap: ViolationsMap, range: Range, rule: string): number {
+export function findOccurrenceIndex(violationsMap: ViolationsMap, range: Range, rule: string): number {
   // Ordered [range, violation] list
-  const entries = [...validationsMap.entries()];
+  const entries = [...violationsMap.entries()];
 
   // Find where the requested range sits in that order
   const rangeIndex = entries.findIndex(([entryRange]) => entryRange === range);
@@ -25,12 +25,12 @@ export function findOccurrenceIndex(validationsMap: ViolationsMap, range: Range,
 
 // Locates the occurrenceIndex-nth correctable violation for the given rule, if any.
 export function findMatchingCorrection(
-  validationsMap: ViolationsMap,
+  violationsMap: ViolationsMap,
   rule: string,
   occurrenceIndex: number,
 ): Violation | undefined {
   return (
-    [...validationsMap.values()]
+    [...violationsMap.values()]
       // filter on validator keys with a correct function
       .filter((violation) => violation.rule === rule && violation.correct)
       // return the target validation while keeping typing intact (can't use [occurrenceIndex])

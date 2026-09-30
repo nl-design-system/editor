@@ -11,7 +11,7 @@ import { map } from 'lit/directives/map.js';
 import type { ViolationsMap, Violation } from '@/types/validation';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import { tiptapContext } from '@/context/tiptapContext';
-import { validationsContext } from '@/context/validationsContext';
+import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type FocusValidationItemInGutterDetail } from '@/events';
 import { getHighestSeverityEntryByElement } from '@/utils/validations';
 import linkListStyles from './styles';
@@ -50,9 +50,9 @@ export class LinkList extends LitElement {
   @property({ attribute: false })
   editor?: Editor;
 
-  @consume({ context: validationsContext, subscribe: true })
+  @consume({ context: violationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsMap?: ViolationsMap;
+  violationsMap?: ViolationsMap;
 
   get #links(): LinkEntry[] {
     if (!this.htmlDocument) return [];
@@ -61,7 +61,7 @@ export class LinkList extends LitElement {
       href: element.getAttribute('href') ?? '',
       index,
       text: element.textContent ?? '',
-      validationEntry: getHighestSeverityEntryByElement(this.validationsMap, element),
+      validationEntry: getHighestSeverityEntryByElement(this.violationsMap, element),
     }));
   }
 

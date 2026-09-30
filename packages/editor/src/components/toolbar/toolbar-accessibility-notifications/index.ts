@@ -13,7 +13,7 @@ import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import type { ViolationsMap } from '@/types/validation';
 import { identifierContext } from '@/context/identifierContext';
-import { validationsContext } from '@/context/validationsContext';
+import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type DocumentOverviewMode, type OpenDocumentOverviewDetail } from '@/events';
 import notificationsStyles from './styles';
 
@@ -28,7 +28,7 @@ declare global {
 /**
  * Toolbar trigger that opens the document overview via a global
  * {@link CustomEvents.OPEN_DOCUMENT_OVERVIEW} event; a badge reflects the
- * validation count from {@link validationsContext}.
+ * validation count from {@link violationsContext}.
  *
  * @tag clippy-accessibility-notifications
  */
@@ -37,10 +37,10 @@ declare global {
 export class AccessibilityNotifications extends LitElement {
   static override readonly styles = [notificationsStyles, unsafeCSS(numberBadgeStyles), unsafeCSS(buttonCss), srOnly];
 
-  /** @internal Consumed from the nearest {@link validationsContext} provider. */
-  @consume({ context: validationsContext, subscribe: true })
+  /** @internal Consumed from the nearest {@link violationsContext} provider. */
+  @consume({ context: violationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsContext?: ViolationsMap;
+  violationsContext?: ViolationsMap;
 
   /** @internal Consumed from the nearest {@link identifierContext} provider. */
   @consume({ context: identifierContext, subscribe: true })
@@ -49,11 +49,11 @@ export class AccessibilityNotifications extends LitElement {
 
   /**
    * Violations for standalone use (outside `<clippy-context>`, e.g.
-   * embedded in CKEditor). Takes precedence over {@link validationsContext} when
+   * embedded in CKEditor). Takes precedence over {@link violationsContext} when
    * set; falls back to the consumed context otherwise (in-editor use).
    */
   @property({ attribute: false })
-  validationsMap?: ViolationsMap;
+  violationsMap?: ViolationsMap;
 
   /**
    * Identifier of the editor instance this trigger belongs to, for standalone
@@ -113,7 +113,7 @@ export class AccessibilityNotifications extends LitElement {
   }
 
   override render() {
-    const { size = 0 } = this.validationsMap ?? this.validationsContext ?? {};
+    const { size = 0 } = this.violationsMap ?? this.violationsContext ?? {};
     return html`
       <span data-toolbar-item="accessibility-notifications" class="clippy-accessibility-notifications">
         <clippy-button

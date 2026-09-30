@@ -14,7 +14,7 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ViolationsMap, ValidationSeverity } from '@/types/validation';
 import { validationSeverity } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';
-import { validationsContext } from '@/context/validationsContext';
+import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type FilterChangeDetail } from '@/events';
 import validationFiltersStyles from './styles';
 
@@ -47,9 +47,9 @@ declare global {
 export class ValidationFilters extends LitElement {
   static override readonly styles = [validationFiltersStyles, unsafeCSS(numberBadgeStyles)];
 
-  @consume({ context: validationsContext, subscribe: true })
+  @consume({ context: violationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsContext?: ViolationsMap;
+  violationsContext?: ViolationsMap;
 
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })
@@ -68,12 +68,12 @@ export class ValidationFilters extends LitElement {
   }
 
   #getCountForSeverity(severity: ValidationSeverity): number {
-    if (!this.validationsContext) return 0;
-    return Array.from(this.validationsContext.values()).filter((validation) => validation.severity === severity).length;
+    if (!this.violationsContext) return 0;
+    return Array.from(this.violationsContext.values()).filter((validation) => validation.severity === severity).length;
   }
 
   #getTotalCount(): number {
-    return this.validationsContext?.size ?? 0;
+    return this.violationsContext?.size ?? 0;
   }
 
   #getCount(key: FilterKey): number {
