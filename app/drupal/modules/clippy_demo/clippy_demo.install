@@ -8,6 +8,7 @@
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\link\LinkItemInterface;
 use Drupal\node\Entity\NodeType;
 use Drupal\paragraphs\Entity\ParagraphsType;
 
@@ -20,6 +21,12 @@ function clippy_demo_install(): void {
   ParagraphsType::create([
     'id' => 'clippy_section',
     'label' => 'Section',
+    'dependencies' => $dependencies,
+  ])->save();
+
+  ParagraphsType::create([
+    'id' => 'clippy_call_to_action',
+    'label' => 'Call to action',
     'dependencies' => $dependencies,
   ])->save();
 
@@ -50,6 +57,16 @@ function clippy_demo_install(): void {
       'formatter' => ['type' => 'text_default', 'label' => 'hidden'],
     ],
     [
+      'entity_type' => 'paragraph',
+      'bundle' => 'clippy_call_to_action',
+      'field_name' => 'field_clippy_link',
+      'label' => 'Link',
+      'type' => 'link',
+      'settings' => ['link_type' => LinkItemInterface::LINK_GENERIC, 'title' => DRUPAL_REQUIRED],
+      'widget' => ['type' => 'link_default'],
+      'formatter' => ['type' => 'link', 'label' => 'hidden'],
+    ],
+    [
       'entity_type' => 'node',
       'bundle' => 'clippy_demo',
       'field_name' => 'field_clippy_body',
@@ -68,7 +85,12 @@ function clippy_demo_install(): void {
       'storage_settings' => ['target_type' => 'paragraph'],
       'settings' => [
         'handler' => 'default:paragraph',
-        'handler_settings' => ['target_bundles' => ['clippy_section' => 'clippy_section']],
+        'handler_settings' => [
+          'target_bundles' => [
+            'clippy_section' => 'clippy_section',
+            'clippy_call_to_action' => 'clippy_call_to_action',
+          ],
+        ],
       ],
       'widget' => [
         'type' => 'paragraphs',

@@ -220,6 +220,35 @@ describe('ClippyDocument', () => {
       expect(clippyDocument.violations.map(({ label }) => label)).toEqual(['Title', 'Body']);
     });
 
+    it('follows a source to the place its anchor is moved to', async () => {
+      const intro = { ...createSource('<p></p>'), label: 'Intro' };
+      const outro = { ...createSource('<p></p>'), label: 'Outro' };
+      clippyDocument.register(intro);
+      clippyDocument.register(outro);
+      await validationPass();
+
+      outro.anchor.after(intro.anchor);
+      await validationPass();
+
+      expect(clippyDocument.violations.map(({ label }) => label)).toEqual(['Outro', 'Intro']);
+    });
+
+    it('follows a source whose anchor moves with an element around it', async () => {
+      const intro = { ...createSource('<p></p>'), label: 'Intro' };
+      const outro = { ...createSource('<p></p>'), label: 'Outro' };
+      const row = document.createElement('div');
+      intro.anchor.replaceWith(row);
+      row.append(intro.anchor);
+      clippyDocument.register(intro);
+      clippyDocument.register(outro);
+      await validationPass();
+
+      outro.anchor.after(row);
+      await validationPass();
+
+      expect(clippyDocument.violations.map(({ label }) => label)).toEqual(['Outro', 'Intro']);
+    });
+
     it('records the source that owns each element, in document order', async () => {
       const intro = createSource('<h1>Titel</h1><h3>Intro</h3>');
       const body = createSource('<h5>Kop</h5>');

@@ -1,0 +1,7 @@
+call_to_action:
+  js:
+    js/call-to-action.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - clippy/plugin

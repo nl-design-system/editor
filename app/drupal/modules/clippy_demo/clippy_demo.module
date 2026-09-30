@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Hooks for the Clippy demo module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_field_widget_single_element_WIDGET_TYPE_form_alter().
+ */
+function clippy_demo_field_widget_single_element_paragraphs_form_alter(array &$element, FormStateInterface $form_state, array $context): void {
+  if (($element['#paragraph_type'] ?? NULL) !== 'clippy_call_to_action' || !isset($element['subform'])) {
+    return;
+  }
+
+  $element['subform']['#attributes']['data-clippy-demo-call-to-action'] = '';
+  $element['subform']['#attached']['library'][] = 'clippy_demo/call_to_action';
+}

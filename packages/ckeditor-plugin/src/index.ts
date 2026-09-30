@@ -5,10 +5,16 @@ export type { ReportPanel } from './plugin/reportPanel.ts';
 export type { ValidationResult, ValidationSeverity } from '@nl-design-system-community/editor/validators';
 export { coreValidationRules, coreValidations } from '@nl-design-system-community/clippy-a11y-validator';
 // Re-exported so integration packages register into the same module instance this bundle inlines.
-export { ClippyDocument, getClippyDocument, registerHeadingSource } from '@nl-design-system-community/editor/document';
+export {
+  ClippyDocument,
+  getClippyDocument,
+  registerHeadingSource,
+  registerProxySource,
+} from '@nl-design-system-community/editor/document';
 export type {
   DocumentViolation,
   HeadingLevel,
+  ProxySourceRegistration,
   RegisteredProxySource,
 } from '@nl-design-system-community/editor/document';
 export type { Panel } from '@nl-design-system-community/editor/panel';

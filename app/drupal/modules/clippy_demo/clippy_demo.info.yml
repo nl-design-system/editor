@@ -1,10 +1,11 @@
 name: Clippy demo
 type: module
-description: A content type with a title, a rich text field and repeatable sections, to demonstrate the Clippy accessibility report.
+description: A content type with a title, a rich text field and repeatable sections and calls to action, to demonstrate the Clippy accessibility report.
 core_version_requirement: ^11
 package: Custom
 dependencies:
   - clippy:clippy
+  - drupal:link
   - drupal:node
   - drupal:text
   - entity_reference_revisions:entity_reference_revisions

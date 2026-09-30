@@ -11,6 +11,11 @@ import { byAnchor, hasChanges } from './utils';
 
 export class ClippyDocument {
   readonly #listeners = new Set<ViolationsListener>();
+  readonly #moveObserver = new MutationObserver((records) => {
+    if (records.some(({ addedNodes }) => [...addedNodes].some((node) => this.#containsAnchor(node)))) {
+      this.#schedulePass();
+    }
+  });
   #sources: readonly (SourceRegistration & { id: string; observer: MutationObserver })[] = [];
   readonly #validator: Validator;
   #nextSourceId = 1;
@@ -35,8 +40,9 @@ export class ClippyDocument {
     const id = `clippy-source-${this.#nextSourceId++}`;
     const observer = new MutationObserver(() => this.#schedulePass());
     observer.observe(fragment, { attributes: true, characterData: true, childList: true, subtree: true });
+    this.#moveObserver.observe(anchor.ownerDocument, { childList: true, subtree: true });
     this.#dropDisconnectedSources();
-    this.#sources = [...this.#sources, { id, anchor, correct, focus, fragment, label, observer }].sort(byAnchor);
+    this.#sources = [...this.#sources, { id, anchor, correct, focus, fragment, label, observer }];
     this.#schedulePass();
 
     return {
@@ -70,6 +76,10 @@ export class ClippyDocument {
     };
   }
 
+  #containsAnchor(node: Node) {
+    return this.#sources.some(({ anchor }) => node.contains(anchor));
+  }
+
   #dropDisconnectedSources() {
     const disconnected = this.#sources.filter(({ anchor }) => !anchor.isConnected);
     disconnected.forEach(({ observer }) => observer.disconnect());
@@ -87,6 +97,7 @@ export class ClippyDocument {
 
   #validate() {
     this.#dropDisconnectedSources();
+    this.#sources = [...this.#sources].sort(byAnchor);
     const violations = this.#validator.validate(this.#sources.map(({ fragment }) => fragment)).map((violation) => {
       const { id, correct, focus, label } = this.#sources.find(({ fragment }) => fragment.contains(violation.element))!;
       return {

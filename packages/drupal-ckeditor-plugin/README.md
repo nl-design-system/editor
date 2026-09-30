@@ -35,6 +35,28 @@ A field added by AJAX, such as a new paragraph, joins the report when its editor
 
 Where no field is set as the `<h1>`, nothing supplies the title, so the heading rules judge the content as if the first heading started the page.
 
+### Adding your own content to the report
+
+Content that is more than one heading, such as a paragraph type whose template renders a link, can join the report from another module. The bundle publishes `Drupal.clippy` with:
+
+| Property                | Purpose                                                                                                          |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `clippyDocument`        | The one document every editor and heading field on the page registers with.                                      |
+| `registerHeadingSource` | Registers an input as a heading at a given level, as the `heading_level` setting does.                           |
+| `registerProxySource`   | Registers any markup you build from form values. The validations read that markup as part of the page, in order. |
+
+`registerProxySource(clippyDocument, { anchor, events, focus, label, render })` takes:
+
+- `anchor`: the element whose place in the form decides where the markup sits in the page, such as the paragraph's subform;
+- `render(container)`: puts the markup the page will show into `container`. Reuse the same elements on every call, so a violation keeps pointing at the same element;
+- `events`: events on the anchor after which `render` runs again, such as `input` and `change`;
+- `label`: the name the report shows next to each violation;
+- `focus`: optional, called when an editor chooses a violation in the report.
+
+It returns `unregister`, which the behavior's `detach` should call when a paragraph is removed. Leave rich text out of the markup: every CKEditor registers itself. Declare `clippy/plugin` as a library dependency so `Drupal.clippy` exists before your script runs.
+
+The _Call to action_ paragraph in `app/drupal/modules/clippy_demo` is a working example: `clippy_demo.module` marks its subform and attaches `js/call-to-action.js`, which renders the link field as an `<a>` so the link rules check its text.
+
 ## Editing the content classes
 
 Go to _Configuration → Content authoring → Text formats and editors_, edit a CKEditor 5 format and open the **Content classes** tab. Every class can be changed, and clearing a field outputs that element without a class.

@@ -56,10 +56,10 @@ docker compose exec drupal /opt/drupal/vendor/bin/drush --root=/opt/drupal/web c
 
 ### Available modules
 
-| Module        | Description                                                                                                                                                                   |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `clippy`      | Registers the ClippyPlugin with Drupal's CKEditor 5. Build it first with `pnpm build` from the repository root.                                                               |
-| `clippy_demo` | Adds the _Clippy demo_ content type: a title, a rich text _Body_ field and an _Appendix_ of repeatable sections, each a Paragraphs item with a _Section title_ and rich text. |
+| Module        | Description                                                                                                                                                                                   |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `clippy`      | Registers the ClippyPlugin with Drupal's CKEditor 5. Build it first with `pnpm build` from the repository root.                                                                               |
+| `clippy_demo` | Adds the _Clippy demo_ content type: a title, a rich text _Body_ field and an _Appendix_ of Paragraphs items: sections with a _Section title_ and rich text, and calls to action with a link. |
 
 ### Trying the accessibility report
 
@@ -67,7 +67,8 @@ Go to _Content → Add content → Clippy demo_. The report beside the form cove
 
 - a `<h4>` in _Body_ after a `<h2>` is reported as a skipped level, and so is a `<h4>` in a section's _Text_ right after its _Section title_;
 - clearing the title or a _Section title_ reports an empty heading, labelled with that field;
-- _Add Section_ adds a section whose title and text join the report, and _Remove_ takes them out again.
+- _Add Section_ adds a section whose title and text join the report, and _Remove_ takes them out again;
+- _Add Call to action_ adds a link whose text is checked like a link in the editor: "Klik hier" is reported as too generic, and a URL without link text as an empty link.
 
 `clippy_demo` sets up its content type when it is installed. On a database that already has an older version of it, reinstall it:
 

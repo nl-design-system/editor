@@ -1,4 +1,5 @@
 import { coreValidations, getClippyDocument, setColorSchemeHost } from '@nl-design-system-community/ckeditor-plugin';
+import { type ClippyApi, createClippyApi } from './api.ts';
 import { drupalColorSchemeHost } from './colorSchemeHost.ts';
 import { registerHeadingInput } from './headingInput.ts';
 import { attachReport } from './report.ts';
@@ -8,7 +9,7 @@ type Behavior = {
   detach: (context: Document | Element, settings: unknown, trigger: string) => void;
 };
 
-declare const Drupal: { behaviors: Record<string, Behavior> };
+declare const Drupal: { behaviors: Record<string, Behavior>; clippy?: ClippyApi };
 declare const once: {
   <T extends Element>(id: string, selector: string, context: Document | Element): T[];
   remove: <T extends Element>(id: string, selector: string, context: Document | Element) => T[];
@@ -18,6 +19,8 @@ setColorSchemeHost(drupalColorSchemeHost);
 
 const clippyDocument = getClippyDocument();
 Object.values(coreValidations).forEach((validation) => clippyDocument.registerValidation(validation));
+
+Drupal.clippy = createClippyApi(clippyDocument);
 
 const onceBehavior = <T extends Element>(
   id: string,
