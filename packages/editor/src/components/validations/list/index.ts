@@ -1,13 +1,14 @@
+import type { ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
 import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
-import { map } from 'lit/directives/map.js';
 import '@/components/validations/validation-item';
+import { map } from 'lit/directives/map.js';
 import type { ValidationItem } from '@/components/validations/validation-item';
-import type { ViolationsMap, ValidationSeverity } from '@/types/validation';
+import type { ViolationsMap } from '@/types/validation';
 import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type FocusValidationItemInListEvent } from '@/events';
 import listStyles from './styles';

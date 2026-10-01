@@ -1,6 +1,9 @@
-import { isEmptyOrWhitespace } from '@nl-design-system-community/clippy-a11y-validator';
-import type { ValidationSeverity, ViolationsMap } from '@/types/validation';
-import { validationSeverity } from '@/constants';
+import {
+  isEmptyOrWhitespace,
+  validationSeverity,
+  type ValidationSeverity,
+} from '@nl-design-system-community/clippy-a11y-validator';
+import type { ViolationsMap } from '@/types/validation';
 
 export const VALIDATION_HIGHLIGHT_NAMES = {
   [validationSeverity.ERROR]: 'clippy-validation-error',
