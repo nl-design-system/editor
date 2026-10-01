@@ -8,24 +8,30 @@ import type { Violation, ViolationsMap } from '@/types/validation';
 import { getDocumentLang } from '@/localization';
 import { debounce } from '@/utils/debounce';
 import { getElementRange } from '@/utils/ranges';
+import { resolveViolationDisplay } from '@/utils/validations';
 import { editorCorrections } from './corrections';
 
 const VALIDATION_TIMEOUT = 500;
 
 /**
  * Adds what the editor needs on top of a reported violation: the DOM `Range` the gutter, the
- * highlights and the content views position themselves on, and the correction for the rules the
- * validator package leaves to the editor.
+ * highlights and the content views position themselves on, how the violation covers the document,
+ * and the correction for the rules the validator package leaves to the editor.
+ *
+ * The display is resolved here because this is the one moment the offending element is known to be
+ * laid out: the validator has just walked the live editor DOM.
  */
 const toEditorViolation = (violation: CoreViolation): Violation => {
   const range = getElementRange(violation.element);
+  const display = resolveViolationDisplay(violation.element);
   const override = editorCorrections[violation.rule as keyof typeof editorCorrections];
 
-  if (!override) return { ...violation, ...(range === undefined ? {} : { range }) };
+  if (!override) return { ...violation, display, ...(range === undefined ? {} : { range }) };
 
   return {
     ...violation,
     correct: override.correct(violation.element, range),
+    display,
     ...(override.customCorrectLabel === undefined ? {} : { customCorrectLabel: override.customCorrectLabel() }),
     ...(range === undefined ? {} : { range }),
   };

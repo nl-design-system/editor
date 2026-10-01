@@ -1,19 +1,25 @@
-import { selectors } from '@nl-design-system-community/clippy-a11y-validator';
-import type { Violation, ValidationSeverity, ViolationsMap } from '@/types/validation';
+import type { ValidationDisplay, Violation, ValidationSeverity, ViolationsMap } from '@/types/validation';
 import { validationSeverity } from '@/constants';
 
 /**
- * The elements a violation can sit on that flow inside a line of text. The validator's `scope`
- * says how much context a rule needs to reach its verdict, not how its violation should be drawn,
- * so the editor reads that off the offending element instead.
+ * Inline-level elements whose own box stands in for their content, so they hold no text a
+ * highlight could paint. They keep the gutter band a block violation gets.
  */
-const INLINE_VIOLATION_SELECTOR = [selectors.LINK, selectors.PARAGRAPH_FORMATTING].join(', ');
+const REPLACED_ELEMENTS = new Set(['audio', 'canvas', 'embed', 'iframe', 'img', 'object', 'svg', 'video']);
 
 /**
- * Whether a violation covers a run of text rather than a whole block, which decides both the
- * text highlight painted over its range and the marker the gutter renders for it.
+ * How a violation on `element` covers the document, read off its layout.
+ *
+ * Resolved once, where the violation's range is built: validation runs over the live editor DOM,
+ * so the element is attached and laid out at exactly that moment. Reading layout beats listing the
+ * rules that happen to be inline, which goes stale as soon as the validator grows one. The
+ * validator's `scope` answers a different question: how much context a rule needs for its verdict.
  */
-export const isInlineViolation = ({ element }: Violation): boolean => element.matches(INLINE_VIOLATION_SELECTOR);
+export const resolveViolationDisplay = (element: HTMLElement): ValidationDisplay => {
+  if (REPLACED_ELEMENTS.has(element.localName)) return 'block';
+  const { display } = element.ownerDocument.defaultView?.getComputedStyle(element) ?? {};
+  return display === 'inline' ? 'inline' : 'block';
+};
 
 export const validationSeverityOrder: ValidationSeverity[] = [
   validationSeverity.ERROR,

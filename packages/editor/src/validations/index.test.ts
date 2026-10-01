@@ -149,3 +149,33 @@ describe('runValidation', () => {
     expect(globalThis.getSelection()?.rangeCount).toBe(1);
   });
 });
+
+describe('violation display', () => {
+  const displayOf = (map: ViolationsMap, rule: string): string | undefined =>
+    [...map.values()].find((violation) => violation.rule === rule)?.display;
+
+  it('resolves a violation on a link as inline', () => {
+    const map = validate('<h1>Titel</h1><p>Ga naar <a href="#">lees meer</a>.</p>');
+
+    expect(displayOf(map, coreValidationRules.LINK_SHOULD_NOT_BE_TOO_GENERIC)).toBe('inline');
+  });
+
+  it('resolves a violation on underlined text as inline', () => {
+    const map = validate('<h1>Titel</h1><p>Dit is <u>onderstreept</u>.</p>');
+
+    expect(displayOf(map, coreValidationRules.PARAGRAPH_SHOULD_NOT_CONTAIN_UNDERLINED_TEXT)).toBe('inline');
+  });
+
+  it('resolves a violation on a paragraph as block', () => {
+    const map = validate('<h1>Titel</h1><p></p>');
+
+    expect(displayOf(map, coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_EMPTY)).toBe('block');
+  });
+
+  /** An image is inline-level but holds no text, so it keeps the gutter band instead of a highlight. */
+  it('resolves a violation on an image as block', () => {
+    const map = validate('<h1>Titel</h1><p><img src="data:," /></p>');
+
+    expect(displayOf(map, coreValidationRules.IMAGE_MUST_HAVE_ALT_TEXT)).toBe('block');
+  });
+});
