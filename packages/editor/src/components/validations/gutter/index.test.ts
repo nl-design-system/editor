@@ -1,8 +1,8 @@
-import { coreValidationRules } from '@nl-design-system-community/clippy-a11y-validator';
+import { coreValidationRules, type ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
 import { inlineViolation, violation } from '@test/violation';
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { page } from 'vitest/browser';
-import type { ValidationSeverity, ViolationsMap } from '@/types/validation';
+import type { ViolationsMap } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
 import { CustomEvents, type OpenValidationGroupEvent } from '@/events';
 import { VALIDATION_HOVER_HIGHLIGHT_NAMES } from '@/utils/highlights';
