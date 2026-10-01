@@ -32,7 +32,6 @@ import {
 } from '@/utils/highlights';
 import { renderMarkdown } from '@/utils/markdown';
 import { getOverlappingRanges } from '@/utils/ranges';
-import { isInlineViolation } from '@/utils/validations';
 import gutterStyles from './styles';
 
 const tag = 'clippy-validations-gutter';
@@ -303,7 +302,7 @@ export class Gutter extends LitElement {
   }
 
   #highlightRange(range: Range, violation: Violation): void {
-    if (!isInlineViolation(violation)) return;
+    if (violation.display !== 'inline') return;
     applyHoverHighlight(violation.severity, range);
   }
 
@@ -339,12 +338,12 @@ export class Gutter extends LitElement {
     position: { top: number; height: number },
     metaCount: number | undefined,
   ) {
-    const { correct, customCorrectLabel, messages, severity } = violation;
+    const { correct, customCorrectLabel, display, messages, severity } = violation;
     const { error: heading, href, solution } = messages;
     const isActive = this.activeRange === range;
     return html`<li
       class="clippy-validations-gutter__indicator"
-      data-display=${isInlineViolation(violation) ? 'inline' : 'block'}
+      data-display=${display}
       data-severity=${severity}
       style="inset-block-start: ${position.top}px; block-size: ${position.height}px"
     >

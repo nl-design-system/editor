@@ -1,7 +1,6 @@
 import { isEmptyOrWhitespace } from '@nl-design-system-community/clippy-a11y-validator';
 import type { ValidationSeverity, ViolationsMap } from '@/types/validation';
 import { validationSeverity } from '@/constants';
-import { isInlineViolation } from '@/utils/validations';
 
 export const VALIDATION_HIGHLIGHT_NAMES = {
   [validationSeverity.ERROR]: 'clippy-validation-error',
@@ -150,7 +149,7 @@ export const applyValidationHighlights = (owner: object, violationsMap: Violatio
 
   const owned: OwnedRanges = { blank: new Map(), text: new Map() };
   for (const [range, violation] of violationsMap ?? []) {
-    if (!isInlineViolation(violation)) continue;
+    if (violation.display !== 'inline') continue;
     ensureHighlightStyles(range);
     const bucket = isBlankRange(range) ? owned.blank : owned.text;
     const ranges = bucket.get(violation.severity) ?? [];

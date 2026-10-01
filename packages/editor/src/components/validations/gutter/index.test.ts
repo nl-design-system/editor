@@ -1,5 +1,5 @@
 import { coreValidationRules } from '@nl-design-system-community/clippy-a11y-validator';
-import { violation } from '@test/violation';
+import { inlineViolation, violation } from '@test/violation';
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { page } from 'vitest/browser';
 import type { ValidationSeverity, ViolationsMap } from '@/types/validation';
@@ -138,7 +138,7 @@ describe('<clippy-validations-gutter>', () => {
       new Map([
         [
           range,
-          violation({
+          inlineViolation({
             element: content.querySelector('a')!,
             messages: { error: GENERIC_LINK_HEADING },
             rule: coreValidationRules.LINK_SHOULD_NOT_BE_TOO_GENERIC,
