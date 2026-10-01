@@ -1,6 +1,9 @@
 import { msg } from '@lit/localize';
-import { coreValidationRules, type CoreValidationRule } from '@nl-design-system-community/clippy-a11y-validator';
-import type { CorrectViolationFunction } from '@/types/validation';
+import {
+  coreValidationRules,
+  type CoreValidationRule,
+  type CorrectViolationFunction,
+} from '@nl-design-system-community/clippy-a11y-validator';
 import { CustomEvents } from '@/events';
 
 /**

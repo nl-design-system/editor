@@ -23,10 +23,3 @@ export type Violation = CoreViolation & {
 };
 
 export type ViolationsMap = Map<Range, Violation>;
-
-export type {
-  CorrectViolationFunction,
-  ResolvedMessages,
-  ValidationScope,
-  ValidationSeverity,
-} from '@nl-design-system-community/clippy-a11y-validator';

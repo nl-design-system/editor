@@ -1,3 +1,4 @@
+import type { ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
 import type { Editor } from '@tiptap/core';
 import { consume, ContextProvider } from '@lit/context';
 import { localized, msg } from '@lit/localize';
@@ -6,14 +7,14 @@ import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import X from '@tabler/icons/outline/x.svg?raw';
 import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
-import { property, state } from 'lit/decorators.js';
 import '@/components/validations/list';
 import '@/components/content-views/heading-structure';
 import '@/components/content-views/link-list';
 import '@/components/content-views/language-changes';
+import { property, state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationItem } from '@/components/validations/validation-item';
-import type { ViolationsMap, ValidationSeverity } from '@/types/validation';
+import type { ViolationsMap } from '@/types/validation';
 import '@/components/validation-filters';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import '@nl-design-system-community/clippy-components/clippy-button';

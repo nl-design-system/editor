@@ -1,5 +1,5 @@
-import type { ValidationDisplay, Violation, ValidationSeverity, ViolationsMap } from '@/types/validation';
-import { validationSeverity } from '@/constants';
+import { validationSeverity, type ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
+import type { ValidationDisplay, Violation, ViolationsMap } from '@/types/validation';
 
 /**
  * Inline-level elements whose own box stands in for their content, so they hold no text a

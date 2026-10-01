@@ -1,6 +1,5 @@
-// Rule keys and severities are owned by the validator package; only the editor's own UI mode lives here.
-export { validationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
-
+// Rule keys and severities stay with the validator package, which consumers import from directly;
+// only the editor's own UI mode lives here.
 export const validationInteractionMode = {
   DRAWER: 'drawer',
   LIST: 'list',
