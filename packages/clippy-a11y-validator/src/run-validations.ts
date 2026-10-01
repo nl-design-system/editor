@@ -1,6 +1,6 @@
 import type { Fragment } from './types/fragment.ts';
 import type { Validation, Violation, ViolationPayload } from './types/validation.ts';
-import type { LocaleOptions, ValidateOptions } from './types/validator.ts';
+import type { LocaleOptions, ValidatorRunOptions } from './types/validator.ts';
 import { matchingElements, DocumentContext } from './document-context.ts';
 import { resolveMessages } from './messages.ts';
 
@@ -34,7 +34,7 @@ const validateElement = (validation: Validation, element: HTMLElement, documentC
 export const runValidations = (
   documentContent: readonly Fragment[],
   validations: readonly Validation[],
-  options: Required<LocaleOptions> & ValidateOptions,
+  options: Required<LocaleOptions> & ValidatorRunOptions,
 ): Violation[] => {
   const { severities } = options;
   const applicable = validations.filter(({ severity }) => severities === undefined || severities.includes(severity));

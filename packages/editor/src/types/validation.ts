@@ -1,26 +1,25 @@
+import type { Violation as CoreViolation } from '@nl-design-system-community/clippy-a11y-validator';
 import type { validationInteractionMode } from '@/constants';
-import type { EditorSettings } from '@/types/settings';
-
-export type DocumentValidator = (dom: HTMLElement, settings: EditorSettings) => ValidationResult[];
-
-export type ContentValidator = (dom: HTMLElement, element: Element) => ValidationResult | null;
-
-export type ValidationEntry = readonly [range: Range, value: ValidationResult];
-
-export type CorrectValidationFunction = () => void;
-
-export type ValidationScope = 'block' | 'inline';
 
 export type ValidationInteractionMode = (typeof validationInteractionMode)[keyof typeof validationInteractionMode];
 
-export type ValidationResult = {
-  validatorKey?: string;
+/**
+ * Whether a violation covers a run of text flowing inside a line, or the offending element as a
+ * whole. Decides both the text highlight painted over its range and the marker the gutter renders.
+ */
+export type ValidationDisplay = 'block' | 'inline';
+
+/**
+ * A violation reported by `@nl-design-system-community/clippy-a11y-validator`, extended with what
+ * the editor needs to render and act on it.
+ */
+export type Violation = CoreViolation & {
+  /** Replaces the default "Correct" label, for rules whose fix is an edit rather than a correction. */
+  customCorrectLabel?: string;
+  /** How this violation covers the document, read off the offending element alongside the range. */
+  display: ValidationDisplay;
+  /** The range this violation covers, used to position and focus the issue. */
   range?: Range;
-  scope?: ValidationScope;
-  severity: ValidationSeverity;
-  solutionPayload?: Record<string, number | string | boolean>;
-  correct?: CorrectValidationFunction;
 };
 
-export type ValidationSeverity = 'info' | 'warning' | 'error';
-export type ValidationsMap = Map<Range, ValidationResult>;
+export type ViolationsMap = Map<Range, Violation>;

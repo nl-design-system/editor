@@ -1,18 +1,17 @@
+import type { Validation } from '@nl-design-system-community/clippy-a11y-validator';
 import { Editor } from '@tiptap/core';
 import { vi } from 'vitest';
-import type { EditorSettings } from '@/types/settings';
 import { editorExtensions } from '@/extensions';
-
-const DEFAULT_EDITOR_SETTINGS: EditorSettings = { disableRules: [], enableRules: ['*'], topHeadingLevel: 1 };
 
 export async function createTestEditor(
   content: string,
   callback: (resultMap: Map<Range, unknown>) => void = vi.fn(),
-  settings: EditorSettings = DEFAULT_EDITOR_SETTINGS,
+  validations?: readonly Validation[],
+  readonly = false,
 ): Promise<Editor> {
   const editor = new Editor({
     content,
-    extensions: editorExtensions(settings, callback),
+    extensions: editorExtensions(validations, readonly, callback),
   });
 
   if (editor.isInitialized) return editor;

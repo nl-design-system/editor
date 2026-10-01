@@ -123,10 +123,6 @@ importers:
         version: 4.1.11(@types/node@22.20.1)(@vitest/browser-playwright@4.1.11)(@vitest/coverage-v8@4.1.11)(jsdom@30.0.1)(vite@8.2.2(@types/node@22.20.1)(esbuild@0.28.2)(yaml@2.9.0))
 
   packages/clippy-a11y-validator:
-    dependencies:
-      playwright:
-        specifier: 1.62.1
-        version: 1.62.1
     devDependencies:
       '@nl-design-system/tsconfig':
         specifier: 1.0.5
@@ -137,6 +133,9 @@ importers:
       '@vitest/browser-playwright':
         specifier: 4.1.11
         version: 4.1.11(playwright@1.62.1)(vite@8.2.1(@types/node@22.20.1)(esbuild@0.28.2)(yaml@2.9.0))(vitest@4.1.11)
+      playwright:
+        specifier: 1.62.1
+        version: 1.62.1
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -295,9 +294,6 @@ importers:
       '@nl-design-system-community/clippy-components':
         specifier: 3.2.0
         version: 3.2.0
-      '@nl-design-system-unstable/documentation':
-        specifier: 1.11.0
-        version: 1.11.0
       '@tabler/icons':
         specifier: 3.46.0
         version: 3.46.0
@@ -2131,9 +2127,6 @@ packages:
 
   '@nl-design-system-community/ma-design-tokens@7.0.0':
     resolution: {integrity: sha512-HN5e2Kcn0EtqVdXMiyTq9IfAgVtdFuyG4x+TcECqFi0XatCpEMPXZmSEGCQZ8KO2NuS6D9Hb8zrqROiQ3gBfQg==}
-
-  '@nl-design-system-unstable/documentation@1.11.0':
-    resolution: {integrity: sha512-v022m0x0m+kZ+t/KhcdrtzrqqMZIo2a4MQa4Pfbe6EcE2NMNJIxrzbbVD+xg8VkxyX9qv2W087dY+DzI94QigA==}
 
   '@nl-design-system/eslint-config@2.4.0':
     resolution: {integrity: sha512-IkPKcKDrHfRSXXIkKSZPW3/oldyTgGIU+icLKmIVM/1eGa8zE3cx4Lrb8N8bGCFDcnIN11PpiXGC3uqagByF4A==}
@@ -9238,8 +9231,6 @@ snapshots:
 
   '@nl-design-system-community/ma-design-tokens@7.0.0': {}
 
-  '@nl-design-system-unstable/documentation@1.11.0': {}
-
   '@nl-design-system/eslint-config@2.4.0(eslint@10.9.1(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)':
     dependencies:
       '@eslint/js': 9.39.2
@@ -10454,9 +10445,9 @@ snapshots:
       obug: 2.1.4
       std-env: 4.2.0
       tinyrainbow: 3.1.1
-      vitest: 4.1.11(@types/node@22.20.1)(@vitest/browser-playwright@4.1.11)(@vitest/coverage-v8@4.1.11)(jsdom@30.0.1)(vite@8.2.1(@types/node@22.20.1)(esbuild@0.28.2)(yaml@2.9.0))
+      vitest: 4.1.11(@types/node@22.20.1)(@vitest/browser-playwright@4.1.11)(@vitest/coverage-v8@4.1.11)(jsdom@30.0.1)(vite@8.2.2(@types/node@22.20.1)(esbuild@0.28.2)(yaml@2.9.0))
     optionalDependencies:
-      '@vitest/browser': 4.1.11(vite@8.2.1(@types/node@22.20.1)(esbuild@0.28.2)(yaml@2.9.0))(vitest@4.1.11)
+      '@vitest/browser': 4.1.11(vite@8.2.2(@types/node@22.20.1)(esbuild@0.28.2)(yaml@2.9.0))(vitest@4.1.11)
 
   '@vitest/expect@4.1.10':
     dependencies:

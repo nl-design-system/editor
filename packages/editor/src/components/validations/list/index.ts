@@ -1,16 +1,16 @@
+import type { ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
 import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
-import { map } from 'lit/directives/map.js';
 import '@/components/validations/validation-item';
+import { map } from 'lit/directives/map.js';
 import type { ValidationItem } from '@/components/validations/validation-item';
-import type { ValidationsMap, ValidationSeverity } from '@/types/validation';
-import { validationsContext } from '@/context/validationsContext';
+import type { ViolationsMap } from '@/types/validation';
+import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type FocusValidationItemInListEvent } from '@/events';
-import { renderSolution, type ValidationKey, validationMessages } from '@/messages';
 import listStyles from './styles';
 
 const tag = 'clippy-validations-list';
@@ -40,10 +40,10 @@ declare global {
 export class ValidationsList extends LitElement {
   static override readonly styles = [listStyles, unsafeCSS(paragraphStyle)];
 
-  /** @internal Consumed from the nearest {@link validationsContext} provider. */
-  @consume({ context: validationsContext, subscribe: true })
+  /** @internal Consumed from the nearest {@link violationsContext} provider. */
+  @consume({ context: violationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsContext?: ValidationsMap;
+  violationsContext?: ViolationsMap;
 
   /** Optional severity filter. When set, only items of this severity are rendered. */
   @property({ type: String }) severity: ValidationSeverity | null = null;
@@ -77,7 +77,7 @@ export class ValidationsList extends LitElement {
   };
 
   override render() {
-    const entries = [...(this.validationsContext?.entries() ?? [])].filter(([range, { severity }]) => {
+    const entries = [...(this.violationsContext?.entries() ?? [])].filter(([range, { severity }]) => {
       if (this.focusedValidationGroup) return this.focusedValidationGroup.includes(range);
       return !this.severity || severity === this.severity;
     });
@@ -89,9 +89,8 @@ export class ValidationsList extends LitElement {
 
     return html`
       <ul class="clippy-validations-list" role="list">
-        ${map(entries, ([, { correct, range, severity, solutionPayload, validatorKey }]) => {
-          const valKey = validatorKey as ValidationKey;
-          const { customCorrectLabel, heading, href, solution } = validationMessages()[valKey];
+        ${map(entries, ([, { correct, customCorrectLabel, messages, range, severity }]) => {
+          const { error: heading, href, solution } = messages;
           return html`
             <li class="clippy-validations-list__item">
               <clippy-validation-item
@@ -100,10 +99,9 @@ export class ValidationsList extends LitElement {
                 .heading=${heading}
                 .href=${href}
                 .customCorrectLabel=${customCorrectLabel}
+                .solution=${solution}
                 .correct=${correct}
-              >
-                ${renderSolution(solution, solutionPayload)}
-              </clippy-validation-item>
+              ></clippy-validation-item>
             </li>
           `;
         })}

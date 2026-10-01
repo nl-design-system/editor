@@ -1,3 +1,4 @@
+import type { ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
 import type { Editor } from '@tiptap/core';
 import { consume, ContextProvider } from '@lit/context';
 import { localized, msg } from '@lit/localize';
@@ -6,21 +7,21 @@ import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import X from '@tabler/icons/outline/x.svg?raw';
 import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
-import { property, state } from 'lit/decorators.js';
 import '@/components/validations/list';
 import '@/components/content-views/heading-structure';
 import '@/components/content-views/link-list';
 import '@/components/content-views/language-changes';
+import { property, state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationItem } from '@/components/validations/validation-item';
-import type { ValidationsMap, ValidationSeverity } from '@/types/validation';
+import type { ViolationsMap } from '@/types/validation';
 import '@/components/validation-filters';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { identifierContext } from '@/context/identifierContext';
 import { tiptapContext } from '@/context/tiptapContext';
-import { validationsContext } from '@/context/validationsContext';
+import { violationsContext } from '@/context/violationsContext';
 import {
   CustomEvents,
   type CloseValidationsDrawerEvent,
@@ -36,7 +37,7 @@ import drawerStyles from './styles';
 const tag = 'clippy-validations-drawer';
 
 /**
- * Inline drawer panel that lists all accessibility validation results and
+ * Inline drawer panel that lists all accessibility violations and
  * provides document overview panels (heading structure, link list, language
  * changes). Opens and closes in response to the global
  * `CustomEvents.OPEN_DOCUMENT_OVERVIEW` event, scoped to the current editor
@@ -84,9 +85,9 @@ export class ValidationsDrawer extends LitElement {
   @property({ attribute: false })
   public editor?: Editor;
 
-  @consume({ context: validationsContext, subscribe: true })
+  @consume({ context: violationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsContext?: ValidationsMap;
+  violationsContext?: ViolationsMap;
 
   @consume({ context: htmlDocumentContext, subscribe: true })
   @property({ attribute: false })
@@ -100,13 +101,13 @@ export class ValidationsDrawer extends LitElement {
    * (in-editor use).
    */
   @property({ attribute: false })
-  validationsMap?: ValidationsMap;
+  violationsMap?: ViolationsMap;
 
-  /** @see {@link validationsMap} */
+  /** @see {@link violationsMap} */
   @property({ attribute: false })
   htmlDocument?: HTMLElement;
 
-  /** @see {@link validationsMap} */
+  /** @see {@link violationsMap} */
   @property({ attribute: false })
   identifier?: string;
 
@@ -123,14 +124,14 @@ export class ValidationsDrawer extends LitElement {
    * standalone the prop flows down; in-editor the consumed value is relayed.
    * Scoped to our subtree — no `document.body` pollution or provider thrash.
    */
-  readonly #validationsProvider = new ContextProvider(this, { context: validationsContext, initialValue: new Map() });
+  readonly #violationsProvider = new ContextProvider(this, { context: violationsContext, initialValue: new Map() });
   readonly #htmlDocumentProvider = new ContextProvider(this, { context: htmlDocumentContext });
   readonly #identifierProvider = new ContextProvider(this, { context: identifierContext });
 
   override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
-    if (changed.has('validationsMap') || changed.has('validationsContext')) {
-      this.#validationsProvider.setValue(this.validationsMap ?? this.validationsContext ?? new Map());
+    if (changed.has('violationsMap') || changed.has('violationsContext')) {
+      this.#violationsProvider.setValue(this.violationsMap ?? this.violationsContext ?? new Map());
     }
     if (changed.has('htmlDocument') || changed.has('htmlDocumentContextValue')) {
       this.#htmlDocumentProvider.setValue(this.htmlDocument ?? this.htmlDocumentContextValue);

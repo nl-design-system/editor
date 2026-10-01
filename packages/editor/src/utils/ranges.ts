@@ -1,3 +1,14 @@
+/** A range that selects the whole element, or `undefined` when the element is not selectable. */
+export function getElementRange(element: Element): Range | undefined {
+  try {
+    const range = document.createRange();
+    range.selectNode(element);
+    return range;
+  } catch {
+    return undefined;
+  }
+}
+
 /** Whether two DOM ranges share any content (overlap) within the same document. */
 export function rangesIntersect(a: Range, b: Range): boolean {
   try {

@@ -17,7 +17,7 @@ export {
 export { hasHeaderColumn, hasHeaderRow, tableRows } from './components/table/utils.ts';
 export { isEmptyOrWhitespace } from './utils/text.ts';
 export { Validator } from './validator.ts';
-export type { LocaleOptions, ValidateOptions, ValidatorOptions } from './types/validator.ts';
+export type { LocaleOptions, ValidatorConstructorOptions, ValidatorRunOptions } from './types/validator.ts';
 export type { Locale, ResolvedMessages, ValidationMessages, ValidationMessagesByLocale } from './types/messages.ts';
 export type { Fragment } from './types/fragment.ts';
 export type { CoreSelector, ElementFor, Selector } from './types/selector.ts';

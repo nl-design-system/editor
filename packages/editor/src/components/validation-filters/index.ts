@@ -1,20 +1,20 @@
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
+import { validationSeverity, type ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import AlertCircleIcon from '@tabler/icons/outline/alert-circle.svg?raw';
 import AlertTriangleIcon from '@tabler/icons/outline/alert-triangle.svg?raw';
 import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
 import ListIcon from '@tabler/icons/outline/list.svg?raw';
 import { html, LitElement, unsafeCSS } from 'lit';
-import { property, state } from 'lit/decorators.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
+import { property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import type { ValidationsMap, ValidationSeverity } from '@/types/validation';
-import { validationSeverity } from '@/constants';
+import type { ViolationsMap } from '@/types/validation';
 import { identifierContext } from '@/context/identifierContext';
-import { validationsContext } from '@/context/validationsContext';
+import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type FilterChangeDetail } from '@/events';
 import validationFiltersStyles from './styles';
 
@@ -47,9 +47,9 @@ declare global {
 export class ValidationFilters extends LitElement {
   static override readonly styles = [validationFiltersStyles, unsafeCSS(numberBadgeStyles)];
 
-  @consume({ context: validationsContext, subscribe: true })
+  @consume({ context: violationsContext, subscribe: true })
   @property({ attribute: false })
-  validationsContext?: ValidationsMap;
+  violationsContext?: ViolationsMap;
 
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })
@@ -68,12 +68,12 @@ export class ValidationFilters extends LitElement {
   }
 
   #getCountForSeverity(severity: ValidationSeverity): number {
-    if (!this.validationsContext) return 0;
-    return Array.from(this.validationsContext.values()).filter((validation) => validation.severity === severity).length;
+    if (!this.violationsContext) return 0;
+    return Array.from(this.violationsContext.values()).filter((validation) => validation.severity === severity).length;
   }
 
   #getTotalCount(): number {
-    return this.validationsContext?.size ?? 0;
+    return this.violationsContext?.size ?? 0;
   }
 
   #getCount(key: FilterKey): number {
