@@ -5,6 +5,7 @@ import type { Violation } from '@/types/validation';
  * only has to name what the test is about.
  */
 export const violation = (overrides: Partial<Violation> = {}): Violation => ({
+  display: 'block',
   element: document.createElement('p'),
   messages: { error: 'Deze alinea is leeg.' },
   rule: 'PARAGRAPH_SHOULD_NOT_BE_EMPTY',
@@ -19,6 +20,7 @@ export const violation = (overrides: Partial<Violation> = {}): Violation => ({
  */
 export const inlineViolation = (overrides: Partial<Violation> = {}): Violation =>
   violation({
+    display: 'inline',
     element: document.createElement('a'),
     messages: { error: 'Deze link is leeg.' },
     rule: 'LINK_SHOULD_NOT_BE_EMPTY',

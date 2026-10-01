@@ -6,6 +6,7 @@ const range = (): Range => document.createRange();
 
 const result = (rule: string, correct?: () => void): Violation => ({
   correct,
+  display: 'block',
   element: document.createElement('p'),
   messages: { error: 'Deze alinea is leeg.' },
   rule,
