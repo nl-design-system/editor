@@ -11,7 +11,7 @@ export async function createTestEditor(
 ): Promise<Editor> {
   const editor = new Editor({
     content,
-    extensions: editorExtensions(validations, readonly, callback),
+    extensions: editorExtensions(() => validations, readonly, callback),
   });
 
   if (editor.isInitialized) return editor;

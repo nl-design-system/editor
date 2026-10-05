@@ -27,10 +27,7 @@ const CONTENT = '<h1>Titel</h1><p>LET OP</p><p></p>';
 /** Longer than the validation debounce, so a re-run triggered by an edit has landed. */
 const VALIDATION_SETTLE_MS = 1500;
 
-/**
- * `validations` is read once, when the editor is built, so it is assigned here before the first
- * update rather than after — the same moment a host script gets, right after the markup parses.
- */
+/** Assigns `validations` before the first update, the moment a host script gets after parsing. */
 const render = async (attributes = '', validations?: readonly Validation[]): Promise<Context> => {
   document.body.innerHTML = `
     <clippy-context id="validations-property-test" ${attributes}>
@@ -93,18 +90,43 @@ describe('<clippy-context> validations property', () => {
     expect(rulesOf(context)).toEqual(['PARAGRAPH_MUST_NOT_SHOUT']);
   });
 
-  it('stays on the set it was built with when the property is assigned later', async () => {
-    const context = await render();
+  it('re-runs with the new set when the property is assigned after mounting', async () => {
+    const context = await render('', [coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
     await settled(context);
-    const before = rulesOf(context);
 
     context.validations = [paragraphMustNotShout];
     await context.updateComplete;
+
+    await vi.waitFor(() => expect(rulesOf(context)).toEqual(['PARAGRAPH_MUST_NOT_SHOUT']));
+  });
+
+  /**
+   * The editor reads the property afresh on every run, so an edit after a late assignment keeps
+   * the new set rather than falling back to the one captured when the extensions were built.
+   */
+  it('keeps a newly assigned set when the content is edited afterwards', async () => {
+    const context = await render('', [coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
+    await settled(context);
+    context.validations = [paragraphMustNotShout];
+    await context.updateComplete;
+    await vi.waitFor(() => expect(rulesOf(context)).toEqual(['PARAGRAPH_MUST_NOT_SHOUT']));
+
+    context.editor?.commands.insertContent('x');
     await new Promise((resolve) => {
       setTimeout(resolve, VALIDATION_SETTLE_MS);
     });
 
-    expect(rulesOf(context)).toEqual(before);
+    expect(rulesOf(context)).toEqual(['PARAGRAPH_MUST_NOT_SHOUT']);
+  });
+
+  it('re-runs in readonly mode when the property is assigned after mounting', async () => {
+    const context = await render('readonly', [coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
+    await settled(context);
+
+    context.validations = [paragraphMustNotShout];
+    await context.updateComplete;
+
+    await vi.waitFor(() => expect(rulesOf(context)).toEqual(['PARAGRAPH_MUST_NOT_SHOUT']));
   });
 
   it('reports nothing when given an empty set', async () => {
