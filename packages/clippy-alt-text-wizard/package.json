@@ -41,9 +41,9 @@
   },
   "dependencies": {
     "@lit/localize": "0.12.2",
-    "@nl-design-system-community/clippy-components": "3.2.0",
+    "@nl-design-system-community/clippy-components": "3.5.0",
     "lit": "3.3.3",
-    "xstate": "5.32.6"
+    "xstate": "5.33.2"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "0.11.0",
@@ -58,8 +58,8 @@
     "@nl-design-system-candidate/paragraph-css": "2.1.3",
     "@nl-design-system-community/ma-design-tokens": "7.0.0",
     "@nl-design-system/tsconfig": "1.0.5",
-    "@tabler/icons": "3.46.0",
-    "@types/node": "22.20.1",
+    "@tabler/icons": "3.48.0",
+    "@types/node": "22.20.5",
     "@utrecht/design-tokens": "7.0.0",
     "@utrecht/form-field-css": "3.0.1",
     "@utrecht/form-field-description-css": "3.0.1",
@@ -68,6 +68,6 @@
     "@utrecht/unordered-list-css": "3.1.1",
     "typescript": "6.0.3",
     "vite": "8.3.2",
-    "vite-plugin-dts": "5.1.0"
+    "vite-plugin-dts": "5.1.2"
   }
 }
