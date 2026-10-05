@@ -50,7 +50,7 @@ describe('headingLevelOneMustBeUnique', () => {
 
   it('retags the duplicate to a level 2 when corrected', () => {
     const [violation] = validate('<h1>Eerste</h1><h1 id="tweede">Tweede</h1>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect(fragment.innerHTML).toBe('<h1>Eerste</h1><h2 id="tweede">Tweede</h2>');
     expect(validator.validate([fragment])).toHaveLength(0);

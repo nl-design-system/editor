@@ -36,6 +36,6 @@ describe('paragraphShouldNotBeEmpty', () => {
   });
 
   it('offers no correction', () => {
-    expect(validate('<p></p>')[0]?.correct).toBeUndefined();
+    expect(validate('<p></p>')[0]).not.toHaveProperty('correction');
   });
 });

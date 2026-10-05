@@ -6,7 +6,9 @@ import { messages } from './messages.ts';
 
 export const linkShouldNotBeEmpty = defineValidation({
   condition: hasLinkText,
-  correct: (link) => () => link.remove(),
+  correction: {
+    execute: (link) => () => link.remove(),
+  },
   messages,
   rule: linkValidationRules.LINK_SHOULD_NOT_BE_EMPTY,
   scope: 'element',

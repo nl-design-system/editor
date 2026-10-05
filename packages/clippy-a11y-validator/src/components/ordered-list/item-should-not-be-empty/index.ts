@@ -6,7 +6,9 @@ import { messages } from './messages.ts';
 
 export const orderedListItemShouldNotBeEmpty = defineValidation({
   condition: hasTextContent,
-  correct: (item) => () => item.remove(),
+  correction: {
+    execute: (item) => () => item.remove(),
+  },
   messages,
   rule: orderedListValidationRules.ORDERED_LIST_ITEM_SHOULD_NOT_BE_EMPTY,
   scope: 'element',

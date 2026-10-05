@@ -63,7 +63,7 @@ describe('paragraphShouldNotResembleList', () => {
 
   it.each(conversions)('%s', (_name, paragraphs, tag) => {
     const [violation] = validate(`<h1>Titel</h1>${paragraphs}`);
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect(fragment.querySelectorAll(`${tag} > li`)).toHaveLength(3);
     expect([...fragment.querySelectorAll(`${tag} > li`)].map((item) => item.textContent)).toEqual([
@@ -76,14 +76,14 @@ describe('paragraphShouldNotResembleList', () => {
 
   it('leaves the paragraph valid once corrected', () => {
     const [violation] = validate('<p>- een<br>- twee</p>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect(validator.validate([fragment])).toHaveLength(0);
   });
 
   it('keeps surrounding content intact when corrected', () => {
     const [violation] = validate('<h1>Titel</h1><p>- een<br>- twee</p><p>Slot.</p>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect(fragment.querySelector('h1')?.textContent).toBe('Titel');
     expect(fragment.querySelector('p')?.textContent).toBe('Slot.');

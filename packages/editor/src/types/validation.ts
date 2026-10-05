@@ -14,8 +14,6 @@ export type ValidationDisplay = 'block' | 'inline';
  * the editor needs to render and act on it.
  */
 export type Violation = CoreViolation & {
-  /** Replaces the default "Correct" label, for rules whose fix is an edit rather than a correction. */
-  customCorrectLabel?: string;
   /** How this violation covers the document, read off the offending element alongside the range. */
   display: ValidationDisplay;
   /** The range this violation covers, used to position and focus the issue. */

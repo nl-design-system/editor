@@ -204,18 +204,19 @@ export class ClippyPlugin extends Plugin {
 
   private _patchCorrectionsForCKEditor(violationsMap: ViolationsMap): ViolationsMap {
     for (const [range, violation] of violationsMap) {
-      const { correct, rule } = violation;
-      if (!correct || !rule) {
+      const { correction, rule } = violation;
+      if (!correction || !rule) {
         continue;
       }
 
-      // replace correct functions with model-aware versions that go through editor.setData()
-      violation.correct = this._modelCorrectionFactory(correct, rule, range);
+      // Only the fix goes through the model pipeline. Spreading first keeps the already resolved
+      // label — replacing the whole correction would silently reset the button to "Correct".
+      violation.correction = { ...correction, execute: this._modelCorrectionFactory(correction.execute, rule, range) };
     }
     return violationsMap;
   }
 
-  private _modelCorrectionFactory(originalCorrect: () => void, rule: string, range: Range): () => void {
+  private _modelCorrectionFactory(originalExecute: () => void, rule: string, range: Range): () => void {
     return () => {
       // create a clean HTML copy via this.editor.getData()
       const tempDiv = document.createElement('div');
@@ -227,11 +228,13 @@ export class ClippyPlugin extends Plugin {
 
       // locate the matching correction in the clean HTML copy
       const target = findMatchingCorrection(modelDataViolationsMap, rule, occurrenceIndex);
+      // Bound to a local: TS cannot keep the narrowing across the statements below.
+      const targetExecute = target?.correction?.execute;
 
-      if (target?.correct) {
+      if (targetExecute) {
         // apply it and check whether it actually changed the DOM
         const before = tempDiv.innerHTML;
-        target.correct();
+        targetExecute();
         if (tempDiv.innerHTML !== before) {
           // setData uses CKEditor's model pipeline, keeping the undo/redo state valid.
           this.editor.setData(tempDiv.innerHTML);
@@ -240,7 +243,7 @@ export class ClippyPlugin extends Plugin {
       }
 
       // No matching correction, or it didn't modify the DOM (e.g. open dialog, select range), call original directly.
-      originalCorrect();
+      originalExecute();
     };
   }
 

@@ -5,7 +5,7 @@ import { tableValidationRules } from '../constants.ts';
 import { messages } from './messages.ts';
 
 /**
- * No `correct`: an empty caption still names the table for assistive technology once filled in, so
+ * No `correction`: an empty caption still names the table for assistive technology once filled in, so
  * removing it is the wrong fix. The editor puts the caret in the caption instead.
  */
 export const tableCaptionShouldNotBeEmpty = defineValidation({

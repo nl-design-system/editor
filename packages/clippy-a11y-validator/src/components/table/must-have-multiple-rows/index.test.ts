@@ -34,7 +34,7 @@ describe('tableMustHaveMultipleRows', () => {
 
   it('appends a row with matching cells when corrected', () => {
     const [violation] = validate('<table><tbody><tr><td>C1</td><td>C2</td></tr></tbody></table>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect(fragment.querySelectorAll('tr')).toHaveLength(2);
     expect(fragment.querySelectorAll('tr:last-child > td')).toHaveLength(2);
@@ -43,7 +43,7 @@ describe('tableMustHaveMultipleRows', () => {
 
   it('offers no correction for a table without rows to copy', () => {
     const [violation] = validate('<table></table>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect(fragment.querySelectorAll('tr')).toHaveLength(0);
   });

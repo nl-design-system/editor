@@ -5,7 +5,7 @@ import { hasAltText } from '../utils.ts';
 import { messages } from './messages.ts';
 
 /**
- * No `correct`: only the author knows what the image conveys. The editor opens its image dialog here,
+ * No `correction`: only the author knows what the image conveys. The editor opens its image dialog here,
  * which needs an editing surface this package does not have.
  */
 export const imageMustHaveAltText = defineValidation({

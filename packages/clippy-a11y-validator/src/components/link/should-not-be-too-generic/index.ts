@@ -7,7 +7,7 @@ import { messages } from './messages.ts';
 const GENERIC_LINK_TEXTS = new Set(['klik hier', 'lees meer']);
 
 /**
- * No `correct`: replacing the text would mean inventing copy. The editor selects the link so the author
+ * No `correction`: replacing the text would mean inventing copy. The editor selects the link so the author
  * can rewrite it, which needs an editing surface this package does not have.
  */
 export const linkShouldNotBeTooGeneric = defineValidation({

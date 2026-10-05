@@ -5,7 +5,7 @@ import { tableValidationRules } from '../constants.ts';
 import { messages } from './messages.ts';
 
 /**
- * No `correct`: removing a cell would leave the row shorter than the rest of the table. The editor puts
+ * No `correction`: removing a cell would leave the row shorter than the rest of the table. The editor puts
  * the caret in the cell instead, which needs an editing surface this package does not have.
  */
 export const tableCellShouldNotBeEmpty = defineValidation({

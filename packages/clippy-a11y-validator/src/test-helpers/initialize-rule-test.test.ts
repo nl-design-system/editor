@@ -4,7 +4,7 @@ import { initializeRuleTest } from './initialize-rule-test.ts';
 
 const paragraphMustNotBeEmpty = defineValidation({
   condition: (paragraph) => paragraph.textContent !== '',
-  correct: (paragraph) => () => paragraph.remove(),
+  correction: { execute: (paragraph) => () => paragraph.remove() },
   messages: { nl: { error: 'Deze alinea is leeg.' } },
   rule: 'TEST_PARAGRAPH_MUST_NOT_BE_EMPTY',
   scope: 'element',
@@ -45,7 +45,7 @@ describe('initializeRuleTest', () => {
 
   it('corrects the element inside the fragment it handed out', () => {
     const [violation] = validate('<p></p><p>tekst</p>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect(fragment.innerHTML).toBe('<p>tekst</p>');
   });
