@@ -9,7 +9,7 @@ import { getDocumentLang } from '@/localization';
 import { debounce } from '@/utils/debounce';
 import { getElementRange } from '@/utils/ranges';
 import { resolveViolationDisplay } from '@/utils/validations';
-import { resolveCorrection } from './corrections';
+import { editorCorrection } from './corrections';
 
 const VALIDATION_TIMEOUT = 500;
 
@@ -26,12 +26,12 @@ const VALIDATION_TIMEOUT = 500;
 const toEditorViolation = (violation: CoreViolation): Violation => {
   const range = getElementRange(violation.element);
   const display = resolveViolationDisplay(violation.element);
-  const correction = resolveCorrection(violation, range);
+  const { execute, ...correction } = { ...violation.correction, ...editorCorrection(violation, range) };
 
   return {
     ...violation,
     display,
-    ...(correction === undefined ? {} : { correction }),
+    ...(execute === undefined ? {} : { correction: { ...correction, execute } }),
     ...(range === undefined ? {} : { range }),
   };
 };

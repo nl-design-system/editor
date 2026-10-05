@@ -149,13 +149,16 @@ describe('runValidation', () => {
     expect(result).not.toHaveProperty('correction');
   });
 
-  it('selects an empty table cell rather than removing it', () => {
+  /**
+   * Removing the cell would leave the row short and nobody can guess its content, so there is
+   * nothing to correct. The author is sent there by the Focus action instead.
+   */
+  it('offers no correction for an empty table cell', () => {
     const map = validate('<h1>Titel</h1><table><tr><th>Kop</th></tr><tr><td></td></tr></table>');
     const result = [...map.values()].find(({ rule }) => rule === coreValidationRules.TABLE_CELL_SHOULD_NOT_BE_EMPTY);
-    result?.correction?.execute();
 
-    expect(dom.querySelector('td')).not.toBeNull();
-    expect(globalThis.getSelection()?.rangeCount).toBe(1);
+    expect(result).toBeDefined();
+    expect(result).not.toHaveProperty('correction');
   });
 });
 

@@ -2,26 +2,26 @@ import { msg } from '@lit/localize';
 import {
   coreValidationRules,
   type CoreValidationRule,
-  type CorrectViolationFunction,
   type Violation as CoreViolation,
   type ViolationCorrection,
 } from '@nl-design-system-community/clippy-a11y-validator';
 import { CustomEvents } from '@/events';
 
 /**
- * What the editor layers over the correction the validator package reports.
+ * What the editor layers over the correction the validator package reports, for one violation.
  *
- * Every field is optional and overrides its counterpart: a rule can replace the fix, rename the
- * button, or both. The validator deliberately ships no `correction` for the rules below, because
- * the fix is not a DOM edit but an editor interaction — opening a dialog, or placing the caret so
- * the author can type the answer.
+ * A function rather than an object because both halves are deliberately late: the fix needs the
+ * element and the range, which exist only per violation, and `msg()` has to run once the locale is
+ * loaded. It returns the reported shape, so the two can simply be spread over each other.
+ *
+ * Whatever it fills in wins; omit a field to keep what the validator reported. Omit it — do not
+ * set it to `undefined`, which in a spread would wipe the reported value instead of deferring.
+ *
+ * The validator deliberately ships no `correction` for the rule below, because the fix is not a
+ * DOM edit but an editor interaction. Rules whose only remedy is "go there and write something"
+ * get no correction at all: the Focus action already takes the author to the spot.
  */
-type EditorCorrection = {
-  /** Replaces the reported fix. Omit to keep it and override only the label. */
-  execute?: (element: HTMLElement, range: Range | undefined) => CorrectViolationFunction;
-  /** Replaces the default "Correct" label, when the action is not a correction but an edit. */
-  label?: () => string;
-};
+type EditorCorrection = (element: HTMLElement, range: Range | undefined) => Partial<ViolationCorrection>;
 
 /**
  * Selects a range and makes sure keyboard focus follows it. Outside a TipTap editor (readonly or
@@ -45,15 +45,10 @@ const selectRange = (range: Range | undefined): void => {
   selection.addRange(range);
 };
 
-/** Places the caret in the element so the author can supply the missing text. */
-const selectForAuthoring: EditorCorrection = {
-  execute: (_element, range) => () => selectRange(range),
-};
-
 export const editorCorrections: Partial<Record<CoreValidationRule, EditorCorrection>> = {
   // Alt text is written in the image dialog, which pre-fills the current src and alt.
-  [coreValidationRules.IMAGE_MUST_HAVE_ALT_TEXT]: {
-    execute: (element, range) => () => {
+  [coreValidationRules.IMAGE_MUST_HAVE_ALT_TEXT]: (element, range) => ({
+    execute: () => {
       selectRange(range);
       const { alt, src } = element as HTMLImageElement;
       globalThis.dispatchEvent(
@@ -62,41 +57,17 @@ export const editorCorrections: Partial<Record<CoreValidationRule, EditorCorrect
         }),
       );
     },
-    label: () => msg('Edit'),
-  },
-  // Only the author knows where the link goes, so select the text for them to rewrite.
-  [coreValidationRules.LINK_SHOULD_NOT_BE_TOO_GENERIC]: selectForAuthoring,
-  // Removing a caption or a cell would break the table, so place the caret instead.
-  [coreValidationRules.TABLE_CAPTION_SHOULD_NOT_BE_EMPTY]: selectForAuthoring,
-  [coreValidationRules.TABLE_CELL_SHOULD_NOT_BE_EMPTY]: selectForAuthoring,
+    label: msg('Edit'),
+  }),
 };
 
 /**
- * Layers an editor correction over the one the validator package reports: each field the editor
- * fills in wins, the rest is kept. Without anything to execute there is no correction at all, so a
- * label on its own never renders a button that does nothing.
+ * The editor's layer for this violation, in the reported shape so it can simply be spread over it.
+ *
+ * The cast is needed because a violation's `rule` is a plain string: a host can register its own
+ * validations, so a lookup that finds nothing is normal.
  */
-export const mergeCorrection = (
-  reported: ViolationCorrection | undefined,
-  override: EditorCorrection | undefined,
-  element: HTMLElement,
+export const editorCorrection = (
+  { element, rule }: CoreViolation,
   range: Range | undefined,
-): ViolationCorrection | undefined => {
-  const execute = override?.execute?.(element, range) ?? reported?.execute;
-  if (!execute) return undefined;
-
-  const label = override?.label?.() ?? reported?.label;
-  return { execute, ...(label === undefined ? {} : { label }) };
-};
-
-/** The one place a reported correction and an editor correction become a single correction. */
-export const resolveCorrection = (
-  violation: CoreViolation,
-  range: Range | undefined,
-): ViolationCorrection | undefined =>
-  mergeCorrection(
-    violation.correction,
-    editorCorrections[violation.rule as CoreValidationRule],
-    violation.element,
-    range,
-  );
+): Partial<ViolationCorrection> | undefined => editorCorrections[rule as CoreValidationRule]?.(element, range);
