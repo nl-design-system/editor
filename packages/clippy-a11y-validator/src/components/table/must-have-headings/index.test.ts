@@ -49,7 +49,7 @@ describe('tableMustHaveHeadings', () => {
     const [violation] = validate(
       '<table><tbody><tr><td>C1</td><td>C2</td></tr><tr><td>C3</td><td>C4</td></tr></tbody></table>',
     );
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect([...fragment.querySelectorAll('tr:first-child > *')].map((cell) => cell.tagName)).toEqual(['TH', 'TH']);
     expect(validator.validate([fragment])).toHaveLength(0);
@@ -57,7 +57,7 @@ describe('tableMustHaveHeadings', () => {
 
   it('keeps the cell content and attributes when corrected', () => {
     const [violation] = validate('<table><tbody><tr><td colspan="2">C1</td></tr><tr><td>C2</td></tr></tbody></table>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     const header = fragment.querySelector('th');
     expect(header?.textContent).toBe('C1');

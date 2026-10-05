@@ -37,7 +37,7 @@ describe('paragraphShouldNotContainUnderlinedText', () => {
 
   it('unwraps the underline when corrected, keeping the text', () => {
     const [violation] = validate('<p>Zie <u>onderstreept</u> hier</p>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect(fragment.querySelector('p')?.innerHTML).toBe('Zie onderstreept hier');
     expect(validator.validate([fragment])).toHaveLength(0);

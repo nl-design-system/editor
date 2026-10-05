@@ -49,7 +49,7 @@ describe('headingMustNotBeEmpty', () => {
 
   it('removes the heading when corrected', () => {
     const [violation] = validate('<h1></h1><p>tekst</p>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect(fragment.innerHTML).toBe('<p>tekst</p>');
     expect(validator.validate([fragment])).toHaveLength(0);

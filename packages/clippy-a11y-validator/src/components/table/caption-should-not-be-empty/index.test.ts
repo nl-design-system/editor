@@ -27,6 +27,6 @@ describe('tableCaptionShouldNotBeEmpty', () => {
   });
 
   it('offers no correction, because the caption should be filled in rather than removed', () => {
-    expect(validate('<table><caption></caption></table>')[0]?.correct).toBeUndefined();
+    expect(validate('<table><caption></caption></table>')[0]).not.toHaveProperty('correction');
   });
 });

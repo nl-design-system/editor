@@ -16,7 +16,9 @@ describe('hasChanges', () => {
   it('reports no changes for the same violations found again', () => {
     const element = document.createElement('p');
 
-    expect(hasChanges([violation({ element })], [violation({ correct: () => undefined, element })])).toBe(false);
+    expect(
+      hasChanges([violation({ element })], [violation({ correction: { execute: () => undefined }, element })]),
+    ).toBe(false);
   });
 
   it('reports no changes between two empty results', () => {

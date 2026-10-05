@@ -6,9 +6,13 @@ export type ValidationMessages = {
   solution?: string;
 };
 
-export type ValidationMessagesByLocale = Partial<Record<Locale, ValidationMessages>> & {
-  nl: ValidationMessages;
-};
+/**
+ * Text in every locale that has it. `nl` is the source language, so it is always there and the
+ * fallback chain can never bottom out.
+ */
+export type ByLocale<T> = Partial<Record<Locale, T>> & { nl: T };
+
+export type ValidationMessagesByLocale = ByLocale<ValidationMessages>;
 
 export type ResolvedMessages = {
   error: string;

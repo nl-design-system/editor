@@ -32,7 +32,7 @@ describe('unorderedListItemShouldNotBeEmpty', () => {
 
   it('removes the item when corrected', () => {
     const [violation] = validate('<ul><li>een</li><li></li></ul>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect(fragment.querySelectorAll('li')).toHaveLength(1);
     expect(validator.validate([fragment])).toHaveLength(0);

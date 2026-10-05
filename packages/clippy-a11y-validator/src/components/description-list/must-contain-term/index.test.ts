@@ -46,7 +46,7 @@ describe('descriptionListMustContainTerm', () => {
 
   it('marks the first empty term as still to be written when corrected', () => {
     const [violation] = validate('<dl><dt></dt><dd>beschrijving</dd></dl>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect(fragment.querySelector('dt')?.textContent).toBe('...');
     expect(validator.validate([fragment])).toHaveLength(0);

@@ -7,10 +7,12 @@ import { messages } from './messages.ts';
 export const descriptionTermMustHaveDescription = defineValidation({
   condition: (list) => emptyTermsWithDescription(list).length === 0,
   // Marks the terms as still to be written, rather than inventing copy for them.
-  correct: (list) => () =>
-    emptyTermsWithDescription(list).forEach((term) => {
-      term.textContent = '...';
-    }),
+  correction: {
+    execute: (list) => () =>
+      emptyTermsWithDescription(list).forEach((term) => {
+        term.textContent = '...';
+      }),
+  },
   messages,
   rule: descriptionListValidationRules.DESCRIPTION_TERM_MUST_HAVE_DESCRIPTION,
   scope: 'element',

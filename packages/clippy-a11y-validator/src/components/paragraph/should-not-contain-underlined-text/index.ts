@@ -7,7 +7,9 @@ import { messages } from './messages.ts';
 /** Underlined text reads as a link, so a `u` element is never acceptable and the condition never holds. */
 export const paragraphShouldNotContainUnderlinedText = defineValidation({
   condition: () => false,
-  correct: (underline) => () => unwrapElement(underline),
+  correction: {
+    execute: (underline) => () => unwrapElement(underline),
+  },
   messages,
   rule: paragraphValidationRules.PARAGRAPH_SHOULD_NOT_CONTAIN_UNDERLINED_TEXT,
   scope: 'element',

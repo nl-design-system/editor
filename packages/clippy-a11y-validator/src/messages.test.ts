@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { ValidationMessagesByLocale } from './types/messages.ts';
-import { resolveMessages } from './messages.ts';
+import { resolveLocalised, resolveMessages } from './messages.ts';
 
 const messages: ValidationMessagesByLocale = {
   en: { error: 'The {nodeType} is wrong.', solution: 'Fix the {nodeType}.' },
@@ -54,5 +54,19 @@ describe('resolveMessages', () => {
     const withHref: ValidationMessagesByLocale = { nl: { error: 'Fout.', href: 'https://example.org/{nodeType}' } };
 
     expect(resolveMessages(withHref, 'nl', 'nl', { nodeType: 'alinea' }).href).toBe('https://example.org/{nodeType}');
+  });
+});
+
+describe('resolveLocalised', () => {
+  it('returns the requested locale', () => {
+    expect(resolveLocalised({ en: 'Edit', nl: 'Bewerken' }, 'en', 'nl')).toBe('Edit');
+  });
+
+  it('falls back to the fallback locale when the requested one is missing', () => {
+    expect(resolveLocalised({ nl: 'Bewerken' }, 'en', 'nl')).toBe('Bewerken');
+  });
+
+  it('falls back to Dutch, the source language, when neither is present', () => {
+    expect(resolveLocalised({ nl: 'Bewerken' }, 'en', 'en')).toBe('Bewerken');
   });
 });

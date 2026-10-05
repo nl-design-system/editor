@@ -339,7 +339,7 @@ export class Gutter extends LitElement {
     position: { top: number; height: number },
     metaCount: number | undefined,
   ) {
-    const { correct, customCorrectLabel, display, messages, severity } = violation;
+    const { correction, display, messages, severity } = violation;
     const { error: heading, href, solution } = messages;
     const isActive = this.activeRange === range;
     return html`<li
@@ -376,9 +376,8 @@ export class Gutter extends LitElement {
           .severity=${severity}
           .heading=${heading}
           .href=${href}
-          .customCorrectLabel=${customCorrectLabel}
+          .correction=${correction}
           .solution=${solution}
-          .correct=${correct}
         ></clippy-validation-item>
       </div>
     </li>`;

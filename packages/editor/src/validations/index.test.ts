@@ -120,7 +120,7 @@ describe('runValidation', () => {
     const map = validate('<h1>Titel</h1><p><b></b></p>');
     [...map.values()]
       .find(({ rule }) => rule === coreValidationRules.PARAGRAPH_SHOULD_NOT_CONTAIN_EMPTY_FORMATTING)
-      ?.correct?.();
+      ?.correction?.execute();
 
     expect(dom.innerHTML).toBe('<h1>Titel</h1><p></p>');
   });
@@ -131,22 +131,34 @@ describe('runValidation', () => {
 
     const map = validate('<h1>Titel</h1><p><img src="paspoort.png" alt=""></p>');
     const result = [...map.values()].find(({ rule }) => rule === coreValidationRules.IMAGE_MUST_HAVE_ALT_TEXT);
-    result?.correct?.();
+    result?.correction?.execute();
 
     globalThis.removeEventListener(CustomEvents.OPEN_IMAGE_DIALOG, opened);
 
-    expect(result?.customCorrectLabel).toBeTruthy();
+    expect(result?.correction?.label).toBeTruthy();
     expect(opened).toHaveBeenCalledOnce();
     expect(dom.querySelector('img')).not.toBeNull();
   });
 
-  it('selects an empty table cell rather than removing it', () => {
+  /** Hosts branch on the key being absent, so an uncorrectable violation must not carry one. */
+  it('carries no correction for a violation neither side can fix', () => {
+    const map = validate('<h1>Titel</h1><p></p>');
+    const result = [...map.values()].find(({ rule }) => rule === coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_EMPTY);
+
+    expect(result).toBeDefined();
+    expect(result).not.toHaveProperty('correction');
+  });
+
+  /**
+   * Removing the cell would leave the row short and nobody can guess its content, so there is
+   * nothing to correct. The author is sent there by the Focus action instead.
+   */
+  it('offers no correction for an empty table cell', () => {
     const map = validate('<h1>Titel</h1><table><tr><th>Kop</th></tr><tr><td></td></tr></table>');
     const result = [...map.values()].find(({ rule }) => rule === coreValidationRules.TABLE_CELL_SHOULD_NOT_BE_EMPTY);
-    result?.correct?.();
 
-    expect(dom.querySelector('td')).not.toBeNull();
-    expect(globalThis.getSelection()?.rangeCount).toBe(1);
+    expect(result).toBeDefined();
+    expect(result).not.toHaveProperty('correction');
   });
 });
 
