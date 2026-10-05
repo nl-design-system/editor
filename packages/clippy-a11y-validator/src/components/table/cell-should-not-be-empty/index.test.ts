@@ -37,6 +37,6 @@ describe('tableCellShouldNotBeEmpty', () => {
   });
 
   it('offers no correction, because removing a cell would break the row', () => {
-    expect(validate('<table><tbody><tr><td></td></tr></tbody></table>')[0]?.correct).toBeUndefined();
+    expect(validate('<table><tbody><tr><td></td></tr></tbody></table>')[0]).not.toHaveProperty('correction');
   });
 });

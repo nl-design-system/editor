@@ -55,7 +55,7 @@ describe('paragraphShouldNotResembleHeading', () => {
 
   it('converts the paragraph to a heading one level below the preceding heading', () => {
     const [violation] = validate('<h2>Kosten</h2><p><strong>Wat neemt u mee?</strong></p>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect(fragment.innerHTML).toBe('<h2>Kosten</h2><h3>Wat neemt u mee?</h3>');
     expect(validator.validate([fragment])).toHaveLength(0);
@@ -63,21 +63,21 @@ describe('paragraphShouldNotResembleHeading', () => {
 
   it('converts to a level 1 when no heading precedes it', () => {
     const [violation] = validate('<p><strong>Paspoort aanvragen</strong></p>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect(fragment.innerHTML).toBe('<h1>Paspoort aanvragen</h1>');
   });
 
   it('does not propose a level beyond 6', () => {
     const [violation] = validate('<h6>Diep</h6><p><strong>Nog dieper</strong></p>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect(fragment.innerHTML).toBe('<h6>Diep</h6><h6>Nog dieper</h6>');
   });
 
   it('drops the bold formatting from the resulting heading', () => {
     const [violation] = validate('<p><strong>Wat neemt u mee?</strong></p>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect(fragment.querySelector('strong')).toBeNull();
   });

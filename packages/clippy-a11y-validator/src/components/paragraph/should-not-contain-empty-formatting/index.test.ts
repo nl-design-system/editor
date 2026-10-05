@@ -48,7 +48,7 @@ describe('paragraphShouldNotContainEmptyFormatting', () => {
 
   it('removes the element when corrected', () => {
     const [violation] = validate('<p>Zie <strong></strong>hier</p>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect(fragment.querySelector('p')?.innerHTML).toBe('Zie hier');
     expect(validator.validate([fragment])).toHaveLength(0);

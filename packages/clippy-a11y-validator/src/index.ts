@@ -18,15 +18,23 @@ export { hasHeaderColumn, hasHeaderRow, tableRows } from './components/table/uti
 export { isEmptyOrWhitespace } from './utils/text.ts';
 export { Validator } from './validator.ts';
 export type { LocaleOptions, ValidatorConstructorOptions, ValidatorRunOptions } from './types/validator.ts';
-export type { Locale, ResolvedMessages, ValidationMessages, ValidationMessagesByLocale } from './types/messages.ts';
+export type {
+  ByLocale,
+  Locale,
+  ResolvedMessages,
+  ValidationMessages,
+  ValidationMessagesByLocale,
+} from './types/messages.ts';
 export type { Fragment } from './types/fragment.ts';
 export type { CoreSelector, ElementFor, Selector } from './types/selector.ts';
 export type {
   CorrectViolationFunction,
   ElementValidation,
+  ElementValidationCorrection,
   ElementValidationDefinition,
   DocumentValidation,
   DocumentValidationCondition,
+  DocumentValidationCorrection,
   DocumentValidationDefinition,
   FocusViolationFunction,
   ValidationCondition,
@@ -36,5 +44,6 @@ export type {
   ValidationScope,
   ValidationSeverity,
   Violation,
+  ViolationCorrection,
   ViolationPayload,
 } from './types/validation.ts';

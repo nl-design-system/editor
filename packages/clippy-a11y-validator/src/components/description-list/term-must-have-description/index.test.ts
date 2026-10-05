@@ -54,7 +54,7 @@ describe('descriptionTermMustHaveDescription', () => {
 
   it('marks every unnamed term as still to be written when corrected', () => {
     const [violation] = validate('<dl><dt></dt><dd>een</dd><dt></dt><dd>twee</dd></dl>');
-    violation?.correct?.();
+    violation?.correction?.execute();
 
     expect([...fragment.querySelectorAll('dt')].map(({ textContent }) => textContent)).toEqual(['...', '...']);
     expect(validator.validate([fragment])).toHaveLength(0);

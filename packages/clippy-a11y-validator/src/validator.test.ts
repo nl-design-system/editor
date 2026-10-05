@@ -141,7 +141,7 @@ describe('Validator', () => {
     const acted: [string, Element][] = [];
     const spy: Validation = {
       condition: () => false,
-      correct: (paragraph) => () => acted.push(['correct', paragraph]),
+      correction: { execute: (paragraph) => () => acted.push(['correction', paragraph]) },
       focus: (paragraph) => () => acted.push(['focus', paragraph]),
       messages: { nl: { error: 'x' } },
       rule: 'SPY',
@@ -154,12 +154,69 @@ describe('Validator', () => {
 
     const violations = new Validator({ validations: [spy] }).validate([fragment]);
     violations[1]?.focus?.();
-    violations[0]?.correct?.();
+    violations[0]?.correction?.execute();
 
     expect(acted).toEqual([
       ['focus', second],
-      ['correct', first],
+      ['correction', first],
     ]);
+  });
+
+  it('resolves the correction label into the active locale', () => {
+    const spy: Validation = {
+      condition: () => false,
+      correction: { execute: () => () => {}, label: { en: 'Edit', nl: 'Bewerken' } },
+      messages: { nl: { error: 'x' } },
+      rule: 'SPY',
+      scope: 'element',
+      selector: 'p',
+      severity: 'info',
+    };
+
+    const [violation] = new Validator({ locale: 'en', validations: [spy] }).validate([fragment]);
+
+    expect(violation?.correction?.label).toBe('Edit');
+  });
+
+  it('falls back to the fallback locale for a correction label', () => {
+    const spy: Validation = {
+      condition: () => false,
+      correction: { execute: () => () => {}, label: { nl: 'Bewerken' } },
+      messages: { nl: { error: 'x' } },
+      rule: 'SPY',
+      scope: 'element',
+      selector: 'p',
+      severity: 'info',
+    };
+
+    const [violation] = new Validator({ fallbackLocale: 'nl', locale: 'en', validations: [spy] }).validate([fragment]);
+
+    expect(violation?.correction?.label).toBe('Bewerken');
+  });
+
+  it('leaves the label out when the correction does not name one', () => {
+    const spy: Validation = {
+      condition: () => false,
+      correction: { execute: () => () => {} },
+      messages: { nl: { error: 'x' } },
+      rule: 'SPY',
+      scope: 'element',
+      selector: 'p',
+      severity: 'info',
+    };
+
+    const [violation] = new Validator({ validations: [spy] }).validate([fragment]);
+
+    expect(violation?.correction).not.toHaveProperty('label');
+  });
+
+  /** The absence of the key is what hosts branch on, so it has to be absent, not undefined. */
+  it('reports no correction at all when the validation offers none', () => {
+    const [violation] = new Validator({ validations: [coreValidations[PARAGRAPH_SHOULD_NOT_BE_EMPTY]] }).validate([
+      fragment,
+    ]);
+
+    expect(violation).not.toHaveProperty('correction');
   });
 
   it('offers no focus when the validation does not', () => {
@@ -170,13 +227,15 @@ describe('Validator', () => {
     expect(violation?.focus).toBeUndefined();
   });
 
-  it('hands a document validation the same context in payload, focus and correct', () => {
+  it('hands a document validation the same context in payload, focus and correction', () => {
     const nearestPrecedingTexts: (string | undefined)[] = [];
     const spy: Validation = {
       condition: () => false,
-      correct: (_paragraph, { precedingMatches }) => {
-        nearestPrecedingTexts.push(precedingMatches('h1')[0]?.textContent ?? undefined);
-        return () => {};
+      correction: {
+        execute: (_paragraph, { precedingMatches }) => {
+          nearestPrecedingTexts.push(precedingMatches('h1')[0]?.textContent ?? undefined);
+          return () => {};
+        },
       },
       focus: (_paragraph, { precedingMatches }) => {
         nearestPrecedingTexts.push(precedingMatches('h1')[0]?.textContent ?? undefined);

@@ -12,4 +12,5 @@ export type {
   CoreValidationRule,
   Validation,
   ValidationSeverity,
+  ViolationCorrection,
 } from '@nl-design-system-community/clippy-a11y-validator';

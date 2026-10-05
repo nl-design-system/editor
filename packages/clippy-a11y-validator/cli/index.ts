@@ -122,11 +122,17 @@ function validatePage(page: Page, source: string, fix: boolean, skip: readonly s
       const validator = new Validator({ validations: Object.values(coreValidations) });
       const violations = validator.validate([document.body]);
 
-      if (fix) violations.forEach(({ correct }) => correct?.());
+      if (fix) violations.forEach(({ correction }) => correction?.execute());
 
-      return violations.map(({ element, ...violation }) => ({
-        ...violation,
+      // Project explicitly rather than spreading: a correction's `execute` cannot cross the
+      // serialisation boundary, and spreading would hand Node a truthy correction with its
+      // function silently stripped.
+      return violations.map(({ element, messages, rule, scope, severity }) => ({
         html: element.outerHTML,
+        messages,
+        rule,
+        scope,
+        severity,
       }));
     },
     { fix, skip, source },

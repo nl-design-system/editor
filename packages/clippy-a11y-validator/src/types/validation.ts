@@ -1,4 +1,4 @@
-import type { ValidationMessagesByLocale, ResolvedMessages } from './messages.ts';
+import type { ByLocale, ValidationMessagesByLocale, ResolvedMessages } from './messages.ts';
 import type { ElementFor, Selector } from './selector.ts';
 
 export type ValidationSeverity = 'error' | 'info' | 'warning';
@@ -36,12 +36,31 @@ type SharedValidationDefinition<S extends Selector> = {
   severity: ValidationSeverity;
 };
 
+/**
+ * A fix the validator can apply itself, and the wording for the control that triggers it. Leave
+ * `label` out when the host's default wording is right, which is the case for every rule this
+ * package ships.
+ *
+ * Unlike `messages`, a label is not interpolated with the payload: it is an imperative verb phrase
+ * naming an action, not a sentence about the element.
+ */
+export type ElementValidationCorrection<E extends HTMLElement = HTMLElement> = {
+  execute: (element: E) => CorrectViolationFunction;
+  label?: ByLocale<string>;
+};
+
+/** As {@link ElementValidationCorrection}, for a rule that needs the surrounding document. */
+export type DocumentValidationCorrection<E extends HTMLElement = HTMLElement> = {
+  execute: (element: E, context: ValidationContext) => CorrectViolationFunction;
+  label?: ByLocale<string>;
+};
+
 export type ElementValidationDefinition<
   S extends Selector = Selector,
   E extends HTMLElement = ElementFor<S>,
 > = SharedValidationDefinition<S> & {
   condition: ValidationCondition<E>;
-  correct?: (element: E) => CorrectViolationFunction;
+  correction?: ElementValidationCorrection<E>;
   focus?: (element: E) => FocusViolationFunction;
   payload?: (element: E) => ViolationPayload;
   scope: 'element';
@@ -52,7 +71,7 @@ export type DocumentValidationDefinition<
   E extends HTMLElement = ElementFor<S>,
 > = SharedValidationDefinition<S> & {
   condition: DocumentValidationCondition<E>;
-  correct?: (element: E, context: ValidationContext) => CorrectViolationFunction;
+  correction?: DocumentValidationCorrection<E>;
   focus?: (element: E, context: ValidationContext) => FocusViolationFunction;
   payload?: (element: E, context: ValidationContext) => ViolationPayload;
   scope: 'document';
@@ -67,8 +86,15 @@ export type DocumentValidation = DocumentValidationDefinition<Selector, HTMLElem
 
 export type Validation = ElementValidation | DocumentValidation;
 
+/** The correction a violation carries, with its label already resolved for the active locale. */
+export type ViolationCorrection = {
+  execute: CorrectViolationFunction;
+  label?: string;
+};
+
 export type Violation = {
-  correct?: CorrectViolationFunction;
+  /** Present only when there is something to run: a correction always has an `execute`. */
+  correction?: ViolationCorrection;
   element: HTMLElement;
   focus?: FocusViolationFunction;
   messages: ResolvedMessages;

@@ -1,4 +1,4 @@
-import type { CorrectViolationFunction, ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
+import type { ValidationSeverity, ViolationCorrection } from '@nl-design-system-community/clippy-a11y-validator';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import codeStyle from '@nl-design-system-candidate/code-css/code.css?inline';
@@ -87,10 +87,8 @@ export class ValidationItem extends LitElement {
    * `solution-html` slot is filled.
    */
   @property({ type: String }) solution?: string;
-  /** Custom label for the auto-fix button. Falls back to "Correct". */
-  @property({ type: String }) customCorrectLabel?: string;
-  /** Optional function that applies the automatic fix for this issue. */
-  @property({ type: Function }) correct?: CorrectViolationFunction;
+  /** The fix offered for this issue: what to run, and the label of the button that runs it. */
+  @property({ attribute: false }) correction?: ViolationCorrection;
 
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })
@@ -121,9 +119,7 @@ export class ValidationItem extends LitElement {
         detail: { identifier: this.identifier },
       }),
     );
-    if (typeof this.correct === 'function') {
-      this.correct();
-    }
+    this.correction?.execute();
   };
 
   readonly #getAlertIcon = () => {
@@ -145,9 +141,9 @@ export class ValidationItem extends LitElement {
     return html`
       <div class="clippy-validation-item-actions">
         ${
-          typeof this.correct === 'function'
+          typeof this.correction?.execute === 'function'
             ? html`<clippy-button purpose="primary" @click=${this.#applyFix} aria-describedby=${ariaDescribedBy}>
-                ${this.customCorrectLabel ?? msg('Correct')}
+                ${this.correction.label ?? msg('Correct')}
               </clippy-button>`
             : nothing
         }

@@ -6,7 +6,9 @@ import { messages } from './messages.ts';
 
 export const unorderedListItemShouldNotBeEmpty = defineValidation({
   condition: hasTextContent,
-  correct: (item) => () => item.remove(),
+  correction: {
+    execute: (item) => () => item.remove(),
+  },
   messages,
   rule: unorderedListValidationRules.UNORDERED_LIST_ITEM_SHOULD_NOT_BE_EMPTY,
   scope: 'element',
