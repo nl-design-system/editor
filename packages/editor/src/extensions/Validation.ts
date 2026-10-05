@@ -19,15 +19,15 @@ export default Extension.create({
   },
 
   onCreate({ editor }) {
-    const { updateViolationsContext, validations } = this.options;
-    runValidation(editor.view.dom, validations, updateViolationsContext);
+    const { getValidations, updateViolationsContext } = this.options;
+    runValidation(editor.view.dom, getValidations(), updateViolationsContext);
   },
 
   onUpdate({ editor }) {
-    const { updateViolationsContext, validations } = this.options;
+    const { getValidations, updateViolationsContext } = this.options;
     if (editor.isDestroyed || !editor.view) return;
     try {
-      debouncedValidate(editor.view.dom, validations, updateViolationsContext);
+      debouncedValidate(editor.view.dom, getValidations(), updateViolationsContext);
     } catch {
       // view may not be available during editor lifecycle transitions
     }

@@ -38,8 +38,8 @@ const globalAttributes = {
 } as const;
 
 export const editorExtensions = (
-  /** Unset runs every core validation. Read once, when the extensions are built. */
-  validations: readonly ValidationRule[] | undefined,
+  /** Read on every run, so a host that assigns `validations` after mounting is picked up. */
+  getValidations: () => readonly ValidationRule[] | undefined,
   /** Read once, when the extensions are built: the editor is recreated to change it. */
   readonly: boolean,
   callback: (violations: Map<Range, Violation>) => void,
@@ -227,9 +227,9 @@ export const editorExtensions = (
   }),
   KeyboardShortcuts,
   Validation.configure({
+    getValidations,
     identifier,
     updateViolationsContext: callback,
-    validations,
   }),
   Highlight.configure({
     HTMLAttributes: {

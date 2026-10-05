@@ -71,8 +71,8 @@ export class Context extends LitElement {
    *
    * Property only — a validation is an object, so it has no attribute form.
    *
-   * Read once, when the editor is built: set it before the element upgrades, or alongside the
-   * markup it validates. Assigning it later leaves the running editor on the set it started with.
+   * Read afresh on every run, so assigning it after the element has mounted re-validates the
+   * content against the new set — the moment a framework or a deferred script usually gets.
    *
    * @example
    * ```js
@@ -135,7 +135,7 @@ export class Context extends LitElement {
       },
       // Prevent auto-mounting during SSR; Content component calls moumountnt() client-side
       element: null,
-      extensions: editorExtensions(this.validations, this.readonly, this.updateViolationsContext, this.id),
+      extensions: editorExtensions(() => this.validations, this.readonly, this.updateViolationsContext, this.id),
     });
   }
 
@@ -164,6 +164,7 @@ export class Context extends LitElement {
         // computing indicator positions.
         const mediaEls = [...targetEl.querySelectorAll('img, video, audio')];
 
+        this.readonlyValidationTarget = targetEl;
         Promise.all(mediaEls.map((el) => waitForMedia(el))).then(() => {
           runValidation(targetEl, this.validations, this.updateViolationsContext);
         });
@@ -175,10 +176,40 @@ export class Context extends LitElement {
     }
   }
 
+  /**
+   * @internal The element readonly mode validates, kept so a `validations` change can re-run
+   * against the same target. Unset while an editor is present, which owns its own DOM.
+   */
+  private readonlyValidationTarget?: HTMLElement;
+
+  /**
+   * @internal The element to validate, or `undefined` while nothing is mounted. Reading
+   * `editor.view` throws rather than returning `undefined` before `clippy-content` mounts the
+   * editor, so it needs guarding rather than optional chaining.
+   */
+  private get validationTarget(): HTMLElement | undefined {
+    if (this.editor && !this.editor.isDestroyed) {
+      try {
+        return this.editor.view.dom as HTMLElement;
+      } catch {
+        return undefined;
+      }
+    }
+    return this.readonlyValidationTarget;
+  }
+
   override updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
     if (changedProperties.has('readonly') && this.editor) {
       this.editor.setEditable(!this.readonly);
+    }
+
+    // The extension reads the property afresh on every run, so re-running is enough to pick a new
+    // set up. `updated` only fires after the first render, so this never doubles up with the
+    // initial run in `onCreate` or the readonly animation frame.
+    const target = this.validationTarget;
+    if (target && changedProperties.has('validations')) {
+      runValidation(target, this.validations, this.updateViolationsContext);
     }
   }
 
