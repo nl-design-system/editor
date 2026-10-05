@@ -267,7 +267,7 @@ importers:
     dependencies:
       '@gemeente-denhaag/descriptionlist':
         specifier: 4.1.1
-        version: 4.1.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 4.1.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@lit/context':
         specifier: 1.1.6
         version: 1.1.6
@@ -523,7 +523,7 @@ importers:
         version: 8.0.0(astro@7.2.10(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@22.20.1)(yaml@2.9.0))
       '@astrojs/react':
         specifier: 7.0.0
-        version: 7.0.0(@types/node@22.20.1)(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(esbuild@0.28.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(yaml@2.9.0)
+        version: 7.0.0(@types/node@22.20.1)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(esbuild@0.28.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(yaml@2.9.0)
       '@astrojs/sitemap':
         specifier: 3.7.4
         version: 3.7.4
@@ -558,14 +558,14 @@ importers:
         specifier: 3.46.0
         version: 3.46.0
       '@types/react':
-        specifier: 19.2.18
-        version: 19.2.18
+        specifier: 19.3.0
+        version: 19.3.0
       '@types/react-dom':
-        specifier: 19.2.5
-        version: 19.2.5(@types/react@19.2.18)
+        specifier: 19.3.0
+        version: 19.3.0(@types/react@19.3.0)
       '@utrecht/component-library-css':
         specifier: 9.0.15
-        version: 9.0.15(@babel/runtime@7.29.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 9.0.15(@babel/runtime@7.29.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@utrecht/design-tokens':
         specifier: 7.0.0
         version: 7.0.0
@@ -579,11 +579,11 @@ importers:
         specifier: 11.17.2
         version: 11.17.2
       react:
-        specifier: 19.2.8
-        version: 19.2.8
+        specifier: 19.3.0
+        version: 19.3.0
       react-dom:
-        specifier: 19.2.8
-        version: 19.2.8(react@19.2.8)
+        specifier: 19.3.0
+        version: 19.3.0(react@19.3.0)
       remark-custom-header-id:
         specifier: 1.0.0
         version: 1.0.0
@@ -611,7 +611,7 @@ importers:
         version: link:../editor
       '@utrecht/component-library-css':
         specifier: 9.0.15
-        version: 9.0.15(@babel/runtime@7.29.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 9.0.15(@babel/runtime@7.29.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@utrecht/design-tokens':
         specifier: 7.0.0
         version: 7.0.0
@@ -624,7 +624,7 @@ importers:
         version: 5.3.0
       '@lit/react':
         specifier: 1.0.8
-        version: 1.0.8(@types/react@19.2.18)
+        version: 1.0.8(@types/react@19.3.0)
       '@nl-design-system-community/ma-design-tokens':
         specifier: 7.0.0
         version: 7.0.0
@@ -635,17 +635,17 @@ importers:
         specifier: 22.20.1
         version: 22.20.1
       '@types/react':
-        specifier: 19.2.18
-        version: 19.2.18
+        specifier: 19.3.0
+        version: 19.3.0
       '@types/react-dom':
-        specifier: 19.2.5
-        version: 19.2.5(@types/react@19.2.18)
+        specifier: 19.3.0
+        version: 19.3.0(@types/react@19.3.0)
       react:
-        specifier: 19.2.8
-        version: 19.2.8
+        specifier: 19.3.0
+        version: 19.3.0
       react-dom:
-        specifier: 19.2.8
-        version: 19.2.8(react@19.2.8)
+        specifier: 19.3.0
+        version: 19.3.0(react@19.3.0)
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -2717,13 +2717,13 @@ packages:
   '@types/query-selector-shadow-dom@1.0.4':
     resolution: {integrity: sha512-8jfGPD0wCMCdyBvrvOrWVn8bHL1UEjkPVJKsqNZpEXp+a7mIIvvGpJMd6n6dlNl7IkG2ryxIVqFI516RPE0uhQ==}
 
-  '@types/react-dom@19.2.5':
-    resolution: {integrity: sha512-fMPwH9v7r/pp43yUd2/Mbiex5KouJwwR3dzHkhLREUC6764VyDsqxhAxv6OFEYR1RhjOyD1naqba8ECDBe7ZQg==}
+  '@types/react-dom@19.3.0':
+    resolution: {integrity: sha512-ZI7bU42mZXXKHn/qNLEw2IrbiINU7X5+vfgdixBHkCNpYWXjKgfQ/P+uyGb5CjOLB9UcnTeg3rylQtV2hym44Q==}
     peerDependencies:
-      '@types/react': ^19.2.0
+      '@types/react': ^19.3.0
 
-  '@types/react@19.2.18':
-    resolution: {integrity: sha512-AnzbBERsrLKtk2XSfTbYRLjQPdy116Sty4q+T+Bp3IC4l6jNBvreVPAHmpq9qhXQM7CXZPjLVmGMw9sy+hxQ3w==}
+  '@types/react@19.3.0':
+    resolution: {integrity: sha512-N0rFCuH9YoxG9/m61l9MfpJKfmLOVU0em7ipIz6TRgSSkvReLB9vL85GB+yr8Bs5leqpvg96JSwF4ZS1s4viQg==}
 
   '@types/sax@1.2.7':
     resolution: {integrity: sha512-rO73L89PJxeYM3s3pPPjiPgVVcymqU490g0YO5n5By0k2Erzj6tay/4lr1CHAAU4JyOWd1rpQ8bCf6cZfHU96A==}
@@ -6012,10 +6012,10 @@ packages:
     peerDependencies:
       react: ^19.2.7
 
-  react-dom@19.2.8:
-    resolution: {integrity: sha512-rVprimfGBG3DR+Tq0IQG2DT5PxKth1WIGDmj5yPmlzr4YBe7uyE+Du4oVqTDXZSHGGGXRtTJEGSSePyQCMBglQ==}
+  react-dom@19.3.0:
+    resolution: {integrity: sha512-JDk8dgif51OjFoDE70+OT9ICyYr+69HlmihNwp1+Nsfbna3t5sIiCa9ZJktDmQ4/1b/rn26hIAR2uYXDMr5r0Q==}
     peerDependencies:
-      react: ^19.2.8
+      react: ^19.3.0
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -6027,8 +6027,8 @@ packages:
     resolution: {integrity: sha512-HNe9WslTbXmFK8o8cmwgAeJFSBvt1bPdHCVKtaaV+WlAN36mpT4hcRpwbf3fY56ar2oIXzsBpOAiIRHAdY0OlQ==}
     engines: {node: '>=0.10.0'}
 
-  react@19.2.8:
-    resolution: {integrity: sha512-PWaYA1L/q9u2u7xYQi+Y3L3Yfnie7XyLeaJICV1MGD6LprsBxcAqGjYyr0eY3p+QdsA+x/Irkt4Qif8D63+Sbw==}
+  react@19.3.0:
+    resolution: {integrity: sha512-E8LUcbtBWt20bbl2YoHfx4ZDBdxVTfOKtCZn9cDSJ4l6/nuoApcpIBcj47t2wZoVX8g2ZHuMHbiShgCR1T5Sog==}
     engines: {node: '>=0.10.0'}
 
   read-pkg-up@7.0.1:
@@ -6226,6 +6226,9 @@ packages:
 
   scheduler@0.27.0:
     resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
+
+  scheduler@0.28.0:
+    resolution: {integrity: sha512-juorfCmIkIw8tT+p5BXSm6PJjQF/ycEYmKyzURCIt/RaZIhL+PulbQ9Yu2z1HdOJDdqDTlxA1+xKBmHXJsczAw==}
 
   scslre@0.3.0:
     resolution: {integrity: sha512-3A6sD0WYP7+QrjbfNA2FN3FsOaGGFoekCVgTyypy53gPxhbkCIjtO6YWgdrfM+n/8sI8JeXZOIxsHjMTNxQ4nQ==}
@@ -7412,15 +7415,15 @@ snapshots:
     dependencies:
       prismjs: 1.30.0
 
-  '@astrojs/react@7.0.0(@types/node@22.20.1)(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(esbuild@0.28.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(yaml@2.9.0)':
+  '@astrojs/react@7.0.0(@types/node@22.20.1)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(esbuild@0.28.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(yaml@2.9.0)':
     dependencies:
       '@astrojs/internal-helpers': 0.11.0
-      '@types/react': 19.2.18
-      '@types/react-dom': 19.2.5(@types/react@19.2.18)
+      '@types/react': 19.3.0
+      '@types/react-dom': 19.3.0(@types/react@19.3.0)
       '@vitejs/plugin-react': 6.1.1(vite@8.3.2(@types/node@22.20.1)(esbuild@0.28.2)(yaml@2.9.0))
       devalue: 5.9.4
-      react: 19.2.8
-      react-dom: 19.2.8(react@19.2.8)
+      react: 19.3.0
+      react-dom: 19.3.0(react@19.3.0)
       ultrahtml: 1.7.0
       vite: 8.3.2(@types/node@22.20.1)(esbuild@0.28.2)(yaml@2.9.0)
     transitivePeerDependencies:
@@ -8564,11 +8567,11 @@ snapshots:
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  '@gemeente-denhaag/descriptionlist@4.1.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@gemeente-denhaag/descriptionlist@4.1.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       clsx: 2.1.1
-      react: 19.2.8
-      react-dom: 19.2.8(react@19.2.8)
+      react: 19.3.0
+      react-dom: 19.3.0(react@19.3.0)
 
   '@gemeente-denhaag/icons@4.1.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
@@ -8905,9 +8908,9 @@ snapshots:
     dependencies:
       lit: 3.3.3
 
-  '@lit/react@1.0.8(@types/react@19.2.18)':
+  '@lit/react@1.0.8(@types/react@19.3.0)':
     dependencies:
-      '@types/react': 19.2.18
+      '@types/react': 19.3.0
 
   '@lit/reactive-element@2.1.2':
     dependencies:
@@ -9602,11 +9605,11 @@ snapshots:
 
   '@types/query-selector-shadow-dom@1.0.4': {}
 
-  '@types/react-dom@19.2.5(@types/react@19.2.18)':
+  '@types/react-dom@19.3.0(@types/react@19.3.0)':
     dependencies:
-      '@types/react': 19.2.18
+      '@types/react': 19.3.0
 
-  '@types/react@19.2.18':
+  '@types/react@19.3.0':
     dependencies:
       csstype: 3.2.3
 
@@ -9855,7 +9858,7 @@ snapshots:
 
   '@utrecht/combobox-css@3.0.1': {}
 
-  '@utrecht/component-library-css@9.0.15(@babel/runtime@7.29.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@utrecht/component-library-css@9.0.15(@babel/runtime@7.29.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       '@utrecht/accordion-css': 4.1.0
       '@utrecht/action-group-css': 4.0.1
@@ -9926,7 +9929,7 @@ snapshots:
       '@utrecht/nav-list-css': 2.0.1
       '@utrecht/navigation-css': 2.0.1
       '@utrecht/note-css': 1.0.0
-      '@utrecht/note-react': 1.0.0(@babel/runtime@7.29.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@utrecht/note-react': 1.0.0(@babel/runtime@7.29.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@utrecht/number-badge-css': 4.0.1
       '@utrecht/number-data-css': 3.0.1
       '@utrecht/ordered-list-css': 4.0.1
@@ -10065,13 +10068,13 @@ snapshots:
 
   '@utrecht/note-css@1.0.0': {}
 
-  '@utrecht/note-react@1.0.0(@babel/runtime@7.29.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@utrecht/note-react@1.0.0(@babel/runtime@7.29.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       '@babel/runtime': 7.29.2
       '@utrecht/note-css': 1.0.0
       clsx: 2.1.1
-      react: 19.2.8
-      react-dom: 19.2.8(react@19.2.8)
+      react: 19.3.0
+      react-dom: 19.3.0(react@19.3.0)
 
   '@utrecht/number-badge-css@4.0.1': {}
 
@@ -13569,10 +13572,10 @@ snapshots:
       react: 19.2.7
       scheduler: 0.27.0
 
-  react-dom@19.2.8(react@19.2.8):
+  react-dom@19.3.0(react@19.3.0):
     dependencies:
-      react: 19.2.8
-      scheduler: 0.27.0
+      react: 19.3.0
+      scheduler: 0.28.0
 
   react-is@16.13.1: {}
 
@@ -13580,7 +13583,7 @@ snapshots:
 
   react@19.2.7: {}
 
-  react@19.2.8: {}
+  react@19.3.0: {}
 
   read-pkg-up@7.0.1:
     dependencies:
@@ -13874,6 +13877,8 @@ snapshots:
       xmlchars: 2.2.0
 
   scheduler@0.27.0: {}
+
+  scheduler@0.28.0: {}
 
   scslre@0.3.0:
     dependencies:
