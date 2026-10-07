@@ -143,3 +143,87 @@ describe('<clippy-context> validations property', () => {
     expect(rulesOf(context)).toEqual(['PARAGRAPH_MUST_NOT_SHOUT']);
   });
 });
+
+type ConnectOptions = { name: string };
+type DevtoolsGlobal = {
+  __REDUX_DEVTOOLS_EXTENSION__?: { connect: (options: ConnectOptions) => unknown };
+};
+
+const fakeConnection = () => ({ init: vi.fn(), send: vi.fn(), subscribe: vi.fn(), unsubscribe: vi.fn() });
+
+describe('<clippy-context> Redux DevTools', () => {
+  const stub = () => {
+    const connections: Record<string, ReturnType<typeof fakeConnection>> = {};
+    const connect = vi.fn((options: ConnectOptions) => {
+      connections[options.name] = fakeConnection();
+      return connections[options.name];
+    });
+    (globalThis as DevtoolsGlobal).__REDUX_DEVTOOLS_EXTENSION__ = { connect };
+    return { connect, connections };
+  };
+
+  afterEach(() => {
+    delete (globalThis as DevtoolsGlobal).__REDUX_DEVTOOLS_EXTENSION__;
+  });
+
+  it('reports the violations of the first run to the panel', async () => {
+    const { connections } = stub();
+    const context = await render('', [coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
+    await settled(context);
+
+    const connection = connections['validations-property-test'];
+    await vi.waitFor(() => expect(connection.init).toHaveBeenCalled());
+    expect(connection.init).toHaveBeenCalledWith([...context.violationsContext.values()]);
+  });
+
+  it("sends the violation with the editor's own fields on it", async () => {
+    const { connections } = stub();
+    const context = await render('', [coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
+    await settled(context);
+
+    const connection = connections['validations-property-test'];
+    await vi.waitFor(() => expect(connection.init).toHaveBeenCalled());
+    const [state] = connection.init.mock.calls[0];
+
+    expect(state[0]).toBe([...context.violationsContext.values()][0]);
+    expect(state[0].display).toBe('block');
+    expect(state[0].range).toBeInstanceOf(Range);
+  });
+
+  it('reports a later run as an action, so the panel can diff it against the previous one', async () => {
+    const { connections } = stub();
+    const context = await render('', [coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
+    await settled(context);
+
+    context.validations = [paragraphMustNotShout];
+    await context.updateComplete;
+
+    const connection = connections['validations-property-test'];
+    await vi.waitFor(() => expect(connection.send).toHaveBeenCalled());
+    expect(connection.send).toHaveBeenCalledWith({ type: 'violations/updated' }, [
+      expect.objectContaining({ rule: 'PARAGRAPH_MUST_NOT_SHOUT' }),
+    ]);
+  });
+
+  it('gives every editor on a page its own panel instance', async () => {
+    const { connect, connections } = stub();
+
+    document.body.innerHTML = `
+      <clippy-context id="editor-1"><div slot="value">${CONTENT}</div><clippy-content></clippy-content></clippy-context>
+      <clippy-context id="editor-2"><div slot="value">${CONTENT}</div><clippy-content></clippy-content></clippy-context>`;
+    const contexts = [...document.querySelectorAll('clippy-context')] as Context[];
+    await Promise.all(contexts.map((context) => context.updateComplete));
+    await Promise.all(contexts.map((context) => settled(context)));
+
+    expect(connect).toHaveBeenCalledTimes(2);
+    expect(Object.keys(connections)).toEqual(['editor-1', 'editor-2']);
+    expect(connections['editor-1'].init).toHaveBeenCalledWith([...contexts[0].violationsContext.values()]);
+  });
+
+  it('validates as usual when the extension is not installed', async () => {
+    const context = await render('', [coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
+    await settled(context);
+
+    expect(rulesOf(context)).toEqual(['PARAGRAPH_SHOULD_NOT_BE_EMPTY']);
+  });
+});
