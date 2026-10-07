@@ -9,6 +9,7 @@ import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import { identifierContext } from '@/context/identifierContext';
 import { tiptapContext } from '@/context/tiptapContext';
 import { violationsContext } from '@/context/violationsContext';
+import { ViolationsDevtoolsController } from '@/controllers/ViolationsDevtoolsController';
 import { editorExtensions } from '@/extensions';
 import { initializeLocale } from '@/localization';
 import { waitForMedia } from '@/utils/waitForMedia';
@@ -108,10 +109,17 @@ export class Context extends LitElement {
     initialValue: new Map(),
   });
 
+  /**
+   * @internal Mirrors every validation run into the Redux DevTools extension, when it is
+   * installed. Inert otherwise.
+   */
+  violationsDevtools = new ViolationsDevtoolsController(this, () => this.id);
+
   /** @internal */
   updateViolationsContext = (violations: Map<Range, Violation>): void => {
     this.violationsContext = violations;
     this.lightViolationsContext.setValue(this.violationsContext);
+    this.violationsDevtools.send(violations);
   };
 
   /** @internal */
