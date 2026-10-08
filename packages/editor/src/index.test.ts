@@ -21,7 +21,7 @@ describe('<clippy-editor>', () => {
 
   it('should change selected text to heading level 3', async () => {
     await expect(page.getByRole('heading', { name: 'Start met kopniveau 1' })).toBeInTheDocument();
-    const btnSelector = page.getByRole('button', { name: 'Vet' });
+    const btnSelector = page.getByRole('button', { name: 'Vetgedrukt' });
     await vi.waitFor(() => {
       expect(btnSelector).toBeVisible();
     });
@@ -82,13 +82,13 @@ describe('<clippy-editor>', () => {
   });
 
   it('all toolbar buttons are visible, regardless of viewport size', async () => {
-    expect(page.getByRole('button', { name: 'Vet' })).toBeVisible();
+    expect(page.getByRole('button', { name: 'Vetgedrukt' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Cursief' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Onderstrepen' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Ongedaan maken' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Opnieuw' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Genummerde lijst' })).toBeVisible();
-    expect(page.getByRole('button', { name: 'Geordende lijst' })).toBeVisible();
+    expect(page.getByRole('button', { name: 'Ongeordende lijst' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Definitielijst' })).toBeVisible();
     expect(page.getByRole('button', { name: 'Tabel invoegen' })).toBeVisible();
     const toolbar = await page.getByLabelText('Werkbalk tekstbewerker').element();
