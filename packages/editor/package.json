@@ -20,6 +20,10 @@
       "types": "./dist/entries/accessibility-notifications.d.ts",
       "default": "./dist/accessibility-notifications.js"
     },
+    "./alt-text-wizard": {
+      "types": "./dist/entries/alt-text-wizard.d.ts",
+      "default": "./dist/alt-text-wizard.js"
+    },
     "./color-scheme": {
       "types": "./dist/entries/color-scheme.d.ts",
       "default": "./dist/color-scheme.js"
@@ -58,6 +62,9 @@
     "*": {
       "accessibility-notifications": [
         "./dist/entries/accessibility-notifications.d.ts"
+      ],
+      "alt-text-wizard": [
+        "./dist/entries/alt-text-wizard.d.ts"
       ],
       "color-scheme": [
         "./dist/entries/color-scheme.d.ts"
