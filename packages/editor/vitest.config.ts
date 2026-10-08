@@ -14,6 +14,8 @@ export default defineConfig({
       enabled: true,
       headless: true,
       instances: [{ browser: 'chromium' }],
+      // Vitest 5 made locator text matching exact by default; keep the previous substring behaviour.
+      locators: { exact: false },
       provider: playwright(),
       screenshotDirectory: 'tmp/screenshots',
       viewport: { height: 1280, width: 1024 },

@@ -71,7 +71,7 @@ components.d.ts
 
 # Ignore vitest output
 __screenshots__
-.vitest-attachments
+.vitest/
 
 # Playwright
 .last-run.json
