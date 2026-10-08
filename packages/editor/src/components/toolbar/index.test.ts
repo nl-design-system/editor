@@ -32,13 +32,13 @@ describe('<clippy-toolbar>', () => {
 
   it('renders correctly with required toolbar elements', async () => {
     expect(page.getByLabelText('Werkbalk tekstbewerker')).toBeInTheDocument();
-    expect(page.getByRole('button', { name: 'Vet' })).toBeInTheDocument();
+    expect(page.getByRole('button', { name: 'Vetgedrukt' })).toBeInTheDocument();
     expect(page.getByRole('button', { name: 'Cursief' })).toBeInTheDocument();
     expect(page.getByRole('button', { name: 'Link', exact: true })).toBeInTheDocument();
   });
 
   it('updates all toolbar buttons when editor content changes', async () => {
-    const btn = page.getByRole('button', { name: 'Vet' });
+    const btn = page.getByRole('button', { name: 'Vetgedrukt' });
     expect(btn).toBeVisible();
     expect(btn).toHaveAttribute('aria-pressed', 'false');
   });
@@ -125,7 +125,7 @@ describe('<clippy-toolbar>', () => {
         expect(groups.length).toBe(1);
       });
 
-      expect(page.getByRole('button', { name: 'Vet' })).toBeInTheDocument();
+      expect(page.getByRole('button', { name: 'Vetgedrukt' })).toBeInTheDocument();
       expect(page.getByRole('button', { name: 'Cursief' })).toBeInTheDocument();
 
       // Buttons not in the config should not render
@@ -142,7 +142,7 @@ describe('<clippy-toolbar>', () => {
         expect(groups.length).toBeGreaterThan(0);
       });
 
-      expect(page.getByRole('button', { name: 'Vet' })).toBeInTheDocument();
+      expect(page.getByRole('button', { name: 'Vetgedrukt' })).toBeInTheDocument();
     });
   });
 });
