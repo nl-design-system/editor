@@ -11,14 +11,14 @@ describe('paragraphShouldNotContainEmptyFormatting', () => {
     expect(violation?.rule).toBe('PARAGRAPH_SHOULD_NOT_CONTAIN_EMPTY_FORMATTING');
     expect(violation?.severity).toBe('warning');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.error).toBe('Het `<strong>`-element is leeg.');
+    expect(violation?.messages.error).toBe('Het <strong>-element is leeg.');
   });
 
   it('names the offending tag in the solution', () => {
     const tags = ['strong', 'b', 'em', 'i', 'code', 'mark', 's', 'del', 'u'];
 
     expect(tags.map((tag) => validate(`<p><${tag}></${tag}></p>`)[0]?.messages.solution)).toEqual(
-      tags.map((tag) => `Verwijder het lege \`<${tag}>\`-element of voeg tekst toe.`),
+      tags.map((tag) => `Verwijder het lege <${tag}>-element of voeg tekst toe.`),
     );
   });
 

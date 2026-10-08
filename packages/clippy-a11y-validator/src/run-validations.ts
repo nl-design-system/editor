@@ -55,7 +55,7 @@ const toViolation = (
   if (!found) return undefined;
 
   const { correction, focus, payload } = found;
-  const { messages, rule, scope, severity } = validation;
+  const { documentationId, messages, rule, scope, severity } = validation;
 
   return {
     element,
@@ -65,6 +65,7 @@ const toViolation = (
     scope,
     severity,
     ...(correction === undefined ? {} : { correction }),
+    ...(documentationId === undefined ? {} : { documentationId }),
     ...(payload === undefined ? {} : { payload }),
   };
 };

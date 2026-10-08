@@ -68,6 +68,20 @@ export default css`
     }
   }
 
+  /**
+   * The documentation ships its lists with Amsterdam's class, which no NL Design System CSS package
+   * covers. Style them here so a list in a solution reads as one.
+   */
+  .ams-unordered-list {
+    margin-block: var(--basis-space-block-md);
+    padding-inline-start: var(--basis-space-inline-xl);
+    list-style-type: disc;
+  }
+
+  .ams-unordered-list__item {
+    margin-block-end: var(--basis-space-block-sm);
+  }
+
   .clippy-validation-item-actions {
     display: flex;
     justify-content: flex-start;
