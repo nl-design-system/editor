@@ -31,7 +31,6 @@ import {
   clearHoverHighlight,
   clearValidationHighlights,
 } from '@/utils/highlights';
-import { renderMarkdown } from '@/utils/markdown';
 import { getOverlappingRanges } from '@/utils/ranges';
 import gutterStyles from './styles';
 
@@ -339,7 +338,7 @@ export class Gutter extends LitElement {
     position: { top: number; height: number },
     metaCount: number | undefined,
   ) {
-    const { correction, display, messages, severity } = violation;
+    const { correction, display, documentationId, messages, severity } = violation;
     const { error: heading, href, solution } = messages;
     const isActive = this.activeRange === range;
     return html`<li
@@ -361,7 +360,7 @@ export class Gutter extends LitElement {
         @focus=${() => this.#highlightRange(range, violation)}
         @blur=${() => clearHoverHighlight()}
       >
-        <span class="sr-only">${renderMarkdown(heading)}</span>
+        <span class="sr-only">${heading}</span>
       </button>
       ${metaCount === undefined ? nothing : this.#renderMeta(range, violation, metaCount)}
       <div
@@ -375,6 +374,7 @@ export class Gutter extends LitElement {
           .range=${range}
           .severity=${severity}
           .heading=${heading}
+          .documentationId=${documentationId}
           .href=${href}
           .correction=${correction}
           .solution=${solution}

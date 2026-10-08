@@ -1,6 +1,5 @@
 import type { ValidationMessagesByLocale } from '../../../types/messages.ts';
 
-// Copied from @nl-design-system-unstable/documentation componenten/paragraph/_issues/strong.
 export const messages: ValidationMessagesByLocale = {
   nl: {
     error: 'De hele alinea is dikgedrukt.',

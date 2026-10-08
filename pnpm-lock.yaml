@@ -297,6 +297,9 @@ importers:
       '@nl-design-system-community/clippy-components':
         specifier: 3.2.0
         version: 3.2.0
+      '@nl-design-system-unstable/documentation':
+        specifier: 2.0.0
+        version: 2.0.0
       '@tabler/icons':
         specifier: 3.46.0
         version: 3.46.0
@@ -426,9 +429,6 @@ importers:
       lit:
         specifier: 3.3.3
         version: 3.3.3
-      marked:
-        specifier: 18.0.11
-        version: 18.0.11
       prosemirror-model:
         specifier: 1.25.12
         version: 1.25.12
@@ -528,7 +528,7 @@ importers:
         version: 3.7.4
       '@astrojs/ts-plugin':
         specifier: 1.10.11
-        version: 1.10.11
+        version: 1.10.11(typescript@6.0.3)
       '@fontsource/fira-sans':
         specifier: 5.3.0
         version: 5.3.0
@@ -2083,6 +2083,9 @@ packages:
   '@nl-design-system-community/ma-design-tokens@7.0.0':
     resolution: {integrity: sha512-HN5e2Kcn0EtqVdXMiyTq9IfAgVtdFuyG4x+TcECqFi0XatCpEMPXZmSEGCQZ8KO2NuS6D9Hb8zrqROiQ3gBfQg==}
 
+  '@nl-design-system-unstable/documentation@2.0.0':
+    resolution: {integrity: sha512-HSgHnZohAYqlOXnSL0HHQRdEfqa+6ZaskNAR/UQzvtkPvTM55c8fnCxQ7TIedZ6y66yyB2SMfb+LIUSU6+obQw==}
+
   '@nl-design-system/eslint-config@2.4.0':
     resolution: {integrity: sha512-IkPKcKDrHfRSXXIkKSZPW3/oldyTgGIU+icLKmIVM/1eGa8zE3cx4Lrb8N8bGCFDcnIN11PpiXGC3uqagByF4A==}
     peerDependencies:
@@ -3302,6 +3305,11 @@ packages:
 
   '@volar/typescript@2.4.28':
     resolution: {integrity: sha512-Ja6yvWrbis2QtN4ClAKreeUZPVYMARDYZl9LMEv1iQ1QdepB6wn0jTRxA9MftYmYa4DQ4k/DaSZpFPUfxl8giw==}
+    peerDependencies:
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   '@web/config-loader@0.1.3':
     resolution: {integrity: sha512-XVKH79pk4d3EHRhofete8eAnqto1e8mCRAqPV00KLNFzCWSe8sWmLnqKCqkPNARC6nksMaGrATnA5sPDRllMpQ==}
@@ -5304,11 +5312,6 @@ packages:
     engines: {node: '>= 20'}
     hasBin: true
 
-  marked@18.0.11:
-    resolution: {integrity: sha512-HnslJfsZkRPBDJRHvVtAaWlZHEpSu7u8LgQuJCELjRKuWR+hpq4A7sLq3p8HaI9ypVoXDXxV34CsQJEe1+J5Aw==}
-    engines: {node: '>= 20'}
-    hasBin: true
-
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
@@ -5873,10 +5876,6 @@ packages:
 
   postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
-
-  postcss@8.5.20:
-    resolution: {integrity: sha512-lW616l85ucIQL+FocMmL7pQFPqBmwejrCMg+iPxyImlrANNJG9NHq/RkyCZopDhd8C3LA03PHRJDjkbGu8vvug==}
-    engines: {node: ^10 || ^12 || >=14}
 
   postcss@8.5.26:
     resolution: {integrity: sha512-u82N74LFzG8ca+dD8puPnplTXoGH4fTPpVGuIbt36G3qvNlkvfD0lEAZSxaly3KX8TS/L1A1gsCEmvKmBcVbkQ==}
@@ -7447,15 +7446,17 @@ snapshots:
       is-docker: 4.0.0
       package-manager-detector: 1.8.0
 
-  '@astrojs/ts-plugin@1.10.11':
+  '@astrojs/ts-plugin@1.10.11(typescript@6.0.3)':
     dependencies:
       '@astrojs/compiler': 2.13.1
       '@astrojs/yaml2ts': 0.2.4
       '@jridgewell/sourcemap-codec': 1.6.0
       '@volar/language-core': 2.4.28
-      '@volar/typescript': 2.4.28
+      '@volar/typescript': 2.4.28(typescript@6.0.3)
       semver: 7.8.5
       vscode-languageserver-textdocument: 1.0.14
+    transitivePeerDependencies:
+      - typescript
 
   '@astrojs/yaml2ts@0.2.4':
     dependencies:
@@ -9032,6 +9033,8 @@ snapshots:
 
   '@nl-design-system-community/ma-design-tokens@7.0.0': {}
 
+  '@nl-design-system-unstable/documentation@2.0.0': {}
+
   '@nl-design-system/eslint-config@2.4.0(eslint@10.12.0(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)':
     dependencies:
       '@eslint/js': 9.39.2
@@ -10280,11 +10283,13 @@ snapshots:
 
   '@volar/source-map@2.4.28': {}
 
-  '@volar/typescript@2.4.28':
+  '@volar/typescript@2.4.28(typescript@6.0.3)':
     dependencies:
       '@volar/language-core': 2.4.28
       path-browserify: 1.0.1
       vscode-uri: 3.2.0
+    optionalDependencies:
+      typescript: 6.0.3
 
   '@web/config-loader@0.1.3':
     dependencies:
@@ -12588,8 +12593,6 @@ snapshots:
 
   marked@16.4.2: {}
 
-  marked@18.0.11: {}
-
   math-intrinsics@1.1.0: {}
 
   mathml-tag-names@4.0.0: {}
@@ -13399,17 +13402,11 @@ snapshots:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
-  postcss-sorting@10.0.0(postcss@8.5.20):
+  postcss-sorting@10.0.0(postcss@8.5.26):
     dependencies:
-      postcss: 8.5.20
+      postcss: 8.5.26
 
   postcss-value-parser@4.2.0: {}
-
-  postcss@8.5.20:
-    dependencies:
-      nanoid: 3.3.18
-      picocolors: 1.1.1
-      source-map-js: 1.2.1
 
   postcss@8.5.26:
     dependencies:
@@ -14230,8 +14227,8 @@ snapshots:
 
   stylelint-order@8.1.1(stylelint@17.16.0(supports-color@10.2.2)(typescript@6.0.3)):
     dependencies:
-      postcss: 8.5.20
-      postcss-sorting: 10.0.0(postcss@8.5.20)
+      postcss: 8.5.26
+      postcss-sorting: 10.0.0(postcss@8.5.26)
       stylelint: 17.16.0(supports-color@10.2.2)(typescript@6.0.3)
 
   stylelint-scss@7.2.0(stylelint@17.16.0(supports-color@10.2.2)(typescript@6.0.3)):
@@ -14573,7 +14570,7 @@ snapshots:
   unplugin-dts@1.0.3(esbuild@0.28.2)(rolldown@1.2.12)(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.2(@types/node@22.20.1)(esbuild@0.28.2)(yaml@2.9.0)):
     dependencies:
       '@rollup/pluginutils': 5.4.0
-      '@volar/typescript': 2.4.28
+      '@volar/typescript': 2.4.28(typescript@6.0.3)
       compare-versions: 6.1.1
       debug: 4.4.3(supports-color@10.2.2)
       kolorist: 1.8.0
@@ -14591,7 +14588,7 @@ snapshots:
   unplugin-dts@1.1.0(esbuild@0.28.2)(rolldown@1.2.12)(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.2(@types/node@22.20.1)(esbuild@0.28.2)(yaml@2.9.0)):
     dependencies:
       '@rollup/pluginutils': 5.4.0
-      '@volar/typescript': 2.4.28
+      '@volar/typescript': 2.4.28(typescript@6.0.3)
       compare-versions: 6.1.1
       debug: 4.4.3(supports-color@10.2.2)
       glob-to-regexp: 0.4.1

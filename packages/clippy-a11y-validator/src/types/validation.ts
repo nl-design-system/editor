@@ -30,6 +30,8 @@ export type DocumentValidationCondition<E extends HTMLElement = HTMLElement> = (
 ) => boolean;
 
 type SharedValidationDefinition<S extends Selector> = {
+  /** The rule in `@nl-design-system-unstable/documentation` that explains this violation, by id. */
+  documentationId?: string;
   messages: ValidationMessagesByLocale;
   rule: string;
   selector: S;
@@ -95,6 +97,8 @@ export type ViolationCorrection = {
 export type Violation = {
   /** Present only when there is something to run: a correction always has an `execute`. */
   correction?: ViolationCorrection;
+  /** The rule in `@nl-design-system-unstable/documentation` that explains this violation, by id. */
+  documentationId?: string;
   element: HTMLElement;
   focus?: FocusViolationFunction;
   messages: ResolvedMessages;

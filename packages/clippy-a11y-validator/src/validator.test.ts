@@ -227,6 +227,30 @@ describe('Validator', () => {
     expect(violation?.focus).toBeUndefined();
   });
 
+  it('names the documentation rule the validation points at', () => {
+    const [violation] = new Validator({ validations: [coreValidations[PARAGRAPH_SHOULD_NOT_BE_EMPTY]] }).validate([
+      fragment,
+    ]);
+
+    expect(violation?.documentationId).toBe('a023d975-1365-4057-bb23-d4c23bb52784');
+  });
+
+  /** As with `correction`, hosts branch on the key being there at all. */
+  it('reports no documentation id at all when the validation names none', () => {
+    const spy: Validation = {
+      condition: () => false,
+      messages: { nl: { error: 'x' } },
+      rule: 'SPY',
+      scope: 'element',
+      selector: 'p',
+      severity: 'info',
+    };
+
+    const [violation] = new Validator({ validations: [spy] }).validate([fragment]);
+
+    expect(violation).not.toHaveProperty('documentationId');
+  });
+
   it('hands a document validation the same context in payload, focus and correction', () => {
     const nearestPrecedingTexts: (string | undefined)[] = [];
     const spy: Validation = {

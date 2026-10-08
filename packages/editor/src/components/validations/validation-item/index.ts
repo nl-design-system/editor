@@ -11,15 +11,17 @@ import AlertTriangleIcon from '@tabler/icons/outline/alert-triangle.svg?raw';
 import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
 import { LitElement, html, nothing, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
+import { map } from 'lit/directives/map.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationInteractionMode } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';
 import { CustomEvents, type CorrectValidationIssueDetail, type FocusNodeDetail } from '@/events';
-import { renderMarkdown } from '@/utils/markdown';
+import { documentationSections } from '@/utils/documentation';
 import validationListItemStyles from './styles';
 
 const tag = 'clippy-validation-item';
@@ -34,13 +36,13 @@ const ariaDescribedBy = 'validation-item-header';
 
 /**
  * A single accessibility violation card. Displays the severity icon,
- * heading, optional solution, and action buttons (Focus, Correct).
+ * heading, the documentation for the rule the violation names, and action buttons (Focus, Correct).
  * The `mode` property controls which actions are visible.
  *
  * @tag clippy-validation-item
  *
  * @slot solution-html - Optional HTML content rendered as guidance below
- *   the heading, in place of the `solution` property. Wrap content in a `<p>` element.
+ *   the heading, in place of the documentation and the `solution` property. Wrap content in a `<p>` element.
  *
  * @fires {CustomEvent<FocusNodeDetail>} FOCUS_NODE - Dispatched when the user clicks "Focus",
  *   carrying `detail.range` so the editor can scroll to the relevant node.
@@ -64,7 +66,8 @@ export class ValidationItem extends LitElement {
     unsafeCSS(paragraphStyle),
     unsafeCSS(headingStyle),
     unsafeCSS(linkCss),
-    // The heading and solution are markdown: a code span in them carries `nl-code`.
+    // A code span in the documentation carries `nl-code`, the same class as inline code in the
+    // editor's own content.
     unsafeCSS(codeStyle),
   ];
 
@@ -78,13 +81,18 @@ export class ValidationItem extends LitElement {
   @property({ attribute: false }) range?: Range;
   /** Severity level of the validation issue. */
   @property({ type: String }) severity!: ValidationSeverity;
-  /** Human-readable heading of the validation issue, rendered as markdown. */
+  /** Human-readable heading of the validation issue. */
   @property({ type: String }) heading!: string;
+  /**
+   * The rule in `@nl-design-system-unstable/documentation` that explains this issue, by id. Its
+   * explanation and solutions fill the card. Ignored when the `solution-html` slot is filled.
+   */
+  @property({ type: String }) documentationId?: string;
   /** Optional URL linking to a more extensive explanation of the WCAG criterion. */
   @property({ type: String }) href?: string;
   /**
-   * Guidance on how to resolve the issue, rendered as markdown. Ignored when the
-   * `solution-html` slot is filled.
+   * Guidance on how to resolve the issue. Shown only for a rule the documentation does not
+   * describe, and ignored when the `solution-html` slot is filled.
    */
   @property({ type: String }) solution?: string;
   /** The fix offered for this issue: what to run, and the label of the button that runs it. */
@@ -133,6 +141,19 @@ export class ValidationItem extends LitElement {
     }
   };
 
+  /**
+   * The documentation for the rule, when there is any. The validation's own `solution` stands in
+   * for a rule the documentation package does not describe yet.
+   */
+  #renderGuidance() {
+    const sections = documentationSections(this.documentationId);
+    if (sections.length > 0) {
+      return map(sections, (section) => html`${unsafeHTML(section)}`);
+    }
+
+    return this.solution ? html`<p class="nl-paragraph">${this.solution}</p>` : nothing;
+  }
+
   #renderActions() {
     if (this.mode === validationInteractionMode.READONLY) {
       return nothing;
@@ -165,12 +186,10 @@ export class ValidationItem extends LitElement {
           <span class="clippy-validation-item-severity clippy-validation-item-severity--${this.severity}">
             ${unsafeSVG(this.#getAlertIcon())}
           </span>
-          <h4 class="nl-heading nl-heading--level-4" id=${ariaDescribedBy}>${renderMarkdown(this.heading)}</h4>
+          <h4 class="nl-heading nl-heading--level-4" id=${ariaDescribedBy}>${this.heading}</h4>
         </div>
         <div class="clippy-validation-item__message">
-          <slot name="solution-html">
-            ${this.solution ? html`<p class="nl-paragraph">${renderMarkdown(this.solution)}</p>` : nothing}
-          </slot>
+          <slot name="solution-html">${this.#renderGuidance()}</slot>
           ${
             this.href
               ? html`
