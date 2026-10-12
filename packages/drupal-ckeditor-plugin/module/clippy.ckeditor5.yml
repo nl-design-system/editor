@@ -13,6 +13,19 @@ clippy_validation:
       plugins:
         - ckeditor5_essentials
 
+clippy_alt_text_wizard:
+  ckeditor5:
+    plugins:
+      - clippyCkeditor.ClippyAltTextWizard
+  drupal:
+    label: "Alt-text wizard"
+    library: "clippy/plugin"
+    elements: false
+    toolbar_items: {}
+    conditions:
+      plugins:
+        - ckeditor5_image
+
 clippy_content_classes:
   ckeditor5:
     plugins:
