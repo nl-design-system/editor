@@ -6,12 +6,13 @@ Builds the Clippy CKEditor 5 plugin as an IIFE bundle for use in Drupal.
 
 `module/` holds the Drupal module itself: the `*.yml` plugin registration, the PHP settings form and the config schema. The build copies that folder, the bundle and the generated stylesheets to `app/drupal/modules/clippy/` — not a local `dist/` folder. This makes the plugin immediately available to the Drupal module without a manual copy step.
 
-Two CKEditor 5 plugins are registered:
+Three CKEditor 5 plugins are registered:
 
-| Plugin id                | Configurable | Purpose                                                     |
-| ------------------------ | ------------ | ----------------------------------------------------------- |
-| `clippy_validation`      | no           | Accessibility feedback in the editor.                       |
-| `clippy_content_classes` | yes          | The design-system classes CKEditor writes into the content. |
+| Plugin id                | Configurable | Purpose                                                                                         |
+| ------------------------ | ------------ | ----------------------------------------------------------------------------------------------- |
+| `clippy_validation`      | no           | Accessibility feedback in the editor.                                                           |
+| `clippy_alt_text_wizard` | no           | An Alt-text wizard button in the image alt-text balloon. Only in formats with the image plugin. |
+| `clippy_content_classes` | yes          | The design-system classes CKEditor writes into the content.                                     |
 
 ## Editing the content classes
 
