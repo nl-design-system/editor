@@ -1,13 +1,23 @@
 import type { AltTextWizardButton, AltTextWizardDialog } from '@nl-design-system-community/editor/alt-text-wizard';
 import '@nl-design-system-community/editor/alt-text-wizard';
-import { ContextualBalloon, Plugin, View, type ObservableChangeEvent, type ViewCollection } from 'ckeditor5';
+import {
+  ContextualBalloon,
+  Plugin,
+  View,
+  type ModelElement,
+  type ObservableChangeEvent,
+  type ViewCollection,
+} from 'ckeditor5';
 
 const ALT_TEXT_FORM_CLASS = 'ck-text-alternative-form';
+const ALT_INPUT_SELECTOR = 'input.ck-input';
 
 type AltTextFormView = View & {
   focusTracker?: { add(element: Element): void; remove(element: Element): void };
   _focusables?: ViewCollection;
 };
+
+const altInput = (form: View) => form.element!.querySelector<HTMLInputElement>(ALT_INPUT_SELECTOR);
 
 // Form row wrapping the Wizard button as a CKEditor View, so it can join the form's focus cycling.
 class WizardRowView extends View {
@@ -36,6 +46,7 @@ class WizardDialogView extends View<AltTextWizardDialog> {
     super(locale);
     this.setTemplate({
       attributes: { class: ['ck-reset_all-excluded'] },
+      on: { close: this.bindTemplate.to('close') },
       tag: 'clippy-alt-text-wizard-dialog',
     });
   }
@@ -49,6 +60,7 @@ export class ClippyAltTextWizard extends Plugin {
 
   private readonly _rows = new Map<View, WizardRowView>();
   private _dialog: WizardDialogView | null = null;
+  private _altTextForm: { draft: string; form: AltTextFormView; image: ModelElement | null } | null = null;
 
   afterInit(): void {
     if (!this.editor.plugins.has(ContextualBalloon) || !this.editor.commands.get('imageTextAlternative')) {
@@ -74,18 +86,51 @@ export class ClippyAltTextWizard extends Plugin {
     super.destroy();
   }
 
-  private _openWizard(): void {
+  private _openWizard(form: AltTextFormView): void {
+    this._altTextForm = { draft: altInput(form)!.value, form, image: this._selectedImage() };
+    // close the form before the modal opens, so the editor regaining focus does not pull focus out of the modal
+    form.fire('cancel');
     if (!this._dialog) {
       this._dialog = new WizardDialogView(this.editor.locale);
       this.editor.ui.view.body.add(this._dialog);
+      this.listenTo(this._dialog, 'close', () => this._restoreForm());
     }
     this._dialog.element!.open();
   }
 
+  private _selectedImage(): ModelElement | null {
+    return this.editor.plugins.get('ImageUtils').getClosestSelectedImageElement(this.editor.model.document.selection);
+  }
+
+  private _restoreForm(): void {
+    const altTextForm = this._altTextForm;
+    this._altTextForm = null;
+    const selectedImage = this._selectedImage();
+    if (!altTextForm || !selectedImage || selectedImage !== altTextForm.image) {
+      return;
+    }
+
+    const { draft, form } = altTextForm;
+    const balloon = this.editor.plugins.get(ContextualBalloon);
+    if (balloon.hasView(form)) {
+      return;
+    }
+
+    const view = this.editor.editing.view;
+    balloon.add({
+      position: { target: view.domConverter.mapViewToDom(this.editor.editing.mapper.toViewElement(selectedImage)!) },
+      view: form,
+    });
+
+    const input = altInput(form)!;
+    input.value = draft;
+    input.dispatchEvent(new Event('input'));
+    input.focus();
+  }
+
   private _addWizardButton(form: AltTextFormView): void {
     const formElement = form.element!;
-    // the alt text input field
-    const input = formElement.querySelector<HTMLInputElement>('input.ck-input');
+    const input = altInput(form);
     if (!input || this._rows.has(form)) {
       return;
     }
@@ -98,7 +143,7 @@ export class ClippyAltTextWizard extends Plugin {
 
     const row = new WizardRowView(this.editor.locale);
     row.render();
-    this.listenTo(row, 'execute', () => this._openWizard());
+    this.listenTo(row, 'execute', () => this._openWizard(form));
     // place the row directly below the input, above Save/Cancel
     inputRow.after(row.element!);
     // remember the row, so it is added once per form and destroyed with the plugin

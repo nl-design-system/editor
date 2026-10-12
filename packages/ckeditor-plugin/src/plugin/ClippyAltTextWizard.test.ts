@@ -26,6 +26,8 @@ beforeAll(() => {
 
   HTMLDialogElement.prototype.showModal = function (this: HTMLDialogElement) {
     this.setAttribute('open', '');
+    this.tabIndex = -1;
+    this.focus();
   };
   HTMLDialogElement.prototype.close = function (this: HTMLDialogElement, returnValue?: string) {
     if (!this.open) return;
@@ -93,6 +95,14 @@ const openWizard = async (button: HTMLElement) => {
   return openWizardDialogs()[0];
 };
 
+const altInput = (form: HTMLElement) => form.querySelector<HTMLInputElement>('input.ck-input')!;
+
+const typeDraft = (form: HTMLElement, value: string) => {
+  const input = altInput(form);
+  input.value = value;
+  input.dispatchEvent(new Event('input'));
+};
+
 const follows = (node: Node, reference: Node) =>
   Boolean(reference.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING);
 
@@ -139,32 +149,42 @@ describe('ClippyAltTextWizard', () => {
     expect(wizardDialogs()).toHaveLength(0);
   });
 
-  it("puts the Wizard button between the input and Save/Cancel in Drupal's form", async () => {
+  it('hides the Alt-text form without saving and moves focus into the wizard when it opens', async () => {
+    const editor = await createEditorWithImage('Saved');
+    const form = showAltTextForm(editor);
+    typeDraft(form, 'Draft');
+
+    const dialog = await openWizard(wizardButtons(form)[0]);
+
+    expect(form.isConnected).toBe(false);
+    expect(editor.getData()).toContain('alt="Saved"');
+    expect(document.activeElement).toBe(dialog);
+  });
+
+  it('shows the Alt-text form again with the draft and focus on the input when the wizard closes', async () => {
+    const editor = await createEditorWithImage('Saved');
+    const form = showAltTextForm(editor);
+    typeDraft(form, 'Draft');
+    const dialog = await openWizard(wizardButtons(form)[0]);
+
+    dialog.close();
+
+    expect(balloonElement(editor).contains(form)).toBe(true);
+    expect(altInput(form).value).toBe('Draft');
+    expect(document.activeElement).toBe(altInput(form));
+    expect(editor.getData()).toContain('alt="Saved"');
+  });
+
+  it('adds no Wizard button to other balloon views', async () => {
     const editor = await createEditorWithImage();
     const view = new View(editor.locale);
     view.setTemplate({
-      attributes: {
-        class: ['ck', 'ck-text-alternative-form', 'ck-text-alternative-form--with-decorative-toggle'],
-      },
-      children: [
-        { attributes: { class: ['ck', 'ck-button', 'ck-switchbutton'], type: 'button' }, tag: 'button' },
-        {
-          attributes: { class: ['ck', 'ck-labeled-field-view'] },
-          children: [{ attributes: { class: ['ck', 'ck-input'], type: 'text' }, tag: 'input' }],
-          tag: 'div',
-        },
-        { attributes: { class: ['ck', 'ck-button-save'], type: 'submit' }, tag: 'button' },
-        { attributes: { class: ['ck', 'ck-button-cancel'], type: 'button' }, tag: 'button' },
-      ],
+      children: [{ attributes: { class: ['ck', 'ck-input'], type: 'text' }, tag: 'input' }],
       tag: 'form',
     });
+
     editor.plugins.get(ContextualBalloon).add({ position: { target: document.body }, view });
 
-    const form = view.element!;
-    const [button] = wizardButtons(form);
-    expect(button).toBeDefined();
-    expect(follows(button, form.querySelector('input')!)).toBe(true);
-    expect(follows(form.querySelector('.ck-button-save')!, button)).toBe(true);
-    expect(follows(form.querySelector('.ck-button-cancel')!, button)).toBe(true);
+    expect(wizardButtons(view.element!)).toHaveLength(0);
   });
 });
