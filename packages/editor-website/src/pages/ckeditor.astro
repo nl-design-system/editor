@@ -20,6 +20,7 @@ import Document from '../layouts/document.astro';
     Heading,
     Image,
     ImageTextAlternative,
+    ImageToolbar,
     ImageUpload,
     Italic,
     Link,
@@ -28,7 +29,7 @@ import Document from '../layouts/document.astro';
     Underline,
   } from 'ckeditor5';
   import coreTranslations from 'ckeditor5/translations/nl.js';
-  import { ClippyPlugin } from '@nl-design-system-community/ckeditor-plugin';
+  import { ClippyAltTextWizard, ClippyPlugin } from '@nl-design-system-community/ckeditor-plugin';
 
   const editorEl = document.querySelector<HTMLElement>('#ck-editor');
 
@@ -48,8 +49,10 @@ import Document from '../layouts/document.astro';
       List,
       Image,
       ImageTextAlternative,
+      ImageToolbar,
       ImageUpload,
       ClippyPlugin,
+      ClippyAltTextWizard,
     ],
     toolbar: [
       'heading',
@@ -64,6 +67,9 @@ import Document from '../layouts/document.astro';
       '|',
       'insertImage',
     ],
+    image: {
+      toolbar: ['imageTextAlternative'],
+    },
     heading: {
       options: [
         { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
