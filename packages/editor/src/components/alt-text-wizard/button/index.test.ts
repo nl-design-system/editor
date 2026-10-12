@@ -24,4 +24,13 @@ describe('<clippy-alt-text-wizard-button>', () => {
 
     await expect.element(page.getByRole('button', { name: 'Alt-tekst keuzehulp' })).toBeVisible();
   });
+
+  it('is styled by the Clippy theme outside a themed page', async () => {
+    document.documentElement.lang = 'en';
+    document.body.innerHTML = '<clippy-alt-text-wizard-button></clippy-alt-text-wizard-button>';
+    const button = page.getByRole('button', { name: 'Alt-text wizard' });
+    await expect.element(button).toBeVisible();
+
+    expect(getComputedStyle(button.element()).paddingInlineStart).not.toBe('0px');
+  });
 });
