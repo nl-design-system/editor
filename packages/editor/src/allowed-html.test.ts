@@ -266,15 +266,26 @@ describe('Allowed HTML in Clippy Editor', () => {
     });
 
     it('renders <td> cells with colspan and rowspan attributes', async () => {
-      editor = await createTestEditor('<table><tbody><tr><td>Cell</td></tr></tbody></table>');
-      expect(editor.getHTML()).toContain('<td colspan="1" rowspan="1">');
+      editor = await createTestEditor(
+        '<table><tbody><tr><td colspan="2" rowspan="2">Cell</td></tr><tr></tr></tbody></table>',
+      );
+      expect(editor.getHTML()).toContain('<td colspan="2" rowspan="2">');
     });
 
     it('renders <th> header cells with colspan and rowspan attributes', async () => {
       editor = await createTestEditor(
+        '<table><thead><tr><th colspan="2">Header</th></tr></thead><tbody><tr><td>Cell</td><td>Cell</td></tr></tbody></table>',
+      );
+      expect(editor.getHTML()).toContain('<th colspan="2">');
+    });
+
+    it('omits colspan and rowspan on cells that span a single row and column', async () => {
+      editor = await createTestEditor(
         '<table><thead><tr><th>Header</th></tr></thead><tbody><tr><td>Cell</td></tr></tbody></table>',
       );
-      expect(editor.getHTML()).toContain('<th colspan="1" rowspan="1">');
+      const html = editor.getHTML();
+      expect(html).toContain('<th><p class="nl-paragraph">Header</p></th>');
+      expect(html).toContain('<td><p class="nl-paragraph">Cell</p></td>');
     });
 
     it('wraps cell content in a paragraph', async () => {
@@ -301,7 +312,7 @@ describe('Allowed HTML in Clippy Editor', () => {
           </tbody>
         </table>`);
       expect(editor.getHTML()).toEqual(
-        `<h1 class="nl-heading nl-heading--level-1">Title</h1><table class="utrecht-table utrecht-table--html-table"><caption>caption</caption><thead><tr><th colspan="1" rowspan="1"><p class="nl-paragraph">tablehead</p></th><th colspan="1" rowspan="1"><p class="nl-paragraph">tablehead</p></th></tr></thead><tbody headrows="0" rowheadcolumns="0"><tr><td colspan="1" rowspan="1"><p class="nl-paragraph">table body cell</p></td><td colspan="1" rowspan="1"><p class="nl-paragraph">table body cell</p></td></tr></tbody></table>`,
+        `<h1 class="nl-heading nl-heading--level-1">Title</h1><table class="utrecht-table utrecht-table--html-table"><caption>caption</caption><thead><tr><th><p class="nl-paragraph">tablehead</p></th><th><p class="nl-paragraph">tablehead</p></th></tr></thead><tbody headrows="0" rowheadcolumns="0"><tr><td><p class="nl-paragraph">table body cell</p></td><td><p class="nl-paragraph">table body cell</p></td></tr></tbody></table>`,
       );
     });
   });
