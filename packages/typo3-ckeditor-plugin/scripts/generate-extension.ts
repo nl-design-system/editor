@@ -62,16 +62,8 @@ function writeStyles(): void {
   writeFileSync(resolve(cssOut, 'clippy-tokens.css'), tokenString);
 }
 
-// TYPO3 has no settings form to read content-classes.json at runtime, so the defaults are
-// generated into a preset Clippy.yaml imports.
-function writePreset(fields: ContentClassesJson['fields']): void {
-  writeYaml(resolve(extensionOut, 'Configuration/RTE/ContentClasses.yaml'), {
-    editor: { config: { contentClasses: Object.fromEntries(fields.map((f) => [f.key, f.defaultValue])) } },
-  });
-}
-
-// The same defaults again as site settings, so an admin can override them per site in the
-// backend. The set's page.tsconfig wins over the preset above; without the set nothing changes.
+// The content-class defaults as site settings, so an admin can override them per site in the
+// backend. Without the set the plugin's own defaults apply.
 function writeSet(fields: ContentClassesJson['fields']): void {
   writeYaml(resolve(setOut, 'settings.definitions.yaml'), {
     categories: { [SETTING_CATEGORY]: { description: CATEGORY_DESCRIPTION, label: CATEGORY_LABEL } },
@@ -118,19 +110,23 @@ $EM_CONF[$_EXTKEY] = [
         'conflicts' => [],
         'suggests' => [],
     ],
+    'autoload' => [
+        'psr-4' => [
+            'NlDesignSystemCommunity\\\\Clippy\\\\' => 'Classes/',
+        ],
+    ],
 ];
 `,
   );
 }
 
 export function generateExtension(): void {
-  // The TYPO3 extension itself (composer.json, RTE preset, import map, page TSconfig, shim).
+  // The TYPO3 extension itself (composer.json, event listener, import map, shim).
   cpSync(resolve(packageDir, 'extension'), extensionOut, { recursive: true });
   writeMetadata();
 
   writeStyles();
 
   const { fields } = readContentClasses();
-  writePreset(fields);
   writeSet(fields);
 }

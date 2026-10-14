@@ -7,6 +7,11 @@
     "typo3/cms-core": "^12.4 || ^13.4 || ^14.3",
     "typo3/cms-rte-ckeditor": "^12.4 || ^13.4 || ^14.3"
   },
+  "autoload": {
+    "psr-4": {
+      "NlDesignSystemCommunity\\Clippy\\": "Classes/"
+    }
+  },
   "extra": {
     "typo3/cms": {
       "extension-key": "clippy"
