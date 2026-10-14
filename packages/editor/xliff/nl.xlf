@@ -406,6 +406,14 @@
         <source>Open validation</source>
         <target>Validatiemelding openen</target>
       </trans-unit>
+      <trans-unit id="sa937fce28916575e">
+        <source>Solution</source>
+        <target>Oplossing</target>
+      </trans-unit>
+      <trans-unit id="sc16e00a7a8b2fde2">
+        <source>Back</source>
+        <target>Terug</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

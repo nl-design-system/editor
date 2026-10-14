@@ -9,6 +9,7 @@ export const headingLevelOneMustBeUnique = defineValidation({
   correction: {
     execute: (headingOne) => () => changeTagName(headingOne, 'h2'),
   },
+  documentationId: '0f185b42-34f9-4c50-a3fb-4d0d384d62bf',
   messages,
   rule: headingValidationRules.HEADING_LEVEL_ONE_MUST_BE_UNIQUE,
   scope: 'document',

@@ -10,6 +10,7 @@ export const paragraphShouldNotContainUnderlinedText = defineValidation({
   correction: {
     execute: (underline) => () => unwrapElement(underline),
   },
+  documentationId: 'fe56a126-ed5b-406f-8240-fedd5b25d7cd',
   messages,
   rule: paragraphValidationRules.PARAGRAPH_SHOULD_NOT_CONTAIN_UNDERLINED_TEXT,
   scope: 'element',

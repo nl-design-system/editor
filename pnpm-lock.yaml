@@ -126,6 +126,10 @@ importers:
         version: 5.0.3(@types/node@22.20.5)(@vitest/browser-playwright@5.0.3)(@vitest/coverage-v8@5.0.3)(@vitest/ui@5.0.3)(jsdom@30.1.2)(vite@8.3.3(@types/node@22.20.5)(esbuild@0.28.2)(yaml@2.9.1))
 
   packages/clippy-a11y-validator:
+    dependencies:
+      '@nl-design-system-unstable/documentation':
+        specifier: 2.0.0
+        version: 2.0.0
     devDependencies:
       '@nl-design-system/tsconfig':
         specifier: 1.0.5
@@ -426,9 +430,6 @@ importers:
       lit:
         specifier: 3.3.3
         version: 3.3.3
-      marked:
-        specifier: 18.1.0
-        version: 18.1.0
       prosemirror-model:
         specifier: 1.25.12
         version: 1.25.12
@@ -2102,6 +2103,9 @@ packages:
 
   '@nl-design-system-community/ma-navigation-bar-css@0.0.1':
     resolution: {integrity: sha512-jTxObh0iyoKI2zJC2iU4+QbVceugVMgVNLRO9CM0UdxU1ysn0r7kUAKu2ieeJYSKXTw4HzDbXiUTYk4ioaYU8Q==}
+
+  '@nl-design-system-unstable/documentation@2.0.0':
+    resolution: {integrity: sha512-HSgHnZohAYqlOXnSL0HHQRdEfqa+6ZaskNAR/UQzvtkPvTM55c8fnCxQ7TIedZ6y66yyB2SMfb+LIUSU6+obQw==}
 
   '@nl-design-system/eslint-config@2.4.0':
     resolution: {integrity: sha512-IkPKcKDrHfRSXXIkKSZPW3/oldyTgGIU+icLKmIVM/1eGa8zE3cx4Lrb8N8bGCFDcnIN11PpiXGC3uqagByF4A==}
@@ -5326,11 +5330,6 @@ packages:
 
   marked@16.4.2:
     resolution: {integrity: sha512-TI3V8YYWvkVf3KJe1dRkpnjs68JUPyEa5vjKrp1XEEJUAOaQc+Qj+L1qWbPd0SJuAdQkFU0h73sXXqwDYxsiDA==}
-    engines: {node: '>= 20'}
-    hasBin: true
-
-  marked@18.1.0:
-    resolution: {integrity: sha512-PamYXWWWg2nboG3oX5Ffzpy3EFZROqZJK9hSlMmUnekp7TxPs5DcT95vwd46m73/exfKCRVMtgXoPMI4FEJL6w==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -8942,6 +8941,8 @@ snapshots:
 
   '@nl-design-system-community/ma-navigation-bar-css@0.0.1': {}
 
+  '@nl-design-system-unstable/documentation@2.0.0': {}
+
   '@nl-design-system/eslint-config@2.4.0(eslint@10.12.0(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)':
     dependencies:
       '@eslint/js': 9.39.2
@@ -12506,8 +12507,6 @@ snapshots:
       - supports-color
 
   marked@16.4.2: {}
-
-  marked@18.1.0: {}
 
   math-intrinsics@1.1.0: {}
 

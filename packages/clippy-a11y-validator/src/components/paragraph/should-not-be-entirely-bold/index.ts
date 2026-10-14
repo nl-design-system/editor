@@ -15,6 +15,7 @@ export const paragraphShouldNotBeEntirelyBold = defineValidation({
   correction: {
     execute: (paragraph) => () => paragraph.querySelectorAll(selectors.BOLD).forEach(unwrapElement),
   },
+  documentationId: 'd9c53eaf-16dd-42eb-bcc4-7d9f97283309',
   messages,
   rule: paragraphValidationRules.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD,
   scope: 'element',
