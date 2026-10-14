@@ -2,7 +2,7 @@ import type { ValidationMessagesByLocale } from '../../../types/messages.ts';
 
 export const messages: ValidationMessagesByLocale = {
   nl: {
-    error: 'Deze definitiebeschrijving is leeg.',
-    solution: 'Verwijder de lege definitiebeschrijving of voeg tekst toe.',
+    solution: '<p class="nl-paragraph">Verwijder de lege definitiebeschrijving of voeg tekst toe.</p>',
+    title: 'Deze definitiebeschrijving is leeg.',
   },
 };
