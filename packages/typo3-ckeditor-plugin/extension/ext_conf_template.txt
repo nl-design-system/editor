@@ -1,0 +1,2 @@
+# cat=basic; type=boolean; label=Add Clippy to every rich text editor
+enabled = 1

@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  NlDesignSystemCommunity\Clippy\:
+    resource: "../Classes/*"
+
+  NlDesignSystemCommunity\Clippy\EventListener\AddClippyEditorExtension:
+    tags:
+      - name: event.listener
+        identifier: "clippy/add-clippy-editor-extension"

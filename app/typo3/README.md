@@ -94,11 +94,11 @@ pnpm run build
 
 ### Editing the content classes
 
-The classes `clippy` adds to the editor's output ship as defaults in the extension's RTE preset. To override them per site in the backend, add the `Clippy` site set to the site once:
+The classes `clippy` adds to the editor's output ship as defaults in the plugin. To override them per site in the backend, add the `Clippy` site set to the site once:
 
 _Sites → Setup →_ edit the site _→ Sets →_ add **Clippy**.
 
-_Sites → Setup →_ the site's **Settings** then lists every class under _Content classes_, and the values are stored in `config/sites/<site>/settings.yaml`. A field left empty outputs that element without a class. Without the set nothing changes: the defaults from the preset apply.
+_Sites → Setup →_ the site's **Settings** then lists every class under _Content classes_, and the values are stored in `config/sites/<site>/settings.yaml`. A field left empty outputs that element without a class. Without the set nothing changes: the plugin's defaults apply.
 
 ## Clearing the cache
 

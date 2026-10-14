@@ -4,9 +4,22 @@ Builds the Clippy CKEditor 5 plugin as an ES module for use in TYPO3.
 
 ## How it works
 
-`extension/` holds the TYPO3 extension itself: the Composer manifest, the RTE preset, the import map and the page TSconfig. The build copies that folder, the bundle and the generated stylesheets to `app/typo3/packages/clippy/dist/` — not a local `dist/` folder. This makes the plugin immediately available to the TYPO3 demo environment without a manual copy step.
+`extension/` holds the TYPO3 extension itself: the Composer manifest, the event listener, the import map and the extension configuration. The build copies that folder, the bundle and the generated stylesheets to `app/typo3/packages/clippy/dist/` — not a local `dist/` folder. This makes the plugin immediately available to the TYPO3 demo environment without a manual copy step.
 
-`Configuration/page.tsconfig` sets `RTE.default.preset = clippy`, so every rich text field in the demo uses the preset.
+## How Clippy is switched on
+
+Clippy ships no RTE preset. Instead, `AddClippyEditorExtension` listens to `BeforePrepareConfigurationForEditorEvent` and adds the plugin and its stylesheets to every rich text editor, whatever preset that editor uses. Installing the extension leaves `RTE.default.preset` alone, so your own presets keep working, and the Composer load order doesn't matter.
+
+Clippy is on as soon as the extension is installed. To switch it off for the whole installation, clear _Add Clippy to every rich text editor_ under _Admin Tools → Settings → Extension Configuration → clippy_.
+
+To leave Clippy out of a single preset, remove its module in that preset:
+
+```yaml
+editor:
+  config:
+    removeImportModules:
+      - '@nl-design-system-community/clippy/clippy.js'
+```
 
 | CKEditor plugin  | Purpose                                                     |
 | ---------------- | ----------------------------------------------------------- |
@@ -33,10 +46,16 @@ pnpm --filter @nl-design-system-community/ckeditor-plugin build
 pnpm build
 ```
 
-Files under `Resources/Public/` are picked up on page reload. After changing `composer.json`, `ext_localconf.php` or anything under `Configuration/`, flush the TYPO3 cache:
+Files under `Resources/Public/` are picked up on page reload. After changing `ext_localconf.php`, `Classes/` or anything under `Configuration/`, flush the TYPO3 cache:
 
 ```sh
 docker compose exec typo3 php vendor/bin/typo3 cache:flush
+```
+
+After changing `composer.json`, rebuild the image, since Composer only reads the extension's `autoload` section when it installs the extension:
+
+```sh
+docker compose up --build
 ```
 
 ## Packaging
