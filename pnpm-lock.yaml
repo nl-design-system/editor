@@ -544,6 +544,9 @@ importers:
       '@nl-design-system-community/clippy-alt-text-wizard':
         specifier: workspace:*
         version: link:../clippy-alt-text-wizard
+      '@nl-design-system-community/clippy-components':
+        specifier: 3.5.0
+        version: 3.5.0
       '@nl-design-system-community/editor':
         specifier: workspace:*
         version: link:../editor

@@ -23,7 +23,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 const localeRoot = locale === 'en' ? '/en' : '/';
 ---
 
-<header class="ma-site-header">
+<div slot="header" class="ma-site-header">
   <div class="ma-site-header__logo">
     <SiteLogo href={t('nav.href.editor')} ariaLabel={t('site.logo.label')} />
   </div>
@@ -72,7 +72,7 @@ const localeRoot = locale === 'en' ? '/en' : '/';
       </a>
     </nav>
   </div>
-</header>
+</div>
 
 <script>
   import {

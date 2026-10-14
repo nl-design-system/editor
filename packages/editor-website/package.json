@@ -30,6 +30,7 @@
     "@nl-design-system-candidate/button-css": "1.1.0",
     "@nl-design-system-community/ckeditor-plugin": "workspace:*",
     "@nl-design-system-community/clippy-alt-text-wizard": "workspace:*",
+    "@nl-design-system-community/clippy-components": "3.5.0",
     "@nl-design-system-community/editor": "workspace:*",
     "@nl-design-system-community/editor-react": "workspace:*",
     "@nl-design-system-community/ma-design-tokens": "7.0.0",
