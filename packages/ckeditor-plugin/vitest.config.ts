@@ -8,6 +8,7 @@ export default defineConfig({
       headless: true,
       instances: [{ browser: 'chromium' }],
       provider: playwright(),
+      viewport: { height: 1280, width: 1024 },
     },
   },
 });

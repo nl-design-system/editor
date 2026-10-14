@@ -24,8 +24,8 @@
   "devDependencies": {
     "@nl-design-system/tsconfig": "1.0.5",
     "@types/node": "22.20.5",
+    "@vitest/browser-playwright": "5.0.3",
     "ckeditor5": "48.5.2",
-    "jsdom": "30.1.2",
     "typescript": "6.0.3",
     "vite": "8.3.3",
     "vitest": "5.0.3"
