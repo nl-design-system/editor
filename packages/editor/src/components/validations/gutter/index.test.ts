@@ -57,7 +57,7 @@ const GENERIC_LINK_HEADING = 'De linktekst "lees meer" zegt niet waar de link na
 /** An entirely-bold paragraph violation, named after the copy the validator package ships. */
 const boldParagraph = (severity: ValidationSeverity = 'warning') =>
   violation({
-    messages: { error: BOLD_PARAGRAPH_HEADING },
+    messages: { title: BOLD_PARAGRAPH_HEADING },
     rule: coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD,
     severity,
   });
@@ -105,7 +105,7 @@ describe('<clippy-validations-gutter>', () => {
           rangeOver(content.querySelector('u')!),
           violation({
             element: content.querySelector('u')!,
-            messages: { error: 'Deze tekst is onderstreept. Dat lijkt te veel op een link.' },
+            messages: { title: 'Deze tekst is onderstreept. Dat lijkt te veel op een link.' },
             rule: coreValidationRules.PARAGRAPH_SHOULD_NOT_CONTAIN_UNDERLINED_TEXT,
             severity: 'info',
           }),
@@ -140,7 +140,7 @@ describe('<clippy-validations-gutter>', () => {
           range,
           inlineViolation({
             element: content.querySelector('a')!,
-            messages: { error: GENERIC_LINK_HEADING },
+            messages: { title: GENERIC_LINK_HEADING },
             rule: coreValidationRules.LINK_SHOULD_NOT_BE_TOO_GENERIC,
             severity: 'info',
           }),

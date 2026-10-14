@@ -11,7 +11,7 @@ describe('descriptionListMustContainTerm', () => {
     expect(violation?.rule).toBe('DESCRIPTION_LIST_MUST_CONTAIN_TERM');
     expect(violation?.severity).toBe('error');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.error).toBe('Deze definitielijst heeft geen definitieterm.');
+    expect(violation?.messages.title).toBe('Deze definitielijst heeft geen definitieterm.');
   });
 
   it('flags a list where every term is empty', () => {

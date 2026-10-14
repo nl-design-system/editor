@@ -11,8 +11,13 @@ describe('linkShouldNotBeTooGeneric', () => {
     expect(violation?.rule).toBe('LINK_SHOULD_NOT_BE_TOO_GENERIC');
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.error).toBe('De linktekst "lees meer" zegt niet waar de link naartoe gaat.');
-    expect(violation?.messages.solution).toBe('Beschrijf in de linktekst waar de link naartoe gaat.');
+    expect(violation?.messages.title).toBe('De linktekst geeft niet voldoende informatie');
+    expect(violation?.messages.explanation).toBe(
+      '<p class="nl-paragraph">De linktekst <strong>lees meer</strong> zegt niet waar de link naartoe gaat.</p>',
+    );
+    expect(violation?.messages.solution).toBe(
+      '<p class="nl-paragraph">Zorg ervoor dat de linktekst beschrijft waar de bezoeker naartoe gaat.</p>',
+    );
   });
 
   it('flags "klik hier"', () => {

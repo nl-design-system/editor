@@ -11,7 +11,7 @@ describe('tableCellShouldNotBeEmpty', () => {
     expect(violation?.rule).toBe('TABLE_CELL_SHOULD_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.error).toBe('Deze tabelcel is leeg.');
+    expect(violation?.messages.title).toBe('Deze tabelcel is leeg.');
   });
 
   it('flags an empty header cell', () => {

@@ -11,8 +11,10 @@ describe('descriptionTermShouldNotBeEmpty', () => {
     expect(violation?.rule).toBe('DESCRIPTION_TERM_SHOULD_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.error).toBe('Deze definitielijst bevat een lege definitieterm.');
-    expect(violation?.messages.solution).toBe('Verwijder de lege definitieterm of voeg tekst toe.');
+    expect(violation?.messages.title).toBe('Deze definitielijst bevat een lege definitieterm.');
+    expect(violation?.messages.solution).toBe(
+      '<p class="nl-paragraph">Verwijder de lege definitieterm of voeg tekst toe.</p>',
+    );
   });
 
   it('points the violation at the list rather than at the term', () => {

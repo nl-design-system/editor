@@ -11,7 +11,7 @@ describe('imageMustHaveAltText', () => {
     expect(violation?.rule).toBe('IMAGE_MUST_HAVE_ALT_TEXT');
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.error).toBe('Deze afbeelding heeft geen alternatieve tekst.');
+    expect(violation?.messages.title).toBe('Deze afbeelding heeft geen alternatieve tekst.');
     expect(violation?.messages.solution).toContain('Beschrijf in de alternatieve tekst');
   });
 

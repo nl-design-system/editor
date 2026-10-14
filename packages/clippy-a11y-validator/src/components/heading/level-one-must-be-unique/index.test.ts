@@ -11,7 +11,7 @@ describe('headingLevelOneMustBeUnique', () => {
     expect(violation?.rule).toBe('HEADING_LEVEL_ONE_MUST_BE_UNIQUE');
     expect(violation?.severity).toBe('error');
     expect(violation?.scope).toBe('document');
-    expect(violation?.messages.error).toBe('Dit document heeft meer dan één kopniveau 1.');
+    expect(violation?.messages.title).toBe('Meer dan één kop van niveau 1 op de pagina');
     expect(violation?.messages.solution).toContain('kopniveau 2');
   });
 

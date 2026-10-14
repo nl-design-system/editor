@@ -90,9 +90,12 @@ describe('Validator', () => {
   });
 
   it('falls back to the default locale when the requested locale has no messages', () => {
-    const validator = new Validator({ locale: 'en', validations: [coreValidations[PARAGRAPH_SHOULD_NOT_BE_EMPTY]] });
+    const validations = [coreValidations[PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING]];
+    const validator = new Validator({ locale: 'en', validations });
 
-    expect(validator.validate([fragment])[0]?.messages.error).toBe('Deze alinea is leeg.');
+    expect(validator.validate([fragment])[0]?.messages.title).toBe(
+      'Deze korte, volledig dikgedrukte alinea lijkt op een kop.',
+    );
   });
 
   it('hands an element validation nothing but its element', () => {
@@ -102,7 +105,7 @@ describe('Validator', () => {
         received.push(args);
         return true;
       },
-      messages: { nl: { error: 'x' } },
+      messages: { nl: { title: 'x' } },
       rule: 'SPY',
       scope: 'element',
       selector: 'h1',
@@ -122,7 +125,7 @@ describe('Validator', () => {
         nearestPrecedingTexts.push(precedingMatches('h1, h2')[0]?.textContent ?? undefined);
         return true;
       },
-      messages: { nl: { error: 'x' } },
+      messages: { nl: { title: 'x' } },
       rule: 'SPY',
       scope: 'document',
       selector: 'h2',
@@ -143,7 +146,7 @@ describe('Validator', () => {
       condition: () => false,
       correction: { execute: (paragraph) => () => acted.push(['correction', paragraph]) },
       focus: (paragraph) => () => acted.push(['focus', paragraph]),
-      messages: { nl: { error: 'x' } },
+      messages: { nl: { title: 'x' } },
       rule: 'SPY',
       scope: 'element',
       selector: 'p',
@@ -166,7 +169,7 @@ describe('Validator', () => {
     const spy: Validation = {
       condition: () => false,
       correction: { execute: () => () => {}, label: { en: 'Edit', nl: 'Bewerken' } },
-      messages: { nl: { error: 'x' } },
+      messages: { nl: { title: 'x' } },
       rule: 'SPY',
       scope: 'element',
       selector: 'p',
@@ -182,7 +185,7 @@ describe('Validator', () => {
     const spy: Validation = {
       condition: () => false,
       correction: { execute: () => () => {}, label: { nl: 'Bewerken' } },
-      messages: { nl: { error: 'x' } },
+      messages: { nl: { title: 'x' } },
       rule: 'SPY',
       scope: 'element',
       selector: 'p',
@@ -198,7 +201,7 @@ describe('Validator', () => {
     const spy: Validation = {
       condition: () => false,
       correction: { execute: () => () => {} },
-      messages: { nl: { error: 'x' } },
+      messages: { nl: { title: 'x' } },
       rule: 'SPY',
       scope: 'element',
       selector: 'p',
@@ -227,6 +230,32 @@ describe('Validator', () => {
     expect(violation?.focus).toBeUndefined();
   });
 
+  it('carries the documentation for the rule the validation points at', () => {
+    const [violation] = new Validator({ validations: [coreValidations[PARAGRAPH_SHOULD_NOT_BE_EMPTY]] }).validate([
+      fragment,
+    ]);
+
+    expect(violation?.messages.title).toBe('Alinea heeft geen inhoud');
+    expect(violation?.messages.explanation).toContain('Er is een alinea zonder inhoud.');
+    expect(violation?.messages.solution).toContain('Verwijder de lege alinea.');
+  });
+
+  /** As with `correction`, hosts branch on the key being there at all. */
+  it('reports no explanation at all when the validation names no documentation', () => {
+    const spy: Validation = {
+      condition: () => false,
+      messages: { nl: { title: 'x' } },
+      rule: 'SPY',
+      scope: 'element',
+      selector: 'p',
+      severity: 'info',
+    };
+
+    const [violation] = new Validator({ validations: [spy] }).validate([fragment]);
+
+    expect(violation?.messages).not.toHaveProperty('explanation');
+  });
+
   it('hands a document validation the same context in payload, focus and correction', () => {
     const nearestPrecedingTexts: (string | undefined)[] = [];
     const spy: Validation = {
@@ -241,7 +270,7 @@ describe('Validator', () => {
         nearestPrecedingTexts.push(precedingMatches('h1')[0]?.textContent ?? undefined);
         return () => {};
       },
-      messages: { nl: { error: 'x' } },
+      messages: { nl: { title: 'x' } },
       payload: (_paragraph, { precedingMatches }) => {
         nearestPrecedingTexts.push(precedingMatches('h1')[0]?.textContent ?? undefined);
         return {};

@@ -11,7 +11,7 @@ describe('tableCaptionShouldNotBeEmpty', () => {
     expect(violation?.rule).toBe('TABLE_CAPTION_SHOULD_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.error).toBe('Deze tabel heeft een lege omschrijving.');
+    expect(violation?.messages.title).toBe('Deze tabel heeft een lege omschrijving.');
   });
 
   it('flags a caption holding only whitespace', () => {

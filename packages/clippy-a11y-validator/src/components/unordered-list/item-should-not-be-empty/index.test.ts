@@ -11,7 +11,7 @@ describe('unorderedListItemShouldNotBeEmpty', () => {
     expect(violation?.rule).toBe('UNORDERED_LIST_ITEM_SHOULD_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.error).toBe('Dit lijstitem is leeg.');
+    expect(violation?.messages.title).toBe('Dit lijstitem is leeg.');
   });
 
   it('flags an item holding only whitespace', () => {

@@ -60,7 +60,7 @@ describe('ClippyPlugin', () => {
       correction: { execute: () => {}, label: 'Bewerken' },
       display: 'block',
       element: document.createElement('p'),
-      messages: { error: 'Deze alinea is leeg.' },
+      messages: { title: 'Deze alinea is leeg.' },
       rule: 'PARAGRAPH_SHOULD_NOT_BE_EMPTY',
       scope: 'element',
       severity: 'error',

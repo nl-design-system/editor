@@ -11,7 +11,7 @@ describe('tableMustHaveMultipleRows', () => {
     expect(violation?.rule).toBe('TABLE_MUST_HAVE_MULTIPLE_ROWS');
     expect(violation?.severity).toBe('warning');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.error).toBe('Deze tabel heeft minder dan twee rijen.');
+    expect(violation?.messages.title).toBe('Deze tabel heeft minder dan twee rijen.');
   });
 
   it('flags a table without any rows', () => {
