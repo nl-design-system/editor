@@ -20,6 +20,10 @@ test.describe('Page basics', () => {
   });
 
   test('Richtlijnen nav link is active', async ({ page }) => {
+    const menuButton = page.getByRole('button', { name: 'Menu' });
+    if (await menuButton.isVisible()) {
+      await menuButton.click();
+    }
     await expect(page.getByRole('link', { name: 'Richtlijnen' })).toHaveAttribute('aria-current', 'page');
   });
 });
