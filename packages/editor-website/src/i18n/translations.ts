@@ -3,6 +3,7 @@ export type Locale = 'nl' | 'en';
 const translations = {
   en: {
     'alt-text-wizard.title': 'Alt-text wizard - Rich-text Editor - NL Design System',
+    'breadcrumb.label': 'Breadcrumb',
     'configuration.editor.content': 'Content here...',
     'configuration.editor.placeholder': 'Modify the JSON to change the toolbar live.',
 
@@ -25,7 +26,7 @@ const translations = {
     'integrations.title': 'Integrations - Rich-text Editor - NL Design System',
     'nav.alt-text-wizard': 'Alt-text wizard',
     'nav.configuration': 'Configuration',
-    'nav.editor': 'Editor',
+    'nav.editor': 'Getting started',
     'nav.guidelines': 'Guidelines',
     'nav.href.alt-text-wizard': '/en/alt-text-wizard',
     'nav.href.configuration': '/en/configuration',
@@ -47,6 +48,7 @@ const translations = {
   },
   nl: {
     'alt-text-wizard.title': 'Alt-tekst wizard - Rich-text Editor - NL Design System',
+    'breadcrumb.label': 'Kruimelpad',
     'configuration.editor.content': 'Inhoud hier...',
     'configuration.editor.placeholder': 'Pas de JSON aan om de toolbar live te wijzigen.',
 
@@ -71,7 +73,7 @@ const translations = {
 
     'nav.alt-text-wizard': 'Alt-tekst wizard',
     'nav.configuration': 'Configuratie',
-    'nav.editor': 'Editor',
+    'nav.editor': 'Aan de slag',
     'nav.guidelines': 'Richtlijnen',
     'nav.href.alt-text-wizard': '/alt-tekst-wizard',
     'nav.href.configuration': '/configuratie',

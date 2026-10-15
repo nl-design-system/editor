@@ -21,6 +21,7 @@
     "test:validate-html": "clippy-validate-html dist --skip [slot=value]"
   },
   "dependencies": {
+    "@amsterdam/design-system-css": "4.4.0",
     "@astrojs/mdx": "8.0.3",
     "@astrojs/react": "7.0.1",
     "@astrojs/sitemap": "3.7.4",
