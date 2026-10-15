@@ -2,21 +2,22 @@
 interface Props {
   heading: string;
   href?: string;
+  id?: string;
 }
 
-const { heading, href } = Astro.props;
+const { heading, href, id } = Astro.props;
 ---
 
 {
   href ? (
-    <a class="clippy-card clippy-card--linked" href={href}>
+    <a class="clippy-card clippy-card--linked" href={href} id={id}>
       <h2 class="clippy-card__heading">{heading}</h2>
       <div class="clippy-card__content">
         <slot />
       </div>
     </a>
   ) : (
-    <div class="clippy-card">
+    <div class="clippy-card" id={id}>
       <h2 class="clippy-card__heading">{heading}</h2>
       <div class="clippy-card__content">
         <slot />
