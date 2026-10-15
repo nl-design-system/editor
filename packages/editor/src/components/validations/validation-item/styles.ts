@@ -68,6 +68,35 @@ export default css`
     }
   }
 
+  /* The documentation ships its lists with Amsterdam's class, which no NL Design System package covers. */
+  .ams-unordered-list {
+    margin-block: var(--basis-space-block-md);
+    padding-inline-start: var(--basis-space-inline-xl);
+    list-style-type: disc;
+  }
+
+  .ams-unordered-list__item {
+    margin-block-end: var(--basis-space-block-sm);
+  }
+
+  .clippy-validation-item__links {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--basis-space-inline-md);
+    margin-block-start: var(--basis-space-block-lg);
+  }
+
+  .clippy-validation-item__extensive-explanation {
+    align-items: center;
+    display: inline-flex;
+    gap: var(--basis-space-inline-sm);
+
+    & clippy-icon {
+      flex-shrink: 0;
+    }
+  }
+
   .clippy-validation-item-actions {
     display: flex;
     justify-content: flex-start;

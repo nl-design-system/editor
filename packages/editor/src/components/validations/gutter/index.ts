@@ -31,7 +31,6 @@ import {
   clearHoverHighlight,
   clearValidationHighlights,
 } from '@/utils/highlights';
-import { renderMarkdown } from '@/utils/markdown';
 import { getOverlappingRanges } from '@/utils/ranges';
 import gutterStyles from './styles';
 
@@ -340,7 +339,7 @@ export class Gutter extends LitElement {
     metaCount: number | undefined,
   ) {
     const { correction, display, messages, severity } = violation;
-    const { error: heading, href, solution } = messages;
+    const { explanation, href, solution, title: heading } = messages;
     const isActive = this.activeRange === range;
     return html`<li
       class="clippy-validations-gutter__indicator"
@@ -361,7 +360,7 @@ export class Gutter extends LitElement {
         @focus=${() => this.#highlightRange(range, violation)}
         @blur=${() => clearHoverHighlight()}
       >
-        <span class="sr-only">${renderMarkdown(heading)}</span>
+        <span class="sr-only">${heading}</span>
       </button>
       ${metaCount === undefined ? nothing : this.#renderMeta(range, violation, metaCount)}
       <div
@@ -375,9 +374,10 @@ export class Gutter extends LitElement {
           .range=${range}
           .severity=${severity}
           .heading=${heading}
+          .explanation=${explanation}
+          .solution=${solution}
           .href=${href}
           .correction=${correction}
-          .solution=${solution}
         ></clippy-validation-item>
       </div>
     </li>`;

@@ -11,7 +11,7 @@ describe('paragraphShouldNotResembleHeading', () => {
     expect(violation?.rule).toBe('PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING');
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('document');
-    expect(violation?.messages.error).toBe('Deze korte, volledig dikgedrukte alinea lijkt op een kop.');
+    expect(violation?.messages.title).toBe('Deze korte, volledig dikgedrukte alinea lijkt op een kop.');
     expect(violation?.messages.solution).toContain('Gebruik een echte kop');
   });
 

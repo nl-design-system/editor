@@ -30,6 +30,8 @@ export type DocumentValidationCondition<E extends HTMLElement = HTMLElement> = (
 ) => boolean;
 
 type SharedValidationDefinition<S extends Selector> = {
+  /** The rule in `@nl-design-system-unstable/documentation` that fills in what `messages` leaves out. */
+  documentationId?: string;
   messages: ValidationMessagesByLocale;
   rule: string;
   selector: S;

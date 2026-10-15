@@ -4,7 +4,7 @@ import { hasChanges } from './hasChanges';
 
 const violation = (overrides: Partial<DocumentViolation> = {}): DocumentViolation => ({
   element: document.createElement('p'),
-  messages: { error: 'Lege alinea' },
+  messages: { title: 'Lege alinea' },
   rule: 'paragraph-should-not-be-empty',
   scope: 'element',
   severity: 'warning',

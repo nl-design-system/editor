@@ -1,13 +1,7 @@
 import type { ByLocale, Locale, ResolvedMessages, ValidationMessagesByLocale } from './types/messages.ts';
 import type { ViolationPayload } from './types/validation.ts';
-
-const PLACEHOLDER_REGEX = /\{(\w+)\}/g;
-
-const interpolate = (text: string, payload: ViolationPayload | undefined): string =>
-  text.replace(PLACEHOLDER_REGEX, (placeholder, key: string) => {
-    const value = payload?.[key];
-    return value === undefined ? placeholder : String(value);
-  });
+import { getDocumentationComponentRuleById } from './documentation.ts';
+import { replacePlaceholders } from './utils/html.ts';
 
 /** Which locale wins: the one asked for, else the fallback, else the source language. */
 export const resolveLocalised = <T>(byLocale: ByLocale<T>, locale: Locale, fallbackLocale: Locale): T =>
@@ -18,13 +12,17 @@ export const resolveMessages = (
   locale: Locale,
   fallbackLocale: Locale,
   payload?: ViolationPayload,
+  documentationId?: string,
 ): ResolvedMessages => {
-  const localised = resolveLocalised(messages, locale, fallbackLocale);
-  const { href, solution } = localised;
+  const { explanation, href, solution, title } = resolveLocalised(messages, locale, fallbackLocale);
+  const rule = getDocumentationComponentRuleById(documentationId);
 
   return {
-    error: interpolate(localised.error, payload),
+    ...rule,
+    // A title names the rule rather than this violation, so a named rule gets to name it.
+    title: rule?.title ?? title ?? '',
+    ...(explanation === undefined ? {} : { explanation: replacePlaceholders(explanation, payload) }),
     ...(href === undefined ? {} : { href }),
-    ...(solution === undefined ? {} : { solution: interpolate(solution, payload) }),
+    ...(solution === undefined ? {} : { solution: replacePlaceholders(solution, payload) }),
   };
 };

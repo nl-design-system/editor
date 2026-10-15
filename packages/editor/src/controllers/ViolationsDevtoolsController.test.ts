@@ -47,7 +47,7 @@ function violations(count: number): ViolationsMap {
     map.set(range, {
       display: 'block',
       element,
-      messages: { error: 'Deze alinea is leeg' },
+      messages: { title: 'Deze alinea is leeg' },
       range,
       rule: 'paragraph-should-not-be-empty',
       scope: 'element',

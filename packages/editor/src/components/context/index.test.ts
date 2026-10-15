@@ -15,7 +15,7 @@ const paragraphMustNotShout = defineValidation({
     const text = paragraph.textContent ?? '';
     return text.trim() === '' || text !== text.toUpperCase();
   },
-  messages: { nl: { error: 'Deze alinea staat volledig in hoofdletters.' } },
+  messages: { nl: { title: 'Deze alinea staat volledig in hoofdletters.' } },
   rule: 'PARAGRAPH_MUST_NOT_SHOUT',
   scope: 'element',
   selector: 'p',

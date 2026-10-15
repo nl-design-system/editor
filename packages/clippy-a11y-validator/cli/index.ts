@@ -189,9 +189,9 @@ for (const { file, violations } of results) {
   total += violations.length;
   console.log(relative(process.cwd(), file));
 
+  // `explanation` and `solution` are HTML for a host to render, which this output is not.
   for (const { html, messages, rule, severity } of violations) {
-    console.log(`${severity}: ${rule} — ${messages.error}`);
-    if (messages.solution !== undefined) console.log(`  ${messages.solution}`);
+    console.log(`${severity}: ${rule} — ${messages.title}`);
     console.log(`  ${collapsedHtmlSnippet(html)}`);
     console.log('');
   }

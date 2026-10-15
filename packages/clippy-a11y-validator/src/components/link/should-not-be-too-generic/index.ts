@@ -11,6 +11,7 @@ const GENERIC_LINK_TEXTS = new Set(['klik hier', 'lees meer']);
  */
 export const linkShouldNotBeTooGeneric = defineValidation({
   condition: (link) => !GENERIC_LINK_TEXTS.has(trimmedText(link).toLowerCase()),
+  documentationId: '424870f7-c4c5-4822-b74b-9cd1f6e30d29',
   messages,
   payload: (link) => ({ text: trimmedText(link) }),
   rule: linkValidationRules.LINK_SHOULD_NOT_BE_TOO_GENERIC,

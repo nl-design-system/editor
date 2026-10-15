@@ -7,7 +7,7 @@ import type { Violation } from '@/types/validation';
 export const violation = (overrides: Partial<Violation> = {}): Violation => ({
   display: 'block',
   element: document.createElement('p'),
-  messages: { error: 'Deze alinea is leeg.' },
+  messages: { title: 'Deze alinea is leeg.' },
   rule: 'PARAGRAPH_SHOULD_NOT_BE_EMPTY',
   scope: 'element',
   severity: 'error',
@@ -22,7 +22,7 @@ export const inlineViolation = (overrides: Partial<Violation> = {}): Violation =
   violation({
     display: 'inline',
     element: document.createElement('a'),
-    messages: { error: 'Deze link is leeg.' },
+    messages: { title: 'Deze link is leeg.' },
     rule: 'LINK_SHOULD_NOT_BE_EMPTY',
     ...overrides,
   });

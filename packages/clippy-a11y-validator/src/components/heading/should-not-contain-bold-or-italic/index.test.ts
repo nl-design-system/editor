@@ -11,7 +11,7 @@ describe('headingShouldNotContainBoldOrItalic', () => {
     expect(violation?.rule).toBe('HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC');
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.error).toBe('Deze kop bevat vetgedrukte of cursieve tekst.');
+    expect(violation?.messages.title).toBe('Deze kop bevat vetgedrukte of cursieve tekst.');
     expect(violation?.messages.solution).toContain('Verwijder de vetgedrukte of cursieve opmaak');
   });
 

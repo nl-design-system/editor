@@ -30,8 +30,8 @@ const rulesIn = (map: ViolationsMap): string[] => [...map.values()].map(({ rule 
 const paragraphMustNotBeEmpty = defineValidation({
   condition: () => false,
   messages: {
-    en: { error: 'This paragraph is empty.' },
-    nl: { error: 'Deze alinea is leeg.' },
+    en: { title: 'This paragraph is empty.' },
+    nl: { title: 'Deze alinea is leeg.' },
   },
   rule: 'PARAGRAPH_MUST_NOT_BE_EMPTY',
   scope: 'element',
@@ -46,7 +46,7 @@ const paragraphMustNotShout = defineValidation({
     // An empty paragraph is trivially uppercase; that is the core set's business, not this rule's.
     return text.trim() === '' || text !== text.toUpperCase();
   },
-  messages: { nl: { error: 'Deze alinea staat volledig in hoofdletters.' } },
+  messages: { nl: { title: 'Deze alinea staat volledig in hoofdletters.' } },
   rule: 'PARAGRAPH_MUST_NOT_SHOUT',
   scope: 'element',
   selector: 'p',
@@ -98,7 +98,7 @@ describe('runValidation', () => {
     const [violation] = [...map.values()];
 
     expect(rulesIn(map)).toEqual(['PARAGRAPH_MUST_NOT_SHOUT']);
-    expect(violation?.messages.error).toBe('Deze alinea staat volledig in hoofdletters.');
+    expect(violation?.messages.title).toBe('Deze alinea staat volledig in hoofdletters.');
     expect(violation?.range).toBeInstanceOf(Range);
   });
 
@@ -106,7 +106,7 @@ describe('runValidation', () => {
     document.documentElement.lang = 'en';
     const map = validate('<p></p>', [paragraphMustNotBeEmpty]);
 
-    expect([...map.values()][0]?.messages.error).toBe('This paragraph is empty.');
+    expect([...map.values()][0]?.messages.title).toBe('This paragraph is empty.');
   });
 
   it('runs only the given validations, not the core set as well', () => {

@@ -2,7 +2,7 @@ import type { ValidationMessagesByLocale } from '../../../types/messages.ts';
 
 export const messages: ValidationMessagesByLocale = {
   nl: {
-    error: 'Deze definitielijst bevat een lege definitieterm.',
-    solution: 'Verwijder de lege definitieterm of voeg tekst toe.',
+    solution: '<p class="nl-paragraph">Verwijder de lege definitieterm of voeg tekst toe.</p>',
+    title: 'Deze definitielijst bevat een lege definitieterm.',
   },
 };

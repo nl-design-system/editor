@@ -11,8 +11,10 @@ describe('headingMustNotBeEmpty', () => {
     expect(violation?.rule).toBe('HEADING_MUST_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('error');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.error).toBe('Deze kop is leeg.');
-    expect(violation?.messages.solution).toBe('Verwijder de lege kop of voeg tekst toe.');
+    expect(violation?.messages.title).toBe('Kop heeft geen inhoud');
+    expect(violation?.messages.solution).toBe(
+      '<p class="nl-paragraph">Verwijder de lege kop, of voeg een duidelijke koptekst toe.</p>',
+    );
   });
 
   it('flags an empty heading at every level', () => {

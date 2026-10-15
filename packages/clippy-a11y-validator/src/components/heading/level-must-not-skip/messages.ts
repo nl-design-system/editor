@@ -2,8 +2,10 @@ import type { ValidationMessagesByLocale } from '../../../types/messages.ts';
 
 export const messages: ValidationMessagesByLocale = {
   nl: {
-    error: 'Kopniveau {headingLevel} volgt direct op kopniveau {precedingHeadingLevel}.',
+    explanation:
+      '<p class="nl-paragraph">Kopniveau <strong>{headingLevel}</strong> volgt direct op kopniveau <strong>{precedingHeadingLevel}</strong></p>',
     href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#kopniveaus',
-    solution: 'Gebruik kopniveau {expectedHeadingLevel}, zodat er geen kopniveau wordt overgeslagen.',
+    solution:
+      '<p class="nl-paragraph">Gebruik kopniveau <strong>{expectedHeadingLevel}</strong>, zodat er geen kopniveau wordt overgeslagen.</p>',
   },
 };

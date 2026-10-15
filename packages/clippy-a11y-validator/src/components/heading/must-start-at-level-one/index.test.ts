@@ -11,8 +11,11 @@ describe('headingMustStartAtLevelOne', () => {
     expect(violation?.rule).toBe('HEADING_MUST_START_AT_LEVEL_ONE');
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('document');
-    expect(violation?.messages.error).toBe('Het document begint met kopniveau 2 in plaats van kopniveau 1.');
-    expect(violation?.messages.solution).toBe('Maak van deze kop een kopniveau 1.');
+    expect(violation?.messages.title).toBe('Het document begint niet met kopniveau 1');
+    expect(violation?.messages.explanation).toBe(
+      '<p class="nl-paragraph">Het document begint met kopniveau <strong>2</strong> in plaats van kopniveau 1.</p>',
+    );
+    expect(violation?.messages.solution).toBe('<p class="nl-paragraph">Maak van deze kop een kopniveau 1.</p>');
   });
 
   it('reports the offending heading, not the first block', () => {
@@ -22,7 +25,7 @@ describe('headingMustStartAtLevelOne', () => {
   });
 
   it('interpolates the level of the offending heading', () => {
-    expect(validate('<h4>Kop</h4>')[0]?.messages.error).toContain('kopniveau 4');
+    expect(validate('<h4>Kop</h4>')[0]?.messages.explanation).toContain('<strong>4</strong>');
   });
 
   it('accepts a document that starts with a level 1', () => {

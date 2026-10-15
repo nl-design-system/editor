@@ -42,10 +42,10 @@ describe('validate-html', () => {
   it('names the rule, the message and the offending markup', async () => {
     const { stdout } = await run(FIXTURE);
 
-    expect(stdout).toContain('warning: PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD — De hele alinea is dikgedrukt.');
+    expect(stdout).toContain('warning: PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD — Hele alinea is dikgedrukt');
     expect(stdout).toContain('<p><b>De aanvraag duurt vijf werkdagen.</b></p>');
     expect(stdout).toContain('info: PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING');
-    expect(stdout).toContain('info: PARAGRAPH_SHOULD_NOT_BE_EMPTY — Deze alinea is leeg.');
+    expect(stdout).toContain('info: PARAGRAPH_SHOULD_NOT_BE_EMPTY — Alinea heeft geen inhoud');
   });
 
   it('reports violations from every component the fixture exercises', async () => {
@@ -89,7 +89,7 @@ describe('validate-html', () => {
   it('prints the severity, the rule and the message, but not the documentation link', async () => {
     const { stdout } = await run(FIXTURE);
 
-    expect(stdout).toContain('error: HEADING_MUST_NOT_BE_EMPTY — Deze kop is leeg.');
+    expect(stdout).toContain('error: HEADING_MUST_NOT_BE_EMPTY — Kop heeft geen inhoud');
     expect(stdout).not.toContain('https://nldesignsystem.nl');
   });
 

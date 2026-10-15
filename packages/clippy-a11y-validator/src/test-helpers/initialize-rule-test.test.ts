@@ -5,7 +5,7 @@ import { initializeRuleTest } from './initialize-rule-test.ts';
 const paragraphMustNotBeEmpty = defineValidation({
   condition: (paragraph) => paragraph.textContent !== '',
   correction: { execute: (paragraph) => () => paragraph.remove() },
-  messages: { nl: { error: 'Deze alinea is leeg.' } },
+  messages: { nl: { title: 'Deze alinea is leeg.' } },
   rule: 'TEST_PARAGRAPH_MUST_NOT_BE_EMPTY',
   scope: 'element',
   selector: 'p',

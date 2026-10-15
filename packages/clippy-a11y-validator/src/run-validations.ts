@@ -55,12 +55,12 @@ const toViolation = (
   if (!found) return undefined;
 
   const { correction, focus, payload } = found;
-  const { messages, rule, scope, severity } = validation;
+  const { documentationId, messages, rule, scope, severity } = validation;
 
   return {
     element,
     focus,
-    messages: resolveMessages(messages, locales.locale, locales.fallbackLocale, payload),
+    messages: resolveMessages(messages, locales.locale, locales.fallbackLocale, payload, documentationId),
     rule,
     scope,
     severity,

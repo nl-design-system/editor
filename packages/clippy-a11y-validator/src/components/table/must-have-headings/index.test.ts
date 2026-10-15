@@ -13,7 +13,7 @@ describe('tableMustHaveHeadings', () => {
     expect(violation?.rule).toBe('TABLE_MUST_HAVE_HEADINGS');
     expect(violation?.severity).toBe('warning');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.error).toBe('Deze tabel heeft geen koprij en geen kopkolom.');
+    expect(violation?.messages.title).toBe('Deze tabel heeft geen koprij en geen kopkolom.');
     expect(violation?.messages.solution).toContain('eerste rij of de eerste kolom');
   });
 
