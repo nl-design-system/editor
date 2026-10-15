@@ -1,6 +1,6 @@
 import type { ByLocale, Locale, ResolvedMessages, ValidationMessagesByLocale } from './types/messages.ts';
 import type { ViolationPayload } from './types/validation.ts';
-import { getRuleById } from './documentation.ts';
+import { getDocumentationComponentRuleById } from './documentation.ts';
 import { replacePlaceholders } from './utils/html.ts';
 
 /** Which locale wins: the one asked for, else the fallback, else the source language. */
@@ -15,7 +15,7 @@ export const resolveMessages = (
   documentationId?: string,
 ): ResolvedMessages => {
   const { explanation, href, solution, title } = resolveLocalised(messages, locale, fallbackLocale);
-  const rule = getRuleById(documentationId);
+  const rule = getDocumentationComponentRuleById(documentationId);
 
   return {
     ...rule,
