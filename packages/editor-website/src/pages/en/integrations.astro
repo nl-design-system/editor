@@ -1,6 +1,5 @@
 ---
 import Document from '../../layouts/document.astro';
-import Hero from '../../components/Hero.astro';
 import Section from '../../components/Section.astro';
 import Card from '../../components/Card.astro';
 import CardGroup from '../../components/CardGroup.astro';
@@ -12,7 +11,8 @@ const t = useTranslations('en');
 
 <Document title={t('integrations.title')}>
   <main>
-    <Hero title={indexFrontmatter['title']} intro={indexFrontmatter['intro']} />
+    <h1 class="utrecht-heading-1">{indexFrontmatter['title']}</h1>
+    <p class="utrecht-paragraph">{indexFrontmatter['intro']}</p>
 
     <Section>
       <CardGroup>

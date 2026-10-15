@@ -68,33 +68,6 @@ const locale = (Astro.currentLocale ?? 'nl') as Locale;
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .ma-banner__content {
-    display: grid;
-    grid-template-areas:
-      'header'
-      'copy'
-      'footer';
-    grid-template-columns: auto;
-    grid-template-rows: repeat(3, auto);
-    padding-block: var(--basis-space-block-5xl);
-    padding-inline: var(--basis-space-inline-xl);
-    row-gap: var(--basis-space-row-xl);
-
-    & .ma-banner__header {
-      grid-area: header;
-      max-inline-size: 622px;
-    }
-
-    & .ma-banner__copy {
-      grid-area: copy;
-      max-inline-size: 622px;
-    }
-
-    & .ma-banner__footer {
-      grid-area: footer;
-    }
-  }
-
   .ma-page-section {
     display: flex;
     flex-direction: column;
@@ -103,7 +76,6 @@ const locale = (Astro.currentLocale ?? 'nl') as Locale;
 
   .ma-page-section--with-space {
     margin-block: var(--basis-space-block-4xl);
-    padding-inline: var(--basis-space-inline-xl);
   }
 
   .clippy-guideline {
