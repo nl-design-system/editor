@@ -13,6 +13,7 @@ export default defineConfig({
         document: 'src/entries/document.ts',
         'editor-wrapper': 'src/entries/editor-wrapper.ts',
         gutter: 'src/entries/gutter.ts',
+        hub: 'src/entries/hub.ts',
         index: 'src/index.ts',
         toolbar: 'src/entries/toolbar.ts',
         validators: 'src/entries/validators.ts',
