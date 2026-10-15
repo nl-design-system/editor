@@ -11,7 +11,7 @@ import { getElementRange } from '@/utils/ranges';
 import { resolveViolationDisplay } from '@/utils/validations';
 import { editorCorrection } from './corrections';
 
-const VALIDATION_TIMEOUT = 500;
+export const VALIDATION_TIMEOUT = 500;
 
 /**
  * Adds what the editor needs on top of a reported violation: the DOM `Range` the gutter, the

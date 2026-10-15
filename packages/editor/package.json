@@ -44,6 +44,10 @@
       "types": "./dist/entries/gutter.d.ts",
       "default": "./dist/gutter.js"
     },
+    "./hub": {
+      "types": "./dist/entries/hub.d.ts",
+      "default": "./dist/hub.js"
+    },
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
@@ -80,6 +84,9 @@
       ],
       "gutter": [
         "./dist/entries/gutter.d.ts"
+      ],
+      "hub": [
+        "./dist/entries/hub.d.ts"
       ],
       "toolbar": [
         "./dist/entries/toolbar.d.ts"
