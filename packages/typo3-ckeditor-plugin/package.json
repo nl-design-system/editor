@@ -1,6 +1,6 @@
 {
   "name": "@nl-design-system-community/typo3-ckeditor-plugin",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publishConfig": {
     "access": "public",
     "provenance": true
