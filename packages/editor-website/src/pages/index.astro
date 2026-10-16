@@ -1,8 +1,10 @@
 ---
 import Document from '../layouts/document.astro';
+import Section from '../components/Section.astro';
 import editorPackage from '../../../editor/package.json';
 import { frontmatter as indexFrontmatter } from '../../../../docs/index.md';
 import { useTranslations } from '../i18n/translations.ts';
+import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
 
 const t = useTranslations('nl');
 ---
@@ -32,5 +34,90 @@ const t = useTranslations('nl');
         <span class="nl-button__label">npm v{editorPackage.version}</span>
       </a>
     </div>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Wat is Clippy?</h2>
+      <p class="nl-paragraph">
+        Clippy is een toegankelijke rich-text editor voor websites van de Nederlandse overheid. De editor is gebouwd op
+        Tiptap en wordt geleverd als Web Components, zodat je hem in elk framework en elk CMS kunt gebruiken. De opmaak
+        komt uit de design tokens van NL Design System, zodat de inhoud in de editor er net zo uitziet als op je
+        website.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Welk probleem lost Clippy op?</h2>
+      <p class="nl-paragraph">
+        Veel toegankelijkheidsproblemen ontstaan tijdens het schrijven: een kopniveau dat wordt overgeslagen, een
+        afbeelding zonder alt-tekst, een link met de tekst "klik hier" of lege alinea's om ruimte te maken. Een
+        automatische test vindt die fouten pas als de pagina al online staat.
+      </p>
+      <p class="nl-paragraph">
+        Clippy wijst redacteuren op deze problemen terwijl ze schrijven. Bij elke melding legt de editor uit wat er mis
+        is en hoe je het oplost. Zo helpt Clippy om te voldoen aan WCAG 2.2 niveau AA en ATAG 2.0.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Zo werkt het</h2>
+      <p class="nl-paragraph">
+        In dit voorbeeld volgt kop 3 direct op kop 1. Clippy markeert de kop in de kantlijn en toont onder de tekst wat
+        er aan de hand is.
+      </p>
+      <clippy-context id="clippy-example-heading-level">
+        <div slot="value">
+          <h1>Kopniveau 1</h1>
+          <h3>Kopniveau 3</h3>
+          <p>Een niveau overslaan is niet de bedoeling!</p>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h3 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Niet doen: kopniveau overslaan</span>
+            </h3>
+            <p>
+              Na kop 1 komt hier meteen kop 3, waardoor kop 2 ontbreekt. Gebruikers van een schermlezer navigeren via de
+              koppen en missen dan een niveau in de structuur. Gebruik na kop 1 eerst kop 2.
+            </p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+      <p class="nl-paragraph">
+        Meer voorbeelden vind je bij de <a class="nl-link" href={t('nav.href.guidelines')}
+          >toegankelijkheidsrichtlijnen</a
+        >.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Clippy gebruiken</h2>
+      <ul>
+        <li>Probeer de volledige editor uit in de <a class="nl-link" href={t('nav.href.demo')}>demo</a>.</li>
+        <li>
+          Voeg Clippy toe aan CKEditor 5, Drupal of TYPO3 via de <a class="nl-link" href={t('nav.href.integrations')}
+            >integraties</a
+          >.
+        </li>
+        <li>
+          Gebruik de editor in een React-applicatie met de <a class="nl-link" href={t('nav.href.react')}
+            >React-wrappers</a
+          >.
+        </li>
+        <li>Stel de werkbalk in via de <a class="nl-link" href={t('nav.href.configuration')}>configuratie</a>.</li>
+      </ul>
+    </Section>
   </main>
 </Document>
