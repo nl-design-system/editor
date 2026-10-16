@@ -1,8 +1,10 @@
 ---
 import Document from '../../layouts/document.astro';
+import Section from '../../components/Section.astro';
 import editorPackage from '../../../../editor/package.json';
 import { frontmatter as indexFrontmatter } from '../../../../../docs/en/index.md';
 import { useTranslations } from '../../i18n/translations.ts';
+import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
 
 const t = useTranslations('en');
 ---
@@ -32,5 +34,87 @@ const t = useTranslations('en');
         <span class="nl-button__label">npm v{editorPackage.version}</span>
       </a>
     </div>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">What is Clippy?</h2>
+      <p class="nl-paragraph">
+        Clippy is an accessible rich-text editor for Dutch government websites. It is built on Tiptap and ships as Web
+        Components, so you can use it in any framework and any CMS. Its styling comes from NL Design System design
+        tokens, so content in the editor looks the same as on your website.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">What problem does Clippy solve?</h2>
+      <p class="nl-paragraph">
+        Many accessibility problems are introduced while writing: a skipped heading level, an image without alt text, a
+        link that says "click here" or empty paragraphs used for spacing. An automated test only finds these issues once
+        the page is already online.
+      </p>
+      <p class="nl-paragraph">
+        Clippy points these problems out to editors while they write. For every notification, the editor explains what
+        is wrong and how to fix it. This helps you meet WCAG 2.2 level AA and ATAG 2.0.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">How it works</h2>
+      <p class="nl-paragraph">
+        In this example, heading level 3 follows heading level 1 directly. Clippy marks the heading in the gutter and
+        explains the issue below the text.
+      </p>
+      <clippy-context id="clippy-example-heading-level">
+        <div slot="value">
+          <h1>Heading level 1</h1>
+          <h3>Heading level 3</h3>
+          <p>Skipping a level is not allowed!</p>
+        </div>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h3 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: skip heading levels</span>
+            </h3>
+            <p>
+              Here heading level 3 follows heading level 1, so level 2 is missing. Screen reader users navigate by
+              headings and then miss a level in the structure. Use heading level 2 after heading level 1.
+            </p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+      <p class="nl-paragraph">
+        You can find more examples in the <a class="nl-link" href={t('nav.href.guidelines')}>accessibility guidelines</a
+        >.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Using Clippy</h2>
+      <ul>
+        <li>Try the full editor in the <a class="nl-link" href={t('nav.href.demo')}>demo</a>.</li>
+        <li>
+          Add Clippy to CKEditor 5, Drupal or TYPO3 with the <a class="nl-link" href={t('nav.href.integrations')}
+            >integrations</a
+          >.
+        </li>
+        <li>
+          Use the editor in a React application with the <a class="nl-link" href={t('nav.href.react')}>React wrappers</a
+          >.
+        </li>
+        <li>Configure the toolbar in the <a class="nl-link" href={t('nav.href.configuration')}>configuration</a>.</li>
+      </ul>
+    </Section>
   </main>
 </Document>
