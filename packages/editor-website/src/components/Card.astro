@@ -10,49 +10,47 @@ const { heading, href, id } = Astro.props;
 
 {
   href ? (
-    <a class="clippy-card clippy-card--linked" href={href} id={id}>
-      <h2 class="clippy-card__heading">{heading}</h2>
-      <div class="clippy-card__content">
+    <clippy-card-as-link class="clippy-card" variant="list-item" id={id}>
+      <h2 slot="header" class="clippy-card__heading">
+        {heading}
+      </h2>
+      <a slot="link" href={href}>
+        {heading}
+      </a>
+      <div slot="body" class="clippy-card__content">
         <slot />
       </div>
-    </a>
+    </clippy-card-as-link>
   ) : (
-    <div class="clippy-card" id={id}>
-      <h2 class="clippy-card__heading">{heading}</h2>
-      <div class="clippy-card__content">
+    <clippy-card class="clippy-card" id={id}>
+      <h2 slot="header" class="clippy-card__heading">
+        {heading}
+      </h2>
+      <div slot="body" class="clippy-card__content">
         <slot />
       </div>
-    </div>
+    </clippy-card>
   )
 }
 
 <style is:global>
   .clippy-card {
-    background-color: transparent;
-    border-radius: var(--basis-border-radius-md);
+    --clippy-card-background-color: transparent;
+    --clippy-card-border-color: transparent;
+    --clippy-card-border-radius: var(--basis-border-radius-md);
+    --clippy-card-color: var(--basis-color-default-color-default);
     box-shadow: var(--basis-box-shadow-md);
-    color: var(--basis-color-default-color-default);
-    display: flex;
-    flex-direction: column;
     padding-block: var(--basis-space-block-xl);
     padding-inline: var(--basis-space-inline-xl);
     row-gap: var(--basis-space-row-lg);
   }
 
-  .clippy-card--linked {
-    cursor: var(--basis-action-activate-cursor, pointer);
-    text-decoration: none;
+  .clippy-card::part(header-body) {
+    row-gap: var(--basis-space-row-lg);
   }
 
-  .clippy-card--linked:hover {
+  clippy-card-as-link.clippy-card:hover {
     box-shadow: var(--basis-box-shadow-lg);
-  }
-
-  .clippy-card--linked:focus-visible {
-    outline-color: var(--basis-focus-outline-color);
-    outline-offset: var(--basis-focus-outline-offset);
-    outline-style: var(--basis-focus-outline-style, solid);
-    outline-width: var(--basis-focus-outline-width);
   }
 
   .clippy-card__heading {
@@ -61,11 +59,11 @@ const { heading, href, id } = Astro.props;
     margin-block: 0;
   }
 
-  .clippy-card--linked .clippy-card__heading {
+  clippy-card-as-link .clippy-card__heading {
     color: var(--basis-color-action-1-color-default);
   }
 
-  .clippy-card--linked:active .clippy-card__heading {
+  clippy-card-as-link:active .clippy-card__heading {
     color: var(--basis-color-action-1-color-active);
   }
 
