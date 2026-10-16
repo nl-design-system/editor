@@ -1,5 +1,7 @@
 ---
 import Document from '../../layouts/document.astro';
+import PackageLinks from '../../components/PackageLinks.astro';
+import altTextWizardPackage from '../../../../clippy-alt-text-wizard/package.json';
 import Section from '../../components/Section.astro';
 import MermaidDiagram from '../../components/MermaidDiagram.astro';
 import { useTranslations } from '../../i18n/translations.ts';
@@ -14,14 +16,7 @@ const mermaid = generateMermaidStateDiagram(altTextWizardMachine);
   <main>
     <h1 class="utrecht-heading-1">Alt-text wizard</h1>
     <p class="utrecht-paragraph">A step-by-step wizard that helps authors write accessible alt text for images.</p>
-    <div>
-      <a href="https://www.npmjs.com/package/@nl-design-system-community/clippy-alt-text-wizard">
-        <img src="https://img.shields.io/npm/v/@nl-design-system-community/clippy-alt-text-wizard" alt="npm version" />
-      </a>
-      <a href="https://github.com/nl-design-system/editor">
-        <img src="https://img.shields.io/badge/github-repo-blue?logo=github" alt="GitHub repository" />
-      </a>
-    </div>
+    <PackageLinks pkg={altTextWizardPackage} />
 
     <Section>
       <h2>Demo</h2>

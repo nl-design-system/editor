@@ -6,6 +6,10 @@ import Document from '../../layouts/document.astro';
 import Section from '../../components/Section.astro';
 import Card from '../../components/Card.astro';
 import CardGroup from '../../components/CardGroup.astro';
+import PackageLinks from '../../components/PackageLinks.astro';
+import ckeditorPackage from '../../../../ckeditor-plugin/package.json';
+import drupalPackage from '../../../../drupal-ckeditor-plugin/package.json';
+import typo3Package from '../../../../typo3-ckeditor-plugin/package.json';
 import { frontmatter as indexFrontmatter } from '../../../../../docs/en/index.md';
 import { useTranslations } from '../../i18n/translations.ts';
 
@@ -24,20 +28,7 @@ const t = useTranslations('en');
             Integrate Clippy into Drupal by adding the <code>ClippyPlugin</code> to the CKEditor configuration. This makes
             accessibility validations available directly to editors.
           </p>
-          <p>
-            npm package: <a
-              class="utrecht-link utrecht-link--html-a"
-              href="https://www.npmjs.com/package/@nl-design-system-community/drupal-ckeditor-plugin"
-              ><code>@nl-design-system-community/drupal-ckeditor-plugin</code></a
-            >
-          </p>
-          <p>
-            <a
-              class="utrecht-link utrecht-link--html-a"
-              href="https://github.com/nl-design-system/editor/blob/main/packages/drupal-ckeditor-plugin/README.md"
-              >Read the README</a
-            >
-          </p>
+          <PackageLinks pkg={drupalPackage} />
         </Card>
 
         <Card heading="CKEditor" logo={ckeditorLogo} href="/ckeditor" footer="View the CKEditor plugin demo">
@@ -45,20 +36,7 @@ const t = useTranslations('en');
             Clippy Editor provides a CKEditor 5 plugin that lets you add Clippy's accessibility validations to any
             CKEditor instance.
           </p>
-          <p>
-            npm package: <a
-              class="utrecht-link utrecht-link--html-a"
-              href="https://www.npmjs.com/package/@nl-design-system-community/ckeditor-plugin"
-              ><code>@nl-design-system-community/ckeditor-plugin</code></a
-            >
-          </p>
-          <p>
-            <a
-              class="utrecht-link utrecht-link--html-a"
-              href="https://github.com/nl-design-system/editor/tree/main/packages/ckeditor-plugin"
-              >View the source code</a
-            >
-          </p>
+          <PackageLinks pkg={ckeditorPackage} />
         </Card>
 
         <Card heading="TYPO3" logo={typo3Logo} id="typo3">
@@ -67,13 +45,7 @@ const t = useTranslations('en');
             uses, so accessibility validations are available directly to editors.
           </p>
           <p>npm package: <code>@nl-design-system-community/typo3-ckeditor-plugin</code></p>
-          <p>
-            <a
-              class="utrecht-link utrecht-link--html-a"
-              href="https://github.com/nl-design-system/editor/blob/main/packages/typo3-ckeditor-plugin/README.md"
-              >Read the README</a
-            >
-          </p>
+          <PackageLinks npm={false} pkg={typo3Package} />
         </Card>
       </CardGroup>
     </Section>
