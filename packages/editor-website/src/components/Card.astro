@@ -1,12 +1,13 @@
 ---
 interface Props {
   heading: string;
+  footer?: string;
   href?: string;
   id?: string;
   logo?: string;
 }
 
-const { heading, href, id, logo } = Astro.props;
+const { footer, heading, href, id, logo } = Astro.props;
 ---
 
 {
@@ -22,6 +23,11 @@ const { heading, href, id, logo } = Astro.props;
       <div slot="body" class="clippy-card__content">
         <slot />
       </div>
+      {footer && (
+        <span slot="footer" class="clippy-card__footer">
+          {footer}
+        </span>
+      )}
     </clippy-card-as-link>
   ) : (
     <clippy-card class="clippy-card" id={id}>
@@ -52,6 +58,8 @@ const { heading, href, id, logo } = Astro.props;
   clippy-card-as-link.clippy-card {
     --clippy-card-border-color: var(--basis-color-accent-1-border-default);
     --clippy-card-border-width: var(--basis-border-width-md);
+    --clippy-card-footer-padding-block-start: var(--basis-space-block-xl);
+    row-gap: 0;
   }
 
   clippy-card-as-link.clippy-card:hover {
@@ -62,7 +70,7 @@ const { heading, href, id, logo } = Astro.props;
     --clippy-card-border-color: var(--basis-color-accent-1-border-active);
   }
 
-  clippy-card.clippy-card {
+  .clippy-card {
     align-content: start;
     display: grid;
     grid-template-columns: 1fr auto;
@@ -73,9 +81,13 @@ const { heading, href, id, logo } = Astro.props;
   }
 
   .clippy-card::part(pre-header) {
+    align-self: center;
     grid-column: 2;
     grid-row: 1 / span 2;
-    order: 1;
+  }
+
+  .clippy-card::part(footer) {
+    grid-column: 1;
   }
 
   .clippy-card__logo {
@@ -100,20 +112,36 @@ const { heading, href, id, logo } = Astro.props;
     margin-block: 0;
   }
 
-  @media (width < 48rem) {
-    clippy-card-as-link.clippy-card {
-      flex-direction: column;
-      align-items: stretch;
-    }
+  clippy-card-as-link .clippy-card__content a {
+    position: relative;
+    z-index: 1;
+  }
 
-    clippy-card.clippy-card {
+  .clippy-card__footer {
+    color: var(--basis-color-action-2-color-default);
+    text-decoration: underline;
+  }
+
+  clippy-card-as-link:hover .clippy-card__footer {
+    color: var(--basis-color-action-2-color-hover);
+  }
+
+  clippy-card-as-link:active .clippy-card__footer {
+    color: var(--basis-color-action-2-color-active);
+  }
+
+  @media (width < 48rem) {
+    .clippy-card {
       grid-template-columns: 1fr;
     }
 
     .clippy-card::part(pre-header) {
       grid-column: auto;
       grid-row: auto;
-      order: -1;
+    }
+
+    clippy-card-as-link.clippy-card::part(pre-header) {
+      padding-block-end: var(--basis-space-block-xl);
     }
 
     .clippy-card__logo {
