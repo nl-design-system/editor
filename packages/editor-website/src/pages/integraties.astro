@@ -1,4 +1,7 @@
 ---
+import ckeditorLogo from '../assets/logos/ckeditor.svg?raw';
+import drupalLogo from '../assets/logos/drupal.svg?raw';
+import typo3Logo from '../assets/logos/typo3.svg?raw';
 import Document from '../layouts/document.astro';
 import Section from '../components/Section.astro';
 import Card from '../components/Card.astro';
@@ -16,14 +19,14 @@ const t = useTranslations('nl');
 
     <Section>
       <CardGroup>
-        <Card heading="Drupal" id="drupal">
+        <Card heading="Drupal" logo={drupalLogo} id="drupal">
           <p>
             Integreer Clippy in Drupal door de <code>ClippyPlugin</code> toe te voegen aan de CKEditor-configuratie. Zo zijn
             de toegankelijkheidsvalidaties direct beschikbaar voor redacteurs.
           </p>
         </Card>
 
-        <Card heading="CKEditor" href="/ckeditor">
+        <Card heading="CKEditor" logo={ckeditorLogo} href="/ckeditor">
           <p>
             Clippy Editor biedt een CKEditor 5-plugin waarmee je de toegankelijkheidsvalidaties van Clippy kunt
             toevoegen aan elke CKEditor-instantie. De plugin is beschikbaar als
@@ -31,7 +34,7 @@ const t = useTranslations('nl');
           </p>
         </Card>
 
-        <Card heading="TYPO3" id="typo3">
+        <Card heading="TYPO3" logo={typo3Logo} id="typo3">
           <p>
             Installeer de Clippy-extensie in TYPO3. Clippy wordt dan toegevoegd aan elke rich-text editor, welke preset
             die ook gebruikt, zodat de toegankelijkheidsvalidaties direct beschikbaar zijn voor redacteuren.
