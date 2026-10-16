@@ -2,79 +2,49 @@
 import iconMoonOutline from '@tabler/icons/outline/moon.svg?raw';
 import iconMoonFilled from '@tabler/icons/filled/moon.svg?raw';
 import SiteLogo from './SiteLogo.astro';
+import SiteNavigation from './SiteNavigation.astro';
 import type { Locale } from '../i18n/translations.ts';
 import { useTranslations } from '../i18n/translations.ts';
 
 const locale = (Astro.currentLocale ?? 'nl') as Locale;
 const t = useTranslations(locale);
-
-const navItems = [
-  { href: t('nav.href.editor'), label: t('nav.editor') },
-  { href: t('nav.href.configuration'), label: t('nav.configuration') },
-  { href: t('nav.href.guidelines'), label: t('nav.guidelines') },
-  { href: t('nav.href.react'), label: t('nav.react') },
-  { href: t('nav.href.integrations'), label: t('nav.integrations') },
-  { href: t('nav.href.alt-text-wizard'), label: t('nav.alt-text-wizard') },
-];
-
-const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
-
-// Determine the root path for "active" check per locale
-const localeRoot = locale === 'en' ? '/en' : '/';
+const otherLocale = locale === 'en' ? 'nl' : 'en';
 ---
 
-<header class="ma-site-header">
-  <div class="ma-site-header__logo">
+<clippy-page-header slot="header" variant="compact" label-drawer-title={t('nav.label')}>
+  <div slot="logo">
     <SiteLogo href={t('nav.href.editor')} ariaLabel={t('site.logo.label')} />
   </div>
-  <nav class="ma-site-header__nav" aria-label={t('nav.label')}>
-    <ul class="ma-site-header__nav-list" role="list">
-      {
-        navItems.map(({ href, label }) => {
-          const isActive = href === localeRoot ? currentPath === localeRoot : currentPath.startsWith(href);
-          return (
-            <li>
-              <a
-                class={`ma-site-header__nav-link${isActive ? ' ma-site-header__nav-link--active' : ''}`}
-                href={href}
-                aria-current={isActive ? 'page' : undefined}
-              >
-                {label}
-              </a>
-            </li>
-          );
-        })
-      }
-    </ul>
-  </nav>
-  <div class="ma-site-header__actions">
-    <button
-      type="button"
-      id="ma-color-scheme-toggle"
-      class="nl-button nl-button--secondary nl-button--icon-only ma-theme-toggle"
-      aria-pressed="false"
-    >
-      <span
-        class="nl-button__icon-start ma-theme-toggle__icon ma-theme-toggle__icon--outline"
-        aria-hidden="true"
-        set:html={iconMoonOutline}
-      />
-      <span
-        class="nl-button__icon-start ma-theme-toggle__icon ma-theme-toggle__icon--filled"
-        aria-hidden="true"
-        set:html={iconMoonFilled}
-      />
-      <span class="nl-button__label">{t('theme.toggle')}</span>
-    </button>
-    <nav class="ma-site-header__lang-nav" aria-label={t('nav.language.label')}>
-      <a class="ma-site-header__lang-link" href={t('nav.href.language')} hreflang={locale === 'en' ? 'nl' : 'en'}>
-        {t('nav.language')}
-      </a>
-    </nav>
-  </div>
-</header>
+  <SiteNavigation placement="navigation-bar" />
+  <SiteNavigation placement="navigation-drawer" />
+  <clippy-button slot="end" id="ma-color-scheme-toggle" class="ma-theme-toggle" purpose="secondary" toggle icon-only>
+    <span
+      slot="iconStart"
+      class="ma-theme-toggle__icon ma-theme-toggle__icon--outline"
+      aria-hidden="true"
+      set:html={iconMoonOutline}
+    />
+    <span
+      slot="iconStart"
+      class="ma-theme-toggle__icon ma-theme-toggle__icon--filled"
+      aria-hidden="true"
+      set:html={iconMoonFilled}
+    />
+    {t('theme.toggle')}
+  </clippy-button>
+  <a
+    slot="end"
+    class="nl-button nl-button--subtle ma-language-link"
+    href={t('nav.href.language')}
+    hreflang={otherLocale}
+    lang={otherLocale}
+  >
+    <span class="nl-button__label">{t('nav.language')}</span>
+  </a>
+</clippy-page-header>
 
 <script>
+  import type { ClippyButton } from '@nl-design-system-community/clippy-components/clippy-button';
   import {
     applyColorScheme,
     isDarkColorScheme,
@@ -82,12 +52,12 @@ const localeRoot = locale === 'en' ? '/en' : '/';
     storeColorScheme,
   } from '@nl-design-system-community/editor/color-scheme';
 
-  const toggle = document.getElementById('ma-color-scheme-toggle');
+  const toggle = document.querySelector<ClippyButton>('#ma-color-scheme-toggle');
 
   applyColorScheme((colorScheme) => {
-    const dark = colorScheme === 'dark';
-    toggle?.setAttribute('aria-pressed', String(dark));
-    toggle?.classList.toggle('nl-button--pressed', dark);
+    if (toggle) {
+      toggle.pressed = colorScheme === 'dark';
+    }
   });
 
   toggle?.addEventListener('click', () => {
@@ -98,68 +68,6 @@ const localeRoot = locale === 'en' ? '/en' : '/';
 </script>
 
 <style>
-  .ma-site-header {
-    background-color: var(--basis-color-accent-1-inverse-bg-default);
-    color: var(--basis-color-accent-1-inverse-color-document);
-    align-items: stretch;
-    justify-content: space-between;
-    display: flex;
-    gap: var(--basis-space-inline-xl);
-  }
-
-  .ma-site-header__logo {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    padding-block: var(--basis-space-block-lg);
-    padding-inline: var(--basis-space-inline-lg);
-  }
-
-  .ma-site-header__nav {
-    display: flex;
-    align-self: stretch;
-    align-items: stretch;
-  }
-
-  .ma-site-header__nav-list {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: stretch;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .ma-site-header__nav-link {
-    font-weight: var(--basis-text-font-weight-bold);
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    padding-block: var(--basis-space-block-md);
-    padding-inline: var(--basis-space-inline-xl);
-    block-size: 100%;
-    color: inherit;
-    font-size: var(--basis-text-font-size-md);
-    text-decoration: none;
-  }
-
-  .ma-site-header__nav-link:hover {
-    background-color: var(--basis-color-accent-1-inverse-bg-hover);
-  }
-
-  .ma-site-header__nav-link--active {
-    background-color: var(--basis-color-accent-1-inverse-bg-active);
-    border-block-end: var(--basis-border-width-md) solid var(--basis-color-default-inverse-border-default);
-  }
-
-  .ma-site-header__actions {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    gap: var(--basis-space-inline-lg);
-    padding-inline: var(--basis-space-inline-xl);
-  }
-
   .ma-theme-toggle {
     --nl-button-secondary-background-color: transparent;
     --nl-button-secondary-color: currentColor;
@@ -190,20 +98,18 @@ const localeRoot = locale === 'en' ? '/en' : '/';
     display: inline-flex;
   }
 
-  .ma-site-header__lang-nav {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    padding-block: var(--basis-space-block-md);
-  }
-
-  .ma-site-header__lang-link {
-    color: inherit;
-    font-size: var(--basis-text-font-size-md);
+  .ma-language-link {
+    color: var(--basis-color-accent-1-inverse-color-default);
     text-decoration: none;
   }
 
-  .ma-site-header__lang-link:hover {
-    text-decoration: underline;
+  .ma-language-link:hover {
+    background-color: var(--basis-color-accent-1-inverse-bg-hover);
+    color: var(--basis-color-accent-1-inverse-color-hover);
+  }
+
+  .ma-language-link:active {
+    background-color: var(--basis-color-accent-1-inverse-bg-active);
+    color: var(--basis-color-accent-1-inverse-color-active);
   }
 </style>

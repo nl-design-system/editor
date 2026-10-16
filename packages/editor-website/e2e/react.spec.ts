@@ -25,8 +25,12 @@ test.describe('Page basics', () => {
 
 test.describe('Navigation', () => {
   test('React nav link is active on the react page', async ({ page }) => {
+    const menuButton = page.getByRole('button', { name: 'Menu' });
+    if (await menuButton.isVisible()) {
+      await menuButton.click();
+    }
     await expect(
-      page.locator('.ma-site-header__nav').getByRole('link', { name: 'React', exact: true }),
+      page.getByRole('navigation', { name: 'Hoofdnavigatie' }).getByRole('link', { name: 'React', exact: true }),
     ).toHaveAttribute('aria-current', 'page');
   });
 });
