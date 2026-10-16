@@ -19,6 +19,7 @@ export const getNavigationItems = (locale: Locale, pathname: string): Navigation
 
   const navItems: NavigationLink[] = [
     { href: t('nav.href.editor'), label: t('nav.editor') },
+    { href: t('nav.href.demo'), label: t('nav.demo') },
     { href: t('nav.href.configuration'), label: t('nav.configuration') },
     { href: t('nav.href.guidelines'), label: t('nav.guidelines') },
     { href: t('nav.href.react'), label: t('nav.react') },

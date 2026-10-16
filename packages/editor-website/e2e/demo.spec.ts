@@ -1,14 +1,14 @@
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/demo');
   const clippyEditor = page.locator('#clippy-editor-localhost');
   await expect(clippyEditor.getByRole('button', { name: 'Vetgedrukt', exact: true })).toBeVisible();
 });
 
 test.describe('Page basics', () => {
   test('page has correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('Rich-text Editor - NL Design System');
+    await expect(page).toHaveTitle('Demo - Rich-text Editor - NL Design System');
   });
 
   test('page has document language', async ({ page }) => {
