@@ -49,6 +49,19 @@ const { heading, href, id, logo } = Astro.props;
     row-gap: var(--basis-space-block-xl);
   }
 
+  clippy-card-as-link.clippy-card {
+    --clippy-card-border-color: var(--basis-color-accent-1-border-default);
+    --clippy-card-border-width: var(--basis-border-width-md);
+  }
+
+  clippy-card-as-link.clippy-card:hover {
+    --clippy-card-border-color: var(--basis-color-accent-1-border-hover);
+  }
+
+  clippy-card-as-link.clippy-card:active {
+    --clippy-card-border-color: var(--basis-color-accent-1-border-active);
+  }
+
   clippy-card.clippy-card {
     align-content: start;
     display: grid;
