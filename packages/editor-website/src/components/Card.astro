@@ -3,14 +3,16 @@ interface Props {
   heading: string;
   href?: string;
   id?: string;
+  logo?: string;
 }
 
-const { heading, href, id } = Astro.props;
+const { heading, href, id, logo } = Astro.props;
 ---
 
 {
   href ? (
     <clippy-card-as-link class="clippy-card" variant="list-item" id={id}>
+      {logo && <span slot="pre-header" class="clippy-card__logo" aria-hidden="true" set:html={logo} />}
       <h2 slot="header" class="clippy-card__heading">
         {heading}
       </h2>
@@ -23,6 +25,7 @@ const { heading, href, id } = Astro.props;
     </clippy-card-as-link>
   ) : (
     <clippy-card class="clippy-card" id={id}>
+      {logo && <span slot="pre-header" class="clippy-card__logo" aria-hidden="true" set:html={logo} />}
       <h2 slot="header" class="clippy-card__heading">
         {heading}
       </h2>
@@ -35,36 +38,43 @@ const { heading, href, id } = Astro.props;
 
 <style is:global>
   .clippy-card {
-    --clippy-card-background-color: transparent;
-    --clippy-card-border-color: transparent;
+    --clippy-card-background-color: var(--basis-color-default-bg-default);
+    --clippy-card-border-color: var(--basis-color-default-border-subtle);
     --clippy-card-border-radius: var(--basis-border-radius-md);
-    --clippy-card-color: var(--basis-color-default-color-default);
-    box-shadow: var(--basis-box-shadow-md);
-    padding-block: var(--basis-space-block-xl);
-    padding-inline: var(--basis-space-inline-xl);
-    row-gap: var(--basis-space-row-lg);
+    --clippy-card-color: var(--basis-color-default-color-document);
+    --clippy-card-header-text-decoration: none;
+    column-gap: var(--basis-space-inline-3xl);
+    padding-block: var(--basis-space-block-3xl);
+    padding-inline: var(--basis-space-inline-3xl);
+    row-gap: var(--basis-space-block-xl);
+  }
+
+  clippy-card.clippy-card {
+    align-content: start;
+    display: grid;
+    grid-template-columns: 1fr auto;
   }
 
   .clippy-card::part(header-body) {
-    row-gap: var(--basis-space-row-lg);
+    row-gap: var(--basis-space-block-xl);
   }
 
-  clippy-card-as-link.clippy-card:hover {
-    box-shadow: var(--basis-box-shadow-lg);
+  .clippy-card::part(pre-header) {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    order: 1;
+  }
+
+  .clippy-card__logo {
+    display: flex;
+    inline-size: 6rem;
   }
 
   .clippy-card__heading {
-    font-size: var(--basis-text-font-size-xl);
+    font-family: var(--basis-heading-font-family);
+    font-size: var(--basis-text-font-size-2xl);
     font-weight: var(--basis-text-font-weight-bold);
     margin-block: 0;
-  }
-
-  clippy-card-as-link .clippy-card__heading {
-    color: var(--basis-color-action-1-color-default);
-  }
-
-  clippy-card-as-link:active .clippy-card__heading {
-    color: var(--basis-color-action-1-color-active);
   }
 
   .clippy-card__content {
@@ -73,7 +83,28 @@ const { heading, href, id } = Astro.props;
     row-gap: var(--basis-space-row-md);
   }
 
-  .clippy-card__content :global(p) {
+  .clippy-card__content p {
     margin-block: 0;
+  }
+
+  @media (width < 48rem) {
+    clippy-card-as-link.clippy-card {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    clippy-card.clippy-card {
+      grid-template-columns: 1fr;
+    }
+
+    .clippy-card::part(pre-header) {
+      grid-column: auto;
+      grid-row: auto;
+      order: -1;
+    }
+
+    .clippy-card__logo {
+      inline-size: 4rem;
+    }
   }
 </style>
