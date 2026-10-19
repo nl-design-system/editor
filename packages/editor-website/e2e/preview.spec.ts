@@ -27,6 +27,10 @@ test.describe('Page review on the preview page', () => {
     await expect(issueCount(page)).toHaveText('Totaal 3 toegankelijkheidsmeldingen gevonden.');
   });
 
+  test('the gutter shows an indicator for each known issue', async ({ page }) => {
+    await expect(page.locator('clippy-validations-gutter .clippy-validations-gutter__indicator')).toHaveCount(3);
+  });
+
   test('the drawer lists the issues', async ({ page }) => {
     await openOverview(page, /^Fouten, waarschuwingen en tips/);
 

@@ -33,6 +33,7 @@ import {
   type OpenValidationGroupEvent,
   type ValidationsDrawerToggleDetail,
 } from '@/events';
+import { rangesEqual } from '@/utils/ranges';
 import drawerStyles from './styles';
 
 const tag = 'clippy-validations-drawer';
@@ -140,7 +141,9 @@ export class ValidationsDrawer extends LitElement {
   override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     if (changed.has('violationsMap') || changed.has('violationsContext')) {
-      this.#violationsProvider.setValue(this.violationsMap ?? this.violationsContext ?? new Map());
+      const violations = this.violationsMap ?? this.violationsContext ?? new Map();
+      this.#violationsProvider.setValue(violations);
+      this.#remapFocusedValidationGroup(violations);
     }
     if (changed.has('htmlDocument') || changed.has('htmlDocumentContextValue')) {
       this.#htmlDocumentProvider.setValue(this.htmlDocument ?? this.htmlDocumentContextValue);
@@ -148,6 +151,14 @@ export class ValidationsDrawer extends LitElement {
     if ((changed.has('identifier') || changed.has('identifierContextValue')) && this.#identifier !== undefined) {
       this.#identifierProvider.setValue(this.#identifier);
     }
+  }
+
+  #remapFocusedValidationGroup(violations: ViolationsMap) {
+    const group = this.focusedValidationGroup;
+    if (!group) return;
+    this.focusedValidationGroup = [...violations.keys()].filter((range) =>
+      group.some((focused) => rangesEqual(focused, range)),
+    );
   }
 
   override updated(changed: PropertyValues) {

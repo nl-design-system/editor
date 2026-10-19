@@ -27,3 +27,11 @@ export function getOverlappingRanges(target: Range, ranges: Iterable<Range>): Ra
   const group = [...ranges].filter((range) => range === target || rangesIntersect(target, range));
   return group.length ? group : [target];
 }
+
+export function rangesEqual(a: Range, b: Range): boolean {
+  try {
+    return a.compareBoundaryPoints(Range.START_TO_START, b) === 0 && a.compareBoundaryPoints(Range.END_TO_END, b) === 0;
+  } catch {
+    return false;
+  }
+}
