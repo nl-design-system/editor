@@ -114,7 +114,7 @@ export class ValidationItem extends LitElement {
       new CustomEvent<FocusNodeDetail>(CustomEvents.FOCUS_NODE, {
         bubbles: true,
         composed: true,
-        detail: { range: this.range },
+        detail: { identifier: this.identifier, range: this.range },
       }),
     );
   };

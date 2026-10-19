@@ -5,14 +5,9 @@ import {
 } from '@nl-design-system-community/editor/accessibility-notifications';
 import { setDarkColorScheme, watchHostColorScheme } from '@nl-design-system-community/editor/color-scheme';
 import { EditorContentWrapper, EditorWrapper } from '@nl-design-system-community/editor/editor-wrapper';
-import {
-  CustomEvents,
-  type FocusNodeEvent,
-  type Gutter,
-  validationInteractionMode,
-} from '@nl-design-system-community/editor/gutter';
+import { CustomEvents, type Gutter, validationInteractionMode } from '@nl-design-system-community/editor/gutter';
 import { ClippyHub } from '@nl-design-system-community/editor/hub';
-import { type Validation, type ViolationsMap } from '@nl-design-system-community/editor/validators';
+import { type Validation, type Violation, type ViolationsMap } from '@nl-design-system-community/editor/validators';
 import { Plugin, View, type Locale, type ObservableChangeEvent, type ToolbarView } from 'ckeditor5';
 import { adoptClippyStyles } from '../styles/';
 import { findMatchingCorrection, findOccurrenceIndex, runValidations } from '../utils/correction.ts';
@@ -88,8 +83,6 @@ export class ClippyPlugin extends Plugin {
     wrapper.append(drawer);
     this._drawerEl = drawer;
 
-    this._editorEl.addEventListener(CustomEvents.FOCUS_NODE, this._handleFocusNode);
-
     this._addNotificationsToolbarItem();
 
     this._hub = new ClippyHub({
@@ -97,6 +90,7 @@ export class ClippyPlugin extends Plugin {
         this._violationsMap = violationsMap;
         return this._patchCorrectionsForCKEditor(violationsMap);
       },
+      focusViolation: this._focusViolation,
       identifier: this._identifier,
       target: this._editableEl,
       validations: this._validations,
@@ -204,8 +198,10 @@ export class ClippyPlugin extends Plugin {
     };
   }
 
-  private readonly _handleFocusNode = (event: Event) => {
-    const { range } = (event as FocusNodeEvent).detail;
+  private readonly _focusViolation = ({ range }: Violation) => {
+    if (!range) {
+      return;
+    }
     const domConverter = this.editor.editing.view.domConverter;
 
     // from DOM to virtual view layer, without CKEditor injected DOM artifacts.
@@ -223,7 +219,6 @@ export class ClippyPlugin extends Plugin {
   };
 
   override destroy(): void {
-    this._editorEl?.removeEventListener(CustomEvents.FOCUS_NODE, this._handleFocusNode);
     this._hub?.destroy();
     this._unwatchColorScheme?.();
     this._drawerEl?.remove();
