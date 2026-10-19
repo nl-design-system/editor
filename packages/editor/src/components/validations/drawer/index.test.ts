@@ -241,6 +241,38 @@ describe('<clippy-validations-drawer overlay>', () => {
     await expect.element(page.getByTestId('clippy-validations-drawer')).not.toHaveAttribute('hidden');
   });
 
+  it('keeps showing the opened group when re-validation creates new ranges', async () => {
+    const violationsOn = (...elements: Element[]): Map<Range, Violation> =>
+      new Map(
+        elements.map((element) => {
+          const range = document.createRange();
+          range.selectNode(element);
+          return [range, violation({ range })];
+        }),
+      );
+    const heading = content.querySelector('h1')!;
+    const paragraph = content.querySelector('p')!;
+    drawer.violationsMap = violationsOn(heading, paragraph);
+    await drawer.updateComplete;
+    const [, paragraphRange] = drawer.violationsMap.keys();
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_VALIDATION_GROUP, {
+        detail: { identifier: IDENTIFIER, ranges: [paragraphRange] },
+      }),
+    );
+
+    drawer.violationsMap = violationsOn(heading, paragraph);
+
+    const items = () => [
+      ...(drawer.shadowRoot
+        ?.querySelector('clippy-validations-list')
+        ?.shadowRoot?.querySelectorAll('clippy-validation-item') ?? []),
+    ];
+    const renderedRanges = () => items().map((item) => item.range);
+    await expect.poll(() => renderedRanges().length === 1 && renderedRanges()[0] !== paragraphRange).toBe(true);
+    expect(renderedRanges()[0]?.intersectsNode(paragraph)).toBe(true);
+  });
+
   it('announces when it opens and closes', async () => {
     const toggles: unknown[] = [];
     const record = (event: Event) => toggles.push((event as CustomEvent).detail);
