@@ -16,121 +16,111 @@ import iconChevronLeft from '@tabler/icons/outline/chevron-left.svg?raw';
       import '@nl-design-system-community/ma-design-tokens/dist/theme.css';
       import '@utrecht/design-tokens/dist/theme.css';
       import '@utrecht/component-library-css/dist/index.css';
-      import '@nl-design-system-community/editor';
       import '@nl-design-system-community/editor/theme.css';
       import '@nl-design-system-candidate/button-css/button.css';
+      import { PageReview } from '@nl-design-system-community/editor/page-review';
+
+      const mount = document.querySelector<HTMLElement>('.preview-header__review');
+      if (mount) {
+        new PageReview({ mount });
+      }
     </script>
   </head>
   <body class="utrecht-body">
-    <clippy-context id="clippy-preview" readonly>
-      <div slot="value">
-        <h1>NL Design System Editor — voorbeeld</h1>
-        <p>
-          Onder die steden, <strong>welke</strong>
-          <em>vanouds</em> aan de
-          <strong><em>grafelijke</em></strong> kroon van Holland gelijk zoovele edelgesteenten flonkerden, en wier macht en
-          rijkdom tot een hechten steun verstrekten aan des Landsheer gezag, was Haarlem, gelijk genoeg bekend is, een der
-          voornaamste.
-        </p>
+    <header class="preview-header">
+      <a class="preview-header__back nl-button nl-button--subtle" href="/">
+        <span class="preview-header__icon" aria-hidden="true"><Fragment set:html={iconChevronLeft} /></span>
+        <span class="nl-button__label">Terug naar editor</span>
+      </a>
+      <div class="preview-header__review"></div>
+    </header>
 
-        <h3>Ligging en handel</h3>
-        <p>
-          Aan den over eener rivier gebouwd, waarvan zij zich als van twee armen bedienen kon, om, aan de eene zijde,
-          het Haarlemmermeer en de daarom gelegen landen, aan de andere zij IJ, en door het IJ, de Zuiderzee te
-          bereiken, had zij van deze gunstige ligging reeds vroeg partij getrokken, om een
-          <a href="https://example.com">handel te drijven</a>.
-        </p>
+    <main class="preview-content" data-clippy-demo>
+      <h1>NL Design System Editor — voorbeeld</h1>
+      <p>
+        Onder die steden, <strong>welke</strong>
+        <em>vanouds</em> aan de
+        <strong><em>grafelijke</em></strong> kroon van Holland gelijk zoovele edelgesteenten flonkerden, en wier macht en
+        rijkdom tot een hechten steun verstrekten aan des Landsheer gezag, was Haarlem, gelijk genoeg bekend is, een der voornaamste.
+      </p>
 
-        <h3>Koopvaardij</h3>
-        <p>
-          De koopvaardij bloeide en vele schepen voeren uit naar <a href="https://example.com">verre kusten</a>. De stad
-          groeide en haar inwoners werden welvarend.
-        </p>
+      <h3>Ligging en handel</h3>
+      <p>
+        Aan den over eener rivier gebouwd, waarvan zij zich als van twee armen bedienen kon, om, aan de eene zijde, het
+        Haarlemmermeer en de daarom gelegen landen, aan de andere zij IJ, en door het IJ, de Zuiderzee te bereiken, had
+        zij van deze gunstige ligging reeds vroeg partij getrokken, om een
+        <a href="https://example.com">handel te drijven</a>.
+      </p>
 
-        <h4>Dat mag niet, hè</h4>
-        <p>
-          Dit is een voorbeeld van een onjuiste koppenstructuur: na kop 3 volgt hier een kop 4, terwijl kop 3 nog niet
-          is afgesloten. Dit geeft een validatiefout in de kantlijn.
-        </p>
+      <h3>Koopvaardij</h3>
+      <p>
+        De koopvaardij bloeide en vele schepen voeren uit naar <a href="https://example.com">verre kusten</a>. De stad
+        groeide en haar inwoners werden welvarend.
+      </p>
 
-        <h2>Afbeeldingen</h2>
-        <img alt="Voorbeeldafbeelding 800×400 pixels" src="https://placehold.co/800x400" />
+      <h4>Dat mag niet, hè</h4>
+      <p>
+        Dit is een voorbeeld van een onjuiste koppenstructuur: na kop 3 volgt hier een kop 4, terwijl kop 3 nog niet is
+        afgesloten. Dit geeft een validatiefout in de kantlijn.
+      </p>
 
-        <h2>Lijsten</h2>
+      <h2>Afbeeldingen</h2>
+      <img alt="Voorbeeldafbeelding 800×400 pixels" src="https://placehold.co/800x400" />
 
-        <h3>Correcte lijst</h3>
-        <ul>
-          <li>Eerste item</li>
-          <li>Tweede item</li>
-          <li>Derde item</li>
-        </ul>
+      <h2>Lijsten</h2>
 
-        <h3>Incorrecte genummerde lijst</h3>
-        <p>1 - Eerste item<br />2 - Tweede item<br />3 - Derde item</p>
+      <h3>Correcte lijst</h3>
+      <ul>
+        <li>Eerste item</li>
+        <li>Tweede item</li>
+        <li>Derde item</li>
+      </ul>
 
-        <h2></h2>
+      <h3>Incorrecte genummerde lijst</h3>
+      <p>1 - Eerste item<br />2 - Tweede item<br />3 - Derde item</p>
 
-        <h2>Tabel</h2>
-        <table>
-          <tbody>
-            <tr>
-              <th>Naam</th>
-              <th colspan="3">Beschrijving</th>
-            </tr>
-            <tr>
-              <td>Rij 1, cel 1</td>
-              <td>Rij 1, cel 2</td>
-              <td>Rij 1, cel 3</td>
-              <td>Rij 1, cel 4</td>
-            </tr>
-          </tbody>
-        </table>
+      <h2></h2>
 
-        <h2>Definitielijst</h2>
-        <dl>
-          <dt>Toegankelijkheid</dt>
-          <dd>Het ontwerpen en ontwikkelen van producten zodat mensen met een beperking ze kunnen gebruiken.</dd>
-          <dt>WCAG</dt>
-          <dd>Web Content Accessibility Guidelines — internationale richtlijnen voor toegankelijke webcontent.</dd>
-        </dl>
-        <p><a href="https://example.com">Linkje</a> helemaal onderaan</p>
+      <h2>Tabel</h2>
+      <table>
+        <tbody>
+          <tr>
+            <th>Naam</th>
+            <th colspan="3">Beschrijving</th>
+          </tr>
+          <tr>
+            <td>Rij 1, cel 1</td>
+            <td>Rij 1, cel 2</td>
+            <td>Rij 1, cel 3</td>
+            <td>Rij 1, cel 4</td>
+          </tr>
+        </tbody>
+      </table>
 
-        <h2>Taalkeuzes</h2>
-        <p>
-          Dit document bevat ook fragmenten in andere talen. Gebruik het overzicht "Taalkeuzes" om snel naar een
-          specifiek taalgefragment te navigeren.
-        </p>
-        <p lang="de">
-          Dieser Absatz ist auf Deutsch geschrieben und zeigt, wie ein Sprachwechsel im Dokument dargestellt wird.
-        </p>
-        <p>Weer terug naar document taal Nederlands.</p>
-        <p lang="fr">
-          Ce paragraphe est rédigé en français et illustre comment un changement de langue apparaît dans le document.
-        </p>
-        <p>Dit alinea heeft geen taalkenmerk en valt daardoor terug op de documenttaal (Nederlands).</p>
-        <p lang="ar" dir="rtl">هذه الفقرة باللغة العربية وتتدفق من اليمين إلى اليسار.</p>
-      </div>
+      <h2>Definitielijst</h2>
+      <dl>
+        <dt>Toegankelijkheid</dt>
+        <dd>Het ontwerpen en ontwikkelen van producten zodat mensen met een beperking ze kunnen gebruiken.</dd>
+        <dt>WCAG</dt>
+        <dd>Web Content Accessibility Guidelines — internationale richtlijnen voor toegankelijke webcontent.</dd>
+      </dl>
+      <p><a href="https://example.com">Linkje</a> helemaal onderaan</p>
 
-      <div class="preview-layout">
-        <div class="preview-main">
-          <header class="preview-header">
-            <a class="preview-header__back nl-button nl-button--subtle" href="/">
-              <span class="preview-header__icon" aria-hidden="true"><Fragment set:html={iconChevronLeft} /></span>
-              <span class="nl-button__label">Terug naar editor</span>
-            </a>
-            <clippy-accessibility-notifications></clippy-accessibility-notifications>
-          </header>
-
-          <main class="preview-content">
-            <div class="preview-content__gutter-wrapper">
-              <clippy-validations-gutter mode="drawer"></clippy-validations-gutter>
-              <clippy-content></clippy-content>
-            </div>
-          </main>
-        </div>
-        <clippy-validations-drawer></clippy-validations-drawer>
-      </div>
-    </clippy-context>
+      <h2>Taalkeuzes</h2>
+      <p>
+        Dit document bevat ook fragmenten in andere talen. Gebruik het overzicht "Taalkeuzes" om snel naar een specifiek
+        taalgefragment te navigeren.
+      </p>
+      <p lang="de">
+        Dieser Absatz ist auf Deutsch geschrieben und zeigt, wie ein Sprachwechsel im Dokument dargestellt wird.
+      </p>
+      <p>Weer terug naar document taal Nederlands.</p>
+      <p lang="fr">
+        Ce paragraphe est rédigé en français et illustre comment un changement de langue apparaît dans le document.
+      </p>
+      <p>Dit alinea heeft geen taalkenmerk en valt daardoor terug op de documenttaal (Nederlands).</p>
+      <p lang="ar" dir="rtl">هذه الفقرة باللغة العربية وتتدفق من اليمين إلى اليسار.</p>
+    </main>
 
     <style>
       .preview-header {
@@ -158,18 +148,6 @@ import iconChevronLeft from '@tabler/icons/outline/chevron-left.svg?raw';
         block-size: 1.25em;
       }
 
-      .preview-layout {
-        display: flex;
-        align-items: stretch;
-      }
-
-      .preview-main {
-        display: flex;
-        flex: 1 1 auto;
-        flex-direction: column;
-        min-inline-size: 0;
-      }
-
       .preview-content {
         min-inline-size: 0;
         max-width: 1200px;
@@ -178,12 +156,6 @@ import iconChevronLeft from '@tabler/icons/outline/chevron-left.svg?raw';
         padding-block: var(--basis-space-block-xl, 1.5rem);
       }
 
-      .preview-content__gutter-wrapper {
-        position: relative;
-      }
-
-      /* Content is Light DOM, so the editor's shadow `img` rule can't reach it.
-         Keep images from holding the column open at their intrinsic width. */
       .preview-content :global(img) {
         max-width: 100%;
         height: auto;

@@ -1,5 +1,6 @@
 import type { Validation } from '@nl-design-system-community/clippy-a11y-validator';
-import type { ViolationsMap } from '@/types/validation';
+import type { Violation, ViolationsMap } from '@/types/validation';
+import { CustomEvents, type FocusNodeEvent, type ValidationsDrawerToggleEvent } from '@/events';
 import { debounce } from '@/utils/debounce';
 import { waitForMedia } from '@/utils/waitForMedia';
 import { runValidation, VALIDATION_TIMEOUT } from '@/validations';
@@ -16,17 +17,23 @@ export interface ClippyHubDrawer extends ClippyHubView {
 }
 
 export interface ClippyHubViews {
-  drawer?: ClippyHubDrawer | null;
+  drawer?: (ClippyHubDrawer & HTMLElement) | null;
   gutter?: ClippyHubView | null;
-  trigger?: ClippyHubView | null;
+  trigger?: (ClippyHubView & HTMLElement) | null;
 }
 
 export interface ClippyHubOptions {
   identifier: string;
   target: HTMLElement;
   adaptViolations?: (violationsMap: ViolationsMap) => ViolationsMap;
+  /** Shows the violation of a focused drawer item. Defaults to scrolling it into view. */
+  focusViolation?: (violation: Violation) => void;
   validations?: readonly Validation[];
 }
+
+const scrollIntoView = ({ element }: Violation): void => {
+  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+};
 
 const settleMedia = async (target: HTMLElement): Promise<void> => {
   let timeout: ReturnType<typeof setTimeout> | undefined;
@@ -41,6 +48,7 @@ const settleMedia = async (target: HTMLElement): Promise<void> => {
 
 export class ClippyHub {
   readonly #adaptViolations: (violationsMap: ViolationsMap) => ViolationsMap;
+  readonly #focusViolation: (violation: Violation) => void;
   readonly #identifier: string;
   readonly #target: HTMLElement;
   readonly #validations: readonly Validation[] | undefined;
@@ -51,11 +59,13 @@ export class ClippyHub {
 
   constructor({
     adaptViolations = (violationsMap) => violationsMap,
+    focusViolation = scrollIntoView,
     identifier,
     target,
     validations,
   }: ClippyHubOptions) {
     this.#adaptViolations = adaptViolations;
+    this.#focusViolation = focusViolation;
     this.#identifier = identifier;
     this.#target = target;
     this.#validations = validations;
@@ -64,6 +74,8 @@ export class ClippyHub {
   readonly scheduleValidation = debounce(() => this.validate(), VALIDATION_TIMEOUT);
 
   connect(views: ClippyHubViews): void {
+    globalThis.addEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
+    globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#handleFocusNode);
     Object.assign(this.#views, views);
     for (const view of Object.values(views)) {
       if (view) {
@@ -75,6 +87,8 @@ export class ClippyHub {
 
   destroy(): void {
     this.#destroyed = true;
+    globalThis.removeEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
+    globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#handleFocusNode);
   }
 
   async validate(): Promise<void> {
@@ -89,6 +103,32 @@ export class ClippyHub {
     });
     this.#render();
   }
+
+  readonly #handleDrawerToggle = (event: Event): void => {
+    const { identifier, open } = (event as ValidationsDrawerToggleEvent).detail;
+    if (identifier !== this.#identifier) return;
+
+    const { drawer, trigger } = this.#views;
+    if (open) {
+      this.validate();
+      drawer?.focus();
+      return;
+    }
+    const active = document.activeElement;
+    if (!active || active === document.body || active === drawer) {
+      trigger?.focus();
+    }
+  };
+
+  readonly #handleFocusNode = (event: Event): void => {
+    const { identifier, range } = (event as FocusNodeEvent).detail;
+    if (identifier !== this.#identifier) return;
+
+    const violation = this.#violationsMap?.get(range);
+    if (violation) {
+      this.#focusViolation(violation);
+    }
+  };
 
   #render(): void {
     const violationsMap = this.#violationsMap;

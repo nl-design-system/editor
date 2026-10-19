@@ -5,6 +5,19 @@ export default css`
     display: flex;
   }
 
+  :host([overlay]) {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-end: 0;
+    z-index: 2147483000;
+  }
+
+  :host([overlay]) .clippy-drawer__content {
+    min-inline-size: min(300px, 100vw);
+    max-inline-size: min(500px, 100vw);
+    box-shadow: var(--basis-box-shadow-lg);
+  }
+
   .clippy-drawer__close-button {
     border: none;
     background: none;
