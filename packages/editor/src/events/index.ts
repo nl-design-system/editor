@@ -14,6 +14,7 @@ export const CustomEvents = {
   OPEN_VALIDATIONS_DIALOG: 'OPEN_VALIDATIONS_DIALOG',
   TEXT_FORMAT_CHANGE: 'TEXT_FORMAT_CHANGE',
   VALIDATION_ERROR: 'VALIDATION_ERROR',
+  VALIDATIONS_DRAWER_TOGGLE: 'VALIDATIONS_DRAWER_TOGGLE',
 } as const;
 
 export type DocumentOverviewMode = 'heading-structure' | 'language-changes' | 'link-list' | 'validations';
@@ -38,6 +39,7 @@ export interface OpenValidationGroupDetail {
 export type OpenValidationGroupEvent = CustomEvent<OpenValidationGroupDetail>;
 
 export interface FocusNodeDetail {
+  identifier?: string;
   range: Range;
 }
 
@@ -73,6 +75,13 @@ export interface CloseValidationsDrawerDetail {
 }
 
 export type CloseValidationsDrawerEvent = CustomEvent<CloseValidationsDrawerDetail>;
+
+export interface ValidationsDrawerToggleDetail {
+  identifier?: string;
+  open: boolean;
+}
+
+export type ValidationsDrawerToggleEvent = CustomEvent<ValidationsDrawerToggleDetail>;
 
 export interface OpenValidationsDialogDetail {
   identifier?: string;

@@ -52,6 +52,10 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./page-review": {
+      "types": "./dist/entries/page-review.d.ts",
+      "default": "./dist/page-review.js"
+    },
     "./toolbar": {
       "types": "./dist/entries/toolbar.d.ts",
       "default": "./dist/toolbar.js"
@@ -88,6 +92,9 @@
       "hub": [
         "./dist/entries/hub.d.ts"
       ],
+      "page-review": [
+        "./dist/entries/page-review.d.ts"
+      ],
       "toolbar": [
         "./dist/entries/toolbar.d.ts"
       ],
@@ -104,11 +111,12 @@
   "scripts": {
     "dev": "vite",
     "dev:ssr": "tsx server.ts",
-    "build": "pnpm run build:ts && pnpm run build:cem && pnpm run build:vite",
+    "build": "pnpm run build:ts && pnpm run build:cem && pnpm run build:vite && pnpm run build:page-review",
     "build:cem": "cem analyze --config custom-elements-manifest.config.mjs --litelement",
     "build:analyze": "cross-env ANALYZE_BUNDLE=true vite build",
     "build:ts": "tsc --build",
     "build:vite": "vite build",
+    "build:page-review": "vite build --config vite.page-review.config.ts",
     "preview": "vite preview",
     "test": "pnpm run '/^test:.+$/'",
     "test:vitest": "vitest --run",

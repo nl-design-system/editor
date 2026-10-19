@@ -31,6 +31,7 @@ import {
   type FocusNodeEvent,
   type OpenDocumentOverviewEvent,
   type OpenValidationGroupEvent,
+  type ValidationsDrawerToggleDetail,
 } from '@/events';
 import drawerStyles from './styles';
 
@@ -49,6 +50,8 @@ const tag = 'clippy-validations-drawer';
  *   toggle the panel open state.
  * @fires {CustomEvent} FILTER_CHANGE - Listens to filter the displayed validations
  *   by severity.
+ * @fires {ValidationsDrawerToggleEvent} VALIDATIONS_DRAWER_TOGGLE - Dispatched on `globalThis`
+ *   whenever the drawer opens or closes.
  *
  * @example
  * ```html
@@ -111,6 +114,12 @@ export class ValidationsDrawer extends LitElement {
   @property({ attribute: false })
   identifier?: string;
 
+  /**
+   * Overlays the page instead of sitting next to it, and stays open when an item is focused.
+   */
+  @property({ reflect: true, type: Boolean })
+  overlay = false;
+
   /** Coalesced identifier: standalone prop wins, else the consumed context. */
   get #identifier(): string | undefined {
     return this.identifier ?? this.identifierContextValue;
@@ -139,6 +148,22 @@ export class ValidationsDrawer extends LitElement {
     if ((changed.has('identifier') || changed.has('identifierContextValue')) && this.#identifier !== undefined) {
       this.#identifierProvider.setValue(this.#identifier);
     }
+  }
+
+  override updated(changed: PropertyValues) {
+    super.updated(changed);
+    if (changed.has('open') && (this.open || changed.get('open') !== undefined)) {
+      globalThis.dispatchEvent(
+        new CustomEvent<ValidationsDrawerToggleDetail>(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, {
+          detail: { identifier: this.#identifier, open: this.open },
+        }),
+      );
+    }
+  }
+
+  /** Focus the drawer title. */
+  override focus() {
+    this.shadowRoot?.querySelector<HTMLElement>('.clippy-drawer__title')?.focus();
   }
 
   override connectedCallback() {
@@ -219,6 +244,8 @@ export class ValidationsDrawer extends LitElement {
   };
 
   readonly #focusNode = (event: Event) => {
+    if (this.overlay) return;
+
     const { range } = (event as FocusNodeEvent).detail;
 
     if (this.open) {
@@ -311,7 +338,7 @@ export class ValidationsDrawer extends LitElement {
         @keydown=${this.#handleKeydown}
       >
         <div class="clippy-drawer__header">
-          <h3 id="clippy-drawer-title" class="clippy-drawer__title">${this.#getTitle()}</h3>
+          <h3 id="clippy-drawer-title" class="clippy-drawer__title" tabindex="-1">${this.#getTitle()}</h3>
           <clippy-button class="clippy-drawer__close-button" icon-only purpose="subtle" @click=${this.#closeDrawer}>
             <clippy-icon slot="iconStart">${unsafeSVG(X)}</clippy-icon>
             ${msg('Close')}
