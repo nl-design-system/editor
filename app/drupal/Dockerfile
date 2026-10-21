@@ -15,8 +15,14 @@ RUN chmod +x /usr/local/bin/setup.sh \
     && mkdir -p /opt/drupal/config/sync \
     && chown -R www-data:www-data /opt/drupal/config
 
-RUN echo 'session.upload_progress.enabled = Off' > /usr/local/etc/php/conf.d/upload-progress.ini \
-    && php -r 'exit(ini_get("session.upload_progress.enabled") ? 1 : 0);'
+RUN { \
+        echo 'session.upload_progress.enabled = Off'; \
+        echo 'fatal_error_backtraces = Off'; \
+        echo 'memory_limit = -1'; \
+        echo 'post_max_size = 8M'; \
+        echo 'upload_max_filesize = 2M'; \
+    } > /usr/local/etc/php/conf.d/zz-cve-mitigation.ini \
+    && php -r 'exit(ini_get("session.upload_progress.enabled") || ini_get("fatal_error_backtraces") || ini_get("memory_limit") !== "-1" ? 1 : 0);'
 
 COPY modules/ /var/www/html/modules/custom/
 
