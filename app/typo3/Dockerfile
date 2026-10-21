@@ -25,12 +25,17 @@ RUN apt-get update \
     } > /usr/local/etc/php/conf.d/typo3.ini
 
 RUN { \
-        echo 'session.upload_progress.enabled = Off'; \
+        echo 'session.upload_progress.enabled = 0'; \
         echo 'memory_limit = -1'; \
         echo 'post_max_size = 32M'; \
         echo 'upload_max_filesize = 30M'; \
+        echo 'expose_php = 0'; \
+        echo 'display_errors = 0'; \
     } > /usr/local/etc/php/conf.d/zz-cve-mitigation.ini \
-    && php -r 'exit(ini_get("session.upload_progress.enabled") || ini_get("memory_limit") !== "-1" ? 1 : 0);'
+    && php -r 'exit(ini_get("session.upload_progress.enabled") === "0" ? 0 : 1);' \
+    && php -r 'exit(ini_get("memory_limit") === "-1" ? 0 : 1);' \
+    && php -r 'exit(ini_get("expose_php") === "0" ? 0 : 1);' \
+    && php -r 'exit(ini_get("display_errors") === "0" ? 0 : 1);'
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 

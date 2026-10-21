@@ -16,13 +16,19 @@ RUN chmod +x /usr/local/bin/setup.sh \
     && chown -R www-data:www-data /opt/drupal/config
 
 RUN { \
-        echo 'session.upload_progress.enabled = Off'; \
-        echo 'fatal_error_backtraces = Off'; \
+        echo 'session.upload_progress.enabled = 0'; \
+        echo 'fatal_error_backtraces = 0'; \
         echo 'memory_limit = -1'; \
         echo 'post_max_size = 8M'; \
         echo 'upload_max_filesize = 2M'; \
+        echo 'expose_php = 0'; \
+        echo 'display_errors = 0'; \
     } > /usr/local/etc/php/conf.d/zz-cve-mitigation.ini \
-    && php -r 'exit(ini_get("session.upload_progress.enabled") || ini_get("fatal_error_backtraces") || ini_get("memory_limit") !== "-1" ? 1 : 0);'
+    && php -r 'exit(ini_get("session.upload_progress.enabled") === "0" ? 0 : 1);' \
+    && php -r 'exit(ini_get("fatal_error_backtraces") === "0" ? 0 : 1);' \
+    && php -r 'exit(ini_get("memory_limit") === "-1" ? 0 : 1);' \
+    && php -r 'exit(ini_get("expose_php") === "0" ? 0 : 1);' \
+    && php -r 'exit(ini_get("display_errors") === "0" ? 0 : 1);'
 
 COPY modules/ /var/www/html/modules/custom/
 
