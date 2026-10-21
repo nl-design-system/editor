@@ -24,6 +24,9 @@ RUN apt-get update \
         echo 'post_max_size = 32M'; \
     } > /usr/local/etc/php/conf.d/typo3.ini
 
+RUN echo 'session.upload_progress.enabled = Off' > /usr/local/etc/php/conf.d/upload-progress.ini \
+    && php -r 'exit(ini_get("session.upload_progress.enabled") ? 1 : 0);'
+
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 RUN composer create-project typo3/cms-base-distribution:^14.3 /var/www/html --no-interaction --no-progress \
