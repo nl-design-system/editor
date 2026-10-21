@@ -15,6 +15,9 @@ RUN chmod +x /usr/local/bin/setup.sh \
     && mkdir -p /opt/drupal/config/sync \
     && chown -R www-data:www-data /opt/drupal/config
 
+RUN echo 'session.upload_progress.enabled = Off' > /usr/local/etc/php/conf.d/upload-progress.ini \
+    && php -r 'exit(ini_get("session.upload_progress.enabled") ? 1 : 0);'
+
 COPY modules/ /var/www/html/modules/custom/
 
 USER www-data
