@@ -12,3 +12,7 @@ Only the latest version of **the editor** is currently being supported with secu
 
 You can privately [report a vulnerability issue in this repository's issue tracker](https://github.com/nl-design-system/editor/security/advisories/new).
 The aim is to get back to you within 72 hours, with a confirmation of the issue and a brief action plan or a request for more information.
+
+## Incident response
+
+See [INCIDENT.md](INCIDENT.md) for how to mitigate a vulnerability in the demo environments or take them offline.
