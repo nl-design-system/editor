@@ -9,33 +9,9 @@ import {
   View,
   type Editor,
 } from 'ckeditor5';
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
+import { page } from 'vitest/browser';
 import { ClippyAltTextWizard } from './ClippyAltTextWizard.ts';
-
-beforeAll(() => {
-  globalThis.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  } as unknown as typeof ResizeObserver;
-
-  // CKEditor's focus cycler skips elements without client rects, which jsdom never lays out.
-  Element.prototype.getClientRects = function () {
-    return [new DOMRect(0, 0, 1, 1)] as unknown as DOMRectList;
-  };
-
-  HTMLDialogElement.prototype.showModal = function (this: HTMLDialogElement) {
-    this.setAttribute('open', '');
-    this.tabIndex = -1;
-    this.focus();
-  };
-  HTMLDialogElement.prototype.close = function (this: HTMLDialogElement, returnValue?: string) {
-    if (!this.open) return;
-    if (returnValue !== undefined) this.returnValue = returnValue;
-    this.removeAttribute('open');
-    this.dispatchEvent(new Event('close'));
-  };
-});
 
 const editors: Editor[] = [];
 
@@ -70,29 +46,15 @@ const balloonElement = (editor: Editor) => editor.plugins.get(ContextualBalloon)
 
 const wizardButtons = (root: ParentNode) => root.querySelectorAll<HTMLElement>('clippy-alt-text-wizard-button');
 
-const wizardDialogs = () => [...document.querySelectorAll<AltTextWizardDialog>('clippy-alt-text-wizard-dialog')];
+const wizardButton = () => page.getByRole('button', { name: 'Alt-text wizard' });
 
-const isOpen = (dialog: AltTextWizardDialog) =>
-  Boolean(dialog.shadowRoot?.querySelector('clippy-modal')?.shadowRoot?.querySelector('dialog')?.open);
+const wizardDialog = () => page.getByRole('dialog', { includeHidden: true, name: 'Alt-text wizard' });
 
-const openWizardDialogs = () => wizardDialogs().filter(isOpen);
+const wizardDialogHosts = () => document.querySelectorAll<AltTextWizardDialog>('clippy-alt-text-wizard-dialog');
 
-const innerButton = (button: HTMLElement) =>
-  button.shadowRoot!.querySelector('clippy-button')!.shadowRoot!.querySelector('button')!;
-
-type Rendered = HTMLElement & { updateComplete: Promise<unknown> };
-
-const rendered = async (element: HTMLElement) => {
-  await (element as Rendered).updateComplete;
-  const inner = element.shadowRoot?.querySelector<Rendered>('clippy-button');
-  await inner?.updateComplete;
-  return element;
-};
-
-const openWizard = async (button: HTMLElement) => {
-  innerButton(await rendered(button)).click();
-  await vi.waitFor(() => expect(openWizardDialogs()).toHaveLength(1));
-  return openWizardDialogs()[0];
+const openWizard = async () => {
+  await wizardButton().click();
+  await expect.element(wizardDialog()).toHaveAttribute('open');
 };
 
 const altInput = (form: HTMLElement) => form.querySelector<HTMLInputElement>('input.ck-input')!;
@@ -131,22 +93,23 @@ describe('ClippyAltTextWizard', () => {
 
   it('opens the wizard dialog when the Wizard button is clicked', async () => {
     const editor = await createEditorWithImage();
-    const [button] = wizardButtons(showAltTextForm(editor));
-    expect(openWizardDialogs()).toHaveLength(0);
+    showAltTextForm(editor);
+    await expect.element(wizardDialog()).not.toBeInTheDocument();
 
-    const dialog = await openWizard(button);
+    await openWizard();
 
-    expect(openWizardDialogs()).toEqual([dialog]);
-    expect(dialog.closest('.ck-body-wrapper')).not.toBeNull();
+    expect(wizardDialogHosts()).toHaveLength(1);
+    expect(wizardDialogHosts()[0].closest('.ck-body-wrapper')).not.toBeNull();
   });
 
   it('removes its wizard dialog when the editor is destroyed', async () => {
     const editor = await createEditorWithImage();
-    await openWizard(wizardButtons(showAltTextForm(editor))[0]);
+    showAltTextForm(editor);
+    await openWizard();
 
     await editors.splice(0)[0].destroy();
 
-    expect(wizardDialogs()).toHaveLength(0);
+    expect(wizardDialogHosts()).toHaveLength(0);
   });
 
   it('hides the Alt-text form without saving and moves focus into the wizard when it opens', async () => {
@@ -154,28 +117,29 @@ describe('ClippyAltTextWizard', () => {
     const form = showAltTextForm(editor);
     typeDraft(form, 'Draft');
 
-    const dialog = await openWizard(wizardButtons(form)[0]);
+    await openWizard();
 
     expect(form.isConnected).toBe(false);
     expect(editor.getData()).toContain('alt="Saved"');
-    expect(document.activeElement).toBe(dialog);
+    expect(document.activeElement).toBe(wizardDialogHosts()[0]);
   });
 
   it('shows the Alt-text form again with the draft and focus on the input when the wizard closes', async () => {
     const editor = await createEditorWithImage('Saved');
     const form = showAltTextForm(editor);
     typeDraft(form, 'Draft');
-    const dialog = await openWizard(wizardButtons(form)[0]);
+    await openWizard();
 
-    dialog.close();
+    wizardDialogHosts()[0].close();
 
-    expect(balloonElement(editor).contains(form)).toBe(true);
+    await expect.element(wizardDialog()).not.toHaveAttribute('open');
+    await expect.poll(() => balloonElement(editor).contains(form)).toBe(true);
     expect(altInput(form).value).toBe('Draft');
     expect(document.activeElement).toBe(altInput(form));
     expect(editor.getData()).toContain('alt="Saved"');
   });
 
-  it('adds no Wizard button to other balloon views', async () => {
+  it('should not add an alt-text wizard to other balloon views', async () => {
     const editor = await createEditorWithImage();
     const view = new View(editor.locale);
     view.setTemplate({
