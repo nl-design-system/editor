@@ -7,9 +7,7 @@ import FolderIcon from '@tabler/icons/outline/folder.svg?raw';
 import LockOpenIcon from '@tabler/icons/outline/lock-open.svg?raw';
 import LockIcon from '@tabler/icons/outline/lock.svg?raw';
 import PhotoIcon from '@tabler/icons/outline/photo.svg?raw';
-import WandIcon from '@tabler/icons/outline/wand.svg?raw';
 import formFieldStyles from '@utrecht/form-field-css/dist/index.css?inline';
-import '@nl-design-system-community/clippy-alt-text-wizard';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import formLabelStyles from '@utrecht/form-label-css/dist/index.css?inline';
@@ -18,7 +16,10 @@ import { html, LitElement, nothing, unsafeCSS } from 'lit';
 import { query, state } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import type { AltTextWizardDialog } from '@/components/alt-text-wizard/dialog';
 import type { ImageUpload } from '@/types/image';
+import '@/components/alt-text-wizard/button';
+import '@/components/alt-text-wizard/dialog';
 import { editor } from '@/decorators/TipTapDecorator';
 import { CustomEvents } from '@/events';
 import { imageDialogStyles } from './styles';
@@ -45,8 +46,8 @@ export class ToolbarImageUpload extends LitElement {
   @query('clippy-modal[data-testid="clippy-image-dialog"]')
   private readonly modalDialog!: ClippyModal;
 
-  @query('clippy-modal[data-testid="clippy-alt-text-wizard-dialog"]')
-  private readonly wizardDialog!: ClippyModal;
+  @query('clippy-alt-text-wizard-dialog')
+  private readonly wizardDialog!: AltTextWizardDialog;
 
   readonly #fileInputRef: Ref<HTMLInputElement> = createRef();
   readonly #srcRef: Ref<HTMLInputElement> = createRef();
@@ -231,7 +232,7 @@ export class ToolbarImageUpload extends LitElement {
   }
 
   readonly #openWizard = () => {
-    this.wizardDialog.open();
+    this.wizardDialog.open().catch(console.error);
   };
 
   override connectedCallback() {
@@ -333,10 +334,7 @@ export class ToolbarImageUpload extends LitElement {
                   }}
                   placeholder=${msg('Describe the image for screen readers')}
                 />
-                <clippy-button purpose="secondary" @click=${this.#openWizard}>
-                  <clippy-icon slot="iconStart">${unsafeSVG(WandIcon)}</clippy-icon>
-                  ${msg('Alt-text wizard')}
-                </clippy-button>
+                <clippy-alt-text-wizard-button @click=${this.#openWizard}></clippy-alt-text-wizard-button>
               </div>
             </div>
 
@@ -419,9 +417,7 @@ export class ToolbarImageUpload extends LitElement {
         </div>
       </clippy-modal>
 
-      <clippy-modal .title=${msg('Alt-text wizard')} actions="none" data-testid="clippy-alt-text-wizard-dialog">
-        <clippy-alt-text-wizard></clippy-alt-text-wizard>
-      </clippy-modal>
+      <clippy-alt-text-wizard-dialog></clippy-alt-text-wizard-dialog>
     `;
   }
 }
