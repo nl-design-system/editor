@@ -1,17 +1,8 @@
 import type { Violation, ViolationsMap } from '@nl-design-system-community/editor/validators';
 import { type Gutter, validationInteractionMode } from '@nl-design-system-community/editor/gutter';
 import { ClassicEditor, Essentials, Heading, Paragraph, type Editor } from 'ckeditor5';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { ClippyPlugin } from './ClippyPlugin.ts';
-
-// CKEditor's toolbar observes its own size; jsdom has no ResizeObserver.
-beforeAll(() => {
-  globalThis.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  } as unknown as typeof ResizeObserver;
-});
 
 let editor: Editor | undefined;
 

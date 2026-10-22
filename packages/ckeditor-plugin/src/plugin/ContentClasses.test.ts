@@ -14,17 +14,8 @@ import {
   type EditorConfig,
   type PluginConstructor,
 } from 'ckeditor5';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { ContentClasses } from './ContentClasses.ts';
-
-// CKEditor's toolbar observes its own size; jsdom has no ResizeObserver.
-beforeAll(() => {
-  globalThis.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  } as unknown as typeof ResizeObserver;
-});
 
 let editor: Editor | undefined;
 
