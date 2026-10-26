@@ -17,3 +17,4 @@ export {
   THEME_CLASS,
 } from '../utils/colorScheme';
 export type { ColorScheme, ColorSchemeHost } from '../utils/colorScheme';
+export { ColorSchemeWrapper } from '../components/color-scheme-wrapper';
