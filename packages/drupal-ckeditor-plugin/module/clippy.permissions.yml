@@ -1,0 +1,3 @@
+use clippy page review:
+  title: "Use Page review"
+  description: "Show accessibility feedback on pages rendered in the frontend theme."
