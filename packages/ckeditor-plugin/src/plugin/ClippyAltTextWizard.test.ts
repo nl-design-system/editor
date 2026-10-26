@@ -44,11 +44,9 @@ const showAltTextForm = (editor: Editor) => {
 
 const balloonElement = (editor: Editor) => editor.plugins.get(ContextualBalloon).view.element!;
 
-const wizardButtons = (root: ParentNode) => root.querySelectorAll<HTMLElement>('clippy-alt-text-wizard-button');
-
 const wizardButton = () => page.getByRole('button', { name: 'Alt-text wizard' });
 
-const wizardDialog = () => page.getByRole('dialog', { includeHidden: true, name: 'Alt-text wizard' });
+const wizardDialog = () => page.getByRole('dialog', { name: 'Alt-text wizard', includeHidden: true });
 
 const wizardDialogHosts = () => document.querySelectorAll<AltTextWizardDialog>('clippy-alt-text-wizard-dialog');
 
@@ -65,21 +63,19 @@ const typeDraft = (form: HTMLElement, value: string) => {
   input.dispatchEvent(new Event('input'));
 };
 
-const follows = (node: Node, reference: Node) =>
-  Boolean(reference.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING);
-
 describe('ClippyAltTextWizard', () => {
   it('puts the Wizard button in its own row directly below the alt input row', async () => {
     const editor = await createEditorWithImage();
     const form = showAltTextForm(editor);
 
-    const [button] = wizardButtons(form);
     const input = form.querySelector('input')!;
     const inputRow = [...form.children].find((child) => child.contains(input))!;
 
-    expect(button).toBeDefined();
-    expect(inputRow.nextElementSibling?.contains(button)).toBe(true);
-    expect(follows(button, input)).toBe(true);
+    await expect.element(wizardButton()).toBeVisible();
+    const row = inputRow.nextElementSibling!.getBoundingClientRect();
+    const button = wizardButton().element().getBoundingClientRect();
+    expect(button.top).toBeGreaterThanOrEqual(row.top);
+    expect(button.bottom).toBeLessThanOrEqual(row.bottom);
   });
 
   it('never adds a second Wizard button when the form is shown again', async () => {
@@ -88,7 +84,7 @@ describe('ClippyAltTextWizard', () => {
     form.querySelector<HTMLElement>('.ck-button-back')!.click();
     showAltTextForm(editor);
 
-    expect(wizardButtons(form)).toHaveLength(1);
+    await expect.element(wizardButton()).toBeVisible();
   });
 
   it('opens the wizard dialog when the Wizard button is clicked', async () => {
@@ -100,6 +96,16 @@ describe('ClippyAltTextWizard', () => {
 
     expect(wizardDialogHosts()).toHaveLength(1);
     expect(wizardDialogHosts()[0].closest('.ck-body-wrapper')).not.toBeNull();
+  });
+
+  it('follows the color scheme of the page around the editor with the Wizard button and dialog', async () => {
+    const editor = await createEditorWithImage();
+    const form = showAltTextForm(editor);
+
+    expect(form.querySelector('clippy-color-scheme-wrapper clippy-alt-text-wizard-button')).not.toBeNull();
+
+    await openWizard();
+    expect(wizardDialogHosts()[0].closest('clippy-color-scheme-wrapper')).not.toBeNull();
   });
 
   it('removes its wizard dialog when the editor is destroyed', async () => {
@@ -149,6 +155,6 @@ describe('ClippyAltTextWizard', () => {
 
     editor.plugins.get(ContextualBalloon).add({ position: { target: document.body }, view });
 
-    expect(wizardButtons(view.element!)).toHaveLength(0);
+    expect(wizardButton().query()).toBeNull();
   });
 });
