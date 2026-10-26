@@ -10,6 +10,7 @@ export default css`
     position: fixed;
     inset-block-start: anchor(--clippy-notifications-trigger bottom);
     inset-inline-end: anchor(--clippy-notifications-trigger right);
+    position-try-fallbacks: flip-block;
     display: flex;
     flex-direction: column;
     min-inline-size: max-content;
