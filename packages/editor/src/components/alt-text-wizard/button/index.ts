@@ -6,7 +6,6 @@ import '@nl-design-system-community/clippy-components/clippy-icon';
 import { html, LitElement } from 'lit';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { initializeLocale } from '@/localization';
-import { setDarkColorScheme, watchHostColorScheme, THEME_CLASS } from '@/utils/colorScheme';
 
 const tag = 'clippy-alt-text-wizard-button';
 
@@ -19,21 +18,9 @@ declare global {
 @localized()
 @safeCustomElement(tag)
 export class AltTextWizardButton extends LitElement {
-  private _unwatchColorScheme: (() => void) | null = null;
-
   override connectedCallback() {
     super.connectedCallback();
-    this.classList.add(THEME_CLASS);
-    this._unwatchColorScheme = watchHostColorScheme(this, (colorScheme) =>
-      setDarkColorScheme(colorScheme === 'dark', this),
-    );
     initializeLocale().catch(console.error);
-  }
-
-  override disconnectedCallback() {
-    super.disconnectedCallback();
-    this._unwatchColorScheme?.();
-    this._unwatchColorScheme = null;
   }
 
   override focus(options?: FocusOptions) {
