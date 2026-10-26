@@ -1,0 +1,14 @@
+<?php
+
+declare(strict_types=1);
+
+use Drupal\clippy\PageReview;
+
+/**
+ * Implements hook_install().
+ */
+function clippy_install(bool $is_syncing): void {
+  if (!$is_syncing && \Drupal::entityTypeManager()->getStorage('user_role')->load('content_editor')) {
+    user_role_grant_permissions('content_editor', [PageReview::PERMISSION]);
+  }
+}
