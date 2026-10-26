@@ -9,6 +9,7 @@ import { initializeLocale } from '@/localization';
 
 const IDENTIFIER = 'clippy-page-review';
 const DEFAULT_REVIEW_ROOT = 'main, [role=main]';
+const THEME_CLASSES = ['ma-theme', 'clippy-theme', 'utrecht-theme'];
 
 export interface PageReviewOptions {
   /** Where the trigger goes. Without one, the trigger floats over the page. */
@@ -21,6 +22,7 @@ export interface PageReviewOptions {
 
 const createFloatingMount = (): HTMLElement => {
   const mount = document.createElement('clippy-page-review-trigger');
+  mount.classList.add(...THEME_CLASSES);
   Object.assign(mount.style, {
     backgroundColor: 'var(--basis-color-default-bg-document, Canvas)',
     insetBlockEnd: '1rem',
@@ -63,6 +65,7 @@ export class PageReview extends ClippyHub {
     }
     (mount ?? this.#floatingMount)?.append(this.#trigger);
     this.#drawer.overlay = true;
+    this.#drawer.classList.add(...THEME_CLASSES);
     document.body.append(this.#drawer);
     if (gutter) {
       this.#gutter = this.#addGutter();

@@ -14,10 +14,10 @@ plugin:
 
 page-review:
   js:
-    clippy-page-review.js: {}
+    clippy-page-review.js:
+      preprocess: false
+      attributes:
+        type: module
   css:
     component:
       clippy-page-review.css: {}
-  dependencies:
-    - core/drupal
-    - core/once
