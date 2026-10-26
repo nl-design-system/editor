@@ -226,7 +226,7 @@ export class ClippyAltTextWizard extends LitElement {
   override render() {
     return html`
       <div class="clippy-wizard">
-        <h2 class="nl-heading nl-heading--level-2 clippy-wizard__title">${msg('Alt-text wizard')}</h2>
+        <h2 class="nl-heading nl-heading--level-2">${msg('Alt-text wizard')}</h2>
         <form class="clippy-wizard__form" @submit=${(e: Event) => e.preventDefault()} novalidate>
           ${this.#renderCurrentStep()}
         </form>
