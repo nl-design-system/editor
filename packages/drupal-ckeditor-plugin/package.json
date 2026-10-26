@@ -12,11 +12,12 @@
   },
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && vite build --config vite.page-review.config.ts",
     "test": "vitest --run"
   },
   "dependencies": {
-    "@nl-design-system-community/ckeditor-plugin": "workspace:*"
+    "@nl-design-system-community/ckeditor-plugin": "workspace:*",
+    "@nl-design-system-community/editor": "workspace:*"
   },
   "peerDependencies": {
     "ckeditor5": ">=43.0.0"
