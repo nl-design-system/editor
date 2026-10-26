@@ -12,3 +12,21 @@ ckeditor5.plugin.clippy_content_classes:
         # No NotBlank: an empty class means "render this element without a class".
         type: string
         label: "Class"
+
+clippy.settings:
+  type: config_object
+  label: "Clippy settings"
+  constraints:
+    FullyValidatable: ~
+  mapping:
+    ckeditor:
+      type: boolean
+      label: "Show accessibility feedback in CKEditor"
+    page_review:
+      type: boolean
+      label: "Show Page review on frontend pages"
+    review_root:
+      type: string
+      label: "Review root selector"
+      constraints:
+        NotBlank: []
