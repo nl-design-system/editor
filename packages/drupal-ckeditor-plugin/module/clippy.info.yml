@@ -3,5 +3,6 @@ type: module
 description: "Accessibility feedback and recommendations in CKEditor and on rendered pages, based on NL Design System guidelines."
 core_version_requirement: ^11.1
 package: Custom
+configure: clippy.settings
 dependencies:
   - drupal:ckeditor5

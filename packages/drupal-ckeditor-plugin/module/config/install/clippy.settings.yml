@@ -1,0 +1,3 @@
+ckeditor: true
+page_review: true
+review_root: "main, [role=main]"

@@ -1,0 +1,5 @@
+clippy.settings:
+  title: "Clippy"
+  description: "Turn the CKEditor integration and Page review on or off, and choose what Page review validates."
+  parent: system.admin_config_content
+  route_name: clippy.settings
