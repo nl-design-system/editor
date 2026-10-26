@@ -160,6 +160,18 @@ describe('PageReview', () => {
       expect(trigger()!.getAttribute('class')).toBeNull();
     });
 
+    it('applies the theme classes to its own elements, not to the page', () => {
+      document.body.innerHTML = '<main><h1>Titel</h1></main>';
+
+      review = createPageReview({ mount: undefined });
+
+      for (const element of [drawer()!, trigger()!.parentElement!]) {
+        expect([...element.classList]).toEqual(['ma-theme', 'clippy-theme', 'utrecht-theme']);
+      }
+      expect(document.documentElement.classList).toHaveLength(0);
+      expect(document.body.classList).toHaveLength(0);
+    });
+
     it('removes the floating trigger when destroyed', () => {
       document.body.innerHTML = '<main><h1>Titel</h1></main>';
       const before = document.body.innerHTML;

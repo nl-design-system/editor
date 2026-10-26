@@ -16,6 +16,12 @@ const TOKENS_CSS = [
   '@nl-design-system-candidate/button-css/button.css',
 ];
 
+const PAGE_REVIEW_THEME_CSS = [
+  editorRequire.resolve('@nl-design-system-community/ma-design-tokens/dist/theme.css'),
+  editorRequire.resolve('@utrecht/design-tokens/dist/theme.css'),
+  resolve(packageDir, '../editor/theme.css'),
+];
+
 export const packageVersion = (): string =>
   (JSON.parse(readFileSync(resolve(packageDir, 'package.json'), 'utf8')) as { version: string }).version;
 
@@ -36,4 +42,11 @@ export function generateModule(): void {
   // TEMP - inject tokens from --basis / --utrecht --nl; to be discussed
   const tokenString = TOKENS_CSS.map((spec) => readFileSync(editorRequire.resolve(spec), 'utf8')).join('\n');
   writeFileSync(resolve(moduleOut, 'clippy-tokens.css'), tokenString);
+
+  copyFileSync(
+    packageRequire.resolve('@nl-design-system-community/editor/page-review'),
+    resolve(moduleOut, 'page-review.js'),
+  );
+  const pageReviewCss = PAGE_REVIEW_THEME_CSS.map((path) => readFileSync(path, 'utf8')).join('\n');
+  writeFileSync(resolve(moduleOut, 'clippy-page-review.css'), pageReviewCss);
 }
