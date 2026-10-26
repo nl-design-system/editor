@@ -1,5 +1,6 @@
 import type { AltTextWizardButton, AltTextWizardDialog } from '@nl-design-system-community/editor/alt-text-wizard';
 import '@nl-design-system-community/editor/alt-text-wizard';
+import '@nl-design-system-community/editor/color-scheme';
 import {
   ContextualBalloon,
   Plugin,
@@ -25,13 +26,18 @@ class WizardRowView extends View {
     super(locale);
     this.setTemplate({
       attributes: { class: ['ck', 'ck-form__row', 'clippy-alt-text-wizard-row'] },
-      children: [{ on: { click: this.bindTemplate.to('execute') }, tag: 'clippy-alt-text-wizard-button' }],
+      children: [
+        {
+          children: [{ on: { click: this.bindTemplate.to('execute') }, tag: 'clippy-alt-text-wizard-button' }],
+          tag: 'clippy-color-scheme-wrapper',
+        },
+      ],
       tag: 'div',
     });
   }
 
   focus(): void {
-    (this.element?.firstElementChild as AltTextWizardButton | null)?.focus();
+    this.element?.querySelector<AltTextWizardButton>('clippy-alt-text-wizard-button')?.focus();
   }
 
   override destroy(): void {
@@ -41,14 +47,18 @@ class WizardRowView extends View {
 }
 
 // Wizard dialog element as a CKEditor View, so it can live in the editor's body collection and be cleaned up with the editor.
-class WizardDialogView extends View<AltTextWizardDialog> {
+class WizardDialogView extends View {
   constructor(locale: View['locale']) {
     super(locale);
     this.setTemplate({
       attributes: { class: ['ck-reset_all-excluded'] },
-      on: { close: this.bindTemplate.to('close') },
-      tag: 'clippy-alt-text-wizard-dialog',
+      children: [{ on: { close: this.bindTemplate.to('close') }, tag: 'clippy-alt-text-wizard-dialog' }],
+      tag: 'clippy-color-scheme-wrapper',
     });
+  }
+
+  get dialog(): AltTextWizardDialog {
+    return this.element!.firstElementChild as AltTextWizardDialog;
   }
 }
 
@@ -95,7 +105,7 @@ export class ClippyAltTextWizard extends Plugin {
       this.editor.ui.view.body.add(this._dialog);
       this.listenTo(this._dialog, 'close', () => this._restoreForm());
     }
-    this._dialog.element!.open();
+    this._dialog.dialog.open();
   }
 
   private _selectedImage(): ModelElement | null {
