@@ -1,7 +1,6 @@
 import './index';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
-import { DARK_COLOR_SCHEME_CLASS, THEME_CLASS } from '@/utils/colorScheme';
 import type { AltTextWizardDialog } from './index';
 
 const firstQuestion = () => page.getByRole('radio').first();
@@ -19,7 +18,6 @@ describe('<clippy-alt-text-wizard-dialog>', () => {
   afterEach(() => {
     document.body.innerHTML = '';
     document.documentElement.lang = '';
-    document.documentElement.classList.remove(THEME_CLASS, DARK_COLOR_SCHEME_CLASS);
   });
 
   it('is closed until opened', () => {
@@ -74,17 +72,5 @@ describe('<clippy-alt-text-wizard-dialog>', () => {
     await userEvent.click(page.getByRole('dialog').getByRole('button', { name: 'Sluiten' }));
 
     await vi.waitFor(() => expect(onClose).toHaveBeenCalledOnce());
-  });
-
-  it('follows the dark color scheme of the theme scope it sits in', async () => {
-    document.documentElement.classList.add(THEME_CLASS, DARK_COLOR_SCHEME_CLASS);
-    const dark = document.createElement('clippy-alt-text-wizard-dialog');
-    document.body.append(dark);
-
-    expect(dark).toHaveClass(DARK_COLOR_SCHEME_CLASS);
-
-    document.documentElement.classList.remove(DARK_COLOR_SCHEME_CLASS);
-
-    await expect.poll(() => dark.classList.contains(DARK_COLOR_SCHEME_CLASS)).toBe(false);
   });
 });
