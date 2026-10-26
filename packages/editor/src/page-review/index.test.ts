@@ -17,7 +17,7 @@ const gutterIndicators = () => [
 ];
 
 const createPageReview = (options: Partial<PageReviewOptions> = {}) => {
-  const mount = options.mount ?? document.body.appendChild(document.createElement('header'));
+  const mount = 'mount' in options ? options.mount : document.body.appendChild(document.createElement('header'));
   return new PageReview({ ...options, mount });
 };
 
@@ -145,5 +145,30 @@ describe('PageReview', () => {
     review = undefined;
 
     expect(document.body.innerHTML).toBe(before);
+  });
+
+  describe('without a mount element', () => {
+    it('floats the trigger over the page, outside the Review root', async () => {
+      document.body.innerHTML = '<main><h1>Titel</h1><h3>Overgeslagen</h3></main>';
+
+      review = createPageReview({ mount: undefined });
+
+      await expect.poll(violationCount).toBe(1);
+      const wrapper = trigger()!.parentElement!;
+      expect(wrapper.parentElement).toBe(document.body);
+      expect(getComputedStyle(wrapper).position).toBe('fixed');
+      expect(trigger()!.getAttribute('class')).toBeNull();
+    });
+
+    it('removes the floating trigger when destroyed', () => {
+      document.body.innerHTML = '<main><h1>Titel</h1></main>';
+      const before = document.body.innerHTML;
+      review = createPageReview({ mount: undefined });
+
+      review.destroy();
+      review = undefined;
+
+      expect(document.body.innerHTML).toBe(before);
+    });
   });
 });

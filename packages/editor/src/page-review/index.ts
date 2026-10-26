@@ -11,13 +11,25 @@ const IDENTIFIER = 'clippy-page-review';
 const DEFAULT_REVIEW_ROOT = 'main, [role=main]';
 
 export interface PageReviewOptions {
-  /** Where the trigger goes. */
-  mount: HTMLElement;
+  /** Where the trigger goes. Without one, the trigger floats over the page. */
+  mount?: HTMLElement;
   /** The Review root selector. Falls back to `main, [role=main]`, then `body`. */
   reviewRoot?: string;
   /** Shows indicators in the margin of the Review root. Off by default. */
   gutter?: boolean;
 }
+
+const createFloatingMount = (): HTMLElement => {
+  const mount = document.createElement('clippy-page-review-trigger');
+  Object.assign(mount.style, {
+    backgroundColor: 'var(--basis-color-default-bg-document, Canvas)',
+    insetBlockEnd: '1rem',
+    insetInlineEnd: '1rem',
+    position: 'fixed',
+    zIndex: '2147482000',
+  });
+  return document.body.appendChild(mount);
+};
 
 const resolveReviewRoot = (selector?: string): HTMLElement =>
   (selector ? document.querySelector<HTMLElement>(selector) : null) ??
@@ -37,6 +49,7 @@ export class PageReview extends ClippyHub {
   readonly #trigger = document.createElement('clippy-accessibility-notifications');
   readonly #drawer = document.createElement('clippy-validations-drawer');
   readonly #reviewRoot: HTMLElement;
+  readonly #floatingMount: HTMLElement | null = null;
   #gutter: Gutter | null = null;
   #gutterWrapper: HTMLElement | null = null;
 
@@ -45,7 +58,10 @@ export class PageReview extends ClippyHub {
     super({ adaptViolations: withoutCorrections, identifier: IDENTIFIER, target });
     this.#reviewRoot = target;
 
-    mount.append(this.#trigger);
+    if (!mount) {
+      this.#floatingMount = createFloatingMount();
+    }
+    (mount ?? this.#floatingMount)?.append(this.#trigger);
     this.#drawer.overlay = true;
     document.body.append(this.#drawer);
     if (gutter) {
@@ -74,6 +90,7 @@ export class PageReview extends ClippyHub {
   override destroy(): void {
     super.destroy();
     this.#trigger.remove();
+    this.#floatingMount?.remove();
     this.#drawer.remove();
     this.#gutter?.remove();
     this.#gutterWrapper?.replaceWith(this.#reviewRoot);
