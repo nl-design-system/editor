@@ -130,6 +130,17 @@ describe('<clippy-validations-gutter>', () => {
     expect(page.getByRole('button', { name: /validations on this line/ }).query()).toBeNull();
   });
 
+  it('keeps its buttons out of the tab order when not tabbable', async () => {
+    const { content, gutter } = renderGutter('Deze hele alinea is dikgedrukt.');
+    gutter.tabbable = false;
+    await validate(gutter, new Map([[rangeOver(content), boldParagraph()]]));
+
+    const buttons = [...gutter.shadowRoot!.querySelectorAll('button')];
+    expect(buttons).toHaveLength(2);
+    expect(buttons.map(({ tabIndex }) => tabIndex)).toEqual([-1, -1]);
+    await expect.element(page.getByRole('button', { name: BOLD_PARAGRAPH_HEADING })).toBeInTheDocument();
+  });
+
   it('emphasises the validated text while the indicator is hovered', async () => {
     const { content, gutter } = renderGutter('Ga naar <a href="#">lees meer</a>.');
     const range = rangeOver(content.querySelector('a')!);
@@ -155,5 +166,62 @@ describe('<clippy-validations-gutter>', () => {
 
     await indicator.unhover();
     expect(CSS.highlights.has(VALIDATION_HOVER_HIGHLIGHT_NAMES.info)).toBe(false);
+  });
+
+  describe('overlay', () => {
+    const indicators = (gutter: Gutter) => [
+      ...gutter.shadowRoot!.querySelectorAll<HTMLElement>('.clippy-validations-gutter__indicator'),
+    ];
+
+    const rail = (indicator: HTMLElement) => indicator.querySelector('button')!.getBoundingClientRect();
+
+    const indicatorFor = (gutter: Gutter, element: Element) =>
+      indicators(gutter).find(
+        (indicator) => Math.abs(indicator.getBoundingClientRect().top - element.getBoundingClientRect().top) < 1,
+      );
+
+    const renderOverlay = async (markup: string, contentSelector = 'main') => {
+      document.body.innerHTML = markup;
+      const content = document.querySelector<HTMLElement>(contentSelector)!;
+      const heading = document.querySelector('h3')!;
+      const gutter = document.createElement('clippy-validations-gutter') as Gutter;
+      gutter.overlay = true;
+      gutter.contentElement = content;
+      content.append(gutter);
+      const range = document.createRange();
+      range.selectNode(heading);
+      await validate(gutter, new Map([[range, violation({ element: heading })]]));
+      return { content, gutter, heading };
+    };
+
+    afterEach(() => {
+      document.body.removeAttribute('style');
+    });
+
+    it('lines indicators up with the offending elements in centred content', async () => {
+      const { content, gutter, heading } = await renderOverlay(
+        '<main style="max-inline-size: 30rem; margin-inline: auto"><h1>Titel</h1><p>Tekst</p><h3>Overgeslagen</h3></main>',
+      );
+
+      const indicator = indicators(gutter)[0].getBoundingClientRect();
+      expect(indicator.top).toBeCloseTo(heading.getBoundingClientRect().top, 0);
+      expect(indicator.height).toBeCloseTo(heading.getBoundingClientRect().height, 0);
+      expect(rail(indicators(gutter)[0]).right).toBeCloseTo(content.getBoundingClientRect().left, 0);
+    });
+
+    it('realigns indicators when the content changes size or moves', async () => {
+      const { content, gutter, heading } = await renderOverlay(
+        '<div id="banner"></div><main style="max-inline-size: 30rem; margin-inline: auto"><h1>Titel</h1><h3>Overgeslagen</h3></main>',
+      );
+
+      document.querySelector<HTMLElement>('#banner')!.style.blockSize = '200px';
+      content.style.maxInlineSize = '20rem';
+      document.querySelector('h1')!.style.marginBlockEnd = '100px';
+
+      await expect.poll(() => indicatorFor(gutter, heading)).toBeDefined();
+      await expect
+        .poll(() => rail(indicatorFor(gutter, heading)!).right)
+        .toBeCloseTo(content.getBoundingClientRect().left, 0);
+    });
   });
 });
