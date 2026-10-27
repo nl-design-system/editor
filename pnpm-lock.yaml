@@ -664,6 +664,9 @@ importers:
       '@nl-design-system-community/ckeditor-plugin':
         specifier: workspace:*
         version: link:../ckeditor-plugin
+      '@nl-design-system-community/editor':
+        specifier: workspace:*
+        version: link:../editor
     devDependencies:
       '@nl-design-system/tsconfig':
         specifier: 1.0.5

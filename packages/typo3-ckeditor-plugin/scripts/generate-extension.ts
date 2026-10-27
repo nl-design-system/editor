@@ -8,6 +8,7 @@ export const extensionOut = resolve(packageDir, '../../app/typo3/packages/clippy
 
 const cssOut = resolve(extensionOut, 'Resources/Public/Css');
 const setOut = resolve(extensionOut, 'Configuration/Sets/Clippy');
+const pageReviewOut = resolve(extensionOut, 'Resources/Public/PageReview');
 
 const SETTING_PREFIX = 'clippy.contentClasses';
 const SETTING_CATEGORY = 'contentClasses';
@@ -38,6 +39,12 @@ const TOKENS_CSS = [
   '@nl-design-system-candidate/button-css/button.css',
 ];
 
+const PAGE_REVIEW_THEME_CSS = [
+  editorRequire.resolve('@nl-design-system-community/ma-design-tokens/dist/theme.css'),
+  editorRequire.resolve('@utrecht/design-tokens/dist/theme.css'),
+  resolve(packageDir, '../editor/theme.css'),
+];
+
 export const packageVersion = (): string =>
   (JSON.parse(readFileSync(resolve(packageDir, 'package.json'), 'utf8')) as { version: string }).version;
 
@@ -60,6 +67,16 @@ function writeStyles(): void {
   // TEMP - inject tokens from --basis / --utrecht --nl; to be discussed
   const tokenString = TOKENS_CSS.map((spec) => readFileSync(editorRequire.resolve(spec), 'utf8')).join('\n');
   writeFileSync(resolve(cssOut, 'clippy-tokens.css'), tokenString);
+}
+
+function writePageReview(): void {
+  mkdirSync(pageReviewOut, { recursive: true });
+  copyFileSync(
+    packageRequire.resolve('@nl-design-system-community/editor/page-review'),
+    resolve(pageReviewOut, 'page-review.js'),
+  );
+  const pageReviewCss = PAGE_REVIEW_THEME_CSS.map((path) => readFileSync(path, 'utf8')).join('\n');
+  writeFileSync(resolve(pageReviewOut, 'clippy-page-review.css'), pageReviewCss);
 }
 
 // The content-class defaults as site settings, so an admin can override them per site in the
@@ -126,6 +143,7 @@ export function generateExtension(): void {
   writeMetadata();
 
   writeStyles();
+  writePageReview();
 
   const { fields } = readContentClasses();
   writeSet(fields);
