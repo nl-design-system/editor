@@ -5,6 +5,7 @@ import {
   convertParagraphsToList,
   decrementPrefix,
   isEntirelyBold,
+  isEntirelyItalic,
   isOrderedListItem,
   isOrderedPrefix,
   isUnorderedPrefix,
@@ -232,5 +233,19 @@ describe('isEntirelyBold', () => {
 
   it('is false for plain text', () => {
     expect(isEntirelyBoldFor('<p>plain</p>')).toBe(false);
+  });
+});
+
+describe('isEntirelyItalic', () => {
+  it('is true when all text sits inside italic elements', () => {
+    expect(isEntirelyItalic(render('<p><em>a</em> <i>b</i></p>'))).toBe(true);
+  });
+
+  it('is false when text sits outside the italic elements', () => {
+    expect(isEntirelyItalic(render('<p><em>a</em> and more</p>'))).toBe(false);
+  });
+
+  it('is false without visible text', () => {
+    expect(isEntirelyItalic(render('<p><em> </em></p>'))).toBe(false);
   });
 });

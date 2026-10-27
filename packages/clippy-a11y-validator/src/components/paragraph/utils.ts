@@ -74,12 +74,16 @@ export const resemblesListItem: DocumentValidationCondition = (element, { subseq
   return lines.length > 1 && decrementPrefix(listPrefix(lines[1] ?? '')) === firstPrefix;
 };
 
-export const isEntirelyBold: ValidationCondition = (element) => {
+const isEntirelyFormattedWith = (element: Element, selector: string): boolean => {
   const nodes = visibleTextNodes(element);
   if (nodes.length === 0) return false;
 
   return nodes.every((node) => {
-    const bold = node.parentElement?.closest(selectors.BOLD);
-    return bold !== null && bold !== undefined && element.contains(bold);
+    const wrapper = node.parentElement?.closest(selector);
+    return wrapper !== null && wrapper !== undefined && element.contains(wrapper);
   });
 };
+
+export const isEntirelyBold: ValidationCondition = (element) => isEntirelyFormattedWith(element, selectors.BOLD);
+
+export const isEntirelyItalic: ValidationCondition = (element) => isEntirelyFormattedWith(element, selectors.ITALIC);
