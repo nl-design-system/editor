@@ -1,5 +1,16 @@
 # @nl-design-system-community/drupal-ckeditor-plugin
 
+## 0.3.0
+
+### Minor Changes
+
+- d3b212b: Add the Alt-text wizard to the alt-text balloon of inline images in Drupal.
+
+### Patch Changes
+
+- Updated dependencies [6a3702e]
+  - @nl-design-system-community/ckeditor-plugin@0.3.0
+
 ## 0.2.1
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @nl-design-system-community/editor
 
+## 1.8.0
+
+### Minor Changes
+
+- 6a3702e: Add the Alt-text wizard to CKEditor.
+
+### Patch Changes
+
+- Updated dependencies [6a3702e]
+  - @nl-design-system-community/clippy-alt-text-wizard@0.2.1
+
 ## 1.7.0
 
 ### Minor Changes
