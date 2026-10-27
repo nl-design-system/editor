@@ -29,10 +29,11 @@ const adminBarMount = () => {
 };
 
 /**
- * @param {{ clippy?: { pageReview?: { reviewRoot?: string } } } | undefined} settings
+ * @param {{ clippy?: { pageReview?: { gutter?: 'always' | 'drawer', reviewRoot?: string } } } | undefined} settings
  * @returns {import('@nl-design-system-community/editor/page-review').PageReviewOptions}
  */
 export const pageReviewOptions = (settings) => ({
+  gutter: settings?.clippy?.pageReview?.gutter,
   mount: adminBarMount(),
   reviewRoot: settings?.clippy?.pageReview?.reviewRoot || undefined,
 });
