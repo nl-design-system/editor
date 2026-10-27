@@ -13,6 +13,7 @@ export default css`
   }
 
   :host([overlay]) {
+    background: none !important;
     block-size: auto;
     inset: auto;
   }

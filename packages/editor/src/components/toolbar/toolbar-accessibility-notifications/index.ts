@@ -64,6 +64,10 @@ export class AccessibilityNotifications extends LitElement {
   @property({ attribute: false })
   identifier?: string;
 
+  /** Float the trigger over the page, for hosts that give it no place of its own. */
+  @property({ reflect: true, type: Boolean })
+  floating = false;
+
   /**
    * Disables the trigger and closes any open panel.
    */

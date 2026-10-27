@@ -28,6 +28,11 @@ const openDrawer = () =>
     }),
   );
 
+const closeDrawer = () =>
+  globalThis.dispatchEvent(
+    new CustomEvent(CustomEvents.CLOSE_VALIDATIONS_DRAWER, { detail: { identifier: 'clippy-page-review' } }),
+  );
+
 const validationItems = () => [
   ...(drawer()
     ?.shadowRoot?.querySelector('clippy-validations-list')
@@ -45,6 +50,7 @@ afterEach(() => {
   review?.destroy();
   review = undefined;
   document.body.replaceChildren();
+  document.body.removeAttribute('style');
 });
 
 describe('PageReview', () => {
@@ -95,56 +101,79 @@ describe('PageReview', () => {
     expect(buttonsPerItem).toEqual([1, 1]);
   });
 
-  it('lines gutter indicators up with the offending elements when the gutter is on', async () => {
-    document.body.innerHTML = '<main><h1>Titel</h1><p>Tekst</p><h3>Overgeslagen</h3></main>';
-
-    review = createPageReview({ gutter: true });
-
-    await expect.poll(() => gutterIndicators().length).toBe(1);
-    const heading = document.querySelector('h3')!.getBoundingClientRect();
-    const indicator = gutterIndicators()[0].getBoundingClientRect();
-    expect(indicator.top).toBeCloseTo(heading.top, 0);
-    expect(indicator.height).toBeCloseTo(heading.height, 0);
-  });
-
-  it('opens the matching drawer item when a gutter indicator is clicked', async () => {
-    document.body.innerHTML =
-      '<main><h1>Titel</h1><h3>Overgeslagen</h3><p>1 - Eerste item<br>2 - Tweede item</p></main>';
-    review = createPageReview({ gutter: true });
-    await expect.poll(() => gutterIndicators().length).toBe(2);
-
-    const heading = document.querySelector('h3')!;
-    const headingIndicator = gutterIndicators().find(
-      (indicator) => Math.abs(indicator.getBoundingClientRect().top - heading.getBoundingClientRect().top) < 1,
-    );
-    headingIndicator!.querySelector('button')!.click();
-
-    const content = () => drawer()?.shadowRoot?.querySelector('[data-testid="clippy-validations-drawer"]');
-    await expect.poll(() => content()?.hasAttribute('hidden')).toBe(false);
-    await expect.poll(() => validationItems().length).toBe(1);
-    expect(validationItems()[0].range?.intersectsNode(heading)).toBe(true);
-  });
-
-  it('adds no gutter or wrapper to the page by default', async () => {
-    document.body.innerHTML = '<main><h1>Titel</h1><h3>Overgeslagen</h3></main>';
-    const main = document.querySelector('main')!;
-
-    review = createPageReview();
-
-    await expect.poll(violationCount).toBe(1);
-    expect(document.querySelector('clippy-validations-gutter')).toBeNull();
-    expect(main.parentElement).toBe(document.body);
-  });
-
-  it.each([false, true])('removes everything it added to the page when destroyed (gutter: %s)', (gutter) => {
-    document.body.innerHTML = '<header></header><main><h1>Titel</h1></main>';
+  it('removes everything it added to the page when destroyed', async () => {
+    document.body.innerHTML = '<header></header><main><h1>Titel</h1><h3>Overgeslagen</h3></main>';
     const before = document.body.innerHTML;
-    review = createPageReview({ gutter, mount: document.querySelector('header')! });
+    review = createPageReview({ mount: document.querySelector('header')! });
+    openDrawer();
+    await expect.poll(() => gutterIndicators().length).toBe(1);
 
     review.destroy();
     review = undefined;
 
     expect(document.body.innerHTML).toBe(before);
+  });
+
+  describe('gutter', () => {
+    const indicatorFor = (element: Element) =>
+      gutterIndicators().find(
+        (indicator) => Math.abs(indicator.getBoundingClientRect().top - element.getBoundingClientRect().top) < 1,
+      );
+
+    const reviewWithDrawerOpen = async (count: number) => {
+      review = createPageReview();
+      await expect.poll(violationCount).toBe(count);
+      openDrawer();
+      await expect.poll(() => gutterIndicators().length).toBe(count);
+    };
+
+    it('shows markers without opening the drawer by default', async () => {
+      document.body.innerHTML = '<main><h1>Titel</h1><h3>Overgeslagen</h3></main>';
+
+      review = createPageReview();
+
+      await expect.poll(() => gutterIndicators().length).toBe(1);
+      openDrawer();
+      await expect.poll(() => validationItems().length).toBe(1);
+      closeDrawer();
+      await new Promise(requestAnimationFrame);
+      expect(gutterIndicators()).toHaveLength(1);
+    });
+
+    it('shows markers only while the drawer is open when set to the drawer', async () => {
+      document.body.innerHTML = '<main><h1>Titel</h1><h3>Overgeslagen</h3></main>';
+      review = createPageReview({ gutter: 'drawer' });
+      await expect.poll(violationCount).toBe(1);
+      expect(document.querySelector('clippy-validations-gutter')).toBeNull();
+
+      openDrawer();
+      await expect.poll(() => gutterIndicators().length).toBe(1);
+
+      closeDrawer();
+      await expect.poll(() => document.querySelector('clippy-validations-gutter')).toBeNull();
+    });
+
+    it('keeps its markers out of the tab order', async () => {
+      document.body.innerHTML = '<main><h1>Titel</h1><h3>Overgeslagen</h3></main>';
+
+      await reviewWithDrawerOpen(1);
+
+      const buttons = [...document.querySelector('clippy-validations-gutter')!.shadowRoot!.querySelectorAll('button')];
+      expect(buttons.length).toBeGreaterThan(0);
+      expect(buttons.every(({ tabIndex }) => tabIndex === -1)).toBe(true);
+    });
+
+    it('opens the matching drawer item when an indicator is clicked', async () => {
+      document.body.innerHTML =
+        '<main><h1>Titel</h1><h3>Overgeslagen</h3><p>1 - Eerste item<br>2 - Tweede item</p></main>';
+      await reviewWithDrawerOpen(2);
+
+      const heading = document.querySelector('h3')!;
+      indicatorFor(heading)!.querySelector('button')!.click();
+
+      await expect.poll(() => validationItems().length).toBe(1);
+      expect(validationItems()[0].range?.intersectsNode(heading)).toBe(true);
+    });
   });
 
   describe('without a mount element', () => {
@@ -154,10 +183,8 @@ describe('PageReview', () => {
       review = createPageReview({ mount: undefined });
 
       await expect.poll(violationCount).toBe(1);
-      const wrapper = trigger()!.parentElement!;
-      expect(wrapper.parentElement).toBe(document.body);
-      expect(getComputedStyle(wrapper).position).toBe('fixed');
-      expect(trigger()!.getAttribute('class')).toBeNull();
+      expect(trigger()!.parentElement).toBe(document.body);
+      expect(getComputedStyle(trigger()!).position).toBe('fixed');
     });
 
     it('applies the theme classes to its own elements, not to the page', () => {
@@ -165,7 +192,7 @@ describe('PageReview', () => {
 
       review = createPageReview({ mount: undefined });
 
-      for (const element of [drawer()!, trigger()!.parentElement!]) {
+      for (const element of [drawer()!, trigger()!, document.querySelector('clippy-validations-gutter')!]) {
         expect([...element.classList]).toEqual(['ma-theme', 'clippy-theme', 'utrecht-theme']);
       }
       expect(document.documentElement.classList).toHaveLength(0);
