@@ -10,7 +10,7 @@ const THEME_CLASSES = ['ma-theme', 'clippy-theme', 'utrecht-theme'];
  */
 const addMount = (parent, className, position) => {
   const mount = globalThis.document.createElement('div');
-  mount.classList.add(className, ...THEME_CLASSES);
+  mount.classList.add('clippy-page-review-mount', className, ...THEME_CLASSES);
   parent[position](mount);
   return mount;
 };
