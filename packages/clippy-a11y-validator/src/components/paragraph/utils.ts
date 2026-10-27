@@ -87,3 +87,40 @@ const isEntirelyFormattedWith = (element: Element, selector: string): boolean =>
 export const isEntirelyBold: ValidationCondition = (element) => isEntirelyFormattedWith(element, selectors.BOLD);
 
 export const isEntirelyItalic: ValidationCondition = (element) => isEntirelyFormattedWith(element, selectors.ITALIC);
+
+const isLineBreak = (node: Node): boolean => node instanceof Element && node.tagName === 'BR';
+
+const isWhitespaceText = (node: Node): boolean =>
+  node.nodeType === Node.TEXT_NODE && isEmptyOrWhitespace(node.textContent ?? '');
+
+/**
+ * Groups the child nodes of a paragraph into the text blocks a visitor sees: a run of two or more `<br>`
+ * elements is a blank line between blocks, a single `<br>` stays inside its block. The separating line breaks
+ * belong to no block, and blocks without visible text are dropped.
+ */
+export const textBlocks = (paragraph: Element): Node[][] => {
+  const blocks: Node[][] = [];
+  let block: Node[] = [];
+  let breaks: Node[] = [];
+
+  for (const node of paragraph.childNodes) {
+    if (isLineBreak(node) || (breaks.length > 0 && isWhitespaceText(node))) {
+      breaks.push(node);
+      continue;
+    }
+
+    if (breaks.filter(isLineBreak).length > 1) {
+      blocks.push(block);
+      block = [];
+    } else {
+      block.push(...breaks);
+    }
+
+    breaks = [];
+    block.push(node);
+  }
+
+  blocks.push(block);
+
+  return blocks.filter((nodes) => nodes.some((node) => !isEmptyOrWhitespace(node.textContent ?? '')));
+};
