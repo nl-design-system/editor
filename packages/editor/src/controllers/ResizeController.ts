@@ -12,7 +12,7 @@ export class ResizeController implements ReactiveController {
     host.addController(this);
   }
 
-  observe(element: Element): void {
+  observe(...elements: Element[]): void {
     this.disconnect();
     this.observer = new ResizeObserver(() => {
       clearTimeout(this.timeout);
@@ -20,7 +20,9 @@ export class ResizeController implements ReactiveController {
         this.host.requestUpdate();
       }, DEFAULT_DEBOUNCE_MS);
     });
-    this.observer.observe(element);
+    for (const element of elements) {
+      this.observer.observe(element, { box: 'border-box' });
+    }
   }
 
   disconnect(): void {

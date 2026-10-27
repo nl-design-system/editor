@@ -12,6 +12,7 @@ import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
 import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
+import { styleMap } from 'lit/directives/style-map.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationInteractionMode, Violation, ViolationsMap } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
@@ -133,6 +134,17 @@ export class Gutter extends LitElement {
   @property({ attribute: false })
   contentElement?: HTMLElement;
 
+  /**
+   * Overlay `contentElement` without a positioned wrapper: the gutter aligns its
+   * own box to the content's box and re-aligns when the page lays out again.
+   */
+  @property({ reflect: true, type: Boolean })
+  overlay = false;
+
+  /** Whether the indicator buttons are in the tab order. */
+  @property({ attribute: false })
+  tabbable = true;
+
   /** @internal */
   @state()
   private activeRange: Range | null = null;
@@ -203,6 +215,10 @@ export class Gutter extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
+    if (this.hasUpdated) {
+      this.#observeContent();
+      this.requestUpdate();
+    }
     globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, this.#handleFocusValidationItemInGutter);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
@@ -219,6 +235,13 @@ export class Gutter extends LitElement {
     }
   }
 
+  override willUpdate(changedProperties: PropertyValues): void {
+    super.willUpdate(changedProperties);
+    if (this.overlay && this.contentElement && this.isConnected) {
+      this.#alignTo(this.contentElement);
+    }
+  }
+
   override updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
 
@@ -230,13 +253,38 @@ export class Gutter extends LitElement {
       this.#handleEditorChanged(changedProperties.get('editor'));
     }
 
-    if (changedProperties.has('contentElement')) {
+    if (changedProperties.has('contentElement') || (changedProperties.has('overlay') && this.contentElement)) {
       if (this.contentElement) {
-        this.#resizeController.observe(this.contentElement);
+        this.#observeContent();
       } else if (!this.editor?.view?.dom) {
         this.#resizeController.disconnect();
       }
     }
+  }
+
+  #observeContent(): void {
+    if (!this.contentElement) return;
+    if (this.overlay) {
+      this.#resizeController.observe(this.contentElement, document.body);
+    } else {
+      this.#resizeController.observe(this.contentElement);
+    }
+  }
+
+  #alignTo(content: HTMLElement): void {
+    const box = content.getBoundingClientRect();
+    Object.assign(this.style, {
+      blockSize: `${box.height}px`,
+      inlineSize: `${box.width}px`,
+      left: this.style.left || '0px',
+      margin: '0',
+      position: 'absolute',
+      top: this.style.top || '0px',
+    });
+    this.style.setProperty('--_clippy-gutter-inline-space', `${Math.max(box.left, 0)}px`);
+    const host = this.getBoundingClientRect();
+    this.style.left = `${Number.parseFloat(this.style.left) + box.left - host.left}px`;
+    this.style.top = `${Number.parseFloat(this.style.top) + box.top - host.top}px`;
   }
 
   #handleEditorChanged(previousEditor: Editor | undefined): void {
@@ -301,6 +349,10 @@ export class Gutter extends LitElement {
     }
   }
 
+  get #tabIndex() {
+    return this.tabbable ? nothing : '-1';
+  }
+
   #highlightRange(range: Range, violation: Violation): void {
     if (violation.display !== 'inline') return;
     applyHoverHighlight(violation.severity, range);
@@ -312,6 +364,7 @@ export class Gutter extends LitElement {
       <button
         class="clippy-validations-gutter__meta clippy-validations-gutter__meta--${severity}"
         aria-label=${count > 1 ? msg(str`Open ${count} validations on this line`) : msg('Open validation')}
+        tabindex=${this.#tabIndex}
         @click=${() => this.#handleIndicatorClick(range)}
         @mouseenter=${() => this.#highlightRange(range, violation)}
         @mouseleave=${() => clearHoverHighlight()}
@@ -345,7 +398,7 @@ export class Gutter extends LitElement {
       class="clippy-validations-gutter__indicator"
       data-display=${display}
       data-severity=${severity}
-      style="inset-block-start: ${position.top}px; block-size: ${position.height}px"
+      style=${styleMap({ 'block-size': `${position.height}px`, 'inset-block-start': `${position.top}px` })}
     >
       <button
         class="${classMap({
@@ -354,6 +407,7 @@ export class Gutter extends LitElement {
           'clippy-validations-gutter__toggle--active': isActive,
         })}"
         aria-expanded=${isActive ? 'true' : 'false'}
+        tabindex=${this.#tabIndex}
         @click=${() => this.#handleIndicatorClick(range)}
         @mouseenter=${() => this.#highlightRange(range, violation)}
         @mouseleave=${() => clearHoverHighlight()}
