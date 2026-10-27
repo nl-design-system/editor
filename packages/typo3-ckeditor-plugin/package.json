@@ -19,7 +19,8 @@
     "test-build": "node --test src/build/test-extension-archive.ts"
   },
   "dependencies": {
-    "@nl-design-system-community/ckeditor-plugin": "workspace:*"
+    "@nl-design-system-community/ckeditor-plugin": "workspace:*",
+    "@nl-design-system-community/editor": "workspace:*"
   },
   "peerDependencies": {
     "ckeditor5": ">=43.0.0"

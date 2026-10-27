@@ -1,6 +1,6 @@
 {
   "name": "nl-design-system-community/clippy",
-  "description": "Accessibility feedback and recommendations in CKEditor, based on NL Design System guidelines.",
+  "description": "Accessibility feedback and recommendations in CKEditor and on rendered pages, based on NL Design System guidelines.",
   "license": "EUPL-1.2",
   "type": "typo3-cms-extension",
   "require": {
