@@ -26,6 +26,12 @@ editor:
 | `ClippyPlugin`   | Accessibility feedback in the editor.                       |
 | `ContentClasses` | The design-system classes CKEditor writes into the content. |
 
+## Page review
+
+Backend users who are logged in see a floating Page review button on frontend pages. The `InjectPageReview` frontend middleware adds the Page review script and stylesheet from `Resources/Public/PageReview/` to the `<head>` of HTML responses, but only when a backend user is authenticated in that request. The Admin Panel isn't needed.
+
+The middleware changes the response after TYPO3 has rendered or loaded the page from cache, so the page cache never contains the script and visitors who aren't logged in to the backend never get it. The button only shows where the backend session reaches the frontend domain.
+
 ## The ckeditor5 shim
 
 TYPO3 loads CKEditor 5 as native ES modules through an import map with a specifier per package — `@ckeditor/ckeditor5-core`, `@ckeditor/ckeditor5-ui`, and about fifty others. There is no `ckeditor5` umbrella specifier, so the build externalises `ckeditor5` and rewrites it to `@nl-design-system-community/clippy/ckeditor5.js`, a shim that re-exports the two packages the plugin needs at runtime.
