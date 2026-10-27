@@ -21,5 +21,6 @@ page-review:
   css:
     component:
       clippy-page-review.css: {}
+      clippy-page-review-mount.css: {}
   dependencies:
     - core/drupalSettings

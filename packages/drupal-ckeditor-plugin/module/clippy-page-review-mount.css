@@ -1,0 +1,15 @@
+.clippy-page-review-mount {
+  background: none;
+}
+
+.clippy-page-review-top-bar clippy-accessibility-notifications {
+  /* stylelint-disable-next-line custom-property-pattern */
+  --clippy-button-small-min-block-size: var(--admin-toolbar-space-40, 40px);
+  /* stylelint-disable-next-line custom-property-pattern */
+  --clippy-button-small-min-inline-size: var(--admin-toolbar-space-40, 40px);
+}
+
+.clippy-page-review-top-bar {
+  /* stylelint-disable-next-line custom-property-pattern */
+  margin-inline-end: var(--admin-toolbar-space-4, 4px);
+}
