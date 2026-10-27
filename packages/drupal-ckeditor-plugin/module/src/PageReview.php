@@ -29,7 +29,10 @@ final class PageReview {
       && !\Drupal::service('router.admin_context')->isAdminRoute();
     if ($settings->get('page_review') && $is_frontend_page && \Drupal::currentUser()->hasPermission(self::PERMISSION)) {
       $attachments['#attached']['library'][] = 'clippy/page-review';
-      $attachments['#attached']['drupalSettings']['clippy']['pageReview']['reviewRoot'] = $settings->get('review_root');
+      $attachments['#attached']['drupalSettings']['clippy']['pageReview'] = [
+        'gutter' => $settings->get('gutter_always') ? 'always' : 'drawer',
+        'reviewRoot' => $settings->get('review_root'),
+      ];
     }
   }
 

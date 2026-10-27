@@ -47,6 +47,7 @@ _Administer site configuration_ permission.
 | Show accessibility feedback in CKEditor | on                  | Turns Clippy in CKEditor on or off. The content classes keep working.                                                                                                      |
 | Show Page review on frontend pages      | on                  | Turns Page review on or off for everyone, whatever their permissions.                                                                                                      |
 | Review root selector                    | `main, [role=main]` | The CSS selector of the element Page review validates. When nothing matches, Page review falls back to `main, [role=main]` and then to `body`, so it never fails silently. |
+| Always show gutter markers              | on                  | Shows the gutter markers next to the offending elements as soon as the page loads. When off, they only show while the Page review drawer is open.                          |
 
 ## Editing the content classes
 
