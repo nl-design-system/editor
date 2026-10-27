@@ -1,4 +1,3 @@
-import type { AltTextWizardButton, AltTextWizardDialog } from '@nl-design-system-community/editor/alt-text-wizard';
 import '@nl-design-system-community/editor/alt-text-wizard';
 import '@nl-design-system-community/editor/color-scheme';
 import {
@@ -9,6 +8,8 @@ import {
   type ObservableChangeEvent,
   type ViewCollection,
 } from 'ckeditor5';
+import { Dialog } from './views/dialog.ts';
+import { Row } from './views/row.ts';
 
 const ALT_TEXT_FORM_CLASS = 'ck-text-alternative-form';
 const ALT_INPUT_SELECTOR = 'input.ck-input';
@@ -20,56 +21,14 @@ type AltTextFormView = View & {
 
 const altInput = (form: View) => form.element!.querySelector<HTMLInputElement>(ALT_INPUT_SELECTOR);
 
-// Form row wrapping the Wizard button as a CKEditor View, so it can join the form's focus cycling.
-class WizardRowView extends View {
-  constructor(locale: View['locale']) {
-    super(locale);
-    this.setTemplate({
-      attributes: { class: ['ck', 'ck-form__row', 'clippy-alt-text-wizard-row'] },
-      children: [
-        {
-          children: [{ on: { click: this.bindTemplate.to('execute') }, tag: 'clippy-alt-text-wizard-button' }],
-          tag: 'clippy-color-scheme-wrapper',
-        },
-      ],
-      tag: 'div',
-    });
-  }
-
-  focus(): void {
-    this.element?.querySelector<AltTextWizardButton>('clippy-alt-text-wizard-button')?.focus();
-  }
-
-  override destroy(): void {
-    this.element?.remove();
-    super.destroy();
-  }
-}
-
-// Wizard dialog element as a CKEditor View, so it can live in the editor's body collection and be cleaned up with the editor.
-class WizardDialogView extends View {
-  constructor(locale: View['locale']) {
-    super(locale);
-    this.setTemplate({
-      attributes: { class: ['ck-reset_all-excluded'] },
-      children: [{ on: { close: this.bindTemplate.to('close') }, tag: 'clippy-alt-text-wizard-dialog' }],
-      tag: 'clippy-color-scheme-wrapper',
-    });
-  }
-
-  get dialog(): AltTextWizardDialog {
-    return this.element!.firstElementChild as AltTextWizardDialog;
-  }
-}
-
 // Adds a Wizard button to the image alt-text balloon form (CKEditor's or Drupal's) that opens the alt-text wizard dialog.
 export class ClippyAltTextWizard extends Plugin {
   static get pluginName() {
     return 'ClippyAltTextWizard' as const;
   }
 
-  private readonly _rows = new Map<View, WizardRowView>();
-  private _dialog: WizardDialogView | null = null;
+  private readonly _rows = new Map<View, Row>();
+  private _dialog: Dialog | null = null;
   private _altTextForm: { draft: string; form: AltTextFormView; image: ModelElement | null } | null = null;
 
   afterInit(): void {
@@ -101,7 +60,7 @@ export class ClippyAltTextWizard extends Plugin {
     // close the form before the modal opens, so the editor regaining focus does not pull focus out of the modal
     form.fire('cancel');
     if (!this._dialog) {
-      this._dialog = new WizardDialogView(this.editor.locale);
+      this._dialog = new Dialog(this.editor.locale);
       this.editor.ui.view.body.add(this._dialog);
       this.listenTo(this._dialog, 'close', () => this._restoreForm());
     }
@@ -151,7 +110,7 @@ export class ClippyAltTextWizard extends Plugin {
       return;
     }
 
-    const row = new WizardRowView(this.editor.locale);
+    const row = new Row(this.editor.locale);
     row.render();
     this.listenTo(row, 'execute', () => this._openWizard(form));
     // place the row directly below the input, above Save/Cancel
