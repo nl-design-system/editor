@@ -30,3 +30,6 @@ clippy.settings:
       label: "Review root selector"
       constraints:
         NotBlank: []
+    gutter_always:
+      type: boolean
+      label: "Always show gutter markers"
