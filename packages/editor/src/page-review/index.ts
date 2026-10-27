@@ -1,9 +1,9 @@
 import '@/components/toolbar/toolbar-accessibility-notifications';
 import '@/components/validations/drawer';
 import '@/components/validations/gutter';
-import type { Gutter } from '@/components/validations/gutter';
 import type { ViolationsMap } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
+import { CustomEvents, type ValidationsDrawerToggleEvent } from '@/events';
 import { ClippyHub } from '@/hub';
 import { initializeLocale } from '@/localization';
 
@@ -16,22 +16,9 @@ export interface PageReviewOptions {
   mount?: HTMLElement;
   /** The Review root selector. Falls back to `main, [role=main]`, then `body`. */
   reviewRoot?: string;
-  /** Shows indicators in the margin of the Review root. Off by default. */
-  gutter?: boolean;
+  /** Show the gutter markers from load (default), or only while the drawer is open. */
+  gutter?: 'always' | 'drawer';
 }
-
-const createFloatingMount = (): HTMLElement => {
-  const mount = document.createElement('clippy-page-review-trigger');
-  mount.classList.add(...THEME_CLASSES);
-  Object.assign(mount.style, {
-    backgroundColor: 'var(--basis-color-default-bg-document, Canvas)',
-    insetBlockEnd: '1rem',
-    insetInlineEnd: '1rem',
-    position: 'fixed',
-    zIndex: '2147482000',
-  });
-  return document.body.appendChild(mount);
-};
 
 const resolveReviewRoot = (selector?: string): HTMLElement =>
   (selector ? document.querySelector<HTMLElement>(selector) : null) ??
@@ -50,52 +37,54 @@ initializeLocale().catch(console.error);
 export class PageReview extends ClippyHub {
   readonly #trigger = document.createElement('clippy-accessibility-notifications');
   readonly #drawer = document.createElement('clippy-validations-drawer');
+  readonly #gutter = document.createElement('clippy-validations-gutter');
   readonly #reviewRoot: HTMLElement;
-  readonly #floatingMount: HTMLElement | null = null;
-  #gutter: Gutter | null = null;
-  #gutterWrapper: HTMLElement | null = null;
 
-  constructor({ gutter = false, mount, reviewRoot }: PageReviewOptions) {
+  constructor({ gutter = 'always', mount, reviewRoot }: PageReviewOptions) {
     const target = resolveReviewRoot(reviewRoot);
     super({ adaptViolations: withoutCorrections, identifier: IDENTIFIER, target });
     this.#reviewRoot = target;
 
-    if (!mount) {
-      this.#floatingMount = createFloatingMount();
+    if (mount) {
+      mount.append(this.#trigger);
+    } else {
+      this.#trigger.floating = true;
+      this.#trigger.classList.add(...THEME_CLASSES);
+      document.body.append(this.#trigger);
     }
-    (mount ?? this.#floatingMount)?.append(this.#trigger);
     this.#drawer.overlay = true;
     this.#drawer.classList.add(...THEME_CLASSES);
     document.body.append(this.#drawer);
-    if (gutter) {
-      this.#gutter = this.#addGutter();
-    }
+    this.#gutter.classList.add(...THEME_CLASSES);
+    this.#gutter.mode = validationInteractionMode.DRAWER;
+    this.#gutter.overlay = true;
+    this.#gutter.tabbable = false;
+    this.#gutter.contentElement = this.#reviewRoot;
     this.connect({ drawer: this.#drawer, gutter: this.#gutter, trigger: this.#trigger });
+    if (gutter === 'always') {
+      this.#reviewRoot.append(this.#gutter);
+    } else {
+      globalThis.addEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
+    }
 
     (globalThis.requestIdleCallback ?? setTimeout)(() => this.validate());
   }
 
-  #addGutter(): Gutter {
-    const gutter = document.createElement('clippy-validations-gutter');
-    gutter.mode = validationInteractionMode.DRAWER;
-    gutter.contentElement = this.#reviewRoot;
-    if (this.#reviewRoot === document.body) {
-      document.body.append(gutter);
-      return gutter;
+  readonly #handleDrawerToggle = (event: Event): void => {
+    const { identifier, open } = (event as ValidationsDrawerToggleEvent).detail;
+    if (identifier !== IDENTIFIER) return;
+    if (open) {
+      this.#reviewRoot.append(this.#gutter);
+    } else {
+      this.#gutter.remove();
     }
-    this.#gutterWrapper = document.createElement('div');
-    this.#gutterWrapper.style.position = 'relative';
-    this.#reviewRoot.replaceWith(this.#gutterWrapper);
-    this.#gutterWrapper.append(gutter, this.#reviewRoot);
-    return gutter;
-  }
+  };
 
   override destroy(): void {
     super.destroy();
+    globalThis.removeEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
+    this.#gutter.remove();
     this.#trigger.remove();
-    this.#floatingMount?.remove();
     this.#drawer.remove();
-    this.#gutter?.remove();
-    this.#gutterWrapper?.replaceWith(this.#reviewRoot);
   }
 }

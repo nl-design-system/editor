@@ -1,6 +1,14 @@
 import { css } from 'lit';
 
 export default css`
+  :host([floating]) {
+    background-color: var(--basis-color-default-bg-document, Canvas);
+    inset-block-end: var(--basis-space-block-md);
+    inset-inline-end: var(--basis-space-inline-md);
+    position: fixed;
+    z-index: 2147482000;
+  }
+
   .clippy-accessibility-notifications {
     anchor-name: --clippy-notifications-trigger;
     position: relative;
