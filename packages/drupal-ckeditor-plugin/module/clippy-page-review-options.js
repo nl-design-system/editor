@@ -8,7 +8,7 @@ const THEME_CLASSES = ['ma-theme', 'clippy-theme', 'utrecht-theme'];
  */
 const createReviewElement = (placementClass) => {
   const reviewElement = globalThis.document.createElement('div');
-  reviewElement.classList.add(placementClass, ...THEME_CLASSES);
+  reviewElement.classList.add('clippy-page-review-mount', placementClass, ...THEME_CLASSES);
   return reviewElement;
 };
 
