@@ -86,7 +86,7 @@ async function collectViolations(files: readonly string[], source: string, fix: 
   const browser = await launchBrowser();
 
   try {
-    const page = await browser.newPage();
+    const page = await browser.newPage({ bypassCSP: true });
     const byFile: { file: string; violations: Violations }[] = [];
 
     for (const file of files) {
