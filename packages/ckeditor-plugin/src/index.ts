@@ -1,5 +1,4 @@
 export { ClippyPlugin } from './plugin/ClippyPlugin.ts';
-export { ContentClasses } from './plugin/ContentClasses.ts';
 export { ClippyAltTextWizard } from './plugin/ClippyAltTextWizard.ts';
 export type { Violation, ValidationSeverity } from '@nl-design-system-community/editor/validators';
 // Re-exported so integration packages register into the same module instance this bundle inlines.

@@ -30,11 +30,6 @@ function copyModuleAssets(): Plugin {
       // The Drupal module itself (info/libraries/plugin YAML, PHP, config schema).
       cpSync(resolve(import.meta.dirname, 'module'), moduleOut, { recursive: true });
 
-      // The editable content classes, so the PHP settings form and plugin share defaults
-      copyFileSync(
-        packageRequire.resolve('@nl-design-system-community/ckeditor-plugin/content-classes.json'),
-        resolve(moduleOut, 'content-classes.json'),
-      );
       // Ship the editor's clippy theme tokens (--clippy-*) as the module stylesheet.
       copyFileSync(resolve(import.meta.dirname, '../editor/theme.css'), resolve(moduleOut, 'clippy.css'));
 

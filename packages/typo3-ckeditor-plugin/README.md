@@ -21,10 +21,9 @@ editor:
       - '@nl-design-system-community/clippy/clippy.js'
 ```
 
-| CKEditor plugin  | Purpose                                                     |
-| ---------------- | ----------------------------------------------------------- |
-| `ClippyPlugin`   | Accessibility feedback in the editor.                       |
-| `ContentClasses` | The design-system classes CKEditor writes into the content. |
+| CKEditor plugin | Purpose                               |
+| --------------- | ------------------------------------- |
+| `ClippyPlugin`  | Accessibility feedback in the editor. |
 
 ## Page review
 
@@ -107,13 +106,3 @@ vendor/bin/typo3 extension:setup
 Upload the zip under _Admin Tools → Extensions → Upload Extension_, then activate **Clippy** in the extension list. TYPO3 derives the extension key from the file name, so keep the `clippy_` prefix when renaming the file.
 
 TYPO3 activates a newly uploaded extension in the request that unpacked it, which it cannot do: the upload fails with `Extension clippy is not available` and is deleted again. This is TYPO3's own behaviour, unrelated to this extension, and unchanged from 12.4 through 14. Uploading and activating separately does work, so either turn off _automaticInstallation_ under _Admin Tools → Settings → Extension Configuration → extensionmanager_ before uploading, or skip the upload form and unpack the zip into `typo3conf/ext/clippy/` by hand before activating it.
-
-### Content classes
-
-On TYPO3 13.4 and 14, add the **Clippy** site set to edit the classes under the site's settings. TYPO3 12.4 has no site sets, so override them in the Page TSconfig of the root page instead:
-
-```text
-RTE.default.editor.config.contentClasses.paragraph = my-paragraph
-```
-
-The generated `Configuration/Sets/Clippy/page.tsconfig` lists every key.

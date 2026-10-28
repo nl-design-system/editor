@@ -3,4 +3,4 @@ import { drupalColorSchemeHost } from './colorSchemeHost.ts';
 
 setColorSchemeHost(drupalColorSchemeHost);
 
-export { ClippyAltTextWizard, ClippyPlugin, ContentClasses } from '@nl-design-system-community/ckeditor-plugin';
+export { ClippyAltTextWizard, ClippyPlugin } from '@nl-design-system-community/ckeditor-plugin';
