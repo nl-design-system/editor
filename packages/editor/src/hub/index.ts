@@ -74,7 +74,7 @@ export class ClippyHub {
     this.#validations = validations;
   }
 
-  readonly scheduleValidation = debounce(() => this.validate(), VALIDATION_TIMEOUT);
+  readonly scheduleValidation = debounce(() => this.validate().catch(console.error), VALIDATION_TIMEOUT);
 
   connect(views: ClippyHubViews): void {
     globalThis.addEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
@@ -113,7 +113,7 @@ export class ClippyHub {
 
     const { drawer, trigger } = this.#views;
     if (open) {
-      this.validate();
+      this.validate().catch(console.error);
       drawer?.focus();
       return;
     }
