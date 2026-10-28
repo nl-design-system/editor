@@ -1,18 +1,3 @@
-ckeditor5.plugin.clippy_content_classes:
-  type: mapping
-  label: "Content classes"
-  constraints:
-    FullyValidatable: ~
-  mapping:
-    classes:
-      # A sequence, not a mapping: the keys come from content-classes.json.
-      type: sequence
-      label: "Content classes"
-      sequence:
-        # No NotBlank: an empty class means "render this element without a class".
-        type: string
-        label: "Class"
-
 clippy.settings:
   type: config_object
   label: "Clippy settings"

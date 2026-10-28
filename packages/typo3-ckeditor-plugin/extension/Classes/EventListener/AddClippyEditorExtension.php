@@ -35,7 +35,7 @@ final class AddClippyEditorExtension
 
         $configuration['importModules'] = [
             ...$importModules,
-            ['module' => self::MODULE, 'exports' => ['ClippyPlugin', 'ContentClasses']],
+            ['module' => self::MODULE, 'exports' => ['ClippyPlugin']],
         ];
         $configuration['contentsCss'] = [...(array)($configuration['contentsCss'] ?? []), ...self::CONTENTS_CSS];
 
