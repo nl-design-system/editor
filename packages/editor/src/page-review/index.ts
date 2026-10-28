@@ -71,7 +71,7 @@ export class PageReview extends ClippyHub {
       globalThis.addEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
     }
 
-    (globalThis.requestIdleCallback ?? setTimeout)(() => this.validate());
+    (globalThis.requestIdleCallback ?? setTimeout)(() => this.validate().catch(console.error));
   }
 
   readonly #handleDrawerToggle = (event: Event): void => {
