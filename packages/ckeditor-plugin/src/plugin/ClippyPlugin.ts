@@ -11,16 +11,10 @@ import { type Validation, type Violation, type ViolationsMap } from '@nl-design-
 import { Plugin, View, type Locale, type ObservableChangeEvent, type ToolbarView } from 'ckeditor5';
 import { adoptClippyStyles } from '../styles/';
 import { findMatchingCorrection, findOccurrenceIndex, runValidations } from '../utils/correction.ts';
-import { ContentClasses } from './ContentClasses.ts';
 
 export class ClippyPlugin extends Plugin {
   static get pluginName() {
     return 'ClippyPlugin' as const;
-  }
-
-  static get requires() {
-    // Ensure the design-system classes are applied to CKEditor content
-    return [ContentClasses] as const;
   }
 
   private _editableEl: HTMLElement | null = null;

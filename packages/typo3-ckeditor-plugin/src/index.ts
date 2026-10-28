@@ -3,4 +3,4 @@ import { typo3ColorSchemeHost } from './colorSchemeHost.ts';
 
 setColorSchemeHost(typo3ColorSchemeHost);
 
-export { ClippyPlugin, ContentClasses } from '@nl-design-system-community/ckeditor-plugin';
+export { ClippyPlugin } from '@nl-design-system-community/ckeditor-plugin';

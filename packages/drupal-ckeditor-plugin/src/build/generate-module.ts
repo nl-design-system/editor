@@ -31,11 +31,6 @@ export function generateModule(): void {
   cpSync(resolve(packageDir, 'module'), moduleOut, { recursive: true });
   appendFileSync(resolve(moduleOut, 'clippy.info.yml'), `version: '${packageVersion()}'\n`);
 
-  // The editable content classes, so the PHP settings form and plugin share defaults
-  copyFileSync(
-    packageRequire.resolve('@nl-design-system-community/ckeditor-plugin/content-classes.json'),
-    resolve(moduleOut, 'content-classes.json'),
-  );
   // Ship the editor's clippy theme tokens (--clippy-*) as the module stylesheet.
   copyFileSync(resolve(packageDir, '../editor/theme.css'), resolve(moduleOut, 'clippy.css'));
 
