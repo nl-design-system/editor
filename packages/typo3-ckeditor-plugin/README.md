@@ -30,7 +30,22 @@ editor:
 
 Backend users who are logged in see a floating Page review button on frontend pages. The `InjectPageReview` frontend middleware adds the Page review script and stylesheet from `Resources/Public/PageReview/` to the `<head>` of HTML responses, but only when a backend user is authenticated in that request. The Admin Panel isn't needed.
 
-The middleware changes the response after TYPO3 has rendered or loaded the page from cache, so the page cache never contains the script and visitors who aren't logged in to the backend never get it. The button only shows where the backend session reaches the frontend domain.
+The middleware changes the response after TYPO3 has rendered or loaded the page from cache, so the page cache never contains the script and visitors who aren't logged in to the backend never get it.
+
+### Why theme issues show up
+
+Page review checks the Review root, the page's main content region, and not only the HTML written in the rich text editor. The heading structure and the other overviews only make sense across the whole region, which combines several content elements with headings from the theme, such as the page title. As a result, Page review can report issues in theme markup that an editor can't fix.
+
+## Settings
+
+Set these for the whole installation under _Admin Tools → Settings → Extension Configuration → clippy_. Clearing _Add Clippy to every rich text editor_ only switches off the CKEditor integration, and clearing _Show Page review on frontend pages_ only switches off Page review.
+
+| Extension configuration              | Default             | Description                                                                                                                                                                |
+| ------------------------------------ | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Add Clippy to every rich text editor | on                  | Turns Clippy in CKEditor on or off.                                                                                                                                        |
+| Show Page review on frontend pages   | on                  | Turns Page review on or off for every backend user.                                                                                                                        |
+| Review root selector                 | `main, [role=main]` | The CSS selector of the element Page review validates. When nothing matches, Page review falls back to `main, [role=main]` and then to `body`, so it never fails silently. |
+| Always show gutter markers           | on                  | Shows the gutter markers as soon as the page loads. When off, they only show while the Page review drawer is open.                                                         |
 
 ## The ckeditor5 shim
 
