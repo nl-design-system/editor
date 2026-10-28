@@ -9,6 +9,7 @@ return [
         'nl-design-system-community/clippy/page-review' => [
             'target' => InjectPageReview::class,
             'after' => [
+                'typo3/cms-frontend/site',
                 'typo3/cms-frontend/backend-user-authentication',
             ],
         ],

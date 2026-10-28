@@ -1,3 +1,5 @@
 import { PageReview } from './page-review.js';
 
-new PageReview({});
+const options = globalThis.document.getElementById('clippy-page-review-options');
+
+new PageReview(options ? JSON.parse(options.textContent) : {});
