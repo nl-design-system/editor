@@ -40,7 +40,11 @@ export class PageReview extends ClippyHub {
   readonly #gutter = document.createElement('clippy-validations-gutter');
   readonly #reviewRoot: HTMLElement;
 
-  constructor({ gutter = 'always', mount, reviewRoot }: PageReviewOptions) {
+  static mount(options: PageReviewOptions = {}): PageReview {
+    return new PageReview(options);
+  }
+
+  private constructor({ gutter = 'always', mount, reviewRoot }: PageReviewOptions) {
     const target = resolveReviewRoot(reviewRoot);
     super({ adaptViolations: withoutCorrections, identifier: IDENTIFIER, target });
     this.#reviewRoot = target;

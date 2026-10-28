@@ -18,7 +18,7 @@ const gutterIndicators = () => [
 
 const createPageReview = (options: Partial<PageReviewOptions> = {}) => {
   const mount = 'mount' in options ? options.mount : document.body.appendChild(document.createElement('header'));
-  return new PageReview({ ...options, mount });
+  return PageReview.mount({ ...options, mount });
 };
 
 const openDrawer = () =>
