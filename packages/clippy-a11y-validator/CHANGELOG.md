@@ -1,5 +1,11 @@
 # @nl-design-system-community/clippy-a11y-validator
 
+## 0.2.1
+
+### Patch Changes
+
+- 17fd337: Validate documents whose Content Security Policy would otherwise block the injected validator script.
+
 ## 0.2.0
 
 ### Minor Changes
