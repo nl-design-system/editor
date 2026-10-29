@@ -1,12 +1,12 @@
 ---
-import Document from '../layouts/document.astro';
-import PackageLinks from '../components/PackageLinks.astro';
-import altTextWizardPackage from '../../../clippy-alt-text-wizard/package.json';
-import Section from '../components/Section.astro';
-import MermaidDiagram from '../components/MermaidDiagram.astro';
-import { useTranslations } from '../i18n/translations.ts';
+import Document from '../../layouts/document.astro';
+import PackageLinks from '../../components/PackageLinks.astro';
+import altTextWizardPackage from '../../../../clippy-alt-text-wizard/package.json';
+import Section from '../../components/Section.astro';
+import MermaidDiagram from '../../components/MermaidDiagram.astro';
+import { useTranslations } from '../../i18n/translations.ts';
 import { altTextWizardMachine } from '@nl-design-system-community/clippy-alt-text-wizard/state-machine';
-import { generateMermaidStateDiagram } from '../utils/generateMermaidStateDiagram.ts';
+import { generateMermaidStateDiagram } from '../../utils/generateMermaidStateDiagram.ts';
 
 const t = useTranslations('nl');
 const mermaid = generateMermaidStateDiagram(altTextWizardMachine);

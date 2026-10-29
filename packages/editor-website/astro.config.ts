@@ -36,6 +36,18 @@ export default defineConfig({
 
   publicDir: '../../static',
 
+  redirects: {
+    '/alt-tekst-wizard': '/bibliotheken/alt-tekst-wizard',
+    '/ckeditor': '/bibliotheken/ckeditor',
+    '/configuratie': '/bibliotheken/editor/configuratie',
+    '/en/alt-text-wizard': '/en/libraries/alt-text-wizard',
+    '/en/configuration': '/en/libraries/editor/configuration',
+    '/en/integrations': '/en/libraries',
+    '/en/react': '/en/libraries/editor/react',
+    '/integraties': '/bibliotheken',
+    '/react': '/bibliotheken/editor/react',
+  },
+
   server: {
     port: 5174,
   },

@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Alt-text wizard (NL)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/alt-tekst-wizard');
+    await page.goto('/bibliotheken/alt-tekst-wizard');
     await expect(page.locator('clippy-alt-text-wizard')).toBeVisible();
   });
 
@@ -46,7 +46,7 @@ test.describe('Alt-text wizard (NL)', () => {
 
 test.describe('Alt-text wizard (EN)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/en/alt-text-wizard');
+    await page.goto('/en/libraries/alt-text-wizard');
     await expect(page.locator('clippy-alt-text-wizard')).toBeVisible();
   });
 

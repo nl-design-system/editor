@@ -1,17 +1,17 @@
 ---
-import ckeditorLogo from '../../assets/logos/ckeditor.svg?raw';
-import drupalLogo from '../../assets/logos/drupal.svg?raw';
-import typo3Logo from '../../assets/logos/typo3.svg?raw';
-import Document from '../../layouts/document.astro';
-import Section from '../../components/Section.astro';
-import Card from '../../components/Card.astro';
-import CardGroup from '../../components/CardGroup.astro';
-import PackageLinks from '../../components/PackageLinks.astro';
-import ckeditorPackage from '../../../../ckeditor-plugin/package.json';
-import drupalPackage from '../../../../drupal-ckeditor-plugin/package.json';
-import typo3Package from '../../../../typo3-ckeditor-plugin/package.json';
-import { frontmatter as indexFrontmatter } from '../../../../../docs/en/index.md';
-import { useTranslations } from '../../i18n/translations.ts';
+import ckeditorLogo from '../../../assets/logos/ckeditor.svg?raw';
+import drupalLogo from '../../../assets/logos/drupal.svg?raw';
+import typo3Logo from '../../../assets/logos/typo3.svg?raw';
+import Document from '../../../layouts/document.astro';
+import Section from '../../../components/Section.astro';
+import Card from '../../../components/Card.astro';
+import CardGroup from '../../../components/CardGroup.astro';
+import PackageLinks from '../../../components/PackageLinks.astro';
+import ckeditorPackage from '../../../../../ckeditor-plugin/package.json';
+import drupalPackage from '../../../../../drupal-ckeditor-plugin/package.json';
+import typo3Package from '../../../../../typo3-ckeditor-plugin/package.json';
+import { frontmatter as indexFrontmatter } from '../../../../../../docs/en/index.md';
+import { useTranslations } from '../../../i18n/translations.ts';
 
 const t = useTranslations('en');
 ---
@@ -31,7 +31,12 @@ const t = useTranslations('en');
           <PackageLinks pkg={drupalPackage} />
         </Card>
 
-        <Card heading="CKEditor" logo={ckeditorLogo} href="/ckeditor" footer="View the CKEditor plugin demo">
+        <Card
+          heading="CKEditor"
+          logo={ckeditorLogo}
+          href="/bibliotheken/ckeditor"
+          footer="View the CKEditor plugin demo"
+        >
           <p>
             Clippy Editor provides a CKEditor 5 plugin that lets you add Clippy's accessibility validations to any
             CKEditor instance.

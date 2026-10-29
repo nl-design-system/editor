@@ -1,17 +1,17 @@
 ---
-import ckeditorLogo from '../assets/logos/ckeditor.svg?raw';
-import drupalLogo from '../assets/logos/drupal.svg?raw';
-import typo3Logo from '../assets/logos/typo3.svg?raw';
-import Document from '../layouts/document.astro';
-import Section from '../components/Section.astro';
-import Card from '../components/Card.astro';
-import CardGroup from '../components/CardGroup.astro';
-import PackageLinks from '../components/PackageLinks.astro';
-import ckeditorPackage from '../../../ckeditor-plugin/package.json';
-import drupalPackage from '../../../drupal-ckeditor-plugin/package.json';
-import typo3Package from '../../../typo3-ckeditor-plugin/package.json';
-import { frontmatter as indexFrontmatter } from '../../../../docs/index.md';
-import { useTranslations } from '../i18n/translations.ts';
+import ckeditorLogo from '../../assets/logos/ckeditor.svg?raw';
+import drupalLogo from '../../assets/logos/drupal.svg?raw';
+import typo3Logo from '../../assets/logos/typo3.svg?raw';
+import Document from '../../layouts/document.astro';
+import Section from '../../components/Section.astro';
+import Card from '../../components/Card.astro';
+import CardGroup from '../../components/CardGroup.astro';
+import PackageLinks from '../../components/PackageLinks.astro';
+import ckeditorPackage from '../../../../ckeditor-plugin/package.json';
+import drupalPackage from '../../../../drupal-ckeditor-plugin/package.json';
+import typo3Package from '../../../../typo3-ckeditor-plugin/package.json';
+import { frontmatter as indexFrontmatter } from '../../../../../docs/index.md';
+import { useTranslations } from '../../i18n/translations.ts';
 
 const t = useTranslations('nl');
 ---
@@ -31,7 +31,12 @@ const t = useTranslations('nl');
           <PackageLinks pkg={drupalPackage} />
         </Card>
 
-        <Card heading="CKEditor" logo={ckeditorLogo} href="/ckeditor" footer="Bekijk de CKEditor-plugin demo">
+        <Card
+          heading="CKEditor"
+          logo={ckeditorLogo}
+          href="/bibliotheken/ckeditor"
+          footer="Bekijk de CKEditor-plugin demo"
+        >
           <p>
             Clippy Editor biedt een CKEditor 5-plugin waarmee je de toegankelijkheidsvalidaties van Clippy kunt
             toevoegen aan elke CKEditor-instantie.
