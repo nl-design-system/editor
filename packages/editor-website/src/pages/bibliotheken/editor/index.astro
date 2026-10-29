@@ -1,5 +1,6 @@
 ---
 import Document from '../../../layouts/document.astro';
+import LibrariesNavigation from '../../../components/LibrariesNavigation.astro';
 import Section from '../../../components/Section.astro';
 import CodeBlock from '../../../components/CodeBlock.astro';
 import PackageLinks from '../../../components/PackageLinks.astro';
@@ -11,6 +12,7 @@ const t = useTranslations('nl');
 ---
 
 <Document title={t('library.editor.title')}>
+  <LibrariesNavigation />
   <main>
     <h1 class="nl-heading nl-heading--level-1">Editor</h1>
     <p class="nl-paragraph">

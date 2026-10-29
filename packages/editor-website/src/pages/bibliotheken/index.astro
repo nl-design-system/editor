@@ -3,6 +3,7 @@ import ckeditorLogo from '../../assets/logos/ckeditor.svg?raw';
 import drupalLogo from '../../assets/logos/drupal.svg?raw';
 import typo3Logo from '../../assets/logos/typo3.svg?raw';
 import Document from '../../layouts/document.astro';
+import LibrariesNavigation from '../../components/LibrariesNavigation.astro';
 import Section from '../../components/Section.astro';
 import Card from '../../components/Card.astro';
 import CardGroup from '../../components/CardGroup.astro';
@@ -19,6 +20,7 @@ const t = useTranslations('nl');
 ---
 
 <Document title={t('libraries.title')}>
+  <LibrariesNavigation />
   <main>
     <h1 class="nl-heading nl-heading--level-1">Bibliotheken</h1>
     <p class="nl-paragraph">

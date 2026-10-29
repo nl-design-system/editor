@@ -1,5 +1,6 @@
 ---
 import Document from '../../../layouts/document.astro';
+import LibrariesNavigation from '../../../components/LibrariesNavigation.astro';
 import Section from '../../../components/Section.astro';
 import PackageLinks from '../../../components/PackageLinks.astro';
 import drupalPackage from '../../../../../drupal-ckeditor-plugin/package.json';
@@ -9,6 +10,7 @@ const t = useTranslations('en');
 ---
 
 <Document title={t('library.drupal.title')}>
+  <LibrariesNavigation />
   <main>
     <h1 class="nl-heading nl-heading--level-1">Drupal</h1>
     <p class="nl-paragraph">

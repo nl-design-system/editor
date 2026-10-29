@@ -20,19 +20,26 @@ export const getNavigationItems = (locale: Locale, pathname: string): Navigation
   const navItems: NavigationLink[] = [
     { href: t('nav.href.editor'), label: t('nav.editor') },
     { href: t('nav.href.demo'), label: t('nav.demo') },
-    { href: t('nav.href.configuration'), label: t('nav.configuration') },
-    { href: t('nav.href.guidelines'), label: t('nav.guidelines') },
-    { href: t('nav.href.react'), label: t('nav.react') },
     {
       href: t('nav.href.libraries'),
       items: [
-        { href: '/bibliotheken/ckeditor', label: 'CKEditor' },
-        { href: `${t('nav.href.libraries')}#drupal`, label: 'Drupal' },
-        { href: `${t('nav.href.libraries')}#typo3`, label: 'TYPO3' },
+        {
+          href: t('nav.href.library.editor'),
+          items: [
+            { href: t('nav.href.configuration'), label: t('nav.configuration') },
+            { href: t('nav.href.react'), label: t('nav.react') },
+          ],
+          label: t('nav.library.editor'),
+        },
+        { href: t('nav.href.library.a11y-validator'), label: t('nav.library.a11y-validator') },
+        { href: t('nav.href.alt-text-wizard'), label: t('nav.alt-text-wizard') },
+        { href: t('nav.href.library.ckeditor'), label: 'CKEditor' },
+        { href: t('nav.href.library.drupal'), label: 'Drupal' },
+        { href: t('nav.href.library.typo3'), label: 'TYPO3' },
       ],
       label: t('nav.libraries'),
     },
-    { href: t('nav.href.alt-text-wizard'), label: t('nav.alt-text-wizard') },
+    { href: t('nav.href.guidelines'), label: t('nav.guidelines') },
   ];
 
   const currentPath = pathname.replace(/\/$/, '') || '/';

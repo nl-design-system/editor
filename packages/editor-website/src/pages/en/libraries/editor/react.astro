@@ -1,5 +1,6 @@
 ---
 import Document from '../../../../layouts/document.astro';
+import LibrariesNavigation from '../../../../components/LibrariesNavigation.astro';
 import PackageLinks from '../../../../components/PackageLinks.astro';
 import reactPackage from '../../../../../../react/package.json';
 import Section from '../../../../components/Section.astro';
@@ -13,6 +14,7 @@ const t = useTranslations('en');
 ---
 
 <Document title={t('react.title')}>
+  <LibrariesNavigation />
   <main>
     <h1 class="nl-heading nl-heading--level-1">{reactFrontmatter['title']}</h1>
     <p class="nl-paragraph">{reactFrontmatter['intro']}</p>
