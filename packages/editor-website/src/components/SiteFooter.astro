@@ -7,7 +7,7 @@ const locale = (Astro.currentLocale ?? 'nl') as Locale;
 const t = useTranslations(locale);
 ---
 
-<footer class="clippy-website-footer">
+<div slot="footer" class="clippy-website-footer">
   <div class="clippy-website-footer__inner">
     <div class="clippy-website-footer__logo">
       <SiteLogo href={t('nav.href.editor')} ariaLabel={t('site.logo.label')} />
@@ -26,7 +26,7 @@ const t = useTranslations(locale);
       <a class="clippy-website-footer__nav-link" href={t('footer.accessibility.href')}>{t('footer.accessibility')}</a>
     </nav>
   </div>
-</footer>
+</div>
 
 <style>
   .clippy-website-footer {

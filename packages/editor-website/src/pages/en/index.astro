@@ -1,109 +1,120 @@
 ---
 import Document from '../../layouts/document.astro';
-import Hero from '../../components/Hero.astro';
 import Section from '../../components/Section.astro';
+import editorPackage from '../../../../editor/package.json';
 import { frontmatter as indexFrontmatter } from '../../../../../docs/en/index.md';
 import { useTranslations } from '../../i18n/translations.ts';
+import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
 
 const t = useTranslations('en');
 ---
 
 <Document title={t('index.title')}>
   <main>
-    <Hero title={indexFrontmatter['title']} intro={indexFrontmatter['intro']}>
-      <Fragment slot="footer">
-        <a
-          class="nl-button nl-button--primary"
-          href="https://github.com/nl-design-system/editor"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <span class="nl-button__label">{t('index.cta.github')}</span>
-        </a>
-        <a
-          class="nl-button nl-button--secondary"
-          href="https://github.com/orgs/nl-design-system/projects/70/views/27"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <span class="nl-button__label">{t('index.cta.roadmap')}</span>
-        </a>
-      </Fragment>
-      <Fragment slot="badges">
-        <a href="https://www.npmjs.com/package/@nl-design-system-community/editor">
-          <img src="https://img.shields.io/npm/v/@nl-design-system-community/editor" alt="npm version" />
-        </a>
-        <a href="https://github.com/nl-design-system/editor">
-          <img src="https://img.shields.io/badge/github-repo-blue?logo=github" alt="GitHub repository" />
-        </a>
-      </Fragment>
-    </Hero>
+    <h1 class="nl-heading nl-heading--level-1">{indexFrontmatter['title']}</h1>
+    <p class="nl-paragraph">{indexFrontmatter['intro']}</p>
+    <div class="utrecht-action-group">
+      <a
+        class="nl-button nl-button--primary"
+        href="https://github.com/nl-design-system/editor"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <span class="nl-button__label">{t('index.cta.github')}</span>
+      </a>
+      <a
+        class="nl-button nl-button--secondary"
+        href="https://github.com/orgs/nl-design-system/projects/70/views/27"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <span class="nl-button__label">{t('index.cta.roadmap')}</span>
+      </a>
+      <a class="nl-button nl-button--primary" href={`https://www.npmjs.com/package/${editorPackage.name}`}>
+        <span class="nl-button__label">npm v{editorPackage.version}</span>
+      </a>
+    </div>
 
     <Section>
-      <div class="clippy-index__preview-bar">
-        <a class="nl-button nl-button--secondary" href="/preview">
-          <span class="nl-button__label">Preview</span>
-        </a>
-      </div>
-      <clippy-editor id="clippy-editor-localhost">
+      <h2 class="nl-heading nl-heading--level-2">What is Clippy?</h2>
+      <p class="nl-paragraph">
+        Clippy is an accessible rich-text editor for Dutch government websites. It is built on Tiptap and ships as Web
+        Components, so you can use it in any framework and any CMS. Its styling comes from NL Design System design
+        tokens, so content in the editor looks the same as on your website.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">What problem does Clippy solve?</h2>
+      <p class="nl-paragraph">
+        Many accessibility problems are introduced while writing: a skipped heading level, an image without alt text, a
+        link that says "click here" or empty paragraphs used for spacing. An automated test only finds these issues once
+        the page is already online.
+      </p>
+      <p class="nl-paragraph">
+        Clippy points these problems out to editors while they write. For every notification, the editor explains what
+        is wrong and how to fix it. This helps you meet WCAG 2.2 level AA and ATAG 2.0.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">How it works</h2>
+      <p class="nl-paragraph">
+        In this example, heading level 3 follows heading level 1 directly. Clippy marks the heading in the gutter and
+        explains the issue below the text.
+      </p>
+      <clippy-context id="clippy-example-heading-level">
         <div slot="value">
-          <h1>NL Design System Editor heading 1</h1>
-          <p>
-            Among the cities that <strong>have</strong>
-            <i>long</i> adorned the <strong><i>comital</i></strong> crown of Holland like so many precious gems, and whose
-            power and wealth provided a firm support for the authority of the Count, Haarlem, as is well known, was one of
-            the most important.
-          </p>
-          <h2>NL Design System Editor heading 2</h2>
-          <p></p>
-          <h4>That is not allowed</h4>
-          <p>
-            Built on the banks of a river of which it made use as
-            <a href="https://example.com">two arms</a> to reach, on the one side, the Haarlemmermeer and the surrounding lands,
-            and on the other the IJ, and through the IJ, the Zuiderzee, it had already early taken advantage of this favourable
-            position to conduct a<a href="https://example.com"> </a>trade that, though seldom extending further than the
-            regions surrounding those inland seas, nonetheless provided it with opportunity.
-          </p>
-          <table>
-            <tbody>
-              <tr>
-                <th>Name</th>
-                <th colspan="3">Description</th>
-              </tr>
-              <tr>
-                <td>Row 1, cell 1</td>
-                <td>Row 1, cell 2</td>
-                <td>Row 1, cell 3</td>
-                <td>Row 1, cell 4</td>
-              </tr>
-            </tbody>
-          </table>
-          <dl>
-            <dt>Foo</dt>
-            <dd>The meaning of foo</dd>
-            <dt>Bar</dt>
-            <dd>The meaning of bar</dd>
-          </dl>
-          <h2>Images</h2>
-          <img alt="Test size 800x400" src="https://placehold.co/800x400" />
-          <h3>Correct list</h3>
-          <ul>
-            <li>Test</li>
-            <li>Test</li>
-            <li>Test</li>
-          </ul>
-          <h3>Incorrect numbered list</h3>
-          <p>1 - Test<br />2 - Test<br />3 - Test</p>
+          <h1>Heading level 1</h1>
+          <h3>Heading level 3</h3>
+          <p>Skipping a level is not allowed!</p>
         </div>
-      </clippy-editor>
+        <div class="clippy-guideline clippy-guideline--negative">
+          <div class="clippy-guideline__description">
+            <h3 class="clippy-guideline__badge clippy-guideline__badge--negative">
+              <Fragment set:html={iconMoodSad} />
+              <span class="clippy-guideline__title">Don't: skip heading levels</span>
+            </h3>
+            <p>
+              Here heading level 3 follows heading level 1, so level 2 is missing. Screen reader users navigate by
+              headings and then miss a level in the structure. Use heading level 2 after heading level 1.
+            </p>
+          </div>
+          <div class="clippy-guideline__example">
+            <div class="clippy-canvas">
+              <div class="clippy-canvas__example">
+                <clippy-content>
+                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+                </clippy-content>
+              </div>
+            </div>
+          </div>
+          <div class="clippy-guideline__validations">
+            <clippy-validations-list></clippy-validations-list>
+          </div>
+        </div>
+      </clippy-context>
+      <p class="nl-paragraph">
+        You can find more examples in the <a class="nl-link" href={t('nav.href.guidelines')}>accessibility guidelines</a
+        >.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Using Clippy</h2>
+      <ul>
+        <li>Try the full editor in the <a class="nl-link" href={t('nav.href.demo')}>demo</a>.</li>
+        <li>
+          Add Clippy to CKEditor 5, Drupal or TYPO3 with the <a class="nl-link" href={t('nav.href.integrations')}
+            >integrations</a
+          >.
+        </li>
+        <li>
+          Use the editor in a React application with the <a class="nl-link" href={t('nav.href.react')}>React wrappers</a
+          >.
+        </li>
+        <li>Configure the toolbar in the <a class="nl-link" href={t('nav.href.configuration')}>configuration</a>.</li>
+      </ul>
     </Section>
   </main>
 </Document>
-
-<style>
-  .clippy-index__preview-bar {
-    display: flex;
-    justify-content: flex-end;
-    padding-block-end: var(--basis-space-block-sm);
-  }
-</style>

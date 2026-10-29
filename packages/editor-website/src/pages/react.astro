@@ -1,6 +1,7 @@
 ---
 import Document from '../layouts/document.astro';
-import Hero from '../components/Hero.astro';
+import PackageLinks from '../components/PackageLinks.astro';
+import reactPackage from '../../../react/package.json';
 import Section from '../components/Section.astro';
 import { frontmatter as reactFrontmatter } from '../../../../docs/react/react.md';
 import { Content as ReactSection1 } from '../../../../docs/react/examples/full-feature-example.md';
@@ -13,16 +14,9 @@ const t = useTranslations('nl');
 
 <Document title={t('react.title')}>
   <main>
-    <Hero title={reactFrontmatter['title']} intro={reactFrontmatter['intro']}>
-      <Fragment slot="badges">
-        <a href="https://www.npmjs.com/package/@nl-design-system-community/editor-react">
-          <img src="https://img.shields.io/npm/v/@nl-design-system-community/editor-react" alt="npm version" />
-        </a>
-        <a href="https://github.com/nl-design-system/editor">
-          <img src="https://img.shields.io/badge/github-repo-blue?logo=github" alt="GitHub repository" />
-        </a>
-      </Fragment>
-    </Hero>
+    <h1 class="nl-heading nl-heading--level-1">{reactFrontmatter['title']}</h1>
+    <p class="nl-paragraph">{reactFrontmatter['intro']}</p>
+    <PackageLinks pkg={reactPackage} />
 
     <Section content={ReactSection1}>
       <ReactEditorExample client:only="react" />

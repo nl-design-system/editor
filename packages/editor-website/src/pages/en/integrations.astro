@@ -1,9 +1,15 @@
 ---
+import ckeditorLogo from '../../assets/logos/ckeditor.svg?raw';
+import drupalLogo from '../../assets/logos/drupal.svg?raw';
+import typo3Logo from '../../assets/logos/typo3.svg?raw';
 import Document from '../../layouts/document.astro';
-import Hero from '../../components/Hero.astro';
 import Section from '../../components/Section.astro';
 import Card from '../../components/Card.astro';
 import CardGroup from '../../components/CardGroup.astro';
+import PackageLinks from '../../components/PackageLinks.astro';
+import ckeditorPackage from '../../../../ckeditor-plugin/package.json';
+import drupalPackage from '../../../../drupal-ckeditor-plugin/package.json';
+import typo3Package from '../../../../typo3-ckeditor-plugin/package.json';
 import { frontmatter as indexFrontmatter } from '../../../../../docs/en/index.md';
 import { useTranslations } from '../../i18n/translations.ts';
 
@@ -12,23 +18,34 @@ const t = useTranslations('en');
 
 <Document title={t('integrations.title')}>
   <main>
-    <Hero title={indexFrontmatter['title']} intro={indexFrontmatter['intro']} />
+    <h1 class="nl-heading nl-heading--level-1">{indexFrontmatter['title']}</h1>
+    <p class="nl-paragraph">{indexFrontmatter['intro']}</p>
 
     <Section>
       <CardGroup>
-        <Card heading="Drupal">
+        <Card heading="Drupal" logo={drupalLogo} id="drupal">
           <p>
             Integrate Clippy into Drupal by adding the <code>ClippyPlugin</code> to the CKEditor configuration. This makes
             accessibility validations available directly to editors.
           </p>
+          <PackageLinks pkg={drupalPackage} />
         </Card>
 
-        <Card heading="CKEditor" href="/ckeditor">
+        <Card heading="CKEditor" logo={ckeditorLogo} href="/ckeditor" footer="View the CKEditor plugin demo">
           <p>
             Clippy Editor provides a CKEditor 5 plugin that lets you add Clippy's accessibility validations to any
-            CKEditor instance. The plugin is available as
-            <code>@nl-design-system-community/ckeditor-plugin</code>.
+            CKEditor instance.
           </p>
+          <PackageLinks pkg={ckeditorPackage} />
+        </Card>
+
+        <Card heading="TYPO3" logo={typo3Logo} id="typo3">
+          <p>
+            Install the Clippy extension in TYPO3. Clippy is then added to every rich text editor, whatever preset it
+            uses, so accessibility validations are available directly to editors.
+          </p>
+          <p>npm package: <code>@nl-design-system-community/typo3-ckeditor-plugin</code></p>
+          <PackageLinks npm={false} pkg={typo3Package} />
         </Card>
       </CardGroup>
     </Section>

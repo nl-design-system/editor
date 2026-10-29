@@ -1,6 +1,5 @@
 ---
 import Document from '../../layouts/document.astro';
-import Hero from '../../components/Hero.astro';
 import Section from '../../components/Section.astro';
 import { frontmatter as guidelinesFrontmatter } from '../../../../../docs/en/guidelines.md';
 import { useTranslations } from '../../i18n/translations.ts';
@@ -11,7 +10,8 @@ const t = useTranslations('en');
 
 <Document title={t('guidelines.title')}>
   <main>
-    <Hero title={guidelinesFrontmatter['title']} intro={guidelinesFrontmatter['intro']} />
+    <h1 class="nl-heading nl-heading--level-1">{guidelinesFrontmatter['title']}</h1>
+    <p class="nl-paragraph">{guidelinesFrontmatter['intro']}</p>
 
     <Section>
       <clippy-context id="editor-1">
