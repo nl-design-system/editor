@@ -1,7 +1,6 @@
 ---
 import Document from '../../layouts/document.astro';
 import Section from '../../components/Section.astro';
-import editorPackage from '../../../../editor/package.json';
 import { frontmatter as indexFrontmatter } from '../../../../../docs/en/index.md';
 import { useTranslations } from '../../i18n/translations.ts';
 import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
@@ -29,9 +28,6 @@ const t = useTranslations('en');
         rel="noreferrer"
       >
         <span class="nl-button__label">{t('index.cta.roadmap')}</span>
-      </a>
-      <a class="nl-button nl-button--primary" href={`https://www.npmjs.com/package/${editorPackage.name}`}>
-        <span class="nl-button__label">npm v{editorPackage.version}</span>
       </a>
     </div>
 
@@ -104,16 +100,7 @@ const t = useTranslations('en');
       <h2 class="nl-heading nl-heading--level-2">Using Clippy</h2>
       <ul>
         <li>Try the full editor in the <a class="nl-link" href={t('nav.href.demo')}>demo</a>.</li>
-        <li>
-          Add Clippy to CKEditor 5, Drupal or TYPO3 with the <a class="nl-link" href={t('nav.href.libraries')}
-            >integrations</a
-          >.
-        </li>
-        <li>
-          Use the editor in a React application with the <a class="nl-link" href={t('nav.href.react')}>React wrappers</a
-          >.
-        </li>
-        <li>Configure the toolbar in the <a class="nl-link" href={t('nav.href.configuration')}>configuration</a>.</li>
+        <li>See every package in the <a class="nl-link" href={t('nav.href.libraries')}>libraries</a>.</li>
       </ul>
     </Section>
   </main>

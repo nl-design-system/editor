@@ -1,7 +1,6 @@
 ---
 import Document from '../layouts/document.astro';
 import Section from '../components/Section.astro';
-import editorPackage from '../../../editor/package.json';
 import { frontmatter as indexFrontmatter } from '../../../../docs/index.md';
 import { useTranslations } from '../i18n/translations.ts';
 import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
@@ -29,9 +28,6 @@ const t = useTranslations('nl');
         rel="noreferrer"
       >
         <span class="nl-button__label">{t('index.cta.roadmap')}</span>
-      </a>
-      <a class="nl-button nl-button--primary" href={`https://www.npmjs.com/package/${editorPackage.name}`}>
-        <span class="nl-button__label">npm v{editorPackage.version}</span>
       </a>
     </div>
 
@@ -106,17 +102,7 @@ const t = useTranslations('nl');
       <h2 class="nl-heading nl-heading--level-2">Clippy gebruiken</h2>
       <ul>
         <li>Probeer de volledige editor uit in de <a class="nl-link" href={t('nav.href.demo')}>demo</a>.</li>
-        <li>
-          Voeg Clippy toe aan CKEditor 5, Drupal of TYPO3 via de <a class="nl-link" href={t('nav.href.libraries')}
-            >integraties</a
-          >.
-        </li>
-        <li>
-          Gebruik de editor in een React-applicatie met de <a class="nl-link" href={t('nav.href.react')}
-            >React-wrappers</a
-          >.
-        </li>
-        <li>Stel de werkbalk in via de <a class="nl-link" href={t('nav.href.configuration')}>configuratie</a>.</li>
+        <li>Bekijk alle pakketten bij de <a class="nl-link" href={t('nav.href.libraries')}>bibliotheken</a>.</li>
       </ul>
     </Section>
   </main>
