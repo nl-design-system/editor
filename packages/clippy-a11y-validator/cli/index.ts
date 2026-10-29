@@ -26,6 +26,7 @@ Arguments:
   path              An .html or .htm file, or a directory to search for them
 
 Options:
+  --allow-warnings  Exit with 0 when no issues of error severity are found
   --fix             Apply the available corrections
   --skip <selector> Drop everything matching this CSS selector before validating,
                     for demo or example markup that is wrong on purpose.
@@ -33,8 +34,9 @@ Options:
   --help, -h        Show this help
 
 Exit codes:
-  0                 No issues found, or --fix was given
-  1                 Issues found
+  0                 No issues above info severity found, or --fix was given
+  1                 Issues of error severity found, or of warning severity
+                    without --allow-warnings
   2                 The arguments or the build output are unusable
 
 Example:
@@ -147,6 +149,7 @@ const collapsedHtmlSnippet = (html: string): string => {
 const { positionals, values } = parseArgs({
   allowPositionals: true,
   options: {
+    'allow-warnings': { default: false, type: 'boolean' },
     fix: { default: false, type: 'boolean' },
     help: { default: false, short: 'h', type: 'boolean' },
     skip: { multiple: true, type: 'string' },
@@ -182,11 +185,14 @@ const results = await collectViolations(files, source, values['fix'], values['sk
 );
 
 let total = 0;
+let failing = 0;
+const passingSeverities = values['allow-warnings'] ? ['info', 'warning'] : ['info'];
 
 for (const { file, violations } of results) {
   if (violations.length === 0) continue;
 
   total += violations.length;
+  failing += violations.filter(({ severity }) => !passingSeverities.includes(severity)).length;
   console.log(relative(process.cwd(), file));
 
   // `explanation` and `solution` are HTML for a host to render, which this output is not.
@@ -198,4 +204,4 @@ for (const { file, violations } of results) {
 }
 
 console.log(`${total} issue(s) found in ${files.length} document(s).`);
-process.exitCode = total > 0 && !values['fix'] ? EXIT_CODE.violationsFound : EXIT_CODE.ok;
+process.exitCode = failing > 0 && !values['fix'] ? EXIT_CODE.violationsFound : EXIT_CODE.ok;

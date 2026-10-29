@@ -172,6 +172,33 @@ describe('validate-html', () => {
     expect(stdout).toContain('4 issue(s) found in 1 document(s).');
   });
 
+  it('exits with 0 when every issue found has info severity', async () => {
+    const { code, stdout } = await run(FIXTURE, '--skip', 'section');
+
+    expect(stdout).toContain('info: PARAGRAPH_SHOULD_NOT_BE_EMPTY');
+    expect(stdout).not.toMatch(/^(error|warning):/m);
+    expect(code).toBe(0);
+  });
+
+  it('exits with 1 on warnings, unless --allow-warnings is given', async () => {
+    const [strict, allowed] = await Promise.all([
+      run(FIXTURE, '--skip', 'section:last-of-type'),
+      run(FIXTURE, '--skip', 'section:last-of-type', '--allow-warnings'),
+    ]);
+
+    expect(strict.stdout).toContain('warning: PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD');
+    expect(strict.stdout).not.toMatch(/^error:/m);
+    expect(strict.code).toBe(1);
+    expect(allowed.code).toBe(0);
+  });
+
+  it('still exits with 1 on errors when --allow-warnings is given', async () => {
+    const { code, stdout } = await run(FIXTURE, '--allow-warnings');
+
+    expect(stdout).toMatch(/^error:/m);
+    expect(code).toBe(1);
+  });
+
   it('refuses a --skip that is not a valid CSS selector', async () => {
     const { code, stderr } = await run(FIXTURE, '--skip', '[[nonsense');
 
