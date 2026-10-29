@@ -1,5 +1,13 @@
 # @nl-design-system-community/editor
 
+## 1.8.2
+
+### Patch Changes
+
+- Updated dependencies [4125932]
+- Updated dependencies [087c648]
+  - @nl-design-system-community/clippy-a11y-validator@0.3.0
+
 ## 1.8.1
 
 ### Patch Changes

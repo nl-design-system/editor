@@ -9,7 +9,7 @@
     "expertteam-digitale-toegankelijkheid",
     "nl-design-system"
   ],
-  "version": "0.3.1",
+  "version": "0.3.2",
   "publishConfig": {
     "access": "public",
     "provenance": true

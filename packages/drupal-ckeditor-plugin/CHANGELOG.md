@@ -1,5 +1,11 @@
 # @nl-design-system-community/drupal-ckeditor-plugin
 
+## 0.3.2
+
+### Patch Changes
+
+- @nl-design-system-community/ckeditor-plugin@0.3.2
+
 ## 0.3.1
 
 ### Patch Changes
