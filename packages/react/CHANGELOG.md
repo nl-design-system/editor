@@ -1,5 +1,11 @@
 # @nl-design-system-community/editor-react
 
+## 1.3.9
+
+### Patch Changes
+
+- @nl-design-system-community/editor@1.8.2
+
 ## 1.3.8
 
 ### Patch Changes

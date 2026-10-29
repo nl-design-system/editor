@@ -1,5 +1,12 @@
 # @nl-design-system-community/clippy-a11y-validator
 
+## 0.3.0
+
+### Minor Changes
+
+- 4125932: `clippy-validate-html` still reports issues of info severity, but no longer exits with 1 when those are the only ones found. Add `--allow-warnings` to also exit with 0 on warnings, failing only on errors.
+- 087c648: Add the `PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_ITALIC` and `PARAGRAPH_SHOULD_NOT_CONTAIN_MULTIPLE_TEXT_BLOCKS` validations, which report a paragraph that is entirely italic and text blocks in one paragraph that are separated only by blank lines.
+
 ## 0.2.1
 
 ### Patch Changes
