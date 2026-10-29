@@ -5,12 +5,14 @@ import {
   convertParagraphsToList,
   decrementPrefix,
   isEntirelyBold,
+  isEntirelyItalic,
   isOrderedListItem,
   isOrderedPrefix,
   isUnorderedPrefix,
   listPrefix,
   resemblesListItem,
   stripListPrefix,
+  textBlocks,
 } from './utils.ts';
 
 describe('listPrefix', () => {
@@ -232,5 +234,45 @@ describe('isEntirelyBold', () => {
 
   it('is false for plain text', () => {
     expect(isEntirelyBoldFor('<p>plain</p>')).toBe(false);
+  });
+});
+
+describe('isEntirelyItalic', () => {
+  it('is true when all text sits inside italic elements', () => {
+    expect(isEntirelyItalic(render('<p><em>a</em> <i>b</i></p>'))).toBe(true);
+  });
+
+  it('is false when text sits outside the italic elements', () => {
+    expect(isEntirelyItalic(render('<p><em>a</em> and more</p>'))).toBe(false);
+  });
+
+  it('is false without visible text', () => {
+    expect(isEntirelyItalic(render('<p><em> </em></p>'))).toBe(false);
+  });
+});
+
+describe('textBlocks', () => {
+  /** The text of each block, so the assertions read as the blocks a visitor sees. */
+  const blockTexts = (html: string): string[] =>
+    textBlocks(render(html)).map((nodes) => nodes.map((node) => node.textContent).join(''));
+
+  it('splits at a run of two or more line breaks', () => {
+    expect(blockTexts('<p>a<br><br>b<br><br><br>c</p>')).toEqual(['a', 'b', 'c']);
+  });
+
+  it('keeps a single line break inside its block', () => {
+    expect(textBlocks(render('<p>a<br>b</p>'))).toHaveLength(1);
+  });
+
+  it('treats whitespace between line breaks as part of the blank line', () => {
+    expect(blockTexts('<p>a<br> <br>b</p>')).toEqual(['a', 'b']);
+  });
+
+  it('drops blocks without visible text', () => {
+    expect(blockTexts('<p><br><br>a<br><br> </p>')).toEqual(['a']);
+  });
+
+  it('returns no blocks for an empty paragraph', () => {
+    expect(textBlocks(render('<p></p>'))).toEqual([]);
   });
 });
