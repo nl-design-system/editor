@@ -1,11 +1,17 @@
 ---
 import Document from '../../layouts/document.astro';
+import PackageLinks from '../../components/PackageLinks.astro';
+import ckeditorPackage from '../../../../ckeditor-plugin/package.json';
 ---
 
 <Document title="NL Design System - CKEditor">
   <main>
     <div class="ma-page-section ma-page-section--with-space">
       <h1>Clippy CKEditor plugin</h1>
+      <p class="nl-paragraph">
+        Een CKEditor 5-plugin waarmee je de toegankelijkheidsvalidaties van Clippy toevoegt aan elke CKEditor-instantie.
+      </p>
+      <PackageLinks pkg={ckeditorPackage} />
       <div id="ck-editor"></div>
     </div>
   </main>

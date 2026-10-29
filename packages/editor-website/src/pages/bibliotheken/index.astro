@@ -7,48 +7,63 @@ import Section from '../../components/Section.astro';
 import Card from '../../components/Card.astro';
 import CardGroup from '../../components/CardGroup.astro';
 import PackageLinks from '../../components/PackageLinks.astro';
+import editorPackage from '../../../../editor/package.json';
+import a11yValidatorPackage from '../../../../clippy-a11y-validator/package.json';
+import altTextWizardPackage from '../../../../clippy-alt-text-wizard/package.json';
 import ckeditorPackage from '../../../../ckeditor-plugin/package.json';
 import drupalPackage from '../../../../drupal-ckeditor-plugin/package.json';
 import typo3Package from '../../../../typo3-ckeditor-plugin/package.json';
-import { frontmatter as indexFrontmatter } from '../../../../../docs/index.md';
 import { useTranslations } from '../../i18n/translations.ts';
 
 const t = useTranslations('nl');
 ---
 
-<Document title={t('integrations.title')}>
+<Document title={t('libraries.title')}>
   <main>
-    <h1 class="nl-heading nl-heading--level-1">{indexFrontmatter['title']}</h1>
-    <p class="nl-paragraph">{indexFrontmatter['intro']}</p>
+    <h1 class="nl-heading nl-heading--level-1">Bibliotheken</h1>
+    <p class="nl-paragraph">
+      Clippy bestaat uit losse pakketten die je apart of samen gebruikt. Kies de pakketten die passen bij jouw website
+      of CMS.
+    </p>
 
     <Section>
       <CardGroup>
-        <Card heading="Drupal" logo={drupalLogo} id="drupal">
+        <Card heading="Editor" href={t('nav.href.library.editor')}>
           <p>
-            Integreer Clippy in Drupal door de <code>ClippyPlugin</code> toe te voegen aan de CKEditor-configuratie. Zo zijn
-            de toegankelijkheidsvalidaties direct beschikbaar voor redacteurs.
+            De toegankelijke rich-text editor als Web Components. Werkt in elk framework, ook als React-component, en
+            controleert de inhoud terwijl redacteuren schrijven.
           </p>
-          <PackageLinks pkg={drupalPackage} />
+          <PackageLinks pkg={editorPackage} />
         </Card>
 
-        <Card
-          heading="CKEditor"
-          logo={ckeditorLogo}
-          href="/bibliotheken/ckeditor"
-          footer="Bekijk de CKEditor-plugin demo"
-        >
+        <Card heading="Toegankelijkheidsvalidator" href={t('nav.href.library.a11y-validator')}>
           <p>
-            Clippy Editor biedt een CKEditor 5-plugin waarmee je de toegankelijkheidsvalidaties van Clippy kunt
-            toevoegen aan elke CKEditor-instantie.
+            Controleert HTML op de contentrichtlijnen van NL Design System, in de editor en via de command line tegen
+            gepubliceerde HTML.
+          </p>
+          <PackageLinks pkg={a11yValidatorPackage} />
+        </Card>
+
+        <Card heading="Alt-tekst wizard" href={t('nav.href.alt-text-wizard')}>
+          <p>Een stapsgewijze wizard die auteurs helpt bij het schrijven van toegankelijke alt-teksten.</p>
+          <PackageLinks pkg={altTextWizardPackage} />
+        </Card>
+
+        <Card heading="CKEditor" logo={ckeditorLogo} href={t('nav.href.library.ckeditor')}>
+          <p>
+            Een CKEditor 5-plugin waarmee je de toegankelijkheidsvalidaties van Clippy toevoegt aan elke
+            CKEditor-instantie.
           </p>
           <PackageLinks pkg={ckeditorPackage} />
         </Card>
 
-        <Card heading="TYPO3" logo={typo3Logo} id="typo3">
-          <p>
-            Installeer de Clippy-extensie in TYPO3. Clippy wordt dan toegevoegd aan elke rich-text editor, welke preset
-            die ook gebruikt, zodat de toegankelijkheidsvalidaties direct beschikbaar zijn voor redacteuren.
-          </p>
+        <Card heading="Drupal" logo={drupalLogo} href={t('nav.href.library.drupal')}>
+          <p>Een Drupal-module die Clippy toevoegt aan de CKEditor van Drupal.</p>
+          <PackageLinks pkg={drupalPackage} />
+        </Card>
+
+        <Card heading="TYPO3" logo={typo3Logo} href={t('nav.href.library.typo3')}>
+          <p>Een TYPO3-extensie die Clippy toevoegt aan elke rich-text editor.</p>
           <PackageLinks pkg={typo3Package} />
         </Card>
       </CardGroup>

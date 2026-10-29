@@ -1,0 +1,86 @@
+---
+import Document from '../../../layouts/document.astro';
+import Section from '../../../components/Section.astro';
+import CodeBlock from '../../../components/CodeBlock.astro';
+import PackageLinks from '../../../components/PackageLinks.astro';
+import a11yValidatorPackage from '../../../../../clippy-a11y-validator/package.json';
+import { useTranslations } from '../../../i18n/translations.ts';
+
+const t = useTranslations('en');
+---
+
+<Document title={t('library.a11y-validator.title')}>
+  <main>
+    <h1 class="nl-heading nl-heading--level-1">Accessibility validator</h1>
+    <p class="nl-paragraph">
+      Checks HTML content against the content guidelines of NL Design System: headings, paragraphs, lists, links,
+      images, tables and description lists. Each issue comes with a link to the guideline and, where the fix is
+      unambiguous, a correction the validator can apply itself.
+    </p>
+    <p class="nl-paragraph">
+      The validator checks content in the editor while an author writes, and runs from the command line against
+      published HTML.
+    </p>
+    <PackageLinks pkg={a11yValidatorPackage} />
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Installation</h2>
+      <CodeBlock code={`npm install ${a11yValidatorPackage.name}`} />
+      <p class="nl-paragraph">
+        The command line tool runs the validator in a browser, so it also needs Playwright and Chromium:
+      </p>
+      <CodeBlock code={`npm install --save-dev playwright\nnpx playwright install chromium`} />
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Command line</h2>
+      <CodeBlock code="npx clippy-validate-html <path...> [options]" />
+      <p class="nl-paragraph">
+        Each path is an <code>.html</code> or <code>.htm</code> file, or a directory to search for them.
+      </p>
+      <table class="utrecht-table">
+        <thead class="utrecht-table__header">
+          <tr class="utrecht-table__row">
+            <th class="utrecht-table__header-cell" scope="col">Option</th>
+            <th class="utrecht-table__header-cell" scope="col">Description</th>
+          </tr>
+        </thead>
+        <tbody class="utrecht-table__body">
+          <tr class="utrecht-table__row">
+            <td class="utrecht-table__cell"><code>--allow-warnings</code></td>
+            <td class="utrecht-table__cell"
+              >Exit with <code>0</code> when no issues of <code>error</code> severity are found.</td
+            >
+          </tr>
+          <tr class="utrecht-table__row">
+            <td class="utrecht-table__cell"><code>--fix</code></td>
+            <td class="utrecht-table__cell">
+              Apply the available corrections. The files on disk stay untouched: the output shows the markup as it is
+              after correcting.
+            </td>
+          </tr>
+          <tr class="utrecht-table__row">
+            <td class="utrecht-table__cell"><code>--skip &lt;selector&gt;</code></td>
+            <td class="utrecht-table__cell">
+              Remove everything matching this CSS selector before validating, e.g. demo markup that is wrong on purpose.
+              Repeat the option for more selectors.
+            </td>
+          </tr>
+          <tr class="utrecht-table__row">
+            <td class="utrecht-table__cell"><code>--help</code>, <code>-h</code></td>
+            <td class="utrecht-table__cell">Show the usage.</td>
+          </tr>
+        </tbody>
+      </table>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Guidelines</h2>
+      <p class="nl-paragraph">
+        You can find every rule with examples in the <a class="nl-link" href={t('nav.href.guidelines')}
+          >accessibility guidelines</a
+        >.
+      </p>
+    </Section>
+  </main>
+</Document>

@@ -1,0 +1,86 @@
+---
+import Document from '../../layouts/document.astro';
+import Section from '../../components/Section.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
+import PackageLinks from '../../components/PackageLinks.astro';
+import a11yValidatorPackage from '../../../../clippy-a11y-validator/package.json';
+import { useTranslations } from '../../i18n/translations.ts';
+
+const t = useTranslations('nl');
+---
+
+<Document title={t('library.a11y-validator.title')}>
+  <main>
+    <h1 class="nl-heading nl-heading--level-1">Toegankelijkheidsvalidator</h1>
+    <p class="nl-paragraph">
+      Controleert HTML op de contentrichtlijnen van NL Design System: koppen, alinea's, lijsten, links, afbeeldingen,
+      tabellen en definitielijsten. Bij elke melding hoort een link naar de richtlijn en, waar de oplossing eenduidig
+      is, een correctie die de validator zelf kan toepassen.
+    </p>
+    <p class="nl-paragraph">
+      De validator controleert de inhoud in de editor terwijl een redacteur schrijft, en draait via de command line
+      tegen gepubliceerde HTML.
+    </p>
+    <PackageLinks pkg={a11yValidatorPackage} />
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Installeren</h2>
+      <CodeBlock code={`npm install ${a11yValidatorPackage.name}`} />
+      <p class="nl-paragraph">
+        De command line tool draait de validator in een browser en heeft daarom ook Playwright en Chromium nodig:
+      </p>
+      <CodeBlock code={`npm install --save-dev playwright\nnpx playwright install chromium`} />
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Command line</h2>
+      <CodeBlock code="npx clippy-validate-html <pad...> [opties]" />
+      <p class="nl-paragraph">
+        Elk pad is een <code>.html</code>- of <code>.htm</code>-bestand, of een map om in te zoeken.
+      </p>
+      <table class="utrecht-table">
+        <thead class="utrecht-table__header">
+          <tr class="utrecht-table__row">
+            <th class="utrecht-table__header-cell" scope="col">Optie</th>
+            <th class="utrecht-table__header-cell" scope="col">Beschrijving</th>
+          </tr>
+        </thead>
+        <tbody class="utrecht-table__body">
+          <tr class="utrecht-table__row">
+            <td class="utrecht-table__cell"><code>--allow-warnings</code></td>
+            <td class="utrecht-table__cell"
+              >Sluit af met <code>0</code> als er geen fouten van niveau <code>error</code> zijn.</td
+            >
+          </tr>
+          <tr class="utrecht-table__row">
+            <td class="utrecht-table__cell"><code>--fix</code></td>
+            <td class="utrecht-table__cell">
+              Pas de beschikbare correcties toe. De bestanden blijven ongewijzigd: de uitvoer toont de opmaak na het
+              corrigeren.
+            </td>
+          </tr>
+          <tr class="utrecht-table__row">
+            <td class="utrecht-table__cell"><code>--skip &lt;selector&gt;</code></td>
+            <td class="utrecht-table__cell">
+              Sla alles over dat overeenkomt met deze CSS-selector, bijvoorbeeld voorbeeldopmaak die expres fout is.
+              Herhaal de optie voor meer selectors.
+            </td>
+          </tr>
+          <tr class="utrecht-table__row">
+            <td class="utrecht-table__cell"><code>--help</code>, <code>-h</code></td>
+            <td class="utrecht-table__cell">Toon het gebruik.</td>
+          </tr>
+        </tbody>
+      </table>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Richtlijnen</h2>
+      <p class="nl-paragraph">
+        Alle regels met voorbeelden vind je bij de <a class="nl-link" href={t('nav.href.guidelines')}
+          >toegankelijkheidsrichtlijnen</a
+        >.
+      </p>
+    </Section>
+  </main>
+</Document>

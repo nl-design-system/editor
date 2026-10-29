@@ -24,13 +24,13 @@ export const getNavigationItems = (locale: Locale, pathname: string): Navigation
     { href: t('nav.href.guidelines'), label: t('nav.guidelines') },
     { href: t('nav.href.react'), label: t('nav.react') },
     {
-      href: t('nav.href.integrations'),
+      href: t('nav.href.libraries'),
       items: [
         { href: '/bibliotheken/ckeditor', label: 'CKEditor' },
-        { href: `${t('nav.href.integrations')}#drupal`, label: 'Drupal' },
-        { href: `${t('nav.href.integrations')}#typo3`, label: 'TYPO3' },
+        { href: `${t('nav.href.libraries')}#drupal`, label: 'Drupal' },
+        { href: `${t('nav.href.libraries')}#typo3`, label: 'TYPO3' },
       ],
-      label: t('nav.integrations'),
+      label: t('nav.libraries'),
     },
     { href: t('nav.href.alt-text-wizard'), label: t('nav.alt-text-wizard') },
   ];

@@ -1,0 +1,50 @@
+---
+import Document from '../../../layouts/document.astro';
+import Section from '../../../components/Section.astro';
+import CodeBlock from '../../../components/CodeBlock.astro';
+import PackageLinks from '../../../components/PackageLinks.astro';
+import editorPackage from '../../../../../editor/package.json';
+import reactPackage from '../../../../../react/package.json';
+import { useTranslations } from '../../../i18n/translations.ts';
+
+const t = useTranslations('nl');
+---
+
+<Document title={t('library.editor.title')}>
+  <main>
+    <h1 class="nl-heading nl-heading--level-1">Editor</h1>
+    <p class="nl-paragraph">
+      De toegankelijke rich-text editor als Web Components. De editor werkt in elk framework en controleert de inhoud
+      terwijl redacteuren schrijven.
+    </p>
+    <PackageLinks pkg={editorPackage} />
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Installeren</h2>
+      <CodeBlock code={`npm install ${editorPackage.name}`} />
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Gebruiken</h2>
+      <p class="nl-paragraph">Importeer de Web Components en het thema:</p>
+      <CodeBlock code={`import '${editorPackage.name}';\nimport '${editorPackage.name}/theme.css';`} />
+      <p class="nl-paragraph">Plaats de editor op de pagina. De beginwaarde komt in het <code>value</code>-slot:</p>
+      <CodeBlock
+        code={`<clippy-editor>\n  <div slot="value">\n    <p>Inhoud hier...</p>\n  </div>\n</clippy-editor>`}
+      />
+      <p class="nl-paragraph">
+        Stel de werkbalk in via de <a class="nl-link" href={t('nav.href.configuration')}>configuratie</a>.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">React</h2>
+      <p class="nl-paragraph">
+        Gebruik je React? Dan zijn de Web Components ook beschikbaar als React-componenten. Bekijk de
+        <a class="nl-link" href={t('nav.href.react')}>React-voorbeelden</a>.
+      </p>
+      <CodeBlock code={`npm install ${reactPackage.name}`} />
+      <PackageLinks pkg={reactPackage} />
+    </Section>
+  </main>
+</Document>

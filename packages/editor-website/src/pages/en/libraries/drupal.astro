@@ -1,0 +1,38 @@
+---
+import Document from '../../../layouts/document.astro';
+import Section from '../../../components/Section.astro';
+import PackageLinks from '../../../components/PackageLinks.astro';
+import drupalPackage from '../../../../../drupal-ckeditor-plugin/package.json';
+import { useTranslations } from '../../../i18n/translations.ts';
+
+const t = useTranslations('en');
+---
+
+<Document title={t('library.drupal.title')}>
+  <main>
+    <h1 class="nl-heading nl-heading--level-1">Drupal</h1>
+    <p class="nl-paragraph">
+      Integrate Clippy into Drupal by adding the <code>ClippyPlugin</code> to the CKEditor configuration. This makes the accessibility
+      validations immediately available to editors.
+    </p>
+    <PackageLinks pkg={drupalPackage} />
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">What the module adds</h2>
+      <ul>
+        <li>Accessibility feedback in the editor.</li>
+        <li>An alt-text wizard button for images, in text formats with the image plugin.</li>
+        <li>The design system classes CKEditor writes into the content.</li>
+      </ul>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Changing the classes</h2>
+      <p class="nl-paragraph">
+        Go to <em>Configuration → Content authoring → Text formats and editors</em>, edit a CKEditor 5 format and open
+        the <strong>Content classes</strong> tab. Every class can be changed, and clearing a field outputs that element without
+        a class.
+      </p>
+    </Section>
+  </main>
+</Document>

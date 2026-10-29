@@ -1,0 +1,38 @@
+---
+import Document from '../../layouts/document.astro';
+import Section from '../../components/Section.astro';
+import PackageLinks from '../../components/PackageLinks.astro';
+import drupalPackage from '../../../../drupal-ckeditor-plugin/package.json';
+import { useTranslations } from '../../i18n/translations.ts';
+
+const t = useTranslations('nl');
+---
+
+<Document title={t('library.drupal.title')}>
+  <main>
+    <h1 class="nl-heading nl-heading--level-1">Drupal</h1>
+    <p class="nl-paragraph">
+      Integreer Clippy in Drupal door de <code>ClippyPlugin</code> toe te voegen aan de CKEditor-configuratie. Zo zijn de
+      toegankelijkheidsvalidaties direct beschikbaar voor redacteurs.
+    </p>
+    <PackageLinks pkg={drupalPackage} />
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Wat de module toevoegt</h2>
+      <ul>
+        <li>Toegankelijkheidsmeldingen in de editor.</li>
+        <li>Een knop voor de alt-tekst wizard bij afbeeldingen, in tekstformaten met de afbeeldingsplugin.</li>
+        <li>De classes van het design system die CKEditor in de inhoud schrijft.</li>
+      </ul>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Classes aanpassen</h2>
+      <p class="nl-paragraph">
+        Ga naar <em>Configuration → Content authoring → Text formats and editors</em>, bewerk een CKEditor
+        5-tekstformaat en open het tabblad <strong>Content classes</strong>. Elke class is aan te passen. Laat je een
+        veld leeg, dan krijgt dat element geen class.
+      </p>
+    </Section>
+  </main>
+</Document>
