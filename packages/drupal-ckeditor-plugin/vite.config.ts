@@ -16,6 +16,12 @@ const TOKENS_CSS = [
   '@nl-design-system-candidate/button-css/button.css',
 ];
 
+const PAGE_REVIEW_THEME_CSS = [
+  editorRequire.resolve('@nl-design-system-community/ma-design-tokens/dist/theme.css'),
+  editorRequire.resolve('@utrecht/design-tokens/dist/theme.css'),
+  resolve(import.meta.dirname, '../editor/theme.css'),
+];
+
 function copyModuleAssets(): Plugin {
   return {
     name: 'copy-module-assets',
@@ -24,17 +30,19 @@ function copyModuleAssets(): Plugin {
       // The Drupal module itself (info/libraries/plugin YAML, PHP, config schema).
       cpSync(resolve(import.meta.dirname, 'module'), moduleOut, { recursive: true });
 
-      // The editable content classes, so the PHP settings form and plugin share defaults
-      copyFileSync(
-        packageRequire.resolve('@nl-design-system-community/ckeditor-plugin/content-classes.json'),
-        resolve(moduleOut, 'content-classes.json'),
-      );
       // Ship the editor's clippy theme tokens (--clippy-*) as the module stylesheet.
       copyFileSync(resolve(import.meta.dirname, '../editor/theme.css'), resolve(moduleOut, 'clippy.css'));
 
       // TEMP - inject tokens from --basis / --utrecht --nl; to be discussed
       const tokenString = TOKENS_CSS.map((spec) => readFileSync(editorRequire.resolve(spec), 'utf8')).join('\n');
       writeFileSync(resolve(moduleOut, 'clippy-tokens.css'), tokenString);
+
+      copyFileSync(
+        packageRequire.resolve('@nl-design-system-community/editor/page-review'),
+        resolve(moduleOut, 'page-review.js'),
+      );
+      const pageReviewCss = PAGE_REVIEW_THEME_CSS.map((path) => readFileSync(path, 'utf8')).join('\n');
+      writeFileSync(resolve(moduleOut, 'clippy-page-review.css'), pageReviewCss);
     },
   };
 }

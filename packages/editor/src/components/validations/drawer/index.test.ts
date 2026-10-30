@@ -194,3 +194,101 @@ describe('<clippy-validations-dialog>', () => {
     expect(drawerEl?.shadowRoot?.querySelector('clippy-validation-filters')).not.toHaveAttribute('hidden');
   });
 });
+
+describe('<clippy-validations-drawer overlay>', () => {
+  const IDENTIFIER = 'page-review-test';
+  let drawer: HTMLElementTagNameMap['clippy-validations-drawer'];
+  let content: HTMLElement;
+
+  const openDrawer = (mode = 'validations') =>
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { identifier: IDENTIFIER, mode } }),
+    );
+
+  const paragraphViolationsMap = (): Map<Range, Violation> => {
+    const range = document.createRange();
+    range.selectNode(content.querySelector('p')!);
+    return new Map([[range, violation({ range })]]);
+  };
+
+  beforeEach(async () => {
+    document.documentElement.lang = 'nl';
+    content = document.createElement('main');
+    content.innerHTML = '<h1>Titel</h1><p></p>';
+    drawer = document.createElement('clippy-validations-drawer');
+    drawer.overlay = true;
+    drawer.identifier = IDENTIFIER;
+    drawer.htmlDocument = content;
+    drawer.violationsMap = paragraphViolationsMap();
+    document.body.replaceChildren(content, drawer);
+    await drawer.updateComplete;
+  });
+
+  afterEach(() => {
+    document.body.replaceChildren();
+  });
+
+  it('stays open when an item is focused', async () => {
+    openDrawer();
+    await expect.element(page.getByTestId('clippy-validations-drawer')).not.toHaveAttribute('hidden');
+
+    const [range] = drawer.violationsMap!.keys();
+    drawer.dispatchEvent(
+      new CustomEvent(CustomEvents.FOCUS_NODE, { bubbles: true, composed: true, detail: { range } }),
+    );
+    await drawer.updateComplete;
+
+    await expect.element(page.getByTestId('clippy-validations-drawer')).not.toHaveAttribute('hidden');
+  });
+
+  it('keeps showing the opened group when re-validation creates new ranges', async () => {
+    const violationsOn = (...elements: Element[]): Map<Range, Violation> =>
+      new Map(
+        elements.map((element) => {
+          const range = document.createRange();
+          range.selectNode(element);
+          return [range, violation({ range })];
+        }),
+      );
+    const heading = content.querySelector('h1')!;
+    const paragraph = content.querySelector('p')!;
+    drawer.violationsMap = violationsOn(heading, paragraph);
+    await drawer.updateComplete;
+    const [, paragraphRange] = drawer.violationsMap.keys();
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_VALIDATION_GROUP, {
+        detail: { identifier: IDENTIFIER, ranges: [paragraphRange] },
+      }),
+    );
+
+    drawer.violationsMap = violationsOn(heading, paragraph);
+
+    const items = () => [
+      ...(drawer.shadowRoot
+        ?.querySelector('clippy-validations-list')
+        ?.shadowRoot?.querySelectorAll('clippy-validation-item') ?? []),
+    ];
+    const renderedRanges = () => items().map((item) => item.range);
+    await expect.poll(() => renderedRanges().length === 1 && renderedRanges()[0] !== paragraphRange).toBe(true);
+    expect(renderedRanges()[0]?.intersectsNode(paragraph)).toBe(true);
+  });
+
+  it('announces when it opens and closes', async () => {
+    const toggles: unknown[] = [];
+    const record = (event: Event) => toggles.push((event as CustomEvent).detail);
+    globalThis.addEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, record);
+
+    openDrawer();
+    await drawer.updateComplete;
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.CLOSE_VALIDATIONS_DRAWER, { detail: { identifier: IDENTIFIER } }),
+    );
+    await drawer.updateComplete;
+    globalThis.removeEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, record);
+
+    expect(toggles).toEqual([
+      { identifier: IDENTIFIER, open: true },
+      { identifier: IDENTIFIER, open: false },
+    ]);
+  });
+});

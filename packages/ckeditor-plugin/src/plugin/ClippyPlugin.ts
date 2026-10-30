@@ -5,31 +5,16 @@ import {
 } from '@nl-design-system-community/editor/accessibility-notifications';
 import { setDarkColorScheme, watchHostColorScheme } from '@nl-design-system-community/editor/color-scheme';
 import { EditorContentWrapper, EditorWrapper } from '@nl-design-system-community/editor/editor-wrapper';
-import {
-  CustomEvents,
-  type FocusNodeEvent,
-  type Gutter,
-  validationInteractionMode,
-} from '@nl-design-system-community/editor/gutter';
-import {
-  debouncedValidate,
-  runValidation,
-  type Validation,
-  type ViolationsMap,
-} from '@nl-design-system-community/editor/validators';
+import { CustomEvents, type Gutter, validationInteractionMode } from '@nl-design-system-community/editor/gutter';
+import { ClippyHub } from '@nl-design-system-community/editor/hub';
+import { type Validation, type Violation, type ViolationsMap } from '@nl-design-system-community/editor/validators';
 import { Plugin, View, type Locale, type ObservableChangeEvent, type ToolbarView } from 'ckeditor5';
 import { adoptClippyStyles } from '../styles/';
 import { findMatchingCorrection, findOccurrenceIndex, runValidations } from '../utils/correction.ts';
-import { ContentClasses } from './ContentClasses.ts';
 
 export class ClippyPlugin extends Plugin {
   static get pluginName() {
     return 'ClippyPlugin' as const;
-  }
-
-  static get requires() {
-    // Ensure the design-system classes are applied to CKEditor content
-    return [ContentClasses] as const;
   }
 
   private _editableEl: HTMLElement | null = null;
@@ -38,6 +23,7 @@ export class ClippyPlugin extends Plugin {
   private _gutterEl: Gutter | null = null;
   private _drawerEl: ValidationsDrawer | null = null;
   private _notificationsView: View | null = null;
+  private _hub: ClippyHub | null = null;
   private _violationsMap: ViolationsMap = new Map();
   /** The validations this editor runs. Unset means every core validation. */
   private readonly _validations: readonly Validation[] | undefined;
@@ -53,8 +39,8 @@ export class ClippyPlugin extends Plugin {
     this._observeSourceEditingMode();
     this.editor.on('ready', () => {
       this._setupUI();
-      this._validate();
-      this.editor.model.document.on('change:data', () => this._debouncedValidate());
+      this._hub?.validate();
+      this.editor.model.document.on('change:data', () => this._hub?.scheduleValidation());
     });
   }
 
@@ -84,18 +70,30 @@ export class ClippyPlugin extends Plugin {
 
     const gutter = document.createElement('clippy-validations-gutter') as Gutter;
     gutter.mode = validationInteractionMode.DRAWER;
-    gutter.identifier = this._identifier;
     contentWrapper.append(gutter);
     this._gutterEl = gutter;
 
     const drawer = document.createElement('clippy-validations-drawer') as ValidationsDrawer;
-    drawer.identifier = this._identifier;
     wrapper.append(drawer);
     this._drawerEl = drawer;
 
-    this._editorEl.addEventListener(CustomEvents.FOCUS_NODE, this._handleFocusNode);
-
     this._addNotificationsToolbarItem();
+
+    this._hub = new ClippyHub({
+      adaptViolations: (violationsMap) => {
+        this._violationsMap = violationsMap;
+        return this._patchCorrectionsForCKEditor(violationsMap);
+      },
+      focusViolation: this._focusViolation,
+      identifier: this._identifier,
+      target: this._editableEl,
+      validations: this._validations,
+    });
+    this._hub.connect({
+      drawer,
+      gutter,
+      trigger: this._notificationsView?.element as AccessibilityNotifications | null,
+    });
   }
 
   private _registerNotificationsToolbarItem(): void {
@@ -149,59 +147,6 @@ export class ClippyPlugin extends Plugin {
     );
   }
 
-  private _validate(): void {
-    if (!this._editableEl) {
-      return;
-    }
-
-    runValidation(this._editableEl, this._validations, (violationsMap: ViolationsMap) => {
-      this._violationsMap = violationsMap;
-      this._render();
-    });
-  }
-
-  private _debouncedValidate(): void {
-    if (!this._editableEl) {
-      return;
-    }
-
-    debouncedValidate(this._editableEl, this._validations, (violationsMap: ViolationsMap) => {
-      this._violationsMap = violationsMap;
-      this._render();
-    });
-  }
-
-  private _render(): void {
-    if (!this._gutterEl || !this._editableEl) {
-      return;
-    }
-
-    const violationsMap = this._patchCorrectionsForCKEditor(this._violationsMap);
-    this._gutterEl.violationsMap = violationsMap;
-    this._renderNotifications(violationsMap);
-  }
-
-  private _renderNotifications(violationsMap: ViolationsMap): void {
-    if (!this._editableEl) {
-      return;
-    }
-
-    // Feed the toolbar button its validation count, `element` is created lazily by CKEditor when the toolbar item is rendered
-    const button = this._notificationsView?.element as AccessibilityNotifications | null;
-    if (button) {
-      button.identifier = this._identifier;
-      button.violationsMap = violationsMap;
-    }
-
-    // Forward the CKEditor DOM element and its validations so the drawer can match
-    // intersecting ranges to the correct validations. Both must reference the
-    // same DOM tree the ranges were created against for the intersection to work.
-    if (this._drawerEl) {
-      this._drawerEl.htmlDocument = this._editableEl;
-      this._drawerEl.violationsMap = violationsMap;
-    }
-  }
-
   private _patchCorrectionsForCKEditor(violationsMap: ViolationsMap): ViolationsMap {
     for (const [range, violation] of violationsMap) {
       const { correction, rule } = violation;
@@ -247,8 +192,10 @@ export class ClippyPlugin extends Plugin {
     };
   }
 
-  private readonly _handleFocusNode = (event: Event) => {
-    const { range } = (event as FocusNodeEvent).detail;
+  private readonly _focusViolation = ({ range }: Violation) => {
+    if (!range) {
+      return;
+    }
     const domConverter = this.editor.editing.view.domConverter;
 
     // from DOM to virtual view layer, without CKEditor injected DOM artifacts.
@@ -266,7 +213,7 @@ export class ClippyPlugin extends Plugin {
   };
 
   override destroy(): void {
-    this._editorEl?.removeEventListener(CustomEvents.FOCUS_NODE, this._handleFocusNode);
+    this._hub?.destroy();
     this._unwatchColorScheme?.();
     this._drawerEl?.remove();
     this._gutterEl?.remove();

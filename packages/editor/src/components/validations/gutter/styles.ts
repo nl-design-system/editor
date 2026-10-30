@@ -12,6 +12,19 @@ export default css`
     pointer-events: none;
   }
 
+  :host([overlay]) {
+    background: none !important;
+    block-size: auto;
+    inset: auto;
+  }
+
+  :host([overlay]) .clippy-validations-gutter__list {
+    inset-block: 0;
+    inset-inline-end: 0;
+    inset-inline-start: calc(-1 * min(var(--_clippy-gutter-rail-inline-size), var(--_clippy-gutter-inline-space, 0px)));
+    position: absolute;
+  }
+
   .clippy-validations-gutter__list {
     list-style: none;
     margin-block: var(--basis-space-none);

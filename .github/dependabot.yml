@@ -77,7 +77,6 @@ updates:
         patterns:
           - "@testing-library/*"
           - "@vitest/*"
-          - "jsdom"
           - "vitest"
       lint-toolchain:
         applies-to: "version-updates"

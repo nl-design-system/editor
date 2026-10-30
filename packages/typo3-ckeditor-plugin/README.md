@@ -21,10 +21,30 @@ editor:
       - '@nl-design-system-community/clippy/clippy.js'
 ```
 
-| CKEditor plugin  | Purpose                                                     |
-| ---------------- | ----------------------------------------------------------- |
-| `ClippyPlugin`   | Accessibility feedback in the editor.                       |
-| `ContentClasses` | The design-system classes CKEditor writes into the content. |
+| CKEditor plugin | Purpose                               |
+| --------------- | ------------------------------------- |
+| `ClippyPlugin`  | Accessibility feedback in the editor. |
+
+## Page review
+
+Backend users who are logged in see a floating Page review button on frontend pages. The `InjectPageReview` frontend middleware adds the Page review script and stylesheet from `Resources/Public/PageReview/` to the `<head>` of HTML responses, but only when a backend user is authenticated in that request. The Admin Panel isn't needed.
+
+The middleware changes the response after TYPO3 has rendered or loaded the page from cache, so the page cache never contains the script and visitors who aren't logged in to the backend never get it.
+
+### Why theme issues show up
+
+Page review checks the Review root, the page's main content region, and not only the HTML written in the rich text editor. The heading structure and the other overviews only make sense across the whole region, which combines several content elements with headings from the theme, such as the page title. As a result, Page review can report issues in theme markup that an editor can't fix.
+
+## Settings
+
+Set these for the whole installation under _Admin Tools → Settings → Extension Configuration → clippy_. Clearing _Add Clippy to every rich text editor_ only switches off the CKEditor integration, and clearing _Show Page review on frontend pages_ only switches off Page review.
+
+| Extension configuration              | Default             | Description                                                                                                                                                                |
+| ------------------------------------ | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Add Clippy to every rich text editor | on                  | Turns Clippy in CKEditor on or off.                                                                                                                                        |
+| Show Page review on frontend pages   | on                  | Turns Page review on or off for every backend user.                                                                                                                        |
+| Review root selector                 | `main, [role=main]` | The CSS selector of the element Page review validates. When nothing matches, Page review falls back to `main, [role=main]` and then to `body`, so it never fails silently. |
+| Always show gutter markers           | on                  | Shows the gutter markers as soon as the page loads. When off, they only show while the Page review drawer is open.                                                         |
 
 ## The ckeditor5 shim
 
@@ -86,13 +106,3 @@ vendor/bin/typo3 extension:setup
 Upload the zip under _Admin Tools → Extensions → Upload Extension_, then activate **Clippy** in the extension list. TYPO3 derives the extension key from the file name, so keep the `clippy_` prefix when renaming the file.
 
 TYPO3 activates a newly uploaded extension in the request that unpacked it, which it cannot do: the upload fails with `Extension clippy is not available` and is deleted again. This is TYPO3's own behaviour, unrelated to this extension, and unchanged from 12.4 through 14. Uploading and activating separately does work, so either turn off _automaticInstallation_ under _Admin Tools → Settings → Extension Configuration → extensionmanager_ before uploading, or skip the upload form and unpack the zip into `typo3conf/ext/clippy/` by hand before activating it.
-
-### Content classes
-
-On TYPO3 13.4 and 14, add the **Clippy** site set to edit the classes under the site's settings. TYPO3 12.4 has no site sets, so override them in the Page TSconfig of the root page instead:
-
-```text
-RTE.default.editor.config.contentClasses.paragraph = my-paragraph
-```
-
-The generated `Configuration/Sets/Clippy/page.tsconfig` lists every key.

@@ -28,10 +28,6 @@
       "types": "./dist/entries/color-scheme.d.ts",
       "default": "./dist/color-scheme.js"
     },
-    "./content-classes": {
-      "types": "./dist/entries/content-classes.d.ts",
-      "default": "./dist/content-classes.js"
-    },
     "./document": {
       "types": "./dist/entries/document.d.ts",
       "default": "./dist/document.js"
@@ -44,9 +40,17 @@
       "types": "./dist/entries/gutter.d.ts",
       "default": "./dist/gutter.js"
     },
+    "./hub": {
+      "types": "./dist/entries/hub.d.ts",
+      "default": "./dist/hub.js"
+    },
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./page-review": {
+      "types": "./dist/entries/page-review.d.ts",
+      "default": "./dist/page-review.js"
     },
     "./toolbar": {
       "types": "./dist/entries/toolbar.d.ts",
@@ -69,9 +73,6 @@
       "color-scheme": [
         "./dist/entries/color-scheme.d.ts"
       ],
-      "content-classes": [
-        "./dist/entries/content-classes.d.ts"
-      ],
       "document": [
         "./dist/entries/document.d.ts"
       ],
@@ -80,6 +81,12 @@
       ],
       "gutter": [
         "./dist/entries/gutter.d.ts"
+      ],
+      "hub": [
+        "./dist/entries/hub.d.ts"
+      ],
+      "page-review": [
+        "./dist/entries/page-review.d.ts"
       ],
       "toolbar": [
         "./dist/entries/toolbar.d.ts"
@@ -97,11 +104,12 @@
   "scripts": {
     "dev": "vite",
     "dev:ssr": "tsx server.ts",
-    "build": "pnpm run build:ts && pnpm run build:cem && pnpm run build:vite",
+    "build": "pnpm run build:ts && pnpm run build:cem && pnpm run build:vite && pnpm run build:page-review",
     "build:cem": "cem analyze --config custom-elements-manifest.config.mjs --litelement",
     "build:analyze": "cross-env ANALYZE_BUNDLE=true vite build",
     "build:ts": "tsc --build",
     "build:vite": "vite build",
+    "build:page-review": "vite build --config vite.page-review.config.ts",
     "preview": "vite preview",
     "test": "pnpm run '/^test:.+$/'",
     "test:vitest": "vitest --run",

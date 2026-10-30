@@ -6,29 +6,47 @@ Builds the Clippy CKEditor 5 plugin as an IIFE bundle for use in Drupal.
 
 `module/` holds the Drupal module itself: the `*.yml` plugin registration, the PHP settings form and the config schema. The build copies that folder, the bundle and the generated stylesheets to `app/drupal/modules/clippy/` — not a local `dist/` folder. This makes the plugin immediately available to the Drupal module without a manual copy step.
 
-Three CKEditor 5 plugins are registered:
+Two CKEditor 5 plugins are registered:
 
 | Plugin id                | Configurable | Purpose                                                                                         |
 | ------------------------ | ------------ | ----------------------------------------------------------------------------------------------- |
 | `clippy_validation`      | no           | Accessibility feedback in the editor.                                                           |
 | `clippy_alt_text_wizard` | no           | An Alt-text wizard button in the image alt-text balloon. Only in formats with the image plugin. |
-| `clippy_content_classes` | yes          | The design-system classes CKEditor writes into the content.                                     |
 
-## Editing the content classes
+## Page review
 
-Go to _Configuration → Content authoring → Text formats and editors_, edit a CKEditor 5 format and open the **Content classes** tab. Every class can be changed, and clearing a field outputs that element without a class.
+Page review shows the accessibility issues of a rendered page on that page. It lists the issues and the Content views (heading structure, link
+list and language changes) in a drawer over the page.
 
-The **Heading** field is a pattern: `{level}` is replaced by the level of the heading that is rendered, so one field covers `<h1>` through `<h6>`.
+### Who sees it
 
-Changing a class replaces the previous one. That matters in Full HTML, where General HTML Support keeps class attributes in the editor model: without replacing, a class saved earlier would end up next to the new one.
+Only users with the **Use Page review** permission, and only on pages rendered in the default
+(frontend) theme: nodes, the node Preview of unsaved changes, taxonomy pages, Views listings and
+Canvas pages. On install, the permission is granted to the
+`content_editor` role if it exists.
 
-The fields and their defaults are not written here. They come from `dist/content-classes.json`, which the `ckeditor-plugin` build generates from `src/plugin/content-classes-config.ts`. Adding a class there makes it appear in this form without a PHP change, and keeps the module from drifting away from the editor. Other CMS integrations read the same file.
+### Where the button goes
 
-### Allowed HTML
+The button goes in the admin bar the site already uses:
 
-The plugin declares `<p class>`, `<h2 class>` … as its elements, and narrows that to the configured values in `ContentClasses::getElementsSubset()`. Without this, a format using _"Limit allowed HTML tags and correct faulty HTML"_ (such as Basic HTML) strips the classes when it renders the content.
+1. the classic **Toolbar**, as a tab, if the Toolbar module renders on the page;
+2. otherwise the **Navigation** module's top bar, before the page actions;
+3. otherwise it floats in the bottom corner of the page.
 
-`<h1>` and `<figure>` are left out, see `ContentClasses::NON_CREATABLE_TAGS`. Drupal validates that every tag a plugin claims an attribute on can actually be created by some enabled plugin, and refuses to save the format otherwise. Nothing creates `<figure>` — Drupal rewrites a caption to `data-caption` on `<img>` — and `heading1` is off in every stock format. So in a restricted format the image and table classes only reach `<img>`, not the wrapper; in Full HTML, which is unrestricted, the editor writes all of them.
+Navigation does not render its top bar on every page. It shows on node and user pages, but not on
+Views listings such as the front page, so the button floats there.
+
+## Settings
+
+Go to _Configuration → Content authoring → Clippy_ (`/admin/config/content/clippy`). It needs the
+_Administer site configuration_ permission.
+
+| Setting                                 | Default             | Effect                                                                                                                                                                     |
+| --------------------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Show accessibility feedback in CKEditor | on                  | Turns Clippy in CKEditor on or off.                                                                                                                                        |
+| Show Page review on frontend pages      | on                  | Turns Page review on or off for everyone, whatever their permissions.                                                                                                      |
+| Review root selector                    | `main, [role=main]` | The CSS selector of the element Page review validates. When nothing matches, Page review falls back to `main, [role=main]` and then to `body`, so it never fails silently. |
+| Always show gutter markers              | on                  | Shows the gutter markers next to the offending elements as soon as the page loads. When off, they only show while the Page review drawer is open.                          |
 
 ## Color scheme
 
@@ -63,7 +81,7 @@ function MYTHEME_page_attachments_alter(array &$attachments): void {
 
 ## Prerequisites
 
-Build `ckeditor-plugin` first, since this package depends on its compiled output and on the `content-classes.json` it generates:
+Build `ckeditor-plugin` first, since this package depends on its compiled output:
 
 ```sh
 pnpm --filter @nl-design-system-community/ckeditor-plugin build

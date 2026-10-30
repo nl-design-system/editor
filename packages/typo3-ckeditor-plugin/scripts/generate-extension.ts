@@ -1,30 +1,17 @@
 import { cpSync, copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
-import { stringify } from 'yaml';
 
 const packageDir = resolve(import.meta.dirname, '..');
 export const extensionOut = resolve(packageDir, '../../app/typo3/packages/clippy/dist');
 
 const cssOut = resolve(extensionOut, 'Resources/Public/Css');
-const setOut = resolve(extensionOut, 'Configuration/Sets/Clippy');
-
-const SETTING_PREFIX = 'clippy.contentClasses';
-const SETTING_CATEGORY = 'contentClasses';
-const CATEGORY_LABEL = 'Content classes';
-const CATEGORY_DESCRIPTION =
-  'Added to the HTML this editor produces. The defaults match the NL Design System. Leave a field empty to output that element without a class.';
+const pageReviewOut = resolve(extensionOut, 'Resources/Public/PageReview');
 
 const TYPO3_VERSIONS = '12.4.0-14.99.99';
 
-const GENERATED = '# Generated from @nl-design-system-community/ckeditor-plugin/content-classes.json - do not edit.';
-
 interface ExtensionComposerJson {
   description: string;
-}
-
-interface ContentClassesJson {
-  fields: { defaultValue: string; description: string; key: string; label: string }[];
 }
 
 const packageRequire = createRequire(resolve(packageDir, 'package.json'));
@@ -38,19 +25,17 @@ const TOKENS_CSS = [
   '@nl-design-system-candidate/button-css/button.css',
 ];
 
+const PAGE_REVIEW_THEME_CSS = [
+  editorRequire.resolve('@nl-design-system-community/ma-design-tokens/dist/theme.css'),
+  editorRequire.resolve('@utrecht/design-tokens/dist/theme.css'),
+  resolve(packageDir, '../editor/theme.css'),
+];
+
 export const packageVersion = (): string =>
   (JSON.parse(readFileSync(resolve(packageDir, 'package.json'), 'utf8')) as { version: string }).version;
 
 const phpString = (value: string): string =>
   `'${value.replaceAll('\\', String.raw`\\`).replaceAll("'", String.raw`\'`)}'`;
-
-const writeYaml = (path: string, value: unknown): void =>
-  writeFileSync(path, `${GENERATED}\n${stringify(value, { lineWidth: 0 })}`);
-
-const readContentClasses = (): ContentClassesJson =>
-  JSON.parse(
-    readFileSync(packageRequire.resolve('@nl-design-system-community/ckeditor-plugin/content-classes.json'), 'utf8'),
-  ) as ContentClassesJson;
 
 function writeStyles(): void {
   mkdirSync(cssOut, { recursive: true });
@@ -62,27 +47,14 @@ function writeStyles(): void {
   writeFileSync(resolve(cssOut, 'clippy-tokens.css'), tokenString);
 }
 
-// The content-class defaults as site settings, so an admin can override them per site in the
-// backend. Without the set the plugin's own defaults apply.
-function writeSet(fields: ContentClassesJson['fields']): void {
-  writeYaml(resolve(setOut, 'settings.definitions.yaml'), {
-    categories: { [SETTING_CATEGORY]: { description: CATEGORY_DESCRIPTION, label: CATEGORY_LABEL } },
-    settings: Object.fromEntries(
-      fields.map(({ defaultValue, description, key, label }) => [
-        `${SETTING_PREFIX}.${key}`,
-        { category: SETTING_CATEGORY, default: defaultValue, description, label, type: 'string' },
-      ]),
-    ),
-  });
-
-  writeFileSync(
-    resolve(setOut, 'page.tsconfig'),
-    [
-      GENERATED,
-      ...fields.map(({ key }) => `RTE.default.editor.config.contentClasses.${key} = {$${SETTING_PREFIX}.${key}}`),
-      '',
-    ].join('\n'),
+function writePageReview(): void {
+  mkdirSync(pageReviewOut, { recursive: true });
+  copyFileSync(
+    packageRequire.resolve('@nl-design-system-community/editor/page-review'),
+    resolve(pageReviewOut, 'page-review.js'),
   );
+  const pageReviewCss = PAGE_REVIEW_THEME_CSS.map((path) => readFileSync(path, 'utf8')).join('\n');
+  writeFileSync(resolve(pageReviewOut, 'clippy-page-review.css'), pageReviewCss);
 }
 
 // The Extension Manager reads ext_emconf.php instead of composer.json, so both carry the version.
@@ -126,7 +98,5 @@ export function generateExtension(): void {
   writeMetadata();
 
   writeStyles();
-
-  const { fields } = readContentClasses();
-  writeSet(fields);
+  writePageReview();
 }

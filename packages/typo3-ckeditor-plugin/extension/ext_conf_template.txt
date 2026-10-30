@@ -1,2 +1,8 @@
 # cat=basic; type=boolean; label=Add Clippy to every rich text editor
 enabled = 1
+# cat=pageReview; type=boolean; label=Show Page review on frontend pages to backend users who are logged in
+pageReview = 1
+# cat=pageReview; type=string; label=Review root selector: the CSS selector of the element Page review validates
+reviewRoot = main, [role=main]
+# cat=pageReview; type=boolean; label=Always show gutter markers: shows the gutter markers as soon as the page loads. When off, they only show while the Page review drawer is open
+gutterAlways = 1

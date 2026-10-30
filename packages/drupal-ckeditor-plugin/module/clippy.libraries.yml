@@ -11,3 +11,16 @@ plugin:
     - core/drupal
     - core/ckeditor5
     - ckeditor5/internal.drupal.ckeditor5
+
+page-review:
+  js:
+    clippy-page-review.js:
+      preprocess: false
+      attributes:
+        type: module
+  css:
+    component:
+      clippy-page-review.css: {}
+      clippy-page-review-mount.css: {}
+  dependencies:
+    - core/drupalSettings
