@@ -4,7 +4,7 @@ Builds the Clippy CKEditor 5 plugin as an IIFE bundle for use in Drupal.
 
 ## How it works
 
-`module/` holds the Drupal module itself: the `*.yml` plugin registration, the PHP settings form and the config schema. The build copies that folder, the bundle and the generated stylesheets to `app/drupal/modules/clippy/` — not a local `dist/` folder. This makes the plugin immediately available to the Drupal module without a manual copy step.
+`module/` holds the Drupal module itself: the `*.yml` plugin registration, the PHP settings form and the config schema. The build copies that folder, the bundle and the generated stylesheets to `app/drupal/modules/clippy/dist/`, and adds the package version to `clippy.info.yml`. The demo mounts `app/drupal/modules/` as `modules/custom/`, so the module is available there without a manual copy step.
 
 Three CKEditor 5 plugins are registered:
 
@@ -80,3 +80,24 @@ After changing the PHP or the config schema, clear the Drupal cache:
 ```sh
 docker compose exec drupal /opt/drupal/vendor/bin/drush --root=/opt/drupal/web cr
 ```
+
+## Packaging
+
+```sh
+pnpm build-and-zip
+```
+
+This builds the module and writes the Extension archive to `dist/clippy-drupal-<version>.zip`, printing its path. `pnpm zip` zips the existing build output without rebuilding. Every file sits under a single `clippy/` folder, and dot-prefixed paths are left out.
+
+`pnpm test-build` zips the build output and checks the archive: its name, the `clippy/` folder, the version in `clippy.info.yml`, the bundle and YAML files, and that it contains no dotfiles. CI runs it on every pull request.
+
+## Installing
+
+Unzip it inside `web/modules/custom/`, which gives a `clippy/` module folder, and enable it:
+
+```sh
+unzip clippy-drupal-<version>.zip -d web/modules/custom/
+drush pm:enable clippy
+```
+
+The Extend page and `drush pm:list` show the installed version.
