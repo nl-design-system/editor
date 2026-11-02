@@ -56,7 +56,7 @@
     "@nl-design-system-candidate/heading-css": "2.0.0",
     "@nl-design-system-candidate/link-css": "3.0.0",
     "@nl-design-system-candidate/paragraph-css": "3.0.0",
-    "@nl-design-system-community/ma-design-tokens": "7.0.0",
+    "@nl-design-system-community/ma-design-tokens": "9.1.0",
     "@nl-design-system/tsconfig": "1.0.5",
     "@tabler/icons": "3.50.0",
     "@types/node": "22.20.5",

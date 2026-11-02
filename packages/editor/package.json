@@ -176,7 +176,7 @@
     "@nl-design-system-candidate/heading-css": "2.0.0",
     "@nl-design-system-candidate/mark-css": "2.0.0",
     "@nl-design-system-candidate/paragraph-css": "3.0.0",
-    "@nl-design-system-community/ma-design-tokens": "7.0.0",
+    "@nl-design-system-community/ma-design-tokens": "9.1.0",
     "@nl-design-system/tsconfig": "1.0.5",
     "@testing-library/dom": "10.4.2",
     "@testing-library/user-event": "14.6.8",
