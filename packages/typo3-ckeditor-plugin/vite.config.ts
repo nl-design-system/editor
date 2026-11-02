@@ -1,5 +1,5 @@
 import { defineConfig, type Plugin } from 'vite';
-import { extensionOut, generateExtension } from './scripts/generate-extension.ts';
+import { extensionOut, generateExtension } from './src/build/generate-extension.ts';
 
 function copyExtensionAssets(): Plugin {
   return {

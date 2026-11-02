@@ -1,5 +1,5 @@
 import { defineConfig, type Plugin } from 'vite';
-import { generateModule, moduleOut } from './scripts/generate-module.ts';
+import { generateModule, moduleOut } from './src/build/generate-module.ts';
 
 function copyModuleAssets(): Plugin {
   return {

@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { test } from 'node:test';
 
-const packageDir = resolve(import.meta.dirname, '..');
+const packageDir = resolve(import.meta.dirname, '../..');
 const { version } = JSON.parse(readFileSync(resolve(packageDir, 'package.json'), 'utf8')) as { version: string };
 
 const zipPath = execFileSync(process.execPath, [resolve(import.meta.dirname, 'package-extension.ts')], {
