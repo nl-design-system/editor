@@ -13,7 +13,7 @@ export default css`
   .clippy-drawer__content {
     block-size: 100%;
     inline-size: fit-content;
-    min-inline-size: 300px;
+    min-inline-size: min(300px, 100%);
     max-inline-size: 500px;
     max-block-size: 100%;
     border: 0;
