@@ -1,5 +1,11 @@
 # @nl-design-system-community/editor
 
+## 1.8.3
+
+### Patch Changes
+
+- 024afeb: The validations drawer now moves below the editor content when they do not fit side by side, instead of squeezing the content to zero width on narrow screens and at high zoom levels.
+
 ## 1.8.2
 
 ### Patch Changes
