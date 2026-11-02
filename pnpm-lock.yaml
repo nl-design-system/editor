@@ -256,6 +256,9 @@ importers:
       ckeditor5:
         specifier: 49.0.1
         version: 49.0.1(supports-color@10.2.2)
+      fflate:
+        specifier: 0.8.3
+        version: 0.8.3
       jsdom:
         specifier: 30.1.3
         version: 30.1.3
