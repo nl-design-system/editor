@@ -15,7 +15,8 @@
     "build": "vite build",
     "zip": "node scripts/package-extension.ts",
     "build-and-zip": "pnpm build && pnpm zip",
-    "test": "vitest --run"
+    "test": "vitest --run",
+    "test-build": "node --test scripts/test-extension-archive.ts"
   },
   "dependencies": {
     "@nl-design-system-community/ckeditor-plugin": "workspace:*"
