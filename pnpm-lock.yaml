@@ -184,8 +184,8 @@ importers:
         specifier: 0.8.2
         version: 0.8.2
       '@nl-design-system-candidate/button-css':
-        specifier: 1.1.0
-        version: 1.1.0
+        specifier: 2.0.0
+        version: 2.0.0
       '@nl-design-system-candidate/code-block-css':
         specifier: 2.0.0
         version: 2.0.0
@@ -281,8 +281,8 @@ importers:
         specifier: 0.12.2
         version: 0.12.2
       '@nl-design-system-candidate/button-css':
-        specifier: 1.1.0
-        version: 1.1.0
+        specifier: 2.0.0
+        version: 2.0.0
       '@nl-design-system-candidate/data-badge-css':
         specifier: 1.0.5
         version: 1.0.5
@@ -537,8 +537,8 @@ importers:
         specifier: 5.3.0
         version: 5.3.0
       '@nl-design-system-candidate/button-css':
-        specifier: 1.1.0
-        version: 1.1.0
+        specifier: 2.0.0
+        version: 2.0.0
       '@nl-design-system-community/ckeditor-plugin':
         specifier: workspace:*
         version: link:../ckeditor-plugin
@@ -2047,6 +2047,9 @@ packages:
 
   '@nl-design-system-candidate/button-css@1.1.0':
     resolution: {integrity: sha512-w0JLQyiPL9UrfRwzu3Mq2EWbYvAJbolepeFH4ggyBFXoYm9RMWX6vWb/8Oj999GzAF6N77LlES5jUnaR3BJ7Yw==}
+
+  '@nl-design-system-candidate/button-css@2.0.0':
+    resolution: {integrity: sha512-puG1A5YET0y2acDOaPml59p4oo7+rQz69gPss3AX3wgNwzNn3r/sZTSpmiC+spOwBP+kvdMp19cyKcOkEhiorw==}
 
   '@nl-design-system-candidate/button-tokens@1.0.0':
     resolution: {integrity: sha512-2uxqqVUW9kyib/rPn1rvWI09auUVOkA5IUC+rBlYxUz9DVVn4UcXPeOe9KVgh0a1WuM2dzX3k/bpWRBINtKACw==}
@@ -9031,6 +9034,8 @@ snapshots:
     optional: true
 
   '@nl-design-system-candidate/button-css@1.1.0': {}
+
+  '@nl-design-system-candidate/button-css@2.0.0': {}
 
   '@nl-design-system-candidate/button-tokens@1.0.0': {}
 
