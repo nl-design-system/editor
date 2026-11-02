@@ -144,6 +144,31 @@ describe('<clippy-context> validations property', () => {
   });
 });
 
+describe('<clippy-context> content element', () => {
+  it('provides the rendered editor element once the editor is mounted', async () => {
+    const context = await render();
+
+    await vi.waitFor(() => expect(context.contentElement).toBe(context.editor?.view.dom));
+    expect(document.querySelector('clippy-content')?.contains(context.contentElement!)).toBe(true);
+  });
+
+  it('provides nothing in readonly mode, where there is no editor', async () => {
+    const context = await render('readonly');
+    await settled(context);
+
+    expect(context.contentElement).toBeUndefined();
+  });
+
+  it('stops providing the element when disconnected', async () => {
+    const context = await render();
+    await vi.waitFor(() => expect(context.contentElement).toBeDefined());
+
+    context.remove();
+
+    expect(context.contentElement).toBeUndefined();
+  });
+});
+
 type ConnectOptions = { name: string };
 type DevtoolsGlobal = {
   __REDUX_DEVTOOLS_EXTENSION__?: { connect: (options: ConnectOptions) => unknown };
