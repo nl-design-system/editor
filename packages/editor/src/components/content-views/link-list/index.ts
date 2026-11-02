@@ -1,4 +1,3 @@
-import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import dataBadgeStyle from '@nl-design-system-candidate/data-badge-css/data-badge.css?inline';
@@ -9,8 +8,8 @@ import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import type { ViolationsMap, Violation } from '@/types/validation';
+import { contentElementContext } from '@/context/contentElementContext';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext';
-import { tiptapContext } from '@/context/tiptapContext';
 import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type FocusValidationItemInGutterDetail } from '@/events';
 import { getHighestSeverityEntryByElement } from '@/utils/validations';
@@ -46,9 +45,9 @@ export class LinkList extends LitElement {
   @property({ attribute: false })
   htmlDocument?: HTMLElement;
 
-  @consume({ context: tiptapContext, subscribe: true })
+  @consume({ context: contentElementContext, subscribe: true })
   @property({ attribute: false })
-  editor?: Editor;
+  contentElement?: HTMLElement;
 
   @consume({ context: violationsContext, subscribe: true })
   @property({ attribute: false })
@@ -66,7 +65,7 @@ export class LinkList extends LitElement {
   }
 
   #scrollToLink(index: number, element: HTMLAnchorElement, validationRange: Range | undefined) {
-    const renderedEl = this.editor?.view?.dom?.querySelectorAll<HTMLAnchorElement>('a[href]')[index] ?? element;
+    const renderedEl = this.contentElement?.querySelectorAll<HTMLAnchorElement>('a[href]')[index] ?? element;
     renderedEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     if (validationRange) {
       globalThis.dispatchEvent(

@@ -1,4 +1,3 @@
-import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import dataBadgeStyle from '@nl-design-system-candidate/data-badge-css/data-badge.css?inline';
@@ -8,8 +7,8 @@ import { safeCustomElement } from '@nl-design-system-community/clippy-components
 import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
+import { contentElementContext } from '@/context/contentElementContext';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext';
-import { tiptapContext } from '@/context/tiptapContext';
 import { findNearestAncestorAttribute } from '@/utils/domTraverser';
 import languageChangesStyles from './styles';
 
@@ -46,9 +45,9 @@ export class LanguageChanges extends LitElement {
   @property({ attribute: false })
   htmlDocument?: HTMLElement;
 
-  @consume({ context: tiptapContext, subscribe: true })
+  @consume({ context: contentElementContext, subscribe: true })
   @property({ attribute: false })
-  editor?: Editor;
+  contentElement?: HTMLElement;
 
   /** Returns the ambient document language by walking up the DOM from the
    * editor view element, crossing shadow roots as needed. */
@@ -94,9 +93,7 @@ export class LanguageChanges extends LitElement {
   #scrollToNode(index: number, element: Element) {
     try {
       // Collect [lang] elements from the rendered DOM in the same tree order
-      const renderedEl = this.editor?.view?.dom
-        ? (Array.from(this.editor.view.dom.querySelectorAll<Element>('[lang]'))[index] ?? element)
-        : element;
+      const renderedEl = this.contentElement?.querySelectorAll('[lang]')[index] ?? element;
       renderedEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch (err) {
       console.error('[clippy-language-changes] Cannot scroll to node', err);

@@ -1,4 +1,3 @@
-import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
 import dataBadgeStyle from '@nl-design-system-candidate/data-badge-css/data-badge.css?inline';
@@ -11,8 +10,8 @@ import { property } from 'lit/decorators.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import { map } from 'lit/directives/map.js';
 import type { ViolationsMap, Violation } from '@/types/validation';
+import { contentElementContext } from '@/context/contentElementContext';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext';
-import { tiptapContext } from '@/context/tiptapContext';
 import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type FocusValidationItemInGutterDetail } from '@/events';
 import { getHighestSeverityEntryByElement } from '@/utils/validations';
@@ -49,9 +48,9 @@ export class HeadingStructure extends LitElement {
   @property({ attribute: false })
   htmlDocument?: HTMLElement;
 
-  @consume({ context: tiptapContext, subscribe: true })
+  @consume({ context: contentElementContext, subscribe: true })
   @property({ attribute: false })
-  editor?: Editor;
+  contentElement?: HTMLElement;
 
   @consume({ context: violationsContext, subscribe: true })
   @property({ attribute: false })
@@ -71,8 +70,7 @@ export class HeadingStructure extends LitElement {
   }
 
   #scrollToHeading(index: number, element: HTMLElement) {
-    const renderedEl =
-      this.editor?.view?.dom?.querySelectorAll<HTMLElement>('h1, h2, h3, h4, h5, h6')[index] ?? element;
+    const renderedEl = this.contentElement?.querySelectorAll<HTMLElement>('h1, h2, h3, h4, h5, h6')[index] ?? element;
     renderedEl.scrollIntoView({ block: 'start' });
     const validationRange = getHighestSeverityEntryByElement(this.violationsMap, element)?.[0] ?? null;
     if (validationRange) {
