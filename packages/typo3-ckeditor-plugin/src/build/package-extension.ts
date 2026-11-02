@@ -3,7 +3,7 @@ import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'n
 import { resolve, sep } from 'node:path';
 import { extensionOut, packageVersion } from './generate-extension.ts';
 
-const releaseDir = resolve(import.meta.dirname, '../dist');
+const releaseDir = resolve(import.meta.dirname, '../../dist');
 const zipPath = resolve(releaseDir, `clippy_${packageVersion()}.zip`);
 
 const files: Zippable = Object.fromEntries(

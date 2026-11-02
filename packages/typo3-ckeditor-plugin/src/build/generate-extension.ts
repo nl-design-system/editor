@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 import { stringify } from 'yaml';
 
-const packageDir = resolve(import.meta.dirname, '..');
+const packageDir = resolve(import.meta.dirname, '../..');
 export const extensionOut = resolve(packageDir, '../../app/typo3/packages/clippy/dist');
 
 const cssOut = resolve(extensionOut, 'Resources/Public/Css');

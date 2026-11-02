@@ -2,7 +2,7 @@ import { appendFileSync, cpSync, copyFileSync, mkdirSync, readFileSync, writeFil
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 
-const packageDir = resolve(import.meta.dirname, '..');
+const packageDir = resolve(import.meta.dirname, '../..');
 export const moduleOut = resolve(packageDir, '../../app/drupal/modules/clippy/dist');
 
 const packageRequire = createRequire(resolve(packageDir, 'package.json'));

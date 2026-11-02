@@ -3,7 +3,7 @@ import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'n
 import { resolve, sep } from 'node:path';
 import { moduleOut, packageVersion } from './generate-module.ts';
 
-const releaseDir = resolve(import.meta.dirname, '../dist');
+const releaseDir = resolve(import.meta.dirname, '../../dist');
 const zipPath = resolve(releaseDir, `clippy-drupal-${packageVersion()}.zip`);
 
 const files: Zippable = Object.fromEntries(

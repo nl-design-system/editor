@@ -13,10 +13,10 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "zip": "node scripts/package-extension.ts",
+    "zip": "node src/build/package-extension.ts",
     "build-and-zip": "pnpm run build && pnpm run zip",
     "test": "vitest --run",
-    "test-build": "node --test scripts/test-extension-archive.ts"
+    "test-build": "node --test src/build/test-extension-archive.ts"
   },
   "dependencies": {
     "@nl-design-system-community/ckeditor-plugin": "workspace:*"
