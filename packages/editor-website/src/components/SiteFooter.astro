@@ -15,15 +15,20 @@ const t = useTranslations(locale);
 
     <div class="clippy-website-footer__about">
       <p>
-        {t('footer.about')}{' '}
-        <a href="https://nldesignsystem.nl">NL Design System</a>.
+        {t('footer.about')} <a href="https://nldesignsystem.nl">NL Design System</a>.
       </p>
     </div>
 
     <nav class="clippy-website-footer__nav" aria-label={t('footer.nav.label')}>
-      <a class="clippy-website-footer__nav-link" href={t('footer.contact.href')}>{t('footer.contact')}</a>
-      <a class="clippy-website-footer__nav-link" href={t('footer.privacy.href')}>{t('footer.privacy')}</a>
-      <a class="clippy-website-footer__nav-link" href={t('footer.accessibility.href')}>{t('footer.accessibility')}</a>
+      <a class="clippy-website-footer__nav-link" href={t('footer.contact.href')}>
+        {t('footer.contact')}
+      </a>
+      <a class="clippy-website-footer__nav-link" href={t('footer.privacy.href')}>
+        {t('footer.privacy')}
+      </a>
+      <a class="clippy-website-footer__nav-link" href={t('footer.accessibility.href')}>
+        {t('footer.accessibility')}
+      </a>
     </nav>
   </div>
 </footer>
