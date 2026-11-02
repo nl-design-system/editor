@@ -60,6 +60,8 @@ docker compose up --build
 
 ## Packaging
 
+Download `clippy_<version>.zip` from [typo3-ckeditor-plugin Releases](https://github.com/nl-design-system/editor/releases?q=typo3-ckeditor-plugin) or build it yourself:
+
 ```sh
 pnpm build-and-zip
 ```
