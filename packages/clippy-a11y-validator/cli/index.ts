@@ -163,7 +163,7 @@ if (values['help']) {
 
 if (positionals.length === 0) fail(`Missing path argument.\n\n${help()}`);
 
-if (!existsSync(VALIDATOR_BUNDLE)) fail(`${PACKAGE_NAME} is not built — run \`pnpm build\` first.`);
+if (!existsSync(VALIDATOR_BUNDLE)) fail(`${PACKAGE_NAME} is not built — run \`pnpm run build\` first.`);
 
 const files = positionals.flatMap((argument) => {
   const path = resolve(argument);
