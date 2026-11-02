@@ -40,7 +40,7 @@
     "@utrecht/design-tokens": "7.0.0",
     "astro": "7.3.6",
     "ckeditor5": "49.0.1",
-    "mermaid": "11.17.2",
+    "mermaid": "12.2.0",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "remark-custom-header-id": "1.0.0",
