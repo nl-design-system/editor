@@ -93,6 +93,8 @@ This builds the module and writes the Extension archive to `dist/clippy-drupal-<
 
 ## Installing
 
+Download `clippy-drupal-<version>.zip` from [drupal-ckeditor-plugin Releases](https://github.com/nl-design-system/editor/releases?q=drupal-ckeditor-plugin).
+
 Unzip it inside `web/modules/custom/`, which gives a `clippy/` module folder, and enable it:
 
 ```sh

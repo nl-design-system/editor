@@ -45,6 +45,7 @@ jobs:
         run: pnpm run build
 
       - name: Publish to the npm Registry
+        id: changesets
         uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         env:
           GIT_AUTHOR_EMAIL: ${{ secrets.GIT_AUTHOR_EMAIL }}
@@ -57,3 +58,23 @@ jobs:
           commit-message: "docs(release): design system packages"
           pr-title: "docs(release): design system packages"
           publish-script: "pnpm run changeset:publish"
+
+      - name: Attach the Drupal module archive to its Release
+        if: ${{ steps.changesets.outputs.published == 'true' && contains(fromJSON(steps.changesets.outputs['published-packages']).*.name, '@nl-design-system-community/drupal-ckeditor-plugin') }}
+        working-directory: packages/drupal-ckeditor-plugin
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          pnpm run zip
+          version=$(jq -r .version package.json)
+          gh release upload "@nl-design-system-community/drupal-ckeditor-plugin@${version}" "dist/clippy-drupal-${version}.zip"
+
+      - name: Attach the TYPO3 extension archive to its Release
+        if: ${{ steps.changesets.outputs.published == 'true' && contains(fromJSON(steps.changesets.outputs['published-packages']).*.name, '@nl-design-system-community/typo3-ckeditor-plugin') }}
+        working-directory: packages/typo3-ckeditor-plugin
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          pnpm run zip
+          version=$(jq -r .version package.json)
+          gh release upload "@nl-design-system-community/typo3-ckeditor-plugin@${version}" "dist/clippy_${version}.zip"
