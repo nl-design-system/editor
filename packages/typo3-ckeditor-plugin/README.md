@@ -37,13 +37,13 @@ This is why `packages/ckeditor-plugin` needs no host-specific code.
 Build `ckeditor-plugin` first, since this package depends on its compiled output:
 
 ```sh
-pnpm --filter @nl-design-system-community/ckeditor-plugin build
+pnpm --filter @nl-design-system-community/ckeditor-plugin run build
 ```
 
 ## Build
 
 ```sh
-pnpm build
+pnpm run build
 ```
 
 Files under `Resources/Public/` are picked up on page reload. After changing `ext_localconf.php`, `Classes/` or anything under `Configuration/`, flush the TYPO3 cache:
@@ -63,7 +63,7 @@ docker compose up --build
 Download `clippy_<version>.zip` from [typo3-ckeditor-plugin Releases](https://github.com/nl-design-system/editor/releases?q=typo3-ckeditor-plugin) or build it yourself:
 
 ```sh
-pnpm build-and-zip
+pnpm run build-and-zip
 ```
 
 This builds the extension and zips it into `dist/clippy_<version>.zip`, with the extension files at the root of the archive. The zip installs on TYPO3 12.4, 13.4 and 14.

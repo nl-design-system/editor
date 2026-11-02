@@ -66,13 +66,13 @@ function MYTHEME_page_attachments_alter(array &$attachments): void {
 Build `ckeditor-plugin` first, since this package depends on its compiled output and on the `content-classes.json` it generates:
 
 ```sh
-pnpm --filter @nl-design-system-community/ckeditor-plugin build
+pnpm --filter @nl-design-system-community/ckeditor-plugin run build
 ```
 
 ## Build
 
 ```sh
-pnpm build
+pnpm run build
 ```
 
 After changing the PHP or the config schema, clear the Drupal cache:
@@ -84,12 +84,12 @@ docker compose exec drupal /opt/drupal/vendor/bin/drush --root=/opt/drupal/web c
 ## Packaging
 
 ```sh
-pnpm build-and-zip
+pnpm run build-and-zip
 ```
 
-This builds the module and writes the Extension archive to `dist/clippy-drupal-<version>.zip`, printing its path. `pnpm zip` zips the existing build output without rebuilding. Every file sits under a single `clippy/` folder, and dot-prefixed paths are left out.
+This builds the module and writes the Extension archive to `dist/clippy-drupal-<version>.zip`, printing its path. `pnpm run zip` zips the existing build output without rebuilding. Every file sits under a single `clippy/` folder, and dot-prefixed paths are left out.
 
-`pnpm test-build` zips the build output and checks the archive: its name, the `clippy/` folder, the version in `clippy.info.yml`, the bundle and YAML files, and that it contains no dotfiles. CI runs it on every pull request.
+`pnpm run test-build` zips the build output and checks the archive: its name, the `clippy/` folder, the version in `clippy.info.yml`, the bundle and YAML files, and that it contains no dotfiles. CI runs it on every pull request.
 
 ## Installing
 

@@ -14,7 +14,7 @@
   "scripts": {
     "build": "vite build",
     "zip": "node scripts/package-extension.ts",
-    "build-and-zip": "pnpm build && pnpm zip",
+    "build-and-zip": "pnpm run build && pnpm run zip",
     "test": "vitest --run",
     "test-build": "node --test scripts/test-extension-archive.ts"
   },

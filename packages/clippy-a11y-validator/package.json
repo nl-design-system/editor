@@ -32,7 +32,7 @@
   ],
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "pnpm build:validator && pnpm build:cli",
+    "build": "pnpm run build:validator && pnpm run build:cli",
     "build:validator": "vite build --config vite.validator.config.ts",
     "build:cli": "vite build --config vite.cli.config.ts",
     "validate": "node dist/cli.js",
