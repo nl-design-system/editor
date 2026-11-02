@@ -9,7 +9,7 @@ export default css`
     gap: var(--basis-space-inline-md);
     background-color: var(--basis-color-info-bg-document);
     border-block-start: var(--basis-border-width-md) solid var(--basis-color-info-color-default);
-    min-inline-size: 320px;
+    min-inline-size: min(320px, 100%);
 
     &:focus {
       outline: oklch(from var(--basis-color-info-color-subtle) l c h) solid 1px;
