@@ -1,9 +1,11 @@
+import { ContextProvider } from '@lit/context';
 import { coreValidationRules, type ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
 import { inlineViolation, violation } from '@test/violation';
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { page } from 'vitest/browser';
 import type { ViolationsMap } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
+import { contentElementContext } from '@/context/contentElementContext';
 import { CustomEvents, type OpenValidationGroupEvent } from '@/events';
 import { VALIDATION_HOVER_HIGHLIGHT_NAMES } from '@/utils/highlights';
 import type { Gutter } from './index';
@@ -53,6 +55,9 @@ const openedBy = async (name: string | RegExp): Promise<OpenValidationGroupEvent
 
 const BOLD_PARAGRAPH_HEADING = 'De hele alinea is dikgedrukt.';
 const GENERIC_LINK_HEADING = 'De linktekst "lees meer" zegt niet waar de link naartoe gaat.';
+
+/** Longer than the resize debounce, so the observer's initial callback has landed. */
+const RESIZE_SETTLE_MS = 200;
 
 /** An entirely-bold paragraph violation, named after the copy the validator package ships. */
 const boldParagraph = (severity: ValidationSeverity = 'warning') =>
@@ -155,5 +160,31 @@ describe('<clippy-validations-gutter>', () => {
 
     await indicator.unhover();
     expect(CSS.highlights.has(VALIDATION_HOVER_HIGHLIGHT_NAMES.info)).toBe(false);
+  });
+
+  describe('content element context', () => {
+    it('repositions indicators when the provided content element changes size', async () => {
+      document.body.innerHTML =
+        '<div style="position: relative; block-size: 600px; display: flow-root"><div style="display: flow-root"><h1>Titel</h1><h3>Kop</h3></div></div>';
+      const container = document.body.firstElementChild as HTMLElement;
+      const content = container.firstElementChild as HTMLElement;
+      const heading = content.querySelector('h3')!;
+      const range = rangeOver(heading);
+      new ContextProvider(container, { context: contentElementContext, initialValue: content });
+      const gutter = document.createElement('clippy-validations-gutter') as Gutter;
+      container.append(gutter);
+      await validate(gutter, new Map([[range, boldParagraph()]]));
+      const indicator = () => gutter.shadowRoot!.querySelector<HTMLElement>('.clippy-validations-gutter__indicator')!;
+      await expect
+        .poll(() => indicator().getBoundingClientRect().top)
+        .toBeCloseTo(range.getBoundingClientRect().top, 0);
+      await new Promise((resolve) => setTimeout(resolve, RESIZE_SETTLE_MS));
+
+      content.querySelector('h1')!.style.paddingBlockEnd = '100px';
+
+      await expect
+        .poll(() => indicator().getBoundingClientRect().top)
+        .toBeCloseTo(range.getBoundingClientRect().top, 0);
+    });
   });
 });
