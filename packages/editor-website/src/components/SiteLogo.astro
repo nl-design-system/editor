@@ -10,7 +10,9 @@ const { href, ariaLabel } = Astro.props;
 ---
 
 <a class="ma-site-logo" href={href} aria-label={ariaLabel}>
-  <span class="ma-site-logo__icon"><Fragment set:html={logo} /></span>
+  <span class="ma-site-logo__icon">
+    <Fragment set:html={logo} />
+  </span>
   <span class="ma-site-logo__label">
     <span class="ma-site-logo__label-primary">Clippy</span>
     <span class="ma-site-logo__label-secondary">Editor</span>

@@ -29,22 +29,20 @@ const localeRoot = locale === 'en' ? '/en' : '/';
   </div>
   <nav class="ma-site-header__nav" aria-label={t('nav.label')}>
     <ul class="ma-site-header__nav-list" role="list">
-      {
-        navItems.map(({ href, label }) => {
-          const isActive = href === localeRoot ? currentPath === localeRoot : currentPath.startsWith(href);
-          return (
-            <li>
-              <a
-                class={`ma-site-header__nav-link${isActive ? ' ma-site-header__nav-link--active' : ''}`}
-                href={href}
-                aria-current={isActive ? 'page' : undefined}
-              >
-                {label}
-              </a>
-            </li>
-          );
-        })
-      }
+      {navItems.map(({ href, label }) => {
+        const isActive = href === localeRoot ? currentPath === localeRoot : currentPath.startsWith(href);
+        return (
+          <li>
+            <a
+              class={`ma-site-header__nav-link${isActive ? ' ma-site-header__nav-link--active' : ''}`}
+              href={href}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {label}
+            </a>
+          </li>
+        );
+      })}
     </ul>
   </nav>
   <div class="ma-site-header__actions">
