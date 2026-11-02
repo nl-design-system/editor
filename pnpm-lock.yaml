@@ -202,8 +202,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@nl-design-system-community/ma-design-tokens':
-        specifier: 7.0.0
-        version: 7.0.0
+        specifier: 9.1.0
+        version: 9.1.0
       '@nl-design-system/tsconfig':
         specifier: 1.0.5
         version: 1.0.5(typescript@6.0.3)
@@ -465,8 +465,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@nl-design-system-community/ma-design-tokens':
-        specifier: 7.0.0
-        version: 7.0.0
+        specifier: 9.1.0
+        version: 9.1.0
       '@nl-design-system/tsconfig':
         specifier: 1.0.5
         version: 1.0.5(typescript@6.0.3)
@@ -552,8 +552,8 @@ importers:
         specifier: workspace:*
         version: link:../react
       '@nl-design-system-community/ma-design-tokens':
-        specifier: 7.0.0
-        version: 7.0.0
+        specifier: 9.1.0
+        version: 9.1.0
       '@tabler/icons':
         specifier: 3.50.0
         version: 3.50.0
@@ -626,8 +626,8 @@ importers:
         specifier: 1.0.8
         version: 1.0.8(@types/react@19.3.0)
       '@nl-design-system-community/ma-design-tokens':
-        specifier: 7.0.0
-        version: 7.0.0
+        specifier: 9.1.0
+        version: 9.1.0
       '@nl-design-system/tsconfig':
         specifier: 1.0.5
         version: 1.0.5(typescript@6.0.3)
@@ -1970,8 +1970,8 @@ packages:
   '@nl-design-system-community/design-tokens-schema@2.5.0':
     resolution: {integrity: sha512-7G1ZyWA2pEio/CdoYFrYFLrm/fV8ESRGmAeOl3N55FYhnwg24zFWQl9fWzEmqpRwyjRjlcwT9vjFENvWgHhhaA==}
 
-  '@nl-design-system-community/ma-design-tokens@7.0.0':
-    resolution: {integrity: sha512-HN5e2Kcn0EtqVdXMiyTq9IfAgVtdFuyG4x+TcECqFi0XatCpEMPXZmSEGCQZ8KO2NuS6D9Hb8zrqROiQ3gBfQg==}
+  '@nl-design-system-community/ma-design-tokens@9.1.0':
+    resolution: {integrity: sha512-dHqz2CP0Yek3ehmLTOtRH5ESkQUuk1062oXmljUZlkNwHNrtlVOjBM3vJO/j5zqFyWcFUOg0rP3Ryyd21KFqxg==}
 
   '@nl-design-system-community/ma-navigation-bar-css@0.0.1':
     resolution: {integrity: sha512-jTxObh0iyoKI2zJC2iU4+QbVceugVMgVNLRO9CM0UdxU1ysn0r7kUAKu2ieeJYSKXTw4HzDbXiUTYk4ioaYU8Q==}
@@ -8804,7 +8804,7 @@ snapshots:
       es-toolkit: 1.52.0
       zod: 4.6.5
 
-  '@nl-design-system-community/ma-design-tokens@7.0.0': {}
+  '@nl-design-system-community/ma-design-tokens@9.1.0': {}
 
   '@nl-design-system-community/ma-navigation-bar-css@0.0.1': {}
 
