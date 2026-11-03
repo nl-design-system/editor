@@ -20,7 +20,7 @@ export default css`
 
   :host([overlay]) .clippy-validations-gutter__list {
     inset-block: 0;
-    inset-inline-end: 0;
+    inset-inline-end: var(--basis-space-none);
     inset-inline-start: calc(-1 * min(var(--_clippy-gutter-rail-inline-size), var(--_clippy-gutter-inline-space, 0px)));
     position: absolute;
   }
