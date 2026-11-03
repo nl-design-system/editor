@@ -1,5 +1,6 @@
 export const DARK_COLOR_SCHEME_QUERY = '(prefers-color-scheme: dark)';
 export const THEME_CLASS = 'ma-theme';
+export const THEME_CLASSES = [THEME_CLASS, 'clippy-theme', 'utrecht-theme'];
 export const DARK_COLOR_SCHEME_CLASS = 'ma-theme--color-scheme-dark';
 
 /** localStorage key holding the user's explicit choice: `'dark'` or `'light'`. */

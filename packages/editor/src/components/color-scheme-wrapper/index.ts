@@ -1,6 +1,6 @@
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { css, html, LitElement } from 'lit';
-import { setDarkColorScheme, watchHostColorScheme, THEME_CLASS } from '@/utils/colorScheme';
+import { setDarkColorScheme, watchHostColorScheme, THEME_CLASSES } from '@/utils/colorScheme';
 
 const tag = 'clippy-color-scheme-wrapper';
 
@@ -37,7 +37,7 @@ export class ColorSchemeWrapper extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.classList.add(THEME_CLASS, 'clippy-theme', 'utrecht-theme');
+    this.classList.add(...THEME_CLASSES);
     this._unwatchColorScheme = watchHostColorScheme(this, (colorScheme) =>
       setDarkColorScheme(colorScheme === 'dark', this),
     );

@@ -3,7 +3,11 @@ import {
   type CloseValidationsDrawerDetail,
   type ValidationsDrawer,
 } from '@nl-design-system-community/editor/accessibility-notifications';
-import { setDarkColorScheme, watchHostColorScheme } from '@nl-design-system-community/editor/color-scheme';
+import {
+  setDarkColorScheme,
+  THEME_CLASSES,
+  watchHostColorScheme,
+} from '@nl-design-system-community/editor/color-scheme';
 import { EditorContentWrapper, EditorWrapper } from '@nl-design-system-community/editor/editor-wrapper';
 import { CustomEvents, type Gutter, validationInteractionMode } from '@nl-design-system-community/editor/gutter';
 import { ClippyHub } from '@nl-design-system-community/editor/hub';
@@ -54,7 +58,7 @@ export class ClippyPlugin extends Plugin {
 
     const editorEl = this._editorEl;
     // add theme token scoping for the drupal environment.
-    editorEl.classList.add('ma-theme', 'clippy-theme', 'utrecht-theme');
+    editorEl.classList.add(...THEME_CLASSES);
     this._unwatchColorScheme = watchHostColorScheme(editorEl, (colorScheme) =>
       setDarkColorScheme(colorScheme === 'dark', editorEl),
     );

@@ -6,10 +6,10 @@ import { validationInteractionMode } from '@/constants';
 import { CustomEvents, type ValidationsDrawerToggleEvent } from '@/events';
 import { ClippyHub } from '@/hub';
 import { initializeLocale } from '@/localization';
+import { THEME_CLASSES } from '@/utils/colorScheme';
 
 const IDENTIFIER = 'clippy-page-review';
 const DEFAULT_REVIEW_ROOT = 'main, [role=main]';
-const THEME_CLASSES = ['ma-theme', 'clippy-theme', 'utrecht-theme'];
 
 export interface PageReviewOptions {
   /** Where the trigger goes. Without one, the trigger floats over the page. */

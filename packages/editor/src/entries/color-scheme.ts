@@ -15,6 +15,7 @@ export {
   DARK_COLOR_SCHEME_CLASS,
   DARK_COLOR_SCHEME_QUERY,
   THEME_CLASS,
+  THEME_CLASSES,
 } from '../utils/colorScheme';
 export type { ColorScheme, ColorSchemeHost } from '../utils/colorScheme';
 export { ColorSchemeWrapper } from '../components/color-scheme-wrapper';
