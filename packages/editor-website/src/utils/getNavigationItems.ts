@@ -1,5 +1,6 @@
 import type { Locale } from '../i18n/translations.ts';
 import { useTranslations } from '../i18n/translations.ts';
+import { validationGroups } from './validationGroups.ts';
 
 export interface NavigationItem {
   current: boolean;
@@ -52,7 +53,14 @@ export const getNavigationItems = (locale: Locale, pathname: string): Navigation
       ],
       label: t('nav.libraries'),
     },
-    { href: t('nav.href.guidelines'), label: t('nav.guidelines') },
+    {
+      href: t('nav.href.guidelines'),
+      items: validationGroups.map(({ label, slug }) => ({
+        href: `${t('nav.href.guidelines')}/${slug[locale]}`,
+        label: label[locale],
+      })),
+      label: t('nav.guidelines'),
+    },
     { href: t('nav.href.demo'), label: t('nav.demo') },
     { href: t('nav.href.community'), label: t('nav.community') },
   ];

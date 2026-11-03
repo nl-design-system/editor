@@ -1,0 +1,29 @@
+---
+import Document from '../../layouts/document.astro';
+import SectionNavigation from '../../components/SectionNavigation.astro';
+import ValidationCard from '../../components/ValidationCard.astro';
+import { useTranslations } from '../../i18n/translations.ts';
+import { validationGroups, type ValidationGroup } from '../../utils/validationGroups.ts';
+
+export const getStaticPaths = () =>
+  validationGroups.map((group) => ({ params: { group: group.slug.nl }, props: { group } }));
+
+interface Props {
+  group: ValidationGroup;
+}
+
+const { label, rules } = Astro.props.group;
+const t = useTranslations('nl');
+---
+
+<Document title={`${label.nl} - ${t('guidelines.title')}`}>
+  <SectionNavigation href={t('nav.href.guidelines')} />
+  <main>
+    <h1 class="nl-heading nl-heading--level-1">{label.nl}</h1>
+    {rules.map(({ example, rule }) => <ValidationCard example={example.nl} rule={rule} />)}
+  </main>
+</Document>
+
+<script>
+  import '../../scripts/guideline-validations.ts';
+</script>

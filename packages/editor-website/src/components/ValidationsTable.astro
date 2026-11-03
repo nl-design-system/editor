@@ -1,0 +1,52 @@
+---
+import { coreValidations, resolveMessages } from '@nl-design-system-community/clippy-a11y-validator';
+import type { Locale } from '../i18n/translations.ts';
+import { useTranslations } from '../i18n/translations.ts';
+import { ruleAnchor } from '../utils/ruleAnchor.ts';
+import { validationGroups } from '../utils/validationGroups.ts';
+
+const locale = (Astro.currentLocale ?? 'nl') as Locale;
+const t = useTranslations(locale);
+
+const rows = validationGroups.flatMap(({ label, rules, slug }) =>
+  rules.map(({ rule }) => {
+    const { documentationId, messages, severity } = coreValidations[rule];
+    return {
+      component: label[locale],
+      href: `${t('nav.href.guidelines')}/${slug[locale]}#${ruleAnchor(rule)}`,
+      rule,
+      severity,
+      title: resolveMessages(messages, locale, 'nl', undefined, documentationId).title,
+    };
+  }),
+);
+---
+
+<table class="utrecht-table">
+  <thead class="utrecht-table__header">
+    <tr class="utrecht-table__row">
+      <th class="utrecht-table__header-cell" scope="col">{t('validations.table.validation')}</th>
+      <th class="utrecht-table__header-cell" scope="col">{t('validations.table.rule')}</th>
+      <th class="utrecht-table__header-cell" scope="col">{t('validations.table.component')}</th>
+      <th class="utrecht-table__header-cell" scope="col">{t('validations.table.severity')}</th>
+    </tr>
+  </thead>
+  <tbody class="utrecht-table__body">
+    {
+      rows.map(({ component, href, rule, severity, title }) => (
+        <tr class="utrecht-table__row">
+          <td class="utrecht-table__cell">
+            <a class="nl-link" href={href}>
+              {title}
+            </a>
+          </td>
+          <td class="utrecht-table__cell">
+            <code>{rule}</code>
+          </td>
+          <td class="utrecht-table__cell">{component}</td>
+          <td class="utrecht-table__cell">{t(`validations.severity.${severity}`)}</td>
+        </tr>
+      ))
+    }
+  </tbody>
+</table>

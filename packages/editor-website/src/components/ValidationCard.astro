@@ -1,0 +1,111 @@
+---
+import {
+  coreValidations,
+  getDocumentationComponentRuleById,
+  resolveMessages,
+  type CoreValidationRule,
+} from '@nl-design-system-community/clippy-a11y-validator';
+import type { Locale } from '../i18n/translations.ts';
+import { useTranslations } from '../i18n/translations.ts';
+import { ruleAnchor } from '../utils/ruleAnchor.ts';
+
+interface Props {
+  example: string;
+  rule: CoreValidationRule;
+}
+
+const { example, rule } = Astro.props;
+const locale = (Astro.currentLocale ?? 'nl') as Locale;
+const t = useTranslations(locale);
+const { documentationId, messages } = coreValidations[rule];
+const { href, title } = resolveMessages(messages, locale, 'nl', undefined, documentationId);
+const explanation = getDocumentationComponentRuleById(documentationId)?.explanation;
+---
+
+<div class="clippy-validation" id={ruleAnchor(rule)}>
+  <clippy-context id={`example-${ruleAnchor(rule)}`} data-validations={rule}>
+    <div slot="value" set:html={example} />
+    <clippy-card class="clippy-validation__card">
+      <code slot="pre-header">{rule}</code>
+      <h2 slot="header" class="clippy-validation__title">{title}</h2>
+      <div slot="body" class="clippy-validation__body">
+        {
+          explanation ? (
+            <div class="clippy-validation__explanation" lang="nl" set:html={explanation} />
+          ) : (
+            href && (
+              <p class="nl-paragraph">
+                <a class="nl-link" href={href}>
+                  {t('validations.card.guideline')}
+                </a>
+              </p>
+            )
+          )
+        }
+        <clippy-story-preview class="clippy-canvas">
+          <div class="clippy-canvas__example">
+            <clippy-content>
+              <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+            </clippy-content>
+          </div>
+        </clippy-story-preview>
+      </div>
+      <clippy-validations-list slot="footer"></clippy-validations-list>
+    </clippy-card>
+  </clippy-context>
+</div>
+
+<style is:global>
+  .clippy-validation {
+    display: block;
+    margin-block: var(--basis-space-block-3xl);
+  }
+
+  .clippy-validation__card {
+    --clippy-card-background-color: var(--basis-color-default-bg-document);
+    --clippy-card-border-color: var(--basis-color-default-bg-hover);
+    --clippy-card-border-radius: var(--basis-border-radius-lg);
+    --clippy-card-border-width: var(--basis-border-width-sm);
+    --clippy-card-color: var(--basis-color-default-color-document);
+    --clippy-card-header-font-family: var(--basis-heading-font-family);
+    --clippy-card-header-font-size: var(--basis-text-font-size-2xl);
+    --clippy-card-header-font-weight: var(--basis-text-font-weight-bold);
+    --clippy-card-pre-header-color: var(--basis-color-default-color-subtle);
+    --clippy-card-pre-header-font-size: var(--basis-text-font-size-sm);
+    --clippy-card-pre-header-padding-block-start: var(--basis-space-block-4xl);
+    --clippy-card-pre-header-padding-inline-end: var(--basis-space-inline-2xl);
+    --clippy-card-pre-header-padding-inline-start: var(--basis-space-inline-2xl);
+    --clippy-card-header-padding-inline-end: var(--basis-space-inline-2xl);
+    --clippy-card-header-padding-inline-start: var(--basis-space-inline-2xl);
+    --clippy-card-body-padding-inline-end: var(--basis-space-inline-2xl);
+    --clippy-card-body-padding-inline-start: var(--basis-space-inline-2xl);
+    --clippy-card-footer-padding-block-end: var(--basis-space-block-4xl);
+    --clippy-card-footer-padding-inline-end: var(--basis-space-inline-2xl);
+    --clippy-card-footer-padding-inline-start: var(--basis-space-inline-2xl);
+    box-shadow: var(--basis-color-default-bg-default) 0 1px 3px 0;
+    row-gap: var(--basis-space-block-xl);
+  }
+
+  .clippy-validation__title {
+    font: inherit;
+    margin-block: 0;
+  }
+
+  .clippy-validation__card::part(body),
+  .clippy-validation__card::part(footer),
+  .clippy-validation__card clippy-validations-list {
+    box-sizing: border-box;
+    display: block;
+    inline-size: 100%;
+  }
+
+  .clippy-validation__body {
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--basis-space-row-md);
+  }
+
+  .clippy-validation__body clippy-story-preview clippy-content {
+    --basis-space-inline-4xl: var(--basis-space-inline-md);
+  }
+</style>
