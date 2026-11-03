@@ -5,6 +5,7 @@ import { Editor as TiptapEditor } from '@tiptap/core';
 import { LitElement, html, type PropertyValues } from 'lit';
 import { property, queryAssignedElements } from 'lit/decorators.js';
 import type { Violation } from '@/types/validation';
+import { contentElementContext } from '@/context/contentElementContext';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import { identifierContext } from '@/context/identifierContext';
 import { tiptapContext } from '@/context/tiptapContext';
@@ -131,6 +132,10 @@ export class Context extends LitElement {
   htmlDocumentElement?: HTMLElement;
 
   /** @internal */
+  @provide({ context: contentElementContext })
+  contentElement?: HTMLElement;
+
+  /** @internal */
   protected createEditor(): void {
     const content = this.contentSlot.find((el) => el instanceof HTMLDivElement)?.innerHTML || '';
     this.editor = new TiptapEditor({
@@ -144,6 +149,9 @@ export class Context extends LitElement {
       // Prevent auto-mounting during SSR; Content component calls moumountnt() client-side
       element: null,
       extensions: editorExtensions(() => this.validations, this.readonly, this.updateViolationsContext, this.id),
+    });
+    this.editor.on('mount', ({ editor }) => {
+      this.contentElement = editor.view.dom;
     });
   }
 
@@ -250,6 +258,7 @@ export class Context extends LitElement {
   override disconnectedCallback() {
     registeredIdentifiers.delete(this.id);
     this.htmlDocumentElement = undefined;
+    this.contentElement = undefined;
     this.editor?.destroy();
     super.disconnectedCallback();
   }

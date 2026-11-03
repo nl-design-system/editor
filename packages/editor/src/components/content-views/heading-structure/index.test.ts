@@ -1,6 +1,6 @@
 import { violation } from '@test/violation';
 import { waitFor } from '@testing-library/dom';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import type { Context } from '@/components/context';
 import type { ViolationsMap } from '@/types/validation';
 import { CustomEvents } from '@/events';
@@ -38,6 +38,7 @@ describe('<clippy-heading-structure>', () => {
   });
 
   afterEach(() => {
+    vi.restoreAllMocks();
     document.body.innerHTML = '';
     document.documentElement.removeAttribute('lang');
   });
@@ -182,6 +183,22 @@ describe('<clippy-heading-structure>', () => {
       expect(eventFired).toBe(false);
 
       globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
+    });
+  });
+
+  describe('scrolling', () => {
+    it('scrolls the heading rendered in the editor into view, not the hidden source', async () => {
+      const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
+      const scrolled: Element[] = [];
+      vi.spyOn(Element.prototype, 'scrollIntoView').mockImplementation(function (this: Element) {
+        scrolled.push(this);
+      });
+      const rendered = await waitFor(() => document.querySelector('clippy-content h1')!);
+
+      const trigger = await waitFor(() => headingStructure.shadowRoot!.querySelector('button') as HTMLElement);
+      trigger.click();
+
+      expect(scrolled).toEqual([rendered]);
     });
   });
 });

@@ -1,5 +1,5 @@
 import { waitFor } from '@testing-library/dom';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import type { Context } from '@/components/context';
 import type { LanguageChanges } from './index';
 import '@/components/context';
@@ -31,6 +31,7 @@ describe('<clippy-language-changes>', () => {
   });
 
   afterEach(() => {
+    vi.restoreAllMocks();
     document.body.innerHTML = '';
     document.documentElement.removeAttribute('lang');
   });
@@ -162,6 +163,24 @@ describe('<clippy-language-changes>', () => {
           langChanges.shadowRoot?.querySelector('.clippy-language-changes__item .nl-link')?.textContent?.trim(),
         ).toContain('(leeg)'),
       );
+    });
+  });
+
+  describe('scrolling', () => {
+    it('scrolls the language change rendered in the editor into view, not the hidden source', async () => {
+      const { langChanges } = await setupWithContent('<h1>Titel</h1><p lang="en">English.</p>');
+      const scrolled: Element[] = [];
+      vi.spyOn(Element.prototype, 'scrollIntoView').mockImplementation(function (this: Element) {
+        scrolled.push(this);
+      });
+      const rendered = await waitFor(() => document.querySelector('clippy-content [lang]')!);
+
+      const trigger = await waitFor(
+        () => langChanges.shadowRoot!.querySelector('.clippy-language-changes__item .nl-link') as HTMLElement,
+      );
+      trigger.click();
+
+      expect(scrolled).toEqual([rendered]);
     });
   });
 });

@@ -1,5 +1,4 @@
 import type { ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
-import type { Editor } from '@tiptap/core';
 import { consume, ContextProvider } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
@@ -20,7 +19,6 @@ import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { identifierContext } from '@/context/identifierContext';
-import { tiptapContext } from '@/context/tiptapContext';
 import { violationsContext } from '@/context/violationsContext';
 import {
   CustomEvents,
@@ -80,10 +78,6 @@ export class ValidationsDrawer extends LitElement {
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })
   private readonly identifierContextValue?: string;
-
-  @consume({ context: tiptapContext, subscribe: true })
-  @property({ attribute: false })
-  public editor?: Editor;
 
   @consume({ context: violationsContext, subscribe: true })
   @property({ attribute: false })

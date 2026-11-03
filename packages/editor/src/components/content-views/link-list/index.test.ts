@@ -1,6 +1,6 @@
 import { violation } from '@test/violation';
 import { waitFor } from '@testing-library/dom';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import type { Context } from '@/components/context';
 import type { ViolationsMap } from '@/types/validation';
 import type { LinkList } from './index';
@@ -31,6 +31,7 @@ describe('<clippy-link-list>', () => {
   });
 
   afterEach(() => {
+    vi.restoreAllMocks();
     document.body.innerHTML = '';
     document.documentElement.removeAttribute('lang');
   });
@@ -198,6 +199,22 @@ describe('<clippy-link-list>', () => {
       expect(
         linkList.shadowRoot?.querySelector('.nl-data-badge')?.classList.contains('clippy-link-list__badge--error'),
       ).toBe(true);
+    });
+  });
+
+  describe('scrolling', () => {
+    it('scrolls the link rendered in the editor into view, not the hidden source', async () => {
+      const { linkList } = await setupWithContent('<p><a href="https://example.com">Voorbeeld</a></p>');
+      const scrolled: Element[] = [];
+      vi.spyOn(Element.prototype, 'scrollIntoView').mockImplementation(function (this: Element) {
+        scrolled.push(this);
+      });
+      const rendered = await waitFor(() => document.querySelector('clippy-content a[href]')!);
+
+      const trigger = await waitFor(() => linkList.shadowRoot!.querySelector('.nl-link') as HTMLElement);
+      trigger.click();
+
+      expect(scrolled).toEqual([rendered]);
     });
   });
 });

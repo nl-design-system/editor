@@ -1,4 +1,3 @@
-import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
@@ -15,8 +14,8 @@ import { classMap } from 'lit/directives/class-map.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationInteractionMode, Violation, ViolationsMap } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
+import { contentElementContext } from '@/context/contentElementContext';
 import { identifierContext } from '@/context/identifierContext';
-import { tiptapContext } from '@/context/tiptapContext';
 import { violationsContext } from '@/context/violationsContext';
 import { ResizeController } from '@/controllers/ResizeController';
 import {
@@ -127,7 +126,7 @@ export class Gutter extends LitElement {
 
   /**
    * Optional reference element used for indicator positioning and resize
-   * observation when no TipTap editor context is available (standalone use).
+   * observation when no content element context is available (standalone use).
    * Pass the element that wraps the content being validated.
    */
   @property({ attribute: false })
@@ -137,10 +136,10 @@ export class Gutter extends LitElement {
   @state()
   private activeRange: Range | null = null;
 
-  /** @internal Consumed from the nearest {@link tiptapContext} provider. */
-  @consume({ context: tiptapContext, subscribe: true })
-  @property({ attribute: false })
-  private readonly editor?: Editor;
+  /** @internal Consumed from the nearest {@link contentElementContext} provider. */
+  @consume({ context: contentElementContext, subscribe: true })
+  @state()
+  private readonly contentElementContextValue?: HTMLElement;
 
   /** Map of DOM ranges to their violations, used to render indicators. */
   @property({ attribute: false })
@@ -209,12 +208,12 @@ export class Gutter extends LitElement {
   }
 
   override firstUpdated(): void {
-    // With no TipTap editor (readonly consumers skip TipTap entirely) and no
+    // With no content element context (readonly consumers skip TipTap entirely) and no
     // explicit `contentElement`, nothing else attaches a ResizeObserver. Observe
     // the host itself: its `block-size: 100%` tracks the validated content's
     // height, so reflows from resizing or opening the drawer fire the observer
     // and recompute indicator positions.
-    if (!this.editor && !this.contentElement) {
+    if (!this.contentElementContextValue && !this.contentElement) {
       this.#resizeController.observe(this);
     }
   }
@@ -226,39 +225,24 @@ export class Gutter extends LitElement {
       applyValidationHighlights(this, this.violationsMap ?? this.violationsContext);
     }
 
-    if (changedProperties.has('editor')) {
-      this.#handleEditorChanged(changedProperties.get('editor'));
+    if (changedProperties.has('contentElementContextValue')) {
+      this.#handleContentElementContextChanged();
     }
 
     if (changedProperties.has('contentElement')) {
       if (this.contentElement) {
         this.#resizeController.observe(this.contentElement);
-      } else if (!this.editor?.view?.dom) {
+      } else if (!this.contentElementContextValue) {
         this.#resizeController.disconnect();
       }
     }
   }
 
-  #handleEditorChanged(previousEditor: Editor | undefined): void {
+  #handleContentElementContextChanged(): void {
     if (!this.contentElement) {
       this.#resizeController.disconnect();
     }
-    previousEditor?.off('create', this.#attachResizeObserver);
-
-    if (!this.editor) return;
-
-    // editor.view is a getter that throws in TipTap 3.x when not yet mounted.
-    let editorDom: HTMLElement | null = null;
-    try {
-      editorDom = this.editor.view?.dom ?? null;
-    } catch {
-      // Not mounted yet — will wait for the 'create' event.
-    }
-    if (editorDom) {
-      this.#attachResizeObserver();
-    } else {
-      this.editor.on('create', this.#attachResizeObserver);
-    }
+    this.#attachResizeObserver();
   }
 
   override disconnectedCallback() {
@@ -269,13 +253,12 @@ export class Gutter extends LitElement {
     );
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
     globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
-    this.editor?.off('create', this.#attachResizeObserver);
     clearHoverHighlight();
     clearValidationHighlights(this);
   }
 
   readonly #attachResizeObserver = () => {
-    const dom = this.contentElement ?? this.editor?.view?.dom;
+    const dom = this.contentElement ?? this.contentElementContextValue;
     if (!dom) return;
     this.#resizeController.observe(dom);
   };
@@ -283,7 +266,7 @@ export class Gutter extends LitElement {
   /**
    * Compute the top offset and height of a gutter indicator for the given
    * range.  Uses the gutter host element as the reference rectangle so that
-   * positioning is correct regardless of whether a TipTap editor is present.
+   * positioning is correct regardless of whether a content element is present.
    * The host is always rendered at `inset-block-start: 0` inside its
    * containing block, so its top equals the container's top.
    */
