@@ -16,6 +16,8 @@ export {
 } from './components/heading/utils.ts';
 export { hasHeaderColumn, hasHeaderRow, tableRows } from './components/table/utils.ts';
 export { isEmptyOrWhitespace } from './utils/text.ts';
+export { getDocumentationComponentRuleById } from './documentation.ts';
+export { resolveMessages } from './messages.ts';
 export { Validator } from './validator.ts';
 export type { LocaleOptions, ValidatorConstructorOptions, ValidatorRunOptions } from './types/validator.ts';
 export type {
