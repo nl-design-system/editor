@@ -1,0 +1,65 @@
+---
+import Document from '../../layouts/document.astro';
+import Section from '../../components/Section.astro';
+import { useTranslations } from '../../i18n/translations.ts';
+
+const t = useTranslations('en');
+---
+
+<Document title={t('community.title')}>
+  <main>
+    <h1 class="nl-heading nl-heading--level-1">Community</h1>
+    <p class="nl-paragraph">
+      The editor is open source. We build it together with everyone who cares about accessible content.
+    </p>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Open source</h2>
+      <p class="nl-paragraph">
+        The code is public on <a class="nl-link" href="https://github.com/nl-design-system/editor">GitHub</a>. You are
+        free to use, change and share the editor under the <a
+          class="nl-link"
+          href="https://github.com/nl-design-system/editor/blob/main/LICENSE.md"
+          >European Union Public License (EUPL) 1.2</a
+        >. The documentation is licensed as Creative Commons Zero 1.0.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Contributing</h2>
+      <ul class="utrecht-unordered-list">
+        <li class="utrecht-unordered-list__item">
+          Found a bug or have an idea? Open an <a
+            class="nl-link"
+            href="https://github.com/nl-design-system/editor/issues">issue</a
+          >.
+        </li>
+        <li class="utrecht-unordered-list__item">
+          Want to contribute code? Fork the repository and send a <a
+            class="nl-link"
+            href="https://github.com/nl-design-system/editor/pulls">pull request</a
+          >.
+        </li>
+        <li class="utrecht-unordered-list__item">
+          Missing a check? <a class="nl-link" href={t('nav.href.guidelines')}>Validations</a> explains how to add a validation.
+        </li>
+      </ul>
+      <p class="nl-paragraph">
+        Before you join in, read our <a
+          class="nl-link"
+          href="https://github.com/nl-design-system/editor/blob/main/CODE_OF_CONDUCT.md">code of conduct</a
+        >.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Expertteam Digitale Toegankelijkheid</h2>
+      <p class="nl-paragraph">
+        Read more about the
+        <a class="nl-link" href="https://nldesignsystem.nl/project/expertteam-digitale-toegankelijkheid/"
+          >Expertteam Digitale Toegankelijkheid</a
+        > (digital accessibility expert team) on the NL Design System website.
+      </p>
+    </Section>
+  </main>
+</Document>

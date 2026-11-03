@@ -1,0 +1,66 @@
+---
+import Document from '../layouts/document.astro';
+import Section from '../components/Section.astro';
+import { useTranslations } from '../i18n/translations.ts';
+
+const t = useTranslations('nl');
+---
+
+<Document title={t('community.title')}>
+  <main>
+    <h1 class="nl-heading nl-heading--level-1">Community</h1>
+    <p class="nl-paragraph">
+      De editor is open source. We bouwen hem samen met iedereen die toegankelijke content belangrijk vindt.
+    </p>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Open source</h2>
+      <p class="nl-paragraph">
+        De code staat openbaar op <a class="nl-link" href="https://github.com/nl-design-system/editor">GitHub</a>. Je
+        mag de editor vrij gebruiken, aanpassen en delen onder de <a
+          class="nl-link"
+          href="https://github.com/nl-design-system/editor/blob/main/LICENSE.md"
+          >European Union Public License (EUPL) 1.2</a
+        >. De documentatie valt onder Creative Commons Zero 1.0.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Bijdragen</h2>
+      <ul class="utrecht-unordered-list">
+        <li class="utrecht-unordered-list__item">
+          Vond je een fout of heb je een idee? Maak een <a
+            class="nl-link"
+            href="https://github.com/nl-design-system/editor/issues">issue</a
+          > aan.
+        </li>
+        <li class="utrecht-unordered-list__item">
+          Wil je code bijdragen? Maak een fork en stuur een <a
+            class="nl-link"
+            href="https://github.com/nl-design-system/editor/pulls">pull request</a
+          >.
+        </li>
+        <li class="utrecht-unordered-list__item">
+          Mis je een controle? Lees bij <a class="nl-link" href={t('nav.href.guidelines')}>Validaties</a> hoe je een validatie
+          toevoegt.
+        </li>
+      </ul>
+      <p class="nl-paragraph">
+        Lees voordat je meedoet onze <a
+          class="nl-link"
+          href="https://github.com/nl-design-system/editor/blob/main/CODE_OF_CONDUCT.nl.md">gedragscode</a
+        >.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Expertteam Digitale Toegankelijkheid</h2>
+      <p class="nl-paragraph">
+        Lees meer over het
+        <a class="nl-link" href="https://nldesignsystem.nl/project/expertteam-digitale-toegankelijkheid/"
+          >Expertteam Digitale Toegankelijkheid</a
+        > op de website van NL Design System.
+      </p>
+    </Section>
+  </main>
+</Document>

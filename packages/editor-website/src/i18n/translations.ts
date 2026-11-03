@@ -4,6 +4,7 @@ const translations = {
   en: {
     'alt-text-wizard.title': 'Alt-text wizard - Rich-text Editor - NL Design System',
     'breadcrumb.label': 'Breadcrumb',
+    'community.title': 'Community - Rich-text Editor - NL Design System',
     'configuration.editor.content': 'Content here...',
     'configuration.editor.placeholder': 'Modify the JSON to change the toolbar live.',
 
@@ -73,6 +74,7 @@ const translations = {
   nl: {
     'alt-text-wizard.title': 'Alt-tekst wizard - Rich-text Editor - NL Design System',
     'breadcrumb.label': 'Kruimelpad',
+    'community.title': 'Community - Rich-text Editor - NL Design System',
     'configuration.editor.content': 'Inhoud hier...',
     'configuration.editor.placeholder': 'Pas de JSON aan om de toolbar live te wijzigen.',
 
