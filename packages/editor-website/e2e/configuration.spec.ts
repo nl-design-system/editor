@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/bibliotheken/editor/configuratie');
+  await page.goto('/hulpmiddelen/editor/configuratie');
   const minimalEditor = page.locator('#clippy-editor-minimal-toolbar');
   await expect(minimalEditor.getByRole('button', { name: 'Vetgedrukt', exact: true })).toBeVisible();
 });

@@ -1,14 +1,14 @@
 import { expect, test } from '@playwright/test';
+import { ruleAnchor } from '../src/utils/ruleAnchor.ts';
+import { validationGroups } from '../src/utils/validationGroups.ts';
 
-test.beforeEach(async ({ page }) => {
-  await page.goto('/richtlijnen');
-  // Wait for the clippy-context custom element (not the inner textbox that gets the same id)
-  await expect(page.locator('clippy-context#editor-1')).toBeVisible();
-});
+test.describe('Overview', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/validaties');
+  });
 
-test.describe('Page basics', () => {
   test('page has correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('Toegankelijkheidsrichtlijnen - Rich-text Editor - NL Design System');
+    await expect(page).toHaveTitle('Validaties - Rich-text Editor - NL Design System');
   });
 
   test('page has document language', async ({ page }) => {
@@ -16,156 +16,71 @@ test.describe('Page basics', () => {
   });
 
   test('page heading is visible', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: 'Toegankelijkheidsrichtlijnen', level: 1 })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Validaties', level: 1 })).toBeVisible();
   });
 
-  test('Richtlijnen nav link is active', async ({ page }) => {
-    const menuButton = page.getByRole('button', { name: 'Menu' });
+  test('Validaties nav link is active', async ({ page }) => {
+    const menuButton = page.getByRole('button', { name: 'Menu', exact: true });
     if (await menuButton.isVisible()) {
       await menuButton.click();
     }
-    await expect(page.getByRole('link', { name: 'Richtlijnen' })).toHaveAttribute('aria-current', 'page');
+    await expect(page.getByRole('link', { name: 'Validaties', exact: true }).filter({ visible: true })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+  });
+
+  test('lists every core validation', async ({ page }) => {
+    const rules = validationGroups.flatMap(({ rules }) => rules);
+    await expect(page.getByRole('table').getByRole('row')).toHaveCount(rules.length + 1);
+  });
+
+  test('links a validation to its card', async ({ page }) => {
+    const row = page.getByRole('row').filter({ hasText: 'IMAGE_MUST_HAVE_ALT_TEXT' });
+    await expect(row.getByRole('link')).toHaveAttribute('href', '/validaties/afbeelding#image-must-have-alt-text');
   });
 });
 
-test.describe('Guideline examples are present', () => {
-  const guidelines: Array<{ id: string; title: string }> = [
-    { id: 'editor-1', title: 'Niet doen: lege alinea' },
-    { id: 'editor-2', title: 'Niet doen: lege inline elementen' },
-    { id: 'editor-3', title: 'Niet doen: tekst onderstrepen' },
-    { id: 'editor-4', title: 'Niet doen: lege list items' },
-    { id: 'editor-5', title: 'Niet doen: lege list items' },
-    { id: 'editor-6', title: 'Niet doen: geordende lijst zonder opmaak' },
-    { id: 'editor-7', title: 'Niet doen: lijst zonder opmaak' },
-    { id: 'editor-8', title: 'Niet doen: Lege Definition List' },
-    { id: 'editor-9', title: 'Niet doen: Lege rij in een tabel' },
-    { id: 'editor-10', title: 'Niet doen: Afbeelding zonder alt-tekst' },
-    { id: 'editor-11', title: 'Niet doen: Koptekst zonder opmaak' },
-    { id: 'editor-12', title: 'Niet doen: Kopniveau overslaan' },
-    { id: 'editor-13', title: 'Niet doen: Tabel zonder kopcellen' },
-    { id: 'editor-15', title: 'Niet doen: Meer dan 1 hoofdkop' },
-    { id: 'editor-16', title: 'Niet doen: Niet beginnen met een hoofdkop' },
-    { id: 'editor-17', title: 'Niet doen: Definitie zonder term' },
-    { id: 'editor-19', title: 'Niet doen: Heading met bold' },
-    { id: 'editor-20', title: 'Niet doen: Heading met italic' },
-    { id: 'editor-21', title: 'Niet doen: Onduidelijke linktekst' },
-  ];
+test.describe('Component pages', () => {
+  for (const { label, rules, slug } of validationGroups) {
+    test.describe(label.nl, () => {
+      test.beforeEach(async ({ page }) => {
+        await page.goto(`/validaties/${slug.nl}`);
+      });
 
-  guidelines.forEach(({ id, title }) => {
-    test(`"${title}" example is present (#${id})`, async ({ page }) => {
-      const context = page.locator(`clippy-context#${id}`);
-      await expect(context).toBeAttached();
-      await expect(context.locator('.clippy-guideline__title').filter({ hasText: title })).toBeVisible();
-    });
-  });
-});
+      test('page heading and navigation link are present', async ({ page }) => {
+        await expect(page.getByRole('heading', { name: label.nl, exact: true, level: 1 })).toBeVisible();
+        const menuButton = page.getByRole('button', { name: 'Menu', exact: true });
+        if (await menuButton.isVisible()) {
+          await menuButton.click();
+        }
+        await expect(page.getByRole('link', { name: label.nl, exact: true }).filter({ visible: true })).toHaveAttribute(
+          'aria-current',
+          'page',
+        );
+      });
 
-test.describe('Validation messages shown for bad content', () => {
-  test('editor-1 (lege alinea) shows a validation warning', async ({ page }) => {
-    const context = page.locator('clippy-context#editor-1');
-    await expect(context).toBeAttached();
-    await expect(context.locator('clippy-content')).toBeAttached();
-  });
-
-  test('editor-10 (afbeelding zonder alt) has an image in its content', async ({ page }) => {
-    const slot = page.locator('clippy-context#editor-10 [slot="value"]');
-    await expect(slot.locator('img')).toBeAttached();
-  });
-
-  test('editor-12 (kopniveau overslaan) has skipped heading levels in its content', async ({ page }) => {
-    const textbox = page.locator('clippy-context#editor-12').getByRole('textbox');
-    await expect(textbox.getByRole('heading', { level: 1 })).toBeAttached();
-    await expect(textbox.getByRole('heading', { level: 3 })).toBeAttached();
-  });
-
-  test('editor-15 (meer dan 1 h1) has multiple h1s in its content', async ({ page }) => {
-    const textbox = page.locator('clippy-context#editor-15').getByRole('textbox');
-    await expect(textbox.getByRole('heading', { level: 1 })).toHaveCount(2);
-  });
-
-  test('editor-21 (onduidelijke linktekst) has a generic link in its content', async ({ page }) => {
-    const textbox = page.locator('clippy-context#editor-21').getByRole('textbox');
-    await expect(textbox.getByRole('link')).toBeAttached();
-  });
-});
-
-/**
- * Each guideline editor runs the validations its content trips, assigned by id in
- * `src/scripts/guideline-validations.ts`.
- * The expected indicator count is derived from the content and the rule's selector: every
- * validation of `@nl-design-system-community/clippy-a11y-validator` fires once per element
- * matching its selector, in document order.
- *
- * TipTap wraps list-item and table-cell content in a `<p>`, so an empty `<li>` becomes
- * `<li><p></p></li>`. Only the rule whose selector matches fires, so that counts once.
- */
-test.describe('Gutter indicators', () => {
-  const gutterGuidelines: Array<{ id: string; title: string; expectedIndicators: number }> = [
-    // paragraph-should-not-be-empty: 1 empty <p>
-    { id: 'editor-1', expectedIndicators: 1, title: 'lege alinea' },
-    // emphasis-should-not-be-empty: 7 empty emphasis elements (b, u, strong, mark, em, s, i)
-    // link-should-not-be-empty: 1 empty <a>
-    { id: 'editor-2', expectedIndicators: 8, title: 'lege inline elementen' },
-    // emphasis-should-not-be-underlined: 1 <u> element
-    { id: 'editor-3', expectedIndicators: 1, title: 'tekst onderstrepen' },
-    // list-item-should-not-be-empty: 1 empty <li>
-    { id: 'editor-4', expectedIndicators: 1, title: 'lege list items (ul)' },
-    // list-item-should-not-be-empty: 1 empty <li>
-    { id: 'editor-5', expectedIndicators: 1, title: 'lege list items (ol)' },
-    // paragraph-should-not-resemble-list: 1 numbered-list paragraph
-    { id: 'editor-6', expectedIndicators: 1, title: 'geordende lijst zonder opmaak' },
-    // paragraph-should-not-resemble-list: 1 bullet-list paragraph
-    { id: 'editor-7', expectedIndicators: 1, title: 'lijst zonder opmaak' },
-    // description-term-should-not-be-empty: 1 empty <dt>
-    // description-should-not-be-empty: 1 empty <dd>
-    { id: 'editor-8', expectedIndicators: 2, title: 'lege Definition List' },
-    // table-cell-should-not-be-empty: 3 empty <td> cells
-    { id: 'editor-9', expectedIndicators: 3, title: 'lege rij in een tabel' },
-    // image-must-have-alt-text: 1 <img> without alt
-    { id: 'editor-10', expectedIndicators: 1, title: 'afbeelding zonder alt-tekst' },
-    // paragraph-should-not-resemble-heading: 1 bold-only paragraph
-    { id: 'editor-11', expectedIndicators: 1, title: 'koptekst zonder opmaak' },
-    // heading-level-must-not-skip: h1 → h3 (skipped h2)
-    { id: 'editor-12', expectedIndicators: 1, title: 'kopniveau overslaan' },
-    // table-must-have-headings: 1 table without <th> cells
-    { id: 'editor-13', expectedIndicators: 1, title: 'tabel zonder kopcellen' },
-    // table-must-have-multiple-rows: 1 single-row table
-    { id: 'editor-14', expectedIndicators: 1, title: 'tabel met één rij' },
-    // heading-level-one-must-be-unique: 2 h1s → 1 extra flagged
-    { id: 'editor-15', expectedIndicators: 1, title: 'meer dan 1 hoofdkop' },
-    // heading-must-start-at-level-one: the first heading is an h2
-    { id: 'editor-16', expectedIndicators: 1, title: 'niet beginnen met een hoofdkop' },
-    // description-term-must-have-description: empty <dt> paired with a non-empty <dd>
-    { id: 'editor-17', expectedIndicators: 1, title: 'definitie zonder term' },
-    // description-list-must-contain-term: <dl> where every <dt> is empty
-    { id: 'editor-18', expectedIndicators: 1, title: 'definitielijst zonder term' },
-    // heading-should-not-contain-bold-or-italic: h1 with <strong>
-    { id: 'editor-19', expectedIndicators: 1, title: 'heading met bold' },
-    // heading-should-not-contain-bold-or-italic: h1 with <em>
-    { id: 'editor-20', expectedIndicators: 1, title: 'heading met italic' },
-    // link-should-not-be-too-generic: "klik hier" link
-    { id: 'editor-21', expectedIndicators: 1, title: 'onduidelijke linktekst' },
-  ];
-
-  for (const { id, expectedIndicators, title } of gutterGuidelines) {
-    test(`${id} (${title}) gutter has ${expectedIndicators} indicator(s)`, async ({ page }) => {
-      const context = page.locator(`clippy-context#${id}`);
-      const indicators = context.locator('clippy-validations-gutter .clippy-validations-gutter__indicator');
-
-      await expect(indicators).toHaveCount(expectedIndicators);
+      for (const { rule } of rules) {
+        test(`${rule} example shows its validation`, async ({ page }) => {
+          const card = page.locator(`#${ruleAnchor(rule)}`);
+          await expect(card.getByText(rule, { exact: true })).toBeVisible();
+          await expect(card.locator('.clippy-validation__title')).toBeVisible();
+          await expect(
+            card.locator('clippy-validations-gutter .clippy-validations-gutter__indicator').first(),
+          ).toBeVisible();
+          await expect(card.locator('clippy-validations-list clippy-validation-item').first()).toBeAttached();
+        });
+      }
     });
   }
+});
 
-  test('gutter indicator count matches validation list item count for each editor', async ({ page }) => {
-    for (const { id } of gutterGuidelines) {
-      const context = page.locator(`clippy-context#${id}`);
-      const gutterIndicators = context.locator('clippy-validations-gutter .clippy-validations-gutter__indicator');
-      const listItems = context.locator('clippy-validations-list clippy-validation-item');
-
-      const gutterCount = await gutterIndicators.count();
-      const listCount = await listItems.count();
-
-      expect(gutterCount, `${id}: gutter and list counts should match`).toBe(listCount);
-    }
+test.describe('English component page', () => {
+  test('shows the rules of the component', async ({ page }) => {
+    await page.goto('/en/validations/heading');
+    await expect(page.getByRole('heading', { name: 'Heading', exact: true, level: 1 })).toBeVisible();
+    await expect(page.locator('#heading-must-not-be-empty clippy-validations-list clippy-validation-item')).toHaveCount(
+      1,
+    );
   });
 });

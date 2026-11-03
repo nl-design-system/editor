@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/react');
+  await page.goto('/hulpmiddelen/editor/react');
   // Wait for the React components to hydrate (client:only) — scope to the custom element tag
   await expect(page.locator('clippy-editor#react-editor-1')).toBeVisible();
   await expect(
@@ -25,13 +25,14 @@ test.describe('Page basics', () => {
 
 test.describe('Navigation', () => {
   test('React nav link is active on the react page', async ({ page }) => {
-    const menuButton = page.getByRole('button', { name: 'Menu' });
+    const menuButton = page.getByRole('button', { name: 'Menu', exact: true });
     if (await menuButton.isVisible()) {
       await menuButton.click();
     }
-    await expect(
-      page.getByRole('navigation', { name: 'Hoofdnavigatie' }).getByRole('link', { name: 'React', exact: true }),
-    ).toHaveAttribute('aria-current', 'page');
+    await expect(page.getByRole('link', { name: 'React', exact: true }).filter({ visible: true })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
   });
 });
 
