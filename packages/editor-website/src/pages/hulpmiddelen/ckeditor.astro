@@ -1,12 +1,15 @@
 ---
 import Document from '../../layouts/document.astro';
-import LibrariesNavigation from '../../components/LibrariesNavigation.astro';
+import SectionNavigation from '../../components/SectionNavigation.astro';
 import PackageLinks from '../../components/PackageLinks.astro';
 import ckeditorPackage from '../../../../ckeditor-plugin/package.json';
+import { useTranslations } from '../../i18n/translations.ts';
+
+const t = useTranslations('nl');
 ---
 
 <Document title="NL Design System - CKEditor">
-  <LibrariesNavigation />
+  <SectionNavigation href={t('nav.href.libraries')} />
   <main>
     <div class="ma-page-section ma-page-section--with-space">
       <h1>Clippy CKEditor plugin</h1>

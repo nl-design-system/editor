@@ -1,6 +1,6 @@
 ---
 import Document from '../../../layouts/document.astro';
-import LibrariesNavigation from '../../../components/LibrariesNavigation.astro';
+import SectionNavigation from '../../../components/SectionNavigation.astro';
 import Section from '../../../components/Section.astro';
 import CodeBlock from '../../../components/CodeBlock.astro';
 import PackageLinks from '../../../components/PackageLinks.astro';
@@ -12,7 +12,7 @@ const t = useTranslations('nl');
 ---
 
 <Document title={t('library.editor.title')}>
-  <LibrariesNavigation />
+  <SectionNavigation href={t('nav.href.libraries')} />
   <main>
     <h1 class="nl-heading nl-heading--level-1">Editor</h1>
     <p class="nl-paragraph">
@@ -27,7 +27,7 @@ const t = useTranslations('nl');
     </Section>
 
     <Section>
-      <h2 class="nl-heading nl-heading--level-2">Gebruiken</h2>
+      <h2 class="nl-heading nl-heading--level-2" id="componenten">Gebruiken</h2>
       <p class="nl-paragraph">Importeer de Web Components en het thema:</p>
       <CodeBlock code={`import '${editorPackage.name}';\nimport '${editorPackage.name}/theme.css';`} />
       <p class="nl-paragraph">Plaats de editor op de pagina. De beginwaarde komt in het <code>value</code>-slot:</p>

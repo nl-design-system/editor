@@ -37,15 +37,17 @@ export default defineConfig({
   publicDir: '../../static',
 
   redirects: {
-    '/alt-tekst-wizard': '/bibliotheken/alt-tekst-wizard',
-    '/ckeditor': '/bibliotheken/ckeditor',
-    '/configuratie': '/bibliotheken/editor/configuratie',
-    '/en/alt-text-wizard': '/en/libraries/alt-text-wizard',
-    '/en/configuration': '/en/libraries/editor/configuration',
-    '/en/integrations': '/en/libraries',
-    '/en/react': '/en/libraries/editor/react',
-    '/integraties': '/bibliotheken',
-    '/react': '/bibliotheken/editor/react',
+    '/alt-tekst-wizard': '/hulpmiddelen/alt-tekst-wizard',
+    '/ckeditor': '/hulpmiddelen/ckeditor',
+    '/configuratie': '/hulpmiddelen/editor/configuratie',
+    '/en/alt-text-wizard': '/en/tools/alt-text-wizard',
+    '/en/configuration': '/en/tools/editor/configuration',
+    '/en/guidelines': '/en/validations',
+    '/en/integrations': '/en/tools',
+    '/en/react': '/en/tools/editor/react',
+    '/integraties': '/hulpmiddelen',
+    '/react': '/hulpmiddelen/editor/react',
+    '/richtlijnen': '/validaties',
   },
 
   server: {

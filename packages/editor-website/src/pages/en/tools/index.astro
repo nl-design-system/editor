@@ -3,7 +3,7 @@ import ckeditorLogo from '../../../assets/logos/ckeditor.svg?raw';
 import drupalLogo from '../../../assets/logos/drupal.svg?raw';
 import typo3Logo from '../../../assets/logos/typo3.svg?raw';
 import Document from '../../../layouts/document.astro';
-import LibrariesNavigation from '../../../components/LibrariesNavigation.astro';
+import SectionNavigation from '../../../components/SectionNavigation.astro';
 import Section from '../../../components/Section.astro';
 import Card from '../../../components/Card.astro';
 import CardGroup from '../../../components/CardGroup.astro';
@@ -20,9 +20,9 @@ const t = useTranslations('en');
 ---
 
 <Document title={t('libraries.title')}>
-  <LibrariesNavigation />
+  <SectionNavigation href={t('nav.href.libraries')} />
   <main>
-    <h1 class="nl-heading nl-heading--level-1">Libraries</h1>
+    <h1 class="nl-heading nl-heading--level-1">Tools</h1>
     <p class="nl-paragraph">
       Clippy consists of separate packages that you can use on their own or together. Pick the packages that fit your
       website or CMS.

@@ -1,6 +1,6 @@
 ---
 import Document from '../../layouts/document.astro';
-import LibrariesNavigation from '../../components/LibrariesNavigation.astro';
+import SectionNavigation from '../../components/SectionNavigation.astro';
 import Section from '../../components/Section.astro';
 import CodeBlock from '../../components/CodeBlock.astro';
 import PackageLinks from '../../components/PackageLinks.astro';
@@ -11,7 +11,7 @@ const t = useTranslations('nl');
 ---
 
 <Document title={t('library.a11y-validator.title')}>
-  <LibrariesNavigation />
+  <SectionNavigation href={t('nav.href.libraries')} />
   <main>
     <h1 class="nl-heading nl-heading--level-1">Toegankelijkheidsvalidator</h1>
     <p class="nl-paragraph">
@@ -35,7 +35,17 @@ const t = useTranslations('nl');
     </Section>
 
     <Section>
-      <h2 class="nl-heading nl-heading--level-2">Command line</h2>
+      <h2 class="nl-heading nl-heading--level-2" id="browser">Browser</h2>
+      <p class="nl-paragraph">
+        Controleer een deel van de pagina in de browser. Elke melding verwijst naar het element zelf:
+      </p>
+      <CodeBlock
+        code={`import { coreValidations, Validator } from '${a11yValidatorPackage.name}';\n\nconst validator = new Validator({ validations: Object.values(coreValidations) });\nconst violations = validator.validate([document.querySelector('main')]);`}
+      />
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2" id="command-line">Command line</h2>
       <CodeBlock code="npx clippy-validate-html <pad...> [opties]" />
       <p class="nl-paragraph">
         Elk pad is een <code>.html</code>- of <code>.htm</code>-bestand, of een map om in te zoeken.

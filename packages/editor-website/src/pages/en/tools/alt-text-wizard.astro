@@ -1,6 +1,6 @@
 ---
 import Document from '../../../layouts/document.astro';
-import LibrariesNavigation from '../../../components/LibrariesNavigation.astro';
+import SectionNavigation from '../../../components/SectionNavigation.astro';
 import PackageLinks from '../../../components/PackageLinks.astro';
 import altTextWizardPackage from '../../../../../clippy-alt-text-wizard/package.json';
 import Section from '../../../components/Section.astro';
@@ -14,7 +14,7 @@ const mermaid = generateMermaidStateDiagram(altTextWizardMachine);
 ---
 
 <Document title={t('alt-text-wizard.title')}>
-  <LibrariesNavigation />
+  <SectionNavigation href={t('nav.href.libraries')} />
   <main>
     <h1 class="nl-heading nl-heading--level-1">Alt-text wizard</h1>
     <p class="nl-paragraph">A step-by-step wizard that helps authors write accessible alt text for images.</p>
