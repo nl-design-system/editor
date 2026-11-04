@@ -128,7 +128,8 @@ const unregister = validator.register(abbreviationMustHaveTitle);
 
 `condition` returns `true` when the element is fine. A `document` scoped validation also receives a context to look at
 the elements before and after it. Add `corrections` for the fixes the validator can apply, primary first, and `payload`
-to fill placeholders such as `{text}` in the messages.
+to fill placeholders such as `{text}` in the messages. A correction always receives the context, so a fix can depend
+on the document even when the issue lies in the element itself.
 
 ## Rules
 

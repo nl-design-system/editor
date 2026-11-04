@@ -11,6 +11,16 @@ export const paragraphShouldNotBeEntirelyItalic = defineValidation({
   corrections: [
     {
       execute: (paragraph) => () => paragraph.querySelectorAll(selectors.ITALIC).forEach(unwrapElement),
+      label: { en: 'Remove italic', nl: 'Schuingedrukt verwijderen' },
+    },
+    {
+      execute: (paragraph) => () => {
+        paragraph.querySelectorAll(selectors.ITALIC).forEach(unwrapElement);
+        const blockquote = paragraph.ownerDocument.createElement('blockquote');
+        paragraph.replaceWith(blockquote);
+        blockquote.append(paragraph);
+      },
+      label: { en: 'Convert to blockquote', nl: 'Omzetten naar citaat' },
     },
   ],
   documentationId: 'aeb01c78-8633-47bc-8fff-7aa1eec10130',
