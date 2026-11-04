@@ -34,7 +34,7 @@ Each path is an `.html` or `.htm` file, or a directory to search for them.
 | Option              | Description                                                                                                                                      |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `--allow-warnings`  | Exit with `0` when no issues of `error` severity are found.                                                                                      |
-| `--fix`             | Apply the available corrections. The files on disk stay untouched: the output shows the markup as it is after correcting.                        |
+| `--fix`             | Apply the primary correction of each issue. The files on disk stay untouched: the output shows the markup as it is after correcting.             |
 | `--skip <selector>` | Remove everything matching this CSS selector before validating, e.g. demo markup that is wrong on purpose. Repeat the option for more selectors. |
 | `--help`, `-h`      | Show the usage.                                                                                                                                  |
 
@@ -88,15 +88,15 @@ validator.validate([content], { severities: ['error', 'warning'] });
 
 Each violation has:
 
-| Property     | Description                                                                                                      |
-| ------------ | ---------------------------------------------------------------------------------------------------------------- |
-| `rule`       | The rule that was violated, e.g. `HEADING_MUST_NOT_BE_EMPTY`.                                                    |
-| `severity`   | `error`, `warning` or `info`.                                                                                    |
-| `element`    | The element that violates the rule.                                                                              |
-| `messages`   | `title` (plain text), `explanation` and `solution` (HTML) and `href`, a link to the guideline.                   |
-| `correction` | Present when the validator can fix the issue: call `correction.execute()` to change the element.                 |
-| `focus`      | Present when the validation defines one; call it to move focus to the offending markup.                          |
-| `scope`      | `element` when the element has issues in itself, `document` when the issue lies in its relation to the document. |
+| Property      | Description                                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `rule`        | The rule that was violated, e.g. `HEADING_MUST_NOT_BE_EMPTY`.                                                       |
+| `severity`    | `error`, `warning` or `info`.                                                                                       |
+| `element`     | The element that violates the rule.                                                                                 |
+| `messages`    | `title` (plain text), `explanation` and `solution` (HTML) and `href`, a link to the guideline.                      |
+| `corrections` | Present when the validator can fix the issue, primary first: call `corrections[0].execute()` to change the element. |
+| `focus`       | Present when the validation defines one; call it to move focus to the offending markup.                             |
+| `scope`       | `element` when the element has issues in itself, `document` when the issue lies in its relation to the document.    |
 
 `explanation` and `solution` are HTML. Placeholders filled with the author's own content are escaped, but render them
 as HTML only in a context where that is safe.
@@ -127,8 +127,8 @@ const unregister = validator.register(abbreviationMustHaveTitle);
 ```
 
 `condition` returns `true` when the element is fine. A `document` scoped validation also receives a context to look at
-the elements before and after it. Add `correction` for a fix the validator can apply, and `payload` to fill
-placeholders such as `{text}` in the messages.
+the elements before and after it. Add `corrections` for the fixes the validator can apply, primary first, and `payload`
+to fill placeholders such as `{text}` in the messages.
 
 ## Rules
 
