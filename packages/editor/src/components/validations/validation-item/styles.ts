@@ -102,4 +102,35 @@ export default css`
     justify-content: flex-start;
     gap: var(--basis-space-inline-md);
   }
+
+  .clippy-validation-item__corrections {
+    display: flex;
+    gap: var(--basis-space-inline-xs);
+    position: relative;
+  }
+
+  .clippy-validation-item__corrections-menu {
+    background-color: var(--basis-color-default-bg-document);
+    border-color: var(--basis-color-default-border-default);
+    border-radius: var(--basis-border-radius-md);
+    border-style: solid;
+    border-width: var(--basis-border-width-sm);
+    box-shadow: var(--basis-box-shadow-md);
+    display: flex;
+    flex-direction: column;
+    inset-block-start: 100%;
+    inset-inline-start: 0;
+    margin-block-start: var(--basis-space-block-xs);
+    min-inline-size: 100%;
+    padding-block: var(--basis-space-block-xs);
+    position: absolute;
+    z-index: 1;
+  }
+
+  .clippy-validation-item__corrections-menu-item {
+    border-radius: 0;
+    inline-size: 100%;
+    justify-content: flex-start;
+    white-space: nowrap;
+  }
 `;

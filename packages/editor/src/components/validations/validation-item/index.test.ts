@@ -5,9 +5,9 @@ import { page, userEvent } from 'vitest/browser';
 import { CustomEvents } from '@/events';
 import type { ValidationItem } from './index';
 
-/** Mounts an item with its properties set directly — `correction` has no attribute form. */
+/** Mounts an item with its properties set directly — `corrections` has no attribute form. */
 const renderItem = async (
-  properties: Partial<Pick<ValidationItem, 'correction' | 'explanation' | 'heading' | 'href' | 'solution'>> = {},
+  properties: Partial<Pick<ValidationItem, 'corrections' | 'explanation' | 'heading' | 'href' | 'solution'>> = {},
 ): Promise<ValidationItem> => {
   document.body.innerHTML = `<clippy-validation-item pos="1" severity="error" heading="Fout"></clippy-validation-item>`;
   const item = document.querySelector('clippy-validation-item') as ValidationItem;
@@ -18,6 +18,13 @@ const renderItem = async (
 
 const correctButton = (item: ValidationItem): HTMLElement | null | undefined =>
   item.shadowRoot?.querySelector('clippy-button[purpose="primary"]');
+
+const menuToggle = (item: ValidationItem): HTMLButtonElement | null | undefined =>
+  item.shadowRoot?.querySelector('button[aria-haspopup="menu"]');
+
+const menuItems = (item: ValidationItem): HTMLButtonElement[] => [
+  ...(item.shadowRoot?.querySelectorAll<HTMLButtonElement>('[role="menuitem"]') ?? []),
+];
 
 /** Copy as a violation carries it: the heading plain text, explanation and solution as HTML. */
 const ENTIRELY_BOLD = {
@@ -161,7 +168,7 @@ describe('<validation-item> solution', () => {
   });
 
   it('keeps the actions reachable from the solution', async () => {
-    await renderItem({ correction: { execute: () => {} }, ...ENTIRELY_BOLD });
+    await renderItem({ corrections: [{ execute: () => {} }], ...ENTIRELY_BOLD });
 
     await userEvent.click(solutionLink());
 
@@ -191,13 +198,13 @@ describe('<validation-item> correction', () => {
   });
 
   it('labels the button "Correct" when the correction does not name one', async () => {
-    const item = await renderItem({ correction: { execute: () => {} } });
+    const item = await renderItem({ corrections: [{ execute: () => {} }] });
 
     expect(correctButton(item)?.textContent?.trim()).toBe('Correct');
   });
 
   it('uses the label the correction carries', async () => {
-    const item = await renderItem({ correction: { execute: () => {}, label: 'Bewerken' } });
+    const item = await renderItem({ corrections: [{ execute: () => {}, label: 'Bewerken' }] });
 
     expect(correctButton(item)?.textContent?.trim()).toBe('Bewerken');
   });
@@ -205,12 +212,101 @@ describe('<validation-item> correction', () => {
   it('runs the correction and announces it when the button is clicked', async () => {
     const execute = vi.fn();
     const announced = vi.fn();
-    const item = await renderItem({ correction: { execute } });
+    const item = await renderItem({ corrections: [{ execute }] });
     item.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, announced);
 
     correctButton(item)?.click();
 
     expect(execute).toHaveBeenCalledOnce();
     expect(announced).toHaveBeenCalledOnce();
+  });
+});
+
+describe('<validation-item> alternative corrections', () => {
+  const renderWithAlternatives = async () => {
+    const executes = [vi.fn(), vi.fn(), vi.fn()];
+    const item = await renderItem({
+      corrections: [
+        { execute: executes[0]!, label: 'Cursief verwijderen' },
+        { execute: executes[1]!, label: 'Omzetten naar citaat' },
+        { execute: executes[2]!, label: 'Omzetten naar intro' },
+      ],
+    });
+    return { executes, item };
+  };
+
+  it('offers no menu for a single correction', async () => {
+    const item = await renderItem({ corrections: [{ execute: () => {} }] });
+
+    expect(menuToggle(item)).toBeNull();
+  });
+
+  it('runs the first correction from the main button', async () => {
+    const { executes, item } = await renderWithAlternatives();
+
+    correctButton(item)?.click();
+
+    expect(correctButton(item)?.textContent?.trim()).toBe('Cursief verwijderen');
+    expect(executes[0]).toHaveBeenCalledOnce();
+    expect(executes[1]).not.toHaveBeenCalled();
+  });
+
+  it('names the menu button and keeps its menu closed at first', async () => {
+    const { item } = await renderWithAlternatives();
+
+    expect(menuToggle(item)?.getAttribute('aria-label')).toBe('More corrections');
+    expect(menuToggle(item)?.getAttribute('aria-expanded')).toBe('false');
+    expect(menuItems(item)).toHaveLength(0);
+  });
+
+  it('lists the other corrections and focuses the first once opened', async () => {
+    const { item } = await renderWithAlternatives();
+
+    await userEvent.click(menuToggle(item)!);
+
+    expect(menuToggle(item)?.getAttribute('aria-expanded')).toBe('true');
+    expect(menuItems(item).map((menuItem) => menuItem.textContent?.trim())).toEqual([
+      'Omzetten naar citaat',
+      'Omzetten naar intro',
+    ]);
+    expect(item.shadowRoot?.activeElement).toBe(menuItems(item)[0]);
+  });
+
+  it('moves between the corrections with the arrow keys, wrapping around', async () => {
+    const { item } = await renderWithAlternatives();
+    await userEvent.click(menuToggle(item)!);
+
+    await userEvent.keyboard('{ArrowDown}');
+    expect(item.shadowRoot?.activeElement).toBe(menuItems(item)[1]);
+
+    await userEvent.keyboard('{ArrowDown}');
+    expect(item.shadowRoot?.activeElement).toBe(menuItems(item)[0]);
+
+    await userEvent.keyboard('{ArrowUp}');
+    expect(item.shadowRoot?.activeElement).toBe(menuItems(item)[1]);
+  });
+
+  it('runs the chosen correction, announces it and closes the menu', async () => {
+    const { executes, item } = await renderWithAlternatives();
+    const announced = vi.fn();
+    item.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, announced);
+    await userEvent.click(menuToggle(item)!);
+
+    await userEvent.click(menuItems(item)[1]!);
+
+    expect(executes[2]).toHaveBeenCalledOnce();
+    expect(executes[0]).not.toHaveBeenCalled();
+    expect(announced).toHaveBeenCalledOnce();
+    expect(menuItems(item)).toHaveLength(0);
+  });
+
+  it('closes on Escape and returns focus to the menu button', async () => {
+    const { item } = await renderWithAlternatives();
+    await userEvent.click(menuToggle(item)!);
+
+    await userEvent.keyboard('{Escape}');
+
+    await waitFor(() => expect(menuItems(item)).toHaveLength(0));
+    expect(item.shadowRoot?.activeElement).toBe(menuToggle(item));
   });
 });

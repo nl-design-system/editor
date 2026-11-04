@@ -27,7 +27,7 @@ const resolveReviewRoot = (selector?: string): HTMLElement =>
 
 const withoutCorrections = (violationsMap: ViolationsMap): ViolationsMap => {
   for (const violation of violationsMap.values()) {
-    delete violation.correction;
+    delete violation.corrections;
   }
   return violationsMap;
 };

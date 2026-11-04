@@ -2,6 +2,7 @@ import type { ValidationSeverity, ViolationCorrection } from '@nl-design-system-
 import type { ClippyButton } from '@nl-design-system-community/clippy-components/clippy-button';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
+import buttonStyle from '@nl-design-system-candidate/button-css/button.css?inline';
 import codeStyle from '@nl-design-system-candidate/code-css/code.css?inline';
 import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
 import linkCss from '@nl-design-system-candidate/link-css/link.css?inline';
@@ -10,6 +11,7 @@ import { safeCustomElement } from '@nl-design-system-community/clippy-components
 import AlertCircleIcon from '@tabler/icons/outline/alert-circle.svg?raw';
 import AlertTriangleIcon from '@tabler/icons/outline/alert-triangle.svg?raw';
 import ArrowLeftIcon from '@tabler/icons/outline/arrow-left.svg?raw';
+import ChevronDownIcon from '@tabler/icons/outline/chevron-down.svg?raw';
 import ExternalLinkIcon from '@tabler/icons/outline/external-link.svg?raw';
 import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
 import { LitElement, html, nothing, unsafeCSS, type PropertyValues } from 'lit';
@@ -35,12 +37,15 @@ declare global {
 
 const ariaDescribedBy = 'validation-item-header';
 
+const correctionsMenuId = 'validation-item-corrections-menu';
+
 type ValidationItemView = 'explanation' | 'solution';
 
 /**
  * A single accessibility violation card. Displays the severity icon,
  * heading, explanation or solution, and action buttons (Focus, Correct).
- * The `mode` property controls which actions are visible.
+ * The `mode` property controls which actions are visible. With more than one correction, the Correct
+ * button runs the first and a menu button next to it offers the others.
  *
  * @tag clippy-validation-item
  *
@@ -50,7 +55,11 @@ type ValidationItemView = 'explanation' | 'solution';
  * @fires {CustomEvent<FocusNodeDetail>} FOCUS_NODE - Dispatched when the user clicks "Focus",
  *   carrying `detail.range` so the editor can scroll to the relevant node.
  * @fires {CustomEvent<CorrectValidationIssueDetail>} CORRECT_VALIDATION_ISSUE - Dispatched when the user
- *   clicks "Correct", triggering the auto-fix callback.
+ *   clicks "Correct" or picks a correction from the menu, triggering the auto-fix callback.
+ *
+ * The corrections menu follows the WAI-ARIA menu button pattern: opening it focuses the first
+ * correction, Arrow Down / Arrow Up move between them (wrapping), Home / End jump to the first / last,
+ * and Escape closes it and returns focus to the menu button.
  *
  * @example
  * ```html
@@ -66,6 +75,7 @@ type ValidationItemView = 'explanation' | 'solution';
 export class ValidationItem extends LitElement {
   static override readonly styles = [
     validationListItemStyles,
+    unsafeCSS(buttonStyle),
     unsafeCSS(paragraphStyle),
     unsafeCSS(headingStyle),
     unsafeCSS(linkCss),
@@ -91,10 +101,12 @@ export class ValidationItem extends LitElement {
   @property({ type: String }) explanation?: string;
   /** Guidance on how to resolve the issue, as HTML. */
   @property({ type: String }) solution?: string;
-  /** The fix offered for this issue: what to run, and the label of the button that runs it. */
-  @property({ attribute: false }) correction?: ViolationCorrection;
+  /** The fixes offered for this issue, primary first: what to run, and the label of the control that runs it. */
+  @property({ attribute: false }) corrections?: ViolationCorrection[];
 
   @state() private view: ValidationItemView = 'explanation';
+
+  @state() private correctionsMenuOpen = false;
 
   @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })
@@ -103,6 +115,8 @@ export class ValidationItem extends LitElement {
   readonly #listItemRef: Ref<HTMLDivElement> = createRef();
   readonly #solutionLinkRef: Ref<ClippyButton> = createRef();
   readonly #backLinkRef: Ref<ClippyButton> = createRef();
+  readonly #correctionsMenuToggleRef: Ref<HTMLButtonElement> = createRef();
+  readonly #correctionsMenuRef: Ref<HTMLDivElement> = createRef();
 
   override focus(): void {
     this.#listItemRef.value?.focus();
@@ -119,7 +133,8 @@ export class ValidationItem extends LitElement {
     );
   };
 
-  readonly #applyFix = () => {
+  readonly #applyFix = (correction: ViolationCorrection) => {
+    this.correctionsMenuOpen = false;
     this.dispatchEvent(
       new CustomEvent<CorrectValidationIssueDetail>(CustomEvents.CORRECT_VALIDATION_ISSUE, {
         bubbles: true,
@@ -127,7 +142,57 @@ export class ValidationItem extends LitElement {
         detail: { identifier: this.identifier },
       }),
     );
-    this.correction?.execute();
+    correction.execute();
+  };
+
+  readonly #toggleCorrectionsMenu = async () => {
+    this.correctionsMenuOpen = !this.correctionsMenuOpen;
+    if (!this.correctionsMenuOpen) return;
+
+    await this.updateComplete;
+    this.#correctionsMenuItems()[0]?.focus();
+  };
+
+  readonly #closeCorrectionsMenu = () => {
+    this.correctionsMenuOpen = false;
+    this.#correctionsMenuToggleRef.value?.focus();
+  };
+
+  #correctionsMenuItems(): HTMLButtonElement[] {
+    return [...(this.#correctionsMenuRef.value?.querySelectorAll<HTMLButtonElement>('[role="menuitem"]') ?? [])];
+  }
+
+  readonly #handleCorrectionsMenuKeydown = (event: KeyboardEvent) => {
+    const items = this.#correctionsMenuItems();
+    const current = items.indexOf(this.shadowRoot?.activeElement as HTMLButtonElement);
+
+    switch (event.key) {
+      case 'ArrowDown':
+        items[(current + 1) % items.length]?.focus();
+        break;
+      case 'ArrowUp':
+        items[(current - 1 + items.length) % items.length]?.focus();
+        break;
+      case 'Home':
+        items[0]?.focus();
+        break;
+      case 'End':
+        items.at(-1)?.focus();
+        break;
+      case 'Escape':
+        this.#closeCorrectionsMenu();
+        break;
+      default:
+        return;
+    }
+    event.preventDefault();
+  };
+
+  readonly #handleCorrectionsMenuFocusout = (event: FocusEvent) => {
+    const next = event.relatedTarget as Node | null;
+    if (next && this.#correctionsMenuRef.value?.contains(next)) return;
+    if (next === this.#correctionsMenuToggleRef.value) return;
+    this.correctionsMenuOpen = false;
   };
 
   readonly #showSolution = () => {
@@ -210,6 +275,63 @@ export class ValidationItem extends LitElement {
     `;
   }
 
+  #renderCorrectionsMenu(alternatives: ViolationCorrection[]) {
+    if (alternatives.length === 0) return nothing;
+
+    return html`
+      <button
+        type="button"
+        class="nl-button nl-button--primary nl-button--icon-only"
+        aria-label=${msg('More corrections')}
+        aria-haspopup="menu"
+        aria-expanded=${this.correctionsMenuOpen ? 'true' : 'false'}
+        aria-controls=${correctionsMenuId}
+        @click=${this.#toggleCorrectionsMenu}
+        ${ref(this.#correctionsMenuToggleRef)}
+      >
+        <clippy-icon>${unsafeSVG(ChevronDownIcon)}</clippy-icon>
+      </button>
+      ${
+        this.correctionsMenuOpen
+          ? html`<div
+              id=${correctionsMenuId}
+              role="menu"
+              aria-label=${msg('More corrections')}
+              class="clippy-validation-item__corrections-menu"
+              @keydown=${this.#handleCorrectionsMenuKeydown}
+              @focusout=${this.#handleCorrectionsMenuFocusout}
+              ${ref(this.#correctionsMenuRef)}
+            >
+              ${alternatives.map(
+                (correction) =>
+                  html`<button
+                    type="button"
+                    role="menuitem"
+                    tabindex="-1"
+                    class="nl-button nl-button--subtle clippy-validation-item__corrections-menu-item"
+                    @click=${() => this.#applyFix(correction)}
+                  >
+                    ${correction.label ?? msg('Correct')}
+                  </button>`,
+              )}
+            </div>`
+          : nothing
+      }
+    `;
+  }
+
+  #renderCorrections() {
+    const [primary, ...alternatives] = this.corrections ?? [];
+    if (!primary) return nothing;
+
+    return html`<div class="clippy-validation-item__corrections">
+      <clippy-button purpose="primary" @click=${() => this.#applyFix(primary)} aria-describedby=${ariaDescribedBy}>
+        ${primary.label ?? msg('Correct')}
+      </clippy-button>
+      ${this.#renderCorrectionsMenu(alternatives)}
+    </div>`;
+  }
+
   #renderActions() {
     if (this.mode === validationInteractionMode.READONLY) {
       return nothing;
@@ -217,13 +339,7 @@ export class ValidationItem extends LitElement {
 
     return html`
       <div class="clippy-validation-item-actions">
-        ${
-          typeof this.correction?.execute === 'function'
-            ? html`<clippy-button purpose="primary" @click=${this.#applyFix} aria-describedby=${ariaDescribedBy}>
-                ${this.correction.label ?? msg('Correct')}
-              </clippy-button>`
-            : nothing
-        }
+        ${this.#renderCorrections()}
         <clippy-button purpose="secondary" @click=${this.#focusNode} aria-describedby=${ariaDescribedBy}>
           ${msg('Focus')}
         </clippy-button>

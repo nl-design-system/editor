@@ -414,6 +414,10 @@
         <source>Back</source>
         <target>Terug</target>
       </trans-unit>
+      <trans-unit id="s339e7dd71ea9b039">
+        <source>More corrections</source>
+        <target>Meer correcties</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
