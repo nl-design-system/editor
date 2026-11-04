@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('clippy-context#clippy-example-heading-level')).toBeVisible();
+  await expect(page.locator('#heading-level-must-not-skip')).toBeVisible();
 });
 
 test.describe('Page basics', () => {
@@ -33,7 +33,7 @@ test.describe('Page basics', () => {
 
 test.describe('Example', () => {
   test('flags the skipped heading level', async ({ page }) => {
-    const context = page.locator('clippy-context#clippy-example-heading-level');
+    const context = page.locator('#heading-level-must-not-skip');
 
     await expect(context.locator('clippy-validations-gutter .clippy-validations-gutter__indicator')).toHaveCount(1);
     await expect(context.locator('clippy-validations-list clippy-validation-item')).toHaveCount(1);

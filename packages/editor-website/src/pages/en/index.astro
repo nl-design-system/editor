@@ -1,9 +1,9 @@
 ---
 import Document from '../../layouts/document.astro';
+import ValidationCard from '../../components/ValidationCard.astro';
 import Section from '../../components/Section.astro';
 import { frontmatter as indexFrontmatter } from '../../../../../docs/en/index.md';
 import { useTranslations } from '../../i18n/translations.ts';
-import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
 
 const t = useTranslations('en');
 ---
@@ -59,40 +59,9 @@ const t = useTranslations('en');
         In this example, heading level 3 follows heading level 1 directly. Clippy marks the heading in the gutter and
         explains the issue below the text.
       </p>
-      <clippy-context id="clippy-example-heading-level">
-        <div slot="value">
-          <h1>Heading level 1</h1>
-          <h3>Heading level 3</h3>
-          <p>Skipping a level is not allowed!</p>
-        </div>
-        <div class="clippy-guideline clippy-guideline--negative">
-          <div class="clippy-guideline__description">
-            <h3 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Don't: skip heading levels</span>
-            </h3>
-            <p>
-              Here heading level 3 follows heading level 1, so level 2 is missing. Screen reader users navigate by
-              headings and then miss a level in the structure. Use heading level 2 after heading level 1.
-            </p>
-          </div>
-          <div class="clippy-guideline__example">
-            <div class="clippy-canvas">
-              <div class="clippy-canvas__example">
-                <clippy-content>
-                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
-                </clippy-content>
-              </div>
-            </div>
-          </div>
-          <div class="clippy-guideline__validations">
-            <clippy-validations-list></clippy-validations-list>
-          </div>
-        </div>
-      </clippy-context>
+      <ValidationCard headingLevel={3} rule="HEADING_LEVEL_MUST_NOT_SKIP" />
       <p class="nl-paragraph">
-        You can find more examples in the <a class="nl-link" href={t('nav.href.guidelines')}>accessibility guidelines</a
-        >.
+        You can find more examples in the <a class="nl-link" href={t('nav.href.guidelines')}>validations</a>.
       </p>
     </Section>
 
@@ -105,3 +74,7 @@ const t = useTranslations('en');
     </Section>
   </main>
 </Document>
+
+<script>
+  import '../../scripts/guideline-validations.ts';
+</script>

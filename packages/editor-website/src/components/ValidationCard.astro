@@ -8,18 +8,21 @@ import {
 import type { Locale } from '../i18n/translations.ts';
 import { useTranslations } from '../i18n/translations.ts';
 import { ruleAnchor } from '../utils/ruleAnchor.ts';
+import { validationGroups } from '../utils/validationGroups.ts';
 
 interface Props {
-  example: string;
+  headingLevel?: 2 | 3;
   rule: CoreValidationRule;
 }
 
-const { example, rule } = Astro.props;
+const { headingLevel = 2, rule } = Astro.props;
+const Heading = `h${headingLevel}` as const;
 const locale = (Astro.currentLocale ?? 'nl') as Locale;
 const t = useTranslations(locale);
 const { documentationId, messages } = coreValidations[rule];
 const { href, title } = resolveMessages(messages, locale, 'nl', undefined, documentationId);
 const explanation = getDocumentationComponentRuleById(documentationId)?.explanation;
+const example = validationGroups.flatMap(({ rules }) => rules).find((entry) => entry.rule === rule)?.example[locale];
 ---
 
 <div class="clippy-validation" id={ruleAnchor(rule)}>
@@ -27,7 +30,7 @@ const explanation = getDocumentationComponentRuleById(documentationId)?.explanat
     <div slot="value" set:html={example} />
     <clippy-card class="clippy-validation__card">
       <code slot="pre-header">{rule}</code>
-      <h2 slot="header" class="clippy-validation__title">{title}</h2>
+      <Heading slot="header" class="clippy-validation__title">{title}</Heading>
       <div slot="body" class="clippy-validation__body">
         {
           explanation ? (
@@ -42,12 +45,10 @@ const explanation = getDocumentationComponentRuleById(documentationId)?.explanat
             )
           )
         }
-        <clippy-story-preview class="clippy-canvas">
-          <div class="clippy-canvas__example">
-            <clippy-content>
-              <clippy-validations-gutter mode="list"></clippy-validations-gutter>
-            </clippy-content>
-          </div>
+        <clippy-story-preview>
+          <clippy-content>
+            <clippy-validations-gutter mode="list"></clippy-validations-gutter>
+          </clippy-content>
         </clippy-story-preview>
       </div>
       <clippy-validations-list slot="footer"></clippy-validations-list>
@@ -105,7 +106,9 @@ const explanation = getDocumentationComponentRuleById(documentationId)?.explanat
     row-gap: var(--basis-space-row-md);
   }
 
+  /* The gutter is positioned absolutely and 1rem wide. */
   .clippy-validation__body clippy-story-preview clippy-content {
     --basis-space-inline-4xl: var(--basis-space-inline-md);
+    padding-inline-end: 1rem;
   }
 </style>

@@ -1,9 +1,9 @@
 ---
 import Document from '../layouts/document.astro';
+import ValidationCard from '../components/ValidationCard.astro';
 import Section from '../components/Section.astro';
 import { frontmatter as indexFrontmatter } from '../../../../docs/index.md';
 import { useTranslations } from '../i18n/translations.ts';
-import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
 
 const t = useTranslations('nl');
 ---
@@ -60,41 +60,9 @@ const t = useTranslations('nl');
         In dit voorbeeld volgt kop 3 direct op kop 1. Clippy markeert de kop in de kantlijn en toont onder de tekst wat
         er aan de hand is.
       </p>
-      <clippy-context id="clippy-example-heading-level">
-        <div slot="value">
-          <h1>Kopniveau 1</h1>
-          <h3>Kopniveau 3</h3>
-          <p>Een niveau overslaan is niet de bedoeling!</p>
-        </div>
-        <div class="clippy-guideline clippy-guideline--negative">
-          <div class="clippy-guideline__description">
-            <h3 class="clippy-guideline__badge clippy-guideline__badge--negative">
-              <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: kopniveau overslaan</span>
-            </h3>
-            <p>
-              Na kop 1 komt hier meteen kop 3, waardoor kop 2 ontbreekt. Gebruikers van een schermlezer navigeren via de
-              koppen en missen dan een niveau in de structuur. Gebruik na kop 1 eerst kop 2.
-            </p>
-          </div>
-          <div class="clippy-guideline__example">
-            <div class="clippy-canvas">
-              <div class="clippy-canvas__example">
-                <clippy-content>
-                  <clippy-validations-gutter mode="list"></clippy-validations-gutter>
-                </clippy-content>
-              </div>
-            </div>
-          </div>
-          <div class="clippy-guideline__validations">
-            <clippy-validations-list></clippy-validations-list>
-          </div>
-        </div>
-      </clippy-context>
+      <ValidationCard headingLevel={3} rule="HEADING_LEVEL_MUST_NOT_SKIP" />
       <p class="nl-paragraph">
-        Meer voorbeelden vind je bij de <a class="nl-link" href={t('nav.href.guidelines')}
-          >toegankelijkheidsrichtlijnen</a
-        >.
+        Meer voorbeelden vind je bij de <a class="nl-link" href={t('nav.href.guidelines')}>validaties</a>.
       </p>
     </Section>
 
@@ -107,3 +75,7 @@ const t = useTranslations('nl');
     </Section>
   </main>
 </Document>
+
+<script>
+  import '../scripts/guideline-validations.ts';
+</script>

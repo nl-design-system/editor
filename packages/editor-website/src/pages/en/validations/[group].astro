@@ -20,7 +20,7 @@ const t = useTranslations('en');
   <SectionNavigation href={t('nav.href.guidelines')} />
   <main>
     <h1 class="nl-heading nl-heading--level-1">{label.en}</h1>
-    {rules.map(({ example, rule }) => <ValidationCard example={example.en} rule={rule} />)}
+    {rules.map(({ rule }) => <ValidationCard rule={rule} />)}
   </main>
 </Document>
 
