@@ -229,8 +229,8 @@ importers:
         specifier: 3.0.1
         version: 3.0.1
       '@utrecht/unordered-list-css':
-        specifier: 3.1.1
-        version: 3.1.1
+        specifier: 4.0.0
+        version: 4.0.0
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -431,8 +431,8 @@ importers:
         specifier: 4.1.0
         version: 4.1.0
       '@utrecht/unordered-list-css':
-        specifier: 3.1.1
-        version: 3.1.1
+        specifier: 4.0.0
+        version: 4.0.0
       lit:
         specifier: 3.3.3
         version: 3.3.3
@@ -3080,6 +3080,9 @@ packages:
 
   '@utrecht/unordered-list-css@3.1.1':
     resolution: {integrity: sha512-cWhDU02Hg5BnfpRebjYkuj3I18todui/bXk0LfA5OrovfOQRxCdQZK/hmTD/M+uCZRKUrnLO/jDI+VYoXFpdYA==}
+
+  '@utrecht/unordered-list-css@4.0.0':
+    resolution: {integrity: sha512-oYfR0QaE2gsOmELndXDZeeEzcR0QgqYoFHd4h0QC/AIrDta1MLa5AB4MrIG4HjQBBADp47lVHE7f7n+xBwUVdA==}
 
   '@utrecht/url-data-css@3.0.1':
     resolution: {integrity: sha512-ol6iFP2/ApRNnWJxLS3cKUjFz/CmaJJ9Zv6TFP/SUChyKSTJZhmqprs1Mpt3aPbyS9cmhIiolnWaf2x/A310Mw==}
@@ -9833,6 +9836,8 @@ snapshots:
   '@utrecht/top-task-nav-css@2.0.1': {}
 
   '@utrecht/unordered-list-css@3.1.1': {}
+
+  '@utrecht/unordered-list-css@4.0.0': {}
 
   '@utrecht/url-data-css@3.0.1': {}
 
