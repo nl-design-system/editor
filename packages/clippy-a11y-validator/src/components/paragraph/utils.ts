@@ -1,7 +1,8 @@
-import type { DocumentValidationCondition, ValidationCondition } from '../../types/validation.ts';
+import type { DocumentValidationCondition, ValidationCondition, ValidationContext } from '../../types/validation.ts';
 import { selectors } from '../../consts/selectors.ts';
-import { textLines, visibleTextNodes } from '../../utils/dom.ts';
+import { textLines, trimmedText, visibleTextNodes } from '../../utils/dom.ts';
 import { isEmptyOrWhitespace } from '../../utils/text.ts';
+import { expectedHeadingLevel } from '../heading/utils.ts';
 import { orderedListRegex } from '../ordered-list/index.ts';
 import { unorderedListRegex } from '../unordered-list/index.ts';
 
@@ -123,4 +124,11 @@ export const textBlocks = (paragraph: Element): Node[][] => {
   blocks.push(block);
 
   return blocks.filter((nodes) => nodes.some((node) => !isEmptyOrWhitespace(node.textContent ?? '')));
+};
+
+/** Replaces the paragraph with a plain-text heading that slots into the outline without skipping. */
+export const replaceWithHeading = (paragraph: HTMLElement, context: ValidationContext): void => {
+  const heading = paragraph.ownerDocument.createElement(`h${expectedHeadingLevel(context)}`);
+  heading.textContent = trimmedText(paragraph);
+  paragraph.replaceWith(heading);
 };

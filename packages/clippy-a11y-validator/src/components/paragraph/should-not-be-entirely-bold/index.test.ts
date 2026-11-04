@@ -14,7 +14,7 @@ describe('paragraphShouldNotBeEntirelyBold', () => {
 
     expect(violation?.rule).toBe('PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD');
     expect(violation?.severity).toBe('warning');
-    expect(violation?.scope).toBe('element');
+    expect(violation?.scope).toBe('document');
     expect(violation?.messages.title).toBe('Hele alinea is dikgedrukt');
     expect(violation?.messages.solution).toContain('alleen voor de woorden');
   });
@@ -40,6 +40,20 @@ describe('paragraphShouldNotBeEntirelyBold', () => {
     violation?.corrections?.[0]?.execute();
 
     expect(fragment.querySelector('p')?.innerHTML).toBe(`${LONG} ${LONG}`);
+    expect(validator.validate([fragment])).toHaveLength(0);
+  });
+
+  it('offers removing the bold first and converting to a heading second', () => {
+    const [violation] = validate(`<p><strong>${LONG}</strong></p>`);
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Dikgedrukt verwijderen', 'Omzetten naar kop']);
+  });
+
+  it('converts the paragraph to a heading one level below the preceding heading', () => {
+    const [violation] = validate(`<h2>Sectie</h2><p><strong>${LONG}</strong></p>`);
+    violation?.corrections?.[1]?.execute();
+
+    expect(fragment.innerHTML).toBe(`<h2>Sectie</h2><h3>${LONG}</h3>`);
     expect(validator.validate([fragment])).toHaveLength(0);
   });
 

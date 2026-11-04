@@ -12,7 +12,10 @@ describe('paragraphShouldNotBeEntirelyItalic', () => {
     const [violation] = validate(`<p><em>${TEXT}</em></p>`);
 
     expect(violation).toEqual({
-      corrections: [{ execute: expect.any(Function) }],
+      corrections: [
+        { execute: expect.any(Function), label: 'Schuingedrukt verwijderen' },
+        { execute: expect.any(Function), label: 'Omzetten naar citaat' },
+      ],
       element: fragment.querySelector('p'),
       messages: getDocumentationComponentRuleById(paragraphShouldNotBeEntirelyItalic.documentationId),
       rule: 'PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_ITALIC',
@@ -46,6 +49,14 @@ describe('paragraphShouldNotBeEntirelyItalic', () => {
     violation?.corrections?.[0]?.execute();
 
     expect(fragment.querySelector('p')?.innerHTML).toBe(`${TEXT} ${TEXT}`);
+    expect(validator.validate([fragment])).toHaveLength(0);
+  });
+
+  it('moves the paragraph into a blockquote without the italics when converted to a quote', () => {
+    const [violation] = validate(`<p class="nl-paragraph"><em>${TEXT}</em></p>`);
+    violation?.corrections?.[1]?.execute();
+
+    expect(fragment.innerHTML).toBe(`<blockquote><p class="nl-paragraph">${TEXT}</p></blockquote>`);
     expect(validator.validate([fragment])).toHaveLength(0);
   });
 });
