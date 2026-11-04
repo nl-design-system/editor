@@ -71,13 +71,6 @@ const translations = {
     'site.title': 'Rich-text Editor - NL Design System',
     'theme.toggle': 'Dark mode',
     'validations.card.guideline': 'Read the guideline on NL Design System',
-    'validations.severity.error': 'Error',
-    'validations.severity.info': 'Tip',
-    'validations.severity.warning': 'Warning',
-    'validations.table.component': 'Component',
-    'validations.table.rule': 'Rule',
-    'validations.table.severity': 'Severity',
-    'validations.table.validation': 'Validation',
   },
   nl: {
     'alt-text-wizard.title': 'Alt-tekst wizard - Rich-text Editor - NL Design System',
@@ -151,13 +144,6 @@ const translations = {
     'site.title': 'Rich-text Editor - NL Design System',
     'theme.toggle': 'Donkere modus',
     'validations.card.guideline': 'Lees de richtlijn op NL Design System',
-    'validations.severity.error': 'Fout',
-    'validations.severity.info': 'Tip',
-    'validations.severity.warning': 'Waarschuwing',
-    'validations.table.component': 'Onderdeel',
-    'validations.table.rule': 'Regel',
-    'validations.table.severity': 'Ernst',
-    'validations.table.validation': 'Validatie',
   },
 } as const;
 

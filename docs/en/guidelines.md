@@ -1,4 +1,4 @@
 ---
 title: Validations
-intro: Every check of the accessibility validator, with an example of content that triggers it.
+intro: Clippy checks whether your content is accessible while you write. Each validation tests a rule from the NL Design System content guidelines and reports when the content does not meet it.
 ---

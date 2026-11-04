@@ -30,14 +30,13 @@ test.describe('Overview', () => {
     );
   });
 
-  test('lists every core validation', async ({ page }) => {
-    const rules = validationGroups.flatMap(({ rules }) => rules);
-    await expect(page.getByRole('table').getByRole('row')).toHaveCount(rules.length + 1);
-  });
-
-  test('links a validation to its card', async ({ page }) => {
-    const row = page.getByRole('row').filter({ hasText: 'IMAGE_MUST_HAVE_ALT_TEXT' });
-    await expect(row.getByRole('link')).toHaveAttribute('href', '/validaties/afbeelding#image-must-have-alt-text');
+  test('lists every component', async ({ page }) => {
+    const list = page.getByRole('main').getByRole('list');
+    await expect(list.getByRole('listitem')).toHaveCount(validationGroups.length);
+    await expect(list.getByRole('link', { name: 'Afbeelding', exact: true })).toHaveAttribute(
+      'href',
+      '/validaties/afbeelding',
+    );
   });
 });
 
