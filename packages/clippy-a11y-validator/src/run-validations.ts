@@ -25,7 +25,7 @@ const validateElement = (
 
     return {
       corrections: corrections?.map(({ execute, label }) => ({
-        execute: execute(element),
+        execute: execute(element, documentContext.for(element)),
         ...localisedLabel(label, locales),
       })),
       focus: focus?.(element),
