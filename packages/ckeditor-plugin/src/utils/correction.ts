@@ -20,7 +20,8 @@ export function findOccurrenceIndex(violationsMap: ViolationsMap, range: Range, 
   const entriesBeforeRange = entries.slice(0, rangeIndex);
 
   // Filter how many correctable violations for the same validator precede this range.
-  return entriesBeforeRange.filter(([, violation]) => violation.rule === rule && violation.correction?.execute).length;
+  return entriesBeforeRange.filter(([, violation]) => violation.rule === rule && violation.corrections !== undefined)
+    .length;
 }
 
 // Locates the occurrenceIndex-nth correctable violation for the given rule, if any.
@@ -32,7 +33,7 @@ export function findMatchingCorrection(
   return (
     [...violationsMap.values()]
       // filter on validator keys with a correct function
-      .filter((violation) => violation.rule === rule && violation.correction?.execute)
+      .filter((violation) => violation.rule === rule && violation.corrections !== undefined)
       // return the target validation while keeping typing intact (can't use [occurrenceIndex])
       .at(occurrenceIndex)
   );
