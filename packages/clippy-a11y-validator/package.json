@@ -39,12 +39,12 @@
     "test": "vitest --run"
   },
   "dependencies": {
-    "@nl-design-system-unstable/documentation": "2.0.0"
+    "@nl-design-system-unstable/documentation": "2.1.0"
   },
   "devDependencies": {
     "@nl-design-system/tsconfig": "1.0.5",
     "@types/node": "22.20.5",
-    "@vitest/browser-playwright": "5.0.5",
+    "@vitest/browser-playwright": "5.1.0",
     "playwright": "1.64.1",
     "typescript": "6.0.3",
     "vite": "8.3.5",
