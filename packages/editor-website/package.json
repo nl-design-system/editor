@@ -37,7 +37,7 @@
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@utrecht/component-library-css": "9.0.16",
-    "@utrecht/design-tokens": "7.0.0",
+    "@utrecht/design-tokens": "8.0.0",
     "astro": "7.4.5",
     "ckeditor5": "49.0.1",
     "mermaid": "12.3.0",
