@@ -38,6 +38,6 @@ describe('imageMustHaveAltText', () => {
   });
 
   it('offers no correction, because only the author knows what the image conveys', () => {
-    expect(validate('<p><img src="paspoort.png"></p>')[0]).not.toHaveProperty('correction');
+    expect(validate('<p><img src="paspoort.png"></p>')[0]).not.toHaveProperty('corrections');
   });
 });

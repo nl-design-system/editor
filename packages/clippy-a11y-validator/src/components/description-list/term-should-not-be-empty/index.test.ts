@@ -55,7 +55,7 @@ describe('descriptionTermShouldNotBeEmpty', () => {
 
   it('removes every empty term without a description when corrected', () => {
     const [violation] = validate('<dl><dt></dt><dd></dd><dt> </dt><dd> </dd></dl>');
-    violation?.correction?.execute();
+    violation?.corrections?.[0]?.execute();
 
     expect(fragment.querySelector('dt')).toBeNull();
     expect(validator.validate([fragment])).toHaveLength(0);

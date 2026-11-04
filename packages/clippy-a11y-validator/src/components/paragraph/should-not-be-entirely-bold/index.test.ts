@@ -37,7 +37,7 @@ describe('paragraphShouldNotBeEntirelyBold', () => {
 
   it('unwraps the bold children when corrected', () => {
     const [violation] = validate(`<p><strong>${LONG}</strong> <b>${LONG}</b></p>`);
-    violation?.correction?.execute();
+    violation?.corrections?.[0]?.execute();
 
     expect(fragment.querySelector('p')?.innerHTML).toBe(`${LONG} ${LONG}`);
     expect(validator.validate([fragment])).toHaveLength(0);

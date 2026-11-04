@@ -12,12 +12,14 @@ export const descriptionListMustContainTerm = defineValidation({
     return terms.length === 0 || terms.some((term) => hasTextContent(term));
   },
   // Marks the term as still to be written, rather than inventing copy for it.
-  correction: {
-    execute: (list) => () => {
-      const empty = ownTerms(list).find((term) => !hasTextContent(term));
-      if (empty) empty.textContent = '...';
+  corrections: [
+    {
+      execute: (list) => () => {
+        const empty = ownTerms(list).find((term) => !hasTextContent(term));
+        if (empty) empty.textContent = '...';
+      },
     },
-  },
+  ],
   messages,
   rule: descriptionListValidationRules.DESCRIPTION_LIST_MUST_CONTAIN_TERM,
   scope: 'element',

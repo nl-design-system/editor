@@ -7,14 +7,16 @@ import { messages } from './messages.ts';
 
 export const tableMustHaveHeadings = defineValidation({
   condition: (table) => tableRows(table).length === 0 || hasHeaderRow(table) || hasHeaderColumn(table),
-  correction: {
-    execute: (table) => () => {
-      const [firstRow] = tableRows(table);
-      if (!firstRow) return;
-      // `changeTagName` swaps each cell in place, so the live collection keeps its length while iterating.
-      for (const cell of firstRow.children) changeTagName(cell, 'th');
+  corrections: [
+    {
+      execute: (table) => () => {
+        const [firstRow] = tableRows(table);
+        if (!firstRow) return;
+        // `changeTagName` swaps each cell in place, so the live collection keeps its length while iterating.
+        for (const cell of firstRow.children) changeTagName(cell, 'th');
+      },
     },
-  },
+  ],
   messages,
   rule: tableValidationRules.TABLE_MUST_HAVE_HEADINGS,
   scope: 'element',

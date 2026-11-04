@@ -50,7 +50,7 @@ describe('headingMustStartAtLevelOne', () => {
 
   it('retags the heading to a level 1 when corrected', () => {
     const [violation] = validate('<h2 id="kop">Kop</h2><p>tekst</p>');
-    violation?.correction?.execute();
+    violation?.corrections?.[0]?.execute();
 
     expect(fragment.innerHTML).toBe('<h1 id="kop">Kop</h1><p>tekst</p>');
     expect(validator.validate([fragment])).toHaveLength(0);

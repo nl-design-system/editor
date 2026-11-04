@@ -39,6 +39,6 @@ describe('paragraphShouldNotContainMultipleTextBlocks', () => {
   });
 
   it('offers no correction', () => {
-    expect(validate('<p>Eerste blok.<br><br>Tweede blok.</p>')[0]).not.toHaveProperty('correction');
+    expect(validate('<p>Eerste blok.<br><br>Tweede blok.</p>')[0]).not.toHaveProperty('corrections');
   });
 });

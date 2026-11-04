@@ -8,10 +8,12 @@ import { messages } from './messages.ts';
 
 export const headingShouldNotContainBoldOrItalic = defineValidation({
   condition: not(containsEmphasis),
-  correction: {
-    execute: (heading) => () =>
-      heading.querySelectorAll(`${selectors.BOLD}, ${selectors.ITALIC}`).forEach(unwrapElement),
-  },
+  corrections: [
+    {
+      execute: (heading) => () =>
+        heading.querySelectorAll(`${selectors.BOLD}, ${selectors.ITALIC}`).forEach(unwrapElement),
+    },
+  ],
   messages,
   rule: headingValidationRules.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC,
   scope: 'element',

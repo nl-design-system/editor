@@ -8,9 +8,11 @@ import { messages } from './messages.ts';
 
 export const paragraphShouldNotBeEntirelyItalic = defineValidation({
   condition: not(isEntirelyItalic),
-  correction: {
-    execute: (paragraph) => () => paragraph.querySelectorAll(selectors.ITALIC).forEach(unwrapElement),
-  },
+  corrections: [
+    {
+      execute: (paragraph) => () => paragraph.querySelectorAll(selectors.ITALIC).forEach(unwrapElement),
+    },
+  ],
   documentationId: 'aeb01c78-8633-47bc-8fff-7aa1eec10130',
   messages,
   rule: paragraphValidationRules.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_ITALIC,

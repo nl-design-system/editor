@@ -52,7 +52,7 @@ describe('linkShouldNotBeEmpty', () => {
 
   it('removes the link when corrected', () => {
     const [violation] = validate('<p>Zie <a href="/paspoort"></a>hier</p>');
-    violation?.correction?.execute();
+    violation?.corrections?.[0]?.execute();
 
     expect(fragment.querySelector('p')?.innerHTML).toBe('Zie hier');
     expect(validator.validate([fragment])).toHaveLength(0);

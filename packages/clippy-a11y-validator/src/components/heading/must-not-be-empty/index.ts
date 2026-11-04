@@ -6,9 +6,11 @@ import { messages } from './messages.ts';
 
 export const headingMustNotBeEmpty = defineValidation({
   condition: hasTextContent,
-  correction: {
-    execute: (heading) => () => heading.remove(),
-  },
+  corrections: [
+    {
+      execute: (heading) => () => heading.remove(),
+    },
+  ],
   documentationId: 'c4ef9fcd-016e-4f8f-aea7-6f7e5bcd6fe2',
   messages,
   rule: headingValidationRules.HEADING_MUST_NOT_BE_EMPTY,
