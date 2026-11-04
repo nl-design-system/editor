@@ -28,25 +28,12 @@ const t = useTranslations('nl');
 
     <Section>
       <CardGroup>
-        <Card heading="Editor" href={t('nav.href.library.editor')}>
-          <p>
-            De toegankelijke rich-text editor als Web Components. Werkt in elk framework, ook als React-component, en
-            controleert de inhoud terwijl redacteuren schrijven.
-          </p>
-          <PackageLinks pkg={editorPackage} />
-        </Card>
-
         <Card heading="Toegankelijkheidsvalidator" href={t('nav.href.library.a11y-validator')}>
           <p>
             Controleert HTML op de contentrichtlijnen van NL Design System, in de editor en via de command line tegen
             gepubliceerde HTML.
           </p>
           <PackageLinks pkg={a11yValidatorPackage} />
-        </Card>
-
-        <Card heading="Alt-tekst wizard" href={t('nav.href.alt-text-wizard')}>
-          <p>Een stapsgewijze wizard die auteurs helpt bij het schrijven van toegankelijke alt-teksten.</p>
-          <PackageLinks pkg={altTextWizardPackage} />
         </Card>
 
         <Card heading="CKEditor" logo={ckeditorLogo} href={t('nav.href.library.ckeditor')}>
@@ -65,6 +52,19 @@ const t = useTranslations('nl');
         <Card heading="TYPO3" logo={typo3Logo} href={t('nav.href.library.typo3')}>
           <p>Een TYPO3-extensie die Clippy toevoegt aan elke rich-text editor.</p>
           <PackageLinks pkg={typo3Package} />
+        </Card>
+
+        <Card heading="Editor" href={t('nav.href.library.editor')}>
+          <p>
+            De toegankelijke rich-text editor als Web Components. Werkt in elk framework, ook als React-component, en
+            controleert de inhoud terwijl redacteuren schrijven.
+          </p>
+          <PackageLinks pkg={editorPackage} />
+        </Card>
+
+        <Card heading="Alt-tekst wizard" href={t('nav.href.alt-text-wizard')}>
+          <p>Een stapsgewijze wizard die auteurs helpt bij het schrijven van toegankelijke alt-teksten.</p>
+          <PackageLinks pkg={altTextWizardPackage} />
         </Card>
       </CardGroup>
     </Section>

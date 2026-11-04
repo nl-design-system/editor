@@ -28,25 +28,12 @@ const t = useTranslations('en');
 
     <Section>
       <CardGroup>
-        <Card heading="Editor" href={t('nav.href.library.editor')}>
-          <p>
-            The accessible rich-text editor as Web Components. It works in any framework, also as a React component, and
-            checks content while editors write.
-          </p>
-          <PackageLinks pkg={editorPackage} />
-        </Card>
-
         <Card heading="Accessibility validator" href={t('nav.href.library.a11y-validator')}>
           <p>
             Checks HTML against the NL Design System content guidelines, inside the editor and from the command line
             against published HTML.
           </p>
           <PackageLinks pkg={a11yValidatorPackage} />
-        </Card>
-
-        <Card heading="Alt-text wizard" href={t('nav.href.alt-text-wizard')}>
-          <p>A step-by-step wizard that helps authors write accessible alt text for images.</p>
-          <PackageLinks pkg={altTextWizardPackage} />
         </Card>
 
         <Card heading="CKEditor" logo={ckeditorLogo} href={t('nav.href.library.ckeditor')}>
@@ -62,6 +49,19 @@ const t = useTranslations('en');
         <Card heading="TYPO3" logo={typo3Logo} href={t('nav.href.library.typo3')}>
           <p>A TYPO3 extension that adds Clippy to every rich-text editor.</p>
           <PackageLinks pkg={typo3Package} />
+        </Card>
+
+        <Card heading="Editor" href={t('nav.href.library.editor')}>
+          <p>
+            The accessible rich-text editor as Web Components. It works in any framework, also as a React component, and
+            checks content while editors write.
+          </p>
+          <PackageLinks pkg={editorPackage} />
+        </Card>
+
+        <Card heading="Alt-text wizard" href={t('nav.href.alt-text-wizard')}>
+          <p>A step-by-step wizard that helps authors write accessible alt text for images.</p>
+          <PackageLinks pkg={altTextWizardPackage} />
         </Card>
       </CardGroup>
     </Section>
