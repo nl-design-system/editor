@@ -11,9 +11,11 @@ export const headingLevelMustNotSkip = defineValidation({
 
     return preceding === null || headingLevel(heading) <= headingLevel(preceding) + 1;
   },
-  correction: {
-    execute: (heading, context) => () => changeTagName(heading, `h${expectedHeadingLevel(context)}`),
-  },
+  corrections: [
+    {
+      execute: (heading, context) => () => changeTagName(heading, `h${expectedHeadingLevel(context)}`),
+    },
+  ],
   documentationId: '2bd2f0a4-fa95-4ce5-8e16-1dfd7d959193',
   messages,
   payload: (heading, context) => ({
