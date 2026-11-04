@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('Page basics', () => {
   test('page has correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('Rich-text Editor - NL Design System');
+    await expect(page).toHaveTitle('Toegankelijke content schrijven met Clippy - NL Design System');
   });
 
   test('page has document language', async ({ page }) => {
@@ -15,7 +15,9 @@ test.describe('Page basics', () => {
   });
 
   test('page heading is visible', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: 'NL Design System - Rich-text editor', level: 1 })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: 'Toegankelijke content schrijven met Clippy', level: 1 }),
+    ).toBeVisible();
   });
 
   test('headings do not skip a level', async ({ page }) => {
