@@ -5,7 +5,7 @@ import { getNavigationItems, type NavigationItem } from '../utils/getNavigationI
 
 const locale = (Astro.currentLocale ?? 'nl') as Locale;
 const t = useTranslations(locale);
-const [home, ...pages] = getNavigationItems(locale, Astro.url.pathname);
+const [, ...pages] = getNavigationItems(locale, Astro.url.pathname);
 
 const findTrail = (items: NavigationItem[]): NavigationItem[] => {
   for (const item of items) {
@@ -17,14 +17,14 @@ const findTrail = (items: NavigationItem[]): NavigationItem[] => {
 };
 
 const trail = findTrail(pages);
-const current = trail.at(-1);
+const current = trail.length > 1 ? trail.at(-1) : undefined;
 ---
 
 {
   current && (
     <nav slot="breadcrumb" class="ams-breadcrumb" aria-label={t('breadcrumb.label')}>
       <ol class="ams-breadcrumb__list">
-        {[home, ...trail.slice(0, -1)].map(({ href, label }) => (
+        {trail.slice(0, -1).map(({ href, label }) => (
           <li class="ams-breadcrumb__item">
             <a class="ams-breadcrumb__link" href={href}>
               {label}
