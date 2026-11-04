@@ -14,13 +14,15 @@ export const resemblesHeading: ValidationCondition = (paragraph) =>
 
 export const paragraphShouldNotResembleHeading = defineValidation({
   condition: not(resemblesHeading),
-  correction: {
-    execute: (paragraph, context) => () => {
-      const heading = paragraph.ownerDocument.createElement(`h${expectedHeadingLevel(context)}`);
-      heading.textContent = trimmedText(paragraph);
-      paragraph.replaceWith(heading);
+  corrections: [
+    {
+      execute: (paragraph, context) => () => {
+        const heading = paragraph.ownerDocument.createElement(`h${expectedHeadingLevel(context)}`);
+        heading.textContent = trimmedText(paragraph);
+        paragraph.replaceWith(heading);
+      },
     },
-  },
+  ],
   messages,
   rule: paragraphValidationRules.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING,
   scope: 'document',
