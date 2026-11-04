@@ -59,15 +59,20 @@ const { footer, heading, href, id, logo } = Astro.props;
     --clippy-card-border-color: var(--basis-color-accent-1-border-default);
     --clippy-card-border-width: var(--basis-border-width-md);
     --clippy-card-footer-padding-block-start: var(--basis-space-block-xl);
+    --clippy-card-header-color: var(--basis-color-action-2-color-default);
     row-gap: 0;
   }
 
   clippy-card-as-link.clippy-card:hover {
+    --clippy-card-background-color: var(--basis-color-default-bg-hover);
     --clippy-card-border-color: var(--basis-color-accent-1-border-hover);
+    --clippy-card-header-color: var(--basis-color-action-2-color-hover);
+    --clippy-card-header-text-decoration: underline;
   }
 
   clippy-card-as-link.clippy-card:active {
     --clippy-card-border-color: var(--basis-color-accent-1-border-active);
+    --clippy-card-header-color: var(--basis-color-action-2-color-active);
   }
 
   .clippy-card {
