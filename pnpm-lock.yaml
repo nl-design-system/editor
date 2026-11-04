@@ -214,8 +214,8 @@ importers:
         specifier: 22.20.5
         version: 22.20.5
       '@utrecht/design-tokens':
-        specifier: 7.0.0
-        version: 7.0.0
+        specifier: 8.0.0
+        version: 8.0.0
       '@utrecht/form-field-css':
         specifier: 3.0.1
         version: 3.0.1
@@ -489,8 +489,8 @@ importers:
         specifier: 1.0.4
         version: 1.0.4
       '@utrecht/design-tokens':
-        specifier: 7.0.0
-        version: 7.0.0
+        specifier: 8.0.0
+        version: 8.0.0
       '@vitest/browser-playwright':
         specifier: 5.1.0
         version: 5.1.0(playwright@1.64.1)(vite@8.3.5(@types/node@22.20.5)(yaml@2.9.1))(vitest@5.1.0)
@@ -573,8 +573,8 @@ importers:
         specifier: 9.0.16
         version: 9.0.16(@babel/runtime@7.29.7)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@utrecht/design-tokens':
-        specifier: 7.0.0
-        version: 7.0.0
+        specifier: 8.0.0
+        version: 8.0.0
       astro:
         specifier: 7.4.5
         version: 7.4.5(@types/node@22.20.5)(yaml@2.9.1)
@@ -619,8 +619,8 @@ importers:
         specifier: 9.0.16
         version: 9.0.16(@babel/runtime@7.29.7)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@utrecht/design-tokens':
-        specifier: 7.0.0
-        version: 7.0.0
+        specifier: 8.0.0
+        version: 8.0.0
     devDependencies:
       '@fontsource/fira-sans':
         specifier: 5.3.0
@@ -3282,8 +3282,8 @@ packages:
   '@utrecht/data-placeholder-css@3.0.1':
     resolution: {integrity: sha512-gXQ3Qrp+EUagVFaz8XWS7I014uVJe9Zq0uy9srVpOrkFfFeZsVtejddE/+AKSCxohNZYWl40wTu3V5GhdgYCEQ==}
 
-  '@utrecht/design-tokens@7.0.0':
-    resolution: {integrity: sha512-UKYQ04oYTCX+7MC7jjgThKZNvXNCjG0Bt1zWFGbTMsVcucXZRG5ktZMcfD/dR76WkPgbmg/2wXdZEn9DwLxkqg==}
+  '@utrecht/design-tokens@8.0.0':
+    resolution: {integrity: sha512-gY5CN2OHfp9X5+U8t2D9dugVwtXcUG/axWo/pudoUIRBwE+ll6l0vHhH1nAYefDUq1C4AyajtwwAesHS8aD+cg==}
 
   '@utrecht/digid-button-css@1.4.2':
     resolution: {integrity: sha512-lE0/KipLVHaxb7YeZC3YPqSiSaDVyCkzSWmxLjs8k5ghzId8WI4vG8P42716gDBh9tsfdX0kRcVFdh5KerSiyw==}
@@ -11248,7 +11248,7 @@ snapshots:
 
   '@utrecht/data-placeholder-css@3.0.1': {}
 
-  '@utrecht/design-tokens@7.0.0':
+  '@utrecht/design-tokens@8.0.0':
     dependencies:
       '@fontsource-variable/noto-sans': 5.2.10
 
