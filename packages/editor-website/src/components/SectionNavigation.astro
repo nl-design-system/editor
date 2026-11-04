@@ -12,12 +12,15 @@ const t = useTranslations(locale);
 const currentPath = Astro.url.pathname.replace(/\/$/, '');
 const section = getNavigationItems(locale, Astro.url.pathname).find(({ href }) => href === Astro.props.href);
 
-const markCurrentPage = ({ href, items, label }: NavigationItem): NavigationItem => ({
-  current: href === currentPath,
-  href,
-  label,
-  ...(items && { items: items.map(markCurrentPage) }),
-});
+const markCurrentPage = ({ href, items, label }: NavigationItem): NavigationItem => {
+  const children = items?.map(markCurrentPage);
+  return {
+    current: href === currentPath && !children?.some(({ current }) => current),
+    href,
+    label,
+    ...(children && { items: children }),
+  };
+};
 ---
 
 {
