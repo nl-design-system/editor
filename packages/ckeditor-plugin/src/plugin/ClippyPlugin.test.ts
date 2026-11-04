@@ -64,7 +64,7 @@ describe('ClippyPlugin', () => {
       _patchCorrectionsForCKEditor: (map: ViolationsMap) => ViolationsMap;
     };
     const violation = {
-      correction: { execute: () => {}, label: 'Bewerken' },
+      corrections: [{ execute: () => {}, label: 'Bewerken' }],
       display: 'block',
       element: document.createElement('p'),
       messages: { title: 'Deze alinea is leeg.' },
@@ -72,11 +72,11 @@ describe('ClippyPlugin', () => {
       scope: 'element',
       severity: 'error',
     } as Violation;
-    const original = violation.correction?.execute;
+    const original = violation.corrections?.[0]?.execute;
 
     plugin._patchCorrectionsForCKEditor(new Map([[document.createRange(), violation]]));
 
-    expect(violation.correction?.label).toBe('Bewerken');
-    expect(violation.correction?.execute).not.toBe(original);
+    expect(violation.corrections?.[0]?.label).toBe('Bewerken');
+    expect(violation.corrections?.[0]?.execute).not.toBe(original);
   });
 });

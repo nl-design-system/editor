@@ -11,7 +11,7 @@ const result = (rule: string, execute?: () => void): Violation => ({
   rule,
   scope: 'element',
   severity: 'error',
-  ...(execute === undefined ? {} : { correction: { execute } }),
+  ...(execute === undefined ? {} : { corrections: [{ execute }] }),
 });
 
 describe('findOccurrenceIndex', () => {
