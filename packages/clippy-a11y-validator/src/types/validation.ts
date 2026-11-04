@@ -40,8 +40,8 @@ type SharedValidationDefinition<S extends Selector> = {
 
 /**
  * A fix the validator can apply itself, and the wording for the control that triggers it. Leave
- * `label` out when the host's default wording is right, which is the case for every rule this
- * package ships.
+ * `label` out when the host's default wording is right, which is the case for the first correction
+ * of every rule this package ships.
  *
  * Unlike `messages`, a label is not interpolated with the payload: it is an imperative verb phrase
  * naming an action, not a sentence about the element.
@@ -62,7 +62,8 @@ export type ElementValidationDefinition<
   E extends HTMLElement = ElementFor<S>,
 > = SharedValidationDefinition<S> & {
   condition: ValidationCondition<E>;
-  correction?: ElementValidationCorrection<E>;
+  /** The fixes this rule offers, primary first. */
+  corrections?: ElementValidationCorrection<E>[];
   focus?: (element: E) => FocusViolationFunction;
   payload?: (element: E) => ViolationPayload;
   scope: 'element';
@@ -73,7 +74,8 @@ export type DocumentValidationDefinition<
   E extends HTMLElement = ElementFor<S>,
 > = SharedValidationDefinition<S> & {
   condition: DocumentValidationCondition<E>;
-  correction?: DocumentValidationCorrection<E>;
+  /** The fixes this rule offers, primary first. */
+  corrections?: DocumentValidationCorrection<E>[];
   focus?: (element: E, context: ValidationContext) => FocusViolationFunction;
   payload?: (element: E, context: ValidationContext) => ViolationPayload;
   scope: 'document';
@@ -95,8 +97,8 @@ export type ViolationCorrection = {
 };
 
 export type Violation = {
-  /** Present only when there is something to run: a correction always has an `execute`. */
-  correction?: ViolationCorrection;
+  /** Present only when there is something to run, primary first: a correction always has an `execute`. */
+  corrections?: ViolationCorrection[];
   element: HTMLElement;
   focus?: FocusViolationFunction;
   messages: ResolvedMessages;
