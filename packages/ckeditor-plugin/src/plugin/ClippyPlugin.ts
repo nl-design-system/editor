@@ -153,19 +153,27 @@ export class ClippyPlugin extends Plugin {
 
   private _patchCorrectionsForCKEditor(violationsMap: ViolationsMap): ViolationsMap {
     for (const [range, violation] of violationsMap) {
-      const { correction, rule } = violation;
-      if (!correction || !rule) {
+      const { corrections, rule } = violation;
+      if (!corrections || !rule) {
         continue;
       }
 
       // Only the fix goes through the model pipeline. Spreading first keeps the already resolved
       // label — replacing the whole correction would silently reset the button to "Correct".
-      violation.correction = { ...correction, execute: this._modelCorrectionFactory(correction.execute, rule, range) };
+      violation.corrections = corrections.map((correction, correctionIndex) => ({
+        ...correction,
+        execute: this._modelCorrectionFactory(correction.execute, rule, range, correctionIndex),
+      }));
     }
     return violationsMap;
   }
 
-  private _modelCorrectionFactory(originalExecute: () => void, rule: string, range: Range): () => void {
+  private _modelCorrectionFactory(
+    originalExecute: () => void,
+    rule: string,
+    range: Range,
+    correctionIndex: number,
+  ): () => void {
     return () => {
       // create a clean HTML copy via this.editor.getData()
       const tempDiv = document.createElement('div');
@@ -178,7 +186,7 @@ export class ClippyPlugin extends Plugin {
       // locate the matching correction in the clean HTML copy
       const target = findMatchingCorrection(modelDataViolationsMap, rule, occurrenceIndex);
       // Bound to a local: TS cannot keep the narrowing across the statements below.
-      const targetExecute = target?.correction?.execute;
+      const targetExecute = target?.corrections?.[correctionIndex]?.execute;
 
       if (targetExecute) {
         // apply it and check whether it actually changed the DOM
