@@ -2,6 +2,7 @@ import type { Violation, ViolationsMap } from '@nl-design-system-community/edito
 import { type Gutter, validationInteractionMode } from '@nl-design-system-community/editor/gutter';
 import { ClassicEditor, Essentials, Heading, Paragraph, type Editor } from 'ckeditor5';
 import { afterEach, describe, expect, it } from 'vitest';
+import { page } from 'vitest/browser';
 import { ClippyPlugin } from './ClippyPlugin.ts';
 
 let editor: Editor | undefined;
@@ -10,6 +11,7 @@ afterEach(async () => {
   await editor?.destroy();
   editor = undefined;
   document.body.innerHTML = '';
+  document.documentElement.removeAttribute('lang');
 });
 
 const createEditor = async (html: string): Promise<Editor> => {
@@ -25,6 +27,20 @@ const createEditor = async (html: string): Promise<Editor> => {
 };
 
 describe('ClippyPlugin', () => {
+  it('shows Clippy in Dutch, marked as such, in a CMS set to English', async () => {
+    document.documentElement.lang = 'en';
+    await createEditor('<h2>Kop</h2><p>Tekst</p>');
+
+    await expect.element(page.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' })).toBeInTheDocument();
+    for (const tag of [
+      'clippy-accessibility-notifications',
+      'clippy-validations-drawer',
+      'clippy-validations-gutter',
+    ]) {
+      expect(document.querySelector(tag), tag).toHaveAttribute('lang', 'nl');
+    }
+  });
+
   it('wires the gutter to open the drawer, scoped to the same editor identifier', async () => {
     await createEditor('<h2>Kop</h2><p>Tekst</p>');
 

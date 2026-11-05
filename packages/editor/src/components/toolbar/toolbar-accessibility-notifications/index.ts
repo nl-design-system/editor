@@ -15,6 +15,7 @@ import type { ViolationsMap } from '@/types/validation';
 import { identifierContext } from '@/context/identifierContext';
 import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type DocumentOverviewMode, type OpenDocumentOverviewDetail } from '@/events';
+import { localizeHost } from '@/localization';
 import notificationsStyles from './styles';
 
 const tag = 'clippy-accessibility-notifications';
@@ -103,6 +104,7 @@ export class AccessibilityNotifications extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
+    localizeHost(this);
     this.addEventListener('keydown', this.#handleKeydown);
   }
 

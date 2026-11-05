@@ -26,6 +26,7 @@ import {
   type FocusValidationItemInListDetail,
   type OpenValidationGroupDetail,
 } from '@/events';
+import { localizeHost } from '@/localization';
 import {
   applyHoverHighlight,
   applyValidationHighlights,
@@ -215,6 +216,7 @@ export class Gutter extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
+    localizeHost(this);
     if (this.hasUpdated) {
       this.#observeContent();
       this.requestUpdate();

@@ -12,10 +12,9 @@ describe('<clippy-color-scheme-wrapper>', () => {
   });
 
   it('styles its children with the Clippy theme outside a themed page', async () => {
-    document.documentElement.lang = 'en';
     document.body.innerHTML =
       '<clippy-color-scheme-wrapper><clippy-alt-text-wizard-button></clippy-alt-text-wizard-button></clippy-color-scheme-wrapper>';
-    const button = page.getByRole('button', { name: 'Alt-text wizard' });
+    const button = page.getByRole('button', { name: 'Alt-tekst keuzehulp' });
     await expect.element(button).toBeVisible();
 
     expect(getComputedStyle(button.element()).paddingInlineStart).not.toBe('0px');

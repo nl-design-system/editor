@@ -114,11 +114,11 @@ describe('<clippy-validations-gutter>', () => {
       ]),
     );
 
-    const buttons = page.getByRole('button', { name: /validations on this line/ });
+    const buttons = page.getByRole('button', { name: /validatiemeldingen op deze regel openen/ });
+    await expect.element(buttons).toHaveAccessibleName('2 validatiemeldingen op deze regel openen');
     expect(buttons.elements()).toHaveLength(1);
-    await expect.element(buttons).toHaveAccessibleName('Open 2 validations on this line');
 
-    const detail = await openedBy(/validations on this line/);
+    const detail = await openedBy(/validatiemeldingen op deze regel openen/);
     expect(detail.ranges).toHaveLength(2);
   });
 
@@ -126,8 +126,8 @@ describe('<clippy-validations-gutter>', () => {
     const { content, gutter } = renderGutter('Deze hele alinea is dikgedrukt.');
     await validate(gutter, new Map([[rangeOver(content), boldParagraph('error')]]));
 
-    await expect.element(page.getByRole('button', { name: 'Open validation' })).toBeInTheDocument();
-    expect(page.getByRole('button', { name: /validations on this line/ }).query()).toBeNull();
+    await expect.element(page.getByRole('button', { name: 'Validatiemelding openen' })).toBeInTheDocument();
+    expect(page.getByRole('button', { name: /validatiemeldingen op deze regel openen/ }).query()).toBeNull();
   });
 
   it('keeps its buttons out of the tab order when not tabbable', async () => {

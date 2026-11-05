@@ -18,7 +18,7 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { AltTextStateMachineController } from '@/controllers/AltTextStateMachineController.ts';
-import { initializeLocale } from '@/localization.ts';
+import { localizeHost } from '@/localization.ts';
 import { type AltTextWizardState, altTextWizardMachine } from '@/state-machine.ts';
 import { getQuestionContent } from './question-content.ts';
 import { getResultContent } from './result-content.ts';
@@ -66,7 +66,7 @@ export class ClippyAltTextWizard extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    initializeLocale().then(() => {
+    localizeHost(this).then(() => {
       this.requestUpdate();
     });
   }

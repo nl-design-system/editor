@@ -33,6 +33,7 @@ import {
   type OpenValidationGroupEvent,
   type ValidationsDrawerToggleDetail,
 } from '@/events';
+import { localizeHost } from '@/localization';
 import { rangesEqual } from '@/utils/ranges';
 import drawerStyles from './styles';
 
@@ -179,6 +180,7 @@ export class ValidationsDrawer extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
+    localizeHost(this);
     globalThis.addEventListener(CustomEvents.CLOSE_VALIDATIONS_DRAWER, this.#handleCloseDrawer);
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
     globalThis.addEventListener(CustomEvents.FILTER_CHANGE, this.#handleFilterChange);

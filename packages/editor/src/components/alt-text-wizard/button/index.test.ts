@@ -8,20 +8,21 @@ describe('<clippy-alt-text-wizard-button>', () => {
     document.documentElement.lang = '';
   });
 
-  it('is a button named "Alt-text wizard" with an icon', async () => {
-    document.documentElement.lang = 'en';
+  it('is a button named "Alt-tekst keuzehulp" with an icon', async () => {
+    document.documentElement.lang = 'nl-NL';
     document.body.innerHTML = '<clippy-alt-text-wizard-button></clippy-alt-text-wizard-button>';
 
-    const button = page.getByRole('button', { name: 'Alt-text wizard' });
+    const button = page.getByRole('button', { name: 'Alt-tekst keuzehulp' });
     await expect.element(button).toBeVisible();
     const host = document.querySelector('clippy-alt-text-wizard-button')!;
     expect(host.shadowRoot!.querySelector('clippy-icon svg')).not.toBeNull();
   });
 
-  it('is named "Alt-tekst keuzehulp" in a Dutch document', async () => {
-    document.documentElement.lang = 'nl-NL';
+  it('is Dutch, and marked as such, in an English document', async () => {
+    document.documentElement.lang = 'en';
     document.body.innerHTML = '<clippy-alt-text-wizard-button></clippy-alt-text-wizard-button>';
 
     await expect.element(page.getByRole('button', { name: 'Alt-tekst keuzehulp' })).toBeVisible();
+    expect(document.querySelector('clippy-alt-text-wizard-button')).toHaveAttribute('lang', 'nl');
   });
 });
