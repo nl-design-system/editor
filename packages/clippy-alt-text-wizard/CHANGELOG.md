@@ -1,5 +1,11 @@
 # @nl-design-system-community/clippy-alt-text-wizard
 
+## 0.2.2
+
+### Patch Changes
+
+- 49f7e83: Clippy is always shown in Dutch, whatever the CMS interface language, until English copy is available.
+
 ## 0.2.1
 
 ### Patch Changes

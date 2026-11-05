@@ -1,5 +1,14 @@
 # @nl-design-system-community/typo3-ckeditor-plugin
 
+## 0.1.1
+
+### Patch Changes
+
+- 49f7e83: Clippy is always shown in Dutch, whatever the CMS interface language, until English copy is available.
+- Updated dependencies [49f7e83]
+  - @nl-design-system-community/editor@1.9.1
+  - @nl-design-system-community/ckeditor-plugin@0.4.1
+
 ## 0.1.0
 
 ### Minor Changes
