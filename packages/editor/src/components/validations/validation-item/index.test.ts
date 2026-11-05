@@ -268,6 +268,22 @@ describe('<validation-item> alternative corrections', () => {
     expect(menuItems(item)).toHaveLength(0);
   });
 
+  it('lists the other corrections as full-width subtle buttons in an unordered list', async () => {
+    const { item } = await renderWithAlternatives();
+
+    await userEvent.click(menuToggle(item)!);
+    const menu = item.shadowRoot?.querySelector('clippy-button-group > ul[slot="menu"][role="menu"]');
+    const [first] = menuItems(item);
+
+    expect(menu).not.toBeNull();
+    expect([...menu!.children].every((child) => child.tagName === 'LI' && child.getAttribute('role') === 'none')).toBe(
+      true,
+    );
+    expect(first?.classList).toContain('nl-button--subtle');
+    expect(first?.getBoundingClientRect().width).toBe(menu!.querySelector('li')!.getBoundingClientRect().width);
+    expect(getComputedStyle(first!).borderStartStartRadius).toBe('0px');
+  });
+
   it('lists the other corrections and focuses the first once opened', async () => {
     const { item } = await renderWithAlternatives();
 

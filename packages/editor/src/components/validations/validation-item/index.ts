@@ -73,8 +73,8 @@ type ValidationItemView = 'explanation' | 'solution';
 @safeCustomElement(tag)
 export class ValidationItem extends LitElement {
   static override readonly styles = [
-    validationListItemStyles,
     unsafeCSS(buttonStyle),
+    validationListItemStyles,
     unsafeCSS(paragraphStyle),
     unsafeCSS(headingStyle),
     unsafeCSS(linkCss),
@@ -115,7 +115,7 @@ export class ValidationItem extends LitElement {
   readonly #solutionLinkRef: Ref<ClippyButton> = createRef();
   readonly #backLinkRef: Ref<ClippyButton> = createRef();
   readonly #correctionsMenuToggleRef: Ref<ClippyButton> = createRef();
-  readonly #correctionsMenuRef: Ref<HTMLDivElement> = createRef();
+  readonly #correctionsMenuRef: Ref<HTMLUListElement> = createRef();
 
   override focus(): void {
     this.#listItemRef.value?.focus();
@@ -277,27 +277,29 @@ export class ValidationItem extends LitElement {
   #renderCorrectionsMenu(alternatives: ViolationCorrection[]) {
     if (!this.correctionsMenuOpen) return nothing;
 
-    return html`<div
+    return html`<ul
+      slot="menu"
       role="menu"
       aria-label=${msg('More corrections')}
-      class="clippy-validation-item__corrections-menu"
       @keydown=${this.#handleCorrectionsMenuKeydown}
       @focusout=${this.#handleCorrectionsMenuFocusout}
       ${ref(this.#correctionsMenuRef)}
     >
       ${alternatives.map(
         (correction) =>
-          html`<button
-            type="button"
-            role="menuitem"
-            tabindex="-1"
-            class="nl-button nl-button--subtle clippy-validation-item__corrections-menu-item"
-            @click=${() => this.#applyFix(correction)}
-          >
-            ${correction.label ?? msg('Correct')}
-          </button>`,
+          html`<li role="none">
+            <button
+              type="button"
+              role="menuitem"
+              tabindex="-1"
+              class="nl-button nl-button--subtle clippy-validation-item__corrections-menu-item"
+              @click=${() => this.#applyFix(correction)}
+            >
+              ${correction.label ?? msg('Correct')}
+            </button>
+          </li>`,
       )}
-    </div>`;
+    </ul>`;
   }
 
   #renderCorrectButton(primary: ViolationCorrection, slot?: string) {
@@ -316,23 +318,21 @@ export class ValidationItem extends LitElement {
     if (!primary) return nothing;
     if (alternatives.length === 0) return this.#renderCorrectButton(primary);
 
-    return html`<div class="clippy-validation-item__corrections">
-      <clippy-button-group>
-        ${this.#renderCorrectButton(primary, 'primary')}
-        <clippy-button
-          slot="secondary"
-          purpose="primary"
-          icon-only
-          .expanded=${this.correctionsMenuOpen}
-          @click=${this.#toggleCorrectionsMenu}
-          ${ref(this.#correctionsMenuToggleRef)}
-        >
-          <clippy-icon slot="iconStart">${unsafeSVG(ChevronDownIcon)}</clippy-icon>
-          ${msg('More corrections')}
-        </clippy-button>
-      </clippy-button-group>
+    return html`<clippy-button-group>
+      ${this.#renderCorrectButton(primary, 'primary')}
+      <clippy-button
+        slot="secondary"
+        purpose="primary"
+        icon-only
+        .expanded=${this.correctionsMenuOpen}
+        @click=${this.#toggleCorrectionsMenu}
+        ${ref(this.#correctionsMenuToggleRef)}
+      >
+        <clippy-icon slot="iconStart">${unsafeSVG(ChevronDownIcon)}</clippy-icon>
+        ${msg('More corrections')}
+      </clippy-button>
       ${this.#renderCorrectionsMenu(alternatives)}
-    </div>`;
+    </clippy-button-group>`;
   }
 
   #renderActions() {
