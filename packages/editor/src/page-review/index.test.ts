@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { FLOATING_POSITIONS } from '@/components/toolbar/toolbar-accessibility-notifications';
 import { CustomEvents } from '@/events';
 import { PageReview, type PageReviewOptions } from './index';
 
@@ -185,6 +186,38 @@ describe('PageReview', () => {
       await expect.poll(violationCount).toBe(1);
       expect(trigger()!.parentElement).toBe(document.body);
       expect(getComputedStyle(trigger()!).position).toBe('fixed');
+    });
+
+    const cornerOf = (element: Element) => {
+      if (getComputedStyle(element).position !== 'fixed') return 'not floating';
+      const { bottom, left, right, top } = element.getBoundingClientRect();
+      const vertical = top < globalThis.innerHeight - bottom ? 'top' : 'bottom';
+      const horizontal = left < globalThis.innerWidth - right ? 'left' : 'right';
+      return `${vertical}-${horizontal}`;
+    };
+
+    it.each(FLOATING_POSITIONS)('floats the trigger in the %s corner', async (floatingPosition) => {
+      document.body.innerHTML = '<main><h1>Titel</h1></main>';
+
+      review = createPageReview({ floatingPosition, mount: undefined });
+
+      await expect.poll(() => cornerOf(trigger()!)).toBe(floatingPosition);
+    });
+
+    it('floats the trigger in the bottom right corner by default', async () => {
+      document.body.innerHTML = '<main><h1>Titel</h1></main>';
+
+      review = createPageReview({ mount: undefined });
+
+      await expect.poll(() => cornerOf(trigger()!)).toBe('bottom-right');
+    });
+
+    it('floats the trigger in the bottom right corner for an unknown position', async () => {
+      document.body.innerHTML = '<main><h1>Titel</h1></main>';
+
+      review = createPageReview({ floatingPosition: 'middle' as never, mount: undefined });
+
+      await expect.poll(() => cornerOf(trigger()!)).toBe('bottom-right');
     });
 
     it('applies the theme classes to its own elements, not to the page', () => {

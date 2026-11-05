@@ -2,3 +2,4 @@ ckeditor: true
 page_review: true
 review_root: "main, [role=main]"
 gutter_always: true
+floating_position: bottom-right
