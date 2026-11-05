@@ -62,6 +62,19 @@ describe('PageReview', () => {
     await expect.poll(violationCount).toBe(1);
   });
 
+  it('marks its trigger, drawer and gutter as Dutch in a page in another language', () => {
+    document.documentElement.lang = 'en';
+    document.body.innerHTML = '<main><h1>Title</h1></main>';
+
+    review = createPageReview();
+
+    expect([trigger(), drawer(), document.querySelector('clippy-validations-gutter')]).toEqual([
+      expect.objectContaining({ lang: 'nl' }),
+      expect.objectContaining({ lang: 'nl' }),
+      expect.objectContaining({ lang: 'nl' }),
+    ]);
+  });
+
   it('validates the element matching the Review root selector', async () => {
     document.body.innerHTML =
       '<main><h1>Titel</h1><h2></h2></main><div id="content"><h1>Titel</h1><h2></h2><p></p></div>';

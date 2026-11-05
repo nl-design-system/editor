@@ -5,7 +5,7 @@ import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { html, LitElement } from 'lit';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { initializeLocale } from '@/localization';
+import { localizeHost } from '@/localization';
 
 const tag = 'clippy-alt-text-wizard-button';
 
@@ -20,7 +20,7 @@ declare global {
 export class AltTextWizardButton extends LitElement {
   override connectedCallback() {
     super.connectedCallback();
-    initializeLocale().catch(console.error);
+    localizeHost(this);
   }
 
   override focus(options?: FocusOptions) {

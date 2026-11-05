@@ -4,9 +4,13 @@ import { allLocales, sourceLocale, targetLocales } from './generated/locale-code
 
 const localizedTemplates = new Map([['nl', templates_nl]]);
 
+export const SUPPORTED_LOCALES: readonly (typeof allLocales)[number][] = ['nl'];
+
+const FALLBACK_LOCALE = 'nl';
+
 export function getDocumentLang() {
   const lang = document.documentElement.lang.split('-')[0];
-  return allLocales.find((locale) => lang === locale) ?? sourceLocale;
+  return SUPPORTED_LOCALES.find((locale) => lang === locale) ?? FALLBACK_LOCALE;
 }
 
 export const { setLocale } = configureLocalization({
@@ -15,10 +19,11 @@ export const { setLocale } = configureLocalization({
   targetLocales,
 });
 
-/**
- * Initialize localization based on document language
- * Should be called before any components are rendered
- */
 export const initializeLocale = async () => {
   await setLocale(getDocumentLang());
+};
+
+export const localizeHost = (host: HTMLElement) => {
+  if (!host.hasAttribute('lang')) host.lang = getDocumentLang();
+  initializeLocale().catch(console.error);
 };

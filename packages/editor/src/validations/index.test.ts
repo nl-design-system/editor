@@ -102,11 +102,11 @@ describe('runValidation', () => {
     expect(violation?.range).toBeInstanceOf(Range);
   });
 
-  it('resolves the messages in the language of the document', () => {
+  it('resolves Dutch messages for a document language Clippy has no copy in', () => {
     document.documentElement.lang = 'en';
     const map = validate('<p></p>', [paragraphMustNotBeEmpty]);
 
-    expect([...map.values()][0]?.messages.title).toBe('This paragraph is empty.');
+    expect([...map.values()][0]?.messages.title).toBe('Deze alinea is leeg.');
   });
 
   it('runs only the given validations, not the core set as well', () => {

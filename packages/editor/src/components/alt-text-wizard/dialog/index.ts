@@ -5,7 +5,7 @@ import '@nl-design-system-community/clippy-alt-text-wizard';
 import '@nl-design-system-community/clippy-components/clippy-modal';
 import { html, LitElement } from 'lit';
 import { query } from 'lit/decorators.js';
-import { initializeLocale } from '@/localization';
+import { localizeHost } from '@/localization';
 
 const tag = 'clippy-alt-text-wizard-dialog';
 
@@ -23,7 +23,7 @@ export class AltTextWizardDialog extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    initializeLocale().catch(console.error);
+    localizeHost(this);
   }
 
   async open(): Promise<void> {

@@ -5,7 +5,6 @@ import type { ViolationsMap } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
 import { CustomEvents, type ValidationsDrawerToggleEvent } from '@/events';
 import { ClippyHub } from '@/hub';
-import { initializeLocale } from '@/localization';
 import { THEME_CLASSES } from '@/utils/colorScheme';
 
 const IDENTIFIER = 'clippy-page-review';
@@ -31,8 +30,6 @@ const withoutCorrections = (violationsMap: ViolationsMap): ViolationsMap => {
   }
   return violationsMap;
 };
-
-initializeLocale().catch(console.error);
 
 export class PageReview extends ClippyHub {
   readonly #trigger = document.createElement('clippy-accessibility-notifications');

@@ -44,9 +44,9 @@ const showAltTextForm = (editor: Editor) => {
 
 const balloonElement = (editor: Editor) => editor.plugins.get(ContextualBalloon).view.element!;
 
-const wizardButton = () => page.getByRole('button', { name: 'Alt-text wizard' });
+const wizardButton = () => page.getByRole('button', { name: 'Alt-tekst keuzehulp' });
 
-const wizardDialog = () => page.getByRole('dialog', { name: 'Alt-text wizard', includeHidden: true });
+const wizardDialog = () => page.getByRole('dialog', { name: 'Alt-tekst keuzehulp', includeHidden: true });
 
 const wizardDialogHosts = () => document.querySelectorAll<AltTextWizardDialog>('clippy-alt-text-wizard-dialog');
 
