@@ -25,6 +25,10 @@ final class InjectPageReview implements MiddlewareInterface
 
     private const DEFAULT_REVIEW_ROOT = 'main, [role=main]';
 
+    private const FLOATING_POSITIONS = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
+
+    private const DEFAULT_FLOATING_POSITION = 'bottom-right';
+
     public function __construct(
         private readonly Context $context,
         private readonly ExtensionConfiguration $extensionConfiguration,
@@ -62,7 +66,11 @@ final class InjectPageReview implements MiddlewareInterface
 
     private function options(): array
     {
+        $floatingPosition = (string)$this->extensionSetting('floatingPosition', self::DEFAULT_FLOATING_POSITION);
         return [
+            'floatingPosition' => in_array($floatingPosition, self::FLOATING_POSITIONS, true)
+                ? $floatingPosition
+                : self::DEFAULT_FLOATING_POSITION,
             'gutter' => (bool)$this->extensionSetting('gutterAlways', true) ? 'always' : 'drawer',
             'reviewRoot' => trim((string)$this->extensionSetting('reviewRoot', self::DEFAULT_REVIEW_ROOT)),
         ];

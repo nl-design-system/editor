@@ -1,7 +1,7 @@
-import '@/components/toolbar/toolbar-accessibility-notifications';
+import type { ViolationsMap } from '@/types/validation';
 import '@/components/validations/drawer';
 import '@/components/validations/gutter';
-import type { ViolationsMap } from '@/types/validation';
+import { isFloatingPosition, type FloatingPosition } from '@/components/toolbar/toolbar-accessibility-notifications';
 import { validationInteractionMode } from '@/constants';
 import { CustomEvents, type ValidationsDrawerToggleEvent } from '@/events';
 import { ClippyHub } from '@/hub';
@@ -11,9 +11,13 @@ import { THEME_CLASSES } from '@/utils/colorScheme';
 const IDENTIFIER = 'clippy-page-review';
 const DEFAULT_REVIEW_ROOT = 'main, [role=main]';
 
+export type { FloatingPosition };
+
 export interface PageReviewOptions {
   /** Where the trigger goes. Without one, the trigger floats over the page. */
   mount?: HTMLElement;
+  /** The screen corner of a floating trigger. Defaults to `bottom-right`. */
+  floatingPosition?: FloatingPosition;
   /** The Review root selector. Falls back to `main, [role=main]`, then `body`. */
   reviewRoot?: string;
   /** Show the gutter markers from load (default), or only while the drawer is open. */
@@ -44,7 +48,7 @@ export class PageReview extends ClippyHub {
     return new PageReview(options);
   }
 
-  private constructor({ gutter = 'always', mount, reviewRoot }: PageReviewOptions) {
+  private constructor({ floatingPosition, gutter = 'always', mount, reviewRoot }: PageReviewOptions) {
     const target = resolveReviewRoot(reviewRoot);
     super({ adaptViolations: withoutCorrections, identifier: IDENTIFIER, target });
     this.#reviewRoot = target;
@@ -53,6 +57,9 @@ export class PageReview extends ClippyHub {
       mount.append(this.#trigger);
     } else {
       this.#trigger.floating = true;
+      if (isFloatingPosition(floatingPosition)) {
+        this.#trigger.floatingPosition = floatingPosition;
+      }
       this.#trigger.classList.add(...THEME_CLASSES);
       document.body.append(this.#trigger);
     }

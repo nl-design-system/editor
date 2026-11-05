@@ -59,6 +59,21 @@ final class SettingsForm extends ConfigFormBase {
         'visible' => [':input[name="page_review"]' => ['checked' => TRUE]],
       ],
     ];
+    $form['floating_position'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Floating button position'),
+      '#description' => $this->t('Used when the page has no admin toolbar.'),
+      '#options' => [
+        'bottom-right' => $this->t('Bottom right'),
+        'bottom-left' => $this->t('Bottom left'),
+        'top-right' => $this->t('Top right'),
+        'top-left' => $this->t('Top left'),
+      ],
+      '#config_target' => 'clippy.settings:floating_position',
+      '#states' => [
+        'visible' => [':input[name="page_review"]' => ['checked' => TRUE]],
+      ],
+    ];
     return parent::buildForm($form, $form_state);
   }
 
