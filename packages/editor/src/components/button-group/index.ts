@@ -25,6 +25,8 @@ declare global {
  * @slot secondary - The button at the end, typically an icon-only `clippy-button` that opens a menu.
  * @slot menu - The menu the secondary button opens, typically a `<ul role="menu">`.
  *
+ * @cssprop --clippy-button-group-divider-color - Line between a `purpose="primary"` primary button and the secondary one.
+ * @cssprop --clippy-button-group-divider-width - Width of that line.
  * @cssprop --clippy-button-group-menu-background-color - Background of the menu.
  * @cssprop --clippy-button-group-menu-border-color - Border color of the menu.
  * @cssprop --clippy-button-group-menu-border-radius - Corners of the menu.
@@ -45,6 +47,8 @@ export class ButtonGroup extends LitElement {
   static override readonly styles = css`
     :host {
       --clippy-button-group-border-radius: var(--nl-button-border-radius);
+      --clippy-button-group-divider-color: var(--basis-color-action-1-inverse-color-default);
+      --clippy-button-group-divider-width: 1px;
       --clippy-button-group-menu-background-color: var(--basis-color-default-bg-document);
       --clippy-button-group-menu-border-color: var(--basis-color-default-border-default);
       --clippy-button-group-menu-border-radius: var(--basis-border-radius-md);
@@ -59,6 +63,11 @@ export class ButtonGroup extends LitElement {
     /* border-radius takes its corners in physical order: top-left, top-right, bottom-right, bottom-left. */
     ::slotted([slot='primary']) {
       --nl-button-border-radius: var(--clippy-button-group-border-radius) 0 0 var(--clippy-button-group-border-radius);
+    }
+
+    ::slotted([slot='primary'][purpose='primary']) {
+      border-inline-end: var(--clippy-button-group-divider-width) solid var(--clippy-button-group-divider-color);
+      display: inline-flex;
     }
 
     ::slotted([slot='secondary']) {

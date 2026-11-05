@@ -6,10 +6,13 @@ import type { ButtonGroup } from './index';
 
 const RADIUS = '8px';
 
-const renderGroup = async (dir: 'ltr' | 'rtl' = 'ltr'): Promise<ButtonGroup> => {
+const renderGroup = async (dir: 'ltr' | 'rtl' = 'ltr', purpose = 'primary'): Promise<ButtonGroup> => {
   document.body.innerHTML = `
-    <clippy-button-group dir="${dir}" style="--nl-button-border-radius: ${RADIUS}">
-      <clippy-button slot="primary" purpose="primary">Corrigeren</clippy-button>
+    <clippy-button-group
+      dir="${dir}"
+      style="--nl-button-border-radius: ${RADIUS}; --basis-color-action-1-inverse-color-default: #ffffff"
+    >
+      <clippy-button slot="primary" purpose="${purpose}">Corrigeren</clippy-button>
       <clippy-button slot="secondary" purpose="primary" icon-only>Meer correcties</clippy-button>
       <ul slot="menu" role="menu"><li role="none"><button role="menuitem">Omzetten naar citaat</button></li></ul>
     </clippy-button-group>
@@ -77,10 +80,35 @@ describe('<clippy-button-group>', () => {
 
   it('places the buttons against each other', async () => {
     const group = await renderGroup();
-    const primary = innerButton(group, 'primary').getBoundingClientRect();
-    const secondary = innerButton(group, 'secondary').getBoundingClientRect();
+    const primary = group.querySelector('[slot="primary"]')!.getBoundingClientRect();
+    const secondary = group.querySelector('[slot="secondary"]')!.getBoundingClientRect();
 
     expect(secondary.left).toBe(primary.right);
+  });
+
+  it('divides a primary-purpose primary button from the secondary one with a white line', async () => {
+    const group = await renderGroup();
+    const primary = group.querySelector('[slot="primary"]')!;
+    const style = getComputedStyle(primary);
+
+    expect(style.borderInlineEndWidth).toBe('1px');
+    expect(style.borderInlineEndStyle).toBe('solid');
+    expect(style.borderInlineEndColor).toBe('rgb(255, 255, 255)');
+    expect(primary.getBoundingClientRect().height).toBe(innerButton(group, 'primary').getBoundingClientRect().height);
+  });
+
+  it('puts the dividing line where the buttons meet in a right-to-left layout too', async () => {
+    const group = await renderGroup('rtl');
+    const style = getComputedStyle(group.querySelector('[slot="primary"]')!);
+
+    expect(style.borderLeftWidth).toBe('1px');
+    expect(style.borderRightWidth).toBe('0px');
+  });
+
+  it('adds no dividing line to a primary button of another purpose', async () => {
+    const group = await renderGroup('ltr', 'secondary');
+
+    expect(getComputedStyle(group.querySelector('[slot="primary"]')!).borderInlineEndWidth).toBe('0px');
   });
 
   it('drops the menu below the buttons, at least as wide as the group', async () => {
