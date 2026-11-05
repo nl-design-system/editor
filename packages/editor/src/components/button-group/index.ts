@@ -47,7 +47,7 @@ export class ButtonGroup extends LitElement {
   static override readonly styles = css`
     :host {
       --clippy-button-group-border-radius: var(--nl-button-border-radius);
-      --clippy-button-group-divider-color: var(--basis-color-action-1-inverse-color-default);
+      --clippy-button-group-divider-color: var(--basis-color-action-1-border-subtle);
       --clippy-button-group-divider-width: 1px;
       --clippy-button-group-menu-background-color: var(--basis-color-default-bg-document);
       --clippy-button-group-menu-border-color: var(--basis-color-default-border-default);

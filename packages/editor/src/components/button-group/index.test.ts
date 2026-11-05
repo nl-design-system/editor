@@ -10,7 +10,7 @@ const renderGroup = async (dir: 'ltr' | 'rtl' = 'ltr', purpose = 'primary'): Pro
   document.body.innerHTML = `
     <clippy-button-group
       dir="${dir}"
-      style="--nl-button-border-radius: ${RADIUS}; --basis-color-action-1-inverse-color-default: #ffffff"
+      style="--nl-button-border-radius: ${RADIUS}; --basis-color-action-1-border-subtle: #dbb8e6"
     >
       <clippy-button slot="primary" purpose="${purpose}">Corrigeren</clippy-button>
       <clippy-button slot="secondary" purpose="primary" icon-only>Meer correcties</clippy-button>
@@ -86,14 +86,14 @@ describe('<clippy-button-group>', () => {
     expect(secondary.left).toBe(primary.right);
   });
 
-  it('divides a primary-purpose primary button from the secondary one with a white line', async () => {
+  it('divides a primary-purpose primary button from the secondary one with a lighter accent line', async () => {
     const group = await renderGroup();
     const primary = group.querySelector('[slot="primary"]')!;
     const style = getComputedStyle(primary);
 
     expect(style.borderInlineEndWidth).toBe('1px');
     expect(style.borderInlineEndStyle).toBe('solid');
-    expect(style.borderInlineEndColor).toBe('rgb(255, 255, 255)');
+    expect(style.borderInlineEndColor).toBe('rgb(219, 184, 230)');
     expect(primary.getBoundingClientRect().height).toBe(innerButton(group, 'primary').getBoundingClientRect().height);
   });
 
