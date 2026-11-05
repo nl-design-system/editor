@@ -3,10 +3,20 @@ import { css } from 'lit';
 export default css`
   :host([floating]) {
     background-color: var(--basis-color-default-bg-document, Canvas);
-    inset-block-end: var(--basis-space-block-md);
-    inset-inline-end: var(--basis-space-inline-md);
+    bottom: var(--basis-space-block-md);
+    right: var(--basis-space-inline-md);
     position: fixed;
     z-index: 2147482000;
+  }
+
+  :host([floating][floating-position^='top']) {
+    bottom: auto;
+    top: var(--basis-space-block-md);
+  }
+
+  :host([floating][floating-position$='left']) {
+    left: var(--basis-space-inline-md);
+    right: auto;
   }
 
   .clippy-accessibility-notifications {
@@ -18,7 +28,10 @@ export default css`
     position: fixed;
     inset-block-start: anchor(--clippy-notifications-trigger bottom);
     inset-inline-end: anchor(--clippy-notifications-trigger right);
-    position-try-fallbacks: flip-block;
+    position-try-fallbacks:
+      flip-block,
+      flip-inline,
+      flip-block flip-inline;
     display: flex;
     flex-direction: column;
     min-inline-size: max-content;

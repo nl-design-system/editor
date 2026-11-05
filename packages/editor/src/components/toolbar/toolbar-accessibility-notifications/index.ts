@@ -20,6 +20,15 @@ import notificationsStyles from './styles';
 
 const tag = 'clippy-accessibility-notifications';
 
+export const FLOATING_POSITIONS = ['top-left', 'top-right', 'bottom-left', 'bottom-right'] as const;
+
+export type FloatingPosition = (typeof FLOATING_POSITIONS)[number];
+
+export const DEFAULT_FLOATING_POSITION: FloatingPosition = 'bottom-right';
+
+export const isFloatingPosition = (value: unknown): value is FloatingPosition =>
+  FLOATING_POSITIONS.includes(value as FloatingPosition);
+
 declare global {
   interface HTMLElementTagNameMap {
     [tag]: AccessibilityNotifications;
@@ -68,6 +77,10 @@ export class AccessibilityNotifications extends LitElement {
   /** Float the trigger over the page, for hosts that give it no place of its own. */
   @property({ reflect: true, type: Boolean })
   floating = false;
+
+  /** The screen corner a floating trigger sits in. */
+  @property({ attribute: 'floating-position', reflect: true })
+  floatingPosition: FloatingPosition = DEFAULT_FLOATING_POSITION;
 
   /**
    * Disables the trigger and closes any open panel.

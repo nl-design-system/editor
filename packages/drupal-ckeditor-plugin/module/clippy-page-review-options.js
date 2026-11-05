@@ -1,5 +1,7 @@
 // @ts-check
 
+/** @import { PageReviewOptions } from '@nl-design-system-community/editor/page-review' */
+
 const THEME_CLASSES = ['ma-theme', 'clippy-theme', 'utrecht-theme'];
 
 /**
@@ -30,10 +32,11 @@ const adminBarMount = () => {
 };
 
 /**
- * @param {{ clippy?: { pageReview?: { gutter?: 'always' | 'drawer', reviewRoot?: string } } } | undefined} settings
- * @returns {import('@nl-design-system-community/editor/page-review').PageReviewOptions}
+ * @param {{ clippy?: { pageReview?: Omit<PageReviewOptions, 'mount'> } } | undefined} settings
+ * @returns {PageReviewOptions}
  */
 export const pageReviewOptions = (settings) => ({
+  floatingPosition: settings?.clippy?.pageReview?.floatingPosition,
   gutter: settings?.clippy?.pageReview?.gutter,
   mount: adminBarMount(),
   reviewRoot: settings?.clippy?.pageReview?.reviewRoot || undefined,

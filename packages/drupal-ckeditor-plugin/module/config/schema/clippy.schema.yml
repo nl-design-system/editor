@@ -18,3 +18,12 @@ clippy.settings:
     gutter_always:
       type: boolean
       label: "Always show gutter markers"
+    floating_position:
+      type: string
+      label: "Floating button position"
+      constraints:
+        Choice:
+          - top-left
+          - top-right
+          - bottom-left
+          - bottom-right
