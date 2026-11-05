@@ -6,3 +6,5 @@ pageReview = 1
 reviewRoot = main, [role=main]
 # cat=pageReview; type=boolean; label=Always show gutter markers: shows the gutter markers as soon as the page loads. When off, they only show while the Page review drawer is open
 gutterAlways = 1
+# cat=pageReview; type=options[Bottom right=bottom-right,Bottom left=bottom-left,Top right=top-right,Top left=top-left]; label=Floating button position: the screen corner of the Page review button
+floatingPosition = bottom-right

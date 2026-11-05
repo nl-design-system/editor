@@ -63,6 +63,7 @@ final class InjectPageReview implements MiddlewareInterface
     private function options(): array
     {
         return [
+            'floatingPosition' => $this->extensionSetting('floatingPosition', null),
             'gutter' => (bool)$this->extensionSetting('gutterAlways', true) ? 'always' : 'drawer',
             'reviewRoot' => trim((string)$this->extensionSetting('reviewRoot', self::DEFAULT_REVIEW_ROOT)),
         ];
