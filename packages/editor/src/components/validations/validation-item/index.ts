@@ -21,6 +21,7 @@ import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import '@/components/button-group';
 import type { ValidationInteractionMode } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';
@@ -36,8 +37,6 @@ declare global {
 }
 
 const ariaDescribedBy = 'validation-item-header';
-
-const correctionsMenuId = 'validation-item-corrections-menu';
 
 type ValidationItemView = 'explanation' | 'solution';
 
@@ -115,7 +114,7 @@ export class ValidationItem extends LitElement {
   readonly #listItemRef: Ref<HTMLDivElement> = createRef();
   readonly #solutionLinkRef: Ref<ClippyButton> = createRef();
   readonly #backLinkRef: Ref<ClippyButton> = createRef();
-  readonly #correctionsMenuToggleRef: Ref<HTMLButtonElement> = createRef();
+  readonly #correctionsMenuToggleRef: Ref<ClippyButton> = createRef();
   readonly #correctionsMenuRef: Ref<HTMLDivElement> = createRef();
 
   override focus(): void {
@@ -155,7 +154,7 @@ export class ValidationItem extends LitElement {
 
   readonly #closeCorrectionsMenu = () => {
     this.correctionsMenuOpen = false;
-    this.#correctionsMenuToggleRef.value?.focus();
+    this.#correctionsMenuToggleRef.value?.shadowRoot?.querySelector('button')?.focus();
   };
 
   #correctionsMenuItems(): HTMLButtonElement[] {
@@ -276,58 +275,62 @@ export class ValidationItem extends LitElement {
   }
 
   #renderCorrectionsMenu(alternatives: ViolationCorrection[]) {
-    if (alternatives.length === 0) return nothing;
+    if (!this.correctionsMenuOpen) return nothing;
 
-    return html`
-      <button
-        type="button"
-        class="nl-button nl-button--primary nl-button--icon-only"
-        aria-label=${msg('More corrections')}
-        aria-haspopup="menu"
-        aria-expanded=${this.correctionsMenuOpen ? 'true' : 'false'}
-        aria-controls=${correctionsMenuId}
-        @click=${this.#toggleCorrectionsMenu}
-        ${ref(this.#correctionsMenuToggleRef)}
-      >
-        <clippy-icon>${unsafeSVG(ChevronDownIcon)}</clippy-icon>
-      </button>
-      ${
-        this.correctionsMenuOpen
-          ? html`<div
-              id=${correctionsMenuId}
-              role="menu"
-              aria-label=${msg('More corrections')}
-              class="clippy-validation-item__corrections-menu"
-              @keydown=${this.#handleCorrectionsMenuKeydown}
-              @focusout=${this.#handleCorrectionsMenuFocusout}
-              ${ref(this.#correctionsMenuRef)}
-            >
-              ${alternatives.map(
-                (correction) =>
-                  html`<button
-                    type="button"
-                    role="menuitem"
-                    tabindex="-1"
-                    class="nl-button nl-button--subtle clippy-validation-item__corrections-menu-item"
-                    @click=${() => this.#applyFix(correction)}
-                  >
-                    ${correction.label ?? msg('Correct')}
-                  </button>`,
-              )}
-            </div>`
-          : nothing
-      }
-    `;
+    return html`<div
+      role="menu"
+      aria-label=${msg('More corrections')}
+      class="clippy-validation-item__corrections-menu"
+      @keydown=${this.#handleCorrectionsMenuKeydown}
+      @focusout=${this.#handleCorrectionsMenuFocusout}
+      ${ref(this.#correctionsMenuRef)}
+    >
+      ${alternatives.map(
+        (correction) =>
+          html`<button
+            type="button"
+            role="menuitem"
+            tabindex="-1"
+            class="nl-button nl-button--subtle clippy-validation-item__corrections-menu-item"
+            @click=${() => this.#applyFix(correction)}
+          >
+            ${correction.label ?? msg('Correct')}
+          </button>`,
+      )}
+    </div>`;
+  }
+
+  #renderCorrectButton(primary: ViolationCorrection, slot?: string) {
+    return html`<clippy-button
+      slot=${slot ?? nothing}
+      purpose="primary"
+      @click=${() => this.#applyFix(primary)}
+      aria-describedby=${ariaDescribedBy}
+    >
+      ${primary.label ?? msg('Correct')}
+    </clippy-button>`;
   }
 
   #renderCorrections() {
     const [primary, ...alternatives] = this.corrections ?? [];
     if (!primary) return nothing;
+    if (alternatives.length === 0) return this.#renderCorrectButton(primary);
 
     return html`<div class="clippy-validation-item__corrections">
-      <clippy-button purpose="primary" @click=${() => this.#applyFix(primary)} aria-describedby=${ariaDescribedBy}>
-        ${primary.label ?? msg('Correct')}
-      </clippy-button>
+      <clippy-button-group>
+        ${this.#renderCorrectButton(primary, 'primary')}
+        <clippy-button
+          slot="secondary"
+          purpose="primary"
+          icon-only
+          .expanded=${this.correctionsMenuOpen}
+          @click=${this.#toggleCorrectionsMenu}
+          ${ref(this.#correctionsMenuToggleRef)}
+        >
+          <clippy-icon slot="iconStart">${unsafeSVG(ChevronDownIcon)}</clippy-icon>
+          ${msg('More corrections')}
+        </clippy-button>
+      </clippy-button-group>
       ${this.#renderCorrectionsMenu(alternatives)}
     </div>`;
   }

@@ -1,4 +1,5 @@
 import './index';
+import type { ClippyButton } from '@nl-design-system-community/clippy-components/clippy-button';
 import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
@@ -19,8 +20,8 @@ const renderItem = async (
 const correctButton = (item: ValidationItem): HTMLElement | null | undefined =>
   item.shadowRoot?.querySelector('clippy-button[purpose="primary"]');
 
-const menuToggle = (item: ValidationItem): HTMLButtonElement | null | undefined =>
-  item.shadowRoot?.querySelector('button[aria-haspopup="menu"]');
+const menuToggle = (item: ValidationItem): ClippyButton | null | undefined =>
+  item.shadowRoot?.querySelector('clippy-button-group clippy-button[slot="secondary"]');
 
 const menuItems = (item: ValidationItem): HTMLButtonElement[] => [
   ...(item.shadowRoot?.querySelectorAll<HTMLButtonElement>('[role="menuitem"]') ?? []),
@@ -251,11 +252,19 @@ describe('<validation-item> alternative corrections', () => {
     expect(executes[1]).not.toHaveBeenCalled();
   });
 
+  it('groups the main button with an icon-only menu button', async () => {
+    const { item } = await renderWithAlternatives();
+    const group = item.shadowRoot?.querySelector('clippy-button-group');
+
+    expect(group?.querySelector('clippy-button[slot="primary"]')).toBe(correctButton(item));
+    expect(menuToggle(item)?.iconOnly).toBe(true);
+  });
+
   it('names the menu button and keeps its menu closed at first', async () => {
     const { item } = await renderWithAlternatives();
 
-    expect(menuToggle(item)?.getAttribute('aria-label')).toBe('More corrections');
-    expect(menuToggle(item)?.getAttribute('aria-expanded')).toBe('false');
+    expect(menuToggle(item)?.textContent?.trim()).toBe('More corrections');
+    expect(menuToggle(item)?.expanded).toBe(false);
     expect(menuItems(item)).toHaveLength(0);
   });
 
@@ -264,7 +273,7 @@ describe('<validation-item> alternative corrections', () => {
 
     await userEvent.click(menuToggle(item)!);
 
-    expect(menuToggle(item)?.getAttribute('aria-expanded')).toBe('true');
+    expect(menuToggle(item)?.expanded).toBe(true);
     expect(menuItems(item).map((menuItem) => menuItem.textContent?.trim())).toEqual([
       'Omzetten naar citaat',
       'Omzetten naar intro',
