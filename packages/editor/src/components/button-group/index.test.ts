@@ -11,6 +11,7 @@ const renderGroup = async (dir: 'ltr' | 'rtl' = 'ltr'): Promise<ButtonGroup> => 
     <clippy-button-group dir="${dir}" style="--nl-button-border-radius: ${RADIUS}">
       <clippy-button slot="primary" purpose="primary">Corrigeren</clippy-button>
       <clippy-button slot="secondary" purpose="primary" icon-only>Meer correcties</clippy-button>
+      <ul slot="menu" role="menu"><li role="none"><button role="menuitem">Omzetten naar citaat</button></li></ul>
     </clippy-button-group>
   `;
   const group = document.querySelector('clippy-button-group') as ButtonGroup;
@@ -42,7 +43,7 @@ describe('<clippy-button-group>', () => {
     const group = await renderGroup();
     const slots = [...(group.shadowRoot?.querySelectorAll('slot') ?? [])].map((slot) => slot.name);
 
-    expect(slots).toEqual(['primary', 'secondary']);
+    expect(slots).toEqual(['primary', 'secondary', 'menu']);
   });
 
   it('squares the corners of the primary button where it meets the secondary one', async () => {
@@ -80,5 +81,41 @@ describe('<clippy-button-group>', () => {
     const secondary = innerButton(group, 'secondary').getBoundingClientRect();
 
     expect(secondary.left).toBe(primary.right);
+  });
+
+  it('drops the menu below the buttons, at least as wide as the group', async () => {
+    const group = await renderGroup();
+    const menu = group.querySelector('[slot="menu"]')!.getBoundingClientRect();
+    const buttons = group.getBoundingClientRect();
+
+    expect(menu.top).toBeGreaterThanOrEqual(buttons.bottom);
+    expect(menu.left).toBe(buttons.left);
+    expect(menu.width).toBeGreaterThanOrEqual(buttons.width);
+  });
+
+  it('strips the list styling from the menu', async () => {
+    const group = await renderGroup();
+    const style = getComputedStyle(group.querySelector('[slot="menu"]')!);
+
+    expect(style.listStyleType).toBe('none');
+    expect(style.paddingInlineStart).toBe('0px');
+  });
+
+  it('styles the menu from its own custom properties', async () => {
+    const group = await renderGroup();
+    group.style.setProperty('--clippy-button-group-menu-background-color', 'rgb(1, 2, 3)');
+    group.style.setProperty('--clippy-button-group-menu-border-radius', '3px');
+
+    const style = getComputedStyle(group.querySelector('[slot="menu"]')!);
+
+    expect(style.backgroundColor).toBe('rgb(1, 2, 3)');
+    expect(style.borderStartStartRadius).toBe('3px');
+  });
+
+  it('hands the menu items a square border radius by default', async () => {
+    const group = await renderGroup();
+    const item = group.querySelector('[role="menuitem"]')!;
+
+    expect(getComputedStyle(item).getPropertyValue('--clippy-button-group-menu-item-border-radius').trim()).toBe('0');
   });
 });
