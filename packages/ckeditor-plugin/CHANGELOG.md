@@ -1,5 +1,19 @@
 # @nl-design-system-community/ckeditor-plugin
 
+## 0.4.0
+
+### Minor Changes
+
+- d8e68aa: Remove the content classes from CKEditor. CKEditor writes plain markup again: the `ContentClasses` plugin, the `contentClasses` editor config and `content-classes.json` are gone, as are Drupal's per-format **Content classes** tab and TYPO3's `Clippy` site set. The `@nl-design-system-community/editor/content-classes` entry point is removed; the Tiptap editor keeps its classes for styling.
+
+### Patch Changes
+
+- 520bb5e: Add `ClippyHub`, exported from the new `@nl-design-system-community/editor/hub` entry. It validates an element's live DOM, waits for media inside it to settle, debounces repeated runs and feeds the result to a trigger, drawer and optional gutter that share one identifier. The CKEditor plugin now uses it, so several editors on one page no longer cancel each other's debounced validation.
+- Updated dependencies [520bb5e]
+- Updated dependencies [081b960]
+- Updated dependencies [d8e68aa]
+  - @nl-design-system-community/editor@1.9.0
+
 ## 0.3.3
 
 ### Patch Changes

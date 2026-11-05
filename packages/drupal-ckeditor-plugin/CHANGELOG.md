@@ -1,5 +1,21 @@
 # @nl-design-system-community/drupal-ckeditor-plugin
 
+## 0.4.0
+
+### Minor Changes
+
+- 652c016: Add Page review to the Clippy Drupal module.
+  The module now requires Drupal 11.1 or later.
+- d8e68aa: Remove the content classes from CKEditor. CKEditor writes plain markup again: the `ContentClasses` plugin, the `contentClasses` editor config and `content-classes.json` are gone, as are Drupal's per-format **Content classes** tab and TYPO3's `Clippy` site set. The `@nl-design-system-community/editor/content-classes` entry point is removed; the Tiptap editor keeps its classes for styling.
+
+### Patch Changes
+
+- Updated dependencies [520bb5e]
+- Updated dependencies [081b960]
+- Updated dependencies [d8e68aa]
+  - @nl-design-system-community/ckeditor-plugin@0.4.0
+  - @nl-design-system-community/editor@1.9.0
+
 ## 0.3.3
 
 ### Patch Changes
