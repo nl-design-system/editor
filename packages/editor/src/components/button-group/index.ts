@@ -31,8 +31,6 @@ declare global {
  * @cssprop --clippy-button-group-menu-border-width - Border width of the menu.
  * @cssprop --clippy-button-group-menu-box-shadow - Shadow of the menu.
  * @cssprop --clippy-button-group-menu-item-border-radius - Corners of the menu items, square by default.
- * @cssprop --clippy-button-group-menu-margin-block-start - Space between the buttons and the menu.
- * @cssprop --clippy-button-group-menu-padding-block - Space above the first and below the last menu item.
  *
  * @example
  * ```html
@@ -53,8 +51,6 @@ export class ButtonGroup extends LitElement {
       --clippy-button-group-menu-border-width: var(--basis-border-width-sm);
       --clippy-button-group-menu-box-shadow: var(--basis-box-shadow-md);
       --clippy-button-group-menu-item-border-radius: 0;
-      --clippy-button-group-menu-margin-block-start: var(--basis-space-block-xs);
-      --clippy-button-group-menu-padding-block: var(--basis-space-block-xs);
 
       display: inline-flex;
       position: relative;
@@ -88,10 +84,11 @@ export class ButtonGroup extends LitElement {
       inset-block-start: 100%;
       inset-inline-start: 0;
       list-style-type: none;
-      margin-block: var(--clippy-button-group-menu-margin-block-start) 0;
+      margin-block: 0;
       margin-inline: 0;
       min-inline-size: 100%;
-      padding-block: var(--clippy-button-group-menu-padding-block);
+      overflow: hidden;
+      padding-block: 0;
       padding-inline: 0;
       position: absolute;
       z-index: 1;

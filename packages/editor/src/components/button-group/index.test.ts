@@ -88,17 +88,25 @@ describe('<clippy-button-group>', () => {
     const menu = group.querySelector('[slot="menu"]')!.getBoundingClientRect();
     const buttons = group.getBoundingClientRect();
 
-    expect(menu.top).toBeGreaterThanOrEqual(buttons.bottom);
+    expect(menu.top).toBe(buttons.bottom);
     expect(menu.left).toBe(buttons.left);
     expect(menu.width).toBeGreaterThanOrEqual(buttons.width);
   });
 
-  it('strips the list styling from the menu', async () => {
+  it('strips the list styling and any spacing from the menu', async () => {
     const group = await renderGroup();
+    group.style.setProperty('--basis-space-block-xs', '4px');
     const style = getComputedStyle(group.querySelector('[slot="menu"]')!);
 
     expect(style.listStyleType).toBe('none');
-    expect(style.paddingInlineStart).toBe('0px');
+    expect(style.padding).toBe('0px');
+    expect(style.margin).toBe('0px');
+  });
+
+  it('clips the menu items to the rounded corners of the menu', async () => {
+    const group = await renderGroup();
+
+    expect(getComputedStyle(group.querySelector('[slot="menu"]')!).overflow).toBe('hidden');
   });
 
   it('styles the menu from its own custom properties', async () => {
