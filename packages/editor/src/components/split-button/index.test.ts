@@ -2,29 +2,29 @@ import './index';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import type { ClippyButton } from '@nl-design-system-community/clippy-components/clippy-button';
 import { afterEach, describe, expect, it } from 'vitest';
-import type { ButtonGroup } from './index';
+import type { SplitButton } from './index';
 
 const RADIUS = '8px';
 
-const renderGroup = async (dir: 'ltr' | 'rtl' = 'ltr', purpose = 'primary'): Promise<ButtonGroup> => {
+const renderSplitButton = async (dir: 'ltr' | 'rtl' = 'ltr', purpose = 'primary'): Promise<SplitButton> => {
   document.body.innerHTML = `
-    <clippy-button-group
+    <clippy-split-button
       dir="${dir}"
       style="--nl-button-border-radius: ${RADIUS}; --basis-color-action-1-border-subtle: #dbb8e6"
     >
       <clippy-button slot="primary" purpose="${purpose}">Corrigeren</clippy-button>
       <clippy-button slot="secondary" purpose="primary" icon-only>Meer correcties</clippy-button>
       <ul slot="menu" role="menu"><li role="none"><button role="menuitem">Omzetten naar citaat</button></li></ul>
-    </clippy-button-group>
+    </clippy-split-button>
   `;
-  const group = document.querySelector('clippy-button-group') as ButtonGroup;
+  const group = document.querySelector('clippy-split-button') as SplitButton;
   await group.updateComplete;
   await Promise.all([...group.querySelectorAll<ClippyButton>('clippy-button')].map((button) => button.updateComplete));
   return group;
 };
 
 /** The rendered `nl-button` inside a slotted `clippy-button`, which is what carries the corners. */
-const innerButton = (group: ButtonGroup, slot: 'primary' | 'secondary'): HTMLButtonElement =>
+const innerButton = (group: SplitButton, slot: 'primary' | 'secondary'): HTMLButtonElement =>
   group.querySelector(`[slot="${slot}"]`)!.shadowRoot!.querySelector('button')!;
 
 const corners = (button: HTMLElement) => {
@@ -41,16 +41,16 @@ afterEach(() => {
   document.body.innerHTML = '';
 });
 
-describe('<clippy-button-group>', () => {
+describe('<clippy-split-button>', () => {
   it('renders the primary button before the secondary one', async () => {
-    const group = await renderGroup();
+    const group = await renderSplitButton();
     const slots = [...(group.shadowRoot?.querySelectorAll('slot') ?? [])].map((slot) => slot.name);
 
     expect(slots).toEqual(['primary', 'secondary', 'menu']);
   });
 
   it('squares the corners of the primary button where it meets the secondary one', async () => {
-    const group = await renderGroup();
+    const group = await renderSplitButton();
 
     expect(corners(innerButton(group, 'primary'))).toEqual({
       endEnd: '0px',
@@ -61,7 +61,7 @@ describe('<clippy-button-group>', () => {
   });
 
   it('squares the corners of the secondary button where it meets the primary one', async () => {
-    const group = await renderGroup();
+    const group = await renderSplitButton();
 
     expect(corners(innerButton(group, 'secondary'))).toEqual({
       endEnd: RADIUS,
@@ -72,14 +72,14 @@ describe('<clippy-button-group>', () => {
   });
 
   it('squares the corners where the buttons meet in a right-to-left layout too', async () => {
-    const group = await renderGroup('rtl');
+    const group = await renderSplitButton('rtl');
 
     expect(corners(innerButton(group, 'primary'))).toMatchObject({ endEnd: '0px', startStart: RADIUS });
     expect(corners(innerButton(group, 'secondary'))).toMatchObject({ endEnd: RADIUS, startStart: '0px' });
   });
 
   it('places the buttons against each other', async () => {
-    const group = await renderGroup();
+    const group = await renderSplitButton();
     const primary = group.querySelector('[slot="primary"]')!.getBoundingClientRect();
     const secondary = group.querySelector('[slot="secondary"]')!.getBoundingClientRect();
 
@@ -87,7 +87,7 @@ describe('<clippy-button-group>', () => {
   });
 
   it('divides a primary-purpose primary button from the secondary one with a lighter accent line', async () => {
-    const group = await renderGroup();
+    const group = await renderSplitButton();
     const primary = group.querySelector('[slot="primary"]')!;
     const style = getComputedStyle(primary);
 
@@ -98,7 +98,7 @@ describe('<clippy-button-group>', () => {
   });
 
   it('puts the dividing line where the buttons meet in a right-to-left layout too', async () => {
-    const group = await renderGroup('rtl');
+    const group = await renderSplitButton('rtl');
     const style = getComputedStyle(group.querySelector('[slot="primary"]')!);
 
     expect(style.borderLeftWidth).toBe('1px');
@@ -106,13 +106,13 @@ describe('<clippy-button-group>', () => {
   });
 
   it('adds no dividing line to a primary button of another purpose', async () => {
-    const group = await renderGroup('ltr', 'secondary');
+    const group = await renderSplitButton('ltr', 'secondary');
 
     expect(getComputedStyle(group.querySelector('[slot="primary"]')!).borderInlineEndWidth).toBe('0px');
   });
 
   it('drops the menu below the buttons, at least as wide as the group', async () => {
-    const group = await renderGroup();
+    const group = await renderSplitButton();
     const menu = group.querySelector('[slot="menu"]')!.getBoundingClientRect();
     const buttons = group.getBoundingClientRect();
 
@@ -122,7 +122,7 @@ describe('<clippy-button-group>', () => {
   });
 
   it('strips the list styling and any spacing from the menu', async () => {
-    const group = await renderGroup();
+    const group = await renderSplitButton();
     group.style.setProperty('--basis-space-block-xs', '4px');
     const style = getComputedStyle(group.querySelector('[slot="menu"]')!);
 
@@ -132,15 +132,15 @@ describe('<clippy-button-group>', () => {
   });
 
   it('clips the menu items to the rounded corners of the menu', async () => {
-    const group = await renderGroup();
+    const group = await renderSplitButton();
 
     expect(getComputedStyle(group.querySelector('[slot="menu"]')!).overflow).toBe('hidden');
   });
 
   it('styles the menu from its own custom properties', async () => {
-    const group = await renderGroup();
-    group.style.setProperty('--clippy-button-group-menu-background-color', 'rgb(1, 2, 3)');
-    group.style.setProperty('--clippy-button-group-menu-border-radius', '3px');
+    const group = await renderSplitButton();
+    group.style.setProperty('--clippy-split-button-menu-background-color', 'rgb(1, 2, 3)');
+    group.style.setProperty('--clippy-split-button-menu-border-radius', '3px');
 
     const style = getComputedStyle(group.querySelector('[slot="menu"]')!);
 
@@ -149,9 +149,9 @@ describe('<clippy-button-group>', () => {
   });
 
   it('hands the menu items a square border radius by default', async () => {
-    const group = await renderGroup();
+    const group = await renderSplitButton();
     const item = group.querySelector('[role="menuitem"]')!;
 
-    expect(getComputedStyle(item).getPropertyValue('--clippy-button-group-menu-item-border-radius').trim()).toBe('0');
+    expect(getComputedStyle(item).getPropertyValue('--clippy-split-button-menu-item-border-radius').trim()).toBe('0');
   });
 });

@@ -21,7 +21,7 @@ const correctButton = (item: ValidationItem): HTMLElement | null | undefined =>
   item.shadowRoot?.querySelector('clippy-button[purpose="primary"]');
 
 const menuToggle = (item: ValidationItem): ClippyButton | null | undefined =>
-  item.shadowRoot?.querySelector('clippy-button-group clippy-button[slot="secondary"]');
+  item.shadowRoot?.querySelector('clippy-split-button clippy-button[slot="secondary"]');
 
 const menuItems = (item: ValidationItem): HTMLButtonElement[] => [
   ...(item.shadowRoot?.querySelectorAll<HTMLButtonElement>('[role="menuitem"]') ?? []),
@@ -254,7 +254,7 @@ describe('<validation-item> alternative corrections', () => {
 
   it('groups the main button with an icon-only menu button', async () => {
     const { item } = await renderWithAlternatives();
-    const group = item.shadowRoot?.querySelector('clippy-button-group');
+    const group = item.shadowRoot?.querySelector('clippy-split-button');
 
     expect(group?.querySelector('clippy-button[slot="primary"]')).toBe(correctButton(item));
     expect(menuToggle(item)?.iconOnly).toBe(true);
@@ -272,7 +272,7 @@ describe('<validation-item> alternative corrections', () => {
     const { item } = await renderWithAlternatives();
 
     await userEvent.click(menuToggle(item)!);
-    const menu = item.shadowRoot?.querySelector('clippy-button-group > ul[slot="menu"][role="menu"]');
+    const menu = item.shadowRoot?.querySelector('clippy-split-button > ul[slot="menu"][role="menu"]');
     const [first] = menuItems(item);
 
     expect(menu).not.toBeNull();

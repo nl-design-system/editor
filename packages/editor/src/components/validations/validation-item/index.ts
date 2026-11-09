@@ -21,7 +21,7 @@ import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import '@/components/button-group';
+import '@/components/split-button';
 import type { ValidationInteractionMode } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
 import { identifierContext } from '@/context/identifierContext';
@@ -318,7 +318,7 @@ export class ValidationItem extends LitElement {
     if (!primary) return nothing;
     if (alternatives.length === 0) return this.#renderCorrectButton(primary);
 
-    return html`<clippy-button-group>
+    return html`<clippy-split-button>
       ${this.#renderCorrectButton(primary, 'primary')}
       <clippy-button
         slot="secondary"
@@ -332,7 +332,7 @@ export class ValidationItem extends LitElement {
         ${msg('More corrections')}
       </clippy-button>
       ${this.#renderCorrectionsMenu(alternatives)}
-    </clippy-button-group>`;
+    </clippy-split-button>`;
   }
 
   #renderActions() {

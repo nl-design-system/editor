@@ -104,7 +104,7 @@ export default css`
   }
 
   .clippy-validation-item__corrections-menu-item {
-    --nl-button-border-radius: var(--clippy-button-group-menu-item-border-radius);
+    --nl-button-border-radius: var(--clippy-split-button-menu-item-border-radius);
 
     inline-size: 100%;
     justify-content: flex-start;
