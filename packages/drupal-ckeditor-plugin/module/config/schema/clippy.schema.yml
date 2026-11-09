@@ -23,7 +23,5 @@ clippy.settings:
       label: "Floating button position"
       constraints:
         Choice:
-          - top-left
           - top-right
-          - bottom-left
           - bottom-right

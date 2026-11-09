@@ -20,7 +20,7 @@ import notificationsStyles from './styles';
 
 const tag = 'clippy-accessibility-notifications';
 
-export const FLOATING_POSITIONS = ['top-left', 'top-right', 'bottom-left', 'bottom-right'] as const;
+export const FLOATING_POSITIONS = ['top-right', 'bottom-right'] as const;
 
 export type FloatingPosition = (typeof FLOATING_POSITIONS)[number];
 
