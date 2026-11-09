@@ -1,5 +1,4 @@
 import type { ClippyButton } from '@nl-design-system-community/clippy-components/clippy-button';
-import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import buttonStyle from '@nl-design-system-candidate/button-css/button.css?inline';
 import codeStyle from '@nl-design-system-candidate/code-css/code.css?inline';
@@ -28,7 +27,6 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationInteractionMode } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
-import { identifierContext } from '@/context/identifierContext';
 import { CustomEvents, type CorrectValidationIssueDetail, type FocusNodeDetail } from '@/events';
 import validationListItemStyles from './styles';
 
@@ -110,9 +108,9 @@ export class ValidationItem extends LitElement {
 
   @state() private correctionsMenuOpen = false;
 
-  @consume({ context: identifierContext, subscribe: true })
+  /** Identifier of the Clippy hub this issue belongs to, used to scope its events. */
   @property({ attribute: false })
-  private readonly identifier?: string;
+  identifier?: string;
 
   readonly #listItemRef: Ref<HTMLDivElement> = createRef();
   readonly #correctionsMenuToggleRef: Ref<ClippyButton> = createRef();

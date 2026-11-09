@@ -1,4 +1,3 @@
-import type { Editor } from '@tiptap/core';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import dataBadgeStyle from '@nl-design-system-candidate/data-badge-css/data-badge.css?inline';
@@ -6,19 +5,18 @@ import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { LitElement, html, unsafeCSS } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import type { ViolationsMap, Violation } from '@/types/validation';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext';
-import { tiptapContext } from '@/context/tiptapContext';
 import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type FocusValidationItemInGutterDetail } from '@/events';
+import { localizeHost } from '@/localization';
 import { getHighestSeverityEntryByElement } from '@/utils/validations';
 import linkListStyles from './styles';
 
 interface LinkEntry {
   element: HTMLAnchorElement;
-  index: number;
   href: string;
   text: string;
   validationEntry: [Range, Violation] | null;
@@ -42,32 +40,48 @@ export class LinkList extends LitElement {
     unsafeCSS(paragraphStyle),
   ];
 
-  @consume({ context: htmlDocumentContext, subscribe: true })
+  /** The validated element to read, pushed by the Drawer. Falls back to the consumed context when unset. */
   @property({ attribute: false })
   htmlDocument?: HTMLElement;
 
-  @consume({ context: tiptapContext, subscribe: true })
-  @property({ attribute: false })
-  editor?: Editor;
+  @consume({ context: htmlDocumentContext, subscribe: true })
+  @state()
+  private readonly htmlDocumentContextValue?: HTMLElement;
 
-  @consume({ context: violationsContext, subscribe: true })
+  override connectedCallback() {
+    super.connectedCallback();
+    localizeHost(this);
+  }
+
+  get #root(): HTMLElement | undefined {
+    return this.htmlDocument ?? this.htmlDocumentContextValue;
+  }
+
+  /** The violations that mark an entry, pushed by the Drawer. Falls back to the consumed context when unset. */
   @property({ attribute: false })
   violationsMap?: ViolationsMap;
 
+  @consume({ context: violationsContext, subscribe: true })
+  @state()
+  private readonly violationsContextValue?: ViolationsMap;
+
+  get #violations(): ViolationsMap | undefined {
+    return this.violationsMap ?? this.violationsContextValue;
+  }
+
   get #links(): LinkEntry[] {
-    if (!this.htmlDocument) return [];
-    return Array.from(this.htmlDocument.querySelectorAll<HTMLAnchorElement>('a[href]')).map((element, index) => ({
+    const root = this.#root;
+    if (!root) return [];
+    return Array.from(root.querySelectorAll<HTMLAnchorElement>('a[href]')).map((element) => ({
       element,
       href: element.getAttribute('href') ?? '',
-      index,
       text: element.textContent ?? '',
-      validationEntry: getHighestSeverityEntryByElement(this.violationsMap, element),
+      validationEntry: getHighestSeverityEntryByElement(this.#violations, element),
     }));
   }
 
-  #scrollToLink(index: number, element: HTMLAnchorElement, validationRange: Range | undefined) {
-    const renderedEl = this.editor?.view?.dom?.querySelectorAll<HTMLAnchorElement>('a[href]')[index] ?? element;
-    renderedEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  #scrollToLink(element: HTMLAnchorElement, validationRange: Range | undefined) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
     if (validationRange) {
       globalThis.dispatchEvent(
         new CustomEvent<FocusValidationItemInGutterDetail>(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, {
@@ -88,7 +102,7 @@ export class LinkList extends LitElement {
           links.length > 0
             ? html`
                 <ol class="clippy-link-list__list" role="list">
-                  ${map(links, ({ element, href, index, text, validationEntry }) => {
+                  ${map(links, ({ element, href, text, validationEntry }) => {
                     const severity = validationEntry?.[1].severity ?? null;
                     return html`
                       <li class="clippy-link-list__item">
@@ -106,7 +120,7 @@ export class LinkList extends LitElement {
                             href="#"
                             @click=${(e: Event) => {
                               e.preventDefault();
-                              this.#scrollToLink(index, element, validationEntry?.[0]);
+                              this.#scrollToLink(element, validationEntry?.[0]);
                             }}
                           >
                             ${text.trim() || msg('(empty)')}

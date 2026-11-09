@@ -1,28 +1,21 @@
 import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import type { Context } from '@/components/context';
+import { initializeLocale } from '@/localization';
 import type { LanguageChanges } from './index';
-import '@/components/context';
-import '@/components/content';
 import './index';
 
-async function setupWithContent(contentHtml: string): Promise<{ langChanges: LanguageChanges; contextEl: Context }> {
-  document.body.innerHTML = `
-    <clippy-context id="language-changes-test">
-      <div slot="value" hidden>${contentHtml}</div>
-      <clippy-content></clippy-content>
-      <clippy-language-changes></clippy-language-changes>
-    </clippy-context>
-  `;
+async function setupWithContent(contentHtml: string): Promise<{ langChanges: LanguageChanges }> {
+  const root = document.body.appendChild(document.createElement('div'));
+  root.innerHTML = contentHtml;
+  const langChanges = document.body.appendChild(document.createElement('clippy-language-changes'));
+  langChanges.htmlDocument = root;
 
-  const langChanges = document.querySelector('clippy-language-changes') as unknown as LanguageChanges;
-  const contextEl = document.querySelector('clippy-context') as unknown as Context;
-
-  // Wait until the htmlDocumentContext is set (after TipTap fires 'create' via setTimeout)
-  // and the language-changes component has rendered its <nav>.
   await waitFor(() => expect(langChanges.shadowRoot?.querySelector('nav')).not.toBeNull());
 
-  return { contextEl, langChanges };
+  await initializeLocale();
+  await langChanges.updateComplete;
+
+  return { langChanges };
 }
 
 describe('<clippy-language-changes>', () => {
@@ -103,14 +96,9 @@ describe('<clippy-language-changes>', () => {
 
   describe('document-language label', () => {
     it('shows the "(documenttaal)" label when a block language reverts to the document language', async () => {
-      const { contextEl, langChanges } = await setupWithContent(
+      const { langChanges } = await setupWithContent(
         '<h1>Titel</h1><p lang="en">English.</p><p lang="nl">Terug naar Nederlands.</p>',
       );
-
-      // After clippy-content mounts the editor, force a re-render so that the
-      // docLang DOM traversal can walk up to document.documentElement[lang].
-      await contextEl.updateComplete;
-      langChanges.requestUpdate();
 
       await waitFor(() =>
         expect(langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__doc-label').length).toBeGreaterThan(

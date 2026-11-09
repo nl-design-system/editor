@@ -1,28 +1,23 @@
 import { violation } from '@test/violation';
 import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import type { Context } from '@/components/context';
 import type { ViolationsMap } from '@/types/validation';
+import { initializeLocale } from '@/localization';
 import type { LinkList } from './index';
-import '@/components/context';
-import '@/components/content';
 import './index';
 
-async function setupWithContent(contentHtml: string): Promise<{ linkList: LinkList; contextEl: Context }> {
-  document.body.innerHTML = `
-    <clippy-context id="link-list-test">
-      <div slot="value" hidden>${contentHtml}</div>
-      <clippy-content></clippy-content>
-      <clippy-link-list></clippy-link-list>
-    </clippy-context>
-  `;
-
-  const linkList = document.querySelector('clippy-link-list') as unknown as LinkList;
-  const contextEl = document.querySelector('clippy-context') as unknown as Context;
+async function setupWithContent(contentHtml: string): Promise<{ linkList: LinkList; root: HTMLElement }> {
+  const root = document.body.appendChild(document.createElement('div'));
+  root.innerHTML = contentHtml;
+  const linkList = document.body.appendChild(document.createElement('clippy-link-list'));
+  linkList.htmlDocument = root;
 
   await waitFor(() => expect(linkList.shadowRoot?.querySelector('nav')).not.toBeNull());
 
-  return { contextEl, linkList };
+  await initializeLocale();
+  await linkList.updateComplete;
+
+  return { linkList, root };
 }
 
 describe('<clippy-link-list>', () => {
@@ -117,8 +112,6 @@ describe('<clippy-link-list>', () => {
 
   describe('consecutive text-node merging', () => {
     it('merges adjacent formatted text nodes that share the same link href into a single entry', async () => {
-      // The link contains a bold segment and a plain segment, which TipTap
-      // represents as two adjacent text nodes. The component must merge them.
       const { linkList } = await setupWithContent(
         '<h1>Titel</h1><p><a href="https://example.com"><strong>Vet</strong> en normaal</a></p>',
       );
@@ -151,20 +144,17 @@ describe('<clippy-link-list>', () => {
     });
 
     it('renders a severity badge when a validation entry exists at the link text position', async () => {
-      const { contextEl, linkList } = await setupWithContent(
+      const { linkList, root } = await setupWithContent(
         '<h1>Titel</h1><p><a href="https://example.com">Klik hier</a></p>',
       );
 
-      await waitFor(() => expect(contextEl.htmlDocumentElement?.querySelector('a')).toBeTruthy());
-      const linkEl = contextEl.htmlDocumentElement!.querySelector('a')!;
+      const linkEl = root.querySelector('a')!;
       const linkRange = document.createRange();
       linkRange.selectNode(linkEl);
 
       const violationsMap: ViolationsMap = new Map([[linkRange, violation({ range: linkRange, severity: 'warning' })]]);
 
-      contextEl.updateViolationsContext(violationsMap);
-      await contextEl.updateComplete;
-      linkList.requestUpdate();
+      linkList.violationsMap = violationsMap;
 
       await waitFor(() => expect(linkList.shadowRoot?.querySelector('.nl-data-badge')).not.toBeNull());
       expect(
@@ -173,12 +163,11 @@ describe('<clippy-link-list>', () => {
     });
 
     it('renders a badge for the highest-severity validation when multiple entries share the same position', async () => {
-      const { contextEl, linkList } = await setupWithContent(
+      const { linkList, root } = await setupWithContent(
         '<h1>Titel</h1><p><a href="https://example.com">Klik hier</a></p>',
       );
 
-      await waitFor(() => expect(contextEl.htmlDocumentElement?.querySelector('a')).toBeTruthy());
-      const linkEl = contextEl.htmlDocumentElement!.querySelector('a')!;
+      const linkEl = root.querySelector('a')!;
       const linkRange1 = document.createRange();
       linkRange1.selectNode(linkEl);
       const linkRange2 = document.createRange();
@@ -190,9 +179,7 @@ describe('<clippy-link-list>', () => {
         [linkRange2, violation({ range: linkRange2, severity: 'error' })],
       ]);
 
-      contextEl.updateViolationsContext(violationsMap);
-      await contextEl.updateComplete;
-      linkList.requestUpdate();
+      linkList.violationsMap = violationsMap;
 
       await waitFor(() => expect(linkList.shadowRoot?.querySelector('.nl-data-badge')).not.toBeNull());
       expect(
