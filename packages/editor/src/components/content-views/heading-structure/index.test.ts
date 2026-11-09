@@ -1,35 +1,23 @@
 import { violation } from '@test/violation';
 import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import type { Context } from '@/components/context';
 import type { ViolationsMap } from '@/types/validation';
 import { CustomEvents } from '@/events';
-import '@/components/context';
-import '@/components/content';
+import { initializeLocale } from '@/localization';
 import './index';
 import type { HeadingStructure } from './index';
 
 async function setupWithContent(
   contentHtml: string,
-): Promise<{ contextEl: Context; headingStructure: HeadingStructure }> {
-  document.body.innerHTML = `
-    <clippy-context id="heading-structure-test">
-      <div slot="value" hidden>${contentHtml}</div>
-      <clippy-content></clippy-content>
-      <clippy-heading-structure></clippy-heading-structure>
-    </clippy-context>
-  `;
-
-  const headingStructure = document.querySelector('clippy-heading-structure') as unknown as HeadingStructure;
-  const contextEl = document.querySelector('clippy-context') as unknown as Context;
-
-  // Wait until TipTap has mounted (create event fires via setTimeout(0)) and
-  // the htmlDocumentContext value has propagated to heading-structure.
-  await waitFor(() => expect(contextEl.htmlDocumentElement).toBeTruthy());
-  // One additional update cycle for the context change to propagate to the component.
+): Promise<{ headingStructure: HeadingStructure; root: HTMLElement }> {
+  const root = document.body.appendChild(document.createElement('div'));
+  root.innerHTML = contentHtml;
+  const headingStructure = document.body.appendChild(document.createElement('clippy-heading-structure'));
+  headingStructure.htmlDocument = root;
+  await initializeLocale();
   await headingStructure.updateComplete;
 
-  return { contextEl, headingStructure };
+  return { headingStructure, root };
 }
 
 describe('<clippy-heading-structure>', () => {
@@ -132,11 +120,9 @@ describe('<clippy-heading-structure>', () => {
 
   describe('interactivity', () => {
     it('dispatches FOCUS_VALIDATION_ITEM_IN_GUTTER with the validation key when clicking a heading that has a validation entry', async () => {
-      const { contextEl, headingStructure } = await setupWithContent('<h1>Titel</h1>');
+      const { headingStructure, root } = await setupWithContent('<h1>Titel</h1>');
 
-      // Build a range that intersects the heading element in the editor DOM
-      await waitFor(() => expect(contextEl.htmlDocumentElement?.querySelector('h1')).toBeTruthy());
-      const headingEl = contextEl.htmlDocumentElement!.querySelector('h1')!;
+      const headingEl = root.querySelector('h1')!;
       const headingRange = document.createRange();
       headingRange.selectNode(headingEl);
 
@@ -144,9 +130,7 @@ describe('<clippy-heading-structure>', () => {
         [headingRange, violation({ range: headingRange, severity: 'warning' })],
       ]);
 
-      contextEl.updateViolationsContext(violationsMap);
-      await contextEl.updateComplete;
-      headingStructure.requestUpdate();
+      headingStructure.violationsMap = violationsMap;
       await headingStructure.updateComplete;
 
       const button = headingStructure.shadowRoot!.querySelector('button') as HTMLButtonElement;

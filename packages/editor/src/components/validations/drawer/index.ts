@@ -1,6 +1,5 @@
 import type { ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
-import type { Editor } from '@tiptap/core';
-import { consume, ContextProvider } from '@lit/context';
+import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
@@ -20,7 +19,6 @@ import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import { identifierContext } from '@/context/identifierContext';
-import { tiptapContext } from '@/context/tiptapContext';
 import { violationsContext } from '@/context/violationsContext';
 import {
   CustomEvents,
@@ -38,6 +36,8 @@ import { rangesEqual } from '@/utils/ranges';
 import drawerStyles from './styles';
 
 const tag = 'clippy-validations-drawer';
+
+const NO_VIOLATIONS: ViolationsMap = new Map();
 
 /**
  * Inline drawer panel that lists all accessibility violations and
@@ -83,32 +83,25 @@ export class ValidationsDrawer extends LitElement {
   private focusedValidationGroup: Range[] | null = null;
 
   @consume({ context: identifierContext, subscribe: true })
-  @property({ attribute: false })
+  @state()
   private readonly identifierContextValue?: string;
 
-  @consume({ context: tiptapContext, subscribe: true })
-  @property({ attribute: false })
-  public editor?: Editor;
-
   @consume({ context: violationsContext, subscribe: true })
-  @property({ attribute: false })
-  violationsContext?: ViolationsMap;
+  @state()
+  private readonly violationsContextValue?: ViolationsMap;
 
   @consume({ context: htmlDocumentContext, subscribe: true })
-  @property({ attribute: false })
+  @state()
   private readonly htmlDocumentContextValue?: HTMLElement;
 
   /**
-   * Standalone inputs for use outside `<clippy-context>` (e.g. embedded in
-   * CKEditor). When set, the drawer re-provides them to its subtree so the list
-   * and overview panels resolve their context without a `<clippy-context>`
-   * ancestor. Each falls back to the consumed context value when unset
-   * (in-editor use).
+   * The violations to list, pushed by a Clippy hub. The drawer passes them on to its
+   * filters, list and Content views. Falls back to the consumed context when unset.
    */
   @property({ attribute: false })
   violationsMap?: ViolationsMap;
 
-  /** @see {@link violationsMap} */
+  /** The validated element, which the Content views read. @see {@link violationsMap} */
   @property({ attribute: false })
   htmlDocument?: HTMLElement;
 
@@ -122,35 +115,22 @@ export class ValidationsDrawer extends LitElement {
   @property({ reflect: true, type: Boolean })
   overlay = false;
 
-  /** Coalesced identifier: standalone prop wins, else the consumed context. */
   get #identifier(): string | undefined {
     return this.identifier ?? this.identifierContextValue;
   }
 
-  /**
-   * Re-provide the coalesced (prop ?? consumed) state to the drawer's subtree,
-   * hosted on the drawer element itself. `@lit/context`'s self-serve guard means
-   * our own `@consume`s above still resolve to an ancestor (`<clippy-context>`
-   * in-editor), so providing `prop ?? consumed` is correct in both modes:
-   * standalone the prop flows down; in-editor the consumed value is relayed.
-   * Scoped to our subtree — no `document.body` pollution or provider thrash.
-   */
-  readonly #violationsProvider = new ContextProvider(this, { context: violationsContext, initialValue: new Map() });
-  readonly #htmlDocumentProvider = new ContextProvider(this, { context: htmlDocumentContext });
-  readonly #identifierProvider = new ContextProvider(this, { context: identifierContext });
+  get #violations(): ViolationsMap {
+    return this.violationsMap ?? this.violationsContextValue ?? NO_VIOLATIONS;
+  }
+
+  get #htmlDocument(): HTMLElement | undefined {
+    return this.htmlDocument ?? this.htmlDocumentContextValue;
+  }
 
   override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
-    if (changed.has('violationsMap') || changed.has('violationsContext')) {
-      const violations = this.violationsMap ?? this.violationsContext ?? new Map();
-      this.#violationsProvider.setValue(violations);
-      this.#remapFocusedValidationGroup(violations);
-    }
-    if (changed.has('htmlDocument') || changed.has('htmlDocumentContextValue')) {
-      this.#htmlDocumentProvider.setValue(this.htmlDocument ?? this.htmlDocumentContextValue);
-    }
-    if ((changed.has('identifier') || changed.has('identifierContextValue')) && this.#identifier !== undefined) {
-      this.#identifierProvider.setValue(this.#identifier);
+    if (changed.has('violationsMap') || changed.has('violationsContextValue')) {
+      this.#remapFocusedValidationGroup(this.#violations);
     }
   }
 
@@ -341,6 +321,8 @@ export class ValidationsDrawer extends LitElement {
 
   override render() {
     const isValidations = this._mode === 'validations';
+    const violations = this.#violations;
+    const htmlDocument = this.#htmlDocument;
     return html`
       <div
         data-testid="clippy-validations-drawer"
@@ -359,22 +341,29 @@ export class ValidationsDrawer extends LitElement {
         </div>
         <div class="clippy-drawer__filters">
           <clippy-validation-filters
+            .identifier=${this.#identifier}
+            .violationsMap=${violations}
             ?hidden=${!isValidations || this.#hasFocusedValidationGroup}
           ></clippy-validation-filters>
           ${this.#renderShowAllButton()}
         </div>
         <div class="clippy-drawer__body">
           <div role="region" aria-label=${msg('Heading structure')} ?hidden=${this._mode !== 'heading-structure'}>
-            <clippy-heading-structure></clippy-heading-structure>
+            <clippy-heading-structure
+              .htmlDocument=${htmlDocument}
+              .violationsMap=${violations}
+            ></clippy-heading-structure>
           </div>
           <div role="region" aria-label=${msg('Links')} ?hidden=${this._mode !== 'link-list'}>
-            <clippy-link-list></clippy-link-list>
+            <clippy-link-list .htmlDocument=${htmlDocument} .violationsMap=${violations}></clippy-link-list>
           </div>
           <div role="region" aria-label=${msg('Language changes')} ?hidden=${this._mode !== 'language-changes'}>
-            <clippy-language-changes></clippy-language-changes>
+            <clippy-language-changes .htmlDocument=${htmlDocument}></clippy-language-changes>
           </div>
           <div role="region" aria-label=${msg('Validations')} ?hidden=${!isValidations}>
             <clippy-validations-list
+              .identifier=${this.#identifier}
+              .violationsMap=${violations}
               .severity=${this.#listSeverity}
               .focusedValidationGroup=${this.focusedValidationGroup}
             ></clippy-validations-list>
