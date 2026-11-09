@@ -124,6 +124,18 @@ describe('ClippyHub', () => {
 
     expect(trigger.violationsMap).toBeUndefined();
   });
+
+  it('rejects a second hub with an identifier that is already in use', () => {
+    hub = new ClippyHub({ identifier: IDENTIFIER, target });
+
+    expect(() => new ClippyHub({ identifier: IDENTIFIER, target })).toThrow(IDENTIFIER);
+  });
+
+  it('frees its identifier once destroyed', () => {
+    new ClippyHub({ identifier: IDENTIFIER, target }).destroy();
+
+    expect(() => (hub = new ClippyHub({ identifier: IDENTIFIER, target }))).not.toThrow();
+  });
 });
 
 describe('ClippyHub drawer session', () => {

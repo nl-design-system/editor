@@ -31,6 +31,8 @@ export interface ClippyHubOptions {
   validations?: readonly Validation[];
 }
 
+const identifiers = new Set<string>();
+
 const scrollIntoView = ({ element }: Violation): void => {
   element.scrollIntoView({ behavior: 'smooth', block: 'center' });
 };
@@ -67,6 +69,12 @@ export class ClippyHub {
     target,
     validations,
   }: ClippyHubOptions) {
+    if (identifiers.has(identifier)) {
+      throw new Error(
+        `[clippy-hub] Duplicate identifier "${identifier}". Each Clippy hub on a page needs a unique identifier.`,
+      );
+    }
+    identifiers.add(identifier);
     this.#adaptViolations = adaptViolations;
     this.#focusViolation = focusViolation;
     this.#identifier = identifier;
@@ -89,7 +97,9 @@ export class ClippyHub {
   }
 
   destroy(): void {
+    if (this.#destroyed) return;
     this.#destroyed = true;
+    identifiers.delete(this.#identifier);
     globalThis.removeEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#handleFocusNode);
   }
