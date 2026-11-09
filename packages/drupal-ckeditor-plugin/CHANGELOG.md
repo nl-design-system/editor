@@ -1,5 +1,17 @@
 # @nl-design-system-community/drupal-ckeditor-plugin
 
+## 0.5.0
+
+### Minor Changes
+
+- 19bdc0f: Add a Floating button position setting that puts the Page review button in the top right or bottom right corner on pages without an admin toolbar.
+
+### Patch Changes
+
+- Updated dependencies [19bdc0f]
+  - @nl-design-system-community/editor@1.10.0
+  - @nl-design-system-community/ckeditor-plugin@0.4.2
+
 ## 0.4.1
 
 ### Patch Changes

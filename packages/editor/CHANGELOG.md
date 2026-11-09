@@ -1,5 +1,11 @@
 # @nl-design-system-community/editor
 
+## 1.10.0
+
+### Minor Changes
+
+- 19bdc0f: Add a `floatingPosition` option to `PageReview.mount()` that puts the floating trigger in the top right or bottom right corner of the screen.
+
 ## 1.9.1
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @nl-design-system-community/ckeditor-plugin
 
+## 0.4.2
+
+### Patch Changes
+
+- Updated dependencies [19bdc0f]
+  - @nl-design-system-community/editor@1.10.0
+
 ## 0.4.1
 
 ### Patch Changes
