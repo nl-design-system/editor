@@ -225,10 +225,10 @@ describe('PageReview', () => {
       await expect.poll(() => cornerOf(trigger()!)).toBe('bottom-right');
     });
 
-    it('floats the trigger in the bottom right corner for an unknown position', async () => {
+    it('floats the trigger in the bottom right corner for an unsupported position', async () => {
       document.body.innerHTML = '<main><h1>Titel</h1></main>';
 
-      review = createPageReview({ floatingPosition: 'middle' as never, mount: undefined });
+      review = createPageReview({ floatingPosition: 'bottom-left' as never, mount: undefined });
 
       await expect.poll(() => cornerOf(trigger()!)).toBe('bottom-right');
     });

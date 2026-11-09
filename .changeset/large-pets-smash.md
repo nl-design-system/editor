@@ -2,4 +2,4 @@
 '@nl-design-system-community/typo3-ckeditor-plugin': minor
 ---
 
-Add a Floating button position setting that picks the screen corner of the Page review button.
+Add a Floating button position setting that puts the Page review button in the top right or bottom right corner.

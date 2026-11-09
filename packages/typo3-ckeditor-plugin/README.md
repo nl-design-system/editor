@@ -45,7 +45,7 @@ Set these for the whole installation under _Admin Tools → Settings → Extensi
 | Show Page review on frontend pages   | on                  | Turns Page review on or off for every backend user.                                                                                                                        |
 | Review root selector                 | `main, [role=main]` | The CSS selector of the element Page review validates. When nothing matches, Page review falls back to `main, [role=main]` and then to `body`, so it never fails silently. |
 | Always show gutter markers           | on                  | Shows the gutter markers as soon as the page loads. When off, they only show while the Page review drawer is open.                                                         |
-| Floating button position             | bottom right        | The screen corner of the Page review button.                                                                                                                               |
+| Floating button position             | bottom right        | The corner of the Page review button: top right or bottom right.                                                                                                           |
 
 ## The ckeditor5 shim
 

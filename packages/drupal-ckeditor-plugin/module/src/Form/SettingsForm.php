@@ -65,9 +65,7 @@ final class SettingsForm extends ConfigFormBase {
       '#description' => $this->t('Used when the page has no admin toolbar.'),
       '#options' => [
         'bottom-right' => $this->t('Bottom right'),
-        'bottom-left' => $this->t('Bottom left'),
         'top-right' => $this->t('Top right'),
-        'top-left' => $this->t('Top left'),
       ],
       '#config_target' => 'clippy.settings:floating_position',
       '#states' => [

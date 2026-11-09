@@ -47,7 +47,7 @@ _Administer site configuration_ permission.
 | Show Page review on frontend pages      | on                  | Turns Page review on or off for everyone, whatever their permissions.                                                                                                      |
 | Review root selector                    | `main, [role=main]` | The CSS selector of the element Page review validates. When nothing matches, Page review falls back to `main, [role=main]` and then to `body`, so it never fails silently. |
 | Always show gutter markers              | on                  | Shows the gutter markers next to the offending elements as soon as the page loads. When off, they only show while the Page review drawer is open.                          |
-| Floating button position                | bottom right        | The screen corner of the Page review button on pages without an admin toolbar.                                                                                             |
+| Floating button position                | bottom right        | The corner of the Page review button on pages without an admin toolbar: top right or bottom right.                                                                         |
 
 ## Color scheme
 
