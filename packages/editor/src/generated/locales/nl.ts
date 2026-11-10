@@ -88,6 +88,7 @@
 'sb9ebdd08bb1dbe7c': `Afbeelding verwijderen`,
 'sbc2807a81d10a828': `Aspect ratio ontgrendelen`,
 'sbd432fec05ae41a3': `Alt-tekst keuzehulp`,
+'sbe4967a005d09e76': `Kantlijn met validatiemeldingen`,
 'sbf61820a44f73942': str`${0} validatiemeldingen op deze regel openen`,
 'sc16e00a7a8b2fde2': `Terug`,
 'sc584f530aeeee4dc': `Validatiemelding openen`,

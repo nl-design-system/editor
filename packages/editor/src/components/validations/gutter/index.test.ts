@@ -1,7 +1,7 @@
 import { coreValidationRules, type ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
 import { inlineViolation, violation } from '@test/violation';
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
-import { page } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import type { ViolationsMap } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
 import { CustomEvents, type OpenValidationGroupEvent } from '@/events';
@@ -142,6 +142,88 @@ describe('<clippy-validations-gutter>', () => {
     expect(buttons).toHaveLength(1);
     expect(buttons.map(({ tabIndex }) => tabIndex)).toEqual([-1]);
     await expect.element(page.getByRole('button', { name: 'Validatiemelding openen' })).toBeInTheDocument();
+  });
+
+  describe('keyboard', () => {
+    /** Two lines, validated bottom line first, so map order differs from visual order. */
+    const renderTwoLines = async () => {
+      const { content, gutter } = renderGutter('<span>Eerste regel</span><br><span>Tweede regel</span>');
+      const [first, second] = content.querySelectorAll('span');
+      await validate(
+        gutter,
+        new Map([
+          [rangeOver(second), violation({ element: second })],
+          [rangeOver(first), violation({ element: first })],
+        ]),
+      );
+      const buttons = [...gutter.shadowRoot!.querySelectorAll('button')];
+      const lineOf = (button: Element) =>
+        Math.abs(button.getBoundingClientRect().top - first.getBoundingClientRect().top) <
+        Math.abs(button.getBoundingClientRect().top - second.getBoundingClientRect().top)
+          ? 'first'
+          : 'second';
+      const focusedLine = () => {
+        const active = gutter.shadowRoot!.activeElement;
+        return active ? lineOf(active) : null;
+      };
+      return { buttons, focusedLine, gutter, lineOf };
+    };
+
+    it('groups its buttons in a named list', async () => {
+      await renderTwoLines();
+
+      await expect.element(page.getByRole('list', { name: 'Kantlijn met validatiemeldingen' })).toBeInTheDocument();
+    });
+
+    it('lists the lines top to bottom', async () => {
+      const { buttons, lineOf } = await renderTwoLines();
+
+      expect(buttons.map(lineOf)).toEqual(['first', 'second']);
+    });
+
+    it('is a single tab stop on the top line', async () => {
+      const { focusedLine } = await renderTwoLines();
+
+      await userEvent.tab();
+      expect(focusedLine()).toBe('first');
+
+      await userEvent.tab();
+      expect(focusedLine()).toBeNull();
+    });
+
+    it('moves between lines with the arrow, Home and End keys', async () => {
+      const { buttons, focusedLine } = await renderTwoLines();
+      buttons[0].focus();
+
+      await userEvent.keyboard('{ArrowDown}');
+      expect(focusedLine()).toBe('second');
+
+      await userEvent.keyboard('{ArrowDown}');
+      expect(focusedLine()).toBe('second');
+
+      await userEvent.keyboard('{ArrowUp}');
+      expect(focusedLine()).toBe('first');
+
+      await userEvent.keyboard('{End}');
+      expect(focusedLine()).toBe('second');
+
+      await userEvent.keyboard('{Home}');
+      expect(focusedLine()).toBe('first');
+    });
+
+    it('returns to the last focused line when tabbing back in', async () => {
+      const { buttons, focusedLine } = await renderTwoLines();
+      const next = document.createElement('button');
+      next.textContent = 'Volgende';
+      document.body.append(next);
+      buttons[0].focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await userEvent.tab();
+      expect(document.activeElement).toBe(next);
+
+      await userEvent.tab({ shift: true });
+      expect(focusedLine()).toBe('second');
+    });
   });
 
   it('emphasises the validated text while its toggle is hovered', async () => {

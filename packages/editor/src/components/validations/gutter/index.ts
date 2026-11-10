@@ -439,12 +439,18 @@ export class Gutter extends LitElement {
     const indicators = [...map.entries()]
       .filter(([range]) => range !== undefined)
       .map(([range, violation]) => ({ position: this.#getIndicatorPosition(range), range, violation }))
-      .filter((indicator): indicator is PositionedIndicator => indicator.position !== null);
+      .filter((indicator): indicator is PositionedIndicator => indicator.position !== null)
+      .sort((a, b) => a.position.top - b.position.top);
 
     const toggleCounts = toggleCountByRange(indicators);
 
     return html`
-      <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
+      <ol
+        class="clippy-validations-gutter__list"
+        aria-label=${msg('Validations gutter')}
+        focusgroup="toolbar block"
+        data-testid="clippy-validations-gutter"
+      >
         ${indicators.map(({ position, range, violation }) =>
           this.#renderIndicator(range, violation, position, toggleCounts.get(range)),
         )}
