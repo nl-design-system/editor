@@ -1,4 +1,3 @@
-import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
@@ -14,8 +13,6 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationInteractionMode, Violation, ViolationsMap } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
-import { identifierContext } from '@/context/identifierContext';
-import { violationsContext } from '@/context/violationsContext';
 import { ResizeController } from '@/controllers/ResizeController';
 import {
   CustomEvents,
@@ -159,23 +156,9 @@ export class Gutter extends LitElement {
   @property({ attribute: false })
   violationsMap?: ViolationsMap;
 
-  @consume({ context: violationsContext, subscribe: true })
-  @state()
-  private readonly violationsContext?: ViolationsMap;
-
-  /** @internal Identifier of the owning editor, used to scope drawer events. */
-  @consume({ context: identifierContext, subscribe: true })
-  @property({ attribute: false })
-  private readonly identifierContextValue?: string;
-
-  /** Standalone identifier for use outside `<clippy-context>` */
+  /** Identifier of the Clippy hub, used to scope drawer events. */
   @property({ attribute: false })
   identifier?: string;
-
-  /** Coalesced identifier: standalone prop wins, else the consumed context. */
-  get #identifier(): string | undefined {
-    return this.identifier ?? this.identifierContextValue;
-  }
 
   readonly #closeValidationItem = () => {
     this.activeRange = null;
@@ -195,7 +178,7 @@ export class Gutter extends LitElement {
     } else if (this.mode === validationInteractionMode.DRAWER) {
       globalThis.dispatchEvent(
         new CustomEvent<OpenValidationGroupDetail>(CustomEvents.OPEN_VALIDATION_GROUP, {
-          detail: { identifier: this.#identifier, ranges: this.#getOverlappingRanges(range) },
+          detail: { identifier: this.identifier, ranges: this.#getOverlappingRanges(range) },
         }),
       );
     }
@@ -204,7 +187,7 @@ export class Gutter extends LitElement {
 
   /** The clicked range plus every other validation range that overlaps it. */
   #getOverlappingRanges(target: Range): Range[] {
-    const map = this.violationsMap ?? this.violationsContext;
+    const map = this.violationsMap;
     if (!map) return [target];
     return getOverlappingRanges(target, map.keys());
   }
@@ -242,8 +225,8 @@ export class Gutter extends LitElement {
   override updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
 
-    if (changedProperties.has('violationsMap') || changedProperties.has('violationsContext')) {
-      applyValidationHighlights(this, this.violationsMap ?? this.violationsContext);
+    if (changedProperties.has('violationsMap')) {
+      applyValidationHighlights(this, this.violationsMap);
     }
 
     if (changedProperties.has('contentElement') || (changedProperties.has('overlay') && this.contentElement)) {
@@ -397,7 +380,7 @@ export class Gutter extends LitElement {
         })}"
       >
         <clippy-validation-item
-          .identifier=${this.#identifier}
+          .identifier=${this.identifier}
           .mode=${this.mode}
           .range=${range}
           .severity=${severity}
@@ -412,7 +395,7 @@ export class Gutter extends LitElement {
   }
 
   override render() {
-    const map = this.violationsMap ?? this.violationsContext;
+    const map = this.violationsMap;
     if (!map || map.size === 0) {
       return nothing;
     }

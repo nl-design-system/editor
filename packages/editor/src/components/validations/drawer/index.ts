@@ -1,5 +1,4 @@
 import type { ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
-import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
@@ -15,11 +14,8 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationItem } from '@/components/validations/validation-item';
 import type { ViolationsMap } from '@/types/validation';
 import '@/components/validation-filters';
-import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
-import { identifierContext } from '@/context/identifierContext';
-import { violationsContext } from '@/context/violationsContext';
 import {
   CustomEvents,
   type CloseValidationsDrawerEvent,
@@ -82,21 +78,9 @@ export class ValidationsDrawer extends LitElement {
   @state()
   private focusedValidationGroup: Range[] | null = null;
 
-  @consume({ context: identifierContext, subscribe: true })
-  @state()
-  private readonly identifierContextValue?: string;
-
-  @consume({ context: violationsContext, subscribe: true })
-  @state()
-  private readonly violationsContextValue?: ViolationsMap;
-
-  @consume({ context: htmlDocumentContext, subscribe: true })
-  @state()
-  private readonly htmlDocumentContextValue?: HTMLElement;
-
   /**
    * The violations to list, pushed by a Clippy hub. The drawer passes them on to its
-   * filters, list and Content views. Falls back to the consumed context when unset.
+   * filters, list and Content views.
    */
   @property({ attribute: false })
   violationsMap?: ViolationsMap;
@@ -115,21 +99,13 @@ export class ValidationsDrawer extends LitElement {
   @property({ reflect: true, type: Boolean })
   overlay = false;
 
-  get #identifier(): string | undefined {
-    return this.identifier ?? this.identifierContextValue;
-  }
-
   get #violations(): ViolationsMap {
-    return this.violationsMap ?? this.violationsContextValue ?? NO_VIOLATIONS;
-  }
-
-  get #htmlDocument(): HTMLElement | undefined {
-    return this.htmlDocument ?? this.htmlDocumentContextValue;
+    return this.violationsMap ?? NO_VIOLATIONS;
   }
 
   override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
-    if (changed.has('violationsMap') || changed.has('violationsContextValue')) {
+    if (changed.has('violationsMap')) {
       this.#remapFocusedValidationGroup(this.#violations);
     }
   }
@@ -147,7 +123,7 @@ export class ValidationsDrawer extends LitElement {
     if (changed.has('open') && (this.open || changed.get('open') !== undefined)) {
       globalThis.dispatchEvent(
         new CustomEvent<ValidationsDrawerToggleDetail>(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, {
-          detail: { identifier: this.#identifier, open: this.open },
+          detail: { identifier: this.identifier, open: this.open },
         }),
       );
     }
@@ -184,7 +160,7 @@ export class ValidationsDrawer extends LitElement {
   readonly #closeDialog = (event: Event) => {
     if (event instanceof CustomEvent) {
       const eventIdentifier = (event as CorrectValidationIssueEvent).detail?.identifier;
-      if (eventIdentifier !== this.#identifier) return;
+      if (eventIdentifier !== this.identifier) return;
     }
     if (this.open) {
       this.open = false;
@@ -193,7 +169,7 @@ export class ValidationsDrawer extends LitElement {
 
   readonly #handleOverviewOpen = (event: Event) => {
     const { identifier, mode } = (event as OpenDocumentOverviewEvent).detail;
-    if (identifier !== this.#identifier) return;
+    if (identifier !== this.identifier) return;
 
     this._mode = mode;
     this.focusedValidationGroup = null;
@@ -204,7 +180,7 @@ export class ValidationsDrawer extends LitElement {
 
   readonly #openValidationGroup = (event: Event) => {
     const { identifier, ranges } = (event as OpenValidationGroupEvent).detail;
-    if (identifier !== this.#identifier) return;
+    if (identifier !== this.identifier) return;
     this._mode = 'validations';
     this.selectedSeverity = null;
     this.focusedValidationGroup = ranges;
@@ -218,7 +194,7 @@ export class ValidationsDrawer extends LitElement {
 
   readonly #handleCloseDrawer = (event: Event) => {
     const { identifier } = (event as CloseValidationsDrawerEvent).detail;
-    if (identifier !== this.#identifier) return;
+    if (identifier !== this.identifier) return;
     this.#closeDrawer();
   };
 
@@ -257,7 +233,7 @@ export class ValidationsDrawer extends LitElement {
     const { identifier, range } = event.detail || {};
     if (!range) return;
 
-    if (!this.open && identifier === this.#identifier) {
+    if (!this.open && identifier === this.identifier) {
       this._mode = 'validations';
       this.focusedValidationGroup = null;
       this.open = true;
@@ -276,7 +252,7 @@ export class ValidationsDrawer extends LitElement {
 
   readonly #handleFilterChange = (event: Event) => {
     const { identifier, severity } = (event as FilterChangeEvent).detail;
-    if (identifier !== this.#identifier) return;
+    if (identifier !== this.identifier) return;
 
     this.selectedSeverity = (severity as ValidationSeverity) || null;
   };
@@ -322,7 +298,7 @@ export class ValidationsDrawer extends LitElement {
   override render() {
     const isValidations = this._mode === 'validations';
     const violations = this.#violations;
-    const htmlDocument = this.#htmlDocument;
+    const htmlDocument = this.htmlDocument;
     return html`
       <div
         data-testid="clippy-validations-drawer"
@@ -341,7 +317,7 @@ export class ValidationsDrawer extends LitElement {
         </div>
         <div class="clippy-drawer__filters">
           <clippy-validation-filters
-            .identifier=${this.#identifier}
+            .identifier=${this.identifier}
             .violationsMap=${violations}
             ?hidden=${!isValidations || this.#hasFocusedValidationGroup}
           ></clippy-validation-filters>
@@ -362,7 +338,7 @@ export class ValidationsDrawer extends LitElement {
           </div>
           <div role="region" aria-label=${msg('Validations')} ?hidden=${!isValidations}>
             <clippy-validations-list
-              .identifier=${this.#identifier}
+              .identifier=${this.identifier}
               .violationsMap=${violations}
               .severity=${this.#listSeverity}
               .focusedValidationGroup=${this.focusedValidationGroup}

@@ -1,15 +1,12 @@
-import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import dataBadgeStyle from '@nl-design-system-candidate/data-badge-css/data-badge.css?inline';
 import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { LitElement, html, unsafeCSS } from 'lit';
-import { property, state } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import type { ViolationsMap, Violation } from '@/types/validation';
-import { htmlDocumentContext } from '@/context/htmlDocumentContext';
-import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type FocusValidationItemInGutterDetail } from '@/events';
 import { localizeHost } from '@/localization';
 import { getHighestSeverityEntryByElement } from '@/utils/validations';
@@ -40,43 +37,27 @@ export class LinkList extends LitElement {
     unsafeCSS(paragraphStyle),
   ];
 
-  /** The validated element to read, pushed by the Drawer. Falls back to the consumed context when unset. */
+  /** The validated element to read, pushed by the Drawer. */
   @property({ attribute: false })
   htmlDocument?: HTMLElement;
-
-  @consume({ context: htmlDocumentContext, subscribe: true })
-  @state()
-  private readonly htmlDocumentContextValue?: HTMLElement;
 
   override connectedCallback() {
     super.connectedCallback();
     localizeHost(this);
   }
 
-  get #root(): HTMLElement | undefined {
-    return this.htmlDocument ?? this.htmlDocumentContextValue;
-  }
-
-  /** The violations that mark an entry, pushed by the Drawer. Falls back to the consumed context when unset. */
+  /** The violations that mark an entry, pushed by the Drawer. */
   @property({ attribute: false })
   violationsMap?: ViolationsMap;
 
-  @consume({ context: violationsContext, subscribe: true })
-  @state()
-  private readonly violationsContextValue?: ViolationsMap;
-
-  get #violations(): ViolationsMap | undefined {
-    return this.violationsMap ?? this.violationsContextValue;
-  }
-
   get #links(): LinkEntry[] {
-    const root = this.#root;
+    const root = this.htmlDocument;
     if (!root) return [];
     return Array.from(root.querySelectorAll<HTMLAnchorElement>('a[href]')).map((element) => ({
       element,
       href: element.getAttribute('href') ?? '',
       text: element.textContent ?? '',
-      validationEntry: getHighestSeverityEntryByElement(this.#violations, element),
+      validationEntry: getHighestSeverityEntryByElement(this.violationsMap, element),
     }));
   }
 

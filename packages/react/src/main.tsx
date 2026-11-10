@@ -8,14 +8,7 @@ import '@nl-design-system-community/ma-design-tokens/dist/theme.css';
 import '@utrecht/component-library-css/dist/index.css';
 import '@utrecht/design-tokens/dist/theme.css';
 import '@nl-design-system-community/editor/theme.css';
-import { ClippyContent } from './components/Content.tsx';
-import { ClippyContext } from './components/Context.tsx';
 import { ClippyEditor } from './components/Editor.tsx';
-import { ClippyEditorContentWrapper } from './components/EditorContentWrapper.tsx';
-import { ClippyEditorWrapper } from './components/EditorWrapper.tsx';
-import { ClippyGutter } from './components/Gutter.tsx';
-import { ClippyToolbar } from './components/Toolbar.tsx';
-import { ClippyValidationsDrawer } from './components/ValidationsDrawer.tsx';
 
 const root = createRoot(document.getElementById('app')!);
 
@@ -37,30 +30,5 @@ root.render(
         <p>Dit is een voorbeeld van de Clippy Editor met een Lit React wrapper</p>
       </div>
     </ClippyEditor>
-    <hr />
-    <h2>React context, content and gutter example</h2>
-    <ClippyContext id="react-editor-2">
-      <div slot="value">
-        <h1>Kopniveau 1 in React editor</h1>
-        <p>
-          Dit is een voorbeeld van de Clippy Editor <a href="#">met een Lit React wrapper</a>
-        </p>
-      </div>
-      <ClippyEditorWrapper>
-        <ClippyEditorContentWrapper>
-          <ClippyToolbar
-            config={[
-              ['format-select', 'language-select'],
-              ['bold', 'italic', 'underline', 'code'],
-              ['link', 'image-upload', 'insert-table'],
-            ]}
-          />
-          <ClippyContent>
-            <ClippyGutter mode="drawer"></ClippyGutter>
-          </ClippyContent>
-        </ClippyEditorContentWrapper>
-        <ClippyValidationsDrawer />
-      </ClippyEditorWrapper>
-    </ClippyContext>
   </>,
 );

@@ -1,13 +1,11 @@
-import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import dataBadgeStyle from '@nl-design-system-candidate/data-badge-css/data-badge.css?inline';
 import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { LitElement, html, unsafeCSS } from 'lit';
-import { property, state } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
-import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import { localizeHost } from '@/localization';
 import { findNearestAncestorAttribute } from '@/utils/domTraverser';
 import languageChangesStyles from './styles';
@@ -40,29 +38,21 @@ export class LanguageChanges extends LitElement {
     unsafeCSS(paragraphStyle),
   ];
 
-  /** The validated element to read, pushed by the Drawer. Falls back to the consumed context when unset. */
+  /** The validated element to read, pushed by the Drawer. */
   @property({ attribute: false })
   htmlDocument?: HTMLElement;
-
-  @consume({ context: htmlDocumentContext, subscribe: true })
-  @state()
-  private readonly htmlDocumentContextValue?: HTMLElement;
 
   override connectedCallback() {
     super.connectedCallback();
     localizeHost(this);
   }
 
-  get #root(): HTMLElement | undefined {
-    return this.htmlDocument ?? this.htmlDocumentContextValue;
-  }
-
   #resolveDocLang(): string | null {
-    return findNearestAncestorAttribute(this.#root ?? null, 'lang');
+    return findNearestAncestorAttribute(this.htmlDocument ?? null, 'lang');
   }
 
   get #languageChanges(): LanguageChangeEntry[] {
-    const root = this.#root;
+    const root = this.htmlDocument;
     if (!root) return [];
     const entries: LanguageChangeEntry[] = [];
 
