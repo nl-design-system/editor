@@ -1,21 +1,15 @@
-import { consume } from '@lit/context';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { Editor as TiptapEditor } from '@tiptap/core';
 import { LitElement, css, html, nothing, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import type { ViolationsMap } from '@/types/validation';
-import { htmlDocumentContext } from '@/context/htmlDocumentContext';
-import { tiptapContext } from '@/context/tiptapContext';
-import { violationsContext } from '@/context/violationsContext';
 
 const tag = 'clippy-content';
 
 /**
  * Padding for the editable area. Because the ProseMirror view (class
  * `clippy-content`) is mounted in Light DOM, this rule has to live in the same
- * tree as the editable — the editor's shadow root when embedded in
- * `<clippy-editor>`, or the document when `<clippy-content>` is used standalone.
+ * tree as the editable, the shadow root of `<clippy-editor>`.
  * It is therefore adopted into `getRootNode()` at connect time rather than
  * declared in a shadow stylesheet that cannot reach slotted content.
  */
@@ -50,8 +44,7 @@ declare global {
  * of this element so that standard browser stylesheets apply. Pass the `shadow`
  * attribute to mount inside the Shadow DOM instead (experimental).
  *
- * The element requires a TipTap editor context (provided by `<clippy-editor>`)
- * to be present in an ancestor.
+ * `<clippy-editor>` passes it the TipTap editor instance as its `editor` property.
  *
  * @tag clippy-content
  *
@@ -77,20 +70,13 @@ export class Content extends LitElement {
       }
     `,
   ];
-  /** @internal TipTap editor instance consumed from context. */
-  @consume({ context: tiptapContext, subscribe: true })
+  /** @internal TipTap editor instance, passed by `<clippy-editor>`. */
   @property({ attribute: false })
   public editor?: TiptapEditor;
 
-  /** @internal Serialised HTML document for read-only rendering, consumed from context. */
-  @consume({ context: htmlDocumentContext, subscribe: true })
+  /** @internal Serialised HTML document for read-only rendering, passed by `<clippy-editor>`. */
   @property({ attribute: false })
   public htmlDocument?: HTMLElement;
-
-  /** @internal Validations map consumed from context (used for reactive updates). */
-  @consume({ context: violationsContext, subscribe: true })
-  @property({ attribute: false })
-  violationsContext?: ViolationsMap;
 
   /**
    * When present, mounts the ProseMirror view inside the Shadow DOM instead of
@@ -120,8 +106,7 @@ export class Content extends LitElement {
     this.style.position = 'relative';
     this.style.display = 'block';
 
-    // The editable is Light DOM, so its padding must be adopted into the root it
-    // actually lives in (works both inside <clippy-editor> and standalone).
+    // The editable is Light DOM, so its padding must be adopted into its own root.
     if (!this.shadow && !this.inline) {
       const root = this.getRootNode();
       if (root instanceof Document || root instanceof ShadowRoot) {
@@ -146,8 +131,7 @@ export class Content extends LitElement {
 
   override updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
-    // Handle the case where the TipTap editor context arrives after firstUpdated()
-    // (e.g. when clippy-content is used standalone inside clippy-context).
+    // Handle the case where the TipTap editor arrives after firstUpdated().
     if (changedProperties.has('editor') && this.editor && !this.#editorMounted) {
       const el = this.shadow ? this.shadowRoot?.firstElementChild : this;
       if (el) {

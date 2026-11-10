@@ -19,6 +19,7 @@ export interface ClippyHubDrawer extends ClippyHubView {
 export interface ClippyHubViews {
   drawer?: (ClippyHubDrawer & HTMLElement) | null;
   gutter?: ClippyHubView | null;
+  list?: ClippyHubView | null;
   trigger?: (ClippyHubView & HTMLElement) | null;
 }
 
@@ -152,9 +153,12 @@ export class ClippyHub {
     if (!violationsMap) {
       return;
     }
-    const { drawer, gutter, trigger } = this.#views;
+    const { drawer, gutter, list, trigger } = this.#views;
     if (gutter) {
       gutter.violationsMap = violationsMap;
+    }
+    if (list) {
+      list.violationsMap = violationsMap;
     }
     if (trigger) {
       trigger.violationsMap = violationsMap;

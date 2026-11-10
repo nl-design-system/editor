@@ -1,27 +1,12 @@
 import type { Editor } from '@tiptap/core';
 import type { ReactiveControllerHost } from 'lit';
-import { ContextConsumer } from '@lit/context';
-import { tiptapContext } from '@/context/tiptapContext';
 
 export class TipTapController {
   private readonly host: ReactiveControllerHost;
-  // @ts-expect-error TypeScript cannot infer the type correctly here
-  private readonly editorConsumer: ContextConsumer<
-    { __context__: Editor | undefined },
-    ReactiveControllerHost & HTMLElement
-  >;
   public _editor: Editor | undefined;
 
-  constructor(host: ReactiveControllerHost & HTMLElement) {
+  constructor(host: ReactiveControllerHost) {
     this.host = host;
-
-    this.editorConsumer = new ContextConsumer(host, {
-      callback: (editor?: Editor) => {
-        this.editor = editor;
-      },
-      context: tiptapContext,
-      subscribe: true,
-    });
   }
 
   get editor(): Editor | undefined {

@@ -1,4 +1,3 @@
-import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
 import dataBadgeStyle from '@nl-design-system-candidate/data-badge-css/data-badge.css?inline';
 import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
@@ -6,12 +5,10 @@ import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import linkButtonStyle from '@utrecht/link-button-css/dist/index.css?inline';
 import { LitElement, html, unsafeCSS } from 'lit';
-import { property, state } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import { map } from 'lit/directives/map.js';
 import type { ViolationsMap, Violation } from '@/types/validation';
-import { htmlDocumentContext } from '@/context/htmlDocumentContext';
-import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type FocusValidationItemInGutterDetail } from '@/events';
 import { localizeHost } from '@/localization';
 import { getHighestSeverityEntryByElement } from '@/utils/validations';
@@ -43,49 +40,33 @@ export class HeadingStructure extends LitElement {
     unsafeCSS(linkButtonStyle),
   ];
 
-  /** The validated element to read, pushed by the Drawer. Falls back to the consumed context when unset. */
+  /** The validated element to read, pushed by the Drawer. */
   @property({ attribute: false })
   htmlDocument?: HTMLElement;
-
-  @consume({ context: htmlDocumentContext, subscribe: true })
-  @state()
-  private readonly htmlDocumentContextValue?: HTMLElement;
 
   override connectedCallback() {
     super.connectedCallback();
     localizeHost(this);
   }
 
-  get #root(): HTMLElement | undefined {
-    return this.htmlDocument ?? this.htmlDocumentContextValue;
-  }
-
-  /** The violations that mark an entry, pushed by the Drawer. Falls back to the consumed context when unset. */
+  /** The violations that mark an entry, pushed by the Drawer. */
   @property({ attribute: false })
   violationsMap?: ViolationsMap;
 
-  @consume({ context: violationsContext, subscribe: true })
-  @state()
-  private readonly violationsContextValue?: ViolationsMap;
-
-  get #violations(): ViolationsMap | undefined {
-    return this.violationsMap ?? this.violationsContextValue;
-  }
-
   get #headings(): HeadingEntry[] {
-    const root = this.#root;
+    const root = this.htmlDocument;
     if (!root) return [];
     return Array.from(root.querySelectorAll<HTMLElement>('h1, h2, h3, h4, h5, h6')).map((element) => ({
       element,
       level: Number.parseInt(element.tagName[1], 10),
       text: element.textContent ?? '',
-      validationEntry: getHighestSeverityEntryByElement(this.#violations, element),
+      validationEntry: getHighestSeverityEntryByElement(this.violationsMap, element),
     }));
   }
 
   #scrollToHeading(element: HTMLElement) {
     element.scrollIntoView({ block: 'start' });
-    const validationRange = getHighestSeverityEntryByElement(this.#violations, element)?.[0] ?? null;
+    const validationRange = getHighestSeverityEntryByElement(this.violationsMap, element)?.[0] ?? null;
     if (validationRange) {
       globalThis.dispatchEvent(
         new CustomEvent<FocusValidationItemInGutterDetail>(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, {

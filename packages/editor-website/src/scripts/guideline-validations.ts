@@ -1,5 +1,5 @@
-import type { Context } from '@nl-design-system-community/editor';
 import { coreValidations, type Validation } from '@nl-design-system-community/clippy-a11y-validator';
+import { ClippyHub } from '@nl-design-system-community/editor/hub';
 
 /**
  * The validation each guideline example demonstrates. Every example shows one mistake, so it runs
@@ -36,7 +36,16 @@ const GUIDELINE_VALIDATIONS: ReadonlyArray<readonly [id: string, validations: re
   ['editor-21', [coreValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC]],
 ];
 
-for (const [id, validations] of GUIDELINE_VALIDATIONS) {
-  const editor = document.getElementById(id) as Context | null;
-  if (editor) editor.validations = validations;
+for (const [identifier, validations] of GUIDELINE_VALIDATIONS) {
+  const example = document.getElementById(identifier);
+  const target = example?.querySelector<HTMLElement>('.clippy-guideline__content');
+  if (!example || !target) continue;
+
+  const gutter = example.querySelector('clippy-validations-gutter');
+  if (gutter) gutter.contentElement = target;
+
+  const hub = new ClippyHub({ identifier, target, validations });
+  hub.connect({ gutter, list: example.querySelector('clippy-validations-list') });
+  hub.validate().catch(console.error);
+  target.addEventListener('input', () => hub.scheduleValidation());
 }

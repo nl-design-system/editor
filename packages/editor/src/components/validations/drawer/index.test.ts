@@ -2,22 +2,21 @@ import { coreValidationRules } from '@nl-design-system-community/clippy-a11y-val
 import { violation } from '@test/violation';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { page } from 'vitest/browser';
-import type { Context } from '@/components/context';
 import type { Violation } from '@/types/validation';
-import '@/components/context';
-import './index';
 import { CustomEvents } from '@/events';
+import './index';
+import type { ValidationsDrawer } from './index';
 
 const TEST_IDENTIFIER = 'test-editor-id';
 
 describe('<clippy-validations-dialog>', () => {
+  let drawerElement: ValidationsDrawer;
+
   beforeEach(() => {
     document.documentElement.lang = 'nl';
-    document.body.innerHTML = `
-      <clippy-context id="${TEST_IDENTIFIER}">
-        <clippy-validations-drawer></clippy-validations-drawer>
-      </clippy-context>
-    `;
+    drawerElement = document.createElement('clippy-validations-drawer');
+    drawerElement.identifier = TEST_IDENTIFIER;
+    document.body.replaceChildren(drawerElement);
   });
 
   afterEach(() => {
@@ -67,8 +66,6 @@ describe('<clippy-validations-dialog>', () => {
   });
 
   it('renders large validations map with all validation items', async () => {
-    const contextElement = document.querySelector('clippy-context') as Context | null;
-
     await vi.waitFor(() => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
@@ -100,11 +97,8 @@ describe('<clippy-validations-dialog>', () => {
       entry(coreValidationRules.HEADING_MUST_START_AT_LEVEL_ONE, 'error'),
     ]);
 
-    // Set violationsContext on the context provider, which will provide it to children
-    if (contextElement) {
-      contextElement.updateViolationsContext(violationsMap);
-      await contextElement.updateComplete;
-    }
+    drawerElement.violationsMap = violationsMap;
+    await drawerElement.updateComplete;
 
     // Open the drawer so the list is rendered
     globalThis.dispatchEvent(
@@ -141,8 +135,6 @@ describe('<clippy-validations-dialog>', () => {
   });
 
   it('shows only the focused group and hides the filters on OPEN_VALIDATION_GROUP', async () => {
-    const contextElement = document.querySelector('clippy-context') as Context | null;
-
     await vi.waitFor(() => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
@@ -156,10 +148,8 @@ describe('<clippy-validations-dialog>', () => {
       [r3, violation({ range: r3, rule: coreValidationRules.IMAGE_MUST_HAVE_ALT_TEXT, severity: 'error' })],
     ]);
 
-    if (contextElement) {
-      contextElement.updateViolationsContext(violationsMap);
-      await contextElement.updateComplete;
-    }
+    drawerElement.violationsMap = violationsMap;
+    await drawerElement.updateComplete;
 
     // Open only the group of r1 + r2 (as if a gutter item with an overlap was clicked).
     globalThis.dispatchEvent(

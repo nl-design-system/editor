@@ -1,5 +1,5 @@
-import '@/components/context';
 import './index';
+import { createTestEditor } from '@test/createTestEditor';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import type { Toolbar } from './index';
@@ -14,13 +14,11 @@ describe('<clippy-toolbar>', () => {
     user = userEvent.setup();
 
     document.documentElement.lang = 'nl';
-    document.body.innerHTML = `
-      <clippy-context id="toolbar-test-editor">
-        <${tag}></${tag}>
-      </clippy-context>
-    `;
+    document.body.innerHTML = `<div class="editor"></div><${tag}></${tag}>`;
+    const editor = await createTestEditor('<p></p>');
+    editor.mount(document.querySelector('.editor')!);
+    document.querySelector<Toolbar>(tag)!.editor = editor;
 
-    // Wait for the toolbar to be rendered inside the context
     await vi.waitFor(() => {
       expect(page.getByLabelText('Werkbalk tekstbewerker')).toBeInTheDocument();
     });

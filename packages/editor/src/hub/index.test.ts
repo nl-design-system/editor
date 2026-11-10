@@ -4,6 +4,7 @@ import type { Violation, ViolationsMap } from '@/types/validation';
 import '@/components/toolbar/toolbar-accessibility-notifications';
 import '@/components/validations/drawer';
 import '@/components/validations/gutter';
+import '@/components/validations/list';
 import { CustomEvents, type DocumentOverviewMode } from '@/events';
 import { VALIDATION_HOVER_HIGHLIGHT_NAMES } from '@/utils/highlights';
 import { ClippyHub } from './index';
@@ -60,6 +61,18 @@ describe('ClippyHub', () => {
     expect(drawer.htmlDocument).toBe(target);
     expect(rulesIn(drawer.violationsMap)).toEqual([coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
     expect(gutter.violationsMap).toBe(drawer.violationsMap);
+  });
+
+  it('feeds a connected validations list the violations and identifier', async () => {
+    target.innerHTML = '<h1>Titel</h1><p></p>';
+    const list = document.body.appendChild(document.createElement('clippy-validations-list'));
+
+    hub = new ClippyHub({ identifier: IDENTIFIER, target });
+    hub.connect({ list });
+    await hub.validate();
+
+    expect(list.identifier).toBe(IDENTIFIER);
+    expect(rulesIn(list.violationsMap)).toEqual([coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
   });
 
   it('gives a view connected after a validation the latest violations', async () => {
