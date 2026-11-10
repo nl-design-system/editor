@@ -79,19 +79,22 @@ describe('<clippy-validations-gutter>', () => {
     CSS.highlights.clear();
   });
 
-  it('names the indicator after the message of the validation', async () => {
+  it('shows a flag next to the validated text as a visual marker only', async () => {
     const { content, gutter } = renderGutter('Deze hele alinea is dikgedrukt.');
     await validate(gutter, new Map([[rangeOver(content), boldParagraph()]]));
 
-    await expect.element(page.getByRole('button', { name: BOLD_PARAGRAPH_HEADING })).toBeInTheDocument();
+    const flag = gutter.shadowRoot!.querySelector('.clippy-validations-gutter__flag')!;
+    expect(flag.localName).toBe('span');
+    expect(flag.getAttribute('aria-hidden')).toBe('true');
+    expect(page.getByRole('button', { name: BOLD_PARAGRAPH_HEADING }).query()).toBeNull();
   });
 
-  it('opens the validation it names, for the editor it belongs to', async () => {
+  it('opens the validation on its line, for the editor it belongs to', async () => {
     const { content, gutter } = renderGutter('Deze hele alinea is dikgedrukt.');
     const range = rangeOver(content);
     await validate(gutter, new Map([[range, boldParagraph()]]));
 
-    const detail = await openedBy(BOLD_PARAGRAPH_HEADING);
+    const detail = await openedBy('Validatiemelding openen');
     expect(detail.identifier).toBe('clippy-editor-1');
     expect(detail.ranges).toEqual([range]);
   });
@@ -136,12 +139,12 @@ describe('<clippy-validations-gutter>', () => {
     await validate(gutter, new Map([[rangeOver(content), boldParagraph()]]));
 
     const buttons = [...gutter.shadowRoot!.querySelectorAll('button')];
-    expect(buttons).toHaveLength(2);
-    expect(buttons.map(({ tabIndex }) => tabIndex)).toEqual([-1, -1]);
-    await expect.element(page.getByRole('button', { name: BOLD_PARAGRAPH_HEADING })).toBeInTheDocument();
+    expect(buttons).toHaveLength(1);
+    expect(buttons.map(({ tabIndex }) => tabIndex)).toEqual([-1]);
+    await expect.element(page.getByRole('button', { name: 'Validatiemelding openen' })).toBeInTheDocument();
   });
 
-  it('emphasises the validated text while the indicator is hovered', async () => {
+  it('emphasises the validated text while its toggle is hovered', async () => {
     const { content, gutter } = renderGutter('Ga naar <a href="#">lees meer</a>.');
     const range = rangeOver(content.querySelector('a')!);
     await validate(
@@ -159,12 +162,12 @@ describe('<clippy-validations-gutter>', () => {
       ]),
     );
 
-    const indicator = page.getByRole('button', { name: GENERIC_LINK_HEADING });
-    await indicator.hover();
+    const toggle = page.getByRole('button', { name: 'Validatiemelding openen' });
+    await toggle.hover();
     const hovered = CSS.highlights.get(VALIDATION_HOVER_HIGHLIGHT_NAMES.info);
     expect(hovered && [...hovered]).toEqual([range]);
 
-    await indicator.unhover();
+    await toggle.unhover();
     expect(CSS.highlights.has(VALIDATION_HOVER_HIGHLIGHT_NAMES.info)).toBe(false);
   });
 
@@ -173,7 +176,8 @@ describe('<clippy-validations-gutter>', () => {
       ...gutter.shadowRoot!.querySelectorAll<HTMLElement>('.clippy-validations-gutter__indicator'),
     ];
 
-    const rail = (indicator: HTMLElement) => indicator.querySelector('button')!.getBoundingClientRect();
+    const flag = (indicator: HTMLElement) =>
+      indicator.querySelector('.clippy-validations-gutter__flag')!.getBoundingClientRect();
 
     const indicatorFor = (gutter: Gutter, element: Element) =>
       indicators(gutter).find(
@@ -206,7 +210,7 @@ describe('<clippy-validations-gutter>', () => {
       const indicator = indicators(gutter)[0].getBoundingClientRect();
       expect(indicator.top).toBeCloseTo(heading.getBoundingClientRect().top, 0);
       expect(indicator.height).toBeCloseTo(heading.getBoundingClientRect().height, 0);
-      expect(rail(indicators(gutter)[0]).right).toBeCloseTo(content.getBoundingClientRect().left, 0);
+      expect(flag(indicators(gutter)[0]).right).toBeCloseTo(content.getBoundingClientRect().left, 0);
     });
 
     it('realigns indicators when the content changes size or moves', async () => {
@@ -220,7 +224,7 @@ describe('<clippy-validations-gutter>', () => {
 
       await expect.poll(() => indicatorFor(gutter, heading)).toBeDefined();
       await expect
-        .poll(() => rail(indicatorFor(gutter, heading)!).right)
+        .poll(() => flag(indicatorFor(gutter, heading)!).right)
         .toBeCloseTo(content.getBoundingClientRect().left, 0);
     });
   });
