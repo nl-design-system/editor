@@ -64,7 +64,7 @@ export class ToolbarImageUpload extends LitElement {
   #replaceExisting = false;
 
   @editor()
-  private readonly editor: Editor | undefined;
+  editor: Editor | undefined;
 
   readonly #openForEdit = () => {
     if (!this.editor) return;

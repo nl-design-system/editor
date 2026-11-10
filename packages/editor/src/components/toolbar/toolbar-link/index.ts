@@ -72,7 +72,7 @@ export class ToolbarLink extends LitElement {
   }
 
   @editor()
-  private readonly editor: Editor | undefined;
+  editor: Editor | undefined;
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();

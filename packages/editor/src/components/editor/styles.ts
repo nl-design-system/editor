@@ -14,10 +14,10 @@ import superscriptStyle from '@utrecht/superscript-css/dist/index.css?inline';
 import tableStyle from '@utrecht/table-css/dist/index.css?inline';
 import unorderedListStyle from '@utrecht/unordered-list-css/dist/index.css?inline';
 import { unsafeCSS } from 'lit';
-import editorStyles from '@/styles';
+import baseStyles from '@/styles';
 
-export const editorContextStyles = [
-  editorStyles,
+export const editorStyles = [
+  baseStyles,
   unsafeCSS(descriptionListStyle),
   unsafeCSS(codeBlockStyle),
   unsafeCSS(codeStyle),

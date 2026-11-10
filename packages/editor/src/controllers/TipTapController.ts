@@ -1,9 +1,9 @@
 import type { Editor } from '@tiptap/core';
-import type { ReactiveController, ReactiveControllerHost } from 'lit';
+import type { ReactiveControllerHost } from 'lit';
 import { ContextConsumer } from '@lit/context';
 import { tiptapContext } from '@/context/tiptapContext';
 
-export class TipTapController implements ReactiveController {
+export class TipTapController {
   private readonly host: ReactiveControllerHost;
   // @ts-expect-error TypeScript cannot infer the type correctly here
   private readonly editorConsumer: ContextConsumer<
@@ -14,12 +14,10 @@ export class TipTapController implements ReactiveController {
 
   constructor(host: ReactiveControllerHost & HTMLElement) {
     this.host = host;
-    host.addController(this);
 
-    // Automatically consume the editor from context
     this.editorConsumer = new ContextConsumer(host, {
       callback: (editor?: Editor) => {
-        this.handleEditorChange(editor);
+        this.editor = editor;
       },
       context: tiptapContext,
       subscribe: true,
@@ -30,25 +28,10 @@ export class TipTapController implements ReactiveController {
     return this._editor;
   }
 
-  private handleEditorChange(editor?: Editor) {
-    if (editor) {
-      this._editor = editor;
-      editor.on('transaction', () => {
-        this.host.requestUpdate();
-      });
-    }
-  }
-
-  hostConnected() {
-    // Context consumer handles the subscription
-  }
-
-  hostDisconnected() {
-    // Context consumer handles the subscription
-    if (this._editor) {
-      this._editor.off('transaction', () => {
-        this.host.requestUpdate();
-      });
-    }
+  set editor(editor: Editor | undefined) {
+    if (editor === this._editor) return;
+    this._editor = editor;
+    editor?.on('transaction', () => this.host.requestUpdate());
+    this.host.requestUpdate();
   }
 }
