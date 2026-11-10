@@ -17,9 +17,8 @@ const rangeOver = (element: Element): Range => {
 };
 
 /**
- * Render a paragraph with a gutter over it. Drawer mode without a
- * `<clippy-context>` ancestor mirrors the CKEditor setup, where the identifier
- * can only reach the drawer through the prop.
+ * Render a paragraph with a gutter over it in drawer mode, with the identifier
+ * set by property as a Clippy hub does.
  */
 const renderGutter = (markup: string) => {
   const content = document.createElement('p');

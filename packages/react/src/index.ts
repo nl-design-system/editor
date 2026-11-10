@@ -1,10 +1,6 @@
-export { ClippyContent } from './components/Content';
-export { ClippyContext } from './components/Context';
+export { ClippyAccessibilityNotifications } from './components/AccessibilityNotifications';
 export { ClippyEditor } from './components/Editor';
-export { ClippyEditorWrapper } from './components/EditorWrapper';
-export { ClippyEditorContentWrapper } from './components/EditorContentWrapper';
 export { ClippyGutter } from './components/Gutter';
 export { ClippyHeadingStructure } from './components/HeadingStructure';
-export { ClippyToolbar } from './components/Toolbar';
 export { ClippyValidationsList } from './components/ValidationsList.tsx';
 export { ClippyValidationsDrawer } from './components/ValidationsDrawer.tsx';

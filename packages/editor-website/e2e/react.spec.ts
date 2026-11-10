@@ -83,15 +83,18 @@ test.describe('Voorbeeld 1: ClippyEditor', () => {
   });
 });
 
-test.describe('Voorbeeld 2: ClippyContext', () => {
-  test('context editor renders', async ({ page }) => {
-    await expect(page.locator('clippy-context#react-editor-2')).toBeVisible();
+test.describe('Voorbeeld 2: Clippy hub', () => {
+  test('renders the content, the trigger and a gutter indicator for the empty paragraph', async ({ page }) => {
+    const example = page.locator('.clippy-hub-example');
+    await expect(example.getByRole('textbox')).toBeVisible();
+    await expect(example.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' })).toBeVisible();
+    await expect(example.locator('clippy-validations-gutter .clippy-validations-gutter__indicator')).toHaveCount(1);
   });
 
-  test('code example for ClippyContext is visible', async ({ page }) => {
+  test('code example for the Clippy hub is visible', async ({ page }) => {
     await expect(
-      page.getByRole('heading', { name: 'Voorbeeld 2: context, content, gutter en validaties', level: 2 }),
+      page.getByRole('heading', { name: 'Voorbeeld 2: zelf samenstellen met een Clippy hub', level: 2 }),
     ).toBeVisible();
-    await expect(page.getByText('ClippyContext').first()).toBeVisible();
+    await expect(page.getByText('new ClippyHub').first()).toBeVisible();
   });
 });

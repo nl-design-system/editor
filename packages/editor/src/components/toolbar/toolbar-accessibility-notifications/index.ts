@@ -1,4 +1,3 @@
-import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
 import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
@@ -12,8 +11,6 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import type { ViolationsMap } from '@/types/validation';
-import { identifierContext } from '@/context/identifierContext';
-import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type DocumentOverviewMode, type OpenDocumentOverviewDetail } from '@/events';
 import { localizeHost } from '@/localization';
 import notificationsStyles from './styles';
@@ -38,7 +35,7 @@ declare global {
 /**
  * Toolbar trigger that opens the document overview via a global
  * {@link CustomEvents.OPEN_DOCUMENT_OVERVIEW} event; a badge reflects the
- * validation count from {@link violationsContext}.
+ * validation count from the violations a Clippy hub pushes.
  *
  * @tag clippy-accessibility-notifications
  */
@@ -47,30 +44,11 @@ declare global {
 export class AccessibilityNotifications extends LitElement {
   static override readonly styles = [notificationsStyles, unsafeCSS(numberBadgeStyles), unsafeCSS(buttonCss), srOnly];
 
-  /** @internal Consumed from the nearest {@link violationsContext} provider. */
-  @consume({ context: violationsContext, subscribe: true })
-  @property({ attribute: false })
-  violationsContext?: ViolationsMap;
-
-  /** @internal Consumed from the nearest {@link identifierContext} provider. */
-  @consume({ context: identifierContext, subscribe: true })
-  @property({ attribute: false })
-  private readonly identifierContextValue?: string;
-
-  /**
-   * Violations for standalone use (outside `<clippy-context>`, e.g.
-   * embedded in CKEditor). Takes precedence over {@link violationsContext} when
-   * set; falls back to the consumed context otherwise (in-editor use).
-   */
+  /** The violations whose count the badge shows, pushed by a Clippy hub. */
   @property({ attribute: false })
   violationsMap?: ViolationsMap;
 
-  /**
-   * Identifier of the editor instance this trigger belongs to, for standalone
-   * use (outside `<clippy-context>`, e.g. embedded in CKEditor). Must match the
-   * identifier of the drawer it should open. Falls back to the consumed
-   * {@link identifierContext} when unset (in-editor use).
-   */
+  /** Identifier of the Clippy hub, matching the identifier of the drawer it opens. */
   @property({ attribute: false })
   identifier?: string;
 
@@ -106,7 +84,7 @@ export class AccessibilityNotifications extends LitElement {
     this._expanded = false;
     globalThis.dispatchEvent(
       new CustomEvent<OpenDocumentOverviewDetail>(CustomEvents.OPEN_DOCUMENT_OVERVIEW, {
-        detail: { identifier: this.identifier ?? this.identifierContextValue, mode },
+        detail: { identifier: this.identifier, mode },
       }),
     );
   };
@@ -132,7 +110,7 @@ export class AccessibilityNotifications extends LitElement {
   }
 
   override render() {
-    const { size = 0 } = this.violationsMap ?? this.violationsContext ?? {};
+    const { size = 0 } = this.violationsMap ?? {};
     return html`
       <span data-toolbar-item="accessibility-notifications" class="clippy-accessibility-notifications">
         <clippy-button
