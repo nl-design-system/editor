@@ -67,6 +67,9 @@ type PositionedIndicator = {
   violation: Violation;
 };
 
+/** Browsers without `focusgroup` get a roving tabindex instead. */
+const supportsFocusgroup = (): boolean => 'focusGroup' in HTMLElement.prototype;
+
 const toggleCountByRange = (indicators: PositionedIndicator[]): Map<Range, number> => {
   const lines = new Map<number, PositionedIndicator[]>();
   for (const indicator of indicators) {
@@ -148,6 +151,12 @@ export class Gutter extends LitElement {
   /** @internal */
   @state()
   private activeRange: Range | null = null;
+
+  /** @internal The line whose button is the gutter's tab stop, without `focusgroup` support. */
+  @state()
+  private focusedRange: Range | null = null;
+
+  #tabStop?: Range;
 
   /** @internal Consumed from the nearest {@link tiptapContext} provider. */
   @consume({ context: tiptapContext, subscribe: true })
@@ -350,9 +359,27 @@ export class Gutter extends LitElement {
     }
   }
 
-  get #tabIndex() {
-    return this.tabbable ? nothing : '-1';
+  #tabIndexFor(range: Range) {
+    if (!this.tabbable) return '-1';
+    if (supportsFocusgroup()) return nothing;
+    return range === this.#tabStop ? '0' : '-1';
   }
+
+  readonly #handleKeydown = (event: KeyboardEvent) => {
+    if (supportsFocusgroup()) return;
+    const buttons = [...this.renderRoot.querySelectorAll<HTMLButtonElement>('.clippy-validations-gutter__toggle')];
+    const current = buttons.indexOf(this.shadowRoot?.activeElement as HTMLButtonElement);
+    if (current === -1) return;
+    const target = {
+      ArrowDown: Math.min(current + 1, buttons.length - 1),
+      ArrowUp: Math.max(current - 1, 0),
+      End: buttons.length - 1,
+      Home: 0,
+    }[event.key];
+    if (target === undefined) return;
+    event.preventDefault();
+    buttons[target].focus();
+  };
 
   #highlightRange(range: Range, violation: Violation): void {
     if (violation.display !== 'inline') return;
@@ -365,11 +392,14 @@ export class Gutter extends LitElement {
       <button
         class="clippy-validations-gutter__toggle clippy-validations-gutter__toggle--${severity}"
         aria-label=${count > 1 ? msg(str`Open ${count} validations on this line`) : msg('Open validation')}
-        tabindex=${this.#tabIndex}
+        tabindex=${this.#tabIndexFor(range)}
         @click=${() => this.#handleToggleClick(range)}
         @mouseenter=${() => this.#highlightRange(range, violation)}
         @mouseleave=${() => clearHoverHighlight()}
-        @focus=${() => this.#highlightRange(range, violation)}
+        @focus=${() => {
+          this.focusedRange = range;
+          this.#highlightRange(range, violation);
+        }}
         @blur=${() => clearHoverHighlight()}
       >
         ${
@@ -443,13 +473,16 @@ export class Gutter extends LitElement {
       .sort((a, b) => a.position.top - b.position.top);
 
     const toggleCounts = toggleCountByRange(indicators);
+    const stops = indicators.filter(({ range }) => toggleCounts.has(range)).map(({ range }) => range);
+    this.#tabStop = this.focusedRange && stops.includes(this.focusedRange) ? this.focusedRange : stops[0];
 
     return html`
       <ol
         class="clippy-validations-gutter__list"
         aria-label=${msg('Validations gutter')}
-        focusgroup="toolbar block"
+        focusgroup=${supportsFocusgroup() ? 'toolbar block' : nothing}
         data-testid="clippy-validations-gutter"
+        @keydown=${this.#handleKeydown}
       >
         ${indicators.map(({ position, range, violation }) =>
           this.#renderIndicator(range, violation, position, toggleCounts.get(range)),

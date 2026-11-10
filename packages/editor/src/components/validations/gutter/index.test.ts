@@ -144,7 +144,20 @@ describe('<clippy-validations-gutter>', () => {
     await expect.element(page.getByRole('button', { name: 'Validatiemelding openen' })).toBeInTheDocument();
   });
 
-  describe('keyboard', () => {
+  describe.each([
+    { name: 'with focusgroup', focusgroup: true },
+    { name: 'without focusgroup', focusgroup: false },
+  ])('keyboard, $name', ({ focusgroup }) => {
+    const focusGroup = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'focusGroup');
+
+    beforeEach(() => {
+      if (!focusgroup) Reflect.deleteProperty(HTMLElement.prototype, 'focusGroup');
+    });
+
+    afterEach(() => {
+      if (focusGroup) Object.defineProperty(HTMLElement.prototype, 'focusGroup', focusGroup);
+    });
+
     /** Two lines, validated bottom line first, so map order differs from visual order. */
     const renderTwoLines = async () => {
       const { content, gutter } = renderGutter('<span>Eerste regel</span><br><span>Tweede regel</span>');
@@ -173,6 +186,13 @@ describe('<clippy-validations-gutter>', () => {
       await renderTwoLines();
 
       await expect.element(page.getByRole('list', { name: 'Kantlijn met validatiemeldingen' })).toBeInTheDocument();
+    });
+
+    it('leaves arrow-key navigation to the browser where it can', async () => {
+      const { gutter } = await renderTwoLines();
+
+      const list = gutter.shadowRoot!.querySelector('ol')!;
+      expect(list.hasAttribute('focusgroup')).toBe(focusgroup);
     });
 
     it('lists the lines top to bottom', async () => {
