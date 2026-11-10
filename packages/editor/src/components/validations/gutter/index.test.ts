@@ -53,6 +53,7 @@ const openedBy = async (name: string | RegExp): Promise<OpenValidationGroupEvent
 
 const BOLD_PARAGRAPH_HEADING = 'De hele alinea is dikgedrukt.';
 const GENERIC_LINK_HEADING = 'De linktekst "lees meer" zegt niet waar de link naartoe gaat.';
+const OPEN_BOLD_PARAGRAPH = "Validatiemelding 'De hele alinea is dikgedrukt' openen";
 
 /** An entirely-bold paragraph violation, named after the copy the validator package ships. */
 const boldParagraph = (severity: ValidationSeverity = 'warning') =>
@@ -94,7 +95,7 @@ describe('<clippy-validations-gutter>', () => {
     const range = rangeOver(content);
     await validate(gutter, new Map([[range, boldParagraph()]]));
 
-    const detail = await openedBy('Validatiemelding openen');
+    const detail = await openedBy(OPEN_BOLD_PARAGRAPH);
     expect(detail.identifier).toBe('clippy-editor-1');
     expect(detail.ranges).toEqual([range]);
   });
@@ -125,11 +126,11 @@ describe('<clippy-validations-gutter>', () => {
     expect(detail.ranges).toHaveLength(2);
   });
 
-  it('names the button for a lone validation without a count', async () => {
+  it('names the button for a lone validation after its message', async () => {
     const { content, gutter } = renderGutter('Deze hele alinea is dikgedrukt.');
     await validate(gutter, new Map([[rangeOver(content), boldParagraph('error')]]));
 
-    await expect.element(page.getByRole('button', { name: 'Validatiemelding openen' })).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: OPEN_BOLD_PARAGRAPH })).toBeInTheDocument();
     expect(page.getByRole('button', { name: /validatiemeldingen op deze regel openen/ }).query()).toBeNull();
   });
 
@@ -141,7 +142,7 @@ describe('<clippy-validations-gutter>', () => {
     const buttons = [...gutter.shadowRoot!.querySelectorAll('button')];
     expect(buttons).toHaveLength(1);
     expect(buttons.map(({ tabIndex }) => tabIndex)).toEqual([-1]);
-    await expect.element(page.getByRole('button', { name: 'Validatiemelding openen' })).toBeInTheDocument();
+    await expect.element(page.getByRole('button', { name: OPEN_BOLD_PARAGRAPH })).toBeInTheDocument();
   });
 
   describe.each([
@@ -264,7 +265,9 @@ describe('<clippy-validations-gutter>', () => {
       ]),
     );
 
-    const toggle = page.getByRole('button', { name: 'Validatiemelding openen' });
+    const toggle = page.getByRole('button', {
+      name: `Validatiemelding 'De linktekst "lees meer" zegt niet waar de link naartoe gaat' openen`,
+    });
     await toggle.hover();
     const hovered = CSS.highlights.get(VALIDATION_HOVER_HIGHLIGHT_NAMES.info);
     expect(hovered && [...hovered]).toEqual([range]);

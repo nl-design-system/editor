@@ -388,10 +388,13 @@ export class Gutter extends LitElement {
 
   #renderToggle(range: Range, violation: Violation, count: number) {
     const { severity } = violation;
+    const title = violation.messages.title.replace(/\.$/, '');
     return html`<div class="clippy-validations-gutter__toggle-anchor">
       <button
         class="clippy-validations-gutter__toggle clippy-validations-gutter__toggle--${severity}"
-        aria-label=${count > 1 ? msg(str`Open ${count} validations on this line`) : msg('Open validation')}
+        aria-label=${
+          count > 1 ? msg(str`Open ${count} validations on this line`) : msg(str`Open validation '${title}'`)
+        }
         tabindex=${this.#tabIndexFor(range)}
         @click=${() => this.#handleToggleClick(range)}
         @mouseenter=${() => this.#highlightRange(range, violation)}
