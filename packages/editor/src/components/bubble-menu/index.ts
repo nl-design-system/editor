@@ -19,7 +19,7 @@ import bubbleMenuStyles from './styles';
 @safeCustomElement('clippy-bubble-menu')
 export class ImageBubbleMenu extends LitElement {
   @editor()
-  private readonly editor: Editor | undefined;
+  editor: Editor | undefined;
 
   readonly #focusNode: Ref<HTMLButtonElement> = createRef();
 

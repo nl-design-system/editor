@@ -1,4 +1,4 @@
-import { coreValidationRules } from '@nl-design-system-community/clippy-a11y-validator';
+import { coreValidationRules, coreValidations } from '@nl-design-system-community/clippy-a11y-validator';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Violation, ViolationsMap } from '@/types/validation';
 import '@/components/toolbar/toolbar-accessibility-notifications';
@@ -123,6 +123,23 @@ describe('ClippyHub', () => {
     await hub.validate();
 
     expect(trigger.violationsMap).toBeUndefined();
+  });
+
+  it('validates with a set of validations assigned after it was created', async () => {
+    target.innerHTML = '<h1>Titel</h1><p></p><h3>Sub</h3>';
+    const trigger = createTrigger();
+    hub = new ClippyHub({
+      identifier: IDENTIFIER,
+      target,
+      validations: [coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY],
+    });
+    hub.connect({ trigger });
+    await hub.validate();
+
+    hub.validations = [coreValidations.HEADING_LEVEL_MUST_NOT_SKIP];
+    await hub.validate();
+
+    expect(rulesIn(trigger.violationsMap)).toEqual([coreValidationRules.HEADING_LEVEL_MUST_NOT_SKIP]);
   });
 
   it('rejects a second hub with an identifier that is already in use', () => {
