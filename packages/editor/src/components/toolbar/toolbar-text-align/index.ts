@@ -8,7 +8,7 @@ import AlignLeftIcon from '@tabler/icons/outline/align-left.svg?raw';
 import AlignRightIcon from '@tabler/icons/outline/align-right.svg?raw';
 import ChevronDownIcon from '@tabler/icons/outline/chevron-down.svg?raw';
 import { html, LitElement } from 'lit';
-import { state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { tiptapContext } from '@/context/tiptapContext';
 import toolbarTextAlignStyles from './styles';
@@ -36,6 +36,7 @@ const iconMap: Record<Alignment, string> = {
 @safeCustomElement(tag)
 export class ToolbarTextAlign extends LitElement {
   @consume({ context: tiptapContext, subscribe: true })
+  @property({ attribute: false })
   editor?: Editor;
 
   static override readonly styles = [toolbarTextAlignStyles];

@@ -1,8 +1,13 @@
 import { Extension } from '@tiptap/core';
 import { CustomEvents, type OpenDocumentOverviewDetail } from '@/events';
-import { debouncedValidate, runValidation } from '@/validations';
 
-export default Extension.create({
+export interface ValidationOptions {
+  identifier?: string;
+  scheduleValidation: (dom: HTMLElement) => void;
+  validate: (dom: HTMLElement) => void;
+}
+
+export default Extension.create<ValidationOptions>({
   name: 'validation',
 
   addKeyboardShortcuts() {
@@ -18,16 +23,21 @@ export default Extension.create({
     };
   },
 
+  addOptions() {
+    return {
+      scheduleValidation: () => {},
+      validate: () => {},
+    };
+  },
+
   onCreate({ editor }) {
-    const { getValidations, updateViolationsContext } = this.options;
-    runValidation(editor.view.dom, getValidations(), updateViolationsContext);
+    this.options.validate(editor.view.dom);
   },
 
   onUpdate({ editor }) {
-    const { getValidations, updateViolationsContext } = this.options;
     if (editor.isDestroyed || !editor.view) return;
     try {
-      debouncedValidate(editor.view.dom, getValidations(), updateViolationsContext);
+      this.options.scheduleValidation(editor.view.dom);
     } catch {
       // view may not be available during editor lifecycle transitions
     }

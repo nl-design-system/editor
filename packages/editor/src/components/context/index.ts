@@ -5,6 +5,7 @@ import { Editor as TiptapEditor } from '@tiptap/core';
 import { LitElement, html, type PropertyValues } from 'lit';
 import { property, queryAssignedElements } from 'lit/decorators.js';
 import type { Violation } from '@/types/validation';
+import { editorStyles } from '@/components/editor/styles';
 import { htmlDocumentContext } from '@/context/htmlDocumentContext';
 import { identifierContext } from '@/context/identifierContext';
 import { tiptapContext } from '@/context/tiptapContext';
@@ -13,8 +14,7 @@ import { ViolationsDevtoolsController } from '@/controllers/ViolationsDevtoolsCo
 import { editorExtensions } from '@/extensions';
 import { initializeLocale } from '@/localization';
 import { waitForMedia } from '@/utils/waitForMedia';
-import { runValidation } from '@/validations';
-import { editorContextStyles } from './styles';
+import { debouncedValidate, runValidation } from '@/validations';
 
 const tag = 'clippy-context';
 
@@ -54,7 +54,7 @@ declare global {
  */
 @safeCustomElement(tag)
 export class Context extends LitElement {
-  static override readonly styles = editorContextStyles;
+  static override readonly styles = editorStyles;
 
   /**
    * Unique identifier for this editor instance. Reflected as the host element's
@@ -143,7 +143,12 @@ export class Context extends LitElement {
       },
       // Prevent auto-mounting during SSR; Content component calls moumountnt() client-side
       element: null,
-      extensions: editorExtensions(() => this.validations, this.readonly, this.updateViolationsContext, this.id),
+      extensions: editorExtensions({
+        identifier: this.id,
+        readonly: this.readonly,
+        scheduleValidation: (dom) => debouncedValidate(dom, this.validations, this.updateViolationsContext),
+        validate: (dom) => runValidation(dom, this.validations, this.updateViolationsContext),
+      }),
       onCreate: ({ editor }) => {
         this.htmlDocumentElement = editor.view.dom;
       },

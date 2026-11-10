@@ -56,7 +56,7 @@ export class ClippyHub {
   readonly #focusViolation: (violation: Violation) => void;
   readonly #identifier: string;
   readonly #target: HTMLElement;
-  readonly #validations: readonly Validation[] | undefined;
+  #validations: readonly Validation[] | undefined;
   readonly #views: ClippyHubViews = {};
   #violationsMap: ViolationsMap | undefined;
   #latestRun = 0;
@@ -79,6 +79,10 @@ export class ClippyHub {
     this.#focusViolation = focusViolation;
     this.#identifier = identifier;
     this.#target = target;
+    this.#validations = validations;
+  }
+
+  set validations(validations: readonly Validation[] | undefined) {
     this.#validations = validations;
   }
 

@@ -28,13 +28,14 @@ import IconTextDirectionLtr from '@tabler/icons/outline/text-direction-ltr.svg?r
 import IconTextDirectionRtl from '@tabler/icons/outline/text-direction-rtl.svg?raw';
 import UnderlineIcon from '@tabler/icons/outline/underline.svg?raw';
 import { LitElement, html, nothing } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
 import { createRef, type Ref } from 'lit/directives/ref.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { editor } from '@/decorators/TipTapDecorator';
 import './toolbar-image';
 import './toolbar-link';
 import { CustomEvents } from '@/events';
+import type { AccessibilityNotifications } from './toolbar-accessibility-notifications';
 import toolbarStyles from './styles';
 import { type ToolbarConfig, type ToolbarItem, defaultToolbarConfig } from './toolbar-config';
 import { isDefaultDir } from './toolbar-language-select/languages';
@@ -50,8 +51,8 @@ declare global {
 /**
  * The editor toolbar component. Renders a configurable set of formatting controls
  * grouped into logical sections, plus the accessibility-notifications trigger
- * ({@link AccessibilityNotifications}). Consumes the TipTap editor instance via
- * the Lit context provider.
+ * ({@link AccessibilityNotifications}). Takes the TipTap editor instance as its
+ * `editor` property and passes it on to its controls.
  *
  * @tag clippy-toolbar
  *
@@ -75,7 +76,11 @@ export class Toolbar extends LitElement {
 
   /** @internal TipTap editor instance injected via {@link editor} decorator. */
   @editor()
-  private readonly editor: Editor | undefined;
+  editor: Editor | undefined;
+
+  /** @internal */
+  @query('clippy-accessibility-notifications')
+  readonly trigger!: AccessibilityNotifications | null;
 
   readonly #toggleOpenShortcuts = () => {
     const { value } = this.#dialogRef;
@@ -133,13 +138,18 @@ export class Toolbar extends LitElement {
 
   get #itemRenderers(): Map<ToolbarItem, () => TemplateResult | typeof nothing> {
     return new Map<ToolbarItem, () => TemplateResult | typeof nothing>([
-      ['format-select', () => html`<clippy-format-select data-toolbar-item="format-select"></clippy-format-select>`],
+      [
+        'format-select',
+        () =>
+          html`<clippy-format-select data-toolbar-item="format-select" .editor=${this.editor}></clippy-format-select>`,
+      ],
       [
         'language-select',
         () =>
           html`<clippy-language-select
             data-toolbar-item="language-select"
             matchTextDirection
+            .editor=${this.editor}
           ></clippy-language-select>`,
       ],
       [
@@ -378,10 +388,18 @@ export class Toolbar extends LitElement {
       ],
       [
         'text-align',
-        () => html`<clippy-toolbar-text-align data-toolbar-item="text-align"></clippy-toolbar-text-align>`,
+        () =>
+          html`<clippy-toolbar-text-align
+            data-toolbar-item="text-align"
+            .editor=${this.editor}
+          ></clippy-toolbar-text-align>`,
       ],
-      ['link', () => html`<clippy-toolbar-link data-toolbar-item="link"></clippy-toolbar-link>`],
-      ['image-upload', () => html`<clippy-toolbar-image data-toolbar-item="image-upload"></clippy-toolbar-image>`],
+      ['link', () => html`<clippy-toolbar-link data-toolbar-item="link" .editor=${this.editor}></clippy-toolbar-link>`],
+      [
+        'image-upload',
+        () =>
+          html`<clippy-toolbar-image data-toolbar-item="image-upload" .editor=${this.editor}></clippy-toolbar-image>`,
+      ],
       [
         'horizontal-rule',
         () => html`
