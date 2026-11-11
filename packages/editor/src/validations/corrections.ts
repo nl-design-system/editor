@@ -8,7 +8,7 @@ import {
 import { CustomEvents } from '@/events';
 
 /**
- * What the editor layers over the correction the validator package reports, for one violation.
+ * What the editor layers over the primary correction the validator package reports, for one violation.
  *
  * A function rather than an object because both halves are deliberately late: the fix needs the
  * element and the range, which exist only per violation, and `msg()` has to run once the locale is
