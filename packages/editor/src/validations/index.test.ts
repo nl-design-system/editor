@@ -120,7 +120,7 @@ describe('runValidation', () => {
     const map = validate('<h1>Titel</h1><p><b></b></p>');
     [...map.values()]
       .find(({ rule }) => rule === coreValidationRules.PARAGRAPH_SHOULD_NOT_CONTAIN_EMPTY_FORMATTING)
-      ?.correction?.execute();
+      ?.corrections?.[0]?.execute();
 
     expect(dom.innerHTML).toBe('<h1>Titel</h1><p></p>');
   });
@@ -131,11 +131,11 @@ describe('runValidation', () => {
 
     const map = validate('<h1>Titel</h1><p><img src="paspoort.png" alt=""></p>');
     const result = [...map.values()].find(({ rule }) => rule === coreValidationRules.IMAGE_MUST_HAVE_ALT_TEXT);
-    result?.correction?.execute();
+    result?.corrections?.[0]?.execute();
 
     globalThis.removeEventListener(CustomEvents.OPEN_IMAGE_DIALOG, opened);
 
-    expect(result?.correction?.label).toBeTruthy();
+    expect(result?.corrections?.[0]?.label).toBeTruthy();
     expect(opened).toHaveBeenCalledOnce();
     expect(dom.querySelector('img')).not.toBeNull();
   });
@@ -146,7 +146,7 @@ describe('runValidation', () => {
     const result = [...map.values()].find(({ rule }) => rule === coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_EMPTY);
 
     expect(result).toBeDefined();
-    expect(result).not.toHaveProperty('correction');
+    expect(result).not.toHaveProperty('corrections');
   });
 
   /**
@@ -158,7 +158,7 @@ describe('runValidation', () => {
     const result = [...map.values()].find(({ rule }) => rule === coreValidationRules.TABLE_CELL_SHOULD_NOT_BE_EMPTY);
 
     expect(result).toBeDefined();
-    expect(result).not.toHaveProperty('correction');
+    expect(result).not.toHaveProperty('corrections');
   });
 });
 

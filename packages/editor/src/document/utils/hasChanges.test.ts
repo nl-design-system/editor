@@ -17,7 +17,7 @@ describe('hasChanges', () => {
     const element = document.createElement('p');
 
     expect(
-      hasChanges([violation({ element })], [violation({ correction: { execute: () => undefined }, element })]),
+      hasChanges([violation({ element })], [violation({ corrections: [{ execute: () => undefined }], element })]),
     ).toBe(false);
   });
 
