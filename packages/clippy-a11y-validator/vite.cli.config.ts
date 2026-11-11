@@ -13,7 +13,13 @@ export default defineConfig({
     minify: false,
     rollupOptions: {
       // The CLI drives a browser and reads files, so its dependencies stay out of the bundle.
-      external: ['playwright', ...builtinModules, ...builtinModules.map((name) => `node:${name}`)],
+      external: [
+        '@clack/prompts',
+        'diff',
+        'playwright',
+        ...builtinModules,
+        ...builtinModules.map((name) => `node:${name}`),
+      ],
       output: {
         banner: '#!/usr/bin/env node',
       },
