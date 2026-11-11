@@ -1,5 +1,13 @@
 # @nl-design-system-community/typo3-ckeditor-plugin
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [c572413]
+  - @nl-design-system-community/editor@1.11.0
+  - @nl-design-system-community/ckeditor-plugin@0.4.3
+
 ## 0.2.0
 
 ### Minor Changes
