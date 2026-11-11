@@ -92,7 +92,6 @@
 'sbd432fec05ae41a3': `Alt-tekst keuzehulp`,
 'sbe4967a005d09e76': `Kantlijn met validatiemeldingen`,
 'sbf61820a44f73942': str`${0} validatiemeldingen op deze regel openen`,
-'sc16e00a7a8b2fde2': `Terug`,
 'sd34470879ed56c05': `Geen koppen gevonden in dit document.`,
 'sd3bb6f0d2e810165': `Afbeelding invoegen`,
 'sd4de7e5f58aa9a72': `Huidig venster`,
