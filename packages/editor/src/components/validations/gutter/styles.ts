@@ -2,7 +2,7 @@ import { css } from 'lit';
 
 export default css`
   :host {
-    --_clippy-gutter-rail-inline-size: var(--basis-space-inline-xl);
+    --_clippy-gutter-flag-inline-size: var(--basis-space-inline-xl);
 
     block-size: 100%;
     inset-block-start: 0;
@@ -21,7 +21,7 @@ export default css`
   :host([overlay]) .clippy-validations-gutter__list {
     inset-block: 0;
     inset-inline-end: var(--basis-space-none);
-    inset-inline-start: calc(-1 * min(var(--_clippy-gutter-rail-inline-size), var(--_clippy-gutter-inline-space, 0px)));
+    inset-inline-start: calc(-1 * min(var(--_clippy-gutter-flag-inline-size), var(--_clippy-gutter-inline-space, 0px)));
     position: absolute;
   }
 
@@ -62,19 +62,13 @@ export default css`
     }
   }
 
-  .clippy-validations-gutter__toggle {
+  .clippy-validations-gutter__flag {
     --_clippy-gutter-flag-color: var(--basis-color-info-border-default);
 
-    background: none;
     block-size: 100%;
-    border-width: var(--basis-border-width-none);
-    cursor: pointer;
-    inline-size: var(--_clippy-gutter-rail-inline-size);
+    inline-size: var(--_clippy-gutter-flag-inline-size);
     inset-block-start: 0;
     inset-inline-start: 0;
-    padding-block: var(--basis-space-none);
-    padding-inline: var(--basis-space-none);
-    pointer-events: auto;
     position: absolute;
     z-index: 1;
 
@@ -109,32 +103,21 @@ export default css`
       clip-path: polygon(0 0, 100% 0, 100% 100%);
     }
 
-    &.clippy-validations-gutter__toggle--error {
+    &.clippy-validations-gutter__flag--error {
       --_clippy-gutter-flag-color: var(--basis-color-negative-border-default);
     }
 
-    &.clippy-validations-gutter__toggle--warning {
+    &.clippy-validations-gutter__flag--warning {
       --_clippy-gutter-flag-color: var(--basis-color-warning-border-default);
     }
 
-    &:hover::before,
-    &:hover::after,
-    &:focus-visible::before,
-    &:focus-visible::after,
-    &.clippy-validations-gutter__toggle--active::before,
-    &.clippy-validations-gutter__toggle--active::after {
+    &.clippy-validations-gutter__flag--active::before,
+    &.clippy-validations-gutter__flag--active::after {
       opacity: 0.7;
     }
   }
 
-  .clippy-validations-gutter__toggle:focus-visible {
-    outline-color: var(--basis-focus-outline-color);
-    outline-offset: var(--basis-focus-outline-offset);
-    outline-style: var(--basis-focus-outline-style);
-    outline-width: var(--basis-focus-outline-width);
-  }
-
-  .clippy-validations-gutter__meta-anchor {
+  .clippy-validations-gutter__toggle-anchor {
     align-items: center;
     display: flex;
     inset-block: 0;
@@ -143,7 +126,7 @@ export default css`
     z-index: 1;
   }
 
-  .clippy-validations-gutter__meta {
+  .clippy-validations-gutter__toggle {
     --_clippy-gutter-severity-color: var(--basis-color-info-color-default);
 
     background: none;
@@ -169,11 +152,11 @@ export default css`
       outline: var(--basis-focus-outline-color) var(--basis-focus-outline-style) var(--basis-focus-outline-width);
     }
 
-    &.clippy-validations-gutter__meta--error {
+    &.clippy-validations-gutter__toggle--error {
       --_clippy-gutter-severity-color: var(--basis-color-negative-color-default);
     }
 
-    &.clippy-validations-gutter__meta--warning {
+    &.clippy-validations-gutter__toggle--warning {
       --_clippy-gutter-severity-color: var(--basis-color-warning-color-default);
     }
   }
@@ -201,16 +184,16 @@ export default css`
     --nl-number-badge-padding-inline: var(--basis-space-none);
   }
 
-  .clippy-validation-gutter__tooltip {
+  .clippy-validations-gutter__tooltip {
     display: none;
     position: absolute;
     inset-block-start: 0;
-    inset-inline-start: var(--_clippy-gutter-rail-inline-size);
+    inset-inline-start: var(--_clippy-gutter-flag-inline-size);
     background-color: var(--basis-color-default-bg-document);
     pointer-events: auto;
     z-index: 10;
   }
-  .clippy-validation-gutter__tooltip--active {
+  .clippy-validations-gutter__tooltip--active {
     display: block;
   }
 
@@ -219,14 +202,13 @@ export default css`
       background-color: transparent !important;
     }
 
-    .clippy-validations-gutter__toggle::before,
-    .clippy-validations-gutter__toggle::after {
+    .clippy-validations-gutter__flag::before,
+    .clippy-validations-gutter__flag::after {
       background-color: CanvasText !important;
     }
 
-    .clippy-validations-gutter__toggle:focus-visible,
-    .clippy-validations-gutter__meta:hover,
-    .clippy-validations-gutter__meta:focus-visible {
+    .clippy-validations-gutter__toggle:hover,
+    .clippy-validations-gutter__toggle:focus-visible {
       outline-color: Highlight;
     }
   }

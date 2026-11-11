@@ -5,7 +5,6 @@ import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/numb
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { validationSeverity, type ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
-import srOnly from '@nl-design-system-community/clippy-components/lib/sr-only';
 import AlertCircleIcon from '@tabler/icons/outline/alert-circle.svg?raw';
 import AlertTriangleIcon from '@tabler/icons/outline/alert-triangle.svg?raw';
 import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
@@ -68,7 +67,10 @@ type PositionedIndicator = {
   violation: Violation;
 };
 
-const metaCountByRange = (indicators: PositionedIndicator[]): Map<Range, number> => {
+/** Browsers without `focusgroup` get a roving tabindex instead. */
+const supportsFocusgroup = (): boolean => 'focusGroup' in HTMLElement.prototype;
+
+const toggleCountByRange = (indicators: PositionedIndicator[]): Map<Range, number> => {
   const lines = new Map<number, PositionedIndicator[]>();
   for (const indicator of indicators) {
     const top = Math.floor(indicator.position.top);
@@ -95,16 +97,16 @@ const metaCountByRange = (indicators: PositionedIndicator[]): Map<Range, number>
 /**
  * Side gutter that displays colour-coded accessibility validation indicators
  * vertically aligned with their corresponding positions in the editor content.
- * Clicking an indicator either scrolls the external validations list to the
+ * Clicking a toggle either scrolls the external validations list to the
  * matching item or opens the matching validation(s) in the drawer, depending on
  * `mode`.
  *
  * @tag clippy-validations-gutter
  *
  * @fires {FocusValidationItemInListEvent} FOCUS_VALIDATION_ITEM_IN_LIST - Dispatched in `list` mode
- *   when the user clicks an indicator, so the list component can scroll to it.
+ *   when the user clicks a toggle, so the list component can scroll to it.
  * @fires {OpenValidationGroupEvent} OPEN_VALIDATION_GROUP - Dispatched in `drawer` mode
- *   when the user clicks an indicator, so the drawer can show that validation
+ *   when the user clicks a toggle, so the drawer can show that validation
  *   and any overlapping ones.
  *
  * @example
@@ -115,14 +117,14 @@ const metaCountByRange = (indicators: PositionedIndicator[]): Map<Range, number>
 @localized()
 @safeCustomElement(tag)
 export class Gutter extends LitElement {
-  static override readonly styles = [gutterStyles, unsafeCSS(paragraphStyle), unsafeCSS(numberBadgeStyles), srOnly];
+  static override readonly styles = [gutterStyles, unsafeCSS(paragraphStyle), unsafeCSS(numberBadgeStyles)];
 
   /**
    * Display mode for validation interactions.
    * - `list` – scroll the external validations list to the item on click.
    * - `drawer` – open the clicked validation (plus any overlapping ones) in the
    *   validations drawer on click.
-   * - `readonly` – indicators are visible and focusable, but clicking them performs no action (default).
+   * - `readonly` – toggles are visible and focusable, but clicking them performs no action (default).
    */
   @property({ type: String })
   mode: ValidationInteractionMode = validationInteractionMode.READONLY;
@@ -142,13 +144,19 @@ export class Gutter extends LitElement {
   @property({ reflect: true, type: Boolean })
   overlay = false;
 
-  /** Whether the indicator buttons are in the tab order. */
+  /** Whether the toggles are in the tab order. */
   @property({ attribute: false })
   tabbable = true;
 
   /** @internal */
   @state()
   private activeRange: Range | null = null;
+
+  /** @internal The line whose button is the gutter's tab stop, without `focusgroup` support. */
+  @state()
+  private focusedRange: Range | null = null;
+
+  #tabStop?: Range;
 
   /** @internal Consumed from the nearest {@link tiptapContext} provider. */
   @consume({ context: tiptapContext, subscribe: true })
@@ -183,7 +191,7 @@ export class Gutter extends LitElement {
 
   readonly #resizeController = new ResizeController(this);
 
-  #handleIndicatorClick(range: Range) {
+  #handleToggleClick(range: Range) {
     if (this.mode === validationInteractionMode.LIST) {
       this.dispatchEvent(
         new CustomEvent<FocusValidationItemInListDetail>(CustomEvents.FOCUS_VALIDATION_ITEM_IN_LIST, {
@@ -199,7 +207,7 @@ export class Gutter extends LitElement {
         }),
       );
     }
-    // `readonly`: the indicator is a focusable button, but clicking it performs no action.
+    // `readonly`: the toggle is a focusable button, but clicking it performs no action.
   }
 
   /** The clicked range plus every other validation range that overlaps it. */
@@ -351,26 +359,50 @@ export class Gutter extends LitElement {
     }
   }
 
-  get #tabIndex() {
-    return this.tabbable ? nothing : '-1';
+  #tabIndexFor(range: Range) {
+    if (!this.tabbable) return '-1';
+    if (supportsFocusgroup()) return nothing;
+    return range === this.#tabStop ? '0' : '-1';
   }
+
+  readonly #handleKeydown = (event: KeyboardEvent) => {
+    if (supportsFocusgroup()) return;
+    const buttons = [...this.renderRoot.querySelectorAll<HTMLButtonElement>('.clippy-validations-gutter__toggle')];
+    const current = buttons.indexOf(this.shadowRoot?.activeElement as HTMLButtonElement);
+    if (current === -1) return;
+    const target = {
+      ArrowDown: Math.min(current + 1, buttons.length - 1),
+      ArrowUp: Math.max(current - 1, 0),
+      End: buttons.length - 1,
+      Home: 0,
+    }[event.key];
+    if (target === undefined) return;
+    event.preventDefault();
+    buttons[target].focus();
+  };
 
   #highlightRange(range: Range, violation: Violation): void {
     if (violation.display !== 'inline') return;
     applyHoverHighlight(violation.severity, range);
   }
 
-  #renderMeta(range: Range, violation: Violation, count: number) {
+  #renderToggle(range: Range, violation: Violation, count: number) {
     const { severity } = violation;
-    return html`<div class="clippy-validations-gutter__meta-anchor">
+    const title = violation.messages.title.replace(/\.$/, '');
+    return html`<div class="clippy-validations-gutter__toggle-anchor">
       <button
-        class="clippy-validations-gutter__meta clippy-validations-gutter__meta--${severity}"
-        aria-label=${count > 1 ? msg(str`Open ${count} validations on this line`) : msg('Open validation')}
-        tabindex=${this.#tabIndex}
-        @click=${() => this.#handleIndicatorClick(range)}
+        class="clippy-validations-gutter__toggle clippy-validations-gutter__toggle--${severity}"
+        aria-label=${
+          count > 1 ? msg(str`Open ${count} validations on this line`) : msg(str`Open validation '${title}'`)
+        }
+        tabindex=${this.#tabIndexFor(range)}
+        @click=${() => this.#handleToggleClick(range)}
         @mouseenter=${() => this.#highlightRange(range, violation)}
         @mouseleave=${() => clearHoverHighlight()}
-        @focus=${() => this.#highlightRange(range, violation)}
+        @focus=${() => {
+          this.focusedRange = range;
+          this.#highlightRange(range, violation);
+        }}
         @blur=${() => clearHoverHighlight()}
       >
         ${
@@ -391,7 +423,7 @@ export class Gutter extends LitElement {
     range: Range,
     violation: Violation,
     position: { top: number; height: number },
-    metaCount: number | undefined,
+    toggleCount: number | undefined,
   ) {
     const { correction, display, messages, severity } = violation;
     const { explanation, href, solution, title: heading } = messages;
@@ -402,27 +434,19 @@ export class Gutter extends LitElement {
       data-severity=${severity}
       style=${styleMap({ 'block-size': `${position.height}px`, 'inset-block-start': `${position.top}px` })}
     >
-      <button
+      <span
         class="${classMap({
-          [`clippy-validations-gutter__toggle--${severity}`]: true,
-          'clippy-validations-gutter__toggle': true,
-          'clippy-validations-gutter__toggle--active': isActive,
+          [`clippy-validations-gutter__flag--${severity}`]: true,
+          'clippy-validations-gutter__flag': true,
+          'clippy-validations-gutter__flag--active': isActive,
         })}"
-        aria-expanded=${isActive ? 'true' : 'false'}
-        tabindex=${this.#tabIndex}
-        @click=${() => this.#handleIndicatorClick(range)}
-        @mouseenter=${() => this.#highlightRange(range, violation)}
-        @mouseleave=${() => clearHoverHighlight()}
-        @focus=${() => this.#highlightRange(range, violation)}
-        @blur=${() => clearHoverHighlight()}
-      >
-        <span class="sr-only">${heading}</span>
-      </button>
-      ${metaCount === undefined ? nothing : this.#renderMeta(range, violation, metaCount)}
+        aria-hidden="true"
+      ></span>
+      ${toggleCount === undefined ? nothing : this.#renderToggle(range, violation, toggleCount)}
       <div
         class="${classMap({
-          'clippy-validation-gutter__tooltip': true,
-          'clippy-validation-gutter__tooltip--active': isActive,
+          'clippy-validations-gutter__tooltip': true,
+          'clippy-validations-gutter__tooltip--active': isActive,
         })}"
       >
         <clippy-validation-item
@@ -448,14 +472,23 @@ export class Gutter extends LitElement {
     const indicators = [...map.entries()]
       .filter(([range]) => range !== undefined)
       .map(([range, violation]) => ({ position: this.#getIndicatorPosition(range), range, violation }))
-      .filter((indicator): indicator is PositionedIndicator => indicator.position !== null);
+      .filter((indicator): indicator is PositionedIndicator => indicator.position !== null)
+      .sort((a, b) => a.position.top - b.position.top);
 
-    const metaCounts = metaCountByRange(indicators);
+    const toggleCounts = toggleCountByRange(indicators);
+    const stops = indicators.filter(({ range }) => toggleCounts.has(range)).map(({ range }) => range);
+    this.#tabStop = this.focusedRange && stops.includes(this.focusedRange) ? this.focusedRange : stops[0];
 
     return html`
-      <ol class="clippy-validations-gutter__list" role="list" data-testid="clippy-validations-gutter">
+      <ol
+        class="clippy-validations-gutter__list"
+        aria-label=${msg('Validations gutter')}
+        focusgroup=${supportsFocusgroup() ? 'toolbar block' : nothing}
+        data-testid="clippy-validations-gutter"
+        @keydown=${this.#handleKeydown}
+      >
         ${indicators.map(({ position, range, violation }) =>
-          this.#renderIndicator(range, violation, position, metaCounts.get(range)),
+          this.#renderIndicator(range, violation, position, toggleCounts.get(range)),
         )}
       </ol>
     `;

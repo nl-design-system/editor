@@ -167,14 +167,14 @@ describe('PageReview', () => {
       await expect.poll(() => document.querySelector('clippy-validations-gutter')).toBeNull();
     });
 
-    it('keeps its markers out of the tab order', async () => {
+    it('lets keyboard users reach its markers', async () => {
       document.body.innerHTML = '<main><h1>Titel</h1><h3>Overgeslagen</h3></main>';
 
       await reviewWithDrawerOpen(1);
 
       const buttons = [...document.querySelector('clippy-validations-gutter')!.shadowRoot!.querySelectorAll('button')];
       expect(buttons.length).toBeGreaterThan(0);
-      expect(buttons.every(({ tabIndex }) => tabIndex === -1)).toBe(true);
+      expect(buttons.some(({ tabIndex }) => tabIndex === 0)).toBe(true);
     });
 
     it('opens the matching drawer item when an indicator is clicked', async () => {

@@ -75,7 +75,6 @@ export class PageReview extends ClippyHub {
     this.#gutter.classList.add(...THEME_CLASSES);
     this.#gutter.mode = validationInteractionMode.DRAWER;
     this.#gutter.overlay = true;
-    this.#gutter.tabbable = false;
     this.#gutter.contentElement = this.#reviewRoot;
     this.connect({ drawer: this.#drawer, gutter: this.#gutter, trigger: this.#trigger });
     if (gutter === 'always') {

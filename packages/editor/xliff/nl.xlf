@@ -402,10 +402,6 @@
         <source>Open <x id="0" equiv-text="${count}"/> validations on this line</source>
         <target><x id="0" equiv-text="${count}"/> validatiemeldingen op deze regel openen</target>
       </trans-unit>
-      <trans-unit id="sc584f530aeeee4dc">
-        <source>Open validation</source>
-        <target>Validatiemelding openen</target>
-      </trans-unit>
       <trans-unit id="sa937fce28916575e">
         <source>Solution</source>
         <target>Oplossing</target>
@@ -413,6 +409,14 @@
       <trans-unit id="sc16e00a7a8b2fde2">
         <source>Back</source>
         <target>Terug</target>
+      </trans-unit>
+      <trans-unit id="sbe4967a005d09e76">
+        <source>Validations gutter</source>
+        <target>Kantlijn met validatiemeldingen</target>
+      </trans-unit>
+      <trans-unit id="s9ff6674bf3e58c36">
+        <source>Open validation '<x id="0" equiv-text="${title}"/>'</source>
+        <target>Validatiemelding '<x id="0" equiv-text="${title}"/>' openen</target>
       </trans-unit>
     </body>
   </file>
