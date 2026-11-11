@@ -24,6 +24,7 @@
 's29a1a2dd90ffd24b': `Validatiemeldingen`,
 's2dd973ed898d0cf5': `Horizontale lijn`,
 's30b26d80216b4307': `(documenttaal)`,
+'s339e7dd71ea9b039': `Meer correcties`,
 's33c26204494fd8c0': `Toon toegankelijkheidsmeldingen`,
 's35c3125c7750681e': `Citaatblok`,
 's3643189d1abbb7f4': `Code`,
