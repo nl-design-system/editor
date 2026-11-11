@@ -62,7 +62,8 @@ export function ReactHubExample() {
           <h1>Kopniveau 1 in React</h1>
           <p></p>
           <p>
-            Dit is een voorbeeld van een Clippy hub <a href="#">met de Lit React wrappers</a>
+            Dit is een voorbeeld van een Clippy hub{' '}
+            <a href="https://lit.dev/docs/frameworks/react/">met de Lit React wrappers</a>
           </p>
         </div>
         <ClippyGutter ref={gutterRef} mode="drawer" />
