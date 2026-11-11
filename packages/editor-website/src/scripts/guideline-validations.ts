@@ -36,6 +36,8 @@ const GUIDELINE_VALIDATIONS: ReadonlyArray<readonly [id: string, validations: re
   ['editor-21', [coreValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC]],
 ];
 
+const hubs: ClippyHub[] = [];
+
 for (const [identifier, validations] of GUIDELINE_VALIDATIONS) {
   const example = document.getElementById(identifier);
   const target = example?.querySelector<HTMLElement>('.clippy-guideline__content');
@@ -46,6 +48,12 @@ for (const [identifier, validations] of GUIDELINE_VALIDATIONS) {
 
   const hub = new ClippyHub({ identifier, target, validations });
   hub.connect({ gutter, list: example.querySelector('clippy-validations-list') });
-  hub.validate().catch(console.error);
   target.addEventListener('input', () => hub.scheduleValidation());
+  hubs.push(hub);
+}
+
+try {
+  await Promise.all(hubs.map((hub) => hub.validate()));
+} catch (error) {
+  console.error(error);
 }
