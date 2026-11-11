@@ -31,12 +31,12 @@ npx clippy-validate-html <path...> [options]
 
 Each path is an `.html` or `.htm` file, or a directory to search for them.
 
-| Option              | Description                                                                                                                                      |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `--allow-warnings`  | Exit with `0` when no issues of `error` severity are found.                                                                                      |
-| `--fix`             | Apply the primary correction of each issue. The files on disk stay untouched: the output shows the markup as it is after correcting.             |
-| `--skip <selector>` | Remove everything matching this CSS selector before validating, e.g. demo markup that is wrong on purpose. Repeat the option for more selectors. |
-| `--help`, `-h`      | Show the usage.                                                                                                                                  |
+| Option              | Description                                                                                                                                                                                                      |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--allow-warnings`  | Exit with `0` when no issues of `error` severity are found.                                                                                                                                                      |
+| `--diff`            | Apply the correction of each issue and show how each document changes. When an issue offers several, ask which one to apply; without an answer on stdin, the issue is left as it is. Nothing is written to disk. |
+| `--skip <selector>` | Remove everything matching this CSS selector before validating, e.g. demo markup that is wrong on purpose. Repeat the option for more selectors.                                                                 |
+| `--help`, `-h`      | Show the usage.                                                                                                                                                                                                  |
 
 Every issue is printed with its severity, rule, title and the offending markup:
 
@@ -52,7 +52,7 @@ warning: PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD — Hele alinea is dikgedrukt
 
 | Code | Meaning                                                                                            |
 | ---- | -------------------------------------------------------------------------------------------------- |
-| `0`  | No issues found, only issues of `info` severity, or `--fix` was given.                             |
+| `0`  | No issues found, or only issues of `info` severity.                                                |
 | `1`  | At least one issue of `error` severity found, or of `warning` severity without `--allow-warnings`. |
 | `2`  | The arguments are unusable: a missing path, a file that is not HTML, an invalid selector.          |
 
