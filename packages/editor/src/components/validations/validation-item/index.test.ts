@@ -1,4 +1,5 @@
 import './index';
+import type { ClippyButton } from '@nl-design-system-community/clippy-components/clippy-button';
 import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
@@ -18,6 +19,18 @@ const renderItem = async (
 
 const correctButton = (item: ValidationItem): HTMLElement | null | undefined =>
   item.shadowRoot?.querySelector('clippy-button[purpose="primary"]');
+
+const menuToggle = (item: ValidationItem): ClippyButton | null | undefined =>
+  item.shadowRoot?.querySelector('clippy-split-button clippy-button[slot="end"]');
+
+const menu = (item: ValidationItem): HTMLUListElement | null | undefined =>
+  item.shadowRoot?.querySelector('clippy-split-button > ul[slot="menu"][popover]');
+
+const menuIsOpen = (item: ValidationItem): boolean => menu(item)?.matches(':popover-open') ?? false;
+
+const menuItems = (item: ValidationItem): HTMLButtonElement[] => [
+  ...(menu(item)?.querySelectorAll<HTMLButtonElement>('li > button') ?? []),
+];
 
 /** Copy as a violation carries it: the heading plain text, explanation and solution as HTML. */
 const ENTIRELY_BOLD = {
@@ -212,5 +225,125 @@ describe('<validation-item> correction', () => {
 
     expect(execute).toHaveBeenCalledOnce();
     expect(announced).toHaveBeenCalledOnce();
+  });
+});
+
+describe('<validation-item> alternative corrections', () => {
+  const renderWithAlternatives = async () => {
+    const executes = [vi.fn(), vi.fn(), vi.fn()];
+    const item = await renderItem({
+      corrections: [
+        { execute: executes[0]!, label: 'Cursief verwijderen' },
+        { execute: executes[1]!, label: 'Omzetten naar citaat' },
+        { execute: executes[2]!, label: 'Omzetten naar intro' },
+      ],
+    });
+    return { executes, item };
+  };
+
+  it('offers no menu for a single correction', async () => {
+    const item = await renderItem({ corrections: [{ execute: () => {} }] });
+
+    expect(menuToggle(item)).toBeNull();
+  });
+
+  it('runs the first correction from the main button', async () => {
+    const { executes, item } = await renderWithAlternatives();
+
+    correctButton(item)?.click();
+
+    expect(correctButton(item)?.textContent?.trim()).toBe('Cursief verwijderen');
+    expect(executes[0]).toHaveBeenCalledOnce();
+    expect(executes[1]).not.toHaveBeenCalled();
+  });
+
+  it('groups the main button with an icon-only menu button', async () => {
+    const { item } = await renderWithAlternatives();
+    const group = item.shadowRoot?.querySelector('clippy-split-button');
+
+    expect(group?.querySelector('clippy-button[slot="start"]')).toBe(correctButton(item));
+    expect(menuToggle(item)?.iconOnly).toBe(true);
+  });
+
+  it('names the menu button and keeps its menu closed at first', async () => {
+    const { item } = await renderWithAlternatives();
+
+    expect(menuToggle(item)?.textContent?.trim()).toBe('More corrections');
+    expect(menuToggle(item)?.expanded).toBe(false);
+    expect(menuIsOpen(item)).toBe(false);
+  });
+
+  it('lists the other corrections as full-width subtle buttons in a popover list', async () => {
+    const { item } = await renderWithAlternatives();
+
+    await userEvent.click(menuToggle(item)!);
+    const [first] = menuItems(item);
+
+    expect(menuIsOpen(item)).toBe(true);
+    expect([...menu(item)!.children].every((child) => child.tagName === 'LI')).toBe(true);
+    expect(first?.classList).toContain('nl-button--subtle');
+    expect(first?.getBoundingClientRect().width).toBe(menu(item)!.querySelector('li')!.getBoundingClientRect().width);
+    expect(getComputedStyle(first!).borderStartStartRadius).toBe('0px');
+  });
+
+  it('closes the menu when its button is activated again', async () => {
+    const { item } = await renderWithAlternatives();
+
+    await userEvent.click(menuToggle(item)!);
+    await userEvent.click(menuToggle(item)!);
+
+    expect(menuIsOpen(item)).toBe(false);
+    await waitFor(() => expect(menuToggle(item)?.expanded).toBe(false));
+  });
+
+  it('lists the other corrections and focuses the first once opened', async () => {
+    const { item } = await renderWithAlternatives();
+
+    await userEvent.click(menuToggle(item)!);
+
+    expect(menuToggle(item)?.expanded).toBe(true);
+    expect(menuItems(item).map((menuItem) => menuItem.textContent?.trim())).toEqual([
+      'Omzetten naar citaat',
+      'Omzetten naar intro',
+    ]);
+    expect(item.shadowRoot?.activeElement).toBe(menuItems(item)[0]);
+  });
+
+  it('moves between the corrections with the arrow keys, wrapping around', async () => {
+    const { item } = await renderWithAlternatives();
+    await userEvent.click(menuToggle(item)!);
+
+    await userEvent.keyboard('{ArrowDown}');
+    expect(item.shadowRoot?.activeElement).toBe(menuItems(item)[1]);
+
+    await userEvent.keyboard('{ArrowDown}');
+    expect(item.shadowRoot?.activeElement).toBe(menuItems(item)[0]);
+
+    await userEvent.keyboard('{ArrowUp}');
+    expect(item.shadowRoot?.activeElement).toBe(menuItems(item)[1]);
+  });
+
+  it('runs the chosen correction, announces it and closes the menu', async () => {
+    const { executes, item } = await renderWithAlternatives();
+    const announced = vi.fn();
+    item.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, announced);
+    await userEvent.click(menuToggle(item)!);
+
+    await userEvent.click(menuItems(item)[1]!);
+
+    expect(executes[2]).toHaveBeenCalledOnce();
+    expect(executes[0]).not.toHaveBeenCalled();
+    expect(announced).toHaveBeenCalledOnce();
+    expect(menuIsOpen(item)).toBe(false);
+  });
+
+  it('closes on Escape and returns focus to the menu button', async () => {
+    const { item } = await renderWithAlternatives();
+    await userEvent.click(menuToggle(item)!);
+
+    await userEvent.keyboard('{Escape}');
+
+    await waitFor(() => expect(menuIsOpen(item)).toBe(false));
+    expect(item.shadowRoot?.activeElement).toBe(menuToggle(item));
   });
 });
