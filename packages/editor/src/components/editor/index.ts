@@ -135,9 +135,11 @@ export class Editor extends LitElement {
     super.connectedCallback();
     if (!this.#isLocaleInitialized) {
       this.#isLocaleInitialized = true;
-      initializeLocale().then(() => {
-        this.requestUpdate();
-      });
+      initializeLocale()
+        .then(() => {
+          this.requestUpdate();
+        })
+        .catch(console.error);
     }
   }
 
