@@ -58,23 +58,20 @@ jobs:
           commit-message: "docs(release): design system packages"
           pr-title: "docs(release): design system packages"
           publish-script: "pnpm run changeset:publish"
+          create-github-releases: false
 
-      - name: Attach the Drupal module archive to its Release
-        if: ${{ steps.changesets.outputs.published == 'true' && contains(fromJSON(steps.changesets.outputs['published-packages']).*.name, '@nl-design-system-community/drupal-ckeditor-plugin') }}
-        working-directory: packages/drupal-ckeditor-plugin
+      - name: Create GitHub Releases
+        if: ${{ steps.changesets.outputs.published == 'true' }}
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.published-packages }}
         run: |
-          pnpm run zip
-          version=$(jq -r .version package.json)
-          gh release upload "@nl-design-system-community/drupal-ckeditor-plugin@${version}" "dist/clippy-drupal-${version}.zip"
-
-      - name: Attach the TYPO3 extension archive to its Release
-        if: ${{ steps.changesets.outputs.published == 'true' && contains(fromJSON(steps.changesets.outputs['published-packages']).*.name, '@nl-design-system-community/typo3-ckeditor-plugin') }}
-        working-directory: packages/typo3-ckeditor-plugin
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          pnpm run zip
-          version=$(jq -r .version package.json)
-          gh release upload "@nl-design-system-community/typo3-ckeditor-plugin@${version}" "dist/clippy_${version}.zip"
+          shopt -s nullglob
+          for package in $(jq -r '.[].name' <<< "$PUBLISHED_PACKAGES"); do
+            dir=$(dirname "$(grep -l "\"name\": \"${package}\"" packages/*/package.json)")
+            version=$(jq -r .version "${dir}/package.json")
+            tag="${package}@${version}"
+            notes=$(awk -v heading="## ${version}" '$0 == heading { found = 1; next } /^## / && found { exit } found' "${dir}/CHANGELOG.md")
+            pnpm --dir "$dir" run --if-present zip
+            gh release create "$tag" "${dir}"/dist/*"${version}".zip --verify-tag --title "$tag" --notes "$notes"
+          done
