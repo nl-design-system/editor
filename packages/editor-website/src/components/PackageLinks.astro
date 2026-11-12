@@ -1,0 +1,19 @@
+---
+interface Props {
+  pkg: { name: string; repository: { directory: string }; version: string };
+}
+
+const { pkg } = Astro.props;
+---
+
+<div class="utrecht-action-group">
+  <a class="nl-button nl-button--primary" href={`https://www.npmjs.com/package/${pkg.name}`}>
+    <span class="nl-button__label">npm v{pkg.version}</span>
+  </a>
+  <a
+    class="nl-button nl-button--secondary"
+    href={`https://github.com/nl-design-system/editor/tree/main/${pkg.repository.directory}`}
+  >
+    <span class="nl-button__label">GitHub</span>
+  </a>
+</div>
