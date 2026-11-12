@@ -1,5 +1,5 @@
 import { execFile } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
@@ -15,15 +15,23 @@ const CLI_CONFIG = fileURLToPath(new URL('../vite.cli.config.ts', import.meta.ur
 
 type Result = { code: number; stderr: string; stdout: string };
 
-const run = async (...args: string[]): Promise<Result> => {
+/** Runs the CLI with `input` as every key pressed on stdin. */
+const runWithInput = async (input: string, ...args: string[]): Promise<Result> => {
   try {
-    const { stderr, stdout } = await promisify(execFile)(process.execPath, [CLI, ...args]);
+    const running = promisify(execFile)(process.execPath, [CLI, ...args]);
+    running.child.stdin?.end(input);
+    const { stderr, stdout } = await running;
     return { code: 0, stderr, stdout };
   } catch (error) {
     const { code = 1, stderr = '', stdout = '' } = error as Partial<Result>;
     return { code, stderr, stdout };
   }
 };
+
+const ENTER = '\r';
+const DOWN = '\u001B[B';
+
+const run = (...args: string[]): Promise<Result> => runWithInput('', ...args);
 
 // Both entry points are built, so the tests never run against a stale bin or a stale library.
 beforeAll(async () => {
@@ -100,34 +108,67 @@ describe('validate-html', () => {
     expect(stdout).not.toContain('Een paspoort kost');
   });
 
-  it('exits with 0 when the corrections are applied', async () => {
-    const { code, stdout } = await run(FIXTURE, '--fix');
+  it('shows the corrections as a diff of each document', async () => {
+    const { stdout } = await runWithInput(ENTER, FIXTURE, '--diff');
+    const name = relative(process.cwd(), FIXTURE);
+
+    expect(stdout).toContain(`--- ${name}\toriginal\n+++ ${name}\tcorrected`);
+    expect(stdout).toMatch(/^-\s*<p><strong>Let op:<\/strong> <strong>u betaalt/m);
+    expect(stdout).toMatch(/^\+\s*<p>Let op: u betaalt bij de aanvraag zelf en niet bij het ophalen\.<\/p>$/m);
+  });
+
+  it('reports the markup as it was found, before correcting', async () => {
+    const { stdout } = await runWithInput(ENTER, FIXTURE, '--diff');
+
+    expect(stdout).toMatch(/^ {2}<p><strong>Let op:<\/strong> <strong>u betaalt/m);
+  });
+
+  it('shows no diff without --diff', async () => {
+    const { stdout } = await run(FIXTURE);
+
+    expect(stdout).not.toMatch(/^--- /m);
+  });
+
+  it('keeps the exit code of the issues it found', async () => {
+    const { code, stdout } = await run(FIXTURE, '--diff');
 
     expect(stdout).toContain('24 issue(s) found in 1 document(s).');
-    expect(code).toBe(0);
+    expect(code).toBe(1);
   });
 
-  it('reports the corrected markup once the corrections are applied', async () => {
-    const [reported, fixed] = await Promise.all([run(FIXTURE), run(FIXTURE, '--fix')]);
-
-    expect(reported.stdout).toContain('<p><strong>Let op:</strong> <strong>u betaalt');
-    expect(fixed.stdout).toContain('<p>Let op: u betaalt bij de aanvraag zelf en niet bij het ophalen.</p>');
-  });
-
-  it('reports the empty paragraphs unchanged, as they have no correction', async () => {
-    const { stdout } = await run(FIXTURE, '--fix');
-
-    expect(stdout).toContain('info: PARAGRAPH_SHOULD_NOT_BE_EMPTY');
-    expect(stdout).toContain('<p></p>');
-  });
-
-  it('corrects in memory and leaves the file on disk untouched', async () => {
+  it('writes nothing to disk', async () => {
     const before = readFileSync(FIXTURE, 'utf8');
 
-    await run(FIXTURE, '--fix');
+    await runWithInput(ENTER, FIXTURE, '--diff');
 
     expect(readFileSync(FIXTURE, 'utf8')).toBe(before);
-    expect(before).toContain('<p><strong>Wat neemt u mee?</strong></p>');
+    expect(readdirSync(FIXTURE_DIRECTORY)).toEqual(['document.html']);
+  });
+
+  it('asks which correction to apply when an issue offers more than one', async () => {
+    const { stderr } = await runWithInput(ENTER, FIXTURE, '--diff');
+
+    expect(stderr).toContain('warning: PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD — Hele alinea is dikgedrukt');
+    expect(stderr).toContain('Dikgedrukt verwijderen');
+    expect(stderr).toContain('Omzetten naar kop');
+    expect(stderr).toContain('Skip');
+  });
+
+  it('leaves an issue with several corrections alone when it is skipped or goes unanswered', async () => {
+    const [skipped, unanswered] = await Promise.all([
+      runWithInput(`${DOWN}${DOWN}${ENTER}`, FIXTURE, '--diff'),
+      run(FIXTURE, '--diff'),
+    ]);
+
+    expect(skipped.stdout).not.toMatch(/^[-+].*Let op/m);
+    expect(unanswered.stdout).not.toMatch(/^[-+].*Let op/m);
+  });
+
+  it('leaves the empty paragraphs out of the diff, as they have no correction', async () => {
+    const { stdout } = await run(FIXTURE, '--diff');
+
+    expect(stdout).toContain('info: PARAGRAPH_SHOULD_NOT_BE_EMPTY');
+    expect(stdout).not.toMatch(/^-\s*<p><\/p>$/m);
   });
 
   it('prints the usage when no path is given', async () => {

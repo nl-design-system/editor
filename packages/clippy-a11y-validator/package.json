@@ -39,7 +39,9 @@
     "test": "vitest --run"
   },
   "dependencies": {
-    "@nl-design-system-unstable/documentation": "2.1.0"
+    "@clack/prompts": "1.8.1",
+    "@nl-design-system-unstable/documentation": "2.1.0",
+    "diff": "9.0.0"
   },
   "devDependencies": {
     "@nl-design-system/tsconfig": "1.0.5",
