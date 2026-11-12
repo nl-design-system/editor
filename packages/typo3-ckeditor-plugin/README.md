@@ -4,7 +4,7 @@ Builds the Clippy CKEditor 5 plugin as an ES module for use in TYPO3.
 
 ## How it works
 
-`extension/` holds the TYPO3 extension itself: the Composer manifest, the event listener, the import map and the extension configuration. The build copies that folder, the bundle and the generated stylesheets to `app/typo3/packages/clippy/dist/` — not a local `dist/` folder. This makes the plugin immediately available to the TYPO3 demo environment without a manual copy step.
+`extension/` holds the TYPO3 extension itself: the Composer manifest, the event listener, the import map and the extension configuration. The build writes that folder, the bundle and the generated stylesheets to `dist/clippy/`, and then copies the result to `app/typo3/packages/clippy/dist/`. This makes the plugin immediately available to the TYPO3 demo environment without a manual copy step.
 
 ## How Clippy is switched on
 
