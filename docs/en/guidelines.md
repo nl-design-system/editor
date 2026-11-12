@@ -1,4 +1,4 @@
 ---
-title: Accessibility guidelines
-intro: Examples of correct and incorrect content in the rich-text editor, based on WCAG guidelines.
+title: Validations
+intro: Clippy checks whether your content is accessible while you write. Each validation tests a rule from the NL Design System content guidelines and reports when the content does not meet it.
 ---
