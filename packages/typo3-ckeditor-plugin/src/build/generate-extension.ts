@@ -1,9 +1,10 @@
-import { cpSync, copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { cpSync, copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 
 const packageDir = resolve(import.meta.dirname, '../..');
-export const extensionOut = resolve(packageDir, '../../app/typo3/packages/clippy/dist');
+export const extensionOut = resolve(packageDir, 'dist/clippy');
+const demoExtensionOut = resolve(packageDir, '../../app/typo3/packages/clippy/dist');
 
 const cssOut = resolve(extensionOut, 'Resources/Public/Css');
 const pageReviewOut = resolve(extensionOut, 'Resources/Public/PageReview');
@@ -99,4 +100,7 @@ export function generateExtension(): void {
 
   writeStyles();
   writePageReview();
+
+  rmSync(demoExtensionOut, { recursive: true, force: true });
+  cpSync(extensionOut, demoExtensionOut, { recursive: true });
 }

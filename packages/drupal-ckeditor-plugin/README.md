@@ -4,7 +4,7 @@ Builds the Clippy CKEditor 5 plugin as an IIFE bundle for use in Drupal.
 
 ## How it works
 
-`module/` holds the Drupal module itself: the `*.yml` plugin registration, the PHP settings form and the config schema. The build copies that folder, the bundle and the generated stylesheets to `app/drupal/modules/clippy/dist/`, and adds the package version to `clippy.info.yml`. The demo mounts `app/drupal/modules/` as `modules/custom/`, so the module is available there without a manual copy step.
+`module/` holds the Drupal module itself: the `*.yml` plugin registration, the PHP settings form and the config schema. The build writes that folder, the bundle and the generated stylesheets to `dist/clippy/`, adds the package version to `clippy.info.yml`, and then copies the result to `app/drupal/modules/clippy/dist/`. The demo mounts `app/drupal/modules/` as `modules/custom/`, so the module is available there without a manual copy step.
 
 Two CKEditor 5 plugins are registered:
 

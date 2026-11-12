@@ -1,9 +1,10 @@
-import { appendFileSync, cpSync, copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { appendFileSync, cpSync, copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 
 const packageDir = resolve(import.meta.dirname, '../..');
-export const moduleOut = resolve(packageDir, '../../app/drupal/modules/clippy/dist');
+export const moduleOut = resolve(packageDir, 'dist/clippy');
+const demoModuleOut = resolve(packageDir, '../../app/drupal/modules/clippy/dist');
 
 const packageRequire = createRequire(resolve(packageDir, 'package.json'));
 
@@ -44,4 +45,7 @@ export function generateModule(): void {
   );
   const pageReviewCss = PAGE_REVIEW_THEME_CSS.map((path) => readFileSync(path, 'utf8')).join('\n');
   writeFileSync(resolve(moduleOut, 'clippy-page-review.css'), pageReviewCss);
+
+  rmSync(demoModuleOut, { recursive: true, force: true });
+  cpSync(moduleOut, demoModuleOut, { recursive: true });
 }
