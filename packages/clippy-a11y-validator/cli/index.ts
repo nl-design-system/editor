@@ -132,7 +132,7 @@ async function collectViolations(files: readonly string[], source: string, fix: 
 
     for (const file of files) {
       await page.goto(pathToFileURL(file).href, { waitUntil: 'load' });
-      byFile.push({ file, ...(await validatePage(page, source, fix, skip)) });
+      byFile.push({ file, ...(await validatePage(page, source, fix, skip)) }); // NOSONAR: one page, one prompt at a time
     }
 
     return byFile;
@@ -190,13 +190,14 @@ function validatePage(page: Page, source: string, fix: boolean, skip: readonly s
           continue;
         }
 
-        const index = await chooseCorrection({
+        const choice = {
           html: element.outerHTML,
           labels: corrections.map(({ label }) => label),
           rule,
           severity,
           title: messages.title,
-        });
+        };
+        const index = await chooseCorrection(choice); // NOSONAR: one prompt at a time, each correction changes the document
         if (index !== null) corrections[index]?.execute();
       }
 
