@@ -81,17 +81,29 @@ docker compose up --build
 
 ## Packaging
 
-Download `clippy_<version>.zip` from [typo3-ckeditor-plugin Releases](https://github.com/nl-design-system/editor/releases?q=typo3-ckeditor-plugin) or build it yourself:
-
 ```sh
-pnpm run build-and-zip
+pnpm run build
+pnpm run pack
 ```
 
-This builds the extension and zips it into `dist/clippy_<version>.zip`, with the extension files at the root of the archive. The zip installs on TYPO3 12.4, 13.4 and 14.
+`pnpm run pack` packs the build output in `dist/clippy/` into the Extension archive `dist/clippy-typo3-<version>.tgz`. The build writes a minimal `package.json` and this README into that folder, and `publishConfig.directory` points at it, so npm gets the same contents. The extension files sit directly under the archive's `package/` folder, next to `package.json`, `README.md` and `LICENSE.md`. The extension installs on TYPO3 12.4, 13.4 and 14.
+
+`pnpm run test-build` runs `pnpm run pack` on the existing build and checks the archive: its name, the `package/` folder, the version in `composer.json` and `ext_emconf.php`, the extension, licence and README files, and that it contains no dotfiles and no source or test output. CI runs it on every pull request.
+
+## Installing
+
+Download `clippy-typo3-<version>.tgz` from [Clippy for TYPO3 Releases](https://github.com/nl-design-system/editor/releases?q=clippy-typo3).
 
 ### Installing with Composer
 
-Unzip the archive into `packages/clippy/` of the TYPO3 project, so `composer.json` sits directly in that folder. The root `composer.json` needs a path repository for `packages/*`, which the TYPO3 base distribution already has:
+Unpack the archive into a new `packages/clippy/` folder of the TYPO3 project, so `composer.json` sits directly in that folder:
+
+```sh
+mkdir -p packages/clippy
+tar -xzf clippy-typo3-<version>.tgz --strip-components=1 -C packages/clippy
+```
+
+The root `composer.json` needs a path repository for `packages/*`, which the TYPO3 base distribution already has:
 
 ```json
 "repositories": [{ "type": "path", "url": "packages/*" }]
@@ -106,6 +118,23 @@ vendor/bin/typo3 extension:setup
 
 ### Installing without Composer
 
-Upload the zip under _Admin Tools → Extensions → Upload Extension_, then activate **Clippy** in the extension list. TYPO3 derives the extension key from the file name, so keep the `clippy_` prefix when renaming the file.
+Unpack the archive into a new `typo3conf/ext/clippy/` folder, then activate **Clippy** under _Admin Tools → Extensions_:
 
-TYPO3 activates a newly uploaded extension in the request that unpacked it, which it cannot do: the upload fails with `Extension clippy is not available` and is deleted again. This is TYPO3's own behaviour, unrelated to this extension, and unchanged from 12.4 through 14. Uploading and activating separately does work, so either turn off _automaticInstallation_ under _Admin Tools → Settings → Extension Configuration → extensionmanager_ before uploading, or skip the upload form and unpack the zip into `typo3conf/ext/clippy/` by hand before activating it.
+```sh
+mkdir typo3conf/ext/clippy
+tar -xzf clippy-typo3-<version>.tgz --strip-components=1 -C typo3conf/ext/clippy
+```
+
+### Uploading in the Extension Manager
+
+_Admin Tools → Extensions → Upload Extension_ only accepts zips. To use it, repackage the contents of the archive's `package/` folder as `clippy_<version>.zip`, with the extension files at the root of the zip:
+
+```sh
+mkdir clippy
+tar -xzf clippy-typo3-<version>.tgz --strip-components=1 -C clippy
+(cd clippy && zip -r ../clippy_<version>.zip .)
+```
+
+TYPO3 derives the extension key from the file name, so keep the `clippy_` prefix.
+
+TYPO3 activates a newly uploaded extension in the request that unpacked it, which it cannot do: the upload fails with `Extension clippy is not available` and is deleted again. This is TYPO3's own behaviour, unrelated to this extension, and unchanged from 12.4 through 14. Uploading and activating separately does work, so turn off _automaticInstallation_ under _Admin Tools → Settings → Extension Configuration → extensionmanager_ before uploading.
