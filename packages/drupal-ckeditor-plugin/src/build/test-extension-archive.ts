@@ -1,27 +1,32 @@
-import { unzipSync } from 'fflate';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { test } from 'node:test';
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, resolve, sep } from 'node:path';
+import { after, test } from 'node:test';
 
 const packageDir = resolve(import.meta.dirname, '../..');
 const { version } = JSON.parse(readFileSync(resolve(packageDir, 'package.json'), 'utf8')) as { version: string };
+const archivePath = resolve(packageDir, 'dist', `clippy-drupal-${version}.tgz`);
 
-const zipPath = execFileSync(process.execPath, [resolve(import.meta.dirname, 'package-extension.ts')], {
-  encoding: 'utf8',
-}).trim();
-const entries = unzipSync(readFileSync(zipPath));
-const paths = Object.keys(entries);
+rmSync(archivePath, { force: true });
+execFileSync('pnpm', ['run', 'pack'], { cwd: packageDir, stdio: 'inherit' });
 
-test('writes clippy-drupal-<version>.zip to dist/', () => {
-  assert.equal(zipPath, resolve(packageDir, 'dist', `clippy-drupal-${version}.zip`));
+const unpacked = mkdtempSync(join(tmpdir(), 'clippy-drupal-'));
+after(() => rmSync(unpacked, { recursive: true, force: true }));
+execFileSync('tar', ['-xzf', archivePath, '-C', unpacked]);
+const paths = readdirSync(unpacked, { encoding: 'utf8', recursive: true, withFileTypes: true })
+  .filter((entry) => entry.isFile())
+  .map((entry) => join(entry.parentPath, entry.name).slice(unpacked.length + 1).split(sep).join('/'));
+
+test('writes clippy-drupal-<version>.tgz to dist/', () => {
+  assert.ok(existsSync(archivePath), `${archivePath} is missing`);
 });
 
-test('puts every entry under clippy/', () => {
+test('puts every entry under package/', () => {
   assert.ok(paths.length > 0);
   assert.deepEqual(
-    paths.filter((path) => !path.startsWith('clippy/')),
+    paths.filter((path) => !path.startsWith('package/')),
     [],
   );
 });
@@ -33,14 +38,37 @@ test('leaves out dot-prefixed paths', () => {
   );
 });
 
-test('writes the package version into clippy/clippy.info.yml', () => {
-  const info = entries['clippy/clippy.info.yml'];
-  assert.ok(info, 'clippy/clippy.info.yml is missing');
-  assert.ok(new TextDecoder().decode(info).split('\n').includes(`version: '${version}'`));
+test('writes the package version into package/clippy.info.yml', () => {
+  const info = readFileSync(join(unpacked, 'package/clippy.info.yml'), 'utf8');
+  assert.ok(info.split('\n').includes(`version: '${version}'`));
 });
 
-test('contains the CKEditor bundle and the libraries and plugin YAML', () => {
-  for (const path of ['clippy/clippy.js', 'clippy/clippy.libraries.yml', 'clippy/clippy.ckeditor5.yml']) {
-    assert.ok(entries[path], `${path} is missing`);
+test('contains the module files directly under package/', () => {
+  for (const path of [
+    'package/clippy.info.yml',
+    'package/clippy.js',
+    'package/clippy.libraries.yml',
+    'package/clippy.ckeditor5.yml',
+    'package/src/PageReview.php',
+  ]) {
+    assert.ok(paths.includes(path), `${path} is missing`);
   }
+});
+
+test('contains the licence, README and package.json', () => {
+  for (const path of ['package/LICENSE.md', 'package/README.md', 'package/package.json']) {
+    assert.ok(paths.includes(path), `${path} is missing`);
+  }
+});
+
+test('contains no source or build output besides the module', () => {
+  assert.deepEqual(
+    paths.filter(
+      (path) =>
+        /^package\/(dist|module|node_modules)\//.test(path) ||
+        /\.tsx?$/.test(path) ||
+        (path.startsWith('package/src/') && !path.endsWith('.php')),
+    ),
+    [],
+  );
 });

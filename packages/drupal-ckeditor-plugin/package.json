@@ -1,9 +1,11 @@
 {
   "name": "@nl-design-system-community/drupal-ckeditor-plugin",
   "version": "0.5.1",
+  "license": "EUPL-1.2",
   "publishConfig": {
     "access": "public",
-    "provenance": true
+    "provenance": true,
+    "directory": "dist/clippy"
   },
   "repository": {
     "type": "git",
@@ -13,8 +15,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "zip": "node src/build/package-extension.ts",
-    "build-and-zip": "pnpm run build && pnpm run zip",
+    "pack": "pnpm pack --out ../clippy-drupal-%v.tgz",
     "test": "vitest --run",
     "test-build": "node --test src/build/test-extension-archive.ts"
   },
@@ -30,7 +31,6 @@
     "@types/node": "22.20.5",
     "@vitest/browser-playwright": "5.1.0",
     "ckeditor5": "49.0.1",
-    "fflate": "0.8.3",
     "typescript": "6.0.3",
     "vite": "8.3.5",
     "vitest": "5.1.0"

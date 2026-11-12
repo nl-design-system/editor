@@ -1,6 +1,6 @@
 import { appendFileSync, cpSync, copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { resolve } from 'node:path';
+import { basename, resolve } from 'node:path';
 
 const packageDir = resolve(import.meta.dirname, '../..');
 export const moduleOut = resolve(packageDir, 'dist/clippy');
@@ -23,14 +23,30 @@ const PAGE_REVIEW_THEME_CSS = [
   resolve(packageDir, '../editor/theme.css'),
 ];
 
-export const packageVersion = (): string =>
-  (JSON.parse(readFileSync(resolve(packageDir, 'package.json'), 'utf8')) as { version: string }).version;
+interface Manifest {
+  name: string;
+  version: string;
+  license: string;
+  repository: unknown;
+  publishConfig: Record<string, unknown>;
+}
+
+function writePackFiles({ name, version, license, repository, publishConfig }: Manifest): void {
+  const { directory: _directory, ...publishSettings } = publishConfig;
+  const manifest = { name, version, license, repository, publishConfig: publishSettings };
+  writeFileSync(resolve(moduleOut, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`);
+  copyFileSync(resolve(packageDir, 'README.md'), resolve(moduleOut, 'README.md'));
+}
 
 export function generateModule(): void {
+  const manifest = JSON.parse(readFileSync(resolve(packageDir, 'package.json'), 'utf8')) as Manifest;
   mkdirSync(moduleOut, { recursive: true });
   // The Drupal module itself (info/libraries/plugin YAML, PHP, config schema).
-  cpSync(resolve(packageDir, 'module'), moduleOut, { recursive: true });
-  appendFileSync(resolve(moduleOut, 'clippy.info.yml'), `version: '${packageVersion()}'\n`);
+  cpSync(resolve(packageDir, 'module'), moduleOut, {
+    recursive: true,
+    filter: (source) => !basename(source).startsWith('.'),
+  });
+  appendFileSync(resolve(moduleOut, 'clippy.info.yml'), `version: '${manifest.version}'\n`);
 
   // Ship the editor's clippy theme tokens (--clippy-*) as the module stylesheet.
   copyFileSync(resolve(packageDir, '../editor/theme.css'), resolve(moduleOut, 'clippy.css'));
@@ -48,4 +64,6 @@ export function generateModule(): void {
 
   rmSync(demoModuleOut, { recursive: true, force: true });
   cpSync(moduleOut, demoModuleOut, { recursive: true });
+
+  writePackFiles(manifest);
 }
