@@ -681,9 +681,6 @@ importers:
       ckeditor5:
         specifier: 49.0.1
         version: 49.0.1(supports-color@10.2.2)
-      fflate:
-        specifier: 0.8.3
-        version: 0.8.3
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -693,6 +690,7 @@ importers:
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@types/node@22.20.5)(@vitest/browser-playwright@5.1.0)(@vitest/coverage-v8@5.1.0)(@vitest/ui@5.1.0)(vite@8.3.5(@types/node@22.20.5)(yaml@2.9.1))
+    publishDirectory: dist/clippy
 
   proprietary/assets: {}
 

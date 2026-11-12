@@ -1,6 +1,6 @@
 import { cpSync, copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { resolve } from 'node:path';
+import { basename, resolve } from 'node:path';
 
 const packageDir = resolve(import.meta.dirname, '../..');
 export const extensionOut = resolve(packageDir, 'dist/clippy');
@@ -32,8 +32,13 @@ const PAGE_REVIEW_THEME_CSS = [
   resolve(packageDir, '../editor/theme.css'),
 ];
 
-export const packageVersion = (): string =>
-  (JSON.parse(readFileSync(resolve(packageDir, 'package.json'), 'utf8')) as { version: string }).version;
+interface Manifest {
+  name: string;
+  version: string;
+  license: string;
+  repository: unknown;
+  publishConfig: Record<string, unknown>;
+}
 
 const phpString = (value: string): string =>
   `'${value.replaceAll('\\', String.raw`\\`).replaceAll("'", String.raw`\'`)}'`;
@@ -59,8 +64,7 @@ function writePageReview(): void {
 }
 
 // The Extension Manager reads ext_emconf.php instead of composer.json, so both carry the version.
-function writeMetadata(): void {
-  const version = packageVersion();
+function writeMetadata(version: string): void {
   const composerPath = resolve(extensionOut, 'composer.json');
   const composer = JSON.parse(readFileSync(composerPath, 'utf8')) as ExtensionComposerJson;
   writeFileSync(composerPath, `${JSON.stringify({ ...composer, version }, null, 2)}\n`);
@@ -93,14 +97,27 @@ $EM_CONF[$_EXTKEY] = [
   );
 }
 
+function writePackFiles({ name, version, license, repository, publishConfig }: Manifest): void {
+  const { directory: _directory, ...publishSettings } = publishConfig;
+  const manifest = { name, version, license, repository, publishConfig: publishSettings };
+  writeFileSync(resolve(extensionOut, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`);
+  copyFileSync(resolve(packageDir, 'README.md'), resolve(extensionOut, 'README.md'));
+}
+
 export function generateExtension(): void {
+  const manifest = JSON.parse(readFileSync(resolve(packageDir, 'package.json'), 'utf8')) as Manifest;
   // The TYPO3 extension itself (composer.json, event listener, import map, shim).
-  cpSync(resolve(packageDir, 'extension'), extensionOut, { recursive: true });
-  writeMetadata();
+  cpSync(resolve(packageDir, 'extension'), extensionOut, {
+    recursive: true,
+    filter: (source) => !basename(source).startsWith('.'),
+  });
+  writeMetadata(manifest.version);
 
   writeStyles();
   writePageReview();
 
   rmSync(demoExtensionOut, { recursive: true, force: true });
   cpSync(extensionOut, demoExtensionOut, { recursive: true });
+
+  writePackFiles(manifest);
 }
