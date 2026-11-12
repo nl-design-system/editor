@@ -1,6 +1,6 @@
 {
   "name": "@nl-design-system-community/drupal-ckeditor-plugin",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "license": "EUPL-1.2",
   "publishConfig": {
     "access": "public",
