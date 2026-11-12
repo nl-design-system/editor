@@ -103,21 +103,23 @@ docker compose exec drupal /opt/drupal/vendor/bin/drush --root=/opt/drupal/web c
 ## Packaging
 
 ```sh
-pnpm run build-and-zip
+pnpm run build
+pnpm run pack
 ```
 
-This builds the module and writes the Extension archive to `dist/clippy-drupal-<version>.zip`, printing its path. `pnpm run zip` zips the existing build output without rebuilding. Every file sits under a single `clippy/` folder, and dot-prefixed paths are left out.
+`pnpm run pack` packs the build output in `dist/clippy/` into the Extension archive `dist/clippy-drupal-<version>.tgz`. The build writes a minimal `package.json` and this README into that folder, and `publishConfig.directory` points at it, so npm gets the same contents. The module files sit directly under the archive's `package/` folder, next to `package.json`, `README.md` and `LICENSE.md`.
 
-`pnpm run test-build` zips the build output and checks the archive: its name, the `clippy/` folder, the version in `clippy.info.yml`, the bundle and YAML files, and that it contains no dotfiles. CI runs it on every pull request.
+`pnpm run test-build` runs `pnpm run pack` on the existing build and checks the archive: its name, the `package/` folder, the version in `clippy.info.yml`, the module, licence and README files, and that it contains no dotfiles and no source or test output. CI runs it on every pull request.
 
 ## Installing
 
-Download `clippy-drupal-<version>.zip` from [drupal-ckeditor-plugin Releases](https://github.com/nl-design-system/editor/releases?q=drupal-ckeditor-plugin).
+Download `clippy-drupal-<version>.tgz` from [Clippy for Drupal Releases](https://github.com/nl-design-system/editor/releases?q=clippy-drupal).
 
-Unzip it inside `web/modules/custom/`, which gives a `clippy/` module folder, and enable it:
+Unpack it into a new `clippy/` module folder inside `web/modules/custom/`, and enable it:
 
 ```sh
-unzip clippy-drupal-<version>.zip -d web/modules/custom/
+mkdir web/modules/custom/clippy
+tar -xzf clippy-drupal-<version>.tgz --strip-components=1 -C web/modules/custom/clippy
 drush pm:enable clippy
 ```
 
