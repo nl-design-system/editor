@@ -25,13 +25,14 @@ test.describe('Page basics', () => {
 
 test.describe('Navigation', () => {
   test('React nav link is active on the react page', async ({ page }) => {
-    const menuButton = page.getByRole('button', { name: 'Menu' });
+    const menuButton = page.getByRole('button', { name: 'Menu', exact: true });
     if (await menuButton.isVisible()) {
       await menuButton.click();
     }
-    await expect(
-      page.getByRole('navigation', { name: 'Hoofdnavigatie' }).getByRole('link', { name: 'React', exact: true }),
-    ).toHaveAttribute('aria-current', 'page');
+    await expect(page.getByRole('link', { name: 'React', exact: true }).filter({ visible: true })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
   });
 });
 

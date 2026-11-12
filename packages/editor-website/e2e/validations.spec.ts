@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('Page basics', () => {
   test('page has correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('Toegankelijkheidsrichtlijnen - Rich-text Editor - NL Design System');
+    await expect(page).toHaveTitle('Validaties - Rich-text Editor - NL Design System');
   });
 
   test('page has document language', async ({ page }) => {
@@ -18,12 +18,15 @@ test.describe('Page basics', () => {
     await expect(page.getByRole('heading', { name: 'Toegankelijkheidsrichtlijnen', level: 1 })).toBeVisible();
   });
 
-  test('Richtlijnen nav link is active', async ({ page }) => {
-    const menuButton = page.getByRole('button', { name: 'Menu' });
+  test('Validaties nav link is active', async ({ page }) => {
+    const menuButton = page.getByRole('button', { name: 'Menu', exact: true });
     if (await menuButton.isVisible()) {
       await menuButton.click();
     }
-    await expect(page.getByRole('link', { name: 'Richtlijnen' })).toHaveAttribute('aria-current', 'page');
+    await expect(page.getByRole('link', { name: 'Validaties', exact: true }).filter({ visible: true })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
   });
 });
 
