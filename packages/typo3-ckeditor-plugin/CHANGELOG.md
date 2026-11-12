@@ -1,5 +1,11 @@
 # @nl-design-system-community/typo3-ckeditor-plugin
 
+## 0.3.0
+
+### Minor Changes
+
+- 3eb95ac: The Extension archive is now created using `pnpm run pack`. Every version gets its own Extension release on GitHub, tagged `clippy-drupal@<version>` or `clippy-typo3@<version>`.
+
 ## 0.2.1
 
 ### Patch Changes
