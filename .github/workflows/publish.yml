@@ -59,22 +59,30 @@ jobs:
           pr-title: "docs(release): design system packages"
           publish-script: "pnpm run changeset:publish"
 
-      - name: Attach the Drupal module archive to its Release
+      - name: Create the Drupal Extension release
         if: ${{ steps.changesets.outputs.published == 'true' && contains(fromJSON(steps.changesets.outputs['published-packages']).*.name, '@nl-design-system-community/drupal-ckeditor-plugin') }}
         working-directory: packages/drupal-ckeditor-plugin
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          pnpm run zip
+          pnpm run pack
           version=$(jq -r .version package.json)
-          gh release upload "@nl-design-system-community/drupal-ckeditor-plugin@${version}" "dist/clippy-drupal-${version}.zip"
+          package_tag=$(jq -rn --arg tag "@nl-design-system-community/drupal-ckeditor-plugin@${version}" '$tag | @uri')
+          gh release create "clippy-drupal@${version}" "dist/clippy-drupal-${version}.tgz" \
+            --target "${GITHUB_SHA}" \
+            --title "clippy-drupal@${version}" \
+            --notes "Release notes: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${package_tag}"
 
-      - name: Attach the TYPO3 extension archive to its Release
+      - name: Create the TYPO3 Extension release
         if: ${{ steps.changesets.outputs.published == 'true' && contains(fromJSON(steps.changesets.outputs['published-packages']).*.name, '@nl-design-system-community/typo3-ckeditor-plugin') }}
         working-directory: packages/typo3-ckeditor-plugin
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          pnpm run zip
+          pnpm run pack
           version=$(jq -r .version package.json)
-          gh release upload "@nl-design-system-community/typo3-ckeditor-plugin@${version}" "dist/clippy_${version}.zip"
+          package_tag=$(jq -rn --arg tag "@nl-design-system-community/typo3-ckeditor-plugin@${version}" '$tag | @uri')
+          gh release create "clippy-typo3@${version}" "dist/clippy-typo3-${version}.tgz" \
+            --target "${GITHUB_SHA}" \
+            --title "clippy-typo3@${version}" \
+            --notes "Release notes: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${package_tag}"
