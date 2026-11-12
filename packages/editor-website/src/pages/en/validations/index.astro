@@ -1,11 +1,11 @@
 ---
-import Document from '../layouts/document.astro';
-import Section from '../components/Section.astro';
-import { frontmatter as guidelinesFrontmatter } from '../../../../docs/guidelines.md';
-import { useTranslations } from '../i18n/translations.ts';
+import Document from '../../../layouts/document.astro';
+import Section from '../../../components/Section.astro';
+import { frontmatter as guidelinesFrontmatter } from '../../../../../../docs/en/guidelines.md';
+import { useTranslations } from '../../../i18n/translations.ts';
 import iconMoodSad from '@tabler/icons/outline/mood-sad.svg?raw';
 
-const t = useTranslations('nl');
+const t = useTranslations('en');
 ---
 
 <Document title={t('guidelines.title')}>
@@ -19,9 +19,9 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: lege alinea</span>
+              <span class="clippy-guideline__title">Don't: empty paragraph</span>
             </h2>
-            <p>Je moet geen alinea's leeg houden om ruimte te maken.</p>
+            <p>Do not use empty paragraphs to create spacing.</p>
           </div>
           <div class="clippy-guideline__example">
             <div class="clippy-canvas">
@@ -34,9 +34,9 @@ const t = useTranslations('nl');
                     role="textbox"
                     aria-multiline="true"
                   >
-                    <p>Hoi,</p>
+                    <p>Hi,</p>
                     <p>&nbsp;</p>
-                    <p>Groetjes,</p>
+                    <p>Kind regards,</p>
                     <p>Robbert</p>
                   </div>
                   <clippy-validations-gutter mode="list"></clippy-validations-gutter>
@@ -55,9 +55,9 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: lege inline elementen</span>
+              <span class="clippy-guideline__title">Don't: empty inline elements</span>
             </h2>
-            <p>Ruim lege elementen op.</p>
+            <p>Clean up empty elements.</p>
           </div>
           <div class="clippy-guideline__example">
             <div class="clippy-canvas">
@@ -143,7 +143,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: tekst onderstrepen</span>
+              <span class="clippy-guideline__title">Don't: underline text</span>
             </h2>
             <p>...</p>
           </div>
@@ -159,7 +159,7 @@ const t = useTranslations('nl');
                     aria-multiline="true"
                   >
                     <p>
-                      Er is onvoldoende verschil tussen de onderstreping van een <u>underline</u> en{' '}
+                      There is insufficient difference between the underline of an <u>underline</u> and a{' '}
                       <a href="#">link</a>.
                     </p>
                   </div>
@@ -179,7 +179,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: lege list items</span>
+              <span class="clippy-guideline__title">Don't: empty list items</span>
             </h2>
             <p>...</p>
           </div>
@@ -195,9 +195,9 @@ const t = useTranslations('nl');
                     aria-multiline="true"
                   >
                     <ul>
-                      <li>Optie 1</li>
-                      <li>Optie 2</li>
-                      <li>Optie 3</li>
+                      <li>Option 1</li>
+                      <li>Option 2</li>
+                      <li>Option 3</li>
                       <li></li>
                     </ul>
                   </div>
@@ -217,7 +217,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: lege list items</span>
+              <span class="clippy-guideline__title">Don't: empty list items</span>
             </h2>
             <p>...</p>
           </div>
@@ -233,9 +233,9 @@ const t = useTranslations('nl');
                     aria-multiline="true"
                   >
                     <ol>
-                      <li>Optie 1</li>
-                      <li>Optie 2</li>
-                      <li>Optie 3</li>
+                      <li>Option 1</li>
+                      <li>Option 2</li>
+                      <li>Option 3</li>
                       <li></li>
                     </ol>
                   </div>
@@ -255,7 +255,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: geordende lijst zonder opmaak</span>
+              <span class="clippy-guideline__title">Don't: ordered list without markup</span>
             </h2>
             <p>...</p>
           </div>
@@ -271,9 +271,9 @@ const t = useTranslations('nl');
                     aria-multiline="true"
                   >
                     <p>
-                      1. Optie 1<br />
-                      2. Optie 2<br />
-                      3. Optie 3
+                      1. Option 1<br />
+                      2. Option 2<br />
+                      3. Option 3
                     </p>
                   </div>
                   <clippy-validations-gutter mode="list"></clippy-validations-gutter>
@@ -292,7 +292,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: lijst zonder opmaak</span>
+              <span class="clippy-guideline__title">Don't: list without markup</span>
             </h2>
             <p>...</p>
           </div>
@@ -308,7 +308,7 @@ const t = useTranslations('nl');
                     aria-multiline="true"
                   >
                     <p>
-                      - Optie 1<br />- Optie 2<br />- Optie 3
+                      - Option 1<br />- Option 2<br />- Option 3
                     </p>
                   </div>
                   <clippy-validations-gutter mode="list"></clippy-validations-gutter>
@@ -327,7 +327,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Lege Definition List</span>
+              <span class="clippy-guideline__title">Don't: empty definition list</span>
             </h2>
             <p>...</p>
           </div>
@@ -369,7 +369,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Lege rij in een tabel</span>
+              <span class="clippy-guideline__title">Don't: empty row in a table</span>
             </h2>
             <p>...</p>
           </div>
@@ -420,7 +420,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Afbeelding zonder alt-tekst</span>
+              <span class="clippy-guideline__title">Don't: image without alt text</span>
             </h2>
             <p>...</p>
           </div>
@@ -455,7 +455,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Koptekst zonder opmaak</span>
+              <span class="clippy-guideline__title">Don't: heading without proper markup</span>
             </h2>
             <p>...</p>
           </div>
@@ -471,7 +471,7 @@ const t = useTranslations('nl');
                     aria-multiline="true"
                   >
                     <p>
-                      <strong>Als het eruit ziet als een header, dan is het een header</strong>
+                      <strong>If it looks like a heading, it should be a heading</strong>
                     </p>
                     <p>Foo</p>
                   </div>
@@ -491,7 +491,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Kopniveau overslaan</span>
+              <span class="clippy-guideline__title">Don't: skip heading levels</span>
             </h2>
             <p>...</p>
           </div>
@@ -506,9 +506,9 @@ const t = useTranslations('nl');
                     role="textbox"
                     aria-multiline="true"
                   >
-                    <h1>Kopniveau 1</h1>
-                    <h3>Kopniveau 3</h3>
-                    <p>Een niveau overslaan is niet de bedoeling!</p>
+                    <h1>Heading level 1</h1>
+                    <h3>Heading level 3</h3>
+                    <p>Skipping a level is not allowed!</p>
                   </div>
                   <clippy-validations-gutter mode="list"></clippy-validations-gutter>
                 </div>
@@ -526,7 +526,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Tabel zonder kopcellen</span>
+              <span class="clippy-guideline__title">Don't: table without header cells</span>
             </h2>
             <p>...</p>
           </div>
@@ -544,15 +544,15 @@ const t = useTranslations('nl');
                     <table>
                       <thead>
                         <tr>
-                          <td colspan="4">Tabelkop</td>
+                          <td colspan="4">Table heading</td>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          <td>Rij 1, cel 1</td>
-                          <td>Rij 1, cel 2</td>
-                          <td>Rij 1, cel 3</td>
-                          <td>Rij 1, cel 4</td>
+                          <td>Row 1, cell 1</td>
+                          <td>Row 1, cell 2</td>
+                          <td>Row 1, cell 3</td>
+                          <td>Row 1, cell 4</td>
                         </tr>
                       </tbody>
                     </table>
@@ -573,7 +573,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Tabel zonder kopcellen</span>
+              <span class="clippy-guideline__title">Don't: table without header cells</span>
             </h2>
             <p>...</p>
           </div>
@@ -592,11 +592,11 @@ const t = useTranslations('nl');
                       <tbody>
                         <tr>
                           <td>
-                            <h2>Kolom 1</h2>
+                            <h2>Column 1</h2>
                             <p>...</p>
                           </td>
                           <td>
-                            <h2>Kolom 2</h2>
+                            <h2>Column 2</h2>
                             <p>...</p>
                           </td>
                         </tr>
@@ -619,7 +619,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Meer dan 1 hoofdkop</span>
+              <span class="clippy-guideline__title">Don't: more than 1 main heading</span>
             </h2>
             <p>...</p>
           </div>
@@ -634,8 +634,8 @@ const t = useTranslations('nl');
                     role="textbox"
                     aria-multiline="true"
                   >
-                    <h1>Kopniveau 1</h1>
-                    <h1>Kopniveau 2</h1>
+                    <h1>Heading level 1</h1>
+                    <h1>Heading level 1 again</h1>
                   </div>
                   <clippy-validations-gutter mode="list"></clippy-validations-gutter>
                 </div>
@@ -653,7 +653,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Niet beginnen met een hoofdkop</span>
+              <span class="clippy-guideline__title">Don't: not starting with a main heading</span>
             </h2>
             <p>...</p>
           </div>
@@ -668,8 +668,8 @@ const t = useTranslations('nl');
                     role="textbox"
                     aria-multiline="true"
                   >
-                    <h2>Kopniveau 2</h2>
-                    <p>Het document begint niet met een hoofdkop.</p>
+                    <h2>Heading level 2</h2>
+                    <p>The document does not start with a main heading.</p>
                   </div>
                   <clippy-validations-gutter mode="list"></clippy-validations-gutter>
                 </div>
@@ -687,7 +687,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Definitie zonder term</span>
+              <span class="clippy-guideline__title">Don't: definition without a term</span>
             </h2>
             <p>...</p>
           </div>
@@ -705,7 +705,7 @@ const t = useTranslations('nl');
                     <dl class="denhaag-description-list">
                       <div class="denhaag-description-list-item">
                         <dt class="denhaag-description-list__title"></dt>
-                        <dd class="denhaag-description-list__detail">Beschrijving zonder term</dd>
+                        <dd class="denhaag-description-list__detail">Description without a term</dd>
                       </div>
                     </dl>
                   </div>
@@ -725,7 +725,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Definitie zonder term</span>
+              <span class="clippy-guideline__title">Don't: definition without a term</span>
             </h2>
             <p>...</p>
           </div>
@@ -743,11 +743,11 @@ const t = useTranslations('nl');
                     <dl class="denhaag-description-list">
                       <div class="denhaag-description-list-item">
                         <dt class="denhaag-description-list__title"></dt>
-                        <dd class="denhaag-description-list__detail">Eerste definitie</dd>
+                        <dd class="denhaag-description-list__detail">First definition</dd>
                       </div>
                       <div class="denhaag-description-list-item">
                         <dt class="denhaag-description-list__title"></dt>
-                        <dd class="denhaag-description-list__detail">Tweede definitie</dd>
+                        <dd class="denhaag-description-list__detail">Second definition</dd>
                       </div>
                     </dl>
                   </div>
@@ -767,7 +767,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Heading met bold</span>
+              <span class="clippy-guideline__title">Don't: heading with bold</span>
             </h2>
             <p>...</p>
           </div>
@@ -783,7 +783,7 @@ const t = useTranslations('nl');
                     aria-multiline="true"
                   >
                     <h1>
-                      Heading met <strong>bold</strong>
+                      Heading with <strong>bold</strong>
                     </h1>
                     <p>...</p>
                   </div>
@@ -803,7 +803,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Heading met italic</span>
+              <span class="clippy-guideline__title">Don't: heading with italic</span>
             </h2>
             <p>...</p>
           </div>
@@ -819,7 +819,7 @@ const t = useTranslations('nl');
                     aria-multiline="true"
                   >
                     <h1>
-                      Heading met <em>italic</em>
+                      Heading with <em>italic</em>
                     </h1>
                     <p>...</p>
                   </div>
@@ -839,7 +839,7 @@ const t = useTranslations('nl');
           <div class="clippy-guideline__description">
             <h2 class="clippy-guideline__badge clippy-guideline__badge--negative">
               <Fragment set:html={iconMoodSad} />
-              <span class="clippy-guideline__title">Niet doen: Onduidelijke linktekst</span>
+              <span class="clippy-guideline__title">Don't: unclear link text</span>
             </h2>
             <p>...</p>
           </div>
@@ -855,8 +855,8 @@ const t = useTranslations('nl');
                     aria-multiline="true"
                   >
                     <p>
-                      Lees meer waarom een linktekst zo belangrijk is, in de blogpost "
-                      <a href="https://example.com/blog/klik-hier">klik hier</a>".
+                      Read more about why link text matters, in the blog post "
+                      <a href="https://example.com/blog/click-here">click here</a>".
                     </p>
                   </div>
                   <clippy-validations-gutter mode="list"></clippy-validations-gutter>
@@ -874,5 +874,5 @@ const t = useTranslations('nl');
 </Document>
 
 <script>
-  import '../scripts/guideline-validations.ts';
+  import '../../../scripts/guideline-validations.ts';
 </script>

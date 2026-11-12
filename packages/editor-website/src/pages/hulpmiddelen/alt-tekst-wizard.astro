@@ -8,14 +8,16 @@ import { useTranslations } from '../../i18n/translations.ts';
 import { altTextWizardMachine } from '@nl-design-system-community/clippy-alt-text-wizard/state-machine';
 import { generateMermaidStateDiagram } from '../../utils/generateMermaidStateDiagram.ts';
 
-const t = useTranslations('en');
+const t = useTranslations('nl');
 const mermaid = generateMermaidStateDiagram(altTextWizardMachine);
 ---
 
 <Document title={t('alt-text-wizard.title')}>
   <main>
-    <h1 class="nl-heading nl-heading--level-1">Alt-text wizard</h1>
-    <p class="nl-paragraph">A step-by-step wizard that helps authors write accessible alt text for images.</p>
+    <h1 class="nl-heading nl-heading--level-1">Alt-tekst wizard</h1>
+    <p class="nl-paragraph">
+      Een stapsgewijze wizard die auteurs helpt bij het schrijven van toegankelijke alt-teksten voor afbeeldingen.
+    </p>
     <PackageLinks pkg={altTextWizardPackage} />
 
     <Section>
@@ -26,10 +28,10 @@ const mermaid = generateMermaidStateDiagram(altTextWizardMachine);
     </Section>
 
     <Section>
-      <h2>Decision tree</h2>
+      <h2>Beslisboom</h2>
       <p>
-        The wizard guides users through a yes/no decision tree. The diagram below is automatically generated from the{' '}
-        <a href="https://stately.ai/docs">XState</a> state machine.
+        De wizard leidt gebruikers door een ja/nee-beslisboom. Het onderstaande diagram wordt automatisch gegenereerd
+        vanuit de <a href="https://stately.ai/docs">XState</a> state machine.
       </p>
       <MermaidDiagram diagram={mermaid} />
     </Section>

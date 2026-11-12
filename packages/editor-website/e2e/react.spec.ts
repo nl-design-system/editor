@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/react');
+  await page.goto('/hulpmiddelen/editor/react');
   // Wait for the React components to hydrate (client:only) — scope to the custom element tag
   await expect(page.locator('clippy-editor#react-editor-1')).toBeVisible();
   await expect(

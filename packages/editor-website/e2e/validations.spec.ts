@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/richtlijnen');
+  await page.goto('/validaties');
   await expect(page.locator('#editor-1')).toBeVisible();
 });
 
