@@ -79,7 +79,6 @@
     "pretest": "pnpm exec playwright install --with-deps",
     "test": "pnpm run --recursive test",
     "test-build": "pnpm --recursive --if-present run test-build",
-    "zip": "pnpm --recursive --if-present run zip",
     "test-update": "pnpm run --sequential '/^test-update:.+$/'",
     "test-update:clean": "pnpm run clean",
     "test-update:lint": "pnpm run lint",
