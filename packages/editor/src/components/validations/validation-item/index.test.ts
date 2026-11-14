@@ -78,7 +78,7 @@ describe('<validation-item> documentation', () => {
     const item = await renderItem({ ...ENTIRELY_BOLD });
 
     const paragraphs = [...(item.shadowRoot?.querySelectorAll('.clippy-validation-item__message p') ?? [])];
-    expect(paragraphs.map(({ textContent }) => textContent)).toEqual([
+    expect(paragraphs.filter((p) => p.checkVisibility()).map(({ textContent }) => textContent)).toEqual([
       expect.stringContaining('De hele alinea is dikgedrukt.'),
     ]);
   });
@@ -104,42 +104,61 @@ describe('<validation-item> documentation', () => {
 });
 
 describe('<validation-item> solution', () => {
-  const solutionLink = () => page.getByRole('button', { name: 'Solution' });
-  const backLink = () => page.getByRole('button', { name: 'Back' });
+  const solutionToggle = () => page.getByRole('button', { name: 'Solution' });
+  const solutionText = () =>
+    page.getByText('Gebruik dikgedrukt alleen voor de woorden of zinnen die extra aandacht nodig hebben.');
 
   it('offers no way in for a violation with nothing explained', async () => {
     await renderItem({ solution: '<p>Verwijder de lege tabelcel.</p>' });
 
-    await expect.element(solutionLink()).not.toBeInTheDocument();
+    await expect.element(solutionToggle()).not.toBeInTheDocument();
   });
 
-  it('shows how to resolve the issue once the link is activated', async () => {
-    const item = await renderItem({ ...ENTIRELY_BOLD });
+  it('starts collapsed', async () => {
+    await renderItem({ ...ENTIRELY_BOLD });
 
-    await userEvent.click(solutionLink());
-
-    const paragraphs = [...(item.shadowRoot?.querySelectorAll('.clippy-validation-item__message p') ?? [])];
-    expect(paragraphs.map(({ textContent }) => textContent)).toEqual([
-      expect.stringContaining('alleen voor de woorden of zinnen die extra aandacht nodig hebben'),
-    ]);
+    await expect.element(solutionToggle()).toHaveAttribute('aria-expanded', 'false');
+    await expect.element(solutionText()).not.toBeVisible();
   });
 
-  it('leaves the explanation behind while the solution shows', async () => {
+  it('expands the solution below the explanation once the toggle is activated', async () => {
     const item = await renderItem({ ...ENTIRELY_BOLD });
 
-    await userEvent.click(solutionLink());
+    await userEvent.click(solutionToggle());
 
-    expect(messageText(item)).not.toContain('De hele alinea is dikgedrukt.');
-  });
-
-  it('goes back to the explanation', async () => {
-    const item = await renderItem({ ...ENTIRELY_BOLD });
-
-    await userEvent.click(solutionLink());
-    await userEvent.click(backLink());
-
+    await expect.element(solutionToggle()).toHaveAttribute('aria-expanded', 'true');
+    await expect.element(solutionText()).toBeVisible();
     expect(messageText(item)).toContain('De hele alinea is dikgedrukt.');
-    await expect.element(backLink()).not.toBeInTheDocument();
+  });
+
+  it('collapses the solution again', async () => {
+    await renderItem({ ...ENTIRELY_BOLD });
+
+    await userEvent.click(solutionToggle());
+    await userEvent.click(solutionToggle());
+
+    await expect.element(solutionToggle()).toHaveAttribute('aria-expanded', 'false');
+    await expect.element(solutionText()).not.toBeVisible();
+  });
+
+  it('points the toggle at the region it expands', async () => {
+    const item = await renderItem({ ...ENTIRELY_BOLD });
+
+    const toggle = item.shadowRoot?.querySelector('.clippy-validation-item__solution-toggle');
+    const region = item.shadowRoot?.getElementById(toggle?.getAttribute('aria-controls') ?? '');
+    expect(region?.textContent).toContain('alleen voor de woorden of zinnen');
+  });
+
+  it('toggles from the keyboard and keeps focus on the toggle', async () => {
+    const item = await renderItem({ ...ENTIRELY_BOLD });
+
+    item.shadowRoot?.querySelector<HTMLButtonElement>('.clippy-validation-item__solution-toggle')?.focus();
+    await userEvent.keyboard('{Enter}');
+    await expect.element(solutionToggle()).toHaveAttribute('aria-expanded', 'true');
+    await userEvent.keyboard(' ');
+    await expect.element(solutionToggle()).toHaveAttribute('aria-expanded', 'false');
+
+    expect(focusedButtonLabel(item)).toBe('Solution');
   });
 
   it('leaves focus alone when the card first renders', async () => {
@@ -150,42 +169,29 @@ describe('<validation-item> solution', () => {
     Object.assign(item, { ...ENTIRELY_BOLD, severity: 'error' });
     document.body.append(item);
     await item.updateComplete;
-    // The card hands focus over a promise, so let every pending microtask settle before judging.
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(document.activeElement?.id).toBe('elsewhere');
   });
 
-  it('moves focus to the back button, so the keyboard lands in the solution', async () => {
-    const item = await renderItem({ ...ENTIRELY_BOLD });
-
-    await userEvent.click(solutionLink());
-
-    await waitFor(() => expect(focusedButtonLabel(item)).toBe('Back'));
-  });
-
-  it('returns focus to the button that opened the solution', async () => {
-    const item = await renderItem({ ...ENTIRELY_BOLD });
-
-    await userEvent.click(solutionLink());
-    await userEvent.click(backLink());
-
-    await waitFor(() => expect(focusedButtonLabel(item)).toBe('Solution'));
-  });
-
-  it('keeps the actions reachable from the solution', async () => {
+  it('keeps the actions reachable while the solution shows', async () => {
     await renderItem({ corrections: [{ execute: () => {} }], ...ENTIRELY_BOLD });
 
-    await userEvent.click(solutionLink());
+    await userEvent.click(solutionToggle());
 
     await expect.element(page.getByRole('button', { name: 'Focus' })).toBeInTheDocument();
   });
 
-  it('shares a line with the link to the criterion', async () => {
+  it('places the link to the criterion between the explanation and the solution', async () => {
     const item = await renderItem({ ...ENTIRELY_BOLD, href: 'https://example.com' });
 
-    const links = item.shadowRoot?.querySelector('.clippy-validation-item__links');
-    expect(links?.textContent?.replace(/\s+/g, ' ').trim()).toBe('Solution Extensive explanation');
+    const text = messageText(item).replace(/\s+/g, ' ');
+    const explanation = text.indexOf('De hele alinea is dikgedrukt.');
+    const link = text.indexOf('Extensive explanation');
+    const toggle = text.indexOf('Solution');
+    expect(explanation).toBeGreaterThanOrEqual(0);
+    expect(link).toBeGreaterThan(explanation);
+    expect(toggle).toBeGreaterThan(link);
   });
 
   it('marks the link to the criterion as leaving the editor', async () => {

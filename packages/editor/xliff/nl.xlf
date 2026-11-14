@@ -406,10 +406,6 @@
         <source>Solution</source>
         <target>Oplossing</target>
       </trans-unit>
-      <trans-unit id="sc16e00a7a8b2fde2">
-        <source>Back</source>
-        <target>Terug</target>
-      </trans-unit>
       <trans-unit id="sbe4967a005d09e76">
         <source>Validations gutter</source>
         <target>Kantlijn met validatiemeldingen</target>

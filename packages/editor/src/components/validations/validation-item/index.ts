@@ -10,11 +10,10 @@ import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import AlertCircleIcon from '@tabler/icons/outline/alert-circle.svg?raw';
 import AlertTriangleIcon from '@tabler/icons/outline/alert-triangle.svg?raw';
-import ArrowLeftIcon from '@tabler/icons/outline/arrow-left.svg?raw';
 import ChevronDownIcon from '@tabler/icons/outline/chevron-down.svg?raw';
 import ExternalLinkIcon from '@tabler/icons/outline/external-link.svg?raw';
 import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
-import { LitElement, html, nothing, unsafeCSS, type PropertyValues } from 'lit';
+import { LitElement, html, nothing, unsafeCSS } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
@@ -37,12 +36,11 @@ declare global {
 }
 
 const ariaDescribedBy = 'validation-item-header';
-
-type ValidationItemView = 'explanation' | 'solution';
+const solutionId = 'validation-item-solution';
 
 /**
  * A single accessibility violation card. Displays the severity icon,
- * heading, explanation or solution, and action buttons (Focus, Correct).
+ * heading, explanation, a disclosure that expands the solution, and action buttons (Focus, Correct).
  * The `mode` property controls which actions are visible. With more than one correction, the Correct
  * button runs the first and a menu button next to it offers the others.
  *
@@ -103,7 +101,7 @@ export class ValidationItem extends LitElement {
   /** The fixes offered for this issue, primary first: what to run, and the label of the control that runs it. */
   @property({ attribute: false }) corrections?: ViolationCorrection[];
 
-  @state() private view: ValidationItemView = 'explanation';
+  @state() private solutionExpanded = false;
 
   @state() private correctionsMenuOpen = false;
 
@@ -112,8 +110,6 @@ export class ValidationItem extends LitElement {
   private readonly identifier?: string;
 
   readonly #listItemRef: Ref<HTMLDivElement> = createRef();
-  readonly #solutionLinkRef: Ref<ClippyButton> = createRef();
-  readonly #backLinkRef: Ref<ClippyButton> = createRef();
   readonly #correctionsMenuToggleRef: Ref<ClippyButton> = createRef();
   readonly #correctionsMenuRef: Ref<HTMLUListElement> = createRef();
   #correctionsMenuWasOpen = false;
@@ -202,12 +198,8 @@ export class ValidationItem extends LitElement {
     event.preventDefault();
   };
 
-  readonly #showSolution = () => {
-    this.view = 'solution';
-  };
-
-  readonly #showExplanation = () => {
-    this.view = 'explanation';
+  readonly #toggleSolution = () => {
+    this.solutionExpanded = !this.solutionExpanded;
   };
 
   readonly #getAlertIcon = () => {
@@ -221,63 +213,46 @@ export class ValidationItem extends LitElement {
     }
   };
 
-  override updated(changedProperties: PropertyValues): void {
-    if (!changedProperties.has('view') || changedProperties.get('view') === undefined) return;
-
-    const landing = this.view === 'solution' ? this.#backLinkRef.value : this.#solutionLinkRef.value;
-    landing?.updateComplete.then(() => landing.shadowRoot?.querySelector('button')?.focus());
-  }
-
   #renderBody() {
-    if (this.view === 'solution') return html`${unsafeHTML(this.solution ?? '')}`;
-
     return html`<slot name="solution-html">${unsafeHTML(this.explanation ?? this.solution ?? '')}</slot>`;
   }
 
-  #renderViewToggleButton() {
-    if (this.view === 'solution') {
-      return html`<clippy-button
-        purpose="subtle"
-        aria-describedby=${ariaDescribedBy}
-        @click=${this.#showExplanation}
-        ${ref(this.#backLinkRef)}
-      >
-        <clippy-icon slot="iconStart">${unsafeSVG(ArrowLeftIcon)}</clippy-icon>
-        ${msg('Back')}
-      </clippy-button>`;
-    }
-
-    return html`<clippy-button
-      purpose="subtle"
-      aria-describedby=${ariaDescribedBy}
-      @click=${this.#showSolution}
-      ${ref(this.#solutionLinkRef)}
-    >
-      ${msg('Solution')}
-    </clippy-button>`;
-  }
-
   #renderLinks() {
-    const hasViewButton = this.view === 'solution' || this.explanation !== undefined;
-    if (!hasViewButton && !this.href) return nothing;
+    if (!this.href) return nothing;
 
     return html`
       <div class="clippy-validation-item__links">
-        ${hasViewButton ? this.#renderViewToggleButton() : nothing}
-        ${
-          this.href
-            ? html`<a
-                class="nl-link clippy-validation-item__extensive-explanation"
-                href="${this.href}"
-                target="_blank"
-                rel="noreferrer"
-                aria-describedby=${ariaDescribedBy}
-              >
-                ${msg('Extensive explanation')}
-                <clippy-icon>${unsafeSVG(ExternalLinkIcon)}</clippy-icon>
-              </a>`
-            : nothing
-        }
+        <a
+          class="nl-link clippy-validation-item__extensive-explanation"
+          href="${this.href}"
+          target="_blank"
+          rel="noreferrer"
+          aria-describedby=${ariaDescribedBy}
+        >
+          ${msg('Extensive explanation')}
+          <clippy-icon>${unsafeSVG(ExternalLinkIcon)}</clippy-icon>
+        </a>
+      </div>
+    `;
+  }
+
+  #renderSolution() {
+    if (this.explanation === undefined) return nothing;
+
+    return html`
+      <div class="clippy-validation-item__solution">
+        <button
+          type="button"
+          class="nl-button nl-button--subtle clippy-validation-item__solution-toggle"
+          aria-expanded=${String(this.solutionExpanded)}
+          aria-controls=${solutionId}
+          aria-describedby=${ariaDescribedBy}
+          @click=${this.#toggleSolution}
+        >
+          <clippy-icon class="nl-button__icon-start">${unsafeSVG(ChevronDownIcon)}</clippy-icon>
+          <span class="nl-button__label">${msg('Solution')}</span>
+        </button>
+        <div id=${solutionId} ?hidden=${!this.solutionExpanded}>${unsafeHTML(this.solution ?? '')}</div>
       </div>
     `;
   }
@@ -368,7 +343,9 @@ export class ValidationItem extends LitElement {
           </span>
           <h4 class="nl-heading nl-heading--level-4" id=${ariaDescribedBy}>${this.heading}</h4>
         </div>
-        <div class="clippy-validation-item__message">${this.#renderBody()} ${this.#renderLinks()}</div>
+        <div class="clippy-validation-item__message">
+          ${this.#renderBody()} ${this.#renderLinks()} ${this.#renderSolution()}
+        </div>
         <div class="clippy-validation-item__footer">${this.#renderActions()}</div>
       </div>
     `;

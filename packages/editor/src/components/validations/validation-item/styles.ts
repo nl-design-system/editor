@@ -97,6 +97,14 @@ export default css`
     }
   }
 
+  .clippy-validation-item__solution {
+    margin-block-start: var(--basis-space-block-lg);
+  }
+
+  .clippy-validation-item__solution-toggle[aria-expanded='true'] clippy-icon {
+    rotate: 180deg;
+  }
+
   .clippy-validation-item-actions {
     display: flex;
     justify-content: flex-start;
