@@ -40,22 +40,19 @@ type SharedValidationDefinition<S extends Selector> = {
 
 /**
  * A fix the validator can apply itself, and the wording for the control that triggers it. Leave
- * `label` out when the host's default wording is right, which is the case for the first correction
- * of every rule this package ships.
+ * `label` out when the host's default wording is right, which is the case for every rule this
+ * package ships with a single correction.
  *
  * Unlike `messages`, a label is not interpolated with the payload: it is an imperative verb phrase
  * naming an action, not a sentence about the element.
  */
 export type ElementValidationCorrection<E extends HTMLElement = HTMLElement> = {
-  execute: (element: E) => CorrectViolationFunction;
-  label?: ByLocale<string>;
-};
-
-/** As {@link ElementValidationCorrection}, for a rule that needs the surrounding document. */
-export type DocumentValidationCorrection<E extends HTMLElement = HTMLElement> = {
   execute: (element: E, context: ValidationContext) => CorrectViolationFunction;
   label?: ByLocale<string>;
 };
+
+/** A correction receives the surrounding document whatever the scope of its rule. */
+export type DocumentValidationCorrection<E extends HTMLElement = HTMLElement> = ElementValidationCorrection<E>;
 
 export type ElementValidationDefinition<
   S extends Selector = Selector,

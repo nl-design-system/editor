@@ -140,6 +140,17 @@ describe('runValidation', () => {
     expect(dom.querySelector('img')).not.toBeNull();
   });
 
+  it('keeps the alternative corrections of the validator package after the primary one', () => {
+    const map = validate('<h1>Titel</h1><p><em>Volledig schuingedrukt.</em></p>');
+    const result = [...map.values()].find(
+      ({ rule }) => rule === coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_ITALIC,
+    );
+    result?.corrections?.[1]?.execute();
+
+    expect(result?.corrections).toHaveLength(2);
+    expect(dom.innerHTML).toBe('<h1>Titel</h1><blockquote><p>Volledig schuingedrukt.</p></blockquote>');
+  });
+
   /** Hosts branch on the key being absent, so an uncorrectable violation must not carry one. */
   it('carries no correction for a violation neither side can fix', () => {
     const map = validate('<h1>Titel</h1><p></p>');

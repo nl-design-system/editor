@@ -1,7 +1,7 @@
 import type { Violation, ViolationsMap } from '@nl-design-system-community/editor/validators';
 import { type Gutter, validationInteractionMode } from '@nl-design-system-community/editor/gutter';
-import { ClassicEditor, Essentials, Heading, Paragraph, type Editor } from 'ckeditor5';
-import { afterEach, describe, expect, it } from 'vitest';
+import { Bold, ClassicEditor, Essentials, Heading, Paragraph, type Editor } from 'ckeditor5';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { page } from 'vitest/browser';
 import { ClippyPlugin } from './ClippyPlugin.ts';
 
@@ -20,7 +20,7 @@ const createEditor = async (html: string): Promise<Editor> => {
 
   editor = await ClassicEditor.create(element, {
     licenseKey: 'GPL',
-    plugins: [Essentials, Paragraph, Heading, ClippyPlugin],
+    plugins: [Essentials, Paragraph, Heading, Bold, ClippyPlugin],
   });
   editor.setData(html);
   return editor;
@@ -78,5 +78,18 @@ describe('ClippyPlugin', () => {
 
     expect(violation.corrections?.[0]?.label).toBe('Bewerken');
     expect(violation.corrections?.[0]?.execute).not.toBe(original);
+  });
+
+  it('routes an alternative correction through the model as well', async () => {
+    const text = 'Deze alinea is volledig dikgedrukt en veel te lang om nog als een kop te kunnen doorgaan.';
+    const instance = await createEditor(`<h2>Kop</h2><p><strong>${text}</strong></p>`);
+    const plugin = instance.plugins.get(ClippyPlugin) as unknown as { _violationsMap: ViolationsMap };
+    const boldViolation = () =>
+      [...plugin._violationsMap.values()].find(({ rule }) => rule === 'PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD');
+    await vi.waitFor(() => expect(boldViolation()?.corrections).toHaveLength(2));
+
+    boldViolation()?.corrections?.[1]?.execute();
+
+    expect(instance.getData()).toBe(`<h2>Kop</h2><h3>${text}</h3>`);
   });
 });

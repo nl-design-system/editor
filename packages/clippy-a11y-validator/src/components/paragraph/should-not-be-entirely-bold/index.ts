@@ -4,7 +4,7 @@ import { not, or } from '../../../utils/combinators.ts';
 import { unwrapElement } from '../../../utils/dom.ts';
 import { paragraphValidationRules } from '../constants.ts';
 import { resemblesHeading } from '../should-not-resemble-heading/index.ts';
-import { isEntirelyBold } from '../utils.ts';
+import { isEntirelyBold, replaceWithHeading } from '../utils.ts';
 import { messages } from './messages.ts';
 
 const isNotEntirelyBold = not(isEntirelyBold);
@@ -15,6 +15,11 @@ export const paragraphShouldNotBeEntirelyBold = defineValidation({
   corrections: [
     {
       execute: (paragraph) => () => paragraph.querySelectorAll(selectors.BOLD).forEach(unwrapElement),
+      label: { en: 'Remove bold', nl: 'Dikgedrukt verwijderen' },
+    },
+    {
+      execute: (paragraph, context) => () => replaceWithHeading(paragraph, context),
+      label: { en: 'Convert to heading', nl: 'Omzetten naar kop' },
     },
   ],
   documentationId: 'd9c53eaf-16dd-42eb-bcc4-7d9f97283309',
