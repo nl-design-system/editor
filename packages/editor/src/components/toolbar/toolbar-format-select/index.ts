@@ -31,7 +31,7 @@ export class FormatSelect extends LitElement {
   static override readonly styles = [toolbarFormatSelectStyles];
 
   @editor()
-  private readonly editor: Editor | undefined;
+  editor: Editor | undefined;
 
   #isFormatActive(name: string, attributes?: Record<'level', number>): boolean {
     return this.editor?.isActive(name, attributes) ?? false;

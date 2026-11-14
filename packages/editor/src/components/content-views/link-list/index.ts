@@ -1,5 +1,3 @@
-import type { Editor } from '@tiptap/core';
-import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import dataBadgeStyle from '@nl-design-system-candidate/data-badge-css/data-badge.css?inline';
 import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
@@ -9,16 +7,13 @@ import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import type { ViolationsMap, Violation } from '@/types/validation';
-import { htmlDocumentContext } from '@/context/htmlDocumentContext';
-import { tiptapContext } from '@/context/tiptapContext';
-import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type FocusValidationItemInGutterDetail } from '@/events';
+import { localizeHost } from '@/localization';
 import { getHighestSeverityEntryByElement } from '@/utils/validations';
 import linkListStyles from './styles';
 
 interface LinkEntry {
   element: HTMLAnchorElement;
-  index: number;
   href: string;
   text: string;
   validationEntry: [Range, Violation] | null;
@@ -42,32 +37,32 @@ export class LinkList extends LitElement {
     unsafeCSS(paragraphStyle),
   ];
 
-  @consume({ context: htmlDocumentContext, subscribe: true })
+  /** The validated element to read, pushed by the Drawer. */
   @property({ attribute: false })
   htmlDocument?: HTMLElement;
 
-  @consume({ context: tiptapContext, subscribe: true })
-  @property({ attribute: false })
-  editor?: Editor;
+  override connectedCallback() {
+    super.connectedCallback();
+    localizeHost(this);
+  }
 
-  @consume({ context: violationsContext, subscribe: true })
+  /** The violations that mark an entry, pushed by the Drawer. */
   @property({ attribute: false })
   violationsMap?: ViolationsMap;
 
   get #links(): LinkEntry[] {
-    if (!this.htmlDocument) return [];
-    return Array.from(this.htmlDocument.querySelectorAll<HTMLAnchorElement>('a[href]')).map((element, index) => ({
+    const root = this.htmlDocument;
+    if (!root) return [];
+    return Array.from(root.querySelectorAll<HTMLAnchorElement>('a[href]')).map((element) => ({
       element,
       href: element.getAttribute('href') ?? '',
-      index,
       text: element.textContent ?? '',
       validationEntry: getHighestSeverityEntryByElement(this.violationsMap, element),
     }));
   }
 
-  #scrollToLink(index: number, element: HTMLAnchorElement, validationRange: Range | undefined) {
-    const renderedEl = this.editor?.view?.dom?.querySelectorAll<HTMLAnchorElement>('a[href]')[index] ?? element;
-    renderedEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  #scrollToLink(element: HTMLAnchorElement, validationRange: Range | undefined) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
     if (validationRange) {
       globalThis.dispatchEvent(
         new CustomEvent<FocusValidationItemInGutterDetail>(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, {
@@ -88,7 +83,7 @@ export class LinkList extends LitElement {
           links.length > 0
             ? html`
                 <ol class="clippy-link-list__list" role="list">
-                  ${map(links, ({ element, href, index, text, validationEntry }) => {
+                  ${map(links, ({ element, href, text, validationEntry }) => {
                     const severity = validationEntry?.[1].severity ?? null;
                     return html`
                       <li class="clippy-link-list__item">
@@ -106,7 +101,7 @@ export class LinkList extends LitElement {
                             href="#"
                             @click=${(e: Event) => {
                               e.preventDefault();
-                              this.#scrollToLink(index, element, validationEntry?.[0]);
+                              this.#scrollToLink(element, validationEntry?.[0]);
                             }}
                           >
                             ${text.trim() || msg('(empty)')}

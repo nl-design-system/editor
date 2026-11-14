@@ -1,10 +1,11 @@
-import { coreValidationRules } from '@nl-design-system-community/clippy-a11y-validator';
+import { coreValidationRules, coreValidations } from '@nl-design-system-community/clippy-a11y-validator';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Violation, ViolationsMap } from '@/types/validation';
 import '@/components/toolbar/toolbar-accessibility-notifications';
 import '@/components/validations/drawer';
 import '@/components/validations/gutter';
-import { CustomEvents } from '@/events';
+import '@/components/validations/list';
+import { CustomEvents, type DocumentOverviewMode } from '@/events';
 import { VALIDATION_HOVER_HIGHLIGHT_NAMES } from '@/utils/highlights';
 import { ClippyHub } from './index';
 
@@ -60,6 +61,18 @@ describe('ClippyHub', () => {
     expect(drawer.htmlDocument).toBe(target);
     expect(rulesIn(drawer.violationsMap)).toEqual([coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
     expect(gutter.violationsMap).toBe(drawer.violationsMap);
+  });
+
+  it('feeds a connected validations list the violations and identifier', async () => {
+    target.innerHTML = '<h1>Titel</h1><p></p>';
+    const list = document.body.appendChild(document.createElement('clippy-validations-list'));
+
+    hub = new ClippyHub({ identifier: IDENTIFIER, target });
+    hub.connect({ list });
+    await hub.validate();
+
+    expect(list.identifier).toBe(IDENTIFIER);
+    expect(rulesIn(list.violationsMap)).toEqual([coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
   });
 
   it('gives a view connected after a validation the latest violations', async () => {
@@ -123,6 +136,35 @@ describe('ClippyHub', () => {
     await hub.validate();
 
     expect(trigger.violationsMap).toBeUndefined();
+  });
+
+  it('validates with a set of validations assigned after it was created', async () => {
+    target.innerHTML = '<h1>Titel</h1><p></p><h3>Sub</h3>';
+    const trigger = createTrigger();
+    hub = new ClippyHub({
+      identifier: IDENTIFIER,
+      target,
+      validations: [coreValidations.PARAGRAPH_SHOULD_NOT_BE_EMPTY],
+    });
+    hub.connect({ trigger });
+    await hub.validate();
+
+    hub.validations = [coreValidations.HEADING_LEVEL_MUST_NOT_SKIP];
+    await hub.validate();
+
+    expect(rulesIn(trigger.violationsMap)).toEqual([coreValidationRules.HEADING_LEVEL_MUST_NOT_SKIP]);
+  });
+
+  it('rejects a second hub with an identifier that is already in use', () => {
+    hub = new ClippyHub({ identifier: IDENTIFIER, target });
+
+    expect(() => new ClippyHub({ identifier: IDENTIFIER, target })).toThrow(IDENTIFIER);
+  });
+
+  it('frees its identifier once destroyed', () => {
+    new ClippyHub({ identifier: IDENTIFIER, target }).destroy();
+
+    expect(() => (hub = new ClippyHub({ identifier: IDENTIFIER, target }))).not.toThrow();
   });
 });
 
@@ -211,5 +253,56 @@ describe('ClippyHub drawer session', () => {
 
     await expect.poll(() => heading.getBoundingClientRect().bottom <= window.innerHeight).toBe(true);
     expect(highlightedText()).toEqual([]);
+  });
+});
+
+describe('ClippyHub views without a context provider', () => {
+  const createDrawer = () => document.body.appendChild(document.createElement('clippy-validations-drawer'));
+
+  const openOverview = (mode: DocumentOverviewMode) =>
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { identifier: IDENTIFIER, mode } }),
+    );
+
+  const inDrawer = <K extends keyof HTMLElementTagNameMap>(drawer: Element, tag: K) =>
+    drawer.shadowRoot!.querySelector(tag)!;
+
+  const textsOf = (element: Element, selector: string) =>
+    [...(element.shadowRoot?.querySelectorAll(selector) ?? [])].map(({ textContent }) => textContent?.trim());
+
+  it('shows the heading structure, links and language changes of the validated element', async () => {
+    target.innerHTML = '<h1>Titel</h1><h2>Sectie</h2><p><a href="/contact">Contact</a></p><p lang="en">Hello</p>';
+    document.body.append(Object.assign(document.createElement('h3'), { textContent: 'Buiten' }));
+    const drawer = createDrawer();
+    hub = new ClippyHub({ identifier: IDENTIFIER, target });
+    hub.connect({ drawer });
+    await hub.validate();
+
+    openOverview('heading-structure');
+    await expect
+      .poll(() => textsOf(inDrawer(drawer, 'clippy-heading-structure'), '.clippy-heading-structure__text'))
+      .toEqual(['Titel', 'Sectie']);
+
+    openOverview('link-list');
+    await expect.poll(() => textsOf(inDrawer(drawer, 'clippy-link-list'), 'a')).toEqual(['Contact']);
+
+    openOverview('language-changes');
+    await expect.poll(() => textsOf(inDrawer(drawer, 'clippy-language-changes'), 'a')).toContain('Hello');
+  });
+
+  it('scrolls the element picked in a Content view into view inside the validated element', async () => {
+    target.innerHTML = '<h1>Titel</h1><div style="block-size: 300vh"></div><h2>Verderop</h2>';
+    const heading = target.querySelector('h2')!;
+    const drawer = createDrawer();
+    hub = new ClippyHub({ identifier: IDENTIFIER, target });
+    hub.connect({ drawer });
+    await hub.validate();
+
+    openOverview('heading-structure');
+    const headingStructure = inDrawer(drawer, 'clippy-heading-structure');
+    await expect.poll(() => headingStructure.shadowRoot?.querySelectorAll('button').length).toBe(2);
+    headingStructure.shadowRoot!.querySelectorAll('button')[1].click();
+
+    await expect.poll(() => heading.getBoundingClientRect().top < window.innerHeight).toBe(true);
   });
 });

@@ -2,6 +2,7 @@ import type { Validation } from '@nl-design-system-community/clippy-a11y-validat
 import { Editor } from '@tiptap/core';
 import { vi } from 'vitest';
 import { editorExtensions } from '@/extensions';
+import { debouncedValidate, runValidation } from '@/validations';
 
 export async function createTestEditor(
   content: string,
@@ -11,7 +12,11 @@ export async function createTestEditor(
 ): Promise<Editor> {
   const editor = new Editor({
     content,
-    extensions: editorExtensions(() => validations, readonly, callback),
+    extensions: editorExtensions({
+      readonly,
+      scheduleValidation: (dom) => debouncedValidate(dom, validations, callback),
+      validate: (dom) => runValidation(dom, validations, callback),
+    }),
   });
 
   if (editor.isInitialized) return editor;

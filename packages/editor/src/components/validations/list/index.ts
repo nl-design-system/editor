@@ -1,5 +1,4 @@
 import type { ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
-import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
@@ -9,7 +8,6 @@ import '@/components/validations/validation-item';
 import { map } from 'lit/directives/map.js';
 import type { ValidationItem } from '@/components/validations/validation-item';
 import type { ViolationsMap } from '@/types/validation';
-import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type FocusValidationItemInListEvent } from '@/events';
 import listStyles from './styles';
 
@@ -40,10 +38,13 @@ declare global {
 export class ValidationsList extends LitElement {
   static override readonly styles = [listStyles, unsafeCSS(paragraphStyle)];
 
-  /** @internal Consumed from the nearest {@link violationsContext} provider. */
-  @consume({ context: violationsContext, subscribe: true })
+  /** The violations to list, pushed by the Drawer. */
   @property({ attribute: false })
-  violationsContext?: ViolationsMap;
+  violationsMap?: ViolationsMap;
+
+  /** Identifier of the Clippy hub, passed on to every item. */
+  @property({ attribute: false })
+  identifier?: string;
 
   /** Optional severity filter. When set, only items of this severity are rendered. */
   @property({ type: String }) severity: ValidationSeverity | null = null;
@@ -77,7 +78,8 @@ export class ValidationsList extends LitElement {
   };
 
   override render() {
-    const entries = [...(this.violationsContext?.entries() ?? [])].filter(([range, { severity }]) => {
+    const violations = this.violationsMap;
+    const entries = [...(violations?.entries() ?? [])].filter(([range, { severity }]) => {
       if (this.focusedValidationGroup) return this.focusedValidationGroup.includes(range);
       return !this.severity || severity === this.severity;
     });
@@ -94,6 +96,7 @@ export class ValidationsList extends LitElement {
           return html`
             <li class="clippy-validations-list__item">
               <clippy-validation-item
+                .identifier=${this.identifier}
                 .range=${range}
                 .severity=${severity}
                 .heading=${heading}

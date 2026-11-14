@@ -2,8 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/richtlijnen');
-  // Wait for the clippy-context custom element (not the inner textbox that gets the same id)
-  await expect(page.locator('clippy-context#editor-1')).toBeVisible();
+  await expect(page.locator('#editor-1')).toBeVisible();
 });
 
 test.describe('Page basics', () => {
@@ -49,38 +48,37 @@ test.describe('Guideline examples are present', () => {
 
   guidelines.forEach(({ id, title }) => {
     test(`"${title}" example is present (#${id})`, async ({ page }) => {
-      const context = page.locator(`clippy-context#${id}`);
-      await expect(context).toBeAttached();
-      await expect(context.locator('.clippy-guideline__title').filter({ hasText: title })).toBeVisible();
+      const example = page.locator(`#${id}`);
+      await expect(example).toBeAttached();
+      await expect(example.locator('.clippy-guideline__title').filter({ hasText: title })).toBeVisible();
     });
   });
 });
 
 test.describe('Validation messages shown for bad content', () => {
   test('editor-1 (lege alinea) shows a validation warning', async ({ page }) => {
-    const context = page.locator('clippy-context#editor-1');
-    await expect(context).toBeAttached();
-    await expect(context.locator('clippy-content')).toBeAttached();
+    const list = page.locator('#editor-1 clippy-validations-list');
+    await expect(list.locator('clippy-validation-item')).toHaveCount(1);
   });
 
   test('editor-10 (afbeelding zonder alt) has an image in its content', async ({ page }) => {
-    const slot = page.locator('clippy-context#editor-10 [slot="value"]');
-    await expect(slot.locator('img')).toBeAttached();
+    const content = page.locator('#editor-10 [contenteditable]');
+    await expect(content.locator('img')).toBeAttached();
   });
 
   test('editor-12 (kopniveau overslaan) has skipped heading levels in its content', async ({ page }) => {
-    const textbox = page.locator('clippy-context#editor-12').getByRole('textbox');
+    const textbox = page.locator('#editor-12').getByRole('textbox');
     await expect(textbox.getByRole('heading', { level: 1 })).toBeAttached();
     await expect(textbox.getByRole('heading', { level: 3 })).toBeAttached();
   });
 
   test('editor-15 (meer dan 1 h1) has multiple h1s in its content', async ({ page }) => {
-    const textbox = page.locator('clippy-context#editor-15').getByRole('textbox');
+    const textbox = page.locator('#editor-15').getByRole('textbox');
     await expect(textbox.getByRole('heading', { level: 1 })).toHaveCount(2);
   });
 
   test('editor-21 (onduidelijke linktekst) has a generic link in its content', async ({ page }) => {
-    const textbox = page.locator('clippy-context#editor-21').getByRole('textbox');
+    const textbox = page.locator('#editor-21').getByRole('textbox');
     await expect(textbox.getByRole('link')).toBeAttached();
   });
 });
@@ -145,7 +143,7 @@ test.describe('Gutter indicators', () => {
 
   for (const { id, expectedIndicators, title } of gutterGuidelines) {
     test(`${id} (${title}) gutter has ${expectedIndicators} indicator(s)`, async ({ page }) => {
-      const context = page.locator(`clippy-context#${id}`);
+      const context = page.locator(`#${id}`);
       const indicators = context.locator('clippy-validations-gutter .clippy-validations-gutter__indicator');
 
       await expect(indicators).toHaveCount(expectedIndicators);
@@ -154,7 +152,7 @@ test.describe('Gutter indicators', () => {
 
   test('gutter indicator count matches validation list item count for each editor', async ({ page }) => {
     for (const { id } of gutterGuidelines) {
-      const context = page.locator(`clippy-context#${id}`);
+      const context = page.locator(`#${id}`);
       const gutterIndicators = context.locator('clippy-validations-gutter .clippy-validations-gutter__indicator');
       const listItems = context.locator('clippy-validations-list clippy-validation-item');
 

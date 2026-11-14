@@ -19,6 +19,7 @@ export interface ClippyHubDrawer extends ClippyHubView {
 export interface ClippyHubViews {
   drawer?: (ClippyHubDrawer & HTMLElement) | null;
   gutter?: ClippyHubView | null;
+  list?: ClippyHubView | null;
   trigger?: (ClippyHubView & HTMLElement) | null;
 }
 
@@ -30,6 +31,8 @@ export interface ClippyHubOptions {
   focusViolation?: (violation: Violation) => void;
   validations?: readonly Validation[];
 }
+
+const identifiers = new Set<string>();
 
 const scrollIntoView = ({ element }: Violation): void => {
   element.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -54,7 +57,7 @@ export class ClippyHub {
   readonly #focusViolation: (violation: Violation) => void;
   readonly #identifier: string;
   readonly #target: HTMLElement;
-  readonly #validations: readonly Validation[] | undefined;
+  #validations: readonly Validation[] | undefined;
   readonly #views: ClippyHubViews = {};
   #violationsMap: ViolationsMap | undefined;
   #latestRun = 0;
@@ -67,10 +70,20 @@ export class ClippyHub {
     target,
     validations,
   }: ClippyHubOptions) {
+    if (identifiers.has(identifier)) {
+      throw new Error(
+        `[clippy-hub] Duplicate identifier "${identifier}". Each Clippy hub on a page needs a unique identifier.`,
+      );
+    }
+    identifiers.add(identifier);
     this.#adaptViolations = adaptViolations;
     this.#focusViolation = focusViolation;
     this.#identifier = identifier;
     this.#target = target;
+    this.#validations = validations;
+  }
+
+  set validations(validations: readonly Validation[] | undefined) {
     this.#validations = validations;
   }
 
@@ -89,7 +102,9 @@ export class ClippyHub {
   }
 
   destroy(): void {
+    if (this.#destroyed) return;
     this.#destroyed = true;
+    identifiers.delete(this.#identifier);
     globalThis.removeEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#handleFocusNode);
   }
@@ -138,9 +153,12 @@ export class ClippyHub {
     if (!violationsMap) {
       return;
     }
-    const { drawer, gutter, trigger } = this.#views;
+    const { drawer, gutter, list, trigger } = this.#views;
     if (gutter) {
       gutter.violationsMap = violationsMap;
+    }
+    if (list) {
+      list.violationsMap = violationsMap;
     }
     if (trigger) {
       trigger.violationsMap = violationsMap;

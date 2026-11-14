@@ -1,4 +1,3 @@
-import type { Validation as ValidationRule } from '@nl-design-system-community/clippy-a11y-validator';
 import { msg } from '@lit/localize';
 import { mergeAttributes } from '@tiptap/core';
 import Blockquote from '@tiptap/extension-blockquote';
@@ -24,27 +23,24 @@ import Text from '@tiptap/extension-text';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
 import { Dropcursor, UndoRedo, Placeholder } from '@tiptap/extensions';
-import type { Violation } from '@/types/validation';
 import { HEADING_LEVELS, contentClasses, headingClasses } from '@/constants';
 import { CustomFileHandler } from '@/extensions/CustomFileHandler';
 import { DefinitionList } from '@/extensions/DefinitionList';
 import KeyboardShortcuts from '@/extensions/KeyboardShortcuts';
 import { Table, TableBody, TableCaption, TableFoot, TableHead } from '@/extensions/Table';
-import Validation from '@/extensions/Validation';
+import Validation, { type ValidationOptions } from '@/extensions/Validation';
 
 const globalAttributes = {
   dir: {},
   lang: {},
 } as const;
 
-export const editorExtensions = (
-  /** Read on every run, so a host that assigns `validations` after mounting is picked up. */
-  getValidations: () => readonly ValidationRule[] | undefined,
+export interface EditorExtensionsOptions extends ValidationOptions {
   /** Read once, when the extensions are built: the editor is recreated to change it. */
-  readonly: boolean,
-  callback: (violations: Map<Range, Violation>) => void,
-  identifier?: string,
-) => [
+  readonly: boolean;
+}
+
+export const editorExtensions = ({ identifier, readonly, scheduleValidation, validate }: EditorExtensionsOptions) => [
   Document,
   Placeholder.configure({
     placeholder: msg('Start met typen...'),
@@ -227,9 +223,9 @@ export const editorExtensions = (
   }),
   KeyboardShortcuts,
   Validation.configure({
-    getValidations,
     identifier,
-    updateViolationsContext: callback,
+    scheduleValidation,
+    validate,
   }),
   Highlight.configure({
     HTMLAttributes: {

@@ -1,7 +1,18 @@
-import '@/components/context';
 import './index';
+import type { Editor } from '@tiptap/core';
+import { createTestEditor } from '@test/createTestEditor';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
+import { initializeLocale } from '@/localization';
+import type { ToolbarLink } from './index';
+
+async function renderToolbarLink(content: string): Promise<Editor> {
+  document.body.innerHTML = '<div class="editor"></div><clippy-toolbar-link></clippy-toolbar-link>';
+  const editor = await createTestEditor(content);
+  editor.mount(document.querySelector('.editor')!);
+  document.querySelector<ToolbarLink>('clippy-toolbar-link')!.editor = editor;
+  return editor;
+}
 
 describe('<clippy-toolbar-link>', () => {
   let user: ReturnType<typeof userEvent.setup>;
@@ -10,11 +21,8 @@ describe('<clippy-toolbar-link>', () => {
     user = userEvent.setup();
     document.documentElement.lang = 'nl';
     document.documentElement.classList = 'ma-theme clippy-theme utrecht-root';
-    document.body.innerHTML = `
-      <clippy-context id="toolbar-link-test-editor">
-        <clippy-toolbar-link></clippy-toolbar-link>
-      </clippy-context>
-    `;
+    await initializeLocale();
+    await renderToolbarLink('<p></p>');
 
     await vi.waitFor(() => {
       expect(page.getByRole('button', { name: 'Link', exact: true })).toBeInTheDocument();
@@ -111,21 +119,13 @@ describe('<clippy-toolbar-link>', () => {
   });
 
   describe('dialog with active link', () => {
-    beforeEach(async () => {
-      document.body.innerHTML = `
-        <clippy-context id="toolbar-link-active-test-editor">
-          <div slot="value"><p>Hello <a href="https://example.com">world</a> text</p></div>
-          <clippy-toolbar-link></clippy-toolbar-link>
-        </clippy-context>
-      `;
+    let editor: Editor;
 
-      const ctx = document.querySelector('clippy-context')!;
-      await vi.waitFor(() => {
-        expect(ctx.editor).toBeTruthy();
-      });
+    beforeEach(async () => {
+      editor = await renderToolbarLink('<p>Hello <a href="https://example.com">world</a> text</p>');
 
       // Position cursor inside the link text "world"
-      ctx.editor!.commands.setTextSelection(8);
+      editor.commands.setTextSelection(8);
 
       await user.click(page.getByRole('button', { name: 'Link', exact: true }));
       await vi.waitFor(() => {
@@ -156,12 +156,11 @@ describe('<clippy-toolbar-link>', () => {
     });
 
     it('removes link when "Link verwijderen" is clicked', async () => {
-      const ctx = document.querySelector('clippy-context')!;
       await user.click(page.getByRole('button', { name: 'Link verwijderen' }));
       await vi.waitFor(() => {
         expect(page.getByLabelText('Link invoegen/bewerken')).not.toHaveAttribute('open');
       });
-      expect(ctx.editor!.isActive('link')).toBe(false);
+      expect(editor.isActive('link')).toBe(false);
     });
   });
 });

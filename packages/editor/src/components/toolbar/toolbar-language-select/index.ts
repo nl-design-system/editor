@@ -39,7 +39,7 @@ export class FormatSelect extends LitElement {
   static override readonly styles = [toolbarLanguageSelectStyles, unsafeCSS(buttonCss)];
 
   @editor()
-  private readonly editor: Editor | undefined;
+  editor: Editor | undefined;
 
   #lang?: string;
 

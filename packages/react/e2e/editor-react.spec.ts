@@ -1,7 +1,5 @@
 import { test, expect } from '@playwright/test';
 
-// The demo page renders two independent editors, each with its own toolbar. Scope
-// toolbar/content assertions to the first editor to avoid strict-mode ambiguity.
 const firstEditor = (page: import('@playwright/test').Page) => page.locator('#react-editor-1');
 
 test.beforeEach(async ({ page }) => {
@@ -34,12 +32,9 @@ test.describe('Clippy Editor rendering', () => {
   });
 
   test('initial content is rendered correctly', async ({ page }) => {
-    await expect(
-      page.locator('#react-editor-2').getByRole('heading', { name: 'Kopniveau 1 in React editor' }),
-    ).toBeVisible();
-
-    // Check for the initial paragraph content
-    await expect(page.locator('#react-editor-2').getByRole('paragraph')).toBeVisible();
+    const editor = firstEditor(page).getByRole('textbox');
+    await expect(editor.getByRole('heading', { name: 'Kopniveau 1 in React editor' })).toBeVisible();
+    await expect(editor.getByText('Dit is een voorbeeld van de Clippy Editor met een Lit React wrapper')).toBeVisible();
   });
 });
 

@@ -1,5 +1,4 @@
 import type { Editor } from '@tiptap/core';
-import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import AlignCenterIcon from '@tabler/icons/outline/align-center.svg?raw';
@@ -10,7 +9,7 @@ import ChevronDownIcon from '@tabler/icons/outline/chevron-down.svg?raw';
 import { html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { tiptapContext } from '@/context/tiptapContext';
+import { editor } from '@/decorators/TipTapDecorator';
 import toolbarTextAlignStyles from './styles';
 
 const tag = 'clippy-toolbar-text-align';
@@ -35,7 +34,7 @@ const iconMap: Record<Alignment, string> = {
 @localized()
 @safeCustomElement(tag)
 export class ToolbarTextAlign extends LitElement {
-  @consume({ context: tiptapContext, subscribe: true })
+  @editor()
   editor?: Editor;
 
   static override readonly styles = [toolbarTextAlignStyles];

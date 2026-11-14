@@ -1,4 +1,3 @@
-import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import { validationSeverity, type ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
@@ -13,8 +12,6 @@ import { property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ViolationsMap } from '@/types/validation';
-import { identifierContext } from '@/context/identifierContext';
-import { violationsContext } from '@/context/violationsContext';
 import { CustomEvents, type FilterChangeDetail } from '@/events';
 import validationFiltersStyles from './styles';
 
@@ -47,13 +44,11 @@ declare global {
 export class ValidationFilters extends LitElement {
   static override readonly styles = [validationFiltersStyles, unsafeCSS(numberBadgeStyles)];
 
-  @consume({ context: violationsContext, subscribe: true })
   @property({ attribute: false })
-  violationsContext?: ViolationsMap;
+  violationsMap?: ViolationsMap;
 
-  @consume({ context: identifierContext, subscribe: true })
   @property({ attribute: false })
-  private readonly identifier?: string;
+  identifier?: string;
 
   @state()
   private activeFilter: FilterKey = 'all';
@@ -68,12 +63,12 @@ export class ValidationFilters extends LitElement {
   }
 
   #getCountForSeverity(severity: ValidationSeverity): number {
-    if (!this.violationsContext) return 0;
-    return Array.from(this.violationsContext.values()).filter((validation) => validation.severity === severity).length;
+    if (!this.violationsMap) return 0;
+    return Array.from(this.violationsMap.values()).filter((validation) => validation.severity === severity).length;
   }
 
   #getTotalCount(): number {
-    return this.violationsContext?.size ?? 0;
+    return this.violationsMap?.size ?? 0;
   }
 
   #getCount(key: FilterKey): number {
