@@ -418,6 +418,10 @@
         <source>Open validation '<x id="0" equiv-text="${title}"/>'</source>
         <target>Validatiemelding '<x id="0" equiv-text="${title}"/>' openen</target>
       </trans-unit>
+      <trans-unit id="s339e7dd71ea9b039">
+        <source>More corrections</source>
+        <target>Meer correcties</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

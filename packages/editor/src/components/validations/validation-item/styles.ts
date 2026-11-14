@@ -102,4 +102,12 @@ export default css`
     justify-content: flex-start;
     gap: var(--basis-space-inline-md);
   }
+
+  .clippy-validation-item__corrections-menu-item {
+    --nl-button-border-radius: var(--clippy-split-button-menu-item-border-radius);
+
+    inline-size: 100%;
+    justify-content: flex-start;
+    white-space: nowrap;
+  }
 `;
