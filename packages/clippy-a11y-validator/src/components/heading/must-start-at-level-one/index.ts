@@ -12,9 +12,11 @@ import { messages } from './messages.ts';
  */
 export const headingMustStartAtLevelOne = defineValidation({
   condition: (heading, context) => precedingHeading(context) !== null || heading.tagName === 'H1',
-  correction: {
-    execute: (heading) => () => changeTagName(heading, 'h1'),
-  },
+  corrections: [
+    {
+      execute: (heading) => () => changeTagName(heading, 'h1'),
+    },
+  ],
   messages,
   payload: (heading) => ({ headingLevel: headingLevel(heading) }),
   rule: headingValidationRules.HEADING_MUST_START_AT_LEVEL_ONE,

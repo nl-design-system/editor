@@ -6,9 +6,11 @@ import { messages } from './messages.ts';
 
 export const paragraphShouldNotContainEmptyFormatting = defineValidation({
   condition: hasTextContent,
-  correction: {
-    execute: (paragraph) => () => paragraph.remove(),
-  },
+  corrections: [
+    {
+      execute: (paragraph) => () => paragraph.remove(),
+    },
+  ],
   messages,
   payload: (paragraph) => ({ tag: paragraph.tagName.toLowerCase() }),
   rule: paragraphValidationRules.PARAGRAPH_SHOULD_NOT_CONTAIN_EMPTY_FORMATTING,

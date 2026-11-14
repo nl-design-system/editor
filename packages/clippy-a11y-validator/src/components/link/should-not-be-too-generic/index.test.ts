@@ -45,6 +45,6 @@ describe('linkShouldNotBeTooGeneric', () => {
   });
 
   it('offers no correction, because the replacement text has to be written by the author', () => {
-    expect(validate('<p><a href="/paspoort">lees meer</a></p>')[0]).not.toHaveProperty('correction');
+    expect(validate('<p><a href="/paspoort">lees meer</a></p>')[0]).not.toHaveProperty('corrections');
   });
 });

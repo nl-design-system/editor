@@ -27,7 +27,7 @@ Arguments:
 
 Options:
   --allow-warnings  Exit with 0 when no issues of error severity are found
-  --fix             Apply the available corrections
+  --fix             Apply the primary correction of each issue
   --skip <selector> Drop everything matching this CSS selector before validating,
                     for demo or example markup that is wrong on purpose.
                     Repeatable
@@ -124,7 +124,7 @@ function validatePage(page: Page, source: string, fix: boolean, skip: readonly s
       const validator = new Validator({ validations: Object.values(coreValidations) });
       const violations = validator.validate([document.body]);
 
-      if (fix) violations.forEach(({ correction }) => correction?.execute());
+      if (fix) violations.forEach(({ corrections }) => corrections?.[0]?.execute());
 
       // Project explicitly rather than spreading: a correction's `execute` cannot cross the
       // serialisation boundary, and spreading would hand Node a truthy correction with its

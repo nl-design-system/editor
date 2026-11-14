@@ -12,7 +12,7 @@ describe('paragraphShouldNotBeEntirelyItalic', () => {
     const [violation] = validate(`<p><em>${TEXT}</em></p>`);
 
     expect(violation).toEqual({
-      correction: { execute: expect.any(Function) },
+      corrections: [{ execute: expect.any(Function) }],
       element: fragment.querySelector('p'),
       messages: getDocumentationComponentRuleById(paragraphShouldNotBeEntirelyItalic.documentationId),
       rule: 'PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_ITALIC',
@@ -43,7 +43,7 @@ describe('paragraphShouldNotBeEntirelyItalic', () => {
 
   it('unwraps the italic children when corrected', () => {
     const [violation] = validate(`<p><em>${TEXT}</em> <i>${TEXT}</i></p>`);
-    violation?.correction?.execute();
+    violation?.corrections?.[0]?.execute();
 
     expect(fragment.querySelector('p')?.innerHTML).toBe(`${TEXT} ${TEXT}`);
     expect(validator.validate([fragment])).toHaveLength(0);

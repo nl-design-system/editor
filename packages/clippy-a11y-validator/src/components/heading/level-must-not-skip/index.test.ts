@@ -63,7 +63,7 @@ describe('headingLevelMustNotSkip', () => {
 
   it('retags the heading to the expected level when corrected', () => {
     const [violation] = validate('<h1>Titel</h1><h4 id="kop">Kop</h4>');
-    violation?.correction?.execute();
+    violation?.corrections?.[0]?.execute();
 
     expect(fragment.innerHTML).toBe('<h1>Titel</h1><h2 id="kop">Kop</h2>');
     expect(validator.validate([fragment])).toHaveLength(0);
