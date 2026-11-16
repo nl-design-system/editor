@@ -64,7 +64,7 @@ describe('ClippyPlugin', () => {
       _patchCorrectionsForCKEditor: (map: ViolationsMap) => ViolationsMap;
     };
     const violation = {
-      correction: { execute: () => {}, label: 'Bewerken' },
+      corrections: [{ execute: () => {}, label: 'Bewerken' }],
       display: 'block',
       element: document.createElement('p'),
       messages: { title: 'Deze alinea is leeg.' },
@@ -72,11 +72,37 @@ describe('ClippyPlugin', () => {
       scope: 'element',
       severity: 'error',
     } as Violation;
-    const original = violation.correction?.execute;
+    const original = violation.corrections?.[0]?.execute;
 
     plugin._patchCorrectionsForCKEditor(new Map([[document.createRange(), violation]]));
 
-    expect(violation.correction?.label).toBe('Bewerken');
-    expect(violation.correction?.execute).not.toBe(original);
+    expect(violation.corrections?.[0]?.label).toBe('Bewerken');
+    expect(violation.corrections?.[0]?.execute).not.toBe(original);
+  });
+
+  it('routes every alternative correction through the model, keeping its label', async () => {
+    const instance = await createEditor('<p></p>');
+    const plugin = instance.plugins.get(ClippyPlugin) as unknown as {
+      _patchCorrectionsForCKEditor: (map: ViolationsMap) => ViolationsMap;
+    };
+    const corrections = [
+      { execute: () => {} },
+      { execute: () => {}, label: 'Maak er een kop van' },
+      { execute: () => {}, label: 'Maak er een lijst van' },
+    ];
+    const violation = {
+      corrections: [...corrections],
+      display: 'block',
+      element: document.createElement('p'),
+      messages: { title: 'Deze alinea is vetgedrukt.' },
+      rule: 'PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_BOLD',
+      scope: 'element',
+      severity: 'warning',
+    } as Violation;
+
+    plugin._patchCorrectionsForCKEditor(new Map([[document.createRange(), violation]]));
+
+    expect(violation.corrections?.map(({ label }) => label)).toEqual(corrections.map(({ label }) => label));
+    violation.corrections?.forEach(({ execute }, index) => expect(execute).not.toBe(corrections[index]?.execute));
   });
 });

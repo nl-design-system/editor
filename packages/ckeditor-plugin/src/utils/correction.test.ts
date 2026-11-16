@@ -11,7 +11,7 @@ const result = (rule: string, execute?: () => void): Violation => ({
   rule,
   scope: 'element',
   severity: 'error',
-  ...(execute === undefined ? {} : { correction: { execute } }),
+  ...(execute === undefined ? {} : { corrections: [{ execute }] }),
 });
 
 describe('findOccurrenceIndex', () => {
@@ -36,6 +36,16 @@ describe('findOccurrenceIndex', () => {
     const r2 = range();
     const map: ViolationsMap = new Map([
       [r1, result('key')],
+      [r2, result('key', vi.fn())],
+    ]);
+    expect(findOccurrenceIndex(map, r2, 'key')).toBe(0);
+  });
+
+  it('does not count violations with an empty corrections list', () => {
+    const r1 = range();
+    const r2 = range();
+    const map: ViolationsMap = new Map([
+      [r1, { ...result('key'), corrections: [] }],
       [r2, result('key', vi.fn())],
     ]);
     expect(findOccurrenceIndex(map, r2, 'key')).toBe(0);
@@ -71,6 +81,11 @@ describe('findMatchingCorrection', () => {
 
   it('returns undefined for violations without a correct function', () => {
     const map: ViolationsMap = new Map([[range(), result('key')]]);
+    expect(findMatchingCorrection(map, 'key', 0)).toBeUndefined();
+  });
+
+  it('returns undefined for violations with an empty corrections list', () => {
+    const map: ViolationsMap = new Map([[range(), { ...result('key'), corrections: [] }]]);
     expect(findMatchingCorrection(map, 'key', 0)).toBeUndefined();
   });
 

@@ -18,27 +18,30 @@ const validateElement = (
   element: HTMLElement,
   documentContext: DocumentContext,
   locales: Required<LocaleOptions>,
-): Pick<Violation, 'correction' | 'focus' | 'payload'> | undefined => {
+): Pick<Violation, 'corrections' | 'focus' | 'payload'> | undefined => {
   if (validation.scope === 'element') {
-    const { condition, correction, focus, payload } = validation;
+    const { condition, corrections, focus, payload } = validation;
     if (condition(element)) return undefined;
 
     return {
-      correction: correction && { execute: correction.execute(element), ...localisedLabel(correction.label, locales) },
+      corrections: corrections?.map(({ execute, label }) => ({
+        execute: execute(element),
+        ...localisedLabel(label, locales),
+      })),
       focus: focus?.(element),
       payload: payload?.(element),
     };
   }
 
-  const { condition, correction, focus, payload } = validation;
+  const { condition, corrections, focus, payload } = validation;
   const context = documentContext.for(element);
   if (condition(element, context)) return undefined;
 
   return {
-    correction: correction && {
-      execute: correction.execute(element, context),
-      ...localisedLabel(correction.label, locales),
-    },
+    corrections: corrections?.map(({ execute, label }) => ({
+      execute: execute(element, context),
+      ...localisedLabel(label, locales),
+    })),
     focus: focus?.(element, context),
     payload: payload?.(element, context),
   };
@@ -54,7 +57,7 @@ const toViolation = (
   const found = validateElement(validation, element, documentContext, locales);
   if (!found) return undefined;
 
-  const { correction, focus, payload } = found;
+  const { corrections, focus, payload } = found;
   const { documentationId, messages, rule, scope, severity } = validation;
 
   return {
@@ -64,7 +67,7 @@ const toViolation = (
     rule,
     scope,
     severity,
-    ...(correction === undefined ? {} : { correction }),
+    ...(corrections === undefined || corrections.length === 0 ? {} : { corrections }),
     ...(payload === undefined ? {} : { payload }),
   };
 };

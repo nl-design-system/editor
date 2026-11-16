@@ -37,7 +37,7 @@ describe('descriptionShouldNotBeEmpty', () => {
 
   it('removes the description when corrected', () => {
     const [violation] = validate('<dl><dt>term</dt><dd></dd></dl>');
-    violation?.correction?.execute();
+    violation?.corrections?.[0]?.execute();
 
     expect(fragment.querySelector('dd')).toBeNull();
     expect(validator.validate([fragment])).toHaveLength(0);

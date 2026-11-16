@@ -1,5 +1,7 @@
 import {
   coreValidations,
+  getAlternativeCorrections,
+  getPrimaryCorrection,
   type Validation,
   Validator,
   type Violation as CoreViolation,
@@ -16,9 +18,9 @@ export const VALIDATION_TIMEOUT = 500;
 /**
  * Adds what the editor needs on top of a reported violation: the DOM `Range` the gutter, the
  * highlights and the content views position themselves on, how the violation covers the document,
- * and the correction. The correction is layered here because the editor's own corrections need the
- * range, which the validator package has no concept of. From this point on every consumer reads
- * one merged violation.
+ * and the corrections. The primary correction is layered here because the editor's own corrections
+ * need the range, which the validator package has no concept of. From this point on every consumer
+ * reads one merged violation.
  *
  * The display is resolved here because this is the one moment the offending element is known to be
  * laid out: the validator has just walked the live editor DOM.
@@ -26,12 +28,17 @@ export const VALIDATION_TIMEOUT = 500;
 const toEditorViolation = (violation: CoreViolation): Violation => {
   const range = getElementRange(violation.element);
   const display = resolveViolationDisplay(violation.element);
-  const { execute, ...correction } = { ...violation.correction, ...editorCorrection(violation, range) };
+  const alternatives = getAlternativeCorrections(violation.corrections);
+  const { execute, ...primary } = {
+    ...getPrimaryCorrection(violation.corrections),
+    ...editorCorrection(violation, range),
+  };
+  const corrections = execute === undefined ? alternatives : [{ ...primary, execute }, ...alternatives];
 
   return {
     ...violation,
     display,
-    ...(execute === undefined ? {} : { correction: { ...correction, execute } }),
+    ...(corrections.length === 0 ? {} : { corrections }),
     ...(range === undefined ? {} : { range }),
   };
 };

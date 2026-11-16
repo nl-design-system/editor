@@ -6,9 +6,11 @@ import { messages } from './messages.ts';
 
 export const descriptionShouldNotBeEmpty = defineValidation({
   condition: hasTextContent,
-  correction: {
-    execute: (description) => () => description.remove(),
-  },
+  corrections: [
+    {
+      execute: (description) => () => description.remove(),
+    },
+  ],
   messages,
   rule: descriptionListValidationRules.DESCRIPTION_SHOULD_NOT_BE_EMPTY,
   scope: 'element',

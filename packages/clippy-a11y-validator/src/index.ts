@@ -1,5 +1,6 @@
 export { selectors, validationSeverity } from './consts/index.ts';
 export { defineValidation } from './define-validation.ts';
+export { getAlternativeCorrections, getPrimaryCorrection } from './corrections.ts';
 export { coreValidationRules, coreValidations } from './components/index.ts';
 export type { CoreValidationRule } from './components/index.ts';
 export { hasTextContent } from './utils/content.ts';
@@ -31,10 +32,12 @@ export type {
   CorrectViolationFunction,
   ElementValidation,
   ElementValidationCorrection,
+  ElementValidationCorrectionList,
   ElementValidationDefinition,
   DocumentValidation,
   DocumentValidationCondition,
   DocumentValidationCorrection,
+  DocumentValidationCorrectionList,
   DocumentValidationDefinition,
   FocusViolationFunction,
   ValidationCondition,
@@ -45,5 +48,6 @@ export type {
   ValidationSeverity,
   Violation,
   ViolationCorrection,
+  ViolationCorrectionList,
   ViolationPayload,
 } from './types/validation.ts';

@@ -40,8 +40,8 @@ type SharedValidationDefinition<S extends Selector> = {
 
 /**
  * A fix the validator can apply itself, and the wording for the control that triggers it. Leave
- * `label` out when the host's default wording is right, which is the case for every rule this
- * package ships.
+ * `label` out when the host's default wording is right, which is the case for the first correction
+ * of every rule this package ships.
  *
  * Unlike `messages`, a label is not interpolated with the payload: it is an imperative verb phrase
  * naming an action, not a sentence about the element.
@@ -57,12 +57,16 @@ export type DocumentValidationCorrection<E extends HTMLElement = HTMLElement> = 
   label?: ByLocale<string>;
 };
 
+export type ElementValidationCorrectionList<E extends HTMLElement = HTMLElement> = ElementValidationCorrection<E>[];
+
+export type DocumentValidationCorrectionList<E extends HTMLElement = HTMLElement> = DocumentValidationCorrection<E>[];
+
 export type ElementValidationDefinition<
   S extends Selector = Selector,
   E extends HTMLElement = ElementFor<S>,
 > = SharedValidationDefinition<S> & {
   condition: ValidationCondition<E>;
-  correction?: ElementValidationCorrection<E>;
+  corrections?: ElementValidationCorrectionList<E>;
   focus?: (element: E) => FocusViolationFunction;
   payload?: (element: E) => ViolationPayload;
   scope: 'element';
@@ -73,7 +77,7 @@ export type DocumentValidationDefinition<
   E extends HTMLElement = ElementFor<S>,
 > = SharedValidationDefinition<S> & {
   condition: DocumentValidationCondition<E>;
-  correction?: DocumentValidationCorrection<E>;
+  corrections?: DocumentValidationCorrectionList<E>;
   focus?: (element: E, context: ValidationContext) => FocusViolationFunction;
   payload?: (element: E, context: ValidationContext) => ViolationPayload;
   scope: 'document';
@@ -94,9 +98,11 @@ export type ViolationCorrection = {
   label?: string;
 };
 
+export type ViolationCorrectionList = ViolationCorrection[];
+
 export type Violation = {
-  /** Present only when there is something to run: a correction always has an `execute`. */
-  correction?: ViolationCorrection;
+  /** Present only when there is something to run, primary first: a correction always has an `execute`. */
+  corrections?: ViolationCorrectionList;
   element: HTMLElement;
   focus?: FocusViolationFunction;
   messages: ResolvedMessages;

@@ -8,17 +8,19 @@ const MINIMUM_ROWS = 2;
 
 export const tableMustHaveMultipleRows = defineValidation({
   condition: (table) => tableRows(table).length >= MINIMUM_ROWS,
-  correction: {
-    execute: (table) => () => {
-      const [firstRow] = tableRows(table);
-      if (!firstRow) return;
+  corrections: [
+    {
+      execute: (table) => () => {
+        const [firstRow] = tableRows(table);
+        if (!firstRow) return;
 
-      const row = table.ownerDocument.createElement('tr');
-      row.append(...Array.from(firstRow.children, () => table.ownerDocument.createElement('td')));
+        const row = table.ownerDocument.createElement('tr');
+        row.append(...Array.from(firstRow.children, () => table.ownerDocument.createElement('td')));
 
-      (table.querySelector('tbody') ?? table).append(row);
+        (table.querySelector('tbody') ?? table).append(row);
+      },
     },
-  },
+  ],
   messages,
   rule: tableValidationRules.TABLE_MUST_HAVE_MULTIPLE_ROWS,
   scope: 'element',
