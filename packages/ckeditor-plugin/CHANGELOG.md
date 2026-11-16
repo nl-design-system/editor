@@ -1,5 +1,19 @@
 # @nl-design-system-community/ckeditor-plugin
 
+## 0.4.4
+
+### Patch Changes
+
+- 8b7248e: Route every correction of a violation through the CKEditor model, not just the first.
+- Updated dependencies [fe3b84b]
+- Updated dependencies [ec815ff]
+- Updated dependencies [163628c]
+- Updated dependencies [7fed8f0]
+- Updated dependencies [d7a2669]
+- Updated dependencies [8b7248e]
+- Updated dependencies [edb7e61]
+  - @nl-design-system-community/editor@2.0.0
+
 ## 0.4.3
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @nl-design-system-community/clippy-a11y-validator
 
+## 0.4.0
+
+### Minor Changes
+
+- 8aff09a: `clippy-validate-html` replaces `--fix` with `--diff`, which applies the corrections and shows how each document changes, without writing anything to disk. When an issue offers more than one correction, it asks which one to apply. `--diff` no longer forces exit code 0.
+- 8b7248e: Export `getPrimaryCorrection` and `getAlternativeCorrections`, which split a violation's corrections into the one a host offers first and any number of alternatives.
+- 8b7248e: A validation now offers a list of `corrections`, primary first, instead of a single `correction`. **Breaking:** read `violation.corrections?.[0]` where you read `violation.correction`.
+- 1139765: Entirely bold paragraphs can also be converted to a heading, and entirely italic paragraphs to a blockquote.
+
 ## 0.3.0
 
 ### Minor Changes

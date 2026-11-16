@@ -1,5 +1,22 @@
 # @nl-design-system-community/editor-react
 
+## 2.0.0
+
+### Major Changes
+
+- ec815ff: The Clippy hub is now the only way to feed the validation components.
+
+### Patch Changes
+
+- Updated dependencies [fe3b84b]
+- Updated dependencies [ec815ff]
+- Updated dependencies [163628c]
+- Updated dependencies [7fed8f0]
+- Updated dependencies [d7a2669]
+- Updated dependencies [8b7248e]
+- Updated dependencies [edb7e61]
+  - @nl-design-system-community/editor@2.0.0
+
 ## 1.3.14
 
 ### Patch Changes
