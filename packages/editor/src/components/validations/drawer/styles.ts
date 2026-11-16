@@ -2,20 +2,17 @@ import { css } from 'lit';
 
 export default css`
   :host {
-    display: flex;
-  }
-
-  :host([overlay]) {
+    display: none;
     position: fixed;
-    inset-block: 0;
-    inset-inline-end: var(--basis-space-none);
+    inset-block-start: var(--clippy-drawer-offset-block-start, 0);
+    inset-block-end: 0;
+    inset-inline-end: 0;
+    inline-size: var(--clippy-drawer-inline-size, min(24rem, 100vw));
     z-index: 2147483000;
   }
 
-  :host([overlay]) .clippy-drawer__content {
-    min-inline-size: min(300px, 100vw);
-    max-inline-size: min(500px, 100vw);
-    box-shadow: var(--basis-box-shadow-lg);
+  :host([open]) {
+    display: flex;
   }
 
   .clippy-drawer__close-button {
@@ -24,12 +21,11 @@ export default css`
   }
 
   .clippy-drawer__content {
+    box-sizing: border-box;
     block-size: 100%;
-    inline-size: fit-content;
-    min-inline-size: min(300px, 100%);
-    max-inline-size: 500px;
-    max-block-size: 100%;
+    inline-size: 100%;
     border: 0;
+    box-shadow: var(--basis-box-shadow-lg);
     background-color: var(--basis-color-action-1-bg-default);
     border-block-start: var(--basis-border-width-md) solid var(--basis-color-accent-1-border-default);
     margin: 0;

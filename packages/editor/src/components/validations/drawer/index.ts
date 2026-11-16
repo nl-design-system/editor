@@ -35,7 +35,7 @@ const tag = 'clippy-validations-drawer';
 const NO_VIOLATIONS: ViolationsMap = new Map();
 
 /**
- * Inline drawer panel that lists all accessibility violations and
+ * Docked drawer panel that lists all accessibility violations and
  * provides document overview panels (heading structure, link list, language
  * changes). Opens and closes in response to the global
  * `CustomEvents.OPEN_DOCUMENT_OVERVIEW` event, scoped to the current editor
@@ -92,11 +92,9 @@ export class ValidationsDrawer extends LitElement {
   @property({ attribute: false })
   identifier?: string;
 
-  /**
-   * Overlays the page instead of sitting next to it, and stays open when an item is focused.
-   */
-  @property({ reflect: true, type: Boolean })
-  overlay = false;
+  readonly #resizeObserver = new ResizeObserver(() => this.#reservePageWidth());
+
+  #hasReservedPageWidth = false;
 
   get #violations(): ViolationsMap {
     return this.violationsMap ?? NO_VIOLATIONS;
@@ -104,7 +102,10 @@ export class ValidationsDrawer extends LitElement {
 
   override updated(changed: PropertyValues) {
     super.updated(changed);
-    if (changed.has('open') && (this.open || changed.get('open') !== undefined)) {
+    if (!changed.has('open')) return;
+    this.toggleAttribute('open', this.open);
+    this.#reservePageWidth();
+    if (this.open || changed.get('open') !== undefined) {
       globalThis.dispatchEvent(
         new CustomEvent<ValidationsDrawerToggleDetail>(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, {
           detail: { identifier: this.identifier, open: this.open },
@@ -118,9 +119,31 @@ export class ValidationsDrawer extends LitElement {
     this.shadowRoot?.querySelector<HTMLElement>('.clippy-drawer__title')?.focus();
   }
 
+  #reservePageWidth() {
+    if (!this.open || !this.isConnected) {
+      this.#releasePageWidth();
+      return;
+    }
+    const width = this.getBoundingClientRect().width;
+    const { style } = document.documentElement;
+    style.marginInlineEnd = `${width}px`;
+    style.maxInlineSize = `calc(100% - ${width}px)`;
+    this.#hasReservedPageWidth = true;
+  }
+
+  #releasePageWidth() {
+    if (!this.#hasReservedPageWidth) return;
+    const { style } = document.documentElement;
+    style.removeProperty('margin-inline-end');
+    style.removeProperty('max-inline-size');
+    this.#hasReservedPageWidth = false;
+  }
+
   override connectedCallback() {
     super.connectedCallback();
     localizeHost(this);
+    this.#resizeObserver.observe(this);
+    if (this.hasUpdated) this.#reservePageWidth();
     globalThis.addEventListener(CustomEvents.CLOSE_VALIDATIONS_DRAWER, this.#handleCloseDrawer);
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
     globalThis.addEventListener(CustomEvents.FILTER_CHANGE, this.#handleFilterChange);
@@ -131,6 +154,8 @@ export class ValidationsDrawer extends LitElement {
   }
 
   override disconnectedCallback() {
+    this.#resizeObserver.disconnect();
+    this.#releasePageWidth();
     globalThis.removeEventListener(CustomEvents.CLOSE_VALIDATIONS_DRAWER, this.#handleCloseDrawer);
     globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
     globalThis.removeEventListener(CustomEvents.FILTER_CHANGE, this.#handleFilterChange);
@@ -187,7 +212,7 @@ export class ValidationsDrawer extends LitElement {
     this.focusedValidationGroup = null;
   };
 
-  // The drawer is an inline panel rather than a native dialog, so Escape-to-close
+  // The drawer is a docked panel rather than a native dialog, so Escape-to-close
   // is handled explicitly to preserve keyboard dismissal.
   readonly #handleKeydown = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && this.open) {
@@ -197,14 +222,7 @@ export class ValidationsDrawer extends LitElement {
   };
 
   readonly #focusNode = (event: Event) => {
-    if (this.overlay) return;
-
     const { range } = (event as FocusNodeEvent).detail;
-
-    if (this.open) {
-      this.open = false;
-    }
-
     if (!range) return;
 
     const selection = globalThis.getSelection();

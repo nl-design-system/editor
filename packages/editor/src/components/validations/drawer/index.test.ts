@@ -189,7 +189,7 @@ describe('<clippy-validations-dialog>', () => {
   });
 });
 
-describe('<clippy-validations-drawer overlay>', () => {
+describe('<clippy-validations-drawer> on a page', () => {
   const IDENTIFIER = 'page-review-test';
   let drawer: HTMLElementTagNameMap['clippy-validations-drawer'];
   let content: HTMLElement;
@@ -210,7 +210,6 @@ describe('<clippy-validations-drawer overlay>', () => {
     content = document.createElement('main');
     content.innerHTML = '<h1>Titel</h1><p></p>';
     drawer = document.createElement('clippy-validations-drawer');
-    drawer.overlay = true;
     drawer.identifier = IDENTIFIER;
     drawer.htmlDocument = content;
     drawer.violationsMap = paragraphViolationsMap();
@@ -220,6 +219,10 @@ describe('<clippy-validations-drawer overlay>', () => {
 
   afterEach(() => {
     document.body.replaceChildren();
+  });
+
+  it('has no overlay property', () => {
+    expect('overlay' in drawer).toBe(false);
   });
 
   it('stays open when an item is focused', async () => {
