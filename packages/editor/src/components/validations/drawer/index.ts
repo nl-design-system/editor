@@ -28,7 +28,6 @@ import {
   type ValidationsDrawerToggleDetail,
 } from '@/events';
 import { localizeHost } from '@/localization';
-import { rangesEqual } from '@/utils/ranges';
 import drawerStyles from './styles';
 
 const tag = 'clippy-validations-drawer';
@@ -101,21 +100,6 @@ export class ValidationsDrawer extends LitElement {
 
   get #violations(): ViolationsMap {
     return this.violationsMap ?? NO_VIOLATIONS;
-  }
-
-  override willUpdate(changed: PropertyValues) {
-    super.willUpdate(changed);
-    if (changed.has('violationsMap')) {
-      this.#remapFocusedValidationGroup(this.#violations);
-    }
-  }
-
-  #remapFocusedValidationGroup(violations: ViolationsMap) {
-    const group = this.focusedValidationGroup;
-    if (!group) return;
-    this.focusedValidationGroup = [...violations.keys()].filter((range) =>
-      group.some((focused) => rangesEqual(focused, range)),
-    );
   }
 
   override updated(changed: PropertyValues) {
