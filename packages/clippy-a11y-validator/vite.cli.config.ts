@@ -12,11 +12,12 @@ export default defineConfig({
     },
     minify: false,
     rollupOptions: {
-      // The CLI drives a browser and reads files, so its dependencies stay out of the bundle.
+      // The CLI imports the validator by its package name, so the validator is not bundled into it a second time.
       external: [
         '@clack/prompts',
+        '@nl-design-system-community/clippy-a11y-validator',
         'diff',
-        'playwright',
+        'happy-dom',
         ...builtinModules,
         ...builtinModules.map((name) => `node:${name}`),
       ],
