@@ -172,6 +172,7 @@ describe('Validator', () => {
       corrections: [
         { execute: () => () => acted.push('primary') },
         { execute: () => () => acted.push('alternative'), label: { nl: 'Anders' } },
+        { execute: () => () => acted.push('another alternative'), label: { nl: 'Nog anders' } },
       ],
       messages: { nl: { title: 'x' } },
       rule: 'SPY',
@@ -183,8 +184,8 @@ describe('Validator', () => {
     const [violation] = new Validator({ validations: [spy] }).validate([fragment]);
     violation?.corrections?.forEach(({ execute }) => execute());
 
-    expect(violation?.corrections?.map(({ label }) => label)).toEqual([undefined, 'Anders']);
-    expect(acted).toEqual(['primary', 'alternative']);
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual([undefined, 'Anders', 'Nog anders']);
+    expect(acted).toEqual(['primary', 'alternative', 'another alternative']);
   });
 
   it('resolves the correction label into the active locale', () => {

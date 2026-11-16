@@ -1,5 +1,7 @@
 import {
   coreValidations,
+  getAlternativeCorrections,
+  getPrimaryCorrection,
   type Validation,
   Validator,
   type Violation as CoreViolation,
@@ -26,8 +28,11 @@ export const VALIDATION_TIMEOUT = 500;
 const toEditorViolation = (violation: CoreViolation): Violation => {
   const range = getElementRange(violation.element);
   const display = resolveViolationDisplay(violation.element);
-  const [reported, ...alternatives] = violation.corrections ?? [];
-  const { execute, ...primary } = { ...reported, ...editorCorrection(violation, range) };
+  const alternatives = getAlternativeCorrections(violation.corrections);
+  const { execute, ...primary } = {
+    ...getPrimaryCorrection(violation.corrections),
+    ...editorCorrection(violation, range),
+  };
   const corrections = execute === undefined ? alternatives : [{ ...primary, execute }, ...alternatives];
 
   return {
