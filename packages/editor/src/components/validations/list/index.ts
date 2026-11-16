@@ -9,6 +9,7 @@ import { map } from 'lit/directives/map.js';
 import type { ValidationItem } from '@/components/validations/validation-item';
 import type { ViolationsMap } from '@/types/validation';
 import { CustomEvents, type FocusValidationItemInListEvent } from '@/events';
+import { rangesEqual } from '@/utils/ranges';
 import listStyles from './styles';
 
 const tag = 'clippy-validations-list';
@@ -80,7 +81,8 @@ export class ValidationsList extends LitElement {
   override render() {
     const violations = this.violationsMap;
     const entries = [...(violations?.entries() ?? [])].filter(([range, { severity }]) => {
-      if (this.focusedValidationGroup) return this.focusedValidationGroup.includes(range);
+      if (this.focusedValidationGroup)
+        return this.focusedValidationGroup.some((focused) => rangesEqual(focused, range));
       return !this.severity || severity === this.severity;
     });
 

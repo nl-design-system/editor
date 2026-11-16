@@ -139,9 +139,13 @@ describe('<clippy-validations-dialog>', () => {
       expect(page.getByTestId('clippy-validations-drawer')).toBeInTheDocument();
     });
 
-    const r1 = document.createRange();
-    const r2 = document.createRange();
-    const r3 = document.createRange();
+    const [r1, r2, r3] = ['h1', 'a', 'img'].map((tagName) => {
+      const element = document.createElement(tagName);
+      document.body.append(element);
+      const range = document.createRange();
+      range.selectNode(element);
+      return range;
+    });
     const violationsMap: Map<Range, Violation> = new Map([
       [r1, violation({ range: r1, rule: coreValidationRules.HEADING_MUST_NOT_BE_EMPTY, severity: 'error' })],
       [r2, violation({ range: r2, rule: coreValidationRules.LINK_SHOULD_NOT_BE_TOO_GENERIC, severity: 'warning' })],
