@@ -4,8 +4,10 @@ import dts from 'vite-plugin-dts';
 export default defineConfig({
   build: {
     lib: {
-      entry: 'src/index.ts',
-      fileName: 'index',
+      entry: {
+        hub: 'src/hub.ts',
+        index: 'src/index.ts',
+      },
       formats: ['es'],
     },
     rollupOptions: {

@@ -95,6 +95,6 @@ test.describe('Voorbeeld 2: Clippy hub', () => {
     await expect(
       page.getByRole('heading', { name: 'Voorbeeld 2: zelf samenstellen met een Clippy hub', level: 2 }),
     ).toBeVisible();
-    await expect(page.getByText('new ClippyHub').first()).toBeVisible();
+    await expect(page.getByText('useClippyHub').first()).toBeVisible();
   });
 });
