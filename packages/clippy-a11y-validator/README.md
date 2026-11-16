@@ -16,12 +16,8 @@ from the command line against published HTML.
 npm install @nl-design-system-community/clippy-a11y-validator
 ```
 
-The command line tool runs the validator in a browser, so it also needs Playwright and Chromium:
-
-```sh
-npm install --save-dev playwright
-npx playwright install chromium
-```
+The command line tool parses each document with [happy-dom](https://github.com/capricorn86/happy-dom), so it needs no
+browser. Scripts in a document don't run: it validates the HTML as written.
 
 ## Command line
 
