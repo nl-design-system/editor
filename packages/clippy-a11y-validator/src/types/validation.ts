@@ -57,13 +57,16 @@ export type DocumentValidationCorrection<E extends HTMLElement = HTMLElement> = 
   label?: ByLocale<string>;
 };
 
+export type ElementValidationCorrectionList<E extends HTMLElement = HTMLElement> = ElementValidationCorrection<E>[];
+
+export type DocumentValidationCorrectionList<E extends HTMLElement = HTMLElement> = DocumentValidationCorrection<E>[];
+
 export type ElementValidationDefinition<
   S extends Selector = Selector,
   E extends HTMLElement = ElementFor<S>,
 > = SharedValidationDefinition<S> & {
   condition: ValidationCondition<E>;
-  /** The fixes this rule offers, primary first. */
-  corrections?: ElementValidationCorrection<E>[];
+  corrections?: ElementValidationCorrectionList<E>;
   focus?: (element: E) => FocusViolationFunction;
   payload?: (element: E) => ViolationPayload;
   scope: 'element';
@@ -74,8 +77,7 @@ export type DocumentValidationDefinition<
   E extends HTMLElement = ElementFor<S>,
 > = SharedValidationDefinition<S> & {
   condition: DocumentValidationCondition<E>;
-  /** The fixes this rule offers, primary first. */
-  corrections?: DocumentValidationCorrection<E>[];
+  corrections?: DocumentValidationCorrectionList<E>;
   focus?: (element: E, context: ValidationContext) => FocusViolationFunction;
   payload?: (element: E, context: ValidationContext) => ViolationPayload;
   scope: 'document';
@@ -96,9 +98,11 @@ export type ViolationCorrection = {
   label?: string;
 };
 
+export type ViolationCorrectionList = ViolationCorrection[];
+
 export type Violation = {
   /** Present only when there is something to run, primary first: a correction always has an `execute`. */
-  corrections?: ViolationCorrection[];
+  corrections?: ViolationCorrectionList;
   element: HTMLElement;
   focus?: FocusViolationFunction;
   messages: ResolvedMessages;
