@@ -41,7 +41,8 @@
   "dependencies": {
     "@clack/prompts": "1.8.1",
     "@nl-design-system-unstable/documentation": "2.1.0",
-    "diff": "9.0.0"
+    "diff": "9.0.0",
+    "happy-dom": "21.0.4"
   },
   "devDependencies": {
     "@nl-design-system/tsconfig": "1.0.5",
@@ -52,13 +53,5 @@
     "vite": "8.3.5",
     "vite-plugin-dts": "5.1.2",
     "vitest": "5.1.0"
-  },
-  "peerDependencies": {
-    "playwright": ">=1.62.1"
-  },
-  "peerDependenciesMeta": {
-    "playwright": {
-      "optional": true
-    }
   }
 }

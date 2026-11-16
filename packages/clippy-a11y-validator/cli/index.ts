@@ -1,16 +1,19 @@
-import type { Page } from 'playwright';
 import { cancel, isCancel, select } from '@clack/prompts';
+import {
+  coreValidations,
+  getAlternativeCorrections,
+  getPrimaryCorrection,
+  Validator,
+} from '@nl-design-system-community/clippy-a11y-validator';
 import { createTwoFilesPatch, FILE_HEADERS_ONLY } from 'diff';
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { Window } from 'happy-dom';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, relative, resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseArgs, styleText } from 'node:util';
 
 const MANIFEST = join(import.meta.dirname, '..', 'package.json');
 
 const { name: PACKAGE_NAME } = JSON.parse(readFileSync(MANIFEST, 'utf8')) as { name: string };
-
-const VALIDATOR_BUNDLE = fileURLToPath(import.meta.resolve(PACKAGE_NAME));
 
 const HTML_EXTENSIONS = ['.htm', '.html'];
 
@@ -42,7 +45,7 @@ Exit codes:
   0                 No issues above info severity found
   1                 Issues of error severity found, or of warning severity
                     without --allow-warnings
-  2                 The arguments or the build output are unusable
+  2                 The arguments are unusable
 
 Example:
   clippy-validate-html dist --skip [slot=value]
@@ -71,23 +74,19 @@ function fail(message: string): never {
 }
 
 /**
- * playwright is an optional peer: the library itself never needs a browser, only this CLI does.
- * Import it where it is used so installing the package stays cheap, and name what to install when
- * it turns out not to be there.
+ * The validator reads the DOM through globals, as it does in a browser. Every document is parsed in this one
+ * window, so `instanceof HTMLElement` holds for its elements.
  */
-async function launchBrowser() {
-  try {
-    const { chromium } = await import('playwright');
-    return await chromium.launch();
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== 'ERR_MODULE_NOT_FOUND') throw error;
-
-    return fail(
-      `${PACKAGE_NAME} needs playwright to validate a document, and it is not installed.\n\n` +
-        'Install it alongside this package:\n  npm install --save-dev playwright\n  npx playwright install chromium',
-    );
-  }
-}
+const window = new Window();
+Object.assign(globalThis, {
+  document: window.document,
+  DOMParser: window.DOMParser,
+  Element: window.Element,
+  HTMLElement: window.HTMLElement,
+  Node: window.Node,
+  NodeFilter: window.NodeFilter,
+  XMLSerializer: window.XMLSerializer,
+});
 
 type CorrectionChoice = { html: string; labels: (string | undefined)[]; rule: string; severity: string; title: string };
 
@@ -122,89 +121,64 @@ async function chooseCorrection({ html, labels, rule, severity, title }: Correct
   return choice === SKIP ? null : choice;
 }
 
-async function collectViolations(files: readonly string[], source: string, fix: boolean, skip: readonly string[]) {
-  const browser = await launchBrowser();
+async function collectViolations(files: readonly string[], fix: boolean, skip: readonly string[]) {
+  const byFile: ({ file: string } & Awaited<ReturnType<typeof validateDocument>>)[] = [];
 
-  try {
-    const page = await browser.newPage({ bypassCSP: true });
-    await page.exposeFunction('chooseCorrection', chooseCorrection);
-    const byFile: ({ file: string } & Awaited<ReturnType<typeof validatePage>>)[] = [];
-
-    for (const file of files) {
-      await page.goto(pathToFileURL(file).href, { waitUntil: 'load' });
-      byFile.push({ file, ...(await validatePage(page, source, fix, skip)) }); // NOSONAR: one page, one prompt at a time
-    }
-
-    return byFile;
-  } finally {
-    await browser.close();
+  for (const file of files) {
+    byFile.push({ file, ...(await validateDocument(file, fix, skip)) }); // NOSONAR: one prompt at a time
   }
+
+  return byFile;
 }
 
-function validatePage(page: Page, source: string, fix: boolean, skip: readonly string[]) {
-  return page.evaluate(
-    async ({ fix, skip, source }) => {
-      for (const selector of skip) {
-        try {
-          document.querySelectorAll(selector).forEach((element) => element.remove());
-        } catch {
-          throw new Error(`${selector} is not a valid CSS selector.`);
-        }
-      }
+async function validateDocument(file: string, fix: boolean, skip: readonly string[]) {
+  const document = new DOMParser().parseFromString(readFileSync(file, 'utf8'), 'text/html');
 
-      const moduleUrl = URL.createObjectURL(new Blob([source], { type: 'text/javascript' }));
-      const { coreValidations, getAlternativeCorrections, getPrimaryCorrection, Validator } = (await import(
-        /* @vite-ignore */ moduleUrl
-      )) as typeof import('@nl-design-system-community/clippy-a11y-validator');
-      URL.revokeObjectURL(moduleUrl);
+  for (const selector of skip) {
+    try {
+      document.querySelectorAll(selector).forEach((element) => element.remove());
+    } catch {
+      throw new Error(`${selector} is not a valid CSS selector.`);
+    }
+  }
 
-      const validator = new Validator({ validations: Object.values(coreValidations) });
-      const violations = validator.validate([document.body]);
-      // Project explicitly rather than spreading: a correction's `execute` cannot cross the
-      // serialisation boundary, and spreading would hand Node a truthy correction with its
-      // function silently stripped. Projected before correcting, so the report shows the markup as found.
-      const reported = violations.map(({ element, messages, rule, scope, severity }) => ({
-        html: element.outerHTML,
-        messages,
-        rule,
-        scope,
-        severity,
-      }));
+  const validator = new Validator({ validations: Object.values(coreValidations) });
+  const violations = validator.validate([document.body]);
+  // Projected before correcting, so the report shows the markup as found.
+  const reported = violations.map(({ element, messages, rule, scope, severity }) => ({
+    html: element.outerHTML,
+    messages,
+    rule,
+    scope,
+    severity,
+  }));
 
-      if (!fix) return { violations: reported };
+  if (!fix) return { violations: reported };
 
-      // Both sides come from the browser, so the diff shows the corrections, not how it serialises.
-      const serialize = () => {
-        const doctype = document.doctype ? `${new XMLSerializer().serializeToString(document.doctype)}\n` : '';
-        return `${doctype}${document.documentElement.outerHTML}\n`;
-      };
-      const original = serialize();
+  const serialize = () => {
+    const doctype = document.doctype ? `${new XMLSerializer().serializeToString(document.doctype)}\n` : '';
+    return `${doctype}${document.documentElement.outerHTML}\n`;
+  };
+  const original = serialize();
 
-      const { chooseCorrection } = globalThis as unknown as {
-        chooseCorrection: (choice: CorrectionChoice) => Promise<number | null>;
-      };
+  for (const { corrections = [], element, messages, rule, severity } of violations) {
+    if (getAlternativeCorrections(corrections).length === 0) {
+      getPrimaryCorrection(corrections)?.execute();
+      continue;
+    }
 
-      for (const { corrections = [], element, messages, rule, severity } of violations) {
-        if (getAlternativeCorrections(corrections).length === 0) {
-          getPrimaryCorrection(corrections)?.execute();
-          continue;
-        }
+    const choice = {
+      html: element.outerHTML,
+      labels: corrections.map(({ label }) => label),
+      rule,
+      severity,
+      title: messages.title,
+    };
+    const index = await chooseCorrection(choice); // NOSONAR: one prompt at a time, each correction changes the document
+    if (index !== null) corrections[index]?.execute();
+  }
 
-        const choice = {
-          html: element.outerHTML,
-          labels: corrections.map(({ label }) => label),
-          rule,
-          severity,
-          title: messages.title,
-        };
-        const index = await chooseCorrection(choice); // NOSONAR: one prompt at a time, each correction changes the document
-        if (index !== null) corrections[index]?.execute();
-      }
-
-      return { corrected: serialize(), original, violations: reported };
-    },
-    { fix, skip, source },
-  );
+  return { corrected: serialize(), original, violations: reported };
 }
 
 const collapsedHtmlSnippet = (html: string): string => {
@@ -229,8 +203,6 @@ if (values['help']) {
 
 if (positionals.length === 0) fail(`Missing path argument.\n\n${help()}`);
 
-if (!existsSync(VALIDATOR_BUNDLE)) fail(`${PACKAGE_NAME} is not built — run \`pnpm run build\` first.`);
-
 const files = positionals.flatMap((argument) => {
   const path = resolve(argument);
   const stats = statSync(path, { throwIfNoEntry: false });
@@ -244,9 +216,7 @@ const files = positionals.flatMap((argument) => {
 
 if (files.length === 0) fail(`No HTML files found in ${positionals.join(', ')}.`);
 
-const source = readFileSync(VALIDATOR_BUNDLE, 'utf8');
-
-const results = await collectViolations(files, source, values['diff'], values['skip'] ?? []).catch((error: unknown) =>
+const results = await collectViolations(files, values['diff'], values['skip'] ?? []).catch((error: unknown) =>
   fail(firstLineOf(error)),
 );
 
