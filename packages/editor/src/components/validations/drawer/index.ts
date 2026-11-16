@@ -34,6 +34,13 @@ const tag = 'clippy-validations-drawer';
 
 const NO_VIOLATIONS: ViolationsMap = new Map();
 
+const canScroll = (element: Element, deltaY: number): boolean => {
+  const { overflowY } = getComputedStyle(element);
+  if (overflowY !== 'auto' && overflowY !== 'scroll') return false;
+  const { clientHeight, scrollHeight, scrollTop } = element;
+  return deltaY < 0 ? scrollTop > 0 : deltaY > 0 && scrollTop + clientHeight < scrollHeight - 1;
+};
+
 /**
  * Docked drawer panel that lists all accessibility violations and
  * provides document overview panels (heading structure, link list, language
@@ -143,6 +150,7 @@ export class ValidationsDrawer extends LitElement {
     super.connectedCallback();
     localizeHost(this);
     this.#resizeObserver.observe(this);
+    this.addEventListener('wheel', this.#keepWheelInDrawer, { passive: false });
     if (this.hasUpdated) this.#reservePageWidth();
     globalThis.addEventListener(CustomEvents.CLOSE_VALIDATIONS_DRAWER, this.#handleCloseDrawer);
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
@@ -155,6 +163,7 @@ export class ValidationsDrawer extends LitElement {
 
   override disconnectedCallback() {
     this.#resizeObserver.disconnect();
+    this.removeEventListener('wheel', this.#keepWheelInDrawer);
     this.#releasePageWidth();
     globalThis.removeEventListener(CustomEvents.CLOSE_VALIDATIONS_DRAWER, this.#handleCloseDrawer);
     globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
@@ -165,6 +174,14 @@ export class ValidationsDrawer extends LitElement {
     globalThis.removeEventListener(CustomEvents.OPEN_VALIDATION_GROUP, this.#openValidationGroup);
     super.disconnectedCallback();
   }
+
+  readonly #keepWheelInDrawer = (event: WheelEvent) => {
+    const path = event.composedPath();
+    const inDrawer = path.slice(0, path.indexOf(this)).filter((target) => target instanceof Element);
+    if (!inDrawer.some((element) => canScroll(element, event.deltaY))) {
+      event.preventDefault();
+    }
+  };
 
   readonly #closeDialog = (event: Event) => {
     if (event instanceof CustomEvent) {

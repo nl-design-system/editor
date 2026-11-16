@@ -64,6 +64,7 @@ export default css`
     flex: 1;
     min-block-size: 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding-inline: var(--basis-space-inline-xl);
     padding-block-end: var(--basis-space-block-xl);
   }
