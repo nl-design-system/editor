@@ -1,5 +1,28 @@
 # @nl-design-system-community/editor
 
+## 2.0.0
+
+### Major Changes
+
+- ec815ff: The Clippy hub is now the only way to feed the validation components.
+
+### Minor Changes
+
+- fe3b84b: Expand the solution in place on a validation card, below the link to the extensive explanation, instead of swapping it for the explanation behind a Back button.
+- 163628c: The validation views take their data from a Clippy hub by property.
+- 7fed8f0: `<clippy-editor>` validates through a Clippy hub on its Tiptap editable instead of Lit context, and passes its Tiptap instance to its toolbar, content and bubble menu as the `editor` property.
+- d7a2669: When a violation offers more than one correction, a menu button next to Correct lists the alternatives.
+- 8b7248e: `clippy-validation-item` takes `corrections` instead of `correction`, and offers the first one.
+- edb7e61: Every Clippy hub on a page needs its own identifier: creating a `ClippyHub` with an identifier that another hub on the page already uses throws an error.
+
+### Patch Changes
+
+- Updated dependencies [8aff09a]
+- Updated dependencies [8b7248e]
+- Updated dependencies [8b7248e]
+- Updated dependencies [1139765]
+  - @nl-design-system-community/clippy-a11y-validator@0.4.0
+
 ## 1.11.0
 
 ### Minor Changes
