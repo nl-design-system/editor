@@ -154,7 +154,7 @@ export class ClippyPlugin extends Plugin {
   private _patchCorrectionsForCKEditor(violationsMap: ViolationsMap): ViolationsMap {
     for (const [range, violation] of violationsMap) {
       const { corrections, rule } = violation;
-      if (!corrections || !rule) {
+      if (!corrections?.length || !rule) {
         continue;
       }
 
