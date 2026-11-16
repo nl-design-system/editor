@@ -71,7 +71,7 @@ const example = validationGroups.flatMap(({ rules }) => rules).find((entry) => e
 
   .clippy-validation__card {
     --clippy-card-background-color: var(--basis-color-default-bg-document);
-    --clippy-card-border-color: var(--basis-color-default-bg-hover);
+    --clippy-card-border-color: var(--basis-color-default-border-subtle);
     --clippy-card-border-radius: var(--basis-border-radius-lg);
     --clippy-card-border-width: var(--basis-border-width-sm);
     --clippy-card-color: var(--basis-color-default-color-document);
@@ -90,8 +90,8 @@ const example = validationGroups.flatMap(({ rules }) => rules).find((entry) => e
     --clippy-card-footer-padding-block-end: var(--basis-space-block-4xl);
     --clippy-card-footer-padding-inline-end: var(--basis-space-inline-2xl);
     --clippy-card-footer-padding-inline-start: var(--basis-space-inline-2xl);
-    box-shadow: var(--basis-color-default-bg-default) 0 1px 3px 0;
-    row-gap: var(--basis-space-block-xl);
+    box-shadow: var(--basis-box-shadow-sm);
+    row-gap: var(--basis-space-row-xl);
   }
 
   .clippy-validation__title {
