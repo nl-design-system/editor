@@ -116,7 +116,7 @@ function validatePage(page: Page, source: string, fix: boolean, skip: readonly s
       }
 
       const moduleUrl = URL.createObjectURL(new Blob([source], { type: 'text/javascript' }));
-      const { coreValidations, Validator } = (await import(
+      const { coreValidations, getPrimaryCorrection, Validator } = (await import(
         /* @vite-ignore */ moduleUrl
       )) as typeof import('@nl-design-system-community/clippy-a11y-validator');
       URL.revokeObjectURL(moduleUrl);
@@ -124,7 +124,7 @@ function validatePage(page: Page, source: string, fix: boolean, skip: readonly s
       const validator = new Validator({ validations: Object.values(coreValidations) });
       const violations = validator.validate([document.body]);
 
-      if (fix) violations.forEach(({ corrections }) => corrections?.[0]?.execute());
+      if (fix) violations.forEach(({ corrections }) => getPrimaryCorrection(corrections)?.execute());
 
       // Project explicitly rather than spreading: a correction's `execute` cannot cross the
       // serialisation boundary, and spreading would hand Node a truthy correction with its

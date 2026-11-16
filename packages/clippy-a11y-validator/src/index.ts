@@ -1,5 +1,6 @@
 export { selectors, validationSeverity } from './consts/index.ts';
 export { defineValidation } from './define-validation.ts';
+export { getAlternativeCorrections, getPrimaryCorrection } from './corrections.ts';
 export { coreValidationRules, coreValidations } from './components/index.ts';
 export type { CoreValidationRule } from './components/index.ts';
 export { hasTextContent } from './utils/content.ts';
