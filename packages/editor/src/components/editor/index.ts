@@ -1,6 +1,6 @@
 import type { Validation } from '@nl-design-system-community/clippy-a11y-validator';
+import type { Editor as TiptapEditor } from '@tiptap/core';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
-import { Editor as TiptapEditor } from '@tiptap/core';
 import { html, LitElement, type PropertyValues } from 'lit';
 import { property, query, queryAssignedElements, state } from 'lit/decorators.js';
 import '@/components/editor-wrapper';
@@ -20,9 +20,9 @@ import type { Toolbar } from '@/components/toolbar';
 import type { ValidationsDrawer } from '@/components/validations/drawer';
 import type { Gutter } from '@/components/validations/gutter';
 import { type ToolbarConfig, defaultToolbarConfig } from '@/components/toolbar/toolbar-config';
+import { ClippyHubController } from '@/controllers/ClippyHubController';
+import { TiptapEditorController } from '@/controllers/TiptapEditorController';
 import { ViolationsDevtoolsController } from '@/controllers/ViolationsDevtoolsController';
-import { editorExtensions } from '@/extensions';
-import { ClippyHub } from '@/hub';
 import { initializeLocale } from '@/localization';
 import { editorStyles } from './styles';
 
@@ -95,10 +95,6 @@ export class Editor extends LitElement {
 
   /** @internal */
   @state()
-  editor?: TiptapEditor;
-
-  /** @internal */
-  @state()
   private readonlyValue?: HTMLElement;
 
   /** @internal */
@@ -127,9 +123,28 @@ export class Editor extends LitElement {
    */
   violationsDevtools = new ViolationsDevtoolsController(this, () => this.id);
 
-  #hub?: ClippyHub;
+  readonly #hub = new ClippyHubController(this, {
+    adaptViolations: (violationsMap) => {
+      this.violationsDevtools.send(violationsMap);
+      return violationsMap;
+    },
+    identifier: () => this.id,
+    validations: () => this.validations,
+    views: () => ({ drawer: this.drawer, gutter: this.gutter, trigger: this.toolbar?.trigger }),
+  });
+
+  readonly #tiptap = new TiptapEditorController(this, {
+    editable: () => !this.readonly,
+    hub: this.#hub,
+    identifier: () => this.id,
+  });
 
   #isLocaleInitialized = false;
+
+  /** @internal */
+  get editor(): TiptapEditor | undefined {
+    return this.#tiptap.editor;
+  }
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -141,13 +156,9 @@ export class Editor extends LitElement {
         })
         .catch(console.error);
     }
-  }
-
-  override disconnectedCallback(): void {
-    this.#hub?.destroy();
-    this.#hub = undefined;
-    this.editor?.destroy();
-    super.disconnectedCallback();
+    if (this.hasUpdated && this.readonlyValue) {
+      this.#validateReadonly();
+    }
   }
 
   override firstUpdated(): void {
@@ -155,63 +166,32 @@ export class Editor extends LitElement {
 
     if (this.readonly) {
       this.readonlyValue = value;
-      this.updateComplete
-        .then(() => this.content?.updateComplete)
-        .then(() => this.content && this.#connectHub(this.content)?.validate())
-        .catch(console.error);
+      this.#validateReadonly();
       return;
     }
 
-    this.editor = new TiptapEditor({
-      content: value?.innerHTML ?? '',
-      editorProps: {
-        attributes: {
-          class: 'clippy-content',
-        },
-      },
-      element: null,
-      extensions: editorExtensions({
-        identifier: this.id,
-        readonly: false,
-        scheduleValidation: () => this.#hub?.scheduleValidation(),
-        validate: () => {
-          this.#hub?.validate().catch(console.error);
-        },
-      }),
-      onMount: ({ editor }) => {
-        this.#connectHub(editor.view.dom);
-      },
-    });
+    this.#tiptap.create(value?.innerHTML ?? '');
   }
 
   override updated(changedProperties: PropertyValues<this>): void {
     super.updated(changedProperties);
-    if (changedProperties.has('readonly') && this.editor) {
-      this.editor.setEditable(!this.readonly);
+    if (changedProperties.has('readonly')) {
+      this.#tiptap.setEditable(!this.readonly);
     }
-    if (changedProperties.has('validations') && this.#hub) {
-      this.#hub.validations = this.validations;
-      this.#hub.validate().catch(console.error);
+    if (changedProperties.has('validations')) {
+      this.#hub.updateValidations();
     }
   }
 
-  #connectHub(target: HTMLElement): ClippyHub | undefined {
-    try {
-      this.#hub = new ClippyHub({
-        adaptViolations: (violationsMap) => {
-          this.violationsDevtools.send(violationsMap);
-          return violationsMap;
-        },
-        identifier: this.id,
-        target,
-        validations: this.validations,
-      });
-    } catch (error) {
-      console.error(error);
-      return undefined;
-    }
-    this.#hub.connect({ drawer: this.drawer, gutter: this.gutter, trigger: this.toolbar?.trigger });
-    return this.#hub;
+  #validateReadonly(): void {
+    this.updateComplete
+      .then(() => this.content?.updateComplete)
+      .then(async () => {
+        if (this.isConnected && this.content) {
+          await this.#hub.connect(this.content)?.validate();
+        }
+      })
+      .catch(console.error);
   }
 
   override render() {
