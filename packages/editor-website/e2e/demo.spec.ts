@@ -316,7 +316,7 @@ test.describe('Accessibility notifications', () => {
     await expect(clippyEditor.getByRole('button', { name: 'Corrigeren' }).first()).toBeVisible();
   });
 
-  test('navigate to node via Focus button', async ({ page }) => {
+  test('navigate to node via Focus button, keeping the drawer open', async ({ page }) => {
     const clippyEditor = page.locator('#clippy-editor-localhost');
     await clippyEditor.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
     await clippyEditor.getByRole('button', { name: 'Fouten, waarschuwingen en tips' }).click();
@@ -325,6 +325,6 @@ test.describe('Accessibility notifications', () => {
     await expect(drawer).toBeVisible();
 
     await clippyEditor.getByRole('button', { name: 'Focus' }).first().click();
-    await expect(drawer).not.toBeVisible();
+    await expect(drawer).toBeVisible();
   });
 });

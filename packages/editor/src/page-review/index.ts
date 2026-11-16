@@ -69,7 +69,6 @@ export class PageReview extends ClippyHub {
       this.#trigger.classList.add(...THEME_CLASSES);
       document.body.append(this.#trigger);
     }
-    this.#drawer.overlay = true;
     this.#drawer.classList.add(...THEME_CLASSES);
     document.body.append(this.#drawer);
     this.#gutter.classList.add(...THEME_CLASSES);
