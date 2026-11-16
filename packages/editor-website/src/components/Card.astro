@@ -47,10 +47,10 @@ const { footer, heading, href, id, logo } = Astro.props;
     --clippy-card-border-radius: var(--basis-border-radius-md);
     --clippy-card-color: var(--basis-color-default-color-document);
     --clippy-card-header-text-decoration: none;
-    column-gap: var(--basis-space-inline-3xl);
+    column-gap: var(--basis-space-column-3xl);
     padding-block: var(--basis-space-block-3xl);
     padding-inline: var(--basis-space-inline-3xl);
-    row-gap: var(--basis-space-block-xl);
+    row-gap: var(--basis-space-row-xl);
   }
 
   clippy-card-as-link.clippy-card {
@@ -80,7 +80,7 @@ const { footer, heading, href, id, logo } = Astro.props;
   }
 
   .clippy-card::part(header-body) {
-    row-gap: var(--basis-space-block-xl);
+    row-gap: var(--basis-space-row-xl);
   }
 
   .clippy-card::part(pre-header) {
@@ -95,7 +95,7 @@ const { footer, heading, href, id, logo } = Astro.props;
 
   .clippy-card__logo {
     display: flex;
-    inline-size: 6rem;
+    inline-size: var(--basis-size-xl);
   }
 
   .clippy-card__heading {
@@ -148,7 +148,7 @@ const { footer, heading, href, id, logo } = Astro.props;
     }
 
     .clippy-card__logo {
-      inline-size: 4rem;
+      inline-size: var(--basis-size-lg);
     }
   }
 </style>
