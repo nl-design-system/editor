@@ -1,13 +1,10 @@
-import type { Gutter, ValidationsDrawer } from '@nl-design-system-community/editor';
-import type { AccessibilityNotifications } from '@nl-design-system-community/editor/accessibility-notifications';
 import {
   ClippyAccessibilityNotifications,
   ClippyEditor,
   ClippyGutter,
   ClippyValidationsDrawer,
 } from '@nl-design-system-community/editor-react';
-import { ClippyHub } from '@nl-design-system-community/editor/hub';
-import { useEffect, useRef } from 'react';
+import { useClippyHub } from '@nl-design-system-community/editor-react/hub';
 
 export function ReactEditorExample() {
   return (
@@ -28,36 +25,21 @@ export function ReactEditorExample() {
 }
 
 export function ReactHubExample() {
-  const contentRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<AccessibilityNotifications>(null);
-  const gutterRef = useRef<Gutter>(null);
-  const drawerRef = useRef<ValidationsDrawer>(null);
-  const hubRef = useRef<ClippyHub | null>(null);
-
-  useEffect(() => {
-    const target = contentRef.current!;
-    const hub = new ClippyHub({ identifier: 'react-hub-example', target });
-    gutterRef.current!.contentElement = target;
-    hub.connect({ drawer: drawerRef.current, gutter: gutterRef.current, trigger: triggerRef.current });
-    hub.validate().catch(console.error);
-    hubRef.current = hub;
-    return () => {
-      hub.destroy();
-      hubRef.current = null;
-    };
-  }, []);
+  const { drawerRef, gutterRef, scheduleValidation, targetRef, triggerRef } = useClippyHub({
+    identifier: 'react-hub-example',
+  });
 
   return (
     <div className="clippy-hub-example">
       <ClippyAccessibilityNotifications ref={triggerRef} />
       <div className="clippy-hub-example__content">
         <div
-          ref={contentRef}
+          ref={targetRef}
           aria-multiline="true"
           contentEditable
           role="textbox"
           suppressContentEditableWarning
-          onInput={() => hubRef.current?.scheduleValidation()}
+          onInput={scheduleValidation}
         >
           <h1>Kopniveau 1 in React</h1>
           <p></p>
