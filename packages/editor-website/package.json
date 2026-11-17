@@ -21,7 +21,6 @@
     "test:validate-html": "clippy-validate-html dist --skip [slot=value] --skip [data-clippy-demo]"
   },
   "dependencies": {
-    "@amsterdam/design-system-css": "4.4.0",
     "@astrojs/mdx": "8.1.2",
     "@astrojs/react": "7.1.2",
     "@astrojs/sitemap": "3.7.4",
@@ -33,7 +32,7 @@
     "@nl-design-system-candidate/paragraph-css": "2.1.3",
     "@nl-design-system-community/ckeditor-plugin": "workspace:*",
     "@nl-design-system-community/clippy-alt-text-wizard": "workspace:*",
-    "@nl-design-system-community/clippy-components": "3.6.0",
+    "@nl-design-system-community/clippy-components": "3.9.0",
     "@nl-design-system-community/editor": "workspace:*",
     "@nl-design-system-community/editor-react": "workspace:*",
     "@nl-design-system-community/ma-design-tokens": "9.1.0",

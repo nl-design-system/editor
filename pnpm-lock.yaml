@@ -528,9 +528,6 @@ importers:
 
   packages/editor-website:
     dependencies:
-      '@amsterdam/design-system-css':
-        specifier: 4.4.0
-        version: 4.4.0
       '@astrojs/mdx':
         specifier: 8.1.2
         version: 8.1.2(astro@7.4.5(@types/node@22.20.5)(yaml@2.9.1))
@@ -565,8 +562,8 @@ importers:
         specifier: workspace:*
         version: link:../clippy-alt-text-wizard
       '@nl-design-system-community/clippy-components':
-        specifier: 3.6.0
-        version: 3.6.0
+        specifier: 3.9.0
+        version: 3.9.0
       '@nl-design-system-community/editor':
         specifier: workspace:*
         version: link:../editor
@@ -2056,9 +2053,6 @@ packages:
   '@nl-design-system-candidate/code-tokens@3.0.0':
     resolution: {integrity: sha512-uPjCHB5mvFMFXDjxjAhWk9zmPxdDdRrrza2vUROmB8jSszxP/37f2tPMqEa+F/ugZTyBOt9AYWk/feBfOruhmQ==}
 
-  '@nl-design-system-candidate/color-sample-css@1.0.5':
-    resolution: {integrity: sha512-ork71HMKs0Maiqd6bhYB1YNxFcHpxKUWp6Pi2GoEQZuo9zobSI750ja8Qi8g1NIExVIlCAm3rSjdiIHZXNeolg==}
-
   '@nl-design-system-candidate/color-sample-css@1.0.6':
     resolution: {integrity: sha512-N4ssqbrkLmvWqLlbNfoMk/7fmBxvQ6fGfRLpH+7LjQJFwFA+RISSP7qKVXIRaZ+6/bq/lD3bJKfzQZAIcDRYiA==}
 
@@ -2148,9 +2142,6 @@ packages:
 
   '@nl-design-system-candidate/skip-link-tokens@1.0.4':
     resolution: {integrity: sha512-MD1+m55nRqkj2eATcBNOLE8N5jWfvjJg2ax+POX8zXm49wJcBGTS6B/kK4kzIPbMuivYnxVtNlmA+Cz/upFBZA==}
-
-  '@nl-design-system-community/clippy-components@3.6.0':
-    resolution: {integrity: sha512-Geert7VC0O6TgmfrdSIRj/kNA05CRCSnxpktH2Ric0w8DO+v/c6IwNxM66Xj9POir4b2ZLEB5p4LMfi0K1Azqw==}
 
   '@nl-design-system-community/clippy-components@3.9.0':
     resolution: {integrity: sha512-NFWw19+O8sAL71fLZZLmEDqhM7Jd1M2lKi2QoGjMQ2yRyX9p0HNlbXlN1bAYmd+YTlRO78rw0MJ0hTu9zDMqJg==}
@@ -2337,10 +2328,6 @@ packages:
     peerDependencies:
       prettier: '*'
 
-  '@projectwallace/css-parser@0.18.8':
-    resolution: {integrity: sha512-yjXsE/7XZOQdh5lX/y6Vy1k8dldDl4KCGSZXWfN+7nZxIHC123d55gGCx4srU/FE8ACJAtx70WIKCNclFG2iLA==}
-    engines: {pnpm: '>=11.0.0'}
-
   '@projectwallace/css-parser@0.19.3':
     resolution: {integrity: sha512-bK6pbuWMXGbrUru4a/nu9h/6SrSPPtUg5VU0bXYqG7hnp4+8d8PeF21T3gU+Lf5I8+jVakDggBoZHxeSRx2HjQ==}
     engines: {pnpm: '>=11.0.0'}
@@ -2517,9 +2504,6 @@ packages:
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^9.0.0 || ^10.0.0
-
-  '@tabler/icons@3.48.0':
-    resolution: {integrity: sha512-lQk06gVHNVBnJp0UOgtth54mcZBJM7rdYKsAxKOProj1bbSAx+/xiuOWfHlyvgdL3M+Y+I0HINrjHa3ygp8eXQ==}
 
   '@tabler/icons@3.50.0':
     resolution: {integrity: sha512-HflLxyrH1cqC7s7jzQGSjpsTAVIoaf7+/yHjbdM59rJQBMjliibp+LYhDPFxOMcwa1M8DNpOk6ENzQiWn9a1Dg==}
@@ -6814,11 +6798,6 @@ packages:
     resolution: {integrity: sha512-xLgQil4kIUCrAzVk9fRSkxkFNwmygLFjVxXrLc65aE1F0+Zsb8rxumFBy4XKyvgMCTL6kilDq3EZ0piE2dP/Dg==}
     engines: {node: '>=18.0.0'}
 
-  react-dom@19.3.0:
-    resolution: {integrity: sha512-JDk8dgif51OjFoDE70+OT9ICyYr+69HlmihNwp1+Nsfbna3t5sIiCa9ZJktDmQ4/1b/rn26hIAR2uYXDMr5r0Q==}
-    peerDependencies:
-      react: ^19.3.0
-
   react-dom@19.3.1:
     resolution: {integrity: sha512-Y0bARz53lhEC1NMCASs0/j+faB/zqt3R8hpvg1e8+61ZVJ4UL0UdC4cBbXfZMcIuhrfgeILTLe+ZeBCavQPtKQ==}
     peerDependencies:
@@ -6832,10 +6811,6 @@ packages:
 
   react-refresh@0.17.0:
     resolution: {integrity: sha512-z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ==}
-    engines: {node: '>=0.10.0'}
-
-  react@19.3.0:
-    resolution: {integrity: sha512-E8LUcbtBWt20bbl2YoHfx4ZDBdxVTfOKtCZn9cDSJ4l6/nuoApcpIBcj47t2wZoVX8g2ZHuMHbiShgCR1T5Sog==}
     engines: {node: '>=0.10.0'}
 
   react@19.3.1:
@@ -7251,11 +7226,6 @@ packages:
   strip-json-comments@3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
-
-  style-dictionary@5.6.0:
-    resolution: {integrity: sha512-OxJXLa0aGza7AnudQpI83VNSu33goo1mlr7o12Js5xCPwCI0VkFYqs8o2KGFwpfl9AMxQ3RH/F0sgtpJLSM7Qw==}
-    engines: {node: '>=22.0.0'}
-    hasBin: true
 
   style-dictionary@5.7.1:
     resolution: {integrity: sha512-qO9WsyR5jZWz8+5JRtehn7HF8YAvm+Jd8UxiYHtvZhYSNwfMfAVOBK1anjdZwbH+njFb7xuQsjqpD+djPXErcw==}
@@ -9274,13 +9244,6 @@ snapshots:
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
 
-  '@gemeente-denhaag/iconbutton@3.2.3(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
-    dependencies:
-      '@gemeente-denhaag/icons': 4.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      clsx: 2.1.1
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
-
   '@gemeente-denhaag/iconbutton@3.2.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@gemeente-denhaag/icons': 4.3.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -9300,12 +9263,6 @@ snapshots:
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
 
-  '@gemeente-denhaag/icons@4.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
-    dependencies:
-      clsx: 2.1.1
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
-
   '@gemeente-denhaag/icons@4.3.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       clsx: 2.1.1
@@ -9316,11 +9273,6 @@ snapshots:
     dependencies:
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
-
-  '@gemeente-denhaag/number-badge@2.2.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
-    dependencies:
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
 
   '@gemeente-denhaag/number-badge@2.2.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
@@ -9335,15 +9287,6 @@ snapshots:
       clsx: 2.1.1
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
-
-  '@gemeente-denhaag/side-navigation@4.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
-    dependencies:
-      '@gemeente-denhaag/iconbutton': 3.2.3(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@gemeente-denhaag/icons': 4.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@gemeente-denhaag/number-badge': 2.2.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      clsx: 2.1.1
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
 
   '@gemeente-denhaag/side-navigation@4.3.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
@@ -9767,8 +9710,6 @@ snapshots:
 
   '@nl-design-system-candidate/code-tokens@3.0.0': {}
 
-  '@nl-design-system-candidate/color-sample-css@1.0.5': {}
-
   '@nl-design-system-candidate/color-sample-css@1.0.6': {}
 
   '@nl-design-system-candidate/color-sample-tokens@2.0.3': {}
@@ -9836,50 +9777,6 @@ snapshots:
       react: 19.3.1
 
   '@nl-design-system-candidate/skip-link-tokens@1.0.4': {}
-
-  '@nl-design-system-community/clippy-components@3.6.0':
-    dependencies:
-      '@amsterdam/design-system-css': 4.4.0
-      '@gemeente-denhaag/iconbutton': 3.2.3(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@gemeente-denhaag/side-navigation': 4.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@nl-design-system-candidate/button-css': 1.1.0
-      '@nl-design-system-candidate/button-tokens': 1.0.0
-      '@nl-design-system-candidate/code-block-tokens': 2.0.3
-      '@nl-design-system-candidate/code-css': 3.0.0
-      '@nl-design-system-candidate/code-tokens': 3.0.0
-      '@nl-design-system-candidate/color-sample-css': 1.0.5
-      '@nl-design-system-candidate/color-sample-tokens': 2.0.3
-      '@nl-design-system-candidate/data-badge-css': 1.0.5
-      '@nl-design-system-candidate/data-badge-tokens': 2.0.3
-      '@nl-design-system-candidate/heading-css': 1.1.3
-      '@nl-design-system-candidate/heading-tokens': 1.1.2
-      '@nl-design-system-candidate/link-tokens': 3.0.3
-      '@nl-design-system-candidate/mark-tokens': 2.0.3
-      '@nl-design-system-candidate/number-badge-tokens': 2.0.3
-      '@nl-design-system-candidate/paragraph-css': 2.1.3
-      '@nl-design-system-candidate/paragraph-tokens': 1.1.3
-      '@nl-design-system-candidate/skip-link-tokens': 1.0.4
-      '@nl-design-system-community/ma-navigation-bar-css': 0.0.1
-      '@projectwallace/css-parser': 0.18.8
-      '@tabler/icons': 3.48.0
-      '@utrecht/combobox-css': 3.0.1
-      '@utrecht/customizable-text-input-css': 1.0.1
-      '@utrecht/data-list-css': 3.0.1
-      '@utrecht/listbox-css': 3.0.1
-      '@utrecht/table-css': 3.0.1
-      '@utrecht/textbox-css': 4.1.0
-      '@utrecht/unordered-list-css': 3.1.1
-      colorjs.io: 0.7.1
-      debounce: 3.0.0
-      dequal: 2.0.3
-      lit: 3.3.3
-      memoize: 11.0.0
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
-      style-dictionary: 5.6.0
-    transitivePeerDependencies:
-      - '@amsterdam/design-system-assets'
-      - '@amsterdam/design-system-tokens'
 
   '@nl-design-system-community/clippy-components@3.9.0':
     dependencies:
@@ -10193,8 +10090,6 @@ snapshots:
       make-synchronized: 0.8.0
       prettier: 3.8.1
 
-  '@projectwallace/css-parser@0.18.8': {}
-
   '@projectwallace/css-parser@0.19.3': {}
 
   '@rijkshuisstijl-community/card-css@1.0.0': {}
@@ -10341,8 +10236,6 @@ snapshots:
       espree: 10.4.0
       estraverse: 5.3.0
       picomatch: 4.0.7
-
-  '@tabler/icons@3.48.0': {}
 
   '@tabler/icons@3.50.0': {}
 
@@ -15397,11 +15290,6 @@ snapshots:
 
   re2js@2.8.6: {}
 
-  react-dom@19.3.0(react@19.3.0):
-    dependencies:
-      react: 19.3.0
-      scheduler: 0.28.0
-
   react-dom@19.3.1(react@19.3.1):
     dependencies:
       react: 19.3.1
@@ -15412,8 +15300,6 @@ snapshots:
   react-is@17.0.2: {}
 
   react-refresh@0.17.0: {}
-
-  react@19.3.0: {}
 
   react@19.3.1: {}
 
@@ -15991,22 +15877,6 @@ snapshots:
   strip-indent@4.1.1: {}
 
   strip-json-comments@3.1.1: {}
-
-  style-dictionary@5.6.0:
-    dependencies:
-      '@bundled-es-modules/deepmerge': 4.3.2
-      '@bundled-es-modules/glob': 13.0.6
-      '@bundled-es-modules/memfs': 4.17.0
-      '@zip.js/zip.js': 2.9.0
-      chalk: 5.6.2
-      change-case: 5.4.4
-      colorjs.io: 0.5.2
-      commander: 12.1.0
-      is-plain-obj: 4.1.0
-      json5: 2.2.3
-      path-unified: 0.2.0
-      prettier: 3.9.10
-      tinycolor2: 1.6.0
 
   style-dictionary@5.7.1:
     dependencies:

@@ -17,22 +17,13 @@ const findTrail = (items: NavigationItem[]): NavigationItem[] => {
 };
 
 const trail = findTrail(pages);
-const current = trail.at(-1);
+const items = [home, ...trail].map(({ href, label }, index, all) => ({
+  current: index === all.length - 1,
+  href,
+  label,
+}));
 ---
 
-{current && (
-  <nav slot="breadcrumb" class="ams-breadcrumb" aria-label={t('breadcrumb.label')}>
-    <ol class="ams-breadcrumb__list">
-      {[home, ...trail.slice(0, -1)].map(({ href, label }) => (
-        <li class="ams-breadcrumb__item">
-          <a class="ams-breadcrumb__link" href={href}>
-            {label}
-          </a>
-        </li>
-      ))}
-      <li class="ams-breadcrumb__item">
-        <span aria-current="page">{current.label}</span>
-      </li>
-    </ol>
-  </nav>
+{trail.length > 0 && (
+  <clippy-breadcrumb-navigation slot="breadcrumb" label={t('breadcrumb.label')} items={JSON.stringify(items)} />
 )}
