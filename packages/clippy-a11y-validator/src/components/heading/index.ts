@@ -4,6 +4,7 @@ import { headingLevelMustNotSkip } from './level-must-not-skip/index.ts';
 import { headingLevelOneMustBeUnique } from './level-one-must-be-unique/index.ts';
 import { headingMustNotBeEmpty } from './must-not-be-empty/index.ts';
 import { headingMustStartAtLevelOne } from './must-start-at-level-one/index.ts';
+import { headingShouldNotBeTooLong } from './should-not-be-too-long/index.ts';
 import { headingShouldNotContainBoldOrItalic } from './should-not-contain-bold-or-italic/index.ts';
 
 export { headingValidationRules };
@@ -15,5 +16,6 @@ export const headingValidations = {
   [headingValidationRules.HEADING_LEVEL_ONE_MUST_BE_UNIQUE]: headingLevelOneMustBeUnique,
   [headingValidationRules.HEADING_MUST_NOT_BE_EMPTY]: headingMustNotBeEmpty,
   [headingValidationRules.HEADING_MUST_START_AT_LEVEL_ONE]: headingMustStartAtLevelOne,
+  [headingValidationRules.HEADING_SHOULD_NOT_BE_TOO_LONG]: headingShouldNotBeTooLong,
   [headingValidationRules.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]: headingShouldNotContainBoldOrItalic,
 } satisfies Record<HeadingValidationRule, Validation>;
