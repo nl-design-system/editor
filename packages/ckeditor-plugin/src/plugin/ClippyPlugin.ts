@@ -1,14 +1,13 @@
 import {
   type AccessibilityNotifications,
   type CloseValidationsDrawerDetail,
-  type ValidationsDrawer,
 } from '@nl-design-system-community/editor/accessibility-notifications';
 import {
   setDarkColorScheme,
   THEME_CLASSES,
   watchHostColorScheme,
 } from '@nl-design-system-community/editor/color-scheme';
-import { EditorContentWrapper, EditorWrapper } from '@nl-design-system-community/editor/editor-wrapper';
+import { EditorContentWrapper } from '@nl-design-system-community/editor/editor-wrapper';
 import { CustomEvents, type Gutter, validationInteractionMode } from '@nl-design-system-community/editor/gutter';
 import { ClippyHub } from '@nl-design-system-community/editor/hub';
 import { type Validation, type Violation, type ViolationsMap } from '@nl-design-system-community/editor/validators';
@@ -23,15 +22,15 @@ export class ClippyPlugin extends Plugin {
 
   private _editableEl: HTMLElement | null = null;
   private _editorEl: HTMLElement | null = null;
-  private _wrapperEl: EditorWrapper | null = null;
+  private _contentWrapperEl: EditorContentWrapper | null = null;
   private _gutterEl: Gutter | null = null;
-  private _drawerEl: ValidationsDrawer | null = null;
   private _notificationsView: View | null = null;
   private _hub: ClippyHub | null = null;
   private _violationsMap: ViolationsMap = new Map();
   /** The validations this editor runs. Unset means every core validation. */
   private readonly _validations: readonly Validation[] | undefined;
   private _unwatchColorScheme: (() => void) | null = null;
+  private readonly _editorResizeObserver = new ResizeObserver(() => this.editor.ui.update());
 
   // Scope drawer events to this editor so multiple CKEditors on one page don't open each other's drawer.
   private get _identifier(): string {
@@ -57,29 +56,23 @@ export class ClippyPlugin extends Plugin {
     }
 
     const editorEl = this._editorEl;
-    // add theme token scoping for the drupal environment.
     editorEl.classList.add(...THEME_CLASSES);
     this._unwatchColorScheme = watchHostColorScheme(editorEl, (colorScheme) =>
       setDarkColorScheme(colorScheme === 'dark', editorEl),
     );
     adoptClippyStyles();
 
-    const wrapper = document.createElement('clippy-editor-wrapper') as EditorWrapper;
-    this._editableEl.replaceWith(wrapper);
-    this._wrapperEl = wrapper;
-
     const contentWrapper = document.createElement('clippy-editor-content-wrapper') as EditorContentWrapper;
+    this._editableEl.replaceWith(contentWrapper);
     contentWrapper.append(this._editableEl);
-    wrapper.append(contentWrapper);
+    this._contentWrapperEl = contentWrapper;
 
     const gutter = document.createElement('clippy-validations-gutter') as Gutter;
     gutter.mode = validationInteractionMode.DRAWER;
     contentWrapper.append(gutter);
     this._gutterEl = gutter;
 
-    const drawer = document.createElement('clippy-validations-drawer') as ValidationsDrawer;
-    wrapper.append(drawer);
-    this._drawerEl = drawer;
+    this._editorResizeObserver.observe(editorEl);
 
     this._addNotificationsToolbarItem();
 
@@ -88,13 +81,13 @@ export class ClippyPlugin extends Plugin {
         this._violationsMap = violationsMap;
         return this._patchCorrectionsForCKEditor(violationsMap);
       },
+      colorSchemeElement: editorEl,
       focusViolation: this._focusViolation,
       identifier: this._identifier,
       target: this._editableEl,
       validations: this._validations,
     });
     this._hub.connect({
-      drawer,
       gutter,
       trigger: this._notificationsView?.element as AccessibilityNotifications | null,
     });
@@ -226,13 +219,11 @@ export class ClippyPlugin extends Plugin {
 
   override destroy(): void {
     this._hub?.destroy();
+    this._editorResizeObserver.disconnect();
     this._unwatchColorScheme?.();
-    this._drawerEl?.remove();
     this._gutterEl?.remove();
-    // Restore the editable to its original parent so CKEditor's own teardown
-    // doesn't have to deal with our extra wrapper elements.
-    if (this._wrapperEl && this._editableEl) {
-      this._wrapperEl.replaceWith(this._editableEl);
+    if (this._contentWrapperEl && this._editableEl) {
+      this._contentWrapperEl.replaceWith(this._editableEl);
     }
     super.destroy();
   }

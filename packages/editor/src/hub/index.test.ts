@@ -2,10 +2,10 @@ import { coreValidationRules, coreValidations } from '@nl-design-system-communit
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Violation, ViolationsMap } from '@/types/validation';
 import '@/components/toolbar/toolbar-accessibility-notifications';
-import '@/components/validations/drawer';
 import '@/components/validations/gutter';
 import '@/components/validations/list';
 import { CustomEvents, type DocumentOverviewMode } from '@/events';
+import { DARK_COLOR_SCHEME_CLASS, THEME_CLASS } from '@/utils/colorScheme';
 import { VALIDATION_HOVER_HIGHLIGHT_NAMES } from '@/utils/highlights';
 import { ClippyHub } from './index';
 
@@ -47,13 +47,13 @@ describe('ClippyHub', () => {
     expect(rulesIn(trigger.violationsMap)).toEqual([coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
   });
 
-  it('feeds the drawer and the gutter the same violations, target and identifier', async () => {
+  it('feeds its drawer and the gutter the same violations, target and identifier', async () => {
     target.innerHTML = '<h1>Titel</h1><p></p>';
-    const drawer = document.body.appendChild(document.createElement('clippy-validations-drawer'));
     const gutter = document.body.appendChild(document.createElement('clippy-validations-gutter'));
 
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
-    hub.connect({ drawer, gutter });
+    const drawer = hub.drawer!;
+    hub.connect({ gutter });
     await hub.validate();
 
     expect(drawer.identifier).toBe(IDENTIFIER);
@@ -184,9 +184,74 @@ describe('ClippyHub', () => {
   });
 });
 
-describe('ClippyHub drawer session', () => {
-  const createDrawer = () => document.body.appendChild(document.createElement('clippy-validations-drawer'));
+describe('ClippyHub Drawer', () => {
+  const openDrawer = () =>
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { identifier: IDENTIFIER, mode: 'validations' } }),
+    );
 
+  const themeScope = ({ dark }: { dark: boolean }) => {
+    const scope = document.body.appendChild(document.createElement('div'));
+    scope.classList.add(THEME_CLASS);
+    scope.classList.toggle(DARK_COLOR_SCHEME_CLASS, dark);
+    return scope;
+  };
+
+  it('docks a themed Drawer in <body>, and removes it once destroyed', () => {
+    hub = new ClippyHub({ identifier: IDENTIFIER, target });
+    const { drawer } = hub;
+
+    expect(drawer?.parentElement).toBe(document.body);
+    expect(drawer?.classList.contains(THEME_CLASS)).toBe(true);
+    expect(drawer?.identifier).toBe(IDENTIFIER);
+
+    hub.destroy();
+
+    expect(drawer?.isConnected).toBe(false);
+  });
+
+  it('gives the page width back when destroyed while its Drawer is open', async () => {
+    target.innerHTML = '<h1>Titel</h1><p></p>';
+    hub = new ClippyHub({ identifier: IDENTIFIER, target });
+    await hub.validate();
+    openDrawer();
+    await expect.poll(() => document.documentElement.style.marginInlineEnd).not.toBe('');
+
+    hub.destroy();
+
+    expect(document.documentElement.style.marginInlineEnd).toBe('');
+  });
+
+  it('follows the color scheme around the target, and switches with it', async () => {
+    const scope = themeScope({ dark: true });
+    scope.append(target);
+    hub = new ClippyHub({ identifier: IDENTIFIER, target });
+
+    expect(hub.drawer?.classList.contains(DARK_COLOR_SCHEME_CLASS)).toBe(true);
+
+    scope.classList.remove(DARK_COLOR_SCHEME_CLASS);
+
+    await expect.poll(() => hub?.drawer?.classList.contains(DARK_COLOR_SCHEME_CLASS)).toBe(false);
+  });
+
+  it('follows the color scheme around colorSchemeElement when one is given', () => {
+    themeScope({ dark: false }).append(target);
+    const colorSchemeElement = themeScope({ dark: true }).appendChild(document.createElement('div'));
+
+    hub = new ClippyHub({ colorSchemeElement, identifier: IDENTIFIER, target });
+
+    expect(hub.drawer?.classList.contains(DARK_COLOR_SCHEME_CLASS)).toBe(true);
+  });
+
+  it('docks no Drawer when drawer is false', () => {
+    hub = new ClippyHub({ createDrawer: false, identifier: IDENTIFIER, target });
+
+    expect(hub.drawer).toBeNull();
+    expect(document.querySelector('clippy-validations-drawer')).toBeNull();
+  });
+});
+
+describe('ClippyHub drawer session', () => {
   const openDrawer = () =>
     globalThis.dispatchEvent(
       new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { identifier: IDENTIFIER, mode: 'validations' } }),
@@ -215,7 +280,7 @@ describe('ClippyHub drawer session', () => {
     target.innerHTML = '<h1>Titel</h1><p></p>';
     const trigger = createTrigger();
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
-    hub.connect({ drawer: createDrawer(), trigger });
+    hub.connect({ trigger });
     await hub.validate();
     expect(trigger.violationsMap?.size).toBe(1);
 
@@ -228,9 +293,9 @@ describe('ClippyHub drawer session', () => {
   it('moves focus into the drawer when it opens, and back to the trigger when it closes', async () => {
     target.innerHTML = '<h1>Titel</h1><p></p>';
     const trigger = createTrigger();
-    const drawer = createDrawer();
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
-    hub.connect({ drawer, trigger });
+    const drawer = hub.drawer!;
+    hub.connect({ trigger });
     await hub.validate();
 
     openDrawer();
@@ -242,10 +307,9 @@ describe('ClippyHub drawer session', () => {
 
   it('hands the violation of a focused drawer item to focusViolation', async () => {
     target.innerHTML = '<h1>Titel</h1><p></p>';
-    const drawer = createDrawer();
     const focused: Violation[] = [];
     hub = new ClippyHub({ focusViolation: (violation) => focused.push(violation), identifier: IDENTIFIER, target });
-    hub.connect({ drawer });
+    const drawer = hub.drawer!;
     await hub.validate();
 
     openDrawer();
@@ -258,9 +322,8 @@ describe('ClippyHub drawer session', () => {
   it('scrolls a focused violation into view by default, without highlighting it', async () => {
     target.innerHTML = '<h1>Titel</h1><div style="block-size: 300vh"></div><h3>Overgeslagen</h3>';
     const heading = target.querySelector('h3')!;
-    const drawer = createDrawer();
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
-    hub.connect({ drawer });
+    const drawer = hub.drawer!;
     await hub.validate();
 
     openDrawer();
@@ -273,8 +336,6 @@ describe('ClippyHub drawer session', () => {
 });
 
 describe('ClippyHub views without a context provider', () => {
-  const createDrawer = () => document.body.appendChild(document.createElement('clippy-validations-drawer'));
-
   const openOverview = (mode: DocumentOverviewMode) =>
     globalThis.dispatchEvent(
       new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { identifier: IDENTIFIER, mode } }),
@@ -289,9 +350,8 @@ describe('ClippyHub views without a context provider', () => {
   it('shows the heading structure, links and language changes of the validated element', async () => {
     target.innerHTML = '<h1>Titel</h1><h2>Sectie</h2><p><a href="/contact">Contact</a></p><p lang="en">Hello</p>';
     document.body.append(Object.assign(document.createElement('h3'), { textContent: 'Buiten' }));
-    const drawer = createDrawer();
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
-    hub.connect({ drawer });
+    const drawer = hub.drawer!;
     await hub.validate();
 
     openOverview('heading-structure');
@@ -309,9 +369,8 @@ describe('ClippyHub views without a context provider', () => {
   it('scrolls the element picked in a Content view into view inside the validated element', async () => {
     target.innerHTML = '<h1>Titel</h1><div style="block-size: 300vh"></div><h2>Verderop</h2>';
     const heading = target.querySelector('h2')!;
-    const drawer = createDrawer();
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
-    hub.connect({ drawer });
+    const drawer = hub.drawer!;
     await hub.validate();
 
     openOverview('heading-structure');

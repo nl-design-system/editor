@@ -73,8 +73,7 @@ describe('<clippy-editor>', () => {
     await expect.element(a11yDrawer).not.toHaveAttribute('hidden');
 
     await vi.waitFor(() => {
-      const editorEl = document.querySelector('clippy-editor');
-      const drawer = editorEl?.shadowRoot?.querySelector('clippy-validations-drawer');
+      const drawer = document.querySelector('clippy-validations-drawer');
       const list = drawer?.shadowRoot?.querySelector('clippy-validations-list');
       const emptyMsg = list?.shadowRoot?.querySelector('p');
       expect(emptyMsg?.textContent?.trim() ?? '').toContain('Geen validatiemeldingen gevonden');

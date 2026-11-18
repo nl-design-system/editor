@@ -1,4 +1,4 @@
-import type { Gutter, ValidationsDrawer, ValidationsList } from '@nl-design-system-community/editor';
+import type { Gutter, ValidationsList } from '@nl-design-system-community/editor';
 import type { AccessibilityNotifications } from '@nl-design-system-community/editor/accessibility-notifications';
 import { ClippyHub, type ClippyHubOptions } from '@nl-design-system-community/editor/hub';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -11,7 +11,6 @@ export function useClippyHub<T extends HTMLElement = HTMLDivElement>(options: Us
   const triggerRef = useRef<AccessibilityNotifications>(null);
   const gutterRef = useRef<Gutter>(null);
   const listRef = useRef<ValidationsList>(null);
-  const drawerRef = useRef<ValidationsDrawer>(null);
   const hubRef = useRef<ClippyHub | null>(null);
   const optionsRef = useRef(options);
   optionsRef.current = options;
@@ -48,7 +47,6 @@ export function useClippyHub<T extends HTMLElement = HTMLDivElement>(options: Us
       gutterRef.current.contentElement = target;
     }
     created.connect({
-      drawer: drawerRef.current,
       gutter: gutterRef.current,
       list: listRef.current,
       trigger: triggerRef.current,
@@ -66,5 +64,5 @@ export function useClippyHub<T extends HTMLElement = HTMLDivElement>(options: Us
 
   const scheduleValidation = useCallback(() => hubRef.current?.scheduleValidation(), []);
 
-  return { drawerRef, gutterRef, hub, listRef, scheduleValidation, targetRef, triggerRef };
+  return { gutterRef, hub, listRef, scheduleValidation, targetRef, triggerRef };
 }

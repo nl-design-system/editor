@@ -11,8 +11,7 @@ declare global {
 }
 
 /**
- * Wraps the editor toolbar and editable content area into a single column so it
- * can be laid out beside the validations drawer by `clippy-editor-wrapper`.
+ * Wraps the editor toolbar and editable content area into a single column.
  *
  * @tag clippy-editor-content-wrapper
  *

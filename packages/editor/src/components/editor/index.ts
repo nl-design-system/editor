@@ -3,11 +3,9 @@ import type { Editor as TiptapEditor } from '@tiptap/core';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import { html, LitElement, type PropertyValues } from 'lit';
 import { property, query, queryAssignedElements, state } from 'lit/decorators.js';
-import '@/components/editor-wrapper';
 import '@/components/editor-content-wrapper';
 import '@/components/toolbar';
 import '@/components/validations/gutter';
-import '@/components/validations/drawer';
 import '@/components/validations/list';
 import '@/components/bubble-menu';
 import '@/components/content-views/heading-structure';
@@ -15,9 +13,7 @@ import '@/components/content-views/link-list';
 import '@/components/content-views/language-changes';
 import '@/components/content';
 import type { Content } from '@/components/content';
-import type { DrawerPosition } from '@/components/editor-wrapper';
 import type { Toolbar } from '@/components/toolbar';
-import type { ValidationsDrawer } from '@/components/validations/drawer';
 import type { Gutter } from '@/components/validations/gutter';
 import { type ToolbarConfig, defaultToolbarConfig } from '@/components/toolbar/toolbar-config';
 import { ClippyHubController } from '@/controllers/ClippyHubController';
@@ -38,8 +34,8 @@ declare global {
 
 /**
  * The main rich text editor component. It composes the toolbar, editable content area,
- * accessibility validation gutter, bubble menu and the validations drawer, and validates
- * its content through a Clippy hub.
+ * accessibility validation gutter and bubble menu, and validates its content through a
+ * Clippy hub, which docks the Drawer at the end side of the screen.
  *
  * @tag clippy-editor
  *
@@ -86,13 +82,6 @@ export class Editor extends LitElement {
   @property({ attribute: 'toolbar-config', type: Array })
   toolbarConfig: ToolbarConfig = defaultToolbarConfig;
 
-  /**
-   * Side of the editor content on which the validations drawer is rendered.
-   * Defaults to `right`.
-   */
-  @property({ attribute: 'drawer-position' })
-  drawerPosition: DrawerPosition = 'right';
-
   /** @internal */
   @state()
   private readonlyValue?: HTMLElement;
@@ -110,10 +99,6 @@ export class Editor extends LitElement {
   private readonly toolbar!: Toolbar | null;
 
   /** @internal */
-  @query('clippy-validations-drawer')
-  private readonly drawer!: ValidationsDrawer | null;
-
-  /** @internal */
   @query('clippy-validations-gutter')
   private readonly gutter!: Gutter | null;
 
@@ -128,9 +113,10 @@ export class Editor extends LitElement {
       this.violationsDevtools.send(violationsMap);
       return violationsMap;
     },
+    colorSchemeElement: () => this,
     identifier: () => this.id,
     validations: () => this.validations,
-    views: () => ({ drawer: this.drawer, gutter: this.gutter, trigger: this.toolbar?.trigger }),
+    views: () => ({ gutter: this.gutter, trigger: this.toolbar?.trigger }),
   });
 
   readonly #tiptap = new TiptapEditorController(this, {
@@ -196,18 +182,15 @@ export class Editor extends LitElement {
 
   override render() {
     return html`
-      <clippy-editor-wrapper drawer-position=${this.drawerPosition}>
-        <clippy-editor-content-wrapper>
-          <clippy-toolbar .config=${this.toolbarConfig} .editor=${this.editor}></clippy-toolbar>
-          <div class="clippy-editor-container" id=${EDITOR_ID}>
-            <slot name="value" hidden></slot>
-            <clippy-validations-gutter mode="drawer"></clippy-validations-gutter>
-            <clippy-content .editor=${this.editor} .htmlDocument=${this.readonlyValue}></clippy-content>
-            <clippy-bubble-menu class="clippy-bubble-menu" .editor=${this.editor}></clippy-bubble-menu>
-          </div>
-        </clippy-editor-content-wrapper>
-        <clippy-validations-drawer></clippy-validations-drawer>
-      </clippy-editor-wrapper>
+      <clippy-editor-content-wrapper>
+        <clippy-toolbar .config=${this.toolbarConfig} .editor=${this.editor}></clippy-toolbar>
+        <div class="clippy-editor-container" id=${EDITOR_ID}>
+          <slot name="value" hidden></slot>
+          <clippy-validations-gutter mode="drawer"></clippy-validations-gutter>
+          <clippy-content .editor=${this.editor} .htmlDocument=${this.readonlyValue}></clippy-content>
+          <clippy-bubble-menu class="clippy-bubble-menu" .editor=${this.editor}></clippy-bubble-menu>
+        </div>
+      </clippy-editor-content-wrapper>
     `;
   }
 }

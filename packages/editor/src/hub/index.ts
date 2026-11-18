@@ -1,11 +1,14 @@
 import type { Validation } from '@nl-design-system-community/clippy-a11y-validator';
+import type { ValidationsDrawer } from '@/components/validations/drawer';
 import type { Violation, ViolationsMap } from '@/types/validation';
+import '@/components/validations/drawer';
 import {
   CustomEvents,
   type CorrectValidationIssueEvent,
   type FocusNodeEvent,
   type ValidationsDrawerToggleEvent,
 } from '@/events';
+import { setDarkColorScheme, THEME_CLASSES, watchHostColorScheme } from '@/utils/colorScheme';
 import { debounce } from '@/utils/debounce';
 import { waitForMedia } from '@/utils/waitForMedia';
 import { runValidation, VALIDATION_TIMEOUT } from '@/validations';
@@ -17,12 +20,7 @@ export interface ClippyHubView {
   violationsMap?: ViolationsMap;
 }
 
-export interface ClippyHubDrawer extends ClippyHubView {
-  htmlDocument?: HTMLElement;
-}
-
 export interface ClippyHubViews {
-  drawer?: (ClippyHubDrawer & HTMLElement) | null;
   gutter?: ClippyHubView | null;
   list?: ClippyHubView | null;
   trigger?: (ClippyHubView & HTMLElement) | null;
@@ -31,6 +29,10 @@ export interface ClippyHubViews {
 export interface ClippyHubOptions {
   identifier: string;
   target: HTMLElement;
+  /** The element whose surrounding color scheme the Drawer follows. Defaults to `target`. */
+  colorSchemeElement?: HTMLElement;
+  /** Whether the hub docks a Drawer in `<body>`. Defaults to `true`. */
+  createDrawer?: boolean;
   adaptViolations?: (violationsMap: ViolationsMap) => ViolationsMap;
   /** Shows the violation of a focused drawer item. Defaults to scrolling it into view. */
   focusViolation?: (violation: Violation) => void;
@@ -58,6 +60,8 @@ const settleMedia = async (target: HTMLElement): Promise<void> => {
 };
 
 export class ClippyHub {
+  readonly drawer: ValidationsDrawer | null;
+  #unwatchColorScheme?: () => void;
   readonly #adaptViolations: (violationsMap: ViolationsMap) => ViolationsMap;
   readonly #focusViolation: (violation: Violation) => void;
   readonly #identifier: string;
@@ -70,6 +74,8 @@ export class ClippyHub {
 
   constructor({
     adaptViolations = (violationsMap) => violationsMap,
+    colorSchemeElement,
+    createDrawer = true,
     focusViolation = scrollIntoView,
     identifier,
     target,
@@ -86,6 +92,23 @@ export class ClippyHub {
     this.#identifier = identifier;
     this.#target = target;
     this.#validations = validations;
+
+    globalThis.addEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
+    globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#handleFocusNode);
+    globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#handleCorrection);
+    this.drawer = createDrawer ? this.#createDrawer(colorSchemeElement ?? target) : null;
+  }
+
+  #createDrawer(colorSchemeElement: HTMLElement): ValidationsDrawer {
+    const drawer = document.createElement('clippy-validations-drawer');
+    drawer.identifier = this.#identifier;
+    drawer.htmlDocument = this.#target;
+    drawer.classList.add(...THEME_CLASSES);
+    this.#unwatchColorScheme = watchHostColorScheme(colorSchemeElement, (colorScheme) =>
+      setDarkColorScheme(colorScheme === 'dark', drawer),
+    );
+    document.body.append(drawer);
+    return drawer;
   }
 
   set validations(validations: readonly Validation[] | undefined) {
@@ -95,9 +118,6 @@ export class ClippyHub {
   readonly scheduleValidation = debounce(() => this.validate().catch(console.error), VALIDATION_TIMEOUT);
 
   connect(views: ClippyHubViews): void {
-    globalThis.addEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
-    globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#handleFocusNode);
-    globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#handleCorrection);
     Object.assign(this.#views, views);
     for (const view of Object.values(views)) {
       if (view) {
@@ -114,6 +134,8 @@ export class ClippyHub {
     globalThis.removeEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#handleFocusNode);
     globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#handleCorrection);
+    this.#unwatchColorScheme?.();
+    this.drawer?.remove();
   }
 
   async validate(): Promise<void> {
@@ -133,7 +155,8 @@ export class ClippyHub {
     const { identifier, open } = (event as ValidationsDrawerToggleEvent).detail;
     if (identifier !== this.#identifier) return;
 
-    const { drawer, trigger } = this.#views;
+    const { drawer } = this;
+    const { trigger } = this.#views;
     if (open) {
       this.validate().catch(console.error);
       drawer?.focus();
@@ -166,7 +189,7 @@ export class ClippyHub {
     if (!violationsMap) {
       return;
     }
-    const { drawer, gutter, list, trigger } = this.#views;
+    const { gutter, list, trigger } = this.#views;
     if (gutter) {
       gutter.violationsMap = violationsMap;
     }
@@ -176,9 +199,8 @@ export class ClippyHub {
     if (trigger) {
       trigger.violationsMap = violationsMap;
     }
-    if (drawer) {
-      drawer.htmlDocument = this.#target;
-      drawer.violationsMap = violationsMap;
+    if (this.drawer) {
+      this.drawer.violationsMap = violationsMap;
     }
   }
 }
