@@ -110,11 +110,6 @@ export default css`
     &.clippy-validations-gutter__flag--warning {
       --_clippy-gutter-flag-color: var(--basis-color-warning-border-default);
     }
-
-    &.clippy-validations-gutter__flag--active::before,
-    &.clippy-validations-gutter__flag--active::after {
-      opacity: 0.7;
-    }
   }
 
   .clippy-validations-gutter__toggle-anchor {
@@ -182,19 +177,6 @@ export default css`
     --nl-number-badge-min-inline-size: auto;
     --nl-number-badge-padding-block: var(--basis-space-none);
     --nl-number-badge-padding-inline: var(--basis-space-none);
-  }
-
-  .clippy-validations-gutter__tooltip {
-    display: none;
-    position: absolute;
-    inset-block-start: 0;
-    inset-inline-start: var(--_clippy-gutter-flag-inline-size);
-    background-color: var(--basis-color-default-bg-document);
-    pointer-events: auto;
-    z-index: 10;
-  }
-  .clippy-validations-gutter__tooltip--active {
-    display: block;
   }
 
   @media (forced-colors: active) {

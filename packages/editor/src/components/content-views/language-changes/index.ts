@@ -6,6 +6,7 @@ import { safeCustomElement } from '@nl-design-system-community/clippy-components
 import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
+import { CustomEvents, type FocusNodeDetail } from '@/events';
 import { localizeHost } from '@/localization';
 import { findNearestAncestorAttribute } from '@/utils/domTraverser';
 import languageChangesStyles from './styles';
@@ -41,6 +42,10 @@ export class LanguageChanges extends LitElement {
   /** The validated element to read, pushed by the Drawer. */
   @property({ attribute: false })
   htmlDocument?: HTMLElement;
+
+  /** Identifier of the Clippy hub, used to scope the focus event. */
+  @property({ attribute: false })
+  identifier?: string;
 
   override connectedCallback() {
     super.connectedCallback();
@@ -87,6 +92,15 @@ export class LanguageChanges extends LitElement {
 
   #scrollToNode(element: Element) {
     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    this.dispatchEvent(
+      new CustomEvent<FocusNodeDetail>(CustomEvents.FOCUS_NODE, {
+        bubbles: true,
+        composed: true,
+        detail: { identifier: this.identifier, range },
+      }),
+    );
   }
 
   override render() {

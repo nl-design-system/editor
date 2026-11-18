@@ -1,5 +1,6 @@
 import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { CustomEvents, type FocusNodeDetail } from '@/events';
 import { initializeLocale } from '@/localization';
 import type { LanguageChanges } from './index';
 import './index';
@@ -150,6 +151,25 @@ describe('<clippy-language-changes>', () => {
           langChanges.shadowRoot?.querySelector('.clippy-language-changes__item .nl-link')?.textContent?.trim(),
         ).toContain('(leeg)'),
       );
+    });
+  });
+
+  describe('interactivity', () => {
+    it('asks to focus the clicked language change, like a Focus button', async () => {
+      const { langChanges } = await setupWithContent('<p>Intro</p><p lang="en">Hello</p>');
+      langChanges.identifier = 'editor';
+      await langChanges.updateComplete;
+      const details: FocusNodeDetail[] = [];
+      const record = (event: Event) => details.push((event as CustomEvent<FocusNodeDetail>).detail);
+      globalThis.addEventListener(CustomEvents.FOCUS_NODE, record);
+
+      langChanges.shadowRoot!.querySelector<HTMLAnchorElement>('a.nl-link')!.click();
+
+      globalThis.removeEventListener(CustomEvents.FOCUS_NODE, record);
+      expect(details).toHaveLength(1);
+      expect(details[0].identifier).toBe('editor');
+      expect(details[0].range.startContainer).toBe(langChanges.htmlDocument!.querySelector('[lang="en"]'));
+      expect(details[0].range.startOffset).toBe(0);
     });
   });
 });
