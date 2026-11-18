@@ -13,6 +13,8 @@ export const expect = base.extend({
       .exclude('.ck-content > *')
       // Validation examples hold intentional mistakes, and data-clippy-ignore would hide them from validation too
       .exclude('.clippy-validation__content > *')
+      // clippy-components 3.10.1 points this button's aria-controls at a drawer in another shadow root
+      .exclude({ fromShadowDom: ['clippy-page-header', 'clippy-button[controls="clippy-mobile-menu-drawer"]'] })
       .analyze();
 
     return {
