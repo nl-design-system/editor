@@ -1,0 +1,69 @@
+---
+import ckeditorLogo from '../../../assets/logos/ckeditor.svg?raw';
+import drupalLogo from '../../../assets/logos/drupal.svg?raw';
+import typo3Logo from '../../../assets/logos/typo3.svg?raw';
+import Document from '../../../layouts/document.astro';
+import Section from '../../../components/Section.astro';
+import Card from '../../../components/Card.astro';
+import CardGroup from '../../../components/CardGroup.astro';
+import PackageLinks from '../../../components/PackageLinks.astro';
+import editorPackage from '@nl-design-system-community/editor/package.json';
+import a11yValidatorPackage from '@nl-design-system-community/clippy-a11y-validator/package.json';
+import altTextWizardPackage from '@nl-design-system-community/clippy-alt-text-wizard/package.json';
+import ckeditorPackage from '@nl-design-system-community/ckeditor-plugin/package.json';
+import drupalPackage from '@nl-design-system-community/drupal-ckeditor-plugin/package.json';
+import typo3Package from '@nl-design-system-community/typo3-ckeditor-plugin/package.json';
+import { useTranslations } from '../../../i18n/translations.ts';
+
+const t = useTranslations('en');
+---
+
+<Document title={t('libraries.title')}>
+  <main>
+    <h1 class="nl-heading nl-heading--level-1">Tools</h1>
+    <p class="nl-paragraph">
+      Clippy Editor consists of separate packages that you can use on their own or together. Pick the packages that fit
+      your website or CMS.
+    </p>
+
+    <Section>
+      <CardGroup>
+        <Card heading="Accessibility validator" href={t('nav.href.library.a11y-validator')}>
+          <p>
+            Checks HTML against the NL Design System content guidelines, inside the editor and from the command line
+            against published HTML.
+          </p>
+          <PackageLinks pkg={a11yValidatorPackage} />
+        </Card>
+
+        <Card heading="CKEditor" logo={ckeditorLogo} href={t('nav.href.library.ckeditor')}>
+          <p>A CKEditor 5 plugin that adds the Clippy Editor accessibility checks to any CKEditor instance.</p>
+          <PackageLinks pkg={ckeditorPackage} />
+        </Card>
+
+        <Card heading="Drupal" logo={drupalLogo} href={t('nav.href.library.drupal')}>
+          <p>A Drupal module that adds Clippy Editor to the Drupal CKEditor.</p>
+          <PackageLinks pkg={drupalPackage} />
+        </Card>
+
+        <Card heading="TYPO3" logo={typo3Logo} href={t('nav.href.library.typo3')}>
+          <p>A TYPO3 extension that adds Clippy Editor to every rich-text editor.</p>
+          <PackageLinks pkg={typo3Package} />
+        </Card>
+
+        <Card heading="Editor" href={t('nav.href.library.editor')}>
+          <p>
+            The accessible rich-text editor as Web Components. It works in any framework, also as a React component, and
+            checks content while editors write.
+          </p>
+          <PackageLinks pkg={editorPackage} />
+        </Card>
+
+        <Card heading="Alt-text wizard" href={t('nav.href.alt-text-wizard')}>
+          <p>A step-by-step wizard that helps authors write accessible alt text for images.</p>
+          <PackageLinks pkg={altTextWizardPackage} />
+        </Card>
+      </CardGroup>
+    </Section>
+  </main>
+</Document>

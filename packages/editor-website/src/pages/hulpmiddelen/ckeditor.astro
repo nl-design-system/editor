@@ -1,11 +1,23 @@
 ---
-import Document from '../layouts/document.astro';
+import Document from '../../layouts/document.astro';
+import SectionNavigation from '../../components/SectionNavigation.astro';
+import PackageLinks from '../../components/PackageLinks.astro';
+import ckeditorPackage from '@nl-design-system-community/ckeditor-plugin/package.json';
+import { useTranslations } from '../../i18n/translations.ts';
+
+const t = useTranslations('nl');
 ---
 
 <Document title="NL Design System - CKEditor">
+  <SectionNavigation href={t('nav.href.libraries')} />
   <main>
     <div class="ma-page-section ma-page-section--with-space">
-      <h1>CKEditor Clippy</h1>
+      <h1>Clippy Editor CKEditor-plugin</h1>
+      <p class="nl-paragraph">
+        Een CKEditor 5-plugin waarmee je de toegankelijkheidsvalidaties van de Clippy Editor toevoegt aan elke
+        CKEditor-instantie.
+      </p>
+      <PackageLinks pkg={ckeditorPackage} />
       <div id="ck-editor"></div>
     </div>
   </main>

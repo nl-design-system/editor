@@ -1,4 +1,4 @@
 ---
-title: NL Design System - Rich-text editor
-intro: This project uses a customized version of the Tiptap rich text editor, a flexible and extensible editor based on ProseMirror.
+title: Write accessible content with Clippy Editor
+intro: Clippy Editor points out accessibility problems to editors while they write, and explains how to fix them.
 ---

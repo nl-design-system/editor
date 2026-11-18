@@ -1,0 +1,46 @@
+---
+import Document from '../../layouts/document.astro';
+import SectionNavigation from '../../components/SectionNavigation.astro';
+import Section from '../../components/Section.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
+import PackageLinks from '../../components/PackageLinks.astro';
+import typo3Package from '@nl-design-system-community/typo3-ckeditor-plugin/package.json';
+import { useTranslations } from '../../i18n/translations.ts';
+
+const t = useTranslations('nl');
+---
+
+<Document title={t('library.typo3.title')}>
+  <SectionNavigation href={t('nav.href.libraries')} />
+  <main>
+    <h1 class="nl-heading nl-heading--level-1">TYPO3</h1>
+    <p class="nl-paragraph">
+      Installeer de Clippy Editor-extensie in TYPO3. De Clippy Editor wordt dan toegevoegd aan elke rich-text editor,
+      welke preset die ook gebruikt, zodat de toegankelijkheidsvalidaties direct beschikbaar zijn voor redacteuren.
+    </p>
+    <PackageLinks pkg={typo3Package} />
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">De Clippy Editor uitzetten</h2>
+      <p class="nl-paragraph">
+        De Clippy Editor staat aan zodra de extensie is geïnstalleerd. Zet de Clippy Editor voor de hele installatie uit
+        met <em>Add Clippy to every rich text editor</em> onder{' '}
+        <em>Admin Tools → Settings → Extension Configuration → clippy</em>.
+      </p>
+      <p class="nl-paragraph">Laat de Clippy Editor weg uit één preset door de module in die preset te verwijderen:</p>
+      <CodeBlock
+        code={`editor:\n  config:\n    removeImportModules:\n      - '@nl-design-system-community/clippy/clippy.js'`}
+      />
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Page review</h2>
+      <p class="nl-paragraph">
+        Ben je ingelogd in de backend, dan zie je op pagina's in de frontend een knop voor <em>Page review</em>. Die
+        toont de toegankelijkheidsmeldingen van de hele pagina. Zet <em>Page review</em> uit met{' '}
+        <em>Show Page review on frontend pages</em> onder{' '}
+        <em>Admin Tools → Settings → Extension Configuration → clippy</em>.
+      </p>
+    </Section>
+  </main>
+</Document>

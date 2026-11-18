@@ -34,6 +34,7 @@ const GUIDELINE_VALIDATIONS: ReadonlyArray<readonly [id: string, validations: re
   ['editor-19', [coreValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]],
   ['editor-20', [coreValidations.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC]],
   ['editor-21', [coreValidations.LINK_SHOULD_NOT_BE_TOO_GENERIC]],
+  ['clippy-example-heading-level', [coreValidations.HEADING_LEVEL_MUST_NOT_SKIP]],
 ];
 
 const hubs: ClippyHub[] = [];

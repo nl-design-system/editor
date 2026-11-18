@@ -1,0 +1,72 @@
+---
+import ckeditorLogo from '../../assets/logos/ckeditor.svg?raw';
+import drupalLogo from '../../assets/logos/drupal.svg?raw';
+import typo3Logo from '../../assets/logos/typo3.svg?raw';
+import Document from '../../layouts/document.astro';
+import Section from '../../components/Section.astro';
+import Card from '../../components/Card.astro';
+import CardGroup from '../../components/CardGroup.astro';
+import PackageLinks from '../../components/PackageLinks.astro';
+import editorPackage from '@nl-design-system-community/editor/package.json';
+import a11yValidatorPackage from '@nl-design-system-community/clippy-a11y-validator/package.json';
+import altTextWizardPackage from '@nl-design-system-community/clippy-alt-text-wizard/package.json';
+import ckeditorPackage from '@nl-design-system-community/ckeditor-plugin/package.json';
+import drupalPackage from '@nl-design-system-community/drupal-ckeditor-plugin/package.json';
+import typo3Package from '@nl-design-system-community/typo3-ckeditor-plugin/package.json';
+import { useTranslations } from '../../i18n/translations.ts';
+
+const t = useTranslations('nl');
+---
+
+<Document title={t('libraries.title')}>
+  <main>
+    <h1 class="nl-heading nl-heading--level-1">Hulpmiddelen</h1>
+    <p class="nl-paragraph">
+      De Clippy Editor bestaat uit losse pakketten die je apart of samen gebruikt. Kies de pakketten die passen bij jouw
+      website of CMS.
+    </p>
+
+    <Section>
+      <CardGroup>
+        <Card heading="Toegankelijkheidsvalidator" href={t('nav.href.library.a11y-validator')}>
+          <p>
+            Controleert HTML op de contentrichtlijnen van NL Design System, in de editor en via de command line tegen
+            gepubliceerde HTML.
+          </p>
+          <PackageLinks pkg={a11yValidatorPackage} />
+        </Card>
+
+        <Card heading="CKEditor" logo={ckeditorLogo} href={t('nav.href.library.ckeditor')}>
+          <p>
+            Een CKEditor 5-plugin waarmee je de toegankelijkheidsvalidaties van de Clippy Editor toevoegt aan elke
+            CKEditor-instantie.
+          </p>
+          <PackageLinks pkg={ckeditorPackage} />
+        </Card>
+
+        <Card heading="Drupal" logo={drupalLogo} href={t('nav.href.library.drupal')}>
+          <p>Een Drupal-module die de Clippy Editor toevoegt aan de CKEditor van Drupal.</p>
+          <PackageLinks pkg={drupalPackage} />
+        </Card>
+
+        <Card heading="TYPO3" logo={typo3Logo} href={t('nav.href.library.typo3')}>
+          <p>Een TYPO3-extensie die de Clippy Editor toevoegt aan elke rich-text editor.</p>
+          <PackageLinks pkg={typo3Package} />
+        </Card>
+
+        <Card heading="Editor" href={t('nav.href.library.editor')}>
+          <p>
+            De toegankelijke rich-text editor als Web Components. Werkt in elk framework, ook als React-component, en
+            controleert de inhoud terwijl redacteuren schrijven.
+          </p>
+          <PackageLinks pkg={editorPackage} />
+        </Card>
+
+        <Card heading="Alt-tekst wizard" href={t('nav.href.alt-text-wizard')}>
+          <p>Een stapsgewijze wizard die auteurs helpt bij het schrijven van toegankelijke alt-teksten.</p>
+          <PackageLinks pkg={altTextWizardPackage} />
+        </Card>
+      </CardGroup>
+    </Section>
+  </main>
+</Document>
