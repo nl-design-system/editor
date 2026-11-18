@@ -20,7 +20,7 @@ const t = useTranslations('en');
           <span class="nl-button__label">Preview</span>
         </a>
       </div>
-      <clippy-editor id="clippy-editor-localhost">
+      <clippy-editor id="clippy-editor-localhost" data-clippy-ignore="content">
         <div slot="value">
           <h1>NL Design System Editor heading 1</h1>
           <p>
@@ -39,8 +39,12 @@ const t = useTranslations('en');
             Built on the banks of a river of which it made use as
             <a href="https://example.com">two arms</a> to reach, on the one side, the Haarlemmermeer and the surrounding
             lands, and on the other the IJ, and through the IJ, the Zuiderzee, it had already early taken advantage of
-            this favourable position to conduct a<a href="https://example.com"> </a>trade that, though seldom extending
-            further than the regions surrounding those inland seas, nonetheless provided it with opportunity.
+            this favourable position to conduct a
+            <a href="https://example.com" data-clippy-ignore>
+              {' '}
+            </a>
+            trade that, though seldom extending further than the regions surrounding those inland seas, nonetheless
+            provided it with opportunity.
           </p>
           <table>
             <tbody>

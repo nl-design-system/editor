@@ -35,6 +35,7 @@ export function ReactHubExample() {
       <div className="clippy-hub-example__content">
         <div
           ref={targetRef}
+          aria-label="Voorbeeldinhoud"
           aria-multiline="true"
           contentEditable
           role="textbox"

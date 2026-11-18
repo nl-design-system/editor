@@ -243,11 +243,11 @@ export const validationGroups: ValidationGroup[] = [
       {
         example: {
           en: `
-          <p>Empty Link: <a href="#">&nbsp;</a></p>
+          <p>Empty Link: <a href="#" data-clippy-ignore>&nbsp;</a></p>
           <p>Link with text: <a href="#">text</a></p>
         `,
           nl: `
-          <p>Empty Link: <a href="#">&nbsp;</a></p>
+          <p>Empty Link: <a href="#" data-clippy-ignore>&nbsp;</a></p>
           <p>Link with text: <a href="#">text</a></p>
         `,
         },
@@ -617,10 +617,10 @@ export const validationGroups: ValidationGroup[] = [
       {
         example: {
           en: `
-          <p><img src="https://placehold.co/320x240" /></p>
+          <p><img src="https://placehold.co/320x240" data-clippy-ignore /></p>
         `,
           nl: `
-          <p><img src="https://placehold.co/320x240" /></p>
+          <p><img src="https://placehold.co/320x240" data-clippy-ignore /></p>
         `,
         },
         rule: 'IMAGE_MUST_HAVE_ALT_TEXT',
