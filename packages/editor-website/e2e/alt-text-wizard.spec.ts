@@ -1,9 +1,13 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures/axe.ts';
 
 test.describe('Alt-text wizard (NL)', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/hulpmiddelen/alt-tekst-wizard');
     await expect(page.locator('clippy-alt-text-wizard')).toBeVisible();
+  });
+
+  test('has no detectable WCAG 2.2 AA violations', async ({ page }) => {
+    await expect(page).not.toHaveAutoDetectableA11yIssues();
   });
 
   test('first question is shown with yes/no radio buttons', async ({ page }) => {
