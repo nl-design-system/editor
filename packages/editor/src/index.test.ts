@@ -57,24 +57,21 @@ describe('<clippy-editor>', () => {
     const text = page.getByRole('heading', { name: 'Start met kopniveau 1' }).element();
     expect(text).toBeInTheDocument();
 
-    await vi.waitFor(() => {
-      expect(page.getByLabelText('Fouten, waarschuwingen of tips', { exact: true })).toBeInTheDocument();
-    });
-
-    expect(page.getByLabelText('Fouten, waarschuwingen of tips', { exact: true })).toHaveAttribute('hidden');
-    expect(page.getByTestId('clippy-validations-drawer')).toHaveAttribute('hidden');
+    await vi.waitFor(() => expect(document.querySelector('clippy-sidebar')).not.toBeNull());
+    expect(document.querySelector('clippy-sidebar')!.open).toBe(false);
     await user.click(text);
     if (isMacOS()) {
       await user.keyboard('{meta>}{alt>}{t}{/alt}{/meta}');
     } else {
       await user.keyboard('{control>}{alt>}{t}{/alt}{/control}');
     }
-    const a11yDrawer = page.getByTestId('clippy-validations-drawer');
-    await expect.element(a11yDrawer).not.toHaveAttribute('hidden');
+    await expect
+      .element(page.getByLabelText('Fouten, waarschuwingen of tips', { exact: true }))
+      .not.toHaveAttribute('hidden');
 
     await vi.waitFor(() => {
-      const drawer = document.querySelector('clippy-validations-drawer');
-      const list = drawer?.shadowRoot?.querySelector('clippy-validations-list');
+      const validationsView = document.querySelector('clippy-validations-view');
+      const list = validationsView?.shadowRoot?.querySelector('clippy-validations-list');
       const emptyMsg = list?.shadowRoot?.querySelector('p');
       expect(emptyMsg?.textContent?.trim() ?? '').toContain('Geen validatiemeldingen gevonden');
     });

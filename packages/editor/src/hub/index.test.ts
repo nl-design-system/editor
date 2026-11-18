@@ -47,20 +47,23 @@ describe('ClippyHub', () => {
     expect(rulesIn(trigger.violationsMap)).toEqual([coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
   });
 
-  it('feeds its drawer and the gutter the same violations, target and identifier', async () => {
+  it('feeds its sidebar views and the gutter the same violations, target and identifier', async () => {
     target.innerHTML = '<h1>Titel</h1><p></p>';
     const gutter = document.body.appendChild(document.createElement('clippy-validations-gutter'));
 
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
-    const drawer = hub.drawer!;
+    const validationsView = hub.validationsView!;
+    const contentViews = hub.contentViews!;
     hub.connect({ gutter });
     await hub.validate();
 
-    expect(drawer.identifier).toBe(IDENTIFIER);
+    expect(validationsView.identifier).toBe(IDENTIFIER);
+    expect(contentViews.identifier).toBe(IDENTIFIER);
     expect(gutter.identifier).toBe(IDENTIFIER);
-    expect(drawer.htmlDocument).toBe(target);
-    expect(rulesIn(drawer.violationsMap)).toEqual([coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
-    expect(gutter.violationsMap).toBe(drawer.violationsMap);
+    expect(contentViews.htmlDocument).toBe(target);
+    expect(rulesIn(validationsView.violationsMap)).toEqual([coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
+    expect(gutter.violationsMap).toBe(validationsView.violationsMap);
+    expect(contentViews.violationsMap).toBe(validationsView.violationsMap);
   });
 
   it('feeds a connected validations list the violations and identifier', async () => {
@@ -184,8 +187,8 @@ describe('ClippyHub', () => {
   });
 });
 
-describe('ClippyHub Drawer', () => {
-  const openDrawer = () =>
+describe('ClippyHub sidebar', () => {
+  const openValidations = () =>
     globalThis.dispatchEvent(
       new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { identifier: IDENTIFIER, mode: 'validations' } }),
     );
@@ -197,24 +200,27 @@ describe('ClippyHub Drawer', () => {
     return scope;
   };
 
-  it('docks a themed Drawer in <body>, and removes it once destroyed', () => {
+  it('docks a themed sidebar with the validations view and Content views in <body>, and removes it once destroyed', () => {
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
-    const { drawer } = hub;
+    const { contentViews, sidebar, validationsView } = hub;
 
-    expect(drawer?.parentElement).toBe(document.body);
-    expect(drawer?.classList.contains(THEME_CLASS)).toBe(true);
-    expect(drawer?.identifier).toBe(IDENTIFIER);
+    expect(sidebar?.parentElement).toBe(document.body);
+    expect(sidebar?.classList.contains(THEME_CLASS)).toBe(true);
+    expect([...(sidebar?.children ?? [])]).toEqual([validationsView, contentViews]);
+    for (const element of [sidebar, validationsView, contentViews]) {
+      expect(element?.identifier).toBe(IDENTIFIER);
+    }
 
     hub.destroy();
 
-    expect(drawer?.isConnected).toBe(false);
+    expect(sidebar?.isConnected).toBe(false);
   });
 
-  it('gives the page width back when destroyed while its Drawer is open', async () => {
+  it('gives the page width back when destroyed while its sidebar is open', async () => {
     target.innerHTML = '<h1>Titel</h1><p></p>';
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
     await hub.validate();
-    openDrawer();
+    openValidations();
     await expect.poll(() => document.documentElement.style.marginInlineEnd).not.toBe('');
 
     hub.destroy();
@@ -227,11 +233,11 @@ describe('ClippyHub Drawer', () => {
     scope.append(target);
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
 
-    expect(hub.drawer?.classList.contains(DARK_COLOR_SCHEME_CLASS)).toBe(true);
+    expect(hub.sidebar?.classList.contains(DARK_COLOR_SCHEME_CLASS)).toBe(true);
 
     scope.classList.remove(DARK_COLOR_SCHEME_CLASS);
 
-    await expect.poll(() => hub?.drawer?.classList.contains(DARK_COLOR_SCHEME_CLASS)).toBe(false);
+    await expect.poll(() => hub?.sidebar?.classList.contains(DARK_COLOR_SCHEME_CLASS)).toBe(false);
   });
 
   it('follows the color scheme around colorSchemeElement when one is given', () => {
@@ -240,18 +246,20 @@ describe('ClippyHub Drawer', () => {
 
     hub = new ClippyHub({ colorSchemeElement, identifier: IDENTIFIER, target });
 
-    expect(hub.drawer?.classList.contains(DARK_COLOR_SCHEME_CLASS)).toBe(true);
+    expect(hub.sidebar?.classList.contains(DARK_COLOR_SCHEME_CLASS)).toBe(true);
   });
 
-  it('docks no Drawer when drawer is false', () => {
-    hub = new ClippyHub({ createDrawer: false, identifier: IDENTIFIER, target });
+  it('docks no sidebar when createSidebar is false', () => {
+    hub = new ClippyHub({ createSidebar: false, identifier: IDENTIFIER, target });
 
-    expect(hub.drawer).toBeNull();
-    expect(document.querySelector('clippy-validations-drawer')).toBeNull();
+    expect(hub.sidebar).toBeNull();
+    expect(hub.validationsView).toBeNull();
+    expect(hub.contentViews).toBeNull();
+    expect(document.querySelector('clippy-sidebar')).toBeNull();
   });
 });
 
-describe('Multiple ClippyHub Drawers on one page', () => {
+describe('Multiple ClippyHub sidebars on one page', () => {
   const OTHER_IDENTIFIER = 'clippy-hub-test-other';
   let otherHub: ClippyHub | undefined;
 
@@ -260,46 +268,46 @@ describe('Multiple ClippyHub Drawers on one page', () => {
     otherHub = undefined;
   });
 
-  const openDrawerOf = (identifier: string) =>
+  const openValidationsOf = (identifier: string) =>
     globalThis.dispatchEvent(
       new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { identifier, mode: 'validations' } }),
     );
 
-  it('closes the open Drawer of another hub when its own Drawer opens, reserving the width of one Drawer', async () => {
+  it('closes the open sidebar of another hub when its own sidebar opens, reserving the width of one sidebar', async () => {
     target.innerHTML = '<h1>Titel</h1><p></p>';
     const otherTarget = document.body.appendChild(document.createElement('div'));
     otherTarget.innerHTML = '<h1>Titel</h1><p></p>';
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
     otherHub = new ClippyHub({ identifier: OTHER_IDENTIFIER, target: otherTarget });
-    const drawer = hub.drawer!;
-    const otherDrawer = otherHub.drawer!;
+    const sidebar = hub.sidebar!;
+    const otherSidebar = otherHub.sidebar!;
     await Promise.all([hub.validate(), otherHub.validate()]);
 
-    openDrawerOf(IDENTIFIER);
-    await expect.poll(() => drawer.hasAttribute('open')).toBe(true);
+    openValidationsOf(IDENTIFIER);
+    await expect.poll(() => sidebar.hasAttribute('open')).toBe(true);
 
-    openDrawerOf(OTHER_IDENTIFIER);
-    await expect.poll(() => otherDrawer.hasAttribute('open')).toBe(true);
-    await expect.poll(() => drawer.hasAttribute('open')).toBe(false);
+    openValidationsOf(OTHER_IDENTIFIER);
+    await expect.poll(() => otherSidebar.hasAttribute('open')).toBe(true);
+    await expect.poll(() => sidebar.hasAttribute('open')).toBe(false);
 
-    const { width } = otherDrawer.getBoundingClientRect();
+    const { width } = otherSidebar.getBoundingClientRect();
     expect(width).toBeGreaterThan(0);
     expect(document.documentElement.style.marginInlineEnd).toBe(`${width}px`);
   });
 });
 
-describe('ClippyHub drawer session', () => {
-  const openDrawer = () =>
+describe('ClippyHub sidebar session', () => {
+  const openValidations = () =>
     globalThis.dispatchEvent(
       new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { identifier: IDENTIFIER, mode: 'validations' } }),
     );
 
-  const closeDrawer = () =>
+  const closeSidebar = () =>
     globalThis.dispatchEvent(new CustomEvent(CustomEvents.CLOSE_SIDEBAR, { detail: { identifier: IDENTIFIER } }));
 
-  const focusButtons = (drawer: Element) =>
+  const focusButtons = (view: Element) =>
     [
-      ...(drawer.shadowRoot
+      ...(view.shadowRoot
         ?.querySelector('clippy-validations-list')
         ?.shadowRoot?.querySelectorAll('clippy-validation-item') ?? []),
     ].map((item) =>
@@ -311,7 +319,7 @@ describe('ClippyHub drawer session', () => {
       [...(CSS.highlights.get(name)?.keys() ?? [])].map((range) => range.toString()),
     );
 
-  it('re-validates the target when its drawer opens', async () => {
+  it('re-validates the target when a sidebar opens', async () => {
     target.innerHTML = '<h1>Titel</h1><p></p>';
     const trigger = createTrigger();
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
@@ -320,86 +328,107 @@ describe('ClippyHub drawer session', () => {
     expect(trigger.violationsMap?.size).toBe(1);
 
     target.append(document.createElement('p'));
-    openDrawer();
+    openValidations();
 
     await expect.poll(() => trigger.violationsMap?.size).toBe(2);
   });
 
-  it('moves focus into the drawer when it opens, and back to the trigger when it closes', async () => {
+  it('moves focus into a sidebar when it opens, and back to the trigger when it closes', async () => {
     target.innerHTML = '<h1>Titel</h1><p></p>';
     const trigger = createTrigger();
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
-    const drawer = hub.drawer!;
+    const validationsView = hub.validationsView!;
     hub.connect({ trigger });
     await hub.validate();
 
-    openDrawer();
-    await expect.poll(() => document.activeElement).toBe(drawer);
+    openValidations();
+    await expect.poll(() => document.activeElement).toBe(validationsView);
 
-    closeDrawer();
+    closeSidebar();
     await expect.poll(() => document.activeElement).toBe(trigger);
   });
 
-  it('moves focus back to the trigger when Escape closes the drawer', async () => {
+  it('moves focus to the sidebar that replaces an open one', async () => {
+    target.innerHTML = '<h1>Titel</h1><p></p>';
+    hub = new ClippyHub({ identifier: IDENTIFIER, target });
+    const validationsView = hub.validationsView!;
+    const contentViews = hub.contentViews!;
+    hub.connect({ trigger: createTrigger() });
+    await hub.validate();
+    openValidations();
+    await expect.poll(() => document.activeElement).toBe(validationsView);
+
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { identifier: IDENTIFIER, mode: 'link-list' } }),
+    );
+
+    await expect.poll(() => document.activeElement).toBe(contentViews);
+    expect(validationsView.open).toBe(false);
+  });
+
+  it('moves focus back to the trigger when Escape closes a sidebar', async () => {
     target.innerHTML = '<h1>Titel</h1><p></p>';
     const trigger = createTrigger();
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
-    const drawer = hub.drawer!;
+    const validationsView = hub.validationsView!;
     hub.connect({ trigger });
     await hub.validate();
 
-    openDrawer();
-    await expect.poll(() => document.activeElement).toBe(drawer);
-    drawer.shadowRoot
-      ?.querySelector('.clippy-drawer__title')
+    openValidations();
+    await expect.poll(() => document.activeElement).toBe(validationsView);
+    validationsView.shadowRoot
+      ?.querySelector('.clippy-validations-view__title')
       ?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'Escape' }));
 
-    await expect.poll(() => drawer.hasAttribute('open')).toBe(false);
+    await expect.poll(() => validationsView.open).toBe(false);
     await expect.poll(() => document.activeElement).toBe(trigger);
   });
 
-  it('moves focus back to the trigger when the close button closes the drawer', async () => {
+  it('moves focus back to the trigger when the close button closes a sidebar', async () => {
     target.innerHTML = '<h1>Titel</h1><p></p>';
     const trigger = createTrigger();
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
-    const drawer = hub.drawer!;
+    const validationsView = hub.validationsView!;
     hub.connect({ trigger });
     await hub.validate();
 
-    openDrawer();
-    await expect.poll(() => document.activeElement).toBe(drawer);
-    drawer.shadowRoot?.querySelector('.clippy-drawer__close-button')?.shadowRoot?.querySelector('button')?.click();
+    openValidations();
+    await expect.poll(() => document.activeElement).toBe(validationsView);
+    hub.sidebar?.shadowRoot
+      ?.querySelector('.clippy-sidebar__close-button')
+      ?.shadowRoot?.querySelector('button')
+      ?.click();
 
-    await expect.poll(() => drawer.hasAttribute('open')).toBe(false);
+    await expect.poll(() => validationsView.open).toBe(false);
     await expect.poll(() => document.activeElement).toBe(trigger);
   });
 
-  it('keeps the drawer open and hands the violation of a picked drawer item to focusViolation', async () => {
+  it('keeps the validations view open and hands the violation of a picked item to focusViolation', async () => {
     target.innerHTML = '<h1>Titel</h1><p></p>';
     const focused: Violation[] = [];
     hub = new ClippyHub({ focusViolation: (violation) => focused.push(violation), identifier: IDENTIFIER, target });
-    const drawer = hub.drawer!;
+    const validationsView = hub.validationsView!;
     await hub.validate();
 
-    openDrawer();
-    await expect.poll(() => focusButtons(drawer).length).toBe(1);
-    focusButtons(drawer)[0]?.click();
-    await drawer.updateComplete;
+    openValidations();
+    await expect.poll(() => focusButtons(validationsView).length).toBe(1);
+    focusButtons(validationsView)[0]?.click();
+    await validationsView.updateComplete;
 
     expect(focused.map(({ element }) => element)).toEqual([target.querySelector('p')]);
-    expect(drawer.hasAttribute('open')).toBe(true);
+    expect(validationsView.open).toBe(true);
   });
 
   it('scrolls a focused violation into view by default, without highlighting it', async () => {
     target.innerHTML = '<h1>Titel</h1><div style="block-size: 300vh"></div><h3>Overgeslagen</h3>';
     const heading = target.querySelector('h3')!;
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
-    const drawer = hub.drawer!;
+    const validationsView = hub.validationsView!;
     await hub.validate();
 
-    openDrawer();
-    await expect.poll(() => focusButtons(drawer).length).toBe(1);
-    focusButtons(drawer)[0]?.click();
+    openValidations();
+    await expect.poll(() => focusButtons(validationsView).length).toBe(1);
+    focusButtons(validationsView)[0]?.click();
 
     await expect.poll(() => heading.getBoundingClientRect().bottom <= window.innerHeight).toBe(true);
     expect(highlightedText()).toEqual([]);
@@ -412,8 +441,8 @@ describe('ClippyHub views without a context provider', () => {
       new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { identifier: IDENTIFIER, mode } }),
     );
 
-  const inDrawer = <K extends keyof HTMLElementTagNameMap>(drawer: Element, tag: K) =>
-    drawer.shadowRoot!.querySelector(tag)!;
+  const inContentViews = <K extends keyof HTMLElementTagNameMap>(contentViews: Element, tag: K) =>
+    contentViews.shadowRoot!.querySelector(tag)!;
 
   const textsOf = (element: Element, selector: string) =>
     [...(element.shadowRoot?.querySelectorAll(selector) ?? [])].map(({ textContent }) => textContent?.trim());
@@ -422,30 +451,30 @@ describe('ClippyHub views without a context provider', () => {
     target.innerHTML = '<h1>Titel</h1><h2>Sectie</h2><p><a href="/contact">Contact</a></p><p lang="en">Hello</p>';
     document.body.append(Object.assign(document.createElement('h3'), { textContent: 'Buiten' }));
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
-    const drawer = hub.drawer!;
+    const contentViews = hub.contentViews!;
     await hub.validate();
 
     openOverview('heading-structure');
     await expect
-      .poll(() => textsOf(inDrawer(drawer, 'clippy-heading-structure'), '.clippy-heading-structure__text'))
+      .poll(() => textsOf(inContentViews(contentViews, 'clippy-heading-structure'), '.clippy-heading-structure__text'))
       .toEqual(['Titel', 'Sectie']);
 
     openOverview('link-list');
-    await expect.poll(() => textsOf(inDrawer(drawer, 'clippy-link-list'), 'a')).toEqual(['Contact']);
+    await expect.poll(() => textsOf(inContentViews(contentViews, 'clippy-link-list'), 'a')).toEqual(['Contact']);
 
     openOverview('language-changes');
-    await expect.poll(() => textsOf(inDrawer(drawer, 'clippy-language-changes'), 'a')).toContain('Hello');
+    await expect.poll(() => textsOf(inContentViews(contentViews, 'clippy-language-changes'), 'a')).toContain('Hello');
   });
 
   it('scrolls the element picked in a Content view into view inside the validated element', async () => {
     target.innerHTML = '<h1>Titel</h1><div style="block-size: 300vh"></div><h2>Verderop</h2>';
     const heading = target.querySelector('h2')!;
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
-    const drawer = hub.drawer!;
+    const contentViews = hub.contentViews!;
     await hub.validate();
 
     openOverview('heading-structure');
-    const headingStructure = inDrawer(drawer, 'clippy-heading-structure');
+    const headingStructure = inContentViews(contentViews, 'clippy-heading-structure');
     await expect.poll(() => headingStructure.shadowRoot?.querySelectorAll('button').length).toBe(2);
     headingStructure.shadowRoot!.querySelectorAll('button')[1].click();
 

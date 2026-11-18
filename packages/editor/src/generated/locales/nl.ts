@@ -99,6 +99,7 @@
 'sd6048d71ae60e1d2': `Doorhalen`,
 'sd79022be2c5470fc': `Werkbalk tekstbewerker`,
 'sd830252189685028': `Fouten, waarschuwingen en tips`,
+'sdb81093099bff15f': `Documentoverzicht`,
 'sdf946172dfa0328f': `Superscript`,
 'se3b4c857f91f80d7': `Sneltoetsen`,
 'se44dd3f2702d6bdb': `Link verwijderen`,

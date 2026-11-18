@@ -1,13 +1,12 @@
 import type { Validation } from '@nl-design-system-community/clippy-a11y-validator';
-import type { ValidationsDrawer } from '@/components/validations/drawer';
+import type { ContentViews } from '@/components/content-views';
+import type { Sidebar } from '@/components/sidebar';
+import type { ValidationsView } from '@/components/validations/view';
 import type { Violation, ViolationsMap } from '@/types/validation';
-import '@/components/validations/drawer';
-import {
-  CustomEvents,
-  type CorrectValidationIssueEvent,
-  type FocusNodeEvent,
-  type SidebarToggleEvent,
-} from '@/events';
+import '@/components/content-views';
+import '@/components/sidebar';
+import '@/components/validations/view';
+import { CustomEvents, type CorrectValidationIssueEvent, type FocusNodeEvent, type SidebarToggleEvent } from '@/events';
 import { setDarkColorScheme, THEME_CLASSES, watchHostColorScheme } from '@/utils/colorScheme';
 import { debounce } from '@/utils/debounce';
 import { waitForMedia } from '@/utils/waitForMedia';
@@ -29,12 +28,12 @@ export interface ClippyHubViews {
 export interface ClippyHubOptions {
   identifier: string;
   target: HTMLElement;
-  /** The element whose surrounding color scheme the Drawer follows. Defaults to `target`. */
+  /** The element whose surrounding color scheme the sidebar follows. Defaults to `target`. */
   colorSchemeElement?: HTMLElement;
-  /** Whether the hub docks a Drawer in `<body>`. Defaults to `true`. */
-  createDrawer?: boolean;
+  /** Whether the hub docks a sidebar with the validations view and the Content views in `<body>`. Defaults to `true`. */
+  createSidebar?: boolean;
   adaptViolations?: (violationsMap: ViolationsMap) => ViolationsMap;
-  /** Shows the violation of a focused drawer item. Defaults to scrolling it into view. */
+  /** Shows the violation of a focused validations view item. Defaults to scrolling it into view. */
   focusViolation?: (violation: Violation) => void;
   validations?: readonly Validation[];
 }
@@ -60,7 +59,9 @@ const settleMedia = async (target: HTMLElement): Promise<void> => {
 };
 
 export class ClippyHub {
-  readonly drawer: ValidationsDrawer | null;
+  readonly sidebar: Sidebar | null = null;
+  readonly validationsView: ValidationsView | null = null;
+  readonly contentViews: ContentViews | null = null;
   #unwatchColorScheme?: () => void;
   readonly #adaptViolations: (violationsMap: ViolationsMap) => ViolationsMap;
   readonly #focusViolation: (violation: Violation) => void;
@@ -75,7 +76,7 @@ export class ClippyHub {
   constructor({
     adaptViolations = (violationsMap) => violationsMap,
     colorSchemeElement,
-    createDrawer = true,
+    createSidebar = true,
     focusViolation = scrollIntoView,
     identifier,
     target,
@@ -96,19 +97,21 @@ export class ClippyHub {
     globalThis.addEventListener(CustomEvents.SIDEBAR_TOGGLE, this.#handleSidebarToggle);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#handleFocusNode);
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#handleCorrection);
-    this.drawer = createDrawer ? this.#createDrawer(colorSchemeElement ?? target) : null;
-  }
-
-  #createDrawer(colorSchemeElement: HTMLElement): ValidationsDrawer {
-    const drawer = document.createElement('clippy-validations-drawer');
-    drawer.identifier = this.#identifier;
-    drawer.htmlDocument = this.#target;
-    drawer.classList.add(...THEME_CLASSES);
-    this.#unwatchColorScheme = watchHostColorScheme(colorSchemeElement, (colorScheme) =>
-      setDarkColorScheme(colorScheme === 'dark', drawer),
+    if (!createSidebar) return;
+    const sidebar = document.createElement('clippy-sidebar');
+    this.sidebar = sidebar;
+    this.validationsView = document.createElement('clippy-validations-view');
+    this.contentViews = document.createElement('clippy-content-views');
+    this.contentViews.htmlDocument = target;
+    for (const element of [sidebar, this.validationsView, this.contentViews]) {
+      element.identifier = identifier;
+    }
+    sidebar.classList.add(...THEME_CLASSES);
+    this.#unwatchColorScheme = watchHostColorScheme(colorSchemeElement ?? target, (colorScheme) =>
+      setDarkColorScheme(colorScheme === 'dark', sidebar),
     );
-    document.body.append(drawer);
-    return drawer;
+    sidebar.append(this.validationsView, this.contentViews);
+    document.body.append(sidebar);
   }
 
   set validations(validations: readonly Validation[] | undefined) {
@@ -135,7 +138,7 @@ export class ClippyHub {
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#handleFocusNode);
     globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#handleCorrection);
     this.#unwatchColorScheme?.();
-    this.drawer?.remove();
+    this.sidebar?.remove();
   }
 
   async validate(): Promise<void> {
@@ -155,15 +158,14 @@ export class ClippyHub {
     const { identifier, open } = (event as SidebarToggleEvent).detail;
     if (identifier !== this.#identifier) return;
 
-    const { drawer } = this;
     const { trigger } = this.#views;
     if (open) {
       this.validate().catch(console.error);
-      drawer?.focus();
+      [this.validationsView, this.contentViews].find((view) => view?.open)?.focus();
       return;
     }
     const active = document.activeElement;
-    if (!active || active === document.body || active === drawer) {
+    if (!active || active === document.body || this.sidebar?.contains(active)) {
       trigger?.focus();
     }
   };
@@ -199,8 +201,11 @@ export class ClippyHub {
     if (trigger) {
       trigger.violationsMap = violationsMap;
     }
-    if (this.drawer) {
-      this.drawer.violationsMap = violationsMap;
+    if (this.validationsView) {
+      this.validationsView.violationsMap = violationsMap;
+    }
+    if (this.contentViews) {
+      this.contentViews.violationsMap = violationsMap;
     }
   }
 }

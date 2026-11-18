@@ -82,9 +82,8 @@ export class PageReview extends ClippyHub {
   }
 
   readonly #handleSidebarToggle = (event: Event): void => {
-    const { identifier, open } = (event as SidebarToggleEvent).detail;
-    if (identifier !== IDENTIFIER) return;
-    if (open) {
+    if ((event as SidebarToggleEvent).detail.identifier !== IDENTIFIER) return;
+    if (this.sidebar?.open) {
       this.#reviewRoot.append(this.#gutter);
     } else {
       this.#gutter.remove();

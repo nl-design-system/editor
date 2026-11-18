@@ -35,7 +35,7 @@ declare global {
 /**
  * The main rich text editor component. It composes the toolbar, editable content area,
  * accessibility validation gutter and bubble menu, and validates its content through a
- * Clippy hub, which docks the Drawer at the end side of the screen.
+ * Clippy hub, which docks the validations view and the Content views at the end side of the screen.
  *
  * @tag clippy-editor
  *
