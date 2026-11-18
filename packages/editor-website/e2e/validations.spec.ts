@@ -1,6 +1,6 @@
-import { expect, test } from '@playwright/test';
 import { ruleAnchor } from '../src/utils/ruleAnchor.ts';
 import { validationGroups } from '../src/utils/validationGroups.ts';
+import { expect, test } from './fixtures/axe.ts';
 
 test.describe('Overview', () => {
   test.beforeEach(async ({ page }) => {
@@ -38,6 +38,12 @@ test.describe('Overview', () => {
       '/validaties/afbeelding',
     );
   });
+
+  test('has no detectable WCAG 2.2 AA violations', async ({ makeAxeBuilder }) => {
+    const results = await makeAxeBuilder().analyze();
+
+    expect(results.violations).toEqual([]);
+  });
 });
 
 test.describe('Component pages', () => {
@@ -45,6 +51,12 @@ test.describe('Component pages', () => {
     test.describe(label.nl, () => {
       test.beforeEach(async ({ page }) => {
         await page.goto(`/validaties/${slug.nl}`);
+      });
+
+      test('has no detectable WCAG 2.2 AA violations', async ({ makeAxeBuilder }) => {
+        const results = await makeAxeBuilder().analyze();
+
+        expect(results.violations).toEqual([]);
       });
 
       test('page heading and navigation link are present', async ({ page }) => {
