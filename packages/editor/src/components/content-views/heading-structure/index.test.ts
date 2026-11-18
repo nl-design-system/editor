@@ -1,8 +1,6 @@
 import { violation } from '@test/violation';
-import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import type { ViolationsMap } from '@/types/validation';
-import { CustomEvents } from '@/events';
+import { CustomEvents, type FocusNodeDetail } from '@/events';
 import { initializeLocale } from '@/localization';
 import './index';
 import type { HeadingStructure } from './index';
@@ -119,53 +117,44 @@ describe('<clippy-heading-structure>', () => {
   });
 
   describe('interactivity', () => {
-    it('dispatches FOCUS_VALIDATION_ITEM_IN_GUTTER with the validation key when clicking a heading that has a validation entry', async () => {
-      const { headingStructure, root } = await setupWithContent('<h1>Titel</h1>');
+    let details: FocusNodeDetail[];
+    const record = (event: Event) => details.push((event as CustomEvent<FocusNodeDetail>).detail);
 
-      const headingEl = root.querySelector('h1')!;
-      const headingRange = document.createRange();
-      headingRange.selectNode(headingEl);
-
-      const violationsMap: ViolationsMap = new Map([
-        [headingRange, violation({ range: headingRange, severity: 'warning' })],
-      ]);
-
-      headingStructure.violationsMap = violationsMap;
-      await headingStructure.updateComplete;
-
-      const button = headingStructure.shadowRoot!.querySelector('button') as HTMLButtonElement;
-      expect(button).toBeVisible();
-
-      let receivedRange: Range | undefined;
-      const handler = (e: Event) => {
-        receivedRange = (e as CustomEvent<{ range: Range }>).detail.range;
-      };
-      globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
-
-      button.click();
-
-      expect(receivedRange).toBe(headingRange);
-
-      globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
+    beforeEach(() => {
+      details = [];
+      globalThis.addEventListener(CustomEvents.FOCUS_NODE, record);
     });
 
-    it('does not dispatch FOCUS_VALIDATION_ITEM_IN_GUTTER when the clicked heading has no validation entry', async () => {
-      const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
+    afterEach(() => {
+      globalThis.removeEventListener(CustomEvents.FOCUS_NODE, record);
+    });
 
-      const button = await waitFor(() => headingStructure.shadowRoot!.querySelector('button') as HTMLButtonElement);
-      expect(button).toBeVisible();
+    it('asks to focus the validation of the clicked heading, like its Focus button', async () => {
+      const { headingStructure, root } = await setupWithContent('<h1>Titel</h1>');
+      headingStructure.identifier = 'editor';
+      const headingRange = document.createRange();
+      headingRange.selectNode(root.querySelector('h1')!);
+      headingStructure.violationsMap = new Map([
+        [headingRange, violation({ range: headingRange, severity: 'warning' })],
+      ]);
+      await headingStructure.updateComplete;
 
-      let eventFired = false;
-      const handler = () => {
-        eventFired = true;
-      };
-      globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
+      headingStructure.shadowRoot!.querySelector('button')!.click();
 
-      button.click();
+      expect(details).toEqual([{ identifier: 'editor', range: headingRange }]);
+    });
 
-      expect(eventFired).toBe(false);
+    it('asks to focus a clicked heading without a validation', async () => {
+      const { headingStructure, root } = await setupWithContent('<h1>Titel</h1>');
+      headingStructure.identifier = 'editor';
+      await headingStructure.updateComplete;
 
-      globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, handler);
+      headingStructure.shadowRoot!.querySelector('button')!.click();
+
+      expect(details).toHaveLength(1);
+      expect(details[0].identifier).toBe('editor');
+      expect(details[0].range.startContainer).toBe(root.querySelector('h1'));
+      expect(details[0].range.startOffset).toBe(0);
     });
   });
 });

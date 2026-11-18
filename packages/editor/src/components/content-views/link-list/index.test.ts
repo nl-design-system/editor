@@ -2,6 +2,7 @@ import { violation } from '@test/violation';
 import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import type { ViolationsMap } from '@/types/validation';
+import { CustomEvents, type FocusNodeDetail } from '@/events';
 import { initializeLocale } from '@/localization';
 import type { LinkList } from './index';
 import './index';
@@ -185,6 +186,46 @@ describe('<clippy-link-list>', () => {
       expect(
         linkList.shadowRoot?.querySelector('.nl-data-badge')?.classList.contains('clippy-link-list__badge--error'),
       ).toBe(true);
+    });
+  });
+
+  describe('interactivity', () => {
+    let details: FocusNodeDetail[];
+    const record = (event: Event) => details.push((event as CustomEvent<FocusNodeDetail>).detail);
+
+    beforeEach(() => {
+      details = [];
+      globalThis.addEventListener(CustomEvents.FOCUS_NODE, record);
+    });
+
+    afterEach(() => {
+      globalThis.removeEventListener(CustomEvents.FOCUS_NODE, record);
+    });
+
+    it('asks to focus the validation of the clicked link, like its Focus button', async () => {
+      const { linkList, root } = await setupWithContent('<p><a href="/contact">Contact</a></p>');
+      linkList.identifier = 'editor';
+      const linkRange = document.createRange();
+      linkRange.selectNodeContents(root.querySelector('a')!);
+      linkList.violationsMap = new Map([[linkRange, violation({ range: linkRange, severity: 'warning' })]]);
+      await linkList.updateComplete;
+
+      linkList.shadowRoot!.querySelector<HTMLAnchorElement>('a.nl-link')!.click();
+
+      expect(details).toEqual([{ identifier: 'editor', range: linkRange }]);
+    });
+
+    it('asks to focus a clicked link without a validation', async () => {
+      const { linkList, root } = await setupWithContent('<p><a href="/contact">Contact</a></p>');
+      linkList.identifier = 'editor';
+      await linkList.updateComplete;
+
+      linkList.shadowRoot!.querySelector<HTMLAnchorElement>('a.nl-link')!.click();
+
+      expect(details).toHaveLength(1);
+      expect(details[0].identifier).toBe('editor');
+      expect(details[0].range.startContainer).toBe(root.querySelector('a'));
+      expect(details[0].range.startOffset).toBe(0);
     });
   });
 });

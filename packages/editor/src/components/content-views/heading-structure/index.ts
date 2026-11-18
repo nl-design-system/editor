@@ -9,7 +9,7 @@ import { property } from 'lit/decorators.js';
 import '@nl-design-system-community/clippy-components/clippy-button';
 import { map } from 'lit/directives/map.js';
 import type { ViolationsMap, Violation } from '@/types/validation';
-import { CustomEvents, type FocusValidationItemInGutterDetail } from '@/events';
+import { CustomEvents, type FocusNodeDetail } from '@/events';
 import { localizeHost } from '@/localization';
 import { getHighestSeverityEntryByElement } from '@/utils/validations';
 import headingStructureStyles from './styles';
@@ -44,6 +44,10 @@ export class HeadingStructure extends LitElement {
   @property({ attribute: false })
   htmlDocument?: HTMLElement;
 
+  /** Identifier of the Clippy hub, used to scope the focus event. */
+  @property({ attribute: false })
+  identifier?: string;
+
   override connectedCallback() {
     super.connectedCallback();
     localizeHost(this);
@@ -64,18 +68,17 @@ export class HeadingStructure extends LitElement {
     }));
   }
 
-  #scrollToHeading(element: HTMLElement) {
+  #scrollToHeading(element: HTMLElement, range?: Range) {
     element.scrollIntoView({ block: 'start' });
-    const validationRange = getHighestSeverityEntryByElement(this.violationsMap, element)?.[0] ?? null;
-    if (validationRange) {
-      globalThis.dispatchEvent(
-        new CustomEvent<FocusValidationItemInGutterDetail>(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, {
-          bubbles: true,
-          composed: true,
-          detail: { range: validationRange },
-        }),
-      );
-    }
+    const focusRange = range ?? document.createRange();
+    if (!range) focusRange.selectNodeContents(element);
+    this.dispatchEvent(
+      new CustomEvent<FocusNodeDetail>(CustomEvents.FOCUS_NODE, {
+        bubbles: true,
+        composed: true,
+        detail: { identifier: this.identifier, range: focusRange },
+      }),
+    );
   }
 
   override render() {
@@ -95,7 +98,7 @@ export class HeadingStructure extends LitElement {
                           class="utrecht-link-button utrecht-link-button--html-button clippy-heading-structure__button"
                           @click=${(e: Event) => {
                             e.preventDefault();
-                            this.#scrollToHeading(element);
+                            this.#scrollToHeading(element, validationEntry?.[0]);
                           }}
                         >
                           <span

@@ -7,7 +7,7 @@ import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import type { ViolationsMap, Violation } from '@/types/validation';
-import { CustomEvents, type FocusValidationItemInGutterDetail } from '@/events';
+import { CustomEvents, type FocusNodeDetail } from '@/events';
 import { localizeHost } from '@/localization';
 import { getHighestSeverityEntryByElement } from '@/utils/validations';
 import linkListStyles from './styles';
@@ -41,6 +41,10 @@ export class LinkList extends LitElement {
   @property({ attribute: false })
   htmlDocument?: HTMLElement;
 
+  /** Identifier of the Clippy hub, used to scope the focus event. */
+  @property({ attribute: false })
+  identifier?: string;
+
   override connectedCallback() {
     super.connectedCallback();
     localizeHost(this);
@@ -61,17 +65,17 @@ export class LinkList extends LitElement {
     }));
   }
 
-  #scrollToLink(element: HTMLAnchorElement, validationRange: Range | undefined) {
+  #scrollToLink(element: HTMLAnchorElement, range?: Range) {
     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    if (validationRange) {
-      globalThis.dispatchEvent(
-        new CustomEvent<FocusValidationItemInGutterDetail>(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, {
-          bubbles: true,
-          composed: true,
-          detail: { range: validationRange },
-        }),
-      );
-    }
+    const focusRange = range ?? document.createRange();
+    if (!range) focusRange.selectNodeContents(element);
+    this.dispatchEvent(
+      new CustomEvent<FocusNodeDetail>(CustomEvents.FOCUS_NODE, {
+        bubbles: true,
+        composed: true,
+        detail: { identifier: this.identifier, range: focusRange },
+      }),
+    );
   }
 
   override render() {

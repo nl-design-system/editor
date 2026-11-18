@@ -6,7 +6,6 @@ export const CustomEvents = {
   FOCUS_NODE: 'FOCUS_NODE',
   FOCUS_TOOLBAR: 'FOCUS_TOOLBAR',
   FOCUS_VALIDATION_ITEM_IN_DRAWER: 'FOCUS_VALIDATION_ITEM_IN_DRAWER',
-  FOCUS_VALIDATION_ITEM_IN_GUTTER: 'FOCUS_VALIDATION_ITEM_IN_GUTTER',
   FOCUS_VALIDATION_ITEM_IN_LIST: 'FOCUS_VALIDATION_ITEM_IN_LIST',
   OPEN_DOCUMENT_OVERVIEW: 'OPEN_DOCUMENT_OVERVIEW',
   OPEN_IMAGE_DIALOG: 'OPEN_IMAGE_DIALOG',
@@ -44,12 +43,6 @@ export interface FocusNodeDetail {
 }
 
 export type FocusNodeEvent = CustomEvent<FocusNodeDetail>;
-
-export interface FocusValidationItemInGutterDetail {
-  range: Range;
-}
-
-export type FocusValidationItemInGutterEvent = CustomEvent<FocusValidationItemInGutterDetail>;
 
 export interface FocusValidationItemInListDetail {
   range: Range;
