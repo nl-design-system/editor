@@ -66,7 +66,7 @@ const translations = {
     'nav.react': 'React',
     'nav.side.label': 'Side navigation',
     'react.title': 'React integration - Rich-text Editor - NL Design System',
-    'site.logo.label': 'NL Design System Editor – home',
+    'site.logo.label': 'Clippy Editor – home',
 
     'site.title': 'Rich-text Editor - NL Design System',
     'theme.toggle': 'Dark mode',
@@ -140,7 +140,7 @@ const translations = {
     'nav.react': 'React',
     'nav.side.label': 'Zijmenu',
     'react.title': 'React integratie - Rich-text Editor - NL Design System',
-    'site.logo.label': 'NL Design System Editor – home',
+    'site.logo.label': 'Clippy Editor – startpagina',
     'site.title': 'Rich-text Editor - NL Design System',
     'theme.toggle': 'Donkere modus',
     'validations.card.guideline': 'Lees de richtlijn op NL Design System',
