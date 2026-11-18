@@ -15,19 +15,19 @@ const t = useTranslations('en');
   <main>
     <h1 class="nl-heading nl-heading--level-1">TYPO3</h1>
     <p class="nl-paragraph">
-      Install the Clippy extension in TYPO3. Clippy is then added to every rich-text editor, whatever preset it uses, so
-      the accessibility validations are immediately available to editors.
+      Install the Clippy Editor extension in TYPO3. Clippy Editor is then added to every rich-text editor, whatever
+      preset it uses, so the accessibility validations are immediately available to editors.
     </p>
     <PackageLinks pkg={typo3Package} />
 
     <Section>
-      <h2 class="nl-heading nl-heading--level-2">Switching Clippy off</h2>
+      <h2 class="nl-heading nl-heading--level-2">Switching Clippy Editor off</h2>
       <p class="nl-paragraph">
-        Clippy is on as soon as the extension is installed. To switch it off for the whole installation, clear{' '}
+        Clippy Editor is on as soon as the extension is installed. To switch it off for the whole installation, clear{' '}
         <em>Add Clippy to every rich text editor</em> under{' '}
         <em>Admin Tools → Settings → Extension Configuration → clippy</em>.
       </p>
-      <p class="nl-paragraph">To leave Clippy out of a single preset, remove its module in that preset:</p>
+      <p class="nl-paragraph">To leave Clippy Editor out of a single preset, remove its module in that preset:</p>
       <CodeBlock
         code={`editor:\n  config:\n    removeImportModules:\n      - '@nl-design-system-community/clippy/clippy.js'`}
       />

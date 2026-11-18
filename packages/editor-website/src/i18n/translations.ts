@@ -24,7 +24,7 @@ const translations = {
     'guidelines.title': 'Validations - Rich-text Editor - NL Design System',
     'index.cta.github': 'Clippy Editor on GitHub',
     'index.cta.roadmap': 'Clippy Editor Roadmap',
-    'index.title': 'Write accessible content with Clippy - NL Design System',
+    'index.title': 'Write accessible content with Clippy Editor - NL Design System',
     'libraries.title': 'Tools - Rich-text Editor - NL Design System',
     'library.a11y-validator.title': 'Accessibility validator - Rich-text Editor - NL Design System',
     'library.drupal.title': 'Drupal - Rich-text Editor - NL Design System',
@@ -95,7 +95,7 @@ const translations = {
     'index.cta.github': 'Clippy Editor op GitHub',
 
     'index.cta.roadmap': 'Clippy Editor Roadmap',
-    'index.title': 'Toegankelijke content schrijven met Clippy - NL Design System',
+    'index.title': 'Toegankelijke content schrijven met de Clippy Editor - NL Design System',
     'libraries.title': 'Hulpmiddelen - Rich-text Editor - NL Design System',
 
     'library.a11y-validator.title': 'Toegankelijkheidsvalidator - Rich-text Editor - NL Design System',
