@@ -284,6 +284,9 @@ importers:
 
   packages/editor:
     dependencies:
+      '@amsterdam/design-system-css':
+        specifier: 4.5.0
+        version: 4.5.0
       '@gemeente-denhaag/descriptionlist':
         specifier: 4.1.2
         version: 4.1.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)

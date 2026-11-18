@@ -1,7 +1,7 @@
 import { coreValidationRules } from '@nl-design-system-community/clippy-a11y-validator';
 import { violation } from '@test/violation';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { page } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import type { Violation } from '@/types/validation';
 import { CustomEvents } from '@/events';
 import './index';
@@ -287,5 +287,87 @@ describe('<clippy-validations-drawer> on a page', () => {
       { identifier: IDENTIFIER, open: true },
       { identifier: IDENTIFIER, open: false },
     ]);
+  });
+});
+
+describe('<clippy-validations-drawer> content view tabs', () => {
+  const IDENTIFIER = 'tabs-editor';
+
+  const openOverview = (mode: string) =>
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { identifier: IDENTIFIER, mode } }),
+    );
+
+  beforeEach(async () => {
+    document.documentElement.lang = 'nl';
+    const drawer = document.createElement('clippy-validations-drawer');
+    drawer.identifier = IDENTIFIER;
+    document.body.replaceChildren(drawer);
+    await drawer.updateComplete;
+  });
+
+  afterEach(() => {
+    document.body.replaceChildren();
+  });
+
+  it('shows a tab per content view with the opened view selected', async () => {
+    openOverview('link-list');
+
+    await vi.waitFor(() => expect(page.getByRole('tab').elements()).toHaveLength(3));
+    await expect.element(page.getByRole('tab', { name: 'Kopstructuur' })).toHaveAttribute('aria-selected', 'false');
+    await expect.element(page.getByRole('tab', { name: 'Links' })).toHaveAttribute('aria-selected', 'true');
+    await expect.element(page.getByRole('tab', { name: 'Taalwijzigingen' })).toHaveAttribute('aria-selected', 'false');
+    await expect.element(page.getByRole('tabpanel', { name: 'Links' })).toBeVisible();
+  });
+
+  it('does not show tabs for the validations', async () => {
+    openOverview('validations');
+
+    await expect.element(page.getByTestId('clippy-validations-drawer')).not.toHaveAttribute('hidden');
+    await expect.element(page.getByRole('tablist')).not.toBeInTheDocument();
+  });
+
+  it('switches the content view when a tab is clicked', async () => {
+    openOverview('heading-structure');
+
+    await userEvent.click(page.getByRole('tab', { name: 'Taalwijzigingen' }));
+
+    await expect.element(page.getByRole('tab', { name: 'Taalwijzigingen' })).toHaveAttribute('aria-selected', 'true');
+    await expect.element(page.getByRole('tabpanel', { name: 'Taalwijzigingen' })).toBeVisible();
+    await expect.element(page.getByRole('tabpanel', { name: 'Kopstructuur' })).not.toBeInTheDocument();
+  });
+
+  it('only keeps the selected tab in the tab sequence', async () => {
+    openOverview('link-list');
+
+    await expect.element(page.getByRole('tab', { name: 'Links' })).toHaveAttribute('tabindex', '0');
+    await expect.element(page.getByRole('tab', { name: 'Kopstructuur' })).toHaveAttribute('tabindex', '-1');
+  });
+
+  it('moves between tabs with the arrow, Home and End keys', async () => {
+    openOverview('heading-structure');
+    const tab = (name: string) => page.getByRole('tab', { name });
+    const drawer = document.querySelector('clippy-validations-drawer')!;
+    const expectFocus = (name: string) =>
+      vi.waitFor(() => expect(drawer.shadowRoot?.activeElement).toBe(tab(name).element()));
+    await expect.element(tab('Kopstructuur')).toBeVisible();
+    (tab('Kopstructuur').element() as HTMLElement).focus();
+
+    await userEvent.keyboard('{ArrowRight}');
+    await expectFocus('Links');
+    await expect.element(tab('Links')).toHaveAttribute('aria-selected', 'true');
+
+    await userEvent.keyboard('{End}');
+    await expectFocus('Taalwijzigingen');
+
+    await userEvent.keyboard('{ArrowRight}');
+    await expectFocus('Kopstructuur');
+
+    await userEvent.keyboard('{ArrowLeft}');
+    await expectFocus('Taalwijzigingen');
+
+    await userEvent.keyboard('{Home}');
+    await expectFocus('Kopstructuur');
+    await expect.element(tab('Kopstructuur')).toHaveAttribute('aria-selected', 'true');
   });
 });

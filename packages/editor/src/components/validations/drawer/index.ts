@@ -1,4 +1,5 @@
 import type { ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
+import tabsStyles from '@amsterdam/design-system-css/dist/tabs/tabs.css?inline';
 import { localized, msg } from '@lit/localize';
 import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/number-badge.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
@@ -42,6 +43,16 @@ const canScroll = (element: Element, deltaY: number): boolean => {
   return deltaY < 0 ? scrollTop > 0 : deltaY > 0 && scrollTop + clientHeight < scrollHeight - 1;
 };
 
+const CONTENT_VIEWS = ['heading-structure', 'link-list', 'language-changes'] as const;
+
+type ContentView = (typeof CONTENT_VIEWS)[number];
+
+const isContentView = (mode: DocumentOverviewMode): mode is ContentView => CONTENT_VIEWS.includes(mode as ContentView);
+
+const tabId = (view: ContentView) => `clippy-drawer-tab-${view}`;
+
+const panelId = (view: ContentView) => `clippy-drawer-panel-${view}`;
+
 /**
  * Docked drawer panel that lists all accessibility violations and
  * provides document overview panels (heading structure, link list, language
@@ -66,7 +77,12 @@ const canScroll = (element: Element, deltaY: number): boolean => {
 @localized()
 @safeCustomElement(tag)
 export class ValidationsDrawer extends LitElement {
-  static override readonly styles = [drawerStyles, unsafeCSS(numberBadgeStyles), unsafeCSS(paragraphStyle)];
+  static override readonly styles = [
+    drawerStyles,
+    unsafeCSS(numberBadgeStyles),
+    unsafeCSS(paragraphStyle),
+    unsafeCSS(tabsStyles),
+  ];
   @state()
   private open = false;
 
@@ -280,7 +296,11 @@ export class ValidationsDrawer extends LitElement {
 
   /** Title of the content currently shown in the drawer. */
   #getTitle(): string {
-    switch (this._mode) {
+    return this.#getLabel(this._mode);
+  }
+
+  #getLabel(mode: DocumentOverviewMode): string {
+    switch (mode) {
       case 'heading-structure':
         return msg('Heading structure');
       case 'link-list':
@@ -316,6 +336,71 @@ export class ValidationsDrawer extends LitElement {
     </clippy-button>`;
   }
 
+  readonly #handleTabKeydown = async (event: KeyboardEvent) => {
+    if (!isContentView(this._mode)) return;
+    const next = this.#getNextContentView(event.key, CONTENT_VIEWS.indexOf(this._mode));
+    if (!next) return;
+
+    event.preventDefault();
+    this._mode = next;
+    await this.updateComplete;
+    this.shadowRoot?.getElementById(tabId(next))?.focus();
+  };
+
+  #getNextContentView(key: string, index: number): ContentView | undefined {
+    const { length } = CONTENT_VIEWS;
+    switch (key) {
+      case 'ArrowRight':
+        return CONTENT_VIEWS[(index + 1) % length];
+      case 'ArrowLeft':
+        return CONTENT_VIEWS[(index - 1 + length) % length];
+      case 'Home':
+        return CONTENT_VIEWS[0];
+      case 'End':
+        return CONTENT_VIEWS[length - 1];
+      default:
+        return undefined;
+    }
+  }
+
+  /** Tabs to switch between the Content views, rendered only while one is shown. */
+  #renderTabs() {
+    if (!isContentView(this._mode)) return nothing;
+    return html`<div class="clippy-drawer__tabs ams-tabs__list" role="tablist">
+      ${CONTENT_VIEWS.map((view) => {
+        const selected = view === this._mode;
+        const label = this.#getLabel(view);
+        return html`<button
+          class="ams-tabs__button"
+          id=${tabId(view)}
+          role="tab"
+          type="button"
+          aria-controls=${panelId(view)}
+          aria-selected=${selected}
+          tabindex=${selected ? 0 : -1}
+          @click=${() => (this._mode = view)}
+          @keydown=${this.#handleTabKeydown}
+        >
+          <span class="ams-tabs__button-label">${label}</span>
+          <span class="ams-tabs__button-label-hidden">${label}</span>
+        </button>`;
+      })}
+    </div>`;
+  }
+
+  #renderContentViewPanel(view: ContentView, content: unknown) {
+    return html`<div
+      class="ams-tabs__panel"
+      id=${panelId(view)}
+      role="tabpanel"
+      aria-labelledby=${tabId(view)}
+      tabindex="0"
+      ?hidden=${this._mode !== view}
+    >
+      ${content}
+    </div>`;
+  }
+
   override render() {
     const isValidations = this._mode === 'validations';
     const violations = this.#violations;
@@ -336,6 +421,7 @@ export class ValidationsDrawer extends LitElement {
             ${msg('Close')}
           </clippy-button>
         </div>
+        ${this.#renderTabs()}
         <div class="clippy-drawer__filters">
           <clippy-validation-filters
             .identifier=${this.identifier}
@@ -345,18 +431,21 @@ export class ValidationsDrawer extends LitElement {
           ${this.#renderShowAllButton()}
         </div>
         <div class="clippy-drawer__body">
-          <div role="region" aria-label=${msg('Heading structure')} ?hidden=${this._mode !== 'heading-structure'}>
-            <clippy-heading-structure
+          ${this.#renderContentViewPanel(
+            'heading-structure',
+            html`<clippy-heading-structure
               .htmlDocument=${htmlDocument}
               .violationsMap=${violations}
-            ></clippy-heading-structure>
-          </div>
-          <div role="region" aria-label=${msg('Links')} ?hidden=${this._mode !== 'link-list'}>
-            <clippy-link-list .htmlDocument=${htmlDocument} .violationsMap=${violations}></clippy-link-list>
-          </div>
-          <div role="region" aria-label=${msg('Language changes')} ?hidden=${this._mode !== 'language-changes'}>
-            <clippy-language-changes .htmlDocument=${htmlDocument}></clippy-language-changes>
-          </div>
+            ></clippy-heading-structure>`,
+          )}
+          ${this.#renderContentViewPanel(
+            'link-list',
+            html`<clippy-link-list .htmlDocument=${htmlDocument} .violationsMap=${violations}></clippy-link-list>`,
+          )}
+          ${this.#renderContentViewPanel(
+            'language-changes',
+            html`<clippy-language-changes .htmlDocument=${htmlDocument}></clippy-language-changes>`,
+          )}
           <div role="region" aria-label=${msg('Validations')} ?hidden=${!isValidations}>
             <clippy-validations-list
               .identifier=${this.identifier}
