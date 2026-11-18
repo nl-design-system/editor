@@ -316,7 +316,8 @@ test.describe('Accessibility notifications', () => {
     await expect(drawer.getByRole('button', { name: 'Corrigeren' }).first()).toBeVisible();
   });
 
-  test('opening the drawer narrows the page, so the drawer covers no content', async ({ page }) => {
+  test('opening the drawer narrows the page, so the drawer covers no content', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name === 'chromium-400-zoom', 'The drawer takes the full width there');
     const clippyEditor = page.locator('#clippy-editor-localhost');
     await clippyEditor.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
     await clippyEditor.getByRole('button', { name: 'Fouten, waarschuwingen en tips' }).click();
@@ -327,6 +328,22 @@ test.describe('Accessibility notifications', () => {
     const editorBox = (await clippyEditor.boundingBox())!;
     expect(editorBox.x + editorBox.width).toBeLessThanOrEqual(drawerBox.x);
     expect(await page.evaluate(() => document.documentElement.style.marginInlineEnd)).toBe(`${drawerBox.width}px`);
+  });
+
+  test('a drawer as wide as the screen lies over the page instead of narrowing it', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium-400-zoom', 'Only the narrow viewport has no room beside the drawer');
+    const clippyEditor = page.locator('#clippy-editor-localhost');
+    const scrollWidth = () => page.evaluate(() => document.documentElement.scrollWidth);
+    const scrollWidthBefore = await scrollWidth();
+    await clippyEditor.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
+    await clippyEditor.getByRole('button', { name: 'Fouten, waarschuwingen en tips' }).click();
+
+    const drawer = page.locator('body > clippy-validations-drawer[open]');
+    await expect(drawer.getByTestId('clippy-validations-drawer')).toBeVisible();
+    const drawerBox = (await drawer.boundingBox())!;
+    expect(drawerBox.x).toBe(0);
+    expect(await page.evaluate(() => document.documentElement.style.marginInlineEnd)).toBe('');
+    expect(await scrollWidth()).toBe(scrollWidthBefore);
   });
 
   test('navigate to node via Focus button, keeping the drawer open', async ({ page }) => {

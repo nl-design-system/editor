@@ -17,7 +17,8 @@ export const observeDrawerOffsets = (drupal) => {
   const update = () => {
     let openInlineSize = 0;
     for (const drawer of globalThis.document.querySelectorAll(DRAWER)) {
-      const inlineSize = drawer.hasAttribute('open') ? Math.round(drawer.getBoundingClientRect().width) : 0;
+      const width = drawer.hasAttribute('open') ? Math.round(drawer.getBoundingClientRect().width) : 0;
+      const inlineSize = width < root.clientWidth ? width : 0;
       openInlineSize = Math.max(openInlineSize, inlineSize);
       drawer.setAttribute(`data-offset-${edge}`, String(inlineSize));
     }
