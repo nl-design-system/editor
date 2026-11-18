@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures/axe.ts';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/demo');
@@ -7,6 +7,10 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('Page basics', () => {
+  test('has no detectable WCAG 2.2 AA violations', async ({ page }) => {
+    await expect(page).not.toHaveAutoDetectableA11yIssues();
+  });
+
   test('page has correct title', async ({ page }) => {
     await expect(page).toHaveTitle('Demo - Clippy Editor - NL Design System');
   });
