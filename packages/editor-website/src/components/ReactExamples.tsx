@@ -1,9 +1,4 @@
-import {
-  ClippyAccessibilityNotifications,
-  ClippyEditor,
-  ClippyGutter,
-  ClippyValidationsDrawer,
-} from '@nl-design-system-community/editor-react';
+import { ClippyAccessibilityNotifications, ClippyEditor, ClippyGutter } from '@nl-design-system-community/editor-react';
 import { useClippyHub } from '@nl-design-system-community/editor-react/hub';
 
 export function ReactEditorExample() {
@@ -25,7 +20,7 @@ export function ReactEditorExample() {
 }
 
 export function ReactHubExample() {
-  const { drawerRef, gutterRef, scheduleValidation, targetRef, triggerRef } = useClippyHub({
+  const { gutterRef, scheduleValidation, targetRef, triggerRef } = useClippyHub({
     identifier: 'react-hub-example',
   });
 
@@ -50,7 +45,6 @@ export function ReactHubExample() {
         </div>
         <ClippyGutter ref={gutterRef} mode="drawer" />
       </div>
-      <ClippyValidationsDrawer ref={drawerRef} />
     </div>
   );
 }

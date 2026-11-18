@@ -1,5 +1,4 @@
 import type { ViolationsMap } from '@/types/validation';
-import '@/components/validations/drawer';
 import '@/components/validations/gutter';
 import {
   DEFAULT_FLOATING_POSITION,
@@ -41,7 +40,6 @@ const withoutCorrections = (violationsMap: ViolationsMap): ViolationsMap => {
 
 export class PageReview extends ClippyHub {
   readonly #trigger = document.createElement('clippy-accessibility-notifications');
-  readonly #drawer = document.createElement('clippy-validations-drawer');
   readonly #gutter = document.createElement('clippy-validations-gutter');
   readonly #reviewRoot: HTMLElement;
 
@@ -69,13 +67,11 @@ export class PageReview extends ClippyHub {
       this.#trigger.classList.add(...THEME_CLASSES);
       document.body.append(this.#trigger);
     }
-    this.#drawer.classList.add(...THEME_CLASSES);
-    document.body.append(this.#drawer);
     this.#gutter.classList.add(...THEME_CLASSES);
     this.#gutter.mode = validationInteractionMode.DRAWER;
     this.#gutter.overlay = true;
     this.#gutter.contentElement = this.#reviewRoot;
-    this.connect({ drawer: this.#drawer, gutter: this.#gutter, trigger: this.#trigger });
+    this.connect({ gutter: this.#gutter, trigger: this.#trigger });
     if (gutter === 'always') {
       this.#reviewRoot.append(this.#gutter);
     } else {
@@ -100,6 +96,5 @@ export class PageReview extends ClippyHub {
     globalThis.removeEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
     this.#gutter.remove();
     this.#trigger.remove();
-    this.#drawer.remove();
   }
 }

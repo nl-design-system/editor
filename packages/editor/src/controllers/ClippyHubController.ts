@@ -7,6 +7,7 @@ export interface ClippyHubControllerOptions {
   identifier: () => string;
   validations: () => readonly Validation[] | undefined;
   views: () => ClippyHubViews;
+  colorSchemeElement?: () => HTMLElement;
   adaptViolations?: (violationsMap: ViolationsMap) => ViolationsMap;
 }
 
@@ -21,9 +22,15 @@ export class ClippyHubController implements ReactiveController {
 
   connect(target: HTMLElement): ClippyHub | undefined {
     this.#hub?.destroy();
-    const { adaptViolations, identifier, validations, views } = this.#options;
+    const { adaptViolations, colorSchemeElement, identifier, validations, views } = this.#options;
     try {
-      this.#hub = new ClippyHub({ adaptViolations, identifier: identifier(), target, validations: validations() });
+      this.#hub = new ClippyHub({
+        adaptViolations,
+        colorSchemeElement: colorSchemeElement?.(),
+        identifier: identifier(),
+        target,
+        validations: validations(),
+      });
     } catch (error) {
       this.#hub = undefined;
       console.error(error);

@@ -311,9 +311,22 @@ test.describe('Accessibility notifications', () => {
     await clippyEditor.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
     await clippyEditor.getByRole('button', { name: 'Fouten, waarschuwingen en tips' }).click();
 
-    const drawer = clippyEditor.getByTestId('clippy-validations-drawer');
+    const drawer = page.getByTestId('clippy-validations-drawer');
     await expect(drawer).toBeVisible();
-    await expect(clippyEditor.getByRole('button', { name: 'Corrigeren' }).first()).toBeVisible();
+    await expect(drawer.getByRole('button', { name: 'Corrigeren' }).first()).toBeVisible();
+  });
+
+  test('opening the drawer narrows the page, so the drawer covers no content', async ({ page }) => {
+    const clippyEditor = page.locator('#clippy-editor-localhost');
+    await clippyEditor.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
+    await clippyEditor.getByRole('button', { name: 'Fouten, waarschuwingen en tips' }).click();
+
+    const drawer = page.locator('body > clippy-validations-drawer[open]');
+    await expect(drawer.getByTestId('clippy-validations-drawer')).toBeVisible();
+    const drawerBox = (await drawer.boundingBox())!;
+    const editorBox = (await clippyEditor.boundingBox())!;
+    expect(editorBox.x + editorBox.width).toBeLessThanOrEqual(drawerBox.x);
+    expect(await page.evaluate(() => document.documentElement.style.marginInlineEnd)).toBe(`${drawerBox.width}px`);
   });
 
   test('navigate to node via Focus button, keeping the drawer open', async ({ page }) => {
@@ -321,10 +334,10 @@ test.describe('Accessibility notifications', () => {
     await clippyEditor.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
     await clippyEditor.getByRole('button', { name: 'Fouten, waarschuwingen en tips' }).click();
 
-    const drawer = clippyEditor.getByTestId('clippy-validations-drawer');
+    const drawer = page.getByTestId('clippy-validations-drawer');
     await expect(drawer).toBeVisible();
 
-    await clippyEditor.getByRole('button', { name: 'Focus' }).first().click();
+    await drawer.getByRole('button', { name: 'Focus' }).first().click();
     await expect(drawer).toBeVisible();
   });
 });
