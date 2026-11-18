@@ -13,7 +13,9 @@ export const test = base.extend<AxeFixture>({
         .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
         .exclude('[data-clippy-ignore]:not([data-clippy-ignore="content"])')
         .exclude({ fromShadowDom: ['[data-clippy-ignore="content"]', '.tiptap > *'] })
-        .exclude('[data-clippy-ignore="content"] .ck-content > *');
+        .exclude('[data-clippy-ignore="content"] .ck-content > *')
+        // clippy-components 3.9.0 points this button's aria-controls at a drawer in another shadow root
+        .exclude({ fromShadowDom: ['clippy-page-header', 'clippy-button[controls="clippy-mobile-menu-drawer"]'] });
 
     await use(makeAxeBuilder);
   },
