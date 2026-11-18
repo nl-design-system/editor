@@ -26,6 +26,7 @@ import {
   type OpenDocumentOverviewEvent,
   type OpenValidationGroupEvent,
   type ValidationsDrawerToggleDetail,
+  type ValidationsDrawerToggleEvent,
 } from '@/events';
 import { localizeHost } from '@/localization';
 import drawerStyles from './styles';
@@ -99,9 +100,7 @@ export class ValidationsDrawer extends LitElement {
   @property({ attribute: false })
   identifier?: string;
 
-  readonly #resizeObserver = new ResizeObserver(() => this.#reservePageWidth());
-
-  #hasReservedPageWidth = false;
+  readonly #resizeObserver = new ResizeObserver(() => this.#updatePageWidth());
 
   get #violations(): ViolationsMap {
     return this.violationsMap ?? NO_VIOLATIONS;
@@ -111,7 +110,7 @@ export class ValidationsDrawer extends LitElement {
     super.updated(changed);
     if (!changed.has('open')) return;
     this.toggleAttribute('open', this.open);
-    this.#reservePageWidth();
+    this.#updatePageWidth();
     if (this.open || changed.get('open') !== undefined) {
       globalThis.dispatchEvent(
         new CustomEvent<ValidationsDrawerToggleDetail>(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, {
@@ -126,24 +125,17 @@ export class ValidationsDrawer extends LitElement {
     this.shadowRoot?.querySelector<HTMLElement>('.clippy-drawer__title')?.focus();
   }
 
-  #reservePageWidth() {
-    if (!this.open || !this.isConnected) {
-      this.#releasePageWidth();
+  #updatePageWidth() {
+    const openDrawer = document.querySelector(`${tag}[open]`);
+    const { style } = document.documentElement;
+    if (!openDrawer) {
+      style.removeProperty('margin-inline-end');
+      style.removeProperty('max-inline-size');
       return;
     }
-    const width = this.getBoundingClientRect().width;
-    const { style } = document.documentElement;
+    const width = openDrawer.getBoundingClientRect().width;
     style.marginInlineEnd = `${width}px`;
     style.maxInlineSize = `calc(100% - ${width}px)`;
-    this.#hasReservedPageWidth = true;
-  }
-
-  #releasePageWidth() {
-    if (!this.#hasReservedPageWidth) return;
-    const { style } = document.documentElement;
-    style.removeProperty('margin-inline-end');
-    style.removeProperty('max-inline-size');
-    this.#hasReservedPageWidth = false;
   }
 
   override connectedCallback() {
@@ -151,7 +143,7 @@ export class ValidationsDrawer extends LitElement {
     localizeHost(this);
     this.#resizeObserver.observe(this);
     this.addEventListener('wheel', this.#keepWheelInDrawer, { passive: false });
-    if (this.hasUpdated) this.#reservePageWidth();
+    if (this.hasUpdated) this.#updatePageWidth();
     globalThis.addEventListener(CustomEvents.CLOSE_VALIDATIONS_DRAWER, this.#handleCloseDrawer);
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
     globalThis.addEventListener(CustomEvents.FILTER_CHANGE, this.#handleFilterChange);
@@ -159,12 +151,13 @@ export class ValidationsDrawer extends LitElement {
     globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#focusValidationItem);
     globalThis.addEventListener(CustomEvents.OPEN_DOCUMENT_OVERVIEW, this.#handleOverviewOpen);
     globalThis.addEventListener(CustomEvents.OPEN_VALIDATION_GROUP, this.#openValidationGroup);
+    globalThis.addEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
   }
 
   override disconnectedCallback() {
     this.#resizeObserver.disconnect();
     this.removeEventListener('wheel', this.#keepWheelInDrawer);
-    this.#releasePageWidth();
+    this.#updatePageWidth();
     globalThis.removeEventListener(CustomEvents.CLOSE_VALIDATIONS_DRAWER, this.#handleCloseDrawer);
     globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
     globalThis.removeEventListener(CustomEvents.FILTER_CHANGE, this.#handleFilterChange);
@@ -172,6 +165,7 @@ export class ValidationsDrawer extends LitElement {
     globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#focusValidationItem);
     globalThis.removeEventListener(CustomEvents.OPEN_DOCUMENT_OVERVIEW, this.#handleOverviewOpen);
     globalThis.removeEventListener(CustomEvents.OPEN_VALIDATION_GROUP, this.#openValidationGroup);
+    globalThis.removeEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
     super.disconnectedCallback();
   }
 
@@ -216,6 +210,13 @@ export class ValidationsDrawer extends LitElement {
   readonly #closeDrawer = () => {
     this.open = false;
     this.focusedValidationGroup = null;
+  };
+
+  readonly #handleDrawerToggle = (event: Event) => {
+    const { identifier, open } = (event as ValidationsDrawerToggleEvent).detail;
+    if (open && identifier !== this.identifier && this.open) {
+      this.#closeDrawer();
+    }
   };
 
   readonly #handleCloseDrawer = (event: Event) => {
