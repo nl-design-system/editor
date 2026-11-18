@@ -29,7 +29,7 @@ const example = validationGroups.flatMap(({ rules }) => rules).find((entry) => e
   <div id={`example-${ruleAnchor(rule)}`} data-validations={rule}>
     <clippy-card class="clippy-validation__card">
       <code slot="pre-header">{rule}</code>
-      <Heading slot="header" class="clippy-validation__title">
+      <Heading slot="header" class="clippy-validation__title" id={`title-${ruleAnchor(rule)}`}>
         {title}
       </Heading>
       <div slot="body" class="clippy-validation__body">
@@ -48,6 +48,7 @@ const example = validationGroups.flatMap(({ rules }) => rules).find((entry) => e
           <div class="clippy-validation__editor">
             <div
               class="clippy-validation__content"
+              aria-labelledby={`title-${ruleAnchor(rule)}`}
               contenteditable="true"
               data-clippy-demo
               role="textbox"

@@ -146,7 +146,7 @@ const translations = {
     'nav.react': 'React',
     'nav.side.label': 'Zijmenu',
     'react.title': 'React integratie - Clippy Editor - NL Design System',
-    'site.logo.label': 'Clippy Editor – home',
+    'site.logo.label': 'Clippy Editor – startpagina',
     'site.title': 'Clippy Editor - NL Design System',
     'theme.toggle': 'Donkere modus',
     'validations.card.guideline': 'Lees de richtlijn op NL Design System',
