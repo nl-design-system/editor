@@ -21,6 +21,16 @@ final class ClippyHooks {
   }
 
   /**
+   * Implements hook_library_info_alter().
+   */
+  #[Hook('library_info_alter')]
+  public function libraryInfoAlter(array &$libraries, string $extension): void {
+    if ($extension === 'olivero' && isset($libraries['global-styling'])) {
+      $libraries['global-styling']['dependencies'][] = 'clippy/olivero';
+    }
+  }
+
+  /**
    * Implements hook_editor_js_settings_alter().
    */
   #[Hook('editor_js_settings_alter')]

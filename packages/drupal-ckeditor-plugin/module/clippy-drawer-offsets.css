@@ -1,0 +1,18 @@
+/* stylelint-disable custom-property-pattern */
+:root {
+  --clippy-drawer-offset-block-start: max(
+    var(--drupal-displace-offset-top, 0px),
+    var(--clippy-drupal-preview-bar-block-end, 0px)
+  );
+}
+/* stylelint-enable custom-property-pattern */
+
+/* stylelint-disable-next-line selector-max-id */
+#drupal-off-canvas-wrapper[data-offset-right]:not([data-offset-right="0"]) {
+  translate: calc(-1 * var(--clippy-drupal-open-drawer-inline-size, 0px)) 0;
+}
+
+/* stylelint-disable-next-line selector-max-id */
+[dir="rtl"] #drupal-off-canvas-wrapper[data-offset-left]:not([data-offset-left="0"]) {
+  translate: var(--clippy-drupal-open-drawer-inline-size, 0) 0;
+}
