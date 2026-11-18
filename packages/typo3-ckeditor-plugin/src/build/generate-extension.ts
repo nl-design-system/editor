@@ -1,4 +1,4 @@
-import { cpSync, copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, copyFileSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { basename, resolve } from 'node:path';
 
@@ -116,7 +116,10 @@ export function generateExtension(): void {
   writeStyles();
   writePageReview();
 
-  rmSync(demoExtensionOut, { recursive: true, force: true });
+  mkdirSync(demoExtensionOut, { recursive: true });
+  for (const entry of readdirSync(demoExtensionOut)) {
+    rmSync(resolve(demoExtensionOut, entry), { recursive: true, force: true });
+  }
   cpSync(extensionOut, demoExtensionOut, { recursive: true });
 
   writePackFiles(manifest);
