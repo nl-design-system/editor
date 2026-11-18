@@ -70,6 +70,7 @@ const translations = {
 
     'site.title': 'Rich-text Editor - NL Design System',
     'theme.toggle': 'Dark mode',
+    'validations.card.guideline': 'Read the guideline on NL Design System',
   },
   nl: {
     'alt-text-wizard.title': 'Alt-tekst wizard - Rich-text Editor - NL Design System',
@@ -142,6 +143,7 @@ const translations = {
     'site.logo.label': 'NL Design System Editor – home',
     'site.title': 'Rich-text Editor - NL Design System',
     'theme.toggle': 'Donkere modus',
+    'validations.card.guideline': 'Lees de richtlijn op NL Design System',
   },
 } as const;
 
