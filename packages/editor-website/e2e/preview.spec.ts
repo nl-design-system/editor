@@ -1,4 +1,5 @@
-import { expect, test, type Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
+import { expect, test } from './fixtures/axe.ts';
 
 const trigger = (page: Page) => page.locator('clippy-accessibility-notifications');
 
@@ -17,6 +18,12 @@ test.describe('Page review on the preview page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/preview');
     await expect(page.locator('.preview-header__review clippy-accessibility-notifications')).toBeVisible();
+  });
+
+  test('has no detectable WCAG 2.2 AA violations', async ({ makeAxeBuilder }) => {
+    const results = await makeAxeBuilder().analyze();
+
+    expect(results.violations).toEqual([]);
   });
 
   test('the trigger counts the known issues in the demo content', async ({ page }) => {
