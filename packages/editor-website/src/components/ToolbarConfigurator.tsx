@@ -114,10 +114,10 @@ export function ToolbarConfigurator() {
                     size="small"
                     icon-only=""
                     className="clippy-toolbar-group__remove"
-                    aria-label={`Verwijder groep ${index + 1}`}
                     onClick={() => handleClick(index)}
                   >
                     <clippy-icon slot="iconStart" dangerouslySetInnerHTML={{ __html: xIconSvg }} />
+                    {`Verwijder groep ${index + 1}`}
                   </clippy-button>
                 </div>
               </div>
