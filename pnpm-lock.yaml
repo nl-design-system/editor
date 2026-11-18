@@ -564,6 +564,9 @@ importers:
       '@nl-design-system-community/clippy-components':
         specifier: 3.9.0
         version: 3.9.0
+      '@nl-design-system-community/drupal-ckeditor-plugin':
+        specifier: workspace:*
+        version: link:../drupal-ckeditor-plugin/dist/clippy
       '@nl-design-system-community/editor':
         specifier: workspace:*
         version: link:../editor
@@ -573,6 +576,9 @@ importers:
       '@nl-design-system-community/ma-design-tokens':
         specifier: 9.1.0
         version: 9.1.0
+      '@nl-design-system-community/typo3-ckeditor-plugin':
+        specifier: workspace:*
+        version: link:../typo3-ckeditor-plugin/dist/clippy
       '@tabler/icons':
         specifier: 3.50.0
         version: 3.50.0
