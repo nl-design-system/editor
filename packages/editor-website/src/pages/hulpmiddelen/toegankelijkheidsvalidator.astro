@@ -29,9 +29,9 @@ const t = useTranslations('nl');
       <h2 class="nl-heading nl-heading--level-2">Installeren</h2>
       <CodeBlock code={`npm install ${a11yValidatorPackage.name}`} />
       <p class="nl-paragraph">
-        De command line tool draait de validator in een browser en heeft daarom ook Playwright en Chromium nodig:
+        De command line tool leest elk document met happy-dom en heeft daarom geen browser nodig. Scripts in een
+        document worden niet uitgevoerd: de tool controleert de HTML zoals die geschreven is.
       </p>
-      <CodeBlock code={`npm install --save-dev playwright\nnpx playwright install chromium`} />
     </Section>
 
     <Section>
@@ -76,11 +76,12 @@ const t = useTranslations('nl');
           </tr>
           <tr class="utrecht-table__row">
             <td class="utrecht-table__cell">
-              <code>--fix</code>
+              <code>--diff</code>
             </td>
             <td class="utrecht-table__cell">
-              Pas de beschikbare correcties toe. De bestanden blijven ongewijzigd: de uitvoer toont de opmaak na het
-              corrigeren.
+              Toon bij elke validatiemelding een suggestie voor hoe je deze kan oplossen. Zijn er meerdere correcties
+              mogelijk, kun je de gewilde correctie selecteren uit een lijst. De oplossing wordt getoond, maar
+              overschrijft nooit het bronbestand.
             </td>
           </tr>
           <tr class="utrecht-table__row">

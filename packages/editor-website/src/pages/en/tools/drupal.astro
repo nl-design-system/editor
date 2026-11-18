@@ -14,8 +14,8 @@ const t = useTranslations('en');
   <main>
     <h1 class="nl-heading nl-heading--level-1">Drupal</h1>
     <p class="nl-paragraph">
-      Integrate Clippy into Drupal by adding the <code>ClippyPlugin</code> to the CKEditor configuration. This makes the
-      accessibility validations immediately available to editors.
+      Install the Clippy module in Drupal. The module adds Clippy to CKEditor 5, so the accessibility validations are
+      immediately available to editors.
     </p>
     <PackageLinks pkg={drupalPackage} />
 
@@ -24,16 +24,18 @@ const t = useTranslations('en');
       <ul>
         <li>Accessibility feedback in the editor.</li>
         <li>An alt-text wizard button for images, in text formats with the image plugin.</li>
-        <li>The design system classes CKEditor writes into the content.</li>
+        <li>
+          <em>Page review</em>: a button on pages in the frontend theme that shows the accessibility issues of the whole
+          page, for users with the <em>Use Page review</em> permission.
+        </li>
       </ul>
     </Section>
 
     <Section>
-      <h2 class="nl-heading nl-heading--level-2">Changing the classes</h2>
+      <h2 class="nl-heading nl-heading--level-2">Settings</h2>
       <p class="nl-paragraph">
-        Go to <em>Configuration → Content authoring → Text formats and editors</em>, edit a CKEditor 5 format and open
-        the <strong>Content classes</strong> tab. Every class can be changed, and clearing a field outputs that element
-        without a class.
+        Go to <em>Configuration → Content authoring → Clippy</em> to turn Clippy in CKEditor and <em>Page review</em> on
+        or off, and to choose which part of the page <em>Page review</em> validates.
       </p>
     </Section>
   </main>
