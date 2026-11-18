@@ -11,6 +11,8 @@ export const expect = base.extend({
       .exclude('[slot=value]')
       .exclude({ fromShadowDom: ['clippy-editor', '.tiptap > *'] })
       .exclude('.ck-content > *')
+      // Validation examples hold intentional mistakes, and data-clippy-ignore would hide them from validation too
+      .exclude('.clippy-validation__content > *')
       .analyze();
 
     return {
