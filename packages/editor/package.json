@@ -60,7 +60,8 @@
       "types": "./dist/entries/validators.d.ts",
       "default": "./dist/validators.js"
     },
-    "./theme.css": "./theme.css"
+    "./theme.css": "./theme.css",
+    "./package.json": "./package.json"
   },
   "typesVersions": {
     "*": {

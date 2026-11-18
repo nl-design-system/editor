@@ -24,7 +24,8 @@
     "./hub": {
       "types": "./dist/hub.d.ts",
       "default": "./dist/hub.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist"

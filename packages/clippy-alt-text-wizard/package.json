@@ -23,7 +23,8 @@
     "./state-machine": {
       "types": "./dist/state-machine.d.ts",
       "default": "./dist/state-machine.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "customElements": "dist/custom-elements.json",
   "files": [
