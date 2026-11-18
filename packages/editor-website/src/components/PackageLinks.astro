@@ -1,13 +1,24 @@
 ---
+import { releaseUrl } from '../utils/releaseUrl.ts';
+
 interface Props {
   pkg: { name: string; repository: { directory: string }; version: string };
 }
 
 const { pkg } = Astro.props;
+const release = releaseUrl(pkg);
 ---
 
 <div class="utrecht-action-group">
-  <a class="nl-button nl-button--primary" href={`https://www.npmjs.com/package/${pkg.name}`}>
+  {release && (
+    <a class="nl-button nl-button--primary" href={release}>
+      <span class="nl-button__label">Release v{pkg.version}</span>
+    </a>
+  )}
+  <a
+    class:list={['nl-button', { 'nl-button--primary': !release, 'nl-button--secondary': release }]}
+    href={`https://www.npmjs.com/package/${pkg.name}`}
+  >
     <span class="nl-button__label">npm v{pkg.version}</span>
   </a>
   <a
