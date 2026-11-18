@@ -1,0 +1,29 @@
+---
+import type { Locale } from '../i18n/translations.ts';
+import { useTranslations } from '../i18n/translations.ts';
+import { getNavigationItems, type NavigationItem } from '../utils/getNavigationItems.ts';
+
+const locale = (Astro.currentLocale ?? 'nl') as Locale;
+const t = useTranslations(locale);
+const [home, ...pages] = getNavigationItems(locale, Astro.url.pathname);
+
+const findTrail = (items: NavigationItem[]): NavigationItem[] => {
+  for (const item of items) {
+    const childTrail = item.items ? findTrail(item.items) : [];
+    if (childTrail.length) return [item, ...childTrail];
+    if (item.current) return [item];
+  }
+  return [];
+};
+
+const trail = findTrail(pages);
+const items = [home, ...trail].map(({ href, label }, index, all) => ({
+  current: index === all.length - 1,
+  href,
+  label,
+}));
+---
+
+{trail.length > 0 && (
+  <clippy-breadcrumb-navigation slot="breadcrumb" label={t('breadcrumb.label')} items={JSON.stringify(items)} />
+)}

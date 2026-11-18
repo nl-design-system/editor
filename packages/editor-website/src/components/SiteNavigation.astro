@@ -1,0 +1,17 @@
+---
+import type { Locale } from '../i18n/translations.ts';
+import { useTranslations } from '../i18n/translations.ts';
+import { getNavigationItems } from '../utils/getNavigationItems.ts';
+
+interface Props {
+  placement: 'navigation-bar' | 'navigation-drawer';
+}
+
+const locale = (Astro.currentLocale ?? 'nl') as Locale;
+const t = useTranslations(locale);
+const { placement } = Astro.props;
+const items = getNavigationItems(locale, Astro.url.pathname);
+const Navigation = placement === 'navigation-bar' ? 'clippy-navigation-bar' : 'clippy-side-navigation';
+---
+
+<Navigation slot={placement} label={t('nav.label')} items={JSON.stringify(items)} />
