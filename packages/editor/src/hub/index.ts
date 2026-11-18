@@ -1,6 +1,11 @@
 import type { Validation } from '@nl-design-system-community/clippy-a11y-validator';
 import type { Violation, ViolationsMap } from '@/types/validation';
-import { CustomEvents, type FocusNodeEvent, type ValidationsDrawerToggleEvent } from '@/events';
+import {
+  CustomEvents,
+  type CorrectValidationIssueEvent,
+  type FocusNodeEvent,
+  type ValidationsDrawerToggleEvent,
+} from '@/events';
 import { debounce } from '@/utils/debounce';
 import { waitForMedia } from '@/utils/waitForMedia';
 import { runValidation, VALIDATION_TIMEOUT } from '@/validations';
@@ -92,6 +97,7 @@ export class ClippyHub {
   connect(views: ClippyHubViews): void {
     globalThis.addEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#handleFocusNode);
+    globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#handleCorrection);
     Object.assign(this.#views, views);
     for (const view of Object.values(views)) {
       if (view) {
@@ -107,6 +113,7 @@ export class ClippyHub {
     identifiers.delete(this.#identifier);
     globalThis.removeEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#handleFocusNode);
+    globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#handleCorrection);
   }
 
   async validate(): Promise<void> {
@@ -146,6 +153,12 @@ export class ClippyHub {
     if (violation) {
       this.#focusViolation(violation);
     }
+  };
+
+  /** The correction runs right after this event, so validation is scheduled rather than run now. */
+  readonly #handleCorrection = (event: Event): void => {
+    if ((event as CorrectValidationIssueEvent).detail?.identifier !== this.#identifier) return;
+    this.scheduleValidation();
   };
 
   #render(): void {
