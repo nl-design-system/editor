@@ -43,7 +43,7 @@ export function ReactHubExample() {
             <a href="https://lit.dev/docs/frameworks/react/">met de Lit React wrappers</a>
           </p>
         </div>
-        <ClippyGutter ref={gutterRef} mode="drawer" />
+        <ClippyGutter ref={gutterRef} mode="sidebar" />
       </div>
     </div>
   );

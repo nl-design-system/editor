@@ -33,7 +33,7 @@ declare global {
 /**
  * Row of toggle buttons that filter the validation list by severity. Exactly one
  * filter is active at a time; selecting one dispatches a global
- * {@link CustomEvents.FILTER_CHANGE} event so the drawer can update the list.
+ * {@link CustomEvents.FILTER_CHANGE} event so the sidebar can update the list.
  *
  * @tag clippy-validation-filters
  *

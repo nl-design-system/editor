@@ -6,7 +6,7 @@ import {
   CustomEvents,
   type CorrectValidationIssueEvent,
   type FocusNodeEvent,
-  type ValidationsDrawerToggleEvent,
+  type SidebarToggleEvent,
 } from '@/events';
 import { setDarkColorScheme, THEME_CLASSES, watchHostColorScheme } from '@/utils/colorScheme';
 import { debounce } from '@/utils/debounce';
@@ -93,7 +93,7 @@ export class ClippyHub {
     this.#target = target;
     this.#validations = validations;
 
-    globalThis.addEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
+    globalThis.addEventListener(CustomEvents.SIDEBAR_TOGGLE, this.#handleSidebarToggle);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#handleFocusNode);
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#handleCorrection);
     this.drawer = createDrawer ? this.#createDrawer(colorSchemeElement ?? target) : null;
@@ -131,7 +131,7 @@ export class ClippyHub {
     if (this.#destroyed) return;
     this.#destroyed = true;
     identifiers.delete(this.#identifier);
-    globalThis.removeEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
+    globalThis.removeEventListener(CustomEvents.SIDEBAR_TOGGLE, this.#handleSidebarToggle);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#handleFocusNode);
     globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#handleCorrection);
     this.#unwatchColorScheme?.();
@@ -151,8 +151,8 @@ export class ClippyHub {
     this.#render();
   }
 
-  readonly #handleDrawerToggle = (event: Event): void => {
-    const { identifier, open } = (event as ValidationsDrawerToggleEvent).detail;
+  readonly #handleSidebarToggle = (event: Event): void => {
+    const { identifier, open } = (event as SidebarToggleEvent).detail;
     if (identifier !== this.#identifier) return;
 
     const { drawer } = this;

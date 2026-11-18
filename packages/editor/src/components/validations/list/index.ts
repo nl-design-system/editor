@@ -39,7 +39,7 @@ declare global {
 export class ValidationsList extends LitElement {
   static override readonly styles = [listStyles, unsafeCSS(paragraphStyle)];
 
-  /** The violations to list, pushed by the Drawer. */
+  /** The violations to list, pushed by the Validations view. */
   @property({ attribute: false })
   violationsMap?: ViolationsMap;
 

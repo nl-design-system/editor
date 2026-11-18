@@ -186,7 +186,7 @@ export class Editor extends LitElement {
         <clippy-toolbar .config=${this.toolbarConfig} .editor=${this.editor}></clippy-toolbar>
         <div class="clippy-editor-container" id=${EDITOR_ID}>
           <slot name="value" hidden></slot>
-          <clippy-validations-gutter mode="drawer"></clippy-validations-gutter>
+          <clippy-validations-gutter mode="sidebar"></clippy-validations-gutter>
           <clippy-content .editor=${this.editor} .htmlDocument=${this.readonlyValue}></clippy-content>
           <clippy-bubble-menu class="clippy-bubble-menu" .editor=${this.editor}></clippy-bubble-menu>
         </div>

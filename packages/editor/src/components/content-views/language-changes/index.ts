@@ -39,7 +39,7 @@ export class LanguageChanges extends LitElement {
     unsafeCSS(paragraphStyle),
   ];
 
-  /** The validated element to read, pushed by the Drawer. */
+  /** The validated element to read, pushed by the Content views. */
   @property({ attribute: false })
   htmlDocument?: HTMLElement;
 

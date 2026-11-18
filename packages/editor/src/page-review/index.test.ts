@@ -31,7 +31,7 @@ const openDrawer = () =>
 
 const closeDrawer = () =>
   globalThis.dispatchEvent(
-    new CustomEvent(CustomEvents.CLOSE_VALIDATIONS_DRAWER, { detail: { identifier: 'clippy-page-review' } }),
+    new CustomEvent(CustomEvents.CLOSE_SIDEBAR, { detail: { identifier: 'clippy-page-review' } }),
   );
 
 const validationItems = () => [
@@ -156,7 +156,7 @@ describe('PageReview', () => {
 
     it('shows markers only while the drawer is open when set to the drawer', async () => {
       document.body.innerHTML = '<main><h1>Titel</h1><h3>Overgeslagen</h3></main>';
-      review = createPageReview({ gutter: 'drawer' });
+      review = createPageReview({ gutter: 'sidebar' });
       await expect.poll(violationCount).toBe(1);
       expect(document.querySelector('clippy-validations-gutter')).toBeNull();
 

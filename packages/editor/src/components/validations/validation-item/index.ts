@@ -85,7 +85,7 @@ export class ValidationItem extends LitElement {
 
   /**
    * Display context for the item's action buttons.
-   * - `list` (default) / `drawer` – Focus and Correct buttons.
+   * - `list` (default) / `sidebar` – Focus and Correct buttons.
    * - `readonly` – no action buttons rendered.
    */
   @property({ type: String }) mode: ValidationInteractionMode = validationInteractionMode.LIST;

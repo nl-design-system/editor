@@ -31,7 +31,7 @@ final class PageReview {
       $attachments['#attached']['library'][] = 'clippy/page-review';
       $attachments['#attached']['drupalSettings']['clippy']['pageReview'] = [
         'floatingPosition' => $settings->get('floating_position'),
-        'gutter' => $settings->get('gutter_always') ? 'always' : 'drawer',
+        'gutter' => $settings->get('gutter_always') ? 'always' : 'sidebar',
         'reviewRoot' => $settings->get('review_root'),
       ];
     }

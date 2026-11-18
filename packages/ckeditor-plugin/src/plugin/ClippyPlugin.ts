@@ -1,6 +1,6 @@
 import {
   type AccessibilityNotifications,
-  type CloseValidationsDrawerDetail,
+  type CloseSidebarDetail,
 } from '@nl-design-system-community/editor/accessibility-notifications';
 import {
   setDarkColorScheme,
@@ -68,7 +68,7 @@ export class ClippyPlugin extends Plugin {
     this._contentWrapperEl = contentWrapper;
 
     const gutter = document.createElement('clippy-validations-gutter') as Gutter;
-    gutter.mode = validationInteractionMode.DRAWER;
+    gutter.mode = validationInteractionMode.SIDEBAR;
     contentWrapper.append(gutter);
     this._gutterEl = gutter;
 
@@ -138,7 +138,7 @@ export class ClippyPlugin extends Plugin {
 
   private _closeValidationsDrawer(): void {
     globalThis.dispatchEvent(
-      new CustomEvent<CloseValidationsDrawerDetail>(CustomEvents.CLOSE_VALIDATIONS_DRAWER, {
+      new CustomEvent<CloseSidebarDetail>(CustomEvents.CLOSE_SIDEBAR, {
         detail: { identifier: this._identifier },
       }),
     );

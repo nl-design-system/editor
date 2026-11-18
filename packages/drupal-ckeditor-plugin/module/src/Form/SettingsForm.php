@@ -53,7 +53,7 @@ final class SettingsForm extends ConfigFormBase {
     $form['gutter_always'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Always show gutter markers'),
-      '#description' => $this->t('When unchecked, markers only show while the Page review drawer is open.'),
+      '#description' => $this->t('When unchecked, markers only show while the Page review sidebar is open.'),
       '#config_target' => 'clippy.settings:gutter_always',
       '#states' => [
         'visible' => [':input[name="page_review"]' => ['checked' => TRUE]],

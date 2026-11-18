@@ -6,7 +6,7 @@ import {
   type FloatingPosition,
 } from '@/components/toolbar/toolbar-accessibility-notifications';
 import { validationInteractionMode } from '@/constants';
-import { CustomEvents, type ValidationsDrawerToggleEvent } from '@/events';
+import { CustomEvents, type SidebarToggleEvent } from '@/events';
 import { ClippyHub } from '@/hub';
 import { THEME_CLASSES } from '@/utils/colorScheme';
 
@@ -22,8 +22,8 @@ export interface PageReviewOptions {
   floatingPosition?: FloatingPosition;
   /** The Review root selector. Falls back to `main, [role=main]`, then `body`. */
   reviewRoot?: string;
-  /** Show the gutter markers from load (default), or only while the drawer is open. */
-  gutter?: 'always' | 'drawer';
+  /** Show the gutter markers from load (default), or only while the sidebar is open. */
+  gutter?: 'always' | 'sidebar';
 }
 
 const resolveReviewRoot = (selector?: string): HTMLElement =>
@@ -68,21 +68,21 @@ export class PageReview extends ClippyHub {
       document.body.append(this.#trigger);
     }
     this.#gutter.classList.add(...THEME_CLASSES);
-    this.#gutter.mode = validationInteractionMode.DRAWER;
+    this.#gutter.mode = validationInteractionMode.SIDEBAR;
     this.#gutter.overlay = true;
     this.#gutter.contentElement = this.#reviewRoot;
     this.connect({ gutter: this.#gutter, trigger: this.#trigger });
     if (gutter === 'always') {
       this.#reviewRoot.append(this.#gutter);
     } else {
-      globalThis.addEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
+      globalThis.addEventListener(CustomEvents.SIDEBAR_TOGGLE, this.#handleSidebarToggle);
     }
 
     (globalThis.requestIdleCallback ?? setTimeout)(() => this.validate().catch(console.error));
   }
 
-  readonly #handleDrawerToggle = (event: Event): void => {
-    const { identifier, open } = (event as ValidationsDrawerToggleEvent).detail;
+  readonly #handleSidebarToggle = (event: Event): void => {
+    const { identifier, open } = (event as SidebarToggleEvent).detail;
     if (identifier !== IDENTIFIER) return;
     if (open) {
       this.#reviewRoot.append(this.#gutter);
@@ -93,7 +93,7 @@ export class PageReview extends ClippyHub {
 
   override destroy(): void {
     super.destroy();
-    globalThis.removeEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
+    globalThis.removeEventListener(CustomEvents.SIDEBAR_TOGGLE, this.#handleSidebarToggle);
     this.#gutter.remove();
     this.#trigger.remove();
   }

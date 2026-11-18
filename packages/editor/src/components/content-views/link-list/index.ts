@@ -37,7 +37,7 @@ export class LinkList extends LitElement {
     unsafeCSS(paragraphStyle),
   ];
 
-  /** The validated element to read, pushed by the Drawer. */
+  /** The validated element to read, pushed by the Content views. */
   @property({ attribute: false })
   htmlDocument?: HTMLElement;
 
@@ -50,7 +50,7 @@ export class LinkList extends LitElement {
     localizeHost(this);
   }
 
-  /** The violations that mark an entry, pushed by the Drawer. */
+  /** The violations that mark an entry, pushed by the Content views. */
   @property({ attribute: false })
   violationsMap?: ViolationsMap;
 

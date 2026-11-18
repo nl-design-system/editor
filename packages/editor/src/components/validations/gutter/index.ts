@@ -87,15 +87,15 @@ const toggleCountByRange = (indicators: PositionedIndicator[]): Map<Range, numbe
  * Side gutter that displays colour-coded accessibility validation indicators
  * vertically aligned with their corresponding positions in the editor content.
  * Clicking a toggle either scrolls the external validations list to the
- * matching item or opens the matching validation(s) in the drawer, depending on
+ * matching item or opens the matching validation(s) in the sidebar, depending on
  * `mode`.
  *
  * @tag clippy-validations-gutter
  *
  * @fires {FocusValidationItemInListEvent} FOCUS_VALIDATION_ITEM_IN_LIST - Dispatched in `list` mode
  *   when the user clicks a toggle, so the list component can scroll to it.
- * @fires {OpenValidationGroupEvent} OPEN_VALIDATION_GROUP - Dispatched in `drawer` mode
- *   when the user clicks a toggle, so the drawer can show that validation
+ * @fires {OpenValidationGroupEvent} OPEN_VALIDATION_GROUP - Dispatched in `sidebar` mode
+ *   when the user clicks a toggle, so the sidebar can show that validation
  *   and any overlapping ones.
  *
  * @example
@@ -111,8 +111,8 @@ export class Gutter extends LitElement {
   /**
    * Display mode for validation interactions.
    * - `list` – scroll the external validations list to the item on click.
-   * - `drawer` – open the clicked validation (plus any overlapping ones) in the
-   *   validations drawer on click.
+   * - `sidebar` – open the clicked validation (plus any overlapping ones) in the
+   *   validations sidebar on click.
    * - `readonly` – toggles are visible and focusable, but clicking them performs no action (default).
    */
   @property({ type: String })
@@ -146,7 +146,7 @@ export class Gutter extends LitElement {
   @property({ attribute: false })
   violationsMap?: ViolationsMap;
 
-  /** Identifier of the Clippy hub, used to scope drawer events. */
+  /** Identifier of the Clippy hub, used to scope sidebar events. */
   @property({ attribute: false })
   identifier?: string;
 
@@ -161,7 +161,7 @@ export class Gutter extends LitElement {
           detail: { range },
         }),
       );
-    } else if (this.mode === validationInteractionMode.DRAWER) {
+    } else if (this.mode === validationInteractionMode.SIDEBAR) {
       globalThis.dispatchEvent(
         new CustomEvent<OpenValidationGroupDetail>(CustomEvents.OPEN_VALIDATION_GROUP, {
           detail: { identifier: this.identifier, ranges: this.#getOverlappingRanges(range) },

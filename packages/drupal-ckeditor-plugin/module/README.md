@@ -27,7 +27,7 @@ Two CKEditor 5 plugins are registered:
 
 ## Page review
 
-Page review shows the accessibility issues of a rendered page on that page. It lists the issues and the Content views (heading structure, link list and language changes) in a Drawer docked beside the page.
+Page review shows the accessibility issues of a rendered page on that page. It lists the issues and the Content views (heading structure, link list and language changes) in a sidebar docked beside the page.
 
 ### Who sees it
 
@@ -52,7 +52,7 @@ Go to _Configuration → Content authoring → Clippy Editor_ (`/admin/config/co
 | Show accessibility feedback in CKEditor | on                  | Turns Clippy Editor in CKEditor on or off.                                                                                                                                 |
 | Show Page review on frontend pages      | on                  | Turns Page review on or off for everyone, whatever their permissions.                                                                                                      |
 | Review root selector                    | `main, [role=main]` | The CSS selector of the element Page review validates. When nothing matches, Page review falls back to `main, [role=main]` and then to `body`, so it never fails silently. |
-| Always show gutter markers              | on                  | Shows the gutter markers next to the offending elements as soon as the page loads. When off, they only show while the Page review Drawer is open.                          |
+| Always show gutter markers              | on                  | Shows the gutter markers next to the offending elements as soon as the page loads. When off, they only show while the Page review sidebar is open.                         |
 | Floating button position                | bottom right        | The corner of the Page review button on pages without an admin toolbar: top right or bottom right.                                                                         |
 
 ## Color scheme

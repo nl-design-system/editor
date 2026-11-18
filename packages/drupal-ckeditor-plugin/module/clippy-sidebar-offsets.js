@@ -1,8 +1,8 @@
 // @ts-check
 
 const DRAWER = 'clippy-validations-drawer';
-const DRAWER_TOGGLE = 'VALIDATIONS_DRAWER_TOGGLE';
-const OPEN_INLINE_SIZE = '--clippy-drupal-open-drawer-inline-size';
+const SIDEBAR_TOGGLE = 'SIDEBAR_TOGGLE';
+const OPEN_INLINE_SIZE = '--clippy-drupal-open-sidebar-inline-size';
 const PREVIEW_BAR = '.node-preview-container';
 const PREVIEW_BAR_BLOCK_END = '--clippy-drupal-preview-bar-block-end';
 
@@ -10,7 +10,7 @@ const PREVIEW_BAR_BLOCK_END = '--clippy-drupal-preview-bar-block-end';
  * @param {{ displace: () => unknown }} drupal
  * @returns {() => void}
  */
-export const observeDrawerOffsets = (drupal) => {
+export const observeSidebarOffsets = (drupal) => {
   const root = globalThis.document.documentElement;
   const edge = root.dir === 'rtl' ? 'left' : 'right';
 
@@ -38,16 +38,16 @@ export const observeDrawerOffsets = (drupal) => {
 
   const observer = new globalThis.MutationObserver(update);
   observer.observe(globalThis.document.body, { childList: true });
-  globalThis.addEventListener(DRAWER_TOGGLE, update);
+  globalThis.addEventListener(SIDEBAR_TOGGLE, update);
   globalThis.addEventListener('resize', update);
   update();
 
   return () => {
     observer.disconnect();
-    globalThis.removeEventListener(DRAWER_TOGGLE, update);
+    globalThis.removeEventListener(SIDEBAR_TOGGLE, update);
     globalThis.removeEventListener('resize', update);
   };
 };
 
 const { Drupal } = /** @type {{ Drupal?: { displace: () => unknown } }} */ (/** @type {unknown} */ (globalThis));
-if (Drupal) observeDrawerOffsets(Drupal);
+if (Drupal) observeSidebarOffsets(Drupal);

@@ -17,7 +17,7 @@ const rangeOver = (element: Element): Range => {
 };
 
 /**
- * Render a paragraph with a gutter over it in drawer mode, with the identifier
+ * Render a paragraph with a gutter over it in sidebar mode, with the identifier
  * set by property as a Clippy hub does.
  */
 const renderGutter = (markup: string) => {
@@ -26,7 +26,7 @@ const renderGutter = (markup: string) => {
   document.body.append(content);
 
   const gutter = document.createElement('clippy-validations-gutter') as Gutter;
-  gutter.mode = validationInteractionMode.DRAWER;
+  gutter.mode = validationInteractionMode.SIDEBAR;
   gutter.identifier = 'clippy-editor-1';
   document.body.append(gutter);
 
@@ -38,7 +38,7 @@ const validate = async (gutter: Gutter, validations: ViolationsMap): Promise<voi
   await gutter.updateComplete;
 };
 
-/** Click the button and return the validations the drawer is asked to open. */
+/** Click the button and return the validations the sidebar is asked to open. */
 const openedBy = async (name: string | RegExp): Promise<OpenValidationGroupEvent['detail']> => {
   const opened: OpenValidationGroupEvent[] = [];
   const listener = (event: Event) => opened.push(event as OpenValidationGroupEvent);

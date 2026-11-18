@@ -49,7 +49,7 @@ describe('ClippyPlugin', () => {
 
     expect(gutter).not.toBeNull();
     expect(drawer).not.toBeNull();
-    expect(gutter?.mode).toBe(validationInteractionMode.DRAWER);
+    expect(gutter?.mode).toBe(validationInteractionMode.SIDEBAR);
     expect(gutter?.identifier).toBeTruthy();
     expect(gutter?.identifier).toBe((drawer as { identifier?: string } | null)?.identifier);
   });

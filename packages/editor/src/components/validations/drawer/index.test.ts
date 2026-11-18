@@ -273,15 +273,13 @@ describe('<clippy-validations-drawer> on a page', () => {
   it('announces when it opens and closes', async () => {
     const toggles: unknown[] = [];
     const record = (event: Event) => toggles.push((event as CustomEvent).detail);
-    globalThis.addEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, record);
+    globalThis.addEventListener(CustomEvents.SIDEBAR_TOGGLE, record);
 
     openDrawer();
     await drawer.updateComplete;
-    globalThis.dispatchEvent(
-      new CustomEvent(CustomEvents.CLOSE_VALIDATIONS_DRAWER, { detail: { identifier: IDENTIFIER } }),
-    );
+    globalThis.dispatchEvent(new CustomEvent(CustomEvents.CLOSE_SIDEBAR, { detail: { identifier: IDENTIFIER } }));
     await drawer.updateComplete;
-    globalThis.removeEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, record);
+    globalThis.removeEventListener(CustomEvents.SIDEBAR_TOGGLE, record);
 
     expect(toggles).toEqual([
       { identifier: IDENTIFIER, open: true },

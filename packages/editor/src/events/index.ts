@@ -1,19 +1,19 @@
 export const CustomEvents = {
-  CLOSE_VALIDATIONS_DRAWER: 'CLOSE_VALIDATIONS_DRAWER',
+  CLOSE_SIDEBAR: 'CLOSE_SIDEBAR',
   CORRECT_VALIDATION_ISSUE: 'CORRECT_VALIDATION_ISSUE',
   FILTER_CHANGE: 'FILTER_CHANGE',
   FOCUS_BUBBLE_MENU: 'FOCUS_BUBBLE_MENU',
   FOCUS_NODE: 'FOCUS_NODE',
   FOCUS_TOOLBAR: 'FOCUS_TOOLBAR',
-  FOCUS_VALIDATION_ITEM_IN_DRAWER: 'FOCUS_VALIDATION_ITEM_IN_DRAWER',
   FOCUS_VALIDATION_ITEM_IN_LIST: 'FOCUS_VALIDATION_ITEM_IN_LIST',
+  FOCUS_VALIDATION_ITEM_IN_SIDEBAR: 'FOCUS_VALIDATION_ITEM_IN_SIDEBAR',
   OPEN_DOCUMENT_OVERVIEW: 'OPEN_DOCUMENT_OVERVIEW',
   OPEN_IMAGE_DIALOG: 'OPEN_IMAGE_DIALOG',
   OPEN_VALIDATION_GROUP: 'OPEN_VALIDATION_GROUP',
   OPEN_VALIDATIONS_DIALOG: 'OPEN_VALIDATIONS_DIALOG',
+  SIDEBAR_TOGGLE: 'SIDEBAR_TOGGLE',
   TEXT_FORMAT_CHANGE: 'TEXT_FORMAT_CHANGE',
   VALIDATION_ERROR: 'VALIDATION_ERROR',
-  VALIDATIONS_DRAWER_TOGGLE: 'VALIDATIONS_DRAWER_TOGGLE',
 } as const;
 
 export type DocumentOverviewMode = 'heading-structure' | 'language-changes' | 'link-list' | 'validations';
@@ -26,7 +26,7 @@ export interface OpenDocumentOverviewDetail {
 export type OpenDocumentOverviewEvent = CustomEvent<OpenDocumentOverviewDetail>;
 
 /**
- * Detail for {@link CustomEvents.OPEN_VALIDATION_GROUP}: opens the drawer showing
+ * Detail for {@link CustomEvents.OPEN_VALIDATION_GROUP}: opens the sidebar showing
  * only the given validation ranges (a single clicked validation plus any that
  * overlap it), with the severity filters hidden.
  */
@@ -50,12 +50,12 @@ export interface FocusValidationItemInListDetail {
 
 export type FocusValidationItemInListEvent = CustomEvent<FocusValidationItemInListDetail>;
 
-export interface FocusValidationItemInDrawerDetail {
+export interface FocusValidationItemInSidebarDetail {
   identifier?: string;
   range?: Range;
 }
 
-export type FocusValidationItemInDrawerEvent = CustomEvent<FocusValidationItemInDrawerDetail>;
+export type FocusValidationItemInSidebarEvent = CustomEvent<FocusValidationItemInSidebarDetail>;
 
 export interface CorrectValidationIssueDetail {
   identifier?: string;
@@ -63,18 +63,18 @@ export interface CorrectValidationIssueDetail {
 
 export type CorrectValidationIssueEvent = CustomEvent<CorrectValidationIssueDetail>;
 
-export interface CloseValidationsDrawerDetail {
+export interface CloseSidebarDetail {
   identifier?: string;
 }
 
-export type CloseValidationsDrawerEvent = CustomEvent<CloseValidationsDrawerDetail>;
+export type CloseSidebarEvent = CustomEvent<CloseSidebarDetail>;
 
-export interface ValidationsDrawerToggleDetail {
+export interface SidebarToggleDetail {
   identifier?: string;
   open: boolean;
 }
 
-export type ValidationsDrawerToggleEvent = CustomEvent<ValidationsDrawerToggleDetail>;
+export type SidebarToggleEvent = CustomEvent<SidebarToggleDetail>;
 
 export interface OpenValidationsDialogDetail {
   identifier?: string;

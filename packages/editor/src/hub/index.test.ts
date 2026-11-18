@@ -295,9 +295,7 @@ describe('ClippyHub drawer session', () => {
     );
 
   const closeDrawer = () =>
-    globalThis.dispatchEvent(
-      new CustomEvent(CustomEvents.CLOSE_VALIDATIONS_DRAWER, { detail: { identifier: IDENTIFIER } }),
-    );
+    globalThis.dispatchEvent(new CustomEvent(CustomEvents.CLOSE_SIDEBAR, { detail: { identifier: IDENTIFIER } }));
 
   const focusButtons = (drawer: Element) =>
     [

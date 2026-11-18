@@ -48,7 +48,7 @@ export class AccessibilityNotifications extends LitElement {
   @property({ attribute: false })
   violationsMap?: ViolationsMap;
 
-  /** Identifier of the Clippy hub, matching the identifier of the drawer it opens. */
+  /** Identifier of the Clippy hub, matching the identifier of the sidebar it opens. */
   @property({ attribute: false })
   identifier?: string;
 

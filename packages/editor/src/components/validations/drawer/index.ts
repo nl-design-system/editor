@@ -19,15 +19,15 @@ import '@nl-design-system-community/clippy-components/clippy-button';
 import '@nl-design-system-community/clippy-components/clippy-icon';
 import {
   CustomEvents,
-  type CloseValidationsDrawerEvent,
+  type CloseSidebarEvent,
   type CorrectValidationIssueEvent,
   type DocumentOverviewMode,
   type FilterChangeEvent,
   type FocusNodeEvent,
   type OpenDocumentOverviewEvent,
   type OpenValidationGroupEvent,
-  type ValidationsDrawerToggleDetail,
-  type ValidationsDrawerToggleEvent,
+  type SidebarToggleDetail,
+  type SidebarToggleEvent,
 } from '@/events';
 import { localizeHost } from '@/localization';
 import drawerStyles from './styles';
@@ -66,7 +66,7 @@ const panelId = (view: ContentView) => `clippy-drawer-panel-${view}`;
  *   toggle the panel open state.
  * @fires {CustomEvent} FILTER_CHANGE - Listens to filter the displayed validations
  *   by severity.
- * @fires {ValidationsDrawerToggleEvent} VALIDATIONS_DRAWER_TOGGLE - Dispatched on `globalThis`
+ * @fires {SidebarToggleEvent} SIDEBAR_TOGGLE - Dispatched on `globalThis`
  *   whenever the drawer opens or closes.
  *
  * @example
@@ -129,7 +129,7 @@ export class ValidationsDrawer extends LitElement {
     this.#updatePageWidth();
     if (this.open || changed.get('open') !== undefined) {
       globalThis.dispatchEvent(
-        new CustomEvent<ValidationsDrawerToggleDetail>(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, {
+        new CustomEvent<SidebarToggleDetail>(CustomEvents.SIDEBAR_TOGGLE, {
           detail: { identifier: this.identifier, open: this.open },
         }),
       );
@@ -161,28 +161,28 @@ export class ValidationsDrawer extends LitElement {
     this.#resizeObserver.observe(this);
     this.addEventListener('wheel', this.#keepWheelInDrawer, { passive: false });
     if (this.hasUpdated) this.#updatePageWidth();
-    globalThis.addEventListener(CustomEvents.CLOSE_VALIDATIONS_DRAWER, this.#handleCloseDrawer);
+    globalThis.addEventListener(CustomEvents.CLOSE_SIDEBAR, this.#handleCloseDrawer);
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
     globalThis.addEventListener(CustomEvents.FILTER_CHANGE, this.#handleFilterChange);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
-    globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#focusValidationItem);
+    globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_SIDEBAR, this.#focusValidationItem);
     globalThis.addEventListener(CustomEvents.OPEN_DOCUMENT_OVERVIEW, this.#handleOverviewOpen);
     globalThis.addEventListener(CustomEvents.OPEN_VALIDATION_GROUP, this.#openValidationGroup);
-    globalThis.addEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
+    globalThis.addEventListener(CustomEvents.SIDEBAR_TOGGLE, this.#handleDrawerToggle);
   }
 
   override disconnectedCallback() {
     this.#resizeObserver.disconnect();
     this.removeEventListener('wheel', this.#keepWheelInDrawer);
     this.#updatePageWidth();
-    globalThis.removeEventListener(CustomEvents.CLOSE_VALIDATIONS_DRAWER, this.#handleCloseDrawer);
+    globalThis.removeEventListener(CustomEvents.CLOSE_SIDEBAR, this.#handleCloseDrawer);
     globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeDialog);
     globalThis.removeEventListener(CustomEvents.FILTER_CHANGE, this.#handleFilterChange);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#focusNode);
-    globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#focusValidationItem);
+    globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_SIDEBAR, this.#focusValidationItem);
     globalThis.removeEventListener(CustomEvents.OPEN_DOCUMENT_OVERVIEW, this.#handleOverviewOpen);
     globalThis.removeEventListener(CustomEvents.OPEN_VALIDATION_GROUP, this.#openValidationGroup);
-    globalThis.removeEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
+    globalThis.removeEventListener(CustomEvents.SIDEBAR_TOGGLE, this.#handleDrawerToggle);
     super.disconnectedCallback();
   }
 
@@ -230,14 +230,14 @@ export class ValidationsDrawer extends LitElement {
   };
 
   readonly #handleDrawerToggle = (event: Event) => {
-    const { identifier, open } = (event as ValidationsDrawerToggleEvent).detail;
+    const { identifier, open } = (event as SidebarToggleEvent).detail;
     if (open && identifier !== this.identifier && this.open) {
       this.#closeDrawer();
     }
   };
 
   readonly #handleCloseDrawer = (event: Event) => {
-    const { identifier } = (event as CloseValidationsDrawerEvent).detail;
+    const { identifier } = (event as CloseSidebarEvent).detail;
     if (identifier !== this.identifier) return;
     this.#closeDrawer();
   };

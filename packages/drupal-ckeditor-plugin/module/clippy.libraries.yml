@@ -11,7 +11,7 @@ plugin:
     - core/drupal
     - core/ckeditor5
     - ckeditor5/internal.drupal.ckeditor5
-    - clippy/drawer-offsets
+    - clippy/sidebar-offsets
 
 page-review:
   js:
@@ -25,17 +25,17 @@ page-review:
       clippy-page-review-mount.css: {}
   dependencies:
     - core/drupalSettings
-    - clippy/drawer-offsets
+    - clippy/sidebar-offsets
 
-drawer-offsets:
+sidebar-offsets:
   js:
-    clippy-drawer-offsets.js:
+    clippy-sidebar-offsets.js:
       preprocess: false
       attributes:
         type: module
   css:
     component:
-      clippy-drawer-offsets.css: {}
+      clippy-sidebar-offsets.css: {}
   dependencies:
     - core/drupal
     - core/drupal.displace

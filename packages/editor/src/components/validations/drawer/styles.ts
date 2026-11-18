@@ -4,10 +4,10 @@ export default css`
   :host {
     display: none;
     position: fixed;
-    inset-block-start: var(--clippy-drawer-offset-block-start, 0);
+    inset-block-start: var(--clippy-sidebar-offset-block-start, 0);
     inset-block-end: 0;
     inset-inline-end: 0;
-    inline-size: var(--clippy-drawer-inline-size, min(24rem, 100vw));
+    inline-size: var(--clippy-sidebar-inline-size, min(24rem, 100vw));
     z-index: 2147483000;
   }
 

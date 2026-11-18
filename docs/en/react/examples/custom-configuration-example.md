@@ -1,6 +1,6 @@
 ## Example 2: compose your own with a Clippy hub
 
-To place the parts in your page yourself, create a `ClippyHub` on the element you want to validate and connect the gutter (`ClippyGutter`) and the notifications button (`ClippyAccessibilityNotifications`) to it. The hub validates the element and passes the violations to those parts as properties, so they can sit anywhere in the page. The hub also creates the drawer itself and docks it at the end side of the screen; while it is open, the page narrows by its width. In React, `useClippyHub` from `@nl-design-system-community/editor-react/hub` creates the hub and connects the parts you give its refs to; it destroys the hub when the component unmounts. The CKEditor plugin and Page review work the same way. Click a gutter indicator (`mode="drawer"`) to open the matching validation(s) in the drawer.
+To place the parts in your page yourself, create a `ClippyHub` on the element you want to validate and connect the gutter (`ClippyGutter`) and the notifications button (`ClippyAccessibilityNotifications`) to it. The hub validates the element and passes the violations to those parts as properties, so they can sit anywhere in the page. The hub also creates the drawer itself and docks it at the end side of the screen; while it is open, the page narrows by its width. In React, `useClippyHub` from `@nl-design-system-community/editor-react/hub` creates the hub and connects the parts you give its refs to; it destroys the hub when the component unmounts. The CKEditor plugin and Page review work the same way. Click a gutter indicator (`mode="sidebar"`) to open the matching validation(s) in the drawer.
 
 The toolbar and editable area of the Clippy editor belong to `ClippyEditor` and are not separate parts to compose with.
 
@@ -33,7 +33,7 @@ export function ReactHubExample() {
             Dit is een voorbeeld van een Clippy hub <a href="#">met de Lit React wrappers</a>
           </p>
         </div>
-        <ClippyGutter ref={gutterRef} mode="drawer" />
+        <ClippyGutter ref={gutterRef} mode="sidebar" />
       </div>
     </div>
   );
