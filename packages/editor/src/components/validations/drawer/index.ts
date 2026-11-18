@@ -127,13 +127,14 @@ export class ValidationsDrawer extends LitElement {
 
   #updatePageWidth() {
     const openDrawer = document.querySelector(`${tag}[open]`);
-    const { style } = document.documentElement;
-    if (!openDrawer) {
+    const root = document.documentElement;
+    const { style } = root;
+    const width = openDrawer?.getBoundingClientRect().width ?? 0;
+    if (!width || width >= root.clientWidth) {
       style.removeProperty('margin-inline-end');
       style.removeProperty('max-inline-size');
       return;
     }
-    const width = openDrawer.getBoundingClientRect().width;
     style.marginInlineEnd = `${width}px`;
     style.maxInlineSize = `calc(100% - ${width}px)`;
   }
