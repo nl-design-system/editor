@@ -418,6 +418,18 @@
         <source>More corrections</source>
         <target>Meer correcties</target>
       </trans-unit>
+      <trans-unit id="s21768e86d19b6e2f">
+        <source>Text style</source>
+        <target>Tekststijl</target>
+      </trans-unit>
+      <trans-unit id="sefcf950b3cc4fc3b">
+        <source>Language</source>
+        <target>Taal</target>
+      </trans-unit>
+      <trans-unit id="sd866c761109e386d">
+        <source>Editor content</source>
+        <target>Inhoud van de editor</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

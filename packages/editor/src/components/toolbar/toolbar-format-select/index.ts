@@ -86,6 +86,8 @@ export class FormatSelect extends LitElement {
     return html`
       <clippy-combobox
         @change=${this.#handleTextFormatChange}
+        hidden-label=${msg('Text style')}
+        name="text-style"
         value=${this.options[this.#selectedIndex]?.value ?? ''}
         .options=${this.options}
       >
