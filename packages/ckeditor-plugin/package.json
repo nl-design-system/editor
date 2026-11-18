@@ -24,7 +24,8 @@
     "./styles": {
       "types": "./dist/clippy.css.d.ts",
       "default": "./dist/clippy.css"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "scripts": {
     "build": "vite build",
