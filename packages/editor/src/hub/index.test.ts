@@ -155,6 +155,22 @@ describe('ClippyHub', () => {
     expect(rulesIn(trigger.violationsMap)).toEqual([coreValidationRules.HEADING_LEVEL_MUST_NOT_SKIP]);
   });
 
+  it('re-validates the target after a correction is applied to it', async () => {
+    target.innerHTML = '<h1>Titel</h1><p></p>';
+    const trigger = createTrigger();
+    hub = new ClippyHub({ identifier: IDENTIFIER, target });
+    hub.connect({ trigger });
+    await hub.validate();
+    expect(trigger.violationsMap?.size).toBe(1);
+
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.CORRECT_VALIDATION_ISSUE, { detail: { identifier: IDENTIFIER } }),
+    );
+    target.querySelector('p')?.remove();
+
+    await expect.poll(() => trigger.violationsMap?.size).toBe(0);
+  });
+
   it('rejects a second hub with an identifier that is already in use', () => {
     hub = new ClippyHub({ identifier: IDENTIFIER, target });
 
