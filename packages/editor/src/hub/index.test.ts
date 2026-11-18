@@ -251,6 +251,43 @@ describe('ClippyHub Drawer', () => {
   });
 });
 
+describe('Multiple ClippyHub Drawers on one page', () => {
+  const OTHER_IDENTIFIER = 'clippy-hub-test-other';
+  let otherHub: ClippyHub | undefined;
+
+  afterEach(() => {
+    otherHub?.destroy();
+    otherHub = undefined;
+  });
+
+  const openDrawerOf = (identifier: string) =>
+    globalThis.dispatchEvent(
+      new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, { detail: { identifier, mode: 'validations' } }),
+    );
+
+  it('closes the open Drawer of another hub when its own Drawer opens, reserving the width of one Drawer', async () => {
+    target.innerHTML = '<h1>Titel</h1><p></p>';
+    const otherTarget = document.body.appendChild(document.createElement('div'));
+    otherTarget.innerHTML = '<h1>Titel</h1><p></p>';
+    hub = new ClippyHub({ identifier: IDENTIFIER, target });
+    otherHub = new ClippyHub({ identifier: OTHER_IDENTIFIER, target: otherTarget });
+    const drawer = hub.drawer!;
+    const otherDrawer = otherHub.drawer!;
+    await Promise.all([hub.validate(), otherHub.validate()]);
+
+    openDrawerOf(IDENTIFIER);
+    await expect.poll(() => drawer.hasAttribute('open')).toBe(true);
+
+    openDrawerOf(OTHER_IDENTIFIER);
+    await expect.poll(() => otherDrawer.hasAttribute('open')).toBe(true);
+    await expect.poll(() => drawer.hasAttribute('open')).toBe(false);
+
+    const { width } = otherDrawer.getBoundingClientRect();
+    expect(width).toBeGreaterThan(0);
+    expect(document.documentElement.style.marginInlineEnd).toBe(`${width}px`);
+  });
+});
+
 describe('ClippyHub drawer session', () => {
   const openDrawer = () =>
     globalThis.dispatchEvent(
@@ -305,7 +342,41 @@ describe('ClippyHub drawer session', () => {
     await expect.poll(() => document.activeElement).toBe(trigger);
   });
 
-  it('hands the violation of a focused drawer item to focusViolation', async () => {
+  it('moves focus back to the trigger when Escape closes the drawer', async () => {
+    target.innerHTML = '<h1>Titel</h1><p></p>';
+    const trigger = createTrigger();
+    hub = new ClippyHub({ identifier: IDENTIFIER, target });
+    const drawer = hub.drawer!;
+    hub.connect({ trigger });
+    await hub.validate();
+
+    openDrawer();
+    await expect.poll(() => document.activeElement).toBe(drawer);
+    drawer.shadowRoot
+      ?.querySelector('.clippy-drawer__title')
+      ?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true, key: 'Escape' }));
+
+    await expect.poll(() => drawer.hasAttribute('open')).toBe(false);
+    await expect.poll(() => document.activeElement).toBe(trigger);
+  });
+
+  it('moves focus back to the trigger when the close button closes the drawer', async () => {
+    target.innerHTML = '<h1>Titel</h1><p></p>';
+    const trigger = createTrigger();
+    hub = new ClippyHub({ identifier: IDENTIFIER, target });
+    const drawer = hub.drawer!;
+    hub.connect({ trigger });
+    await hub.validate();
+
+    openDrawer();
+    await expect.poll(() => document.activeElement).toBe(drawer);
+    drawer.shadowRoot?.querySelector('.clippy-drawer__close-button')?.shadowRoot?.querySelector('button')?.click();
+
+    await expect.poll(() => drawer.hasAttribute('open')).toBe(false);
+    await expect.poll(() => document.activeElement).toBe(trigger);
+  });
+
+  it('keeps the drawer open and hands the violation of a picked drawer item to focusViolation', async () => {
     target.innerHTML = '<h1>Titel</h1><p></p>';
     const focused: Violation[] = [];
     hub = new ClippyHub({ focusViolation: (violation) => focused.push(violation), identifier: IDENTIFIER, target });
@@ -315,8 +386,10 @@ describe('ClippyHub drawer session', () => {
     openDrawer();
     await expect.poll(() => focusButtons(drawer).length).toBe(1);
     focusButtons(drawer)[0]?.click();
+    await drawer.updateComplete;
 
     expect(focused.map(({ element }) => element)).toEqual([target.querySelector('p')]);
+    expect(drawer.hasAttribute('open')).toBe(true);
   });
 
   it('scrolls a focused violation into view by default, without highlighting it', async () => {
