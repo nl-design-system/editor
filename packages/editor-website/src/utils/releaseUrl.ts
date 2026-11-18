@@ -5,7 +5,7 @@ const releaseTagPrefixes: Record<string, string> = {
 
 export const releaseUrl = ({ name, version }: { name: string; version: string }): string | undefined => {
   const prefix = releaseTagPrefixes[name];
-  return prefix
-    ? `https://github.com/nl-design-system/editor/releases/tag/${encodeURIComponent(`${prefix}@${version}`)}`
-    : undefined;
+  if (!prefix) return undefined;
+  const tag = encodeURIComponent(`${prefix}@${version}`);
+  return `https://github.com/nl-design-system/editor/releases/tag/${tag}`;
 };
