@@ -1,5 +1,19 @@
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import dts from 'vite-plugin-dts';
+import { autofixableSolutions } from './src/autofixes.ts';
+import { coreValidations } from './src/components/index.ts';
+
+/** Publishes which documentation solutions the core rules fix, for the documentation to mark them. */
+const autofixes = (): Plugin => ({
+  name: 'autofixes',
+  generateBundle() {
+    this.emitFile({
+      fileName: 'autofixes.json',
+      source: `${JSON.stringify(autofixableSolutions(Object.values(coreValidations)), null, 2)}\n`,
+      type: 'asset',
+    });
+  },
+});
 
 export default defineConfig({
   build: {
@@ -10,5 +24,5 @@ export default defineConfig({
     },
     minify: false,
   },
-  plugins: [dts({ exclude: ['src/**/*.test.ts', 'src/test-helpers'], include: ['src'] })],
+  plugins: [autofixes(), dts({ exclude: ['src/**/*.test.ts', 'src/test-helpers'], include: ['src'] })],
 });
