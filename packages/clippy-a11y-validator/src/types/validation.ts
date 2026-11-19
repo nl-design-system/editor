@@ -49,10 +49,7 @@ type SharedValidationDefinition<S extends Selector> = {
 export type ElementValidationCorrection<E extends HTMLElement = HTMLElement> = {
   execute: (element: E, context: ValidationContext) => CorrectViolationFunction;
   label?: ByLocale<string>;
-  /**
-   * The id of the solution in the rule's documentation that this correction carries out. Like a
-   * label, it can be a `{key}` placeholder filled in from the payload.
-   */
+  /** The id of the solution in the rule's documentation that this correction carries out. */
   solutionId?: string;
 };
 
