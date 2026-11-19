@@ -8,18 +8,12 @@ import AlertTriangleIcon from '@tabler/icons/outline/alert-triangle.svg?raw';
 import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
 import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { ValidationInteractionMode, Violation, ViolationsMap } from '@/types/validation';
 import { validationInteractionMode } from '@/constants';
 import { ResizeController } from '@/controllers/ResizeController';
-import {
-  CustomEvents,
-  type FocusValidationItemInGutterEvent,
-  type FocusValidationItemInListDetail,
-  type OpenValidationGroupDetail,
-} from '@/events';
+import { CustomEvents, type FocusValidationItemInListDetail, type OpenValidationGroupDetail } from '@/events';
 import { localizeHost } from '@/localization';
 import {
   applyHoverHighlight,
@@ -142,10 +136,6 @@ export class Gutter extends LitElement {
   @property({ attribute: false })
   tabbable = true;
 
-  /** @internal */
-  @state()
-  private activeRange: Range | null = null;
-
   /** @internal The line whose button is the gutter's tab stop, without `focusgroup` support. */
   @state()
   private focusedRange: Range | null = null;
@@ -159,10 +149,6 @@ export class Gutter extends LitElement {
   /** Identifier of the Clippy hub, used to scope drawer events. */
   @property({ attribute: false })
   identifier?: string;
-
-  readonly #closeValidationItem = () => {
-    this.activeRange = null;
-  };
 
   readonly #resizeController = new ResizeController(this);
 
@@ -192,11 +178,6 @@ export class Gutter extends LitElement {
     return getOverlappingRanges(target, map.keys());
   }
 
-  readonly #handleFocusValidationItemInGutter = (event: Event) => {
-    const { range } = (event as FocusValidationItemInGutterEvent).detail;
-    this.activeRange = this.activeRange === range ? null : range;
-  };
-
   override connectedCallback() {
     super.connectedCallback();
     localizeHost(this);
@@ -204,9 +185,6 @@ export class Gutter extends LitElement {
       this.#observeContent();
       this.requestUpdate();
     }
-    globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER, this.#handleFocusValidationItemInGutter);
-    globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
-    globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
   }
 
   override firstUpdated(): void {
@@ -265,12 +243,6 @@ export class Gutter extends LitElement {
 
   override disconnectedCallback() {
     super.disconnectedCallback();
-    globalThis.removeEventListener(
-      CustomEvents.FOCUS_VALIDATION_ITEM_IN_GUTTER,
-      this.#handleFocusValidationItemInGutter,
-    );
-    globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#closeValidationItem);
-    globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#closeValidationItem);
     clearHoverHighlight();
     clearValidationHighlights(this);
   }
@@ -355,9 +327,7 @@ export class Gutter extends LitElement {
     position: { top: number; height: number },
     toggleCount: number | undefined,
   ) {
-    const { corrections, display, messages, severity } = violation;
-    const { explanation, href, solution, title: heading } = messages;
-    const isActive = this.activeRange === range;
+    const { display, severity } = violation;
     return html`<li
       class="clippy-validations-gutter__indicator"
       data-display=${display}
@@ -365,32 +335,10 @@ export class Gutter extends LitElement {
       style=${styleMap({ 'block-size': `${position.height}px`, 'inset-block-start': `${position.top}px` })}
     >
       <span
-        class="${classMap({
-          [`clippy-validations-gutter__flag--${severity}`]: true,
-          'clippy-validations-gutter__flag': true,
-          'clippy-validations-gutter__flag--active': isActive,
-        })}"
+        class="clippy-validations-gutter__flag clippy-validations-gutter__flag--${severity}"
         aria-hidden="true"
       ></span>
       ${toggleCount === undefined ? nothing : this.#renderToggle(range, violation, toggleCount)}
-      <div
-        class="${classMap({
-          'clippy-validations-gutter__tooltip': true,
-          'clippy-validations-gutter__tooltip--active': isActive,
-        })}"
-      >
-        <clippy-validation-item
-          .identifier=${this.identifier}
-          .mode=${this.mode}
-          .range=${range}
-          .severity=${severity}
-          .heading=${heading}
-          .explanation=${explanation}
-          .solution=${solution}
-          .href=${href}
-          .corrections=${corrections}
-        ></clippy-validation-item>
-      </div>
     </li>`;
   }
 

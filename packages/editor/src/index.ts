@@ -13,8 +13,6 @@ export type {
   OpenDocumentOverviewDetail,
   FocusNodeDetail,
   FocusNodeEvent,
-  FocusValidationItemInGutterDetail,
-  FocusValidationItemInGutterEvent,
   FocusValidationItemInListDetail,
   FocusValidationItemInListEvent,
   FocusValidationItemInDrawerDetail,
