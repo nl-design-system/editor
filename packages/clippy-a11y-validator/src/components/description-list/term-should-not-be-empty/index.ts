@@ -10,6 +10,7 @@ export const descriptionTermShouldNotBeEmpty = defineValidation({
     {
       execute: (list) => () => emptyTermsWithoutDescription(list).forEach((term) => term.remove()),
       label: { en: 'Remove empty terms', nl: 'Lege termen verwijderen' },
+      solutionId: 'adc9814f-48f3-43f9-934f-d7e12a4b77a5',
     },
   ],
   documentationId: '17fb0798-7a0a-4900-b963-1cbb77cdcc7b',
