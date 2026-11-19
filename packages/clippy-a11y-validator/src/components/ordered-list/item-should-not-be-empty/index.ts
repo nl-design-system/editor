@@ -11,6 +11,7 @@ export const orderedListItemShouldNotBeEmpty = defineValidation({
       execute: (item) => () => item.remove(),
     },
   ],
+  documentationId: 'd7c09976-3560-4e91-adcb-f2f97221cf65',
   messages,
   rule: orderedListValidationRules.ORDERED_LIST_ITEM_SHOULD_NOT_BE_EMPTY,
   scope: 'element',

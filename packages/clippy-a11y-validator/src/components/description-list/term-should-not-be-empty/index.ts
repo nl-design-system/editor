@@ -11,6 +11,7 @@ export const descriptionTermShouldNotBeEmpty = defineValidation({
       execute: (list) => () => emptyTermsWithoutDescription(list).forEach((term) => term.remove()),
     },
   ],
+  documentationId: '17fb0798-7a0a-4900-b963-1cbb77cdcc7b',
   messages,
   rule: descriptionListValidationRules.DESCRIPTION_TERM_SHOULD_NOT_BE_EMPTY,
   scope: 'element',

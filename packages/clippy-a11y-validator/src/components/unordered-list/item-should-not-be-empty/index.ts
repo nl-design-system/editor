@@ -11,6 +11,7 @@ export const unorderedListItemShouldNotBeEmpty = defineValidation({
       execute: (item) => () => item.remove(),
     },
   ],
+  documentationId: 'bfba7c3e-c172-43bd-9c45-e4e1699e3b8d',
   messages,
   rule: unorderedListValidationRules.UNORDERED_LIST_ITEM_SHOULD_NOT_BE_EMPTY,
   scope: 'element',

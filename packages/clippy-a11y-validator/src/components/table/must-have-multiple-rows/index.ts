@@ -21,6 +21,7 @@ export const tableMustHaveMultipleRows = defineValidation({
       },
     },
   ],
+  documentationId: '0b5efab9-89c7-43d5-bd25-d83c061bfa4c',
   messages,
   rule: tableValidationRules.TABLE_MUST_HAVE_MULTIPLE_ROWS,
   scope: 'element',

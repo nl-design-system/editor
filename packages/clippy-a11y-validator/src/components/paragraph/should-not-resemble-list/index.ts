@@ -19,6 +19,7 @@ export const paragraphShouldNotResembleList = defineValidation({
           ),
     },
   ],
+  documentationId: 'af5a0a05-bf3a-4218-b0de-f635f00a1456',
   messages,
   payload: (paragraph) => ({ prefix: listPrefix(paragraph.textContent ?? '').trim() }),
   rule: paragraphValidationRules.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST,
