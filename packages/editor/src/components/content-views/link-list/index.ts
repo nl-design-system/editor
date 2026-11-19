@@ -91,6 +91,20 @@ export class LinkList extends LitElement {
     return html`
       <div class="clippy-link-list__intro">
         <h3 class="nl-heading nl-heading--level-3">${msg('Links')}</h3>
+        <p class="nl-paragraph">
+          ${msg(
+            'This view shows all links in the text, with the address they go to. Every link needs a text that says where it goes, also when it is read on its own, for example in the list of links of a screen reader.',
+          )}
+        </p>
+        <a
+          class="nl-button nl-button--secondary"
+          href="https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/linkteksten/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span class="nl-button__label">${msg('Guidelines for accessible link texts')}</span>
+          <clippy-icon class="nl-button__icon-end">${unsafeSVG(ExternalLinkIcon)}</clippy-icon>
+        </a>
       </div>
       <nav aria-label=${msg('Links')}>
         ${
@@ -134,22 +148,6 @@ export class LinkList extends LitElement {
             : html` <p class="nl-paragraph clippy-link-list__empty">${msg('No links found in this document.')}</p> `
         }
       </nav>
-      <div class="clippy-link-list__guideline">
-        <p class="nl-paragraph">
-          ${msg(
-            'This view shows all links in the text, with the address they go to. Every link needs a text that says where it goes, also when it is read on its own, for example in the list of links of a screen reader.',
-          )}
-        </p>
-        <a
-          class="nl-button nl-button--secondary"
-          href="https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/linkteksten/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <span class="nl-button__label">${msg('Guidelines for accessible link texts')}</span>
-          <clippy-icon class="nl-button__icon-end">${unsafeSVG(ExternalLinkIcon)}</clippy-icon>
-        </a>
-      </div>
     `;
   }
 }

@@ -146,6 +146,14 @@ describe('<clippy-link-list>', () => {
         .toHaveAttribute('href', 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/linkteksten/');
       await expect.element(link).toHaveAttribute('target', '_blank');
     });
+
+    it('explains the view before listing its entries', async () => {
+      const { linkList } = await setupWithContent('<p><a href="/contact">Contact</a></p>');
+
+      const guideline = linkList.shadowRoot!.querySelector('.nl-button--secondary')!;
+      const nav = linkList.shadowRoot!.querySelector('nav')!;
+      expect(guideline.compareDocumentPosition(nav) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
   });
 
   describe('item', () => {

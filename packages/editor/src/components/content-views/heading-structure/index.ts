@@ -94,6 +94,20 @@ export class HeadingStructure extends LitElement {
     return html`
       <div class="clippy-heading-structure__intro">
         <h3 class="nl-heading nl-heading--level-3">${msg('Heading structure')}</h3>
+        <p class="nl-paragraph">
+          ${msg(
+            'This view shows all headings in the text, in order and indented by their level. Headings show the structure of the text. People who use a screen reader use them to get an overview and to go straight to a section, so start with heading level 1 and do not skip a level.',
+          )}
+        </p>
+        <a
+          class="nl-button nl-button--secondary"
+          href="https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span class="nl-button__label">${msg('Guidelines for headings')}</span>
+          <clippy-icon class="nl-button__icon-end">${unsafeSVG(ExternalLinkIcon)}</clippy-icon>
+        </a>
       </div>
       <nav aria-label=${msg('Heading structure')}>
         ${
@@ -140,22 +154,6 @@ export class HeadingStructure extends LitElement {
               `
         }
       </nav>
-      <div class="clippy-heading-structure__guideline">
-        <p class="nl-paragraph">
-          ${msg(
-            'This view shows all headings in the text, in order and indented by their level. Headings show the structure of the text. People who use a screen reader use them to get an overview and to go straight to a section, so start with heading level 1 and do not skip a level.',
-          )}
-        </p>
-        <a
-          class="nl-button nl-button--secondary"
-          href="https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <span class="nl-button__label">${msg('Guidelines for headings')}</span>
-          <clippy-icon class="nl-button__icon-end">${unsafeSVG(ExternalLinkIcon)}</clippy-icon>
-        </a>
-      </div>
     `;
   }
 }

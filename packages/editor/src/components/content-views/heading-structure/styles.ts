@@ -88,21 +88,14 @@ export default css`
   }
 
   .clippy-heading-structure__intro {
-    padding-block-start: var(--basis-space-block-lg);
-    padding-inline: var(--basis-space-inline-lg);
-
-    .nl-heading {
-      margin-block: var(--basis-space-none);
-    }
-  }
-
-  .clippy-heading-structure__guideline {
     align-items: start;
     display: flex;
     flex-direction: column;
     gap: var(--basis-space-block-md);
+    padding-block-start: var(--basis-space-block-lg);
     padding-inline: var(--basis-space-inline-lg);
 
+    .nl-heading,
     .nl-paragraph {
       margin-block: var(--basis-space-none);
     }

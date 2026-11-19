@@ -129,6 +129,14 @@ describe('<clippy-heading-structure>', () => {
         .toHaveAttribute('href', 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/');
       await expect.element(link).toHaveAttribute('target', '_blank');
     });
+
+    it('explains the view before listing its entries', async () => {
+      const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
+
+      const guideline = headingStructure.shadowRoot!.querySelector('.nl-button--secondary')!;
+      const nav = headingStructure.shadowRoot!.querySelector('nav')!;
+      expect(guideline.compareDocumentPosition(nav) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
   });
 
   describe('severity', () => {
