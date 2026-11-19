@@ -24,6 +24,15 @@ describe('paragraphShouldNotResembleList', () => {
     expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Omzetten naar lijst']);
   });
 
+  it.each([
+    ['a bulleted', '<p>- een<br>- twee</p>', 'e7347d49-e751-4f82-9105-0f8ef77e3bba'],
+    ['a numbered', '<p>1. een<br>2. twee</p>', '77ec1d80-1931-40f3-bf4a-502cdffb98c6'],
+  ])('points its correction at the solution for %s list', (_, html, solutionId) => {
+    const [violation] = validate(html);
+
+    expect(violation?.corrections?.map((correction) => correction.solutionId)).toEqual([solutionId]);
+  });
+
   it('flags each bullet paragraph that is continued by the next one', () => {
     expect(validate('<p>- een</p><p>- twee</p><p>- drie</p>')).toHaveLength(2);
   });
@@ -43,7 +52,9 @@ describe('paragraphShouldNotResembleList', () => {
       ['<p>1) een<br>2) twee</p>', '1)'],
     ];
 
-    expect(cases.map(([html]) => validate(html)[0]?.payload)).toEqual(cases.map(([, prefix]) => ({ prefix })));
+    expect(cases.map(([html]) => validate(html)[0]?.payload)).toEqual(
+      cases.map(([, prefix]) => expect.objectContaining({ prefix })),
+    );
   });
 
   it('accepts a paragraph that only looks like a list on one line', () => {
