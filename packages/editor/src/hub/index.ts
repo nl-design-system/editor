@@ -1,12 +1,20 @@
 import type { Validation } from '@nl-design-system-community/clippy-a11y-validator';
-import type { ValidationsDrawer } from '@/components/validations/drawer';
+import type { Drawer } from '@/components/drawer';
+import type { ValidationsView } from '@/components/validations/view';
 import type { Violation, ViolationsMap } from '@/types/validation';
-import '@/components/validations/drawer';
+import { isContentView, type ContentViews } from '@/components/content-views';
+import '@/components/content-views';
+import '@/components/drawer';
+import '@/components/validations/view';
 import {
   CustomEvents,
+  type CloseValidationsDrawerEvent,
   type CorrectValidationIssueEvent,
   type FocusNodeEvent,
-  type ValidationsDrawerToggleEvent,
+  type FocusValidationItemInDrawerEvent,
+  type OpenDocumentOverviewEvent,
+  type OpenValidationGroupEvent,
+  type ValidationsDrawerToggleDetail,
 } from '@/events';
 import { setDarkColorScheme, THEME_CLASSES, watchHostColorScheme } from '@/utils/colorScheme';
 import { debounce } from '@/utils/debounce';
@@ -60,7 +68,9 @@ const settleMedia = async (target: HTMLElement): Promise<void> => {
 };
 
 export class ClippyHub {
-  readonly drawer: ValidationsDrawer | null;
+  readonly drawer: Drawer | null = null;
+  readonly #validationsView: ValidationsView | null = null;
+  readonly #contentViews: ContentViews | null = null;
   #unwatchColorScheme?: () => void;
   readonly #adaptViolations: (violationsMap: ViolationsMap) => ViolationsMap;
   readonly #focusViolation: (violation: Violation) => void;
@@ -93,22 +103,29 @@ export class ClippyHub {
     this.#target = target;
     this.#validations = validations;
 
-    globalThis.addEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
     globalThis.addEventListener(CustomEvents.FOCUS_NODE, this.#handleFocusNode);
     globalThis.addEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#handleCorrection);
-    this.drawer = createDrawer ? this.#createDrawer(colorSchemeElement ?? target) : null;
-  }
-
-  #createDrawer(colorSchemeElement: HTMLElement): ValidationsDrawer {
-    const drawer = document.createElement('clippy-validations-drawer');
-    drawer.identifier = this.#identifier;
-    drawer.htmlDocument = this.#target;
+    if (!createDrawer) return;
+    globalThis.addEventListener(CustomEvents.OPEN_DOCUMENT_OVERVIEW, this.#handleOverviewOpen);
+    globalThis.addEventListener(CustomEvents.OPEN_VALIDATION_GROUP, this.#handleValidationGroupOpen);
+    globalThis.addEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#handleValidationItemFocus);
+    globalThis.addEventListener(CustomEvents.CLOSE_VALIDATIONS_DRAWER, this.#handleDrawerClose);
+    const drawer = document.createElement('clippy-sidebar');
+    this.drawer = drawer;
+    this.#validationsView = document.createElement('clippy-validations-view');
+    this.#contentViews = document.createElement('clippy-content-views');
+    this.#contentViews.htmlDocument = target;
+    for (const view of [this.#validationsView, this.#contentViews]) {
+      view.identifier = identifier;
+      view.hidden = true;
+    }
     drawer.classList.add(...THEME_CLASSES);
-    this.#unwatchColorScheme = watchHostColorScheme(colorSchemeElement, (colorScheme) =>
+    this.#unwatchColorScheme = watchHostColorScheme(colorSchemeElement ?? target, (colorScheme) =>
       setDarkColorScheme(colorScheme === 'dark', drawer),
     );
+    drawer.addEventListener('toggle', this.#handleDrawerToggle);
+    drawer.append(this.#validationsView, this.#contentViews);
     document.body.append(drawer);
-    return drawer;
   }
 
   set validations(validations: readonly Validation[] | undefined) {
@@ -131,9 +148,12 @@ export class ClippyHub {
     if (this.#destroyed) return;
     this.#destroyed = true;
     identifiers.delete(this.#identifier);
-    globalThis.removeEventListener(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, this.#handleDrawerToggle);
     globalThis.removeEventListener(CustomEvents.FOCUS_NODE, this.#handleFocusNode);
     globalThis.removeEventListener(CustomEvents.CORRECT_VALIDATION_ISSUE, this.#handleCorrection);
+    globalThis.removeEventListener(CustomEvents.OPEN_DOCUMENT_OVERVIEW, this.#handleOverviewOpen);
+    globalThis.removeEventListener(CustomEvents.OPEN_VALIDATION_GROUP, this.#handleValidationGroupOpen);
+    globalThis.removeEventListener(CustomEvents.FOCUS_VALIDATION_ITEM_IN_DRAWER, this.#handleValidationItemFocus);
+    globalThis.removeEventListener(CustomEvents.CLOSE_VALIDATIONS_DRAWER, this.#handleDrawerClose);
     this.#unwatchColorScheme?.();
     this.drawer?.remove();
   }
@@ -151,19 +171,69 @@ export class ClippyHub {
     this.#render();
   }
 
-  readonly #handleDrawerToggle = (event: Event): void => {
-    const { identifier, open } = (event as ValidationsDrawerToggleEvent).detail;
-    if (identifier !== this.#identifier) return;
-
+  /** Shows `view` in the drawer, named and headed by its label, and opens the drawer. */
+  #openDrawer(view: ValidationsView | ContentViews | null): void {
     const { drawer } = this;
+    if (!drawer || !view) return;
+    for (const other of [this.#validationsView, this.#contentViews]) {
+      if (other) other.hidden = other !== view;
+    }
+    drawer.label = view.label;
+    if (drawer.open) {
+      drawer.updateComplete.then(() => drawer.focus()).catch(console.error);
+    } else {
+      drawer.open = true;
+    }
+  }
+
+  readonly #handleOverviewOpen = (event: Event): void => {
+    const { identifier, mode } = (event as OpenDocumentOverviewEvent).detail;
+    if (identifier !== this.#identifier) return;
+    if (isContentView(mode)) {
+      if (this.#contentViews) this.#contentViews.view = mode;
+      this.#openDrawer(this.#contentViews);
+    } else {
+      if (this.#validationsView) this.#validationsView.focusedValidationGroup = null;
+      this.#openDrawer(this.#validationsView);
+    }
+  };
+
+  readonly #handleValidationGroupOpen = (event: Event): void => {
+    const { identifier, ranges } = (event as OpenValidationGroupEvent).detail;
+    if (identifier !== this.#identifier || !this.#validationsView) return;
+    this.#validationsView.focusedValidationGroup = ranges;
+    this.#openDrawer(this.#validationsView);
+  };
+
+  readonly #handleValidationItemFocus = (event: Event): void => {
+    const view = this.#validationsView;
+    if ((event as FocusValidationItemInDrawerEvent).detail.identifier !== this.#identifier || !view) return;
+    if (this.drawer?.open && !view.hidden) return;
+    view.focusedValidationGroup = null;
+    this.#openDrawer(view);
+  };
+
+  readonly #handleDrawerClose = (event: Event): void => {
+    if ((event as CloseValidationsDrawerEvent).detail.identifier !== this.#identifier || !this.drawer) return;
+    this.drawer.open = false;
+  };
+
+  readonly #handleDrawerToggle = (event: Event): void => {
+    const open = (event as ToggleEvent).newState === 'open';
+    globalThis.dispatchEvent(
+      new CustomEvent<ValidationsDrawerToggleDetail>(CustomEvents.VALIDATIONS_DRAWER_TOGGLE, {
+        detail: { identifier: this.#identifier, open },
+      }),
+    );
+
     const { trigger } = this.#views;
     if (open) {
       this.validate().catch(console.error);
-      drawer?.focus();
+      this.drawer?.focus();
       return;
     }
     const active = document.activeElement;
-    if (!active || active === document.body || active === drawer) {
+    if (!active || active === document.body || this.drawer?.contains(active)) {
       trigger?.focus();
     }
   };
@@ -181,6 +251,7 @@ export class ClippyHub {
   /** The correction runs right after this event, so validation is scheduled rather than run now. */
   readonly #handleCorrection = (event: Event): void => {
     if ((event as CorrectValidationIssueEvent).detail?.identifier !== this.#identifier) return;
+    if (this.drawer) this.drawer.open = false;
     this.scheduleValidation();
   };
 
@@ -199,8 +270,11 @@ export class ClippyHub {
     if (trigger) {
       trigger.violationsMap = violationsMap;
     }
-    if (this.drawer) {
-      this.drawer.violationsMap = violationsMap;
+    if (this.#validationsView) {
+      this.#validationsView.violationsMap = violationsMap;
+    }
+    if (this.#contentViews) {
+      this.#contentViews.violationsMap = violationsMap;
     }
   }
 }

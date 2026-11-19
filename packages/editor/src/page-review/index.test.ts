@@ -7,7 +7,9 @@ let review: PageReview | undefined;
 
 const trigger = () => document.querySelector('clippy-accessibility-notifications');
 
-const drawer = () => document.querySelector('clippy-validations-drawer');
+const validationsView = () => document.querySelector('clippy-validations-view');
+
+const contentViews = () => document.querySelector('clippy-content-views');
 
 const violationCount = () => trigger()?.violationsMap?.size;
 
@@ -22,7 +24,7 @@ const createPageReview = (options: Partial<PageReviewOptions> = {}) => {
   return PageReview.mount({ ...options, mount });
 };
 
-const openDrawer = () =>
+const openValidations = () =>
   globalThis.dispatchEvent(
     new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, {
       detail: { identifier: 'clippy-page-review', mode: 'validations' },
@@ -35,7 +37,7 @@ const closeDrawer = () =>
   );
 
 const validationItems = () => [
-  ...(drawer()
+  ...(validationsView()
     ?.shadowRoot?.querySelector('clippy-validations-list')
     ?.shadowRoot?.querySelectorAll('clippy-validation-item') ?? []),
 ];
@@ -63,17 +65,20 @@ describe('PageReview', () => {
     await expect.poll(violationCount).toBe(1);
   });
 
-  it('marks its trigger, drawer and gutter as Dutch in a page in another language', () => {
+  it('marks its trigger, drawer views and gutter as Dutch in a page in another language', () => {
     document.documentElement.lang = 'en';
     document.body.innerHTML = '<main><h1>Title</h1></main>';
 
     review = createPageReview();
 
-    expect([trigger(), drawer(), document.querySelector('clippy-validations-gutter')]).toEqual([
-      expect.objectContaining({ lang: 'nl' }),
-      expect.objectContaining({ lang: 'nl' }),
-      expect.objectContaining({ lang: 'nl' }),
-    ]);
+    expect([trigger(), validationsView(), contentViews(), document.querySelector('clippy-validations-gutter')]).toEqual(
+      [
+        expect.objectContaining({ lang: 'nl' }),
+        expect.objectContaining({ lang: 'nl' }),
+        expect.objectContaining({ lang: 'nl' }),
+        expect.objectContaining({ lang: 'nl' }),
+      ],
+    );
   });
 
   it('validates the element matching the Review root selector', async () => {
@@ -107,7 +112,7 @@ describe('PageReview', () => {
     review = createPageReview();
     await expect.poll(violationCount).toBe(2);
 
-    openDrawer();
+    openValidations();
     await expect.poll(() => focusButtons().length).toBe(2);
     const buttonsPerItem = validationItems().map(
       (item) => item.shadowRoot?.querySelectorAll('.clippy-validation-item-actions clippy-button').length,
@@ -119,7 +124,7 @@ describe('PageReview', () => {
     document.body.innerHTML = '<header></header><main><h1>Titel</h1><h3>Overgeslagen</h3></main>';
     const before = document.body.innerHTML;
     review = createPageReview({ mount: document.querySelector('header')! });
-    openDrawer();
+    openValidations();
     await expect.poll(() => gutterIndicators().length).toBe(1);
 
     review.destroy();
@@ -134,10 +139,10 @@ describe('PageReview', () => {
         (indicator) => Math.abs(indicator.getBoundingClientRect().top - element.getBoundingClientRect().top) < 1,
       );
 
-    const reviewWithDrawerOpen = async (count: number) => {
+    const reviewWithValidationsOpen = async (count: number) => {
       review = createPageReview();
       await expect.poll(violationCount).toBe(count);
-      openDrawer();
+      openValidations();
       await expect.poll(() => gutterIndicators().length).toBe(count);
     };
 
@@ -147,7 +152,7 @@ describe('PageReview', () => {
       review = createPageReview();
 
       await expect.poll(() => gutterIndicators().length).toBe(1);
-      openDrawer();
+      openValidations();
       await expect.poll(() => validationItems().length).toBe(1);
       closeDrawer();
       await new Promise(requestAnimationFrame);
@@ -160,17 +165,34 @@ describe('PageReview', () => {
       await expect.poll(violationCount).toBe(1);
       expect(document.querySelector('clippy-validations-gutter')).toBeNull();
 
-      openDrawer();
+      openValidations();
       await expect.poll(() => gutterIndicators().length).toBe(1);
 
       closeDrawer();
       await expect.poll(() => document.querySelector('clippy-validations-gutter')).toBeNull();
     });
 
+    it('keeps showing markers when it switches to the Content views', async () => {
+      document.body.innerHTML = '<main><h1>Titel</h1><h3>Overgeslagen</h3></main>';
+      review = createPageReview({ gutter: 'drawer' });
+      await expect.poll(violationCount).toBe(1);
+      openValidations();
+      await expect.poll(() => gutterIndicators().length).toBe(1);
+
+      globalThis.dispatchEvent(
+        new CustomEvent(CustomEvents.OPEN_DOCUMENT_OVERVIEW, {
+          detail: { identifier: 'clippy-page-review', mode: 'heading-structure' },
+        }),
+      );
+      await new Promise(requestAnimationFrame);
+
+      expect(gutterIndicators()).toHaveLength(1);
+    });
+
     it('lets keyboard users reach its markers', async () => {
       document.body.innerHTML = '<main><h1>Titel</h1><h3>Overgeslagen</h3></main>';
 
-      await reviewWithDrawerOpen(1);
+      await reviewWithValidationsOpen(1);
 
       const buttons = [...document.querySelector('clippy-validations-gutter')!.shadowRoot!.querySelectorAll('button')];
       expect(buttons.length).toBeGreaterThan(0);
@@ -180,7 +202,7 @@ describe('PageReview', () => {
     it('opens the matching drawer item when an indicator is clicked', async () => {
       document.body.innerHTML =
         '<main><h1>Titel</h1><h3>Overgeslagen</h3><p>1 - Eerste item<br>2 - Tweede item</p></main>';
-      await reviewWithDrawerOpen(2);
+      await reviewWithValidationsOpen(2);
 
       const heading = document.querySelector('h3')!;
       indicatorFor(heading)!.querySelector('button')!.click();
@@ -238,7 +260,11 @@ describe('PageReview', () => {
 
       review = createPageReview({ mount: undefined });
 
-      for (const element of [drawer()!, trigger()!, document.querySelector('clippy-validations-gutter')!]) {
+      for (const element of [
+        document.querySelector('clippy-sidebar')!,
+        trigger()!,
+        document.querySelector('clippy-validations-gutter')!,
+      ]) {
         expect([...element.classList]).toEqual(['ma-theme', 'clippy-theme', 'utrecht-theme']);
       }
       expect(document.documentElement.classList).toHaveLength(0);

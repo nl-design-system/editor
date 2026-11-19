@@ -15,12 +15,7 @@ export default css`
     display: flex;
   }
 
-  .clippy-drawer__close-button {
-    border: none;
-    background: none;
-  }
-
-  .clippy-drawer__content {
+  .clippy-drawer {
     box-sizing: border-box;
     block-size: 100%;
     inline-size: 100%;
@@ -45,19 +40,23 @@ export default css`
     align-items: center;
     justify-content: space-between;
     gap: var(--basis-space-inline-md);
-    padding-block: var(--basis-space-none);
     padding-inline-start: var(--basis-space-inline-xl);
   }
 
-  .clippy-drawer__title {
+  .clippy-drawer__header-content {
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  .clippy-drawer__heading {
     margin-block: var(--basis-space-none);
     color: var(--basis-color-default-color-document);
     font-family: var(--nl-paragraph-font-family, inherit);
   }
 
-  .clippy-drawer__filters {
-    padding-block-end: var(--basis-space-block-lg);
-    padding-inline: var(--basis-space-inline-xl);
+  .clippy-drawer__close-button {
+    border: none;
+    background: none;
   }
 
   .clippy-drawer__body {
@@ -69,19 +68,10 @@ export default css`
     padding-block-end: var(--basis-space-block-xl);
   }
 
-  .clippy-drawer__list {
-    display: grid;
-    gap: var(--basis-space-inline-xl);
-    list-style: none;
-    margin-block: var(--basis-space-none);
-    padding-block: var(--basis-space-none);
-    padding-inline: var(--basis-space-none);
-  }
-
-  @media (forced-colors: active) {
-    .clippy-drawer::after {
-      background-color: CanvasText;
-      color: Canvas;
-    }
+  .clippy-drawer__footer {
+    flex-shrink: 0;
+    border-block-start: var(--basis-border-width-sm) solid var(--basis-color-default-border-subtle);
+    padding-block: var(--basis-space-block-lg);
+    padding-inline: var(--basis-space-inline-xl);
   }
 `;
