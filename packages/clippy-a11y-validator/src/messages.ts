@@ -14,7 +14,7 @@ export const resolveMessages = (
   payload?: ViolationPayload,
   documentationId?: string,
 ): ResolvedMessages => {
-  const { explanation, href, solution, title } = resolveLocalised(messages, locale, fallbackLocale);
+  const { explanation, href, solutions, title } = resolveLocalised(messages, locale, fallbackLocale);
   const rule = getDocumentationComponentRuleById(documentationId);
 
   return {
@@ -23,6 +23,8 @@ export const resolveMessages = (
     title: rule?.title ?? title ?? '',
     ...(explanation === undefined ? {} : { explanation: replacePlaceholders(explanation, payload) }),
     ...(href === undefined ? {} : { href }),
-    ...(solution === undefined ? {} : { solution: replacePlaceholders(solution, payload) }),
+    ...(solutions === undefined
+      ? {}
+      : { solutions: solutions.map((solution) => replacePlaceholders(solution, payload)) }),
   };
 };

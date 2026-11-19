@@ -7,14 +7,14 @@ import * as documentationComponentRules from '@nl-design-system-unstable/documen
  */
 type DocumentationComponentRule = {
   explanation: string;
-  solution: string;
+  solutions: string[];
   title: string;
 };
 
 const componentRulesMappedById = new Map<string, DocumentationComponentRule>(
-  documentationComponentRules.rules.map(({ id, explanation, solution, title }) => [
+  documentationComponentRules.rules.map(({ id, explanation, solutions, title }) => [
     id,
-    { explanation, solution, title },
+    { explanation, solutions: solutions.map(({ html }) => html), title },
   ]),
 );
 
