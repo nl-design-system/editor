@@ -239,8 +239,8 @@ describe('Validator', () => {
     const spy: Validation = {
       condition: () => false,
       corrections: [
-        { applies: () => false, execute: () => () => {}, label: { nl: 'Niet' } },
-        { applies: (element) => element.localName === 'p', execute: () => () => {}, label: { nl: 'Wel' } },
+        { condition: () => false, execute: () => () => {}, label: { nl: 'Niet' } },
+        { condition: (element) => element.localName === 'p', execute: () => () => {}, label: { nl: 'Wel' } },
         { execute: () => () => {}, label: { nl: 'Altijd' } },
       ],
       messages: { nl: { title: 'x' } },
