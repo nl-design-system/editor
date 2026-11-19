@@ -11,7 +11,7 @@ describe('descriptionTermMustHaveDescription', () => {
     expect(violation?.rule).toBe('DESCRIPTION_TERM_MUST_HAVE_DESCRIPTION');
     expect(violation?.severity).toBe('error');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.title).toBe('Deze definitielijst heeft een beschrijving bij een lege definitieterm.');
+    expect(violation?.messages.title).toBe('Beschrijving staat bij een lege term');
 
     expect(violation?.element.tagName).toBe('DL');
   });

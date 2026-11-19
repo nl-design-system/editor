@@ -93,9 +93,7 @@ describe('Validator', () => {
     const validations = [coreValidations[PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING]];
     const validator = new Validator({ locale: 'en', validations });
 
-    expect(validator.validate([fragment])[0]?.messages.title).toBe(
-      'Deze korte, volledig dikgedrukte alinea lijkt op een kop.',
-    );
+    expect(validator.validate([fragment])[0]?.messages.title).toBe('Alinea ziet eruit als een kop');
   });
 
   it('hands an element validation nothing but its element', () => {
@@ -276,7 +274,7 @@ describe('Validator', () => {
 
     expect(violation?.messages.title).toBe('Alinea heeft geen inhoud');
     expect(violation?.messages.explanation).toContain('Er is een alinea zonder inhoud.');
-    expect(violation?.messages.solution).toContain('Verwijder de lege alinea.');
+    expect(violation?.messages.solutions?.join('')).toContain('Verwijder de lege alinea.');
   });
 
   /** As with `corrections`, hosts branch on the key being there at all. */

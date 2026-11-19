@@ -12,9 +12,10 @@ describe('linkShouldNotBeEmpty', () => {
     expect(violation?.severity).toBe('warning');
     expect(violation?.scope).toBe('element');
     expect(violation?.messages.title).toBe('Er is geen linktekst voor hulpsoftware beschikbaar');
-    expect(violation?.messages.solution).toBe(
-      '<p class="nl-paragraph">Voeg een linktekst toe, of verwijder de link.</p>',
-    );
+    expect(violation?.messages.solutions).toEqual([
+      '<p class="nl-paragraph">Verwijder de link.</p>',
+      '<p class="nl-paragraph">Voeg een linktekst toe.</p>',
+    ]);
   });
 
   it('flags a link holding only whitespace', () => {

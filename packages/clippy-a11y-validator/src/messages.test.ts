@@ -4,8 +4,8 @@ import { coreValidations } from './components/index.ts';
 import { resolveLocalised, resolveMessages } from './messages.ts';
 
 const messages: ValidationMessagesByLocale = {
-  en: { solution: '<p class="nl-paragraph">Fix the {nodeType}.</p>', title: 'The node is wrong.' },
-  nl: { solution: '<p class="nl-paragraph">Herstel {nodeType}.</p>', title: 'De node is fout.' },
+  en: { solutions: ['<p class="nl-paragraph">Fix the {nodeType}.</p>'], title: 'The node is wrong.' },
+  nl: { solutions: ['<p class="nl-paragraph">Herstel {nodeType}.</p>'], title: 'De node is fout.' },
 };
 
 describe('resolveMessages', () => {
@@ -20,13 +20,13 @@ describe('resolveMessages', () => {
   it('interpolates payload values into the markup', () => {
     const resolved = resolveMessages(messages, 'en', 'nl', { nodeType: 'paragraph' });
 
-    expect(resolved.solution).toBe('<p class="nl-paragraph">Fix the paragraph.</p>');
+    expect(resolved.solutions).toEqual(['<p class="nl-paragraph">Fix the paragraph.</p>']);
   });
 
   it('leaves unknown placeholders untouched', () => {
-    expect(resolveMessages(messages, 'nl', 'nl', { other: 1 }).solution).toBe(
+    expect(resolveMessages(messages, 'nl', 'nl', { other: 1 }).solutions).toEqual([
       '<p class="nl-paragraph">Herstel {nodeType}.</p>',
-    );
+    ]);
   });
 
   /** Only the markup carries placeholders, so a title is whatever the validation wrote. */
@@ -34,8 +34,8 @@ describe('resolveMessages', () => {
     expect(resolveMessages(messages, 'en', 'nl', { nodeType: 'paragraph' }).title).toBe('The node is wrong.');
   });
 
-  it('omits the solution when there is none', () => {
-    expect(resolveMessages({ nl: { title: 'Fout.' } }, 'nl', 'nl').solution).toBeUndefined();
+  it('omits the solutions when there are none', () => {
+    expect(resolveMessages({ nl: { title: 'Fout.' } }, 'nl', 'nl').solutions).toBeUndefined();
   });
 
   it('passes the documentation link through', () => {
@@ -59,35 +59,37 @@ describe('resolveMessages', () => {
 
   it('passes the markup a validation writes straight through', () => {
     const own: ValidationMessagesByLocale = {
-      nl: { solution: '<p class="nl-paragraph">Herstel <strong>het</strong>.</p>' },
+      nl: { solutions: ['<p class="nl-paragraph">Herstel <strong>het</strong>.</p>'] },
     };
 
-    expect(resolveMessages(own, 'nl', 'nl').solution).toBe('<p class="nl-paragraph">Herstel <strong>het</strong>.</p>');
+    expect(resolveMessages(own, 'nl', 'nl').solutions).toEqual([
+      '<p class="nl-paragraph">Herstel <strong>het</strong>.</p>',
+    ]);
   });
 
   it('escapes what it reads off the document, which an author controls', () => {
-    const own: ValidationMessagesByLocale = { nl: { solution: '<p class="nl-paragraph">Herstel {text}.</p>' } };
+    const own: ValidationMessagesByLocale = { nl: { solutions: ['<p class="nl-paragraph">Herstel {text}.</p>'] } };
 
-    expect(resolveMessages(own, 'nl', 'nl', { text: '<img src=x onerror=alert(1)>' }).solution).toBe(
+    expect(resolveMessages(own, 'nl', 'nl', { text: '<img src=x onerror=alert(1)>' }).solutions).toEqual([
       '<p class="nl-paragraph">Herstel &lt;img src=x onerror=alert(1)&gt;.</p>',
-    );
+    ]);
   });
 
   it('escapes an ampersand in what it reads off the document', () => {
-    const own: ValidationMessagesByLocale = { nl: { solution: '<p class="nl-paragraph">Herstel {text}.</p>' } };
+    const own: ValidationMessagesByLocale = { nl: { solutions: ['<p class="nl-paragraph">Herstel {text}.</p>'] } };
 
-    expect(resolveMessages(own, 'nl', 'nl', { text: 'Tom & Jerry' }).solution).toBe(
+    expect(resolveMessages(own, 'nl', 'nl', { text: 'Tom & Jerry' }).solutions).toEqual([
       '<p class="nl-paragraph">Herstel Tom &amp; Jerry.</p>',
-    );
+    ]);
   });
 
   /** A placeholder sits in text content, where a quote is just a character, never in an attribute. */
   it('leaves quotes in what it reads off the document as they are', () => {
-    const own: ValidationMessagesByLocale = { nl: { solution: '<p class="nl-paragraph">Herstel {text}.</p>' } };
+    const own: ValidationMessagesByLocale = { nl: { solutions: ['<p class="nl-paragraph">Herstel {text}.</p>'] } };
 
-    expect(resolveMessages(own, 'nl', 'nl', { text: '"lees meer"' }).solution).toBe(
+    expect(resolveMessages(own, 'nl', 'nl', { text: '"lees meer"' }).solutions).toEqual([
       '<p class="nl-paragraph">Herstel "lees meer".</p>',
-    );
+    ]);
   });
 
   it('leaves the title as plain text, markup and all', () => {
@@ -118,20 +120,20 @@ describe('resolveMessages with documentation', () => {
 
     expect(resolved.title).toBe('Hele alinea is dikgedrukt');
     expect(resolved.explanation).toContain('De hele alinea is dikgedrukt.');
-    expect(resolved.solution).toContain('alleen voor de woorden of zinnen die extra aandacht nodig hebben');
+    expect(resolved.solutions?.join('')).toContain('alleen voor de woorden of zinnen die extra aandacht nodig hebben');
   });
 
-  it('lets the validation override the explanation and the solution', () => {
+  it('lets the validation override the explanation and the solutions', () => {
     const own: ValidationMessagesByLocale = {
       nl: {
         explanation: '<p class="nl-paragraph">Eigen uitleg.</p>',
-        solution: '<p class="nl-paragraph">Eigen oplossing.</p>',
+        solutions: ['<p class="nl-paragraph">Eigen oplossing.</p>'],
       },
     };
     const resolved = resolveMessages(own, 'nl', 'nl', undefined, ENTIRELY_BOLD);
 
     expect(resolved.explanation).toBe('<p class="nl-paragraph">Eigen uitleg.</p>');
-    expect(resolved.solution).toBe('<p class="nl-paragraph">Eigen oplossing.</p>');
+    expect(resolved.solutions).toEqual(['<p class="nl-paragraph">Eigen oplossing.</p>']);
   });
 
   /** The title names the rule, not this violation, so the rule is the one that gets to name it. */

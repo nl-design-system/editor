@@ -11,8 +11,8 @@ describe('paragraphShouldNotResembleHeading', () => {
     expect(violation?.rule).toBe('PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING');
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('document');
-    expect(violation?.messages.title).toBe('Deze korte, volledig dikgedrukte alinea lijkt op een kop.');
-    expect(violation?.messages.solution).toContain('Gebruik een echte kop');
+    expect(violation?.messages.title).toBe('Alinea ziet eruit als een kop');
+    expect(violation?.messages.solutions?.join('')).toContain('Verander de alinea in een kop.');
   });
 
   it('treats b the same as strong', () => {

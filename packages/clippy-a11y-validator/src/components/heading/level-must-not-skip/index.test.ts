@@ -11,13 +11,13 @@ describe('headingLevelMustNotSkip', () => {
     expect(violation?.rule).toBe('HEADING_LEVEL_MUST_NOT_SKIP');
     expect(violation?.severity).toBe('warning');
     expect(violation?.scope).toBe('document');
-    expect(violation?.messages.title).toBe('Er worden een of meerdere kopniveaus overgeslagen');
+    expect(violation?.messages.title).toBe('Koppen slaan een of meer niveaus over');
     expect(violation?.messages.explanation).toBe(
       '<p class="nl-paragraph">Kopniveau <strong>3</strong> volgt direct op kopniveau <strong>1</strong></p>',
     );
-    expect(violation?.messages.solution).toBe(
+    expect(violation?.messages.solutions).toEqual([
       '<p class="nl-paragraph">Gebruik kopniveau <strong>2</strong>, zodat er geen kopniveau wordt overgeslagen.</p>',
-    );
+    ]);
   });
 
   it('reports the levels involved in the payload', () => {

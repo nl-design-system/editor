@@ -11,10 +11,8 @@ describe('descriptionShouldNotBeEmpty', () => {
     expect(violation?.rule).toBe('DESCRIPTION_SHOULD_NOT_BE_EMPTY');
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.title).toBe('Deze definitiebeschrijving is leeg.');
-    expect(violation?.messages.solution).toBe(
-      '<p class="nl-paragraph">Verwijder de lege definitiebeschrijving of voeg tekst toe.</p>',
-    );
+    expect(violation?.messages.title).toBe('Beschrijving is leeg');
+    expect(violation?.messages.solutions?.join('')).toContain('Schrijf de uitleg bij de term.');
   });
 
   it('flags a description holding only whitespace', () => {

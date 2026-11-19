@@ -16,7 +16,7 @@ describe('paragraphShouldNotBeEntirelyBold', () => {
     expect(violation?.severity).toBe('warning');
     expect(violation?.scope).toBe('element');
     expect(violation?.messages.title).toBe('Hele alinea is dikgedrukt');
-    expect(violation?.messages.solution).toContain('alleen voor de woorden');
+    expect(violation?.messages.solutions?.join('')).toContain('alleen voor de woorden');
   });
 
   it('accepts a paragraph with bold and plain text', () => {

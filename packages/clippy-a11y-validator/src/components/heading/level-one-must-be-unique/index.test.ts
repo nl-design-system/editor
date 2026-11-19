@@ -12,7 +12,7 @@ describe('headingLevelOneMustBeUnique', () => {
     expect(violation?.severity).toBe('error');
     expect(violation?.scope).toBe('document');
     expect(violation?.messages.title).toBe('Meer dan één kop van niveau 1 op de pagina');
-    expect(violation?.messages.solution).toContain('kopniveau 2');
+    expect(violation?.messages.solutions?.join('')).toContain('kopniveau 2');
   });
 
   it('reports the duplicate, not the first heading', () => {

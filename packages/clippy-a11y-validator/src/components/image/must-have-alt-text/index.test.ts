@@ -12,7 +12,7 @@ describe('imageMustHaveAltText', () => {
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('element');
     expect(violation?.messages.title).toBe('Deze afbeelding heeft geen alternatieve tekst.');
-    expect(violation?.messages.solution).toContain('Beschrijf in de alternatieve tekst');
+    expect(violation?.messages.solutions?.join('')).toContain('Beschrijf in de alternatieve tekst');
   });
 
   it('flags an image with an empty alt attribute', () => {

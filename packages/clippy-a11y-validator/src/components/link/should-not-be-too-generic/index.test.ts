@@ -15,9 +15,9 @@ describe('linkShouldNotBeTooGeneric', () => {
     expect(violation?.messages.explanation).toBe(
       '<p class="nl-paragraph">De linktekst <strong>lees meer</strong> zegt niet waar de link naartoe gaat.</p>',
     );
-    expect(violation?.messages.solution).toBe(
+    expect(violation?.messages.solutions).toEqual([
       '<p class="nl-paragraph">Zorg ervoor dat de linktekst beschrijft waar de bezoeker naartoe gaat.</p>',
-    );
+    ]);
   });
 
   it('flags "klik hier"', () => {
