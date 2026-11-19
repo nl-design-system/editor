@@ -1,11 +1,16 @@
 import { localized, msg } from '@lit/localize';
+import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 import dataBadgeStyle from '@nl-design-system-candidate/data-badge-css/data-badge.css?inline';
+import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
 import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
+import ExternalLinkIcon from '@tabler/icons/outline/external-link.svg?raw';
 import { LitElement, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
+import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import '@nl-design-system-community/clippy-components/clippy-icon';
 import { CustomEvents, type FocusNodeDetail } from '@/events';
 import { localizeHost } from '@/localization';
 import { findNearestAncestorAttribute } from '@/utils/domTraverser';
@@ -37,6 +42,8 @@ export class LanguageChanges extends LitElement {
     unsafeCSS(dataBadgeStyle),
     unsafeCSS(linkStyle),
     unsafeCSS(paragraphStyle),
+    unsafeCSS(buttonCss),
+    unsafeCSS(headingStyle),
   ];
 
   /** The validated element to read, pushed by the Content views. */
@@ -105,9 +112,31 @@ export class LanguageChanges extends LitElement {
 
   override render() {
     const entries = this.#languageChanges;
+    const documentLanguage = this.#resolveDocLang();
 
     return html`
+      <div class="clippy-language-changes__intro">
+        <h3 class="nl-heading nl-heading--level-3">${msg('Language changes')}</h3>
+        <p class="nl-paragraph">
+          ${msg(
+            'The language of the document and every part of the text in another language. Give text in another language than the document that language, so screen readers pronounce it correctly and translation tools recognise it.',
+          )}
+        </p>
+        <a
+          class="nl-button nl-button--secondary"
+          href="https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/taal/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span class="nl-button__label">${msg('Guidelines for setting the right language')}</span>
+          <clippy-icon class="nl-button__icon-end">${unsafeSVG(ExternalLinkIcon)}</clippy-icon>
+        </a>
+      </div>
       <nav aria-label=${msg('Language changes')}>
+        <p class="clippy-language-changes__document-language">
+          <span class="nl-data-badge">${documentLanguage ?? msg('Not set')}</span>
+          ${msg('Document language')}
+        </p>
         ${
           entries.length > 0
             ? html`

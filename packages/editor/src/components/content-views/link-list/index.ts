@@ -1,22 +1,27 @@
 import { localized, msg } from '@lit/localize';
-import dataBadgeStyle from '@nl-design-system-candidate/data-badge-css/data-badge.css?inline';
+import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
+import headingStyle from '@nl-design-system-candidate/heading-css/heading.css?inline';
 import linkStyle from '@nl-design-system-candidate/link-css/link.css?inline';
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
-import { LitElement, html, unsafeCSS } from 'lit';
+import ExternalLinkIcon from '@tabler/icons/outline/external-link.svg?raw';
+import { LitElement, html, nothing, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
+import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import '@nl-design-system-community/clippy-components/clippy-icon';
+import '@/components/validations/toggle';
 import type { ViolationsMap, Violation } from '@/types/validation';
 import { CustomEvents, type FocusNodeDetail } from '@/events';
 import { localizeHost } from '@/localization';
-import { getHighestSeverityEntryByElement } from '@/utils/validations';
+import { getEntriesByElement } from '@/utils/validations';
 import linkListStyles from './styles';
 
 interface LinkEntry {
   element: HTMLAnchorElement;
   href: string;
   text: string;
-  validationEntry: [Range, Violation] | null;
+  validationEntries: [Range, Violation][];
 }
 
 const tag = 'clippy-link-list';
@@ -32,9 +37,10 @@ declare global {
 export class LinkList extends LitElement {
   static override readonly styles = [
     linkListStyles,
-    unsafeCSS(dataBadgeStyle),
     unsafeCSS(linkStyle),
     unsafeCSS(paragraphStyle),
+    unsafeCSS(buttonCss),
+    unsafeCSS(headingStyle),
   ];
 
   /** The validated element to read, pushed by the Content views. */
@@ -61,7 +67,7 @@ export class LinkList extends LitElement {
       element,
       href: element.getAttribute('href') ?? '',
       text: element.textContent ?? '',
-      validationEntry: getHighestSeverityEntryByElement(this.violationsMap, element),
+      validationEntries: getEntriesByElement(this.violationsMap, element),
     }));
   }
 
@@ -82,36 +88,39 @@ export class LinkList extends LitElement {
     const links = this.#links;
 
     return html`
+      <div class="clippy-link-list__intro">
+        <h3 class="nl-heading nl-heading--level-3">${msg('Links')}</h3>
+      </div>
       <nav aria-label=${msg('Links')}>
         ${
           links.length > 0
             ? html`
                 <ol class="clippy-link-list__list" role="list">
-                  ${map(links, ({ element, href, text, validationEntry }) => {
-                    const severity = validationEntry?.[1].severity ?? null;
+                  ${map(links, ({ element, href, text, validationEntries }) => {
+                    const severity = validationEntries[0]?.[1].severity;
                     return html`
-                      <li class="clippy-link-list__item">
-                        <div class="clippy-link-list__item-header">
-                          ${
-                            severity
-                              ? html`<span
-                                  class="nl-data-badge clippy-link-list__badge--${severity}"
-                                  aria-label=${severity}
-                                ></span>`
-                              : ''
-                          }
+                      <li class="clippy-link-list__item${severity ? ` clippy-link-list__item--${severity}` : ''}">
+                        <div class="clippy-link-list__item-content">
                           <a
                             class="nl-link"
                             href="#"
                             @click=${(e: Event) => {
                               e.preventDefault();
-                              this.#scrollToLink(element, validationEntry?.[0]);
+                              this.#scrollToLink(element, validationEntries[0]?.[0]);
                             }}
                           >
                             ${text.trim() || msg('(empty)')}
                           </a>
+                          ${href ? html`<span class="clippy-link-list__href" title=${href}>${href}</span>` : ''}
                         </div>
-                        ${href ? html`<span class="clippy-link-list__href" title=${href}>${href}</span>` : ''}
+                        ${
+                          validationEntries.length > 0
+                            ? html`<clippy-validation-toggle
+                                .entries=${validationEntries}
+                                .identifier=${this.identifier}
+                              ></clippy-validation-toggle>`
+                            : nothing
+                        }
                       </li>
                     `;
                   })}
@@ -120,6 +129,22 @@ export class LinkList extends LitElement {
             : html` <p class="nl-paragraph clippy-link-list__empty">${msg('No links found in this document.')}</p> `
         }
       </nav>
+      <div class="clippy-link-list__guideline">
+        <p class="nl-paragraph">
+          ${msg(
+            'All links in the text, with the address they go to. Every link needs a text that says where it goes, also when it is read on its own, for example in the list of links of a screen reader.',
+          )}
+        </p>
+        <a
+          class="nl-button nl-button--secondary"
+          href="https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/linkteksten/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span class="nl-button__label">${msg('Guidelines for accessible link texts')}</span>
+          <clippy-icon class="nl-button__icon-end">${unsafeSVG(ExternalLinkIcon)}</clippy-icon>
+        </a>
+      </div>
     `;
   }
 }

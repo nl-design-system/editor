@@ -26,13 +26,14 @@ export default css`
   }
 
   .clippy-heading-structure__item {
-    align-items: baseline;
+    align-items: center;
     display: flex;
     gap: var(--basis-space-inline-sm);
     min-inline-size: 0;
   }
 
   .clippy-heading-structure__button {
+    --utrecht-link-text-decoration: none;
     align-items: baseline;
     display: flex;
     gap: var(--basis-space-inline-sm);
@@ -68,22 +69,43 @@ export default css`
     padding-inline-start: calc(5 * var(--basis-space-inline-lg));
   }
 
-  .clippy-heading-structure__badge--error {
-    --nl-data-badge-background-color: var(--basis-color-negative-bg-default);
-    --nl-data-badge-border-color: var(--basis-color-negative-border-default);
-    --nl-data-badge-color: var(--basis-color-negative-color-default);
+  .clippy-heading-structure__button--error {
+    --utrecht-link-active-color: var(--basis-color-negative-color-active);
+    --utrecht-link-color: var(--basis-color-negative-color-default);
+    --utrecht-link-hover-color: var(--basis-color-negative-color-hover);
   }
 
-  .clippy-heading-structure__badge--warning {
-    --nl-data-badge-background-color: var(--basis-color-warning-bg-default);
-    --nl-data-badge-border-color: var(--basis-color-warning-border-default);
-    --nl-data-badge-color: var(--basis-color-warning-color-default);
+  .clippy-heading-structure__button--warning {
+    --utrecht-link-active-color: var(--basis-color-warning-color-active);
+    --utrecht-link-color: var(--basis-color-warning-color-default);
+    --utrecht-link-hover-color: var(--basis-color-warning-color-hover);
   }
 
-  .clippy-heading-structure__badge--info {
-    --nl-data-badge-background-color: var(--basis-color-default-bg-default);
-    --nl-data-badge-border-color: var(--basis-color-default-border-default);
-    --nl-data-badge-color: var(--basis-color-default-color-default);
+  .clippy-heading-structure__button--info {
+    --utrecht-link-active-color: var(--basis-color-info-color-active);
+    --utrecht-link-color: var(--basis-color-info-color-default);
+    --utrecht-link-hover-color: var(--basis-color-info-color-hover);
+  }
+
+  .clippy-heading-structure__intro {
+    padding-block-start: var(--basis-space-block-lg);
+    padding-inline: var(--basis-space-inline-lg);
+
+    .nl-heading {
+      margin-block: var(--basis-space-none);
+    }
+  }
+
+  .clippy-heading-structure__guideline {
+    align-items: start;
+    display: flex;
+    flex-direction: column;
+    gap: var(--basis-space-block-md);
+    padding-inline: var(--basis-space-inline-lg);
+
+    .nl-paragraph {
+      margin-block: var(--basis-space-none);
+    }
   }
 
   .clippy-heading-structure__empty {

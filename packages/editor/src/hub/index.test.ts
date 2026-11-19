@@ -460,7 +460,9 @@ describe('ClippyHub views without a context provider', () => {
       .toEqual(['Titel', 'Sectie']);
 
     openOverview('link-list');
-    await expect.poll(() => textsOf(inContentViews(contentViews, 'clippy-link-list'), 'a')).toEqual(['Contact']);
+    await expect
+      .poll(() => textsOf(inContentViews(contentViews, 'clippy-link-list'), '.clippy-link-list__item a'))
+      .toEqual(['Contact']);
 
     openOverview('language-changes');
     await expect.poll(() => textsOf(inContentViews(contentViews, 'clippy-language-changes'), 'a')).toContain('Hello');

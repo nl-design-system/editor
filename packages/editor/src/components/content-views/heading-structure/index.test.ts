@@ -42,7 +42,7 @@ describe('<clippy-heading-structure>', () => {
     it('shows the empty-state message when the document contains no headings', async () => {
       const { headingStructure } = await setupWithContent('<p>Paragraaf zonder kop.</p>');
 
-      const emptyState = headingStructure.shadowRoot?.querySelector('p');
+      const emptyState = headingStructure.shadowRoot?.querySelector('.clippy-heading-structure__empty');
       expect(emptyState).toBeVisible();
       expect(emptyState?.textContent?.trim()).toContain('Geen koppen gevonden in dit document.');
     });
@@ -113,6 +113,96 @@ describe('<clippy-heading-structure>', () => {
         'H2 Tweede',
         'H3 Derde',
       ]);
+    });
+  });
+
+  describe('guideline', () => {
+    it('starts with a heading and ends with an explanation and a button link to the guidelines', async () => {
+      const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
+
+      const [first, ...rest] = [...headingStructure.shadowRoot!.children];
+      const title = first.querySelector('h3')!;
+      expect(first).toHaveClass('clippy-heading-structure__intro');
+      expect(first.children).toHaveLength(1);
+      expect(title.textContent?.trim()).toBe('Kopstructuur');
+      const explanation = rest.at(-1)!;
+      const [description, link] = explanation.children;
+      expect(explanation).toHaveClass('clippy-heading-structure__guideline');
+      expect(explanation.previousElementSibling?.tagName).toBe('NAV');
+      expect(description).toHaveClass('nl-paragraph');
+      expect(link).toHaveClass('nl-button', 'nl-button--secondary');
+      expect(link).toHaveAttribute('href', 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/');
+      expect(link).toHaveAttribute('target', '_blank');
+      expect(link.textContent?.trim()).toBe('Richtlijnen voor koppen');
+    });
+  });
+
+  describe('layout', () => {
+    it('does not underline the headings', async () => {
+      const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
+
+      const button = headingStructure.shadowRoot!.querySelector('.clippy-heading-structure__button')!;
+      expect(getComputedStyle(button).textDecorationLine).toBe('none');
+    });
+
+    it('centres the validation toggle vertically on the heading text', async () => {
+      const { headingStructure, root } = await setupWithContent('<h1>Titel</h1>');
+      const range = document.createRange();
+      range.selectNode(root.querySelector('h1')!);
+      headingStructure.violationsMap = new Map([[range, violation({ range, severity: 'error' })]]);
+      await headingStructure.updateComplete;
+      const toggle = headingStructure.shadowRoot!.querySelector('clippy-validation-toggle')!;
+      await toggle.updateComplete;
+
+      const middle = (element: Element) => {
+        const { bottom, top } = element.getBoundingClientRect();
+        return (top + bottom) / 2;
+      };
+      const text = headingStructure.shadowRoot!.querySelector('.clippy-heading-structure__text')!;
+      expect(Math.abs(middle(toggle) - middle(text))).toBeLessThanOrEqual(1);
+    });
+  });
+
+  describe('severity', () => {
+    it('shows a heading with a validation entirely in the colour of its highest severity', async () => {
+      const { headingStructure, root } = await setupWithContent('<h1>Titel</h1><h2>Sectie</h2>');
+      headingStructure.style.setProperty('--basis-color-warning-color-default', 'rgb(1, 2, 3)');
+      const range = document.createRange();
+      range.selectNode(root.querySelector('h2')!);
+      headingStructure.violationsMap = new Map([[range, violation({ range, severity: 'warning' })]]);
+      await headingStructure.updateComplete;
+
+      const [h1, h2] = headingStructure.shadowRoot!.querySelectorAll('.clippy-heading-structure__button');
+      expect(h1.className).not.toMatch(/--(error|warning|info)/);
+      expect(h2).toHaveClass('clippy-heading-structure__button--warning');
+      expect(getComputedStyle(h2.querySelector('.clippy-heading-structure__text')!).color).toBe('rgb(1, 2, 3)');
+      expect(getComputedStyle(h1.querySelector('.clippy-heading-structure__text')!).color).not.toBe('rgb(1, 2, 3)');
+    });
+  });
+
+  describe('validation toggle', () => {
+    const toggle = (headingStructure: HeadingStructure) =>
+      headingStructure.shadowRoot?.querySelector('clippy-validation-toggle');
+
+    it('does not render a toggle for a heading without validations', async () => {
+      const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
+
+      expect(toggle(headingStructure)).toBeNull();
+    });
+
+    it('renders a toggle with the validations of the heading, outside its button', async () => {
+      const { headingStructure, root } = await setupWithContent('<h1>Titel</h1>');
+      const headingRange = document.createRange();
+      headingRange.selectNode(root.querySelector('h1')!);
+      headingStructure.identifier = 'editor';
+      headingStructure.violationsMap = new Map([
+        [headingRange, violation({ range: headingRange, severity: 'warning' })],
+      ]);
+      await headingStructure.updateComplete;
+
+      expect(toggle(headingStructure)!.identifier).toBe('editor');
+      expect(toggle(headingStructure)!.entries.map(([range]) => range)).toEqual([headingRange]);
+      expect(toggle(headingStructure)!.closest('button')).toBeNull();
     });
   });
 
