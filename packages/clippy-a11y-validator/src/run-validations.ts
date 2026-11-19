@@ -16,6 +16,10 @@ const localisedLabel = (
     ? {}
     : { label: replaceTextPlaceholders(resolveLocalised(label, locale, fallbackLocale), payload) };
 
+/** A correction's solution id, filled in from the payload. Absent when the rule names none. */
+const solutionIdFor = (solutionId: string | undefined, payload: ViolationPayload | undefined) =>
+  solutionId === undefined ? {} : { solutionId: replaceTextPlaceholders(solutionId, payload) };
+
 /**
  * Runs one validation against one element, producing the parts of a violation that depend on that
  * element. `undefined` when the element satisfies the validation.
@@ -32,9 +36,10 @@ const validateElement = (
 
     const elementPayload = payload?.(element);
     return {
-      corrections: corrections?.map(({ execute, label }) => ({
+      corrections: corrections?.map(({ execute, label, solutionId }) => ({
         execute: execute(element, documentContext.for(element)),
         ...localisedLabel(label, locales, elementPayload),
+        ...solutionIdFor(solutionId, elementPayload),
       })),
       focus: focus?.(element),
       payload: elementPayload,
@@ -47,9 +52,10 @@ const validateElement = (
 
   const documentPayload = payload?.(element, context);
   return {
-    corrections: corrections?.map(({ execute, label }) => ({
+    corrections: corrections?.map(({ execute, label, solutionId }) => ({
       execute: execute(element, context),
       ...localisedLabel(label, locales, documentPayload),
+      ...solutionIdFor(solutionId, documentPayload),
     })),
     focus: focus?.(element, context),
     payload: documentPayload,
