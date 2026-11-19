@@ -43,8 +43,8 @@ type SharedValidationDefinition<S extends Selector> = {
  * `label` out when the host's default wording is right, which is the case for every rule this
  * package ships with a single correction.
  *
- * Unlike `messages`, a label is not interpolated with the payload: it is an imperative verb phrase
- * naming an action, not a sentence about the element.
+ * Like `messages`, a label can name payload values as `{key}` placeholders; they go in as plain
+ * text. A label is an imperative verb phrase naming an action, not a sentence about the element.
  */
 export type ElementValidationCorrection<E extends HTMLElement = HTMLElement> = {
   execute: (element: E, context: ValidationContext) => CorrectViolationFunction;
