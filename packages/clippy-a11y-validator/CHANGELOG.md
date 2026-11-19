@@ -1,5 +1,17 @@
 # @nl-design-system-community/clippy-a11y-validator
 
+## 0.5.0
+
+### Minor Changes
+
+- 786ba80: Flag headings longer than 60 characters with HEADING_SHOULD_NOT_BE_TOO_LONG, for instance after converting a long bold paragraph to a heading.
+- 4c23707: Export `resolveMessages` and `getDocumentationComponentRuleById`, so a page can show the title and explanation of a rule without a violation.
+
+### Patch Changes
+
+- 76acf2b: Export `package.json`, so tools can read the package metadata by package name.
+- f02b500: Temporarily disable `HEADING_MUST_START_AT_LEVEL_ONE`: content in a CMS editor is part of a page that provides its own `h1`. Heading levels after the first heading are still validated.
+
 ## 0.4.0
 
 ### Minor Changes

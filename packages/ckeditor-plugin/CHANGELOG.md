@@ -1,5 +1,19 @@
 # @nl-design-system-community/ckeditor-plugin
 
+## 0.5.0
+
+### Minor Changes
+
+- d589b47: Added inline drawer support.
+
+### Patch Changes
+
+- f02b500: Temporarily disable `HEADING_MUST_START_AT_LEVEL_ONE`: content in a CMS editor is part of a page that provides its own `h1`. Heading levels after the first heading are still validated.
+- Updated dependencies [76acf2b]
+- Updated dependencies [27b2c79]
+- Updated dependencies [d589b47]
+  - @nl-design-system-community/editor@3.0.0
+
 ## 0.4.4
 
 ### Patch Changes

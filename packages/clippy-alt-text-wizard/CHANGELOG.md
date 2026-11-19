@@ -1,5 +1,11 @@
 # @nl-design-system-community/clippy-alt-text-wizard
 
+## 0.2.3
+
+### Patch Changes
+
+- 76acf2b: Export `package.json`, so tools can read the package metadata by package name.
+
 ## 0.2.2
 
 ### Patch Changes
