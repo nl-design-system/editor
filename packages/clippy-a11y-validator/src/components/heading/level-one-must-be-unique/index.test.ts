@@ -15,6 +15,12 @@ describe('headingLevelOneMustBeUnique', () => {
     expect(violation?.messages.solutions?.join('')).toContain('kopniveau 2');
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate('<h1>Eerste</h1><h1>Tweede</h1>');
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Omzetten naar kopniveau 2']);
+  });
+
   it('reports the duplicate, not the first heading', () => {
     expect(validate('<h1>Eerste</h1><h1>Tweede</h1>')[0]?.element.textContent).toBe('Tweede');
   });

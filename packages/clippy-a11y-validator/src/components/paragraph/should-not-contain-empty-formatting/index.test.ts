@@ -17,6 +17,12 @@ describe('paragraphShouldNotContainEmptyFormatting', () => {
     );
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate('<p><strong></strong></p>');
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Lege alinea verwijderen']);
+  });
+
   it('names the offending tag in the explanation, as text rather than as the tag it names', () => {
     const tags = ['strong', 'b', 'em', 'i', 'code', 'mark', 's', 'del', 'u'];
 

@@ -14,6 +14,12 @@ describe('tableMustHaveMultipleRows', () => {
     expect(violation?.messages.title).toBe('Tabel heeft minder dan twee rijen');
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate('<table><tbody><tr><td>C1</td><td>C2</td></tr></tbody></table>');
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Rij toevoegen']);
+  });
+
   it('flags a table without any rows', () => {
     expect(validate('<table></table>')).toHaveLength(1);
   });

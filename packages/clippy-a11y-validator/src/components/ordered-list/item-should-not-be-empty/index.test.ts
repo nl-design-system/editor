@@ -14,6 +14,12 @@ describe('orderedListItemShouldNotBeEmpty', () => {
     expect(violation?.messages.title).toBe('Lijst-item is leeg');
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate('<ol><li>een</li><li></li></ol>');
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Leeg lijst-item verwijderen']);
+  });
+
   it('flags an item holding only whitespace', () => {
     expect(validate('<ol><li> </li></ol>')).toHaveLength(1);
   });

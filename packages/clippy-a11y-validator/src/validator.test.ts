@@ -218,6 +218,23 @@ describe('Validator', () => {
     expect(violation?.corrections?.[0]?.label).toBe('Bewerken');
   });
 
+  it('fills the payload into the correction label as plain text', () => {
+    const spy: Validation = {
+      condition: () => false,
+      corrections: [{ execute: () => () => {}, label: { nl: 'Omzetten naar {target}' } }],
+      messages: { nl: { title: 'x' } },
+      payload: () => ({ target: '<h2>' }),
+      rule: 'SPY',
+      scope: 'element',
+      selector: 'p',
+      severity: 'info',
+    };
+
+    const [violation] = new Validator({ validations: [spy] }).validate([fragment]);
+
+    expect(violation?.corrections?.[0]?.label).toBe('Omzetten naar <h2>');
+  });
+
   it('leaves the label out when the correction does not name one', () => {
     const spy: Validation = {
       condition: () => false,

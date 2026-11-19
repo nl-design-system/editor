@@ -41,10 +41,10 @@ describe('editorCorrections', () => {
     expect(detail.files[0].url).toContain('paspoort.png');
   });
 
-  it('labels the alt-text action as an edit rather than a correction', () => {
+  it('labels the alt-text action with what it does', () => {
     const { element, range } = rangeOf('<img src="paspoort.png" alt="">', 'img');
 
-    expect(editorCorrections[coreValidationRules.IMAGE_MUST_HAVE_ALT_TEXT]!(element, range).label).toBeTruthy();
+    expect(editorCorrections[coreValidationRules.IMAGE_MUST_HAVE_ALT_TEXT]!(element, range).label).toBe('Add alt text');
   });
 
   it('moves focus to the contenteditable host and selects the image', () => {

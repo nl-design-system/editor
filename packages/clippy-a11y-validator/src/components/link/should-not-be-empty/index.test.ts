@@ -18,6 +18,12 @@ describe('linkShouldNotBeEmpty', () => {
     ]);
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate('<p><a href="/paspoort"></a></p>');
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Lege link verwijderen']);
+  });
+
   it('flags a link holding only whitespace', () => {
     expect(validate('<p><a href="/paspoort"> </a></p>')).toHaveLength(1);
   });

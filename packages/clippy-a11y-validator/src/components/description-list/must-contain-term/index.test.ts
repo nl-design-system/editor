@@ -14,6 +14,12 @@ describe('descriptionListMustContainTerm', () => {
     expect(violation?.messages.title).toBe('Alle termen in de definitielijst zijn leeg');
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate('<dl><dt></dt><dd>beschrijving</dd></dl>');
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Tijdelijke term toevoegen']);
+  });
+
   it('flags a list where every term is empty', () => {
     expect(validate('<dl><dt></dt><dd>een</dd><dt> </dt><dd>twee</dd></dl>')).toHaveLength(1);
   });
