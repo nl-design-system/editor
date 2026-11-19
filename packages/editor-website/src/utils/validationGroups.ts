@@ -58,19 +58,19 @@ export const validationGroups: ValidationGroup[] = [
         },
         rule: 'HEADING_MUST_NOT_BE_EMPTY',
       },
-      {
-        example: {
-          en: `
-          <h2>Heading level 2</h2>
-          <p>The document does not start with a main heading.</p>
-        `,
-          nl: `
-          <h2>Kopniveau 2</h2>
-          <p>Het document begint niet met een hoofdkop.</p>
-        `,
-        },
-        rule: 'HEADING_MUST_START_AT_LEVEL_ONE',
-      },
+      // {
+      //   example: {
+      //     en: `
+      //     <h2>Heading level 2</h2>
+      //     <p>The document does not start with a main heading.</p>
+      //   `,
+      //     nl: `
+      //     <h2>Kopniveau 2</h2>
+      //     <p>Het document begint niet met een hoofdkop.</p>
+      //   `,
+      //   },
+      //   rule: 'HEADING_MUST_START_AT_LEVEL_ONE',
+      // },
       {
         example: {
           en: `

@@ -5,7 +5,7 @@ import { Validator } from './validator.ts';
 
 const {
   HEADING_MUST_NOT_BE_EMPTY,
-  HEADING_MUST_START_AT_LEVEL_ONE,
+  // HEADING_MUST_START_AT_LEVEL_ONE,
   PARAGRAPH_SHOULD_NOT_BE_EMPTY,
   PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING,
   TABLE_MUST_HAVE_HEADINGS,
@@ -338,12 +338,12 @@ describe('Validator', () => {
     expect(validator.validate([first, second]).map(({ element }) => element.id)).toEqual(['first', 'second']);
   });
 
-  it('runs document validations over the composed content it is given', () => {
-    const validator = new Validator({ validations: [coreValidations[HEADING_MUST_START_AT_LEVEL_ONE]] });
-    fragment.innerHTML = '<h2>Kop</h2>';
+  // it('runs document validations over the composed content it is given', () => {
+  //   const validator = new Validator({ validations: [coreValidations[HEADING_MUST_START_AT_LEVEL_ONE]] });
+  //   fragment.innerHTML = '<h2>Kop</h2>';
 
-    expect(validator.validate([fragment]).map(({ rule }) => rule)).toEqual([HEADING_MUST_START_AT_LEVEL_ONE]);
-  });
+  //   expect(validator.validate([fragment]).map(({ rule }) => rule)).toEqual([HEADING_MUST_START_AT_LEVEL_ONE]);
+  // });
 
   it('judges content without its document against a proxy content fragment holding the outline above it', () => {
     const validator = new Validator({ validations: Object.values(coreValidations) });

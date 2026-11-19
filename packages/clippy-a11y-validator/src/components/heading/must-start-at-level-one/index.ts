@@ -1,7 +1,6 @@
 import { selectors, validationSeverity } from '../../../consts/index.ts';
 import { defineValidation } from '../../../define-validation.ts';
 import { changeTagName } from '../../../utils/dom.ts';
-import { headingValidationRules } from '../constants.ts';
 import { headingLevel, precedingHeading } from '../utils.ts';
 import { messages } from './messages.ts';
 
@@ -19,7 +18,7 @@ export const headingMustStartAtLevelOne = defineValidation({
   ],
   messages,
   payload: (heading) => ({ headingLevel: headingLevel(heading) }),
-  rule: headingValidationRules.HEADING_MUST_START_AT_LEVEL_ONE,
+  rule: 'HEADING_MUST_START_AT_LEVEL_ONE',
   scope: 'document',
   selector: selectors.HEADING,
   severity: validationSeverity.INFO,

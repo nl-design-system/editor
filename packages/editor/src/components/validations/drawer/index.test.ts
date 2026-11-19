@@ -94,7 +94,7 @@ describe('<clippy-validations-dialog>', () => {
       entry(coreValidationRules.PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST, 'warning', { prefix: '-' }),
       entry(coreValidationRules.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC, 'warning'),
       entry(coreValidationRules.PARAGRAPH_SHOULD_NOT_CONTAIN_UNDERLINED_TEXT, 'warning'),
-      entry(coreValidationRules.HEADING_MUST_START_AT_LEVEL_ONE, 'error'),
+      entry('HEADING_MUST_START_AT_LEVEL_ONE', 'error'),
     ]);
 
     drawerElement.violationsMap = violationsMap;

@@ -3,7 +3,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { registerHeadingSource } from './headingSource';
 import { ClippyDocument } from './index';
 
-const { HEADING_LEVEL_MUST_NOT_SKIP, HEADING_MUST_NOT_BE_EMPTY, HEADING_MUST_START_AT_LEVEL_ONE } = coreValidationRules;
+const { HEADING_LEVEL_MUST_NOT_SKIP, HEADING_MUST_NOT_BE_EMPTY /* , HEADING_MUST_START_AT_LEVEL_ONE */ } =
+  coreValidationRules;
 
 const validationPass = async () => {
   await Promise.resolve();
@@ -32,7 +33,7 @@ let clippyDocument: ClippyDocument;
 beforeEach(() => {
   document.body.replaceChildren();
   clippyDocument = new ClippyDocument();
-  [HEADING_LEVEL_MUST_NOT_SKIP, HEADING_MUST_NOT_BE_EMPTY, HEADING_MUST_START_AT_LEVEL_ONE].forEach((rule) =>
+  [HEADING_LEVEL_MUST_NOT_SKIP, HEADING_MUST_NOT_BE_EMPTY /* , HEADING_MUST_START_AT_LEVEL_ONE */].forEach((rule) =>
     clippyDocument.registerValidation(coreValidations[rule]),
   );
 });
