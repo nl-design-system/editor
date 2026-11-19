@@ -28,30 +28,27 @@ export const validationSeverityOrder: ValidationSeverity[] = [
 ];
 
 /**
- * Returns the highest-severity validation entry whose range intersects the
- * given DOM element/node, or `null` when there are no matches.
+ * Returns the validation entries whose range intersects the given DOM element/node,
+ * highest severity first.
  *
  * @param violationsMap - The map of all current violations.
  * @param element - The DOM element or node to look up.
  */
-export function getHighestSeverityEntryByElement(
+export function getEntriesByElement(
   violationsMap: ViolationsMap | undefined,
   element: Element | Node | null,
-): [Range, Violation] | null {
-  if (!violationsMap?.size || !element) return null;
+): [Range, Violation][] {
+  if (!violationsMap?.size || !element) return [];
   const target = element instanceof Element ? element : element.parentElement;
-  if (!target) return null;
-  return (
-    [...violationsMap.entries()]
-      .filter(([, violation]) => {
-        if (!violation.range) return false;
-        try {
-          return violation.range.intersectsNode(target);
-        } catch {
-          return false;
-        }
-      })
-      .sort(([, a], [, b]) => validationSeverityOrder.indexOf(a.severity) - validationSeverityOrder.indexOf(b.severity))
-      .at(0) ?? null
-  );
+  if (!target) return [];
+  return [...violationsMap.entries()]
+    .filter(([, violation]) => {
+      if (!violation.range) return false;
+      try {
+        return violation.range.intersectsNode(target);
+      } catch {
+        return false;
+      }
+    })
+    .sort(([, a], [, b]) => validationSeverityOrder.indexOf(a.severity) - validationSeverityOrder.indexOf(b.severity));
 }
