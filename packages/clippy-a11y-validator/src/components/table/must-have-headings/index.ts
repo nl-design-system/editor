@@ -15,6 +15,7 @@ export const tableMustHaveHeadings = defineValidation({
         // `changeTagName` swaps each cell in place, so the live collection keeps its length while iterating.
         for (const cell of firstRow.children) changeTagName(cell, 'th');
       },
+      label: { en: 'Make first row a header row', nl: 'Eerste rij omzetten naar koprij' },
     },
   ],
   documentationId: 'ce51022e-eff9-454c-97ec-9c19ff86c18b',

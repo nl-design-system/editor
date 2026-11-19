@@ -13,6 +13,7 @@ export const descriptionTermMustHaveDescription = defineValidation({
         emptyTermsWithDescription(list).forEach((term) => {
           term.textContent = '...';
         }),
+      label: { en: 'Add placeholder terms', nl: 'Tijdelijke termen toevoegen' },
     },
   ],
   documentationId: '71b05efc-a912-4978-a483-f882abf8f7ab',

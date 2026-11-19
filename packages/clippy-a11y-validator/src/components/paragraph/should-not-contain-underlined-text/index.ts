@@ -10,6 +10,7 @@ export const paragraphShouldNotContainUnderlinedText = defineValidation({
   corrections: [
     {
       execute: (underline) => () => unwrapElement(underline),
+      label: { en: 'Remove underline', nl: 'Onderstreping verwijderen' },
     },
   ],
   documentationId: 'fe56a126-ed5b-406f-8240-fedd5b25d7cd',

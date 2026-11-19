@@ -17,6 +17,7 @@ export const paragraphShouldNotResembleList = defineValidation({
             isOrderedListItem(paragraph),
             subsequentSiblingMatches(paragraph.localName),
           ),
+      label: { en: 'Convert to list', nl: 'Omzetten naar lijst' },
     },
   ],
   documentationId: 'af5a0a05-bf3a-4218-b0de-f635f00a1456',

@@ -9,6 +9,7 @@ export const headingLevelOneMustBeUnique = defineValidation({
   corrections: [
     {
       execute: (headingOne) => () => changeTagName(headingOne, 'h2'),
+      label: { en: 'Change to heading level 2', nl: 'Omzetten naar kopniveau 2' },
     },
   ],
   documentationId: '0f185b42-34f9-4c50-a3fb-4d0d384d62bf',
