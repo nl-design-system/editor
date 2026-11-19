@@ -9,15 +9,22 @@ export const paragraphShouldNotResembleList = defineValidation({
   condition: not(resemblesListItem),
   corrections: [
     {
+      applies: not(isOrderedListItem),
       execute:
         (paragraph, { subsequentSiblingMatches }) =>
         () =>
-          convertParagraphsToList(
-            paragraph,
-            isOrderedListItem(paragraph),
-            subsequentSiblingMatches(paragraph.localName),
-          ),
-      label: { en: 'Convert to list', nl: 'Omzetten naar lijst' },
+          convertParagraphsToList(paragraph, false, subsequentSiblingMatches(paragraph.localName)),
+      label: { en: 'Convert to bulleted list', nl: 'Omzetten naar opsomming' },
+      solutionId: 'e7347d49-e751-4f82-9105-0f8ef77e3bba',
+    },
+    {
+      applies: isOrderedListItem,
+      execute:
+        (paragraph, { subsequentSiblingMatches }) =>
+        () =>
+          convertParagraphsToList(paragraph, true, subsequentSiblingMatches(paragraph.localName)),
+      label: { en: 'Convert to numbered list', nl: 'Omzetten naar genummerde lijst' },
+      solutionId: '77ec1d80-1931-40f3-bf4a-502cdffb98c6',
     },
   ],
   documentationId: 'af5a0a05-bf3a-4218-b0de-f635f00a1456',
