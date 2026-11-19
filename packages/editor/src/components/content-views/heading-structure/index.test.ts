@@ -1,5 +1,6 @@
 import { violation } from '@test/violation';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { page } from 'vitest/browser';
 import { CustomEvents, type FocusNodeDetail } from '@/events';
 import { initializeLocale } from '@/localization';
 import './index';
@@ -42,7 +43,7 @@ describe('<clippy-heading-structure>', () => {
     it('shows the empty-state message when the document contains no headings', async () => {
       const { headingStructure } = await setupWithContent('<p>Paragraaf zonder kop.</p>');
 
-      const emptyState = headingStructure.shadowRoot?.querySelector('p');
+      const emptyState = headingStructure.shadowRoot?.querySelector('.clippy-heading-structure__empty');
       expect(emptyState).toBeVisible();
       expect(emptyState?.textContent?.trim()).toContain('Geen koppen gevonden in dit document.');
     });
@@ -116,6 +117,68 @@ describe('<clippy-heading-structure>', () => {
     });
   });
 
+  describe('guideline', () => {
+    it('has a heading and a link to the guidelines in a new tab', async () => {
+      await setupWithContent('<h1>Titel</h1>');
+
+      await expect.element(page.getByRole('heading', { name: 'Kopstructuur', level: 3 })).toBeVisible();
+      await expect.element(page.getByText(/Dit overzicht toont alle koppen in de tekst/)).toBeVisible();
+      const link = page.getByRole('link', { name: 'Richtlijnen voor koppen' });
+      await expect
+        .element(link)
+        .toHaveAttribute('href', 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/');
+      await expect.element(link).toHaveAttribute('target', '_blank');
+    });
+
+    it('explains the view before listing its entries', async () => {
+      const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
+
+      const guideline = headingStructure.shadowRoot!.querySelector('.nl-button--secondary')!;
+      const nav = headingStructure.shadowRoot!.querySelector('nav')!;
+      expect(guideline.compareDocumentPosition(nav) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
+  });
+
+  describe('severity', () => {
+    it('marks a heading with a validation with its highest severity', async () => {
+      const { headingStructure, root } = await setupWithContent('<h1>Titel</h1><h2>Sectie</h2>');
+      const range = document.createRange();
+      range.selectNode(root.querySelector('h2')!);
+      headingStructure.violationsMap = new Map([[range, violation({ range, severity: 'warning' })]]);
+      await headingStructure.updateComplete;
+
+      const [h1, h2] = headingStructure.shadowRoot!.querySelectorAll('.clippy-heading-structure__button');
+      expect(h1.className).not.toMatch(/--(error|warning|info)/);
+      expect(h2).toHaveClass('clippy-heading-structure__button--warning');
+    });
+  });
+
+  describe('validation button', () => {
+    const validationButton = (headingStructure: HeadingStructure) =>
+      headingStructure.shadowRoot?.querySelector('clippy-validation-button');
+
+    it('does not render a validation button for a heading without validations', async () => {
+      const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
+
+      expect(validationButton(headingStructure)).toBeNull();
+    });
+
+    it('renders a validation button with the validations of the heading, outside its button', async () => {
+      const { headingStructure, root } = await setupWithContent('<h1>Titel</h1>');
+      const headingRange = document.createRange();
+      headingRange.selectNode(root.querySelector('h1')!);
+      headingStructure.identifier = 'editor';
+      headingStructure.violationsMap = new Map([
+        [headingRange, violation({ range: headingRange, severity: 'warning' })],
+      ]);
+      await headingStructure.updateComplete;
+
+      expect(validationButton(headingStructure)!.identifier).toBe('editor');
+      expect(validationButton(headingStructure)!.violations.map(({ range }) => range)).toEqual([headingRange]);
+      expect(validationButton(headingStructure)!.closest('button')).toBeNull();
+    });
+  });
+
   describe('interactivity', () => {
     let details: FocusNodeDetail[];
     const record = (event: Event) => details.push((event as CustomEvent<FocusNodeDetail>).detail);
@@ -129,7 +192,7 @@ describe('<clippy-heading-structure>', () => {
       globalThis.removeEventListener(CustomEvents.FOCUS_NODE, record);
     });
 
-    it('asks to focus the validation of the clicked heading, like its Focus button', async () => {
+    it('asks to focus the clicked heading itself, also when it has a validation', async () => {
       const { headingStructure, root } = await setupWithContent('<h1>Titel</h1>');
       headingStructure.identifier = 'editor';
       const headingRange = document.createRange();
@@ -141,7 +204,9 @@ describe('<clippy-heading-structure>', () => {
 
       headingStructure.shadowRoot!.querySelector('button')!.click();
 
-      expect(details).toEqual([{ identifier: 'editor', range: headingRange }]);
+      expect(details).toHaveLength(1);
+      expect(details[0].range.startContainer).toBe(root.querySelector('h1'));
+      expect(details[0].range.startOffset).toBe(0);
     });
 
     it('asks to focus a clicked heading without a validation', async () => {

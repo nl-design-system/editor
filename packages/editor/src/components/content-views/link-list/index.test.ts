@@ -1,7 +1,7 @@
 import { violation } from '@test/violation';
 import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import type { ViolationsMap } from '@/types/validation';
+import { page } from 'vitest/browser';
 import { CustomEvents, type FocusNodeDetail } from '@/events';
 import { initializeLocale } from '@/localization';
 import type { LinkList } from './index';
@@ -134,58 +134,81 @@ describe('<clippy-link-list>', () => {
     });
   });
 
-  describe('validation badges', () => {
-    it('does not render a badge when no validation entry matches the link position', async () => {
+  describe('guideline', () => {
+    it('has a heading and a link to the guidelines in a new tab', async () => {
+      await setupWithContent('<p><a href="/contact">Contact</a></p>');
+
+      await expect.element(page.getByRole('heading', { name: 'Links', level: 3 })).toBeVisible();
+      await expect.element(page.getByText(/Dit overzicht toont alle links in de tekst/)).toBeVisible();
+      const link = page.getByRole('link', { name: 'Richtlijnen voor toegankelijke linkteksten' });
+      await expect
+        .element(link)
+        .toHaveAttribute('href', 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/linkteksten/');
+      await expect.element(link).toHaveAttribute('target', '_blank');
+    });
+
+    it('explains the view before listing its entries', async () => {
+      const { linkList } = await setupWithContent('<p><a href="/contact">Contact</a></p>');
+
+      const guideline = linkList.shadowRoot!.querySelector('.nl-button--secondary')!;
+      const nav = linkList.shadowRoot!.querySelector('nav')!;
+      expect(guideline.compareDocumentPosition(nav) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
+  });
+
+  describe('item', () => {
+    it('shows each link in a row, not in a card', async () => {
+      const { linkList } = await setupWithContent('<p><a href="/contact">Contact</a> <a href="/over">Over ons</a></p>');
+
+      const items = [...linkList.shadowRoot!.querySelectorAll('.clippy-link-list__item')];
+      expect(items).toHaveLength(2);
+      expect(linkList.shadowRoot!.querySelector('clippy-card')).toBeNull();
+      expect(items[0].querySelector('a')?.textContent?.trim()).toBe('Contact');
+    });
+
+    it('marks the row of a link with a validation with its highest severity', async () => {
+      const { linkList, root } = await setupWithContent('<p><a href="/contact">Contact</a></p>');
+      const range = document.createRange();
+      range.selectNodeContents(root.querySelector('a')!);
+      linkList.violationsMap = new Map([[range, violation({ range, severity: 'warning' })]]);
+      await linkList.updateComplete;
+
+      expect(linkList.shadowRoot!.querySelector('.clippy-link-list__item')).toHaveClass(
+        'clippy-link-list__item--warning',
+      );
+    });
+  });
+
+  describe('validation button', () => {
+    const validationButton = (linkList: LinkList) => linkList.shadowRoot?.querySelector('clippy-validation-button');
+
+    it('does not render a validation button when no validation matches the link', async () => {
       const { linkList } = await setupWithContent(
         '<h1>Titel</h1><p><a href="https://example.com">Link zonder melding</a></p>',
       );
 
       await waitFor(() => expect(linkList.shadowRoot?.querySelectorAll('.clippy-link-list__item').length).toBe(1));
-      expect(linkList.shadowRoot?.querySelector('.nl-data-badge')).toBeNull();
+      expect(validationButton(linkList)).toBeNull();
     });
 
-    it('renders a severity badge when a validation entry exists at the link text position', async () => {
+    it('renders a validation button with every validation of the link, highest severity first', async () => {
       const { linkList, root } = await setupWithContent(
         '<h1>Titel</h1><p><a href="https://example.com">Klik hier</a></p>',
       );
-
       const linkEl = root.querySelector('a')!;
-      const linkRange = document.createRange();
-      linkRange.selectNode(linkEl);
-
-      const violationsMap: ViolationsMap = new Map([[linkRange, violation({ range: linkRange, severity: 'warning' })]]);
-
-      linkList.violationsMap = violationsMap;
-
-      await waitFor(() => expect(linkList.shadowRoot?.querySelector('.nl-data-badge')).not.toBeNull());
-      expect(
-        linkList.shadowRoot?.querySelector('.nl-data-badge')?.classList.contains('clippy-link-list__badge--warning'),
-      ).toBe(true);
-    });
-
-    it('renders a badge for the highest-severity validation when multiple entries share the same position', async () => {
-      const { linkList, root } = await setupWithContent(
-        '<h1>Titel</h1><p><a href="https://example.com">Klik hier</a></p>',
-      );
-
-      const linkEl = root.querySelector('a')!;
-      const linkRange1 = document.createRange();
-      linkRange1.selectNode(linkEl);
-      const linkRange2 = document.createRange();
-      linkRange2.selectNode(linkEl);
-
-      // Two entries for the same element: error takes precedence over warning.
-      const violationsMap: ViolationsMap = new Map([
-        [linkRange1, violation({ range: linkRange1, severity: 'warning' })],
-        [linkRange2, violation({ range: linkRange2, severity: 'error' })],
+      const warningRange = document.createRange();
+      warningRange.selectNode(linkEl);
+      const errorRange = document.createRange();
+      errorRange.selectNode(linkEl);
+      linkList.identifier = 'editor';
+      linkList.violationsMap = new Map([
+        [warningRange, violation({ range: warningRange, severity: 'warning' })],
+        [errorRange, violation({ range: errorRange, severity: 'error' })],
       ]);
 
-      linkList.violationsMap = violationsMap;
-
-      await waitFor(() => expect(linkList.shadowRoot?.querySelector('.nl-data-badge')).not.toBeNull());
-      expect(
-        linkList.shadowRoot?.querySelector('.nl-data-badge')?.classList.contains('clippy-link-list__badge--error'),
-      ).toBe(true);
+      await waitFor(() => expect(validationButton(linkList)).not.toBeNull());
+      expect(validationButton(linkList)!.identifier).toBe('editor');
+      expect(validationButton(linkList)!.violations.map(({ range }) => range)).toEqual([errorRange, warningRange]);
     });
   });
 
@@ -202,17 +225,19 @@ describe('<clippy-link-list>', () => {
       globalThis.removeEventListener(CustomEvents.FOCUS_NODE, record);
     });
 
-    it('asks to focus the validation of the clicked link, like its Focus button', async () => {
+    it('asks to focus the clicked link itself, also when it has a validation', async () => {
       const { linkList, root } = await setupWithContent('<p><a href="/contact">Contact</a></p>');
       linkList.identifier = 'editor';
       const linkRange = document.createRange();
-      linkRange.selectNodeContents(root.querySelector('a')!);
+      linkRange.selectNode(root.querySelector('a')!);
       linkList.violationsMap = new Map([[linkRange, violation({ range: linkRange, severity: 'warning' })]]);
       await linkList.updateComplete;
 
       linkList.shadowRoot!.querySelector<HTMLAnchorElement>('a.nl-link')!.click();
 
-      expect(details).toEqual([{ identifier: 'editor', range: linkRange }]);
+      expect(details).toHaveLength(1);
+      expect(details[0].range.startContainer).toBe(root.querySelector('a'));
+      expect(details[0].range.startOffset).toBe(0);
     });
 
     it('asks to focus a clicked link without a validation', async () => {
