@@ -15,6 +15,12 @@ describe('headingShouldNotContainBoldOrItalic', () => {
     expect(violation?.messages.solutions?.join('')).toContain('Verwijder de vette en cursieve opmaak');
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate('<h2>Kop met <strong>nadruk</strong></h2>');
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Opmaak verwijderen']);
+  });
+
   it('flags a heading that contains italic text', () => {
     expect(validate('<h2>Kop met <em>nadruk</em></h2>')).toHaveLength(1);
   });

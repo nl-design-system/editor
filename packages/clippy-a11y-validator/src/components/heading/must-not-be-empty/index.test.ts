@@ -18,6 +18,12 @@ describe('headingMustNotBeEmpty', () => {
     ]);
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate('<h2></h2>');
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Lege kop verwijderen']);
+  });
+
   it('flags an empty heading at every level', () => {
     expect(validate('<h1></h1><h2></h2><h3></h3><h4></h4><h5></h5><h6></h6>')).toHaveLength(6);
   });

@@ -18,6 +18,12 @@ describe('paragraphShouldNotResembleList', () => {
     expect(violation?.messages.solutions?.join('')).toContain('Verander de regels in een opsomming.');
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate('<p>- een<br>- twee<br>- drie</p>');
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Omzetten naar lijst']);
+  });
+
   it('flags each bullet paragraph that is continued by the next one', () => {
     expect(validate('<p>- een</p><p>- twee</p><p>- drie</p>')).toHaveLength(2);
   });

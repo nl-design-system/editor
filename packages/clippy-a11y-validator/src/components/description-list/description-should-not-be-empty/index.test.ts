@@ -15,6 +15,12 @@ describe('descriptionShouldNotBeEmpty', () => {
     expect(violation?.messages.solutions?.join('')).toContain('Schrijf de uitleg bij de term.');
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate('<dl><dt>term</dt><dd></dd></dl>');
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Lege beschrijving verwijderen']);
+  });
+
   it('flags a description holding only whitespace', () => {
     expect(validate('<dl><dt>term</dt><dd> </dd></dl>')).toHaveLength(1);
   });

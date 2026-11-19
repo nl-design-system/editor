@@ -18,6 +18,12 @@ describe('headingMustStartAtLevelOne', () => {
     expect(violation?.messages.solutions).toEqual(['<p class="nl-paragraph">Maak van deze kop een kopniveau 1.</p>']);
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate('<h2>Kop</h2><p>tekst</p>');
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Omzetten naar kopniveau 1']);
+  });
+
   it('reports the offending heading, not the first block', () => {
     const [violation] = validate('<p>inleiding</p><h3>Kop</h3>');
 

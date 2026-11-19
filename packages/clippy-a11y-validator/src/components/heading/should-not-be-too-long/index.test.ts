@@ -13,7 +13,7 @@ describe('headingShouldNotBeTooLong', () => {
     const [violation] = validate(`<h2>${'a'.repeat(61)}</h2>`);
 
     expect(violation).toEqual({
-      corrections: [{ execute: expect.any(Function) }],
+      corrections: [{ execute: expect.any(Function), label: 'Omzetten naar alinea' }],
       element: fragment.querySelector('h2'),
       messages: {
         ...getDocumentationComponentRuleById(headingShouldNotBeTooLong.documentationId),

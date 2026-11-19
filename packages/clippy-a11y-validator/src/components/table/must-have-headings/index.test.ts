@@ -17,6 +17,14 @@ describe('tableMustHaveHeadings', () => {
     expect(violation?.messages.solutions?.join('')).toContain('Maak van de eerste rij een koprij.');
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate(
+      '<table><tbody><tr><td>C1</td><td>C2</td></tr><tr><td>C3</td><td>C4</td></tr></tbody></table>',
+    );
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Eerste rij omzetten naar koprij']);
+  });
+
   it('accepts a table with a header row', () => {
     expect(
       validate(

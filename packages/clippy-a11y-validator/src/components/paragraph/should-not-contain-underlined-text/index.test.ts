@@ -17,6 +17,12 @@ describe('paragraphShouldNotContainUnderlinedText', () => {
     ]);
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate('<p><u>onderstreept</u></p>');
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Onderstreping verwijderen']);
+  });
+
   it('flags an underline regardless of its content', () => {
     expect(validate('<p><u></u></p><p><u> </u></p><p><u>tekst</u></p>')).toHaveLength(3);
   });

@@ -313,7 +313,7 @@ test.describe('Accessibility notifications', () => {
 
     const validationsView = page.locator('clippy-validations-view');
     await expect(page.getByRole('region', { name: 'Fouten, waarschuwingen of tips' })).toBeVisible();
-    await expect(validationsView.getByRole('button', { name: 'Corrigeren' }).first()).toBeVisible();
+    await expect(validationsView.getByRole('button', { name: 'Omzetten naar kopniveau 3' })).toBeVisible();
   });
 
   test('opening a drawer narrows the page, so the drawer covers no content', async ({ page }, testInfo) => {

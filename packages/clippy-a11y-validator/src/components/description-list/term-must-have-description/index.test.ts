@@ -16,6 +16,12 @@ describe('descriptionTermMustHaveDescription', () => {
     expect(violation?.element.tagName).toBe('DL');
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate('<dl><dt></dt><dd>beschrijving</dd></dl>');
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Tijdelijke termen toevoegen']);
+  });
+
   it('flags a term holding only whitespace', () => {
     expect(validate('<dl><dt> </dt><dd>beschrijving</dd></dl>')).toHaveLength(1);
   });

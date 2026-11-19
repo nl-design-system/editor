@@ -20,6 +20,12 @@ describe('headingLevelMustNotSkip', () => {
     ]);
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate('<h1>Titel</h1><h3>Kop</h3>');
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Omzetten naar kopniveau 2']);
+  });
+
   it('reports the levels involved in the payload', () => {
     expect(validate('<h2>Kop</h2><h5>Diep</h5>')[0]?.payload).toEqual({
       expectedHeadingLevel: 3,

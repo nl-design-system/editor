@@ -15,6 +15,12 @@ describe('paragraphShouldNotResembleHeading', () => {
     expect(violation?.messages.solutions?.join('')).toContain('Verander de alinea in een kop.');
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate('<p><strong>Wat neemt u mee?</strong></p>');
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Omzetten naar kop']);
+  });
+
   it('treats b the same as strong', () => {
     expect(validate('<p><b>Wat neemt u mee?</b></p>')).toHaveLength(1);
   });

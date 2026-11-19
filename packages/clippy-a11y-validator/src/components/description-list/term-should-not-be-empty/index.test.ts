@@ -15,6 +15,12 @@ describe('descriptionTermShouldNotBeEmpty', () => {
     expect(violation?.messages.solutions?.join('')).toContain('Verwijder de lege term.');
   });
 
+  it('labels its correction', () => {
+    const [violation] = validate('<dl><dt></dt><dd></dd></dl>');
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Lege termen verwijderen']);
+  });
+
   it('points the violation at the list rather than at the term', () => {
     expect(validate('<dl><dt></dt><dd></dd></dl>')[0]?.element.tagName).toBe('DL');
   });
