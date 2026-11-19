@@ -3,7 +3,7 @@ clippy_validation:
     plugins:
       - clippyCkeditor.ClippyPlugin
   drupal:
-    label: "Clippy"
+    label: "Clippy Editor"
     library: "clippy/plugin"
     elements: false
     toolbar_items: {}

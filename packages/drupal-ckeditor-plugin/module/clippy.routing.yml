@@ -2,6 +2,6 @@ clippy.settings:
   path: "/admin/config/content/clippy"
   defaults:
     _form: '\Drupal\clippy\Form\SettingsForm'
-    _title: "Clippy"
+    _title: "Clippy Editor"
   requirements:
     _permission: "administer site configuration"

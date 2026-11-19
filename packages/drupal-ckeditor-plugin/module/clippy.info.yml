@@ -1,4 +1,4 @@
-name: "Clippy"
+name: "Clippy Editor"
 type: module
 description: "Accessibility feedback and recommendations in CKEditor and on rendered pages, based on NL Design System guidelines."
 core_version_requirement: ^11.1

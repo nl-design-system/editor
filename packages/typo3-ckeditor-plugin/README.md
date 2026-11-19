@@ -1,51 +1,12 @@
 # typo3-ckeditor-plugin
 
-Builds the Clippy CKEditor 5 plugin as an ES module for use in TYPO3.
+Builds Clippy Editor for TYPO3, the Clippy extension that adds the Clippy CKEditor 5 plugin and Page review to a TYPO3 site. The plugin is bundled as an ES module.
+
+For installing and using the extension, see its [README](extension/README.md). That README is the one published with the extension.
 
 ## How it works
 
-`extension/` holds the TYPO3 extension itself: the Composer manifest, the event listener, the import map and the extension configuration. The build writes that folder, the bundle and the generated stylesheets to `dist/clippy/`, and then copies the result to `app/typo3/packages/clippy/dist/`. This makes the plugin immediately available to the TYPO3 demo environment without a manual copy step.
-
-## How Clippy is switched on
-
-Clippy ships no RTE preset. Instead, `AddClippyEditorExtension` listens to `BeforePrepareConfigurationForEditorEvent` and adds the plugin and its stylesheets to every rich text editor, whatever preset that editor uses. Installing the extension leaves `RTE.default.preset` alone, so your own presets keep working, and the Composer load order doesn't matter.
-
-Clippy is on as soon as the extension is installed. To switch it off for the whole installation, clear _Add Clippy to every rich text editor_ under _Admin Tools → Settings → Extension Configuration → clippy_.
-
-To leave Clippy out of a single preset, remove its module in that preset:
-
-```yaml
-editor:
-  config:
-    removeImportModules:
-      - '@nl-design-system-community/clippy/clippy.js'
-```
-
-| CKEditor plugin | Purpose                               |
-| --------------- | ------------------------------------- |
-| `ClippyPlugin`  | Accessibility feedback in the editor. |
-
-## Page review
-
-Backend users who are logged in see a floating Page review button on frontend pages. The `InjectPageReview` frontend middleware adds the Page review script and stylesheet from `Resources/Public/PageReview/` to the `<head>` of HTML responses, but only when a backend user is authenticated in that request. The Admin Panel isn't needed.
-
-The middleware changes the response after TYPO3 has rendered or loaded the page from cache, so the page cache never contains the script and visitors who aren't logged in to the backend never get it.
-
-### Why theme issues show up
-
-Page review checks the Review root, the page's main content region, and not only the HTML written in the rich text editor. The heading structure and the other overviews only make sense across the whole region, which combines several content elements with headings from the theme, such as the page title. As a result, Page review can report issues in theme markup that an editor can't fix.
-
-## Settings
-
-Set these for the whole installation under _Admin Tools → Settings → Extension Configuration → clippy_. Clearing _Add Clippy to every rich text editor_ only switches off the CKEditor integration, and clearing _Show Page review on frontend pages_ only switches off Page review.
-
-| Extension configuration              | Default             | Description                                                                                                                                                                |
-| ------------------------------------ | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Add Clippy to every rich text editor | on                  | Turns Clippy in CKEditor on or off.                                                                                                                                        |
-| Show Page review on frontend pages   | on                  | Turns Page review on or off for every backend user.                                                                                                                        |
-| Review root selector                 | `main, [role=main]` | The CSS selector of the element Page review validates. When nothing matches, Page review falls back to `main, [role=main]` and then to `body`, so it never fails silently. |
-| Always show gutter markers           | on                  | Shows the gutter markers as soon as the page loads. When off, they only show while the Page review drawer is open.                                                         |
-| Floating button position             | bottom right        | The corner of the Page review button: top right or bottom right.                                                                                                           |
+`extension/` holds the TYPO3 extension itself: the Composer manifest, the event listener, the import map, the extension configuration and the extension's README. The build writes that folder, the bundle and the generated stylesheets to `dist/clippy/`, and then copies the result to `app/typo3/packages/clippy/dist/`. This makes the plugin immediately available to the TYPO3 demo environment without a manual copy step.
 
 ## The ckeditor5 shim
 
@@ -86,55 +47,6 @@ pnpm run build
 pnpm run pack
 ```
 
-`pnpm run pack` packs the build output in `dist/clippy/` into the Extension archive `dist/clippy-typo3-<version>.tgz`. The build writes a minimal `package.json` and this README into that folder, and `publishConfig.directory` points at it, so npm gets the same contents. The extension files sit directly under the archive's `package/` folder, next to `package.json`, `README.md` and `LICENSE.md`. The extension installs on TYPO3 12.4, 13.4 and 14.
+`pnpm run pack` packs the build output in `dist/clippy/` into the Extension archive `dist/clippy-typo3-<version>.tgz`. The build writes a minimal `package.json` into that folder, and `publishConfig.directory` points at it, so npm gets the same contents. The extension files sit directly under the archive's `package/` folder, next to `package.json`, `README.md` and `LICENSE.md`.
 
 `pnpm run test-build` runs `pnpm run pack` on the existing build and checks the archive: its name, the `package/` folder, the version in `composer.json` and `ext_emconf.php`, the extension, licence and README files, and that it contains no dotfiles and no source or test output. CI runs it on every pull request.
-
-## Installing
-
-Download `clippy-typo3-<version>.tgz` from [Clippy for TYPO3 Releases](https://github.com/nl-design-system/editor/releases?q=clippy-typo3).
-
-### Installing with Composer
-
-Unpack the archive into a new `packages/clippy/` folder of the TYPO3 project, so `composer.json` sits directly in that folder:
-
-```sh
-mkdir -p packages/clippy
-tar -xzf clippy-typo3-<version>.tgz --strip-components=1 -C packages/clippy
-```
-
-The root `composer.json` needs a path repository for `packages/*`, which the TYPO3 base distribution already has:
-
-```json
-"repositories": [{ "type": "path", "url": "packages/*" }]
-```
-
-Then require and set up the extension:
-
-```sh
-composer require nl-design-system-community/clippy:@dev
-vendor/bin/typo3 extension:setup
-```
-
-### Installing without Composer
-
-Unpack the archive into a new `typo3conf/ext/clippy/` folder, then activate **Clippy** under _Admin Tools → Extensions_:
-
-```sh
-mkdir typo3conf/ext/clippy
-tar -xzf clippy-typo3-<version>.tgz --strip-components=1 -C typo3conf/ext/clippy
-```
-
-### Uploading in the Extension Manager
-
-_Admin Tools → Extensions → Upload Extension_ only accepts zips. To use it, repackage the contents of the archive's `package/` folder as `clippy_<version>.zip`, with the extension files at the root of the zip:
-
-```sh
-mkdir clippy
-tar -xzf clippy-typo3-<version>.tgz --strip-components=1 -C clippy
-(cd clippy && zip -r ../clippy_<version>.zip .)
-```
-
-TYPO3 derives the extension key from the file name, so keep the `clippy_` prefix.
-
-TYPO3 activates a newly uploaded extension in the request that unpacked it, which it cannot do: the upload fails with `Extension clippy is not available` and is deleted again. This is TYPO3's own behaviour, unrelated to this extension, and unchanged from 12.4 through 14. Uploading and activating separately does work, so turn off _automaticInstallation_ under _Admin Tools → Settings → Extension Configuration → extensionmanager_ before uploading.
