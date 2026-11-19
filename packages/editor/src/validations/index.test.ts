@@ -75,10 +75,11 @@ describe('runValidation', () => {
     expect(result.element.tagName).toBe('P');
   });
 
-  it('accepts a document that opens at heading level 1', () => {
+  // Skipped while HEADING_MUST_START_AT_LEVEL_ONE is disabled (#732): without the rule this test asserts nothing.
+  it.skip('accepts a document that opens at heading level 1', () => {
     const map = validate('<h1>Titel</h1><p>tekst</p>');
 
-    expect(rulesIn(map)).not.toContain(coreValidationRules.HEADING_MUST_START_AT_LEVEL_ONE);
+    expect(rulesIn(map)).not.toContain('HEADING_MUST_START_AT_LEVEL_ONE');
   });
 
   it('validates nothing when given an empty set', () => {
