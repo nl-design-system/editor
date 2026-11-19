@@ -3,7 +3,7 @@ export type Locale = 'en' | 'nl';
 export type ValidationMessages = {
   explanation?: string;
   href?: string;
-  solution?: string;
+  solutions?: string[];
   title?: string;
 };
 
@@ -18,6 +18,6 @@ export type ValidationMessagesByLocale = ByLocale<ValidationMessages>;
 export type ResolvedMessages = {
   explanation?: string;
   href?: string;
-  solution?: string;
+  solutions?: string[];
   title: string;
 };

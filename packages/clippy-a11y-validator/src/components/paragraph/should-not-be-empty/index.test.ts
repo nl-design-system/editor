@@ -12,7 +12,7 @@ describe('paragraphShouldNotBeEmpty', () => {
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('element');
     expect(violation?.messages.title).toBe('Alinea heeft geen inhoud');
-    expect(violation?.messages.solution).toBe('<p class="nl-paragraph">Verwijder de lege alinea.</p>');
+    expect(violation?.messages.solutions).toEqual(['<p class="nl-paragraph">Verwijder de lege alinea.</p>']);
   });
 
   it('flags a paragraph that contains only whitespace', () => {

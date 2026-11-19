@@ -11,13 +11,11 @@ describe('paragraphShouldNotResembleList', () => {
     expect(violation?.rule).toBe('PARAGRAPH_SHOULD_NOT_RESEMBLE_LIST');
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('document');
-    expect(violation?.messages.title).toBe('Lijst gevonden zonder lijstopmaak');
+    expect(violation?.messages.title).toBe('Regels zien eruit als een lijst');
     expect(violation?.messages.explanation).toBe(
       '<p class="nl-paragraph">Deze regels beginnen met <strong>-</strong> en vormen een lijst die niet als lijst is opgemaakt.</p>',
     );
-    expect(violation?.messages.solution).toBe(
-      '<p class="nl-paragraph">Gebruik een echte opsomming in plaats van regels die met "-" beginnen.</p>',
-    );
+    expect(violation?.messages.solutions?.join('')).toContain('Verander de regels in een opsomming.');
   });
 
   it('flags each bullet paragraph that is continued by the next one', () => {

@@ -11,6 +11,7 @@ export const descriptionShouldNotBeEmpty = defineValidation({
       execute: (description) => () => description.remove(),
     },
   ],
+  documentationId: 'd43d4831-2d06-460a-980d-d52f4b18e3b6',
   messages,
   rule: descriptionListValidationRules.DESCRIPTION_SHOULD_NOT_BE_EMPTY,
   scope: 'element',

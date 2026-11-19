@@ -14,6 +14,7 @@ export const headingShouldNotContainBoldOrItalic = defineValidation({
         heading.querySelectorAll(`${selectors.BOLD}, ${selectors.ITALIC}`).forEach(unwrapElement),
     },
   ],
+  documentationId: 'e012b43e-e5bc-415e-b520-40ee857b7c9d',
   messages,
   rule: headingValidationRules.HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC,
   scope: 'element',

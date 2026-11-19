@@ -11,8 +11,8 @@ describe('headingShouldNotContainBoldOrItalic', () => {
     expect(violation?.rule).toBe('HEADING_SHOULD_NOT_CONTAIN_BOLD_OR_ITALIC');
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.title).toBe('Deze kop bevat vetgedrukte of cursieve tekst.');
-    expect(violation?.messages.solution).toContain('Verwijder de vetgedrukte of cursieve opmaak');
+    expect(violation?.messages.title).toBe('Kop bevat vette of cursieve tekst');
+    expect(violation?.messages.solutions?.join('')).toContain('Verwijder de vette en cursieve opmaak');
   });
 
   it('flags a heading that contains italic text', () => {

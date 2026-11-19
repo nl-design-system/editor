@@ -15,6 +15,7 @@ export const descriptionTermMustHaveDescription = defineValidation({
         }),
     },
   ],
+  documentationId: '71b05efc-a912-4978-a483-f882abf8f7ab',
   messages,
   rule: descriptionListValidationRules.DESCRIPTION_TERM_MUST_HAVE_DESCRIPTION,
   scope: 'element',

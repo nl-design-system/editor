@@ -12,7 +12,9 @@ describe('paragraphShouldNotContainUnderlinedText', () => {
     expect(violation?.severity).toBe('info');
     expect(violation?.scope).toBe('element');
     expect(violation?.messages.title).toBe('Tekst is onderstreept');
-    expect(violation?.messages.solution).toBe('<p class="nl-paragraph">Verwijder de onderstreping van de tekst.</p>');
+    expect(violation?.messages.solutions).toEqual([
+      '<p class="nl-paragraph">Verwijder de onderstreping van de tekst.</p>',
+    ]);
   });
 
   it('flags an underline regardless of its content', () => {

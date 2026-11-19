@@ -5,7 +5,8 @@ export const messages: ValidationMessagesByLocale = {
     explanation:
       '<p class="nl-paragraph">Kopniveau <strong>{headingLevel}</strong> volgt direct op kopniveau <strong>{precedingHeadingLevel}</strong></p>',
     href: 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/#kopniveaus',
-    solution:
+    solutions: [
       '<p class="nl-paragraph">Gebruik kopniveau <strong>{expectedHeadingLevel}</strong>, zodat er geen kopniveau wordt overgeslagen.</p>',
+    ],
   },
 };

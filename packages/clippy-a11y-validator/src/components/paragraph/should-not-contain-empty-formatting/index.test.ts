@@ -11,20 +11,17 @@ describe('paragraphShouldNotContainEmptyFormatting', () => {
     expect(violation?.rule).toBe('PARAGRAPH_SHOULD_NOT_CONTAIN_EMPTY_FORMATTING');
     expect(violation?.severity).toBe('warning');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.title).toBe('Leeg opmaak-element gevonden');
+    expect(violation?.messages.title).toBe('Lege opmaak in de tekst');
     expect(violation?.messages.explanation).toBe(
       '<p class="nl-paragraph">Het <code class="nl-code">&lt;strong&gt;</code>-element is leeg.</p>',
     );
   });
 
-  it('names the offending tag in the solution, as text rather than as the tag it names', () => {
+  it('names the offending tag in the explanation, as text rather than as the tag it names', () => {
     const tags = ['strong', 'b', 'em', 'i', 'code', 'mark', 's', 'del', 'u'];
 
-    expect(tags.map((tag) => validate(`<p><${tag}></${tag}></p>`)[0]?.messages.solution)).toEqual(
-      tags.map(
-        (tag) =>
-          `<p class="nl-paragraph">Verwijder het lege <code class="nl-code">&lt;${tag}&gt;</code>-element of voeg tekst toe.</p>`,
-      ),
+    expect(tags.map((tag) => validate(`<p><${tag}></${tag}></p>`)[0]?.messages.explanation)).toEqual(
+      tags.map((tag) => `<p class="nl-paragraph">Het <code class="nl-code">&lt;${tag}&gt;</code>-element is leeg.</p>`),
     );
   });
 

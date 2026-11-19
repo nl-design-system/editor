@@ -10,6 +10,7 @@ import { messages } from './messages.ts';
  */
 export const tableCaptionShouldNotBeEmpty = defineValidation({
   condition: hasTextContent,
+  documentationId: '97c6b3f1-d6c7-4ed1-9ddf-a167a0bd56fa',
   messages,
   rule: tableValidationRules.TABLE_CAPTION_SHOULD_NOT_BE_EMPTY,
   scope: 'element',

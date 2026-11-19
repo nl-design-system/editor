@@ -20,6 +20,7 @@ export const descriptionListMustContainTerm = defineValidation({
       },
     },
   ],
+  documentationId: '5ee9f34a-f0ae-43cf-a99f-08d69ebae5b6',
   messages,
   rule: descriptionListValidationRules.DESCRIPTION_LIST_MUST_CONTAIN_TERM,
   scope: 'element',

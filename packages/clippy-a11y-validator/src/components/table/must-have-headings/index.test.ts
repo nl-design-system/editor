@@ -13,8 +13,8 @@ describe('tableMustHaveHeadings', () => {
     expect(violation?.rule).toBe('TABLE_MUST_HAVE_HEADINGS');
     expect(violation?.severity).toBe('warning');
     expect(violation?.scope).toBe('element');
-    expect(violation?.messages.title).toBe('Deze tabel heeft geen koprij en geen kopkolom.');
-    expect(violation?.messages.solution).toContain('eerste rij of de eerste kolom');
+    expect(violation?.messages.title).toBe('Tabel heeft geen koprij');
+    expect(violation?.messages.solutions?.join('')).toContain('Maak van de eerste rij een koprij.');
   });
 
   it('accepts a table with a header row', () => {

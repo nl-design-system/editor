@@ -8,7 +8,7 @@ import type { ValidationItem } from './index';
 
 /** Mounts an item with its properties set directly — `corrections` has no attribute form. */
 const renderItem = async (
-  properties: Partial<Pick<ValidationItem, 'corrections' | 'explanation' | 'heading' | 'href' | 'solution'>> = {},
+  properties: Partial<Pick<ValidationItem, 'corrections' | 'explanation' | 'heading' | 'href' | 'solutions'>> = {},
 ): Promise<ValidationItem> => {
   document.body.innerHTML = `<clippy-validation-item pos="1" severity="error" heading="Fout"></clippy-validation-item>`;
   const item = document.querySelector('clippy-validation-item') as ValidationItem;
@@ -32,11 +32,11 @@ const menuItems = (item: ValidationItem): HTMLButtonElement[] => [
   ...(menu(item)?.querySelectorAll<HTMLButtonElement>('li > button') ?? []),
 ];
 
-/** Copy as a violation carries it: the heading plain text, explanation and solution as HTML. */
+/** Copy as a violation carries it: the heading plain text, explanation and solutions as HTML. */
 const ENTIRELY_BOLD = {
   explanation: '<p>De hele alinea is dikgedrukt.</p>',
   heading: 'Hele alinea is dikgedrukt',
-  solution: '<p>Gebruik dikgedrukt alleen voor de woorden of zinnen die extra aandacht nodig hebben.</p>',
+  solutions: ['<p>Gebruik dikgedrukt alleen voor de woorden of zinnen die extra aandacht nodig hebben.</p>'],
 };
 
 const messageText = (item: ValidationItem): string =>
@@ -83,8 +83,8 @@ describe('<validation-item> documentation', () => {
     ]);
   });
 
-  it('falls back to the solution for a violation with nothing explained', async () => {
-    await renderItem({ solution: '<p>Verwijder de lege tabelcel.</p>' });
+  it('falls back to the solutions for a violation with nothing explained', async () => {
+    await renderItem({ solutions: ['<p>Verwijder de lege tabelcel.</p>'] });
 
     await expect.element(page.getByText('Verwijder de lege tabelcel.')).toBeInTheDocument();
   });
@@ -109,7 +109,7 @@ describe('<validation-item> solution', () => {
     page.getByText('Gebruik dikgedrukt alleen voor de woorden of zinnen die extra aandacht nodig hebben.');
 
   it('offers no way in for a violation with nothing explained', async () => {
-    await renderItem({ solution: '<p>Verwijder de lege tabelcel.</p>' });
+    await renderItem({ solutions: ['<p>Verwijder de lege tabelcel.</p>'] });
 
     await expect.element(solutionToggle()).not.toBeInTheDocument();
   });
@@ -139,6 +139,27 @@ describe('<validation-item> solution', () => {
 
     await expect.element(solutionToggle()).toHaveAttribute('aria-expanded', 'false');
     await expect.element(solutionText()).not.toBeVisible();
+  });
+
+  it('renders a single solution as it is', async () => {
+    const item = await renderItem({ ...ENTIRELY_BOLD });
+
+    const region = item.shadowRoot?.getElementById('validation-item-solution');
+    expect(region?.querySelector('ul')).toBeNull();
+    expect(region?.querySelector('p')?.textContent).toContain('alleen voor de woorden of zinnen');
+  });
+
+  it('lists multiple solutions', async () => {
+    const item = await renderItem({
+      ...ENTIRELY_BOLD,
+      solutions: ['<p>Verander in een kop.</p>', '<p>Verwijder de vette opmaak.</p>'],
+    });
+
+    const items = item.shadowRoot?.querySelectorAll('#validation-item-solution ul.ams-unordered-list > li');
+    expect([...(items ?? [])].map(({ textContent }) => textContent)).toEqual([
+      'Verander in een kop.',
+      'Verwijder de vette opmaak.',
+    ]);
   });
 
   it('points the toggle at the region it expands', async () => {

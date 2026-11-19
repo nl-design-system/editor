@@ -17,6 +17,7 @@ export const tableMustHaveHeadings = defineValidation({
       },
     },
   ],
+  documentationId: 'ce51022e-eff9-454c-97ec-9c19ff86c18b',
   messages,
   rule: tableValidationRules.TABLE_MUST_HAVE_HEADINGS,
   scope: 'element',

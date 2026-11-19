@@ -18,6 +18,7 @@ export const paragraphShouldNotResembleHeading = defineValidation({
       execute: (paragraph, context) => () => replaceWithHeading(paragraph, context),
     },
   ],
+  documentationId: 'eaff75d3-c9ae-4a03-81b0-05050d7d8b5a',
   messages,
   rule: paragraphValidationRules.PARAGRAPH_SHOULD_NOT_RESEMBLE_HEADING,
   scope: 'document',
