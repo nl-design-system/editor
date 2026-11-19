@@ -1,5 +1,21 @@
 # @nl-design-system-community/drupal-ckeditor-plugin
 
+## 0.7.0
+
+### Minor Changes
+
+- d589b47: Added inline drawer support.
+
+### Patch Changes
+
+- c4d18d9: The Drupal module and TYPO3 extension are now called Clippy Editor in the CMS, and the README published with them only explains how to install and use them.
+- Updated dependencies [76acf2b]
+- Updated dependencies [f02b500]
+- Updated dependencies [27b2c79]
+- Updated dependencies [d589b47]
+  - @nl-design-system-community/editor@3.0.0
+  - @nl-design-system-community/ckeditor-plugin@0.5.0
+
 ## 0.6.1
 
 ### Patch Changes

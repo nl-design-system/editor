@@ -1,5 +1,19 @@
 # @nl-design-system-community/editor-react
 
+## 3.0.0
+
+### Major Changes
+
+- d589b47: Added inline drawer support.
+
+### Patch Changes
+
+- 76acf2b: Export `package.json`, so tools can read the package metadata by package name.
+- Updated dependencies [76acf2b]
+- Updated dependencies [27b2c79]
+- Updated dependencies [d589b47]
+  - @nl-design-system-community/editor@3.0.0
+
 ## 2.0.0
 
 ### Major Changes
