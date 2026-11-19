@@ -1,5 +1,6 @@
 import { waitFor } from '@testing-library/dom';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { page } from 'vitest/browser';
 import { CustomEvents, type FocusNodeDetail } from '@/events';
 import { initializeLocale } from '@/localization';
 import type { LanguageChanges } from './index';
@@ -95,6 +96,40 @@ describe('<clippy-language-changes>', () => {
     });
   });
 
+  describe('document language', () => {
+    it('shows the document language first', async () => {
+      const { langChanges } = await setupWithContent('<p lang="en">Hello</p>');
+
+      const documentLanguage = langChanges.shadowRoot!.querySelector('.clippy-language-changes__document-language')!;
+      expect(documentLanguage.querySelector('.nl-data-badge')?.textContent?.trim()).toBe('nl');
+      expect(documentLanguage.textContent).toContain('Documenttaal');
+      expect(
+        documentLanguage.compareDocumentPosition(
+          langChanges.shadowRoot!.querySelector('.clippy-language-changes__item')!,
+        ) & Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+    });
+
+    it('shows the document language when there are no language changes', async () => {
+      const { langChanges } = await setupWithContent('<p>Alleen Nederlands</p>');
+
+      expect(
+        langChanges
+          .shadowRoot!.querySelector('.clippy-language-changes__document-language .nl-data-badge')
+          ?.textContent?.trim(),
+      ).toBe('nl');
+    });
+
+    it('says when the document has no language', async () => {
+      document.documentElement.removeAttribute('lang');
+      const { langChanges } = await setupWithContent('<p>Tekst</p>');
+
+      expect(
+        langChanges.shadowRoot!.querySelector('.clippy-language-changes__document-language')?.textContent,
+      ).toContain('Niet ingesteld');
+    });
+  });
+
   describe('document-language label', () => {
     it('shows the "(documenttaal)" label when a block language reverts to the document language', async () => {
       const { langChanges } = await setupWithContent(
@@ -151,6 +186,19 @@ describe('<clippy-language-changes>', () => {
           langChanges.shadowRoot?.querySelector('.clippy-language-changes__item .nl-link')?.textContent?.trim(),
         ).toContain('(leeg)'),
       );
+    });
+  });
+
+  describe('guideline', () => {
+    it('has a heading and a link to the guidelines in a new tab', async () => {
+      await setupWithContent('<p lang="en">Hello</p>');
+
+      await expect.element(page.getByRole('heading', { name: 'Taalwijzigingen', level: 3 })).toBeVisible();
+      const link = page.getByRole('link', { name: 'Richtlijnen voor het instellen van de juiste taal' });
+      await expect
+        .element(link)
+        .toHaveAttribute('href', 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/taal/');
+      await expect.element(link).toHaveAttribute('target', '_blank');
     });
   });
 

@@ -1,5 +1,6 @@
 import { violation } from '@test/violation';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { page } from 'vitest/browser';
 import { CustomEvents, type FocusNodeDetail } from '@/events';
 import { initializeLocale } from '@/localization';
 import './index';
@@ -42,7 +43,7 @@ describe('<clippy-heading-structure>', () => {
     it('shows the empty-state message when the document contains no headings', async () => {
       const { headingStructure } = await setupWithContent('<p>Paragraaf zonder kop.</p>');
 
-      const emptyState = headingStructure.shadowRoot?.querySelector('p');
+      const emptyState = headingStructure.shadowRoot?.querySelector('.clippy-heading-structure__empty');
       expect(emptyState).toBeVisible();
       expect(emptyState?.textContent?.trim()).toContain('Geen koppen gevonden in dit document.');
     });
@@ -113,6 +114,59 @@ describe('<clippy-heading-structure>', () => {
         'H2 Tweede',
         'H3 Derde',
       ]);
+    });
+  });
+
+  describe('guideline', () => {
+    it('has a heading and a link to the guidelines in a new tab', async () => {
+      await setupWithContent('<h1>Titel</h1>');
+
+      await expect.element(page.getByRole('heading', { name: 'Kopstructuur', level: 3 })).toBeVisible();
+      const link = page.getByRole('link', { name: 'Richtlijnen voor koppen' });
+      await expect
+        .element(link)
+        .toHaveAttribute('href', 'https://nldesignsystem.nl/richtlijnen/content/tekstopmaak/koppen/');
+      await expect.element(link).toHaveAttribute('target', '_blank');
+    });
+  });
+
+  describe('severity', () => {
+    it('marks a heading with a validation with its highest severity', async () => {
+      const { headingStructure, root } = await setupWithContent('<h1>Titel</h1><h2>Sectie</h2>');
+      const range = document.createRange();
+      range.selectNode(root.querySelector('h2')!);
+      headingStructure.violationsMap = new Map([[range, violation({ range, severity: 'warning' })]]);
+      await headingStructure.updateComplete;
+
+      const [h1, h2] = headingStructure.shadowRoot!.querySelectorAll('.clippy-heading-structure__button');
+      expect(h1.className).not.toMatch(/--(error|warning|info)/);
+      expect(h2).toHaveClass('clippy-heading-structure__button--warning');
+    });
+  });
+
+  describe('validation button', () => {
+    const validationButton = (headingStructure: HeadingStructure) =>
+      headingStructure.shadowRoot?.querySelector('clippy-validation-button');
+
+    it('does not render a validation button for a heading without validations', async () => {
+      const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
+
+      expect(validationButton(headingStructure)).toBeNull();
+    });
+
+    it('renders a validation button with the validations of the heading, outside its button', async () => {
+      const { headingStructure, root } = await setupWithContent('<h1>Titel</h1>');
+      const headingRange = document.createRange();
+      headingRange.selectNode(root.querySelector('h1')!);
+      headingStructure.identifier = 'editor';
+      headingStructure.violationsMap = new Map([
+        [headingRange, violation({ range: headingRange, severity: 'warning' })],
+      ]);
+      await headingStructure.updateComplete;
+
+      expect(validationButton(headingStructure)!.identifier).toBe('editor');
+      expect(validationButton(headingStructure)!.violations.map(({ range }) => range)).toEqual([headingRange]);
+      expect(validationButton(headingStructure)!.closest('button')).toBeNull();
     });
   });
 

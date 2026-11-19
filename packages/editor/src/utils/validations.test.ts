@@ -1,5 +1,6 @@
+import { violation } from '@test/violation';
 import { afterEach, describe, expect, it } from 'vitest';
-import { resolveViolationDisplay } from './validations';
+import { getViolationsByElement, resolveViolationDisplay } from './validations';
 
 function setupContent(html: string): HTMLElement {
   const container = document.createElement('div');
@@ -51,5 +52,38 @@ describe('resolveViolationDisplay', () => {
 
   it('resolves an element that is not in a rendered document as block', () => {
     expect(resolveViolationDisplay(document.createElement('a'))).toBe('block');
+  });
+});
+
+describe('getViolationsByElement', () => {
+  afterEach(() => {
+    document.body.innerHTML = '';
+  });
+
+  it('returns the violations whose range intersects the element, highest severity first', () => {
+    const container = setupContent('<p><a href="#">Link</a></p><p>Andere</p>');
+    const [paragraph, other] = container.querySelectorAll('p');
+    const rangeOf = (node: Node) => {
+      const range = document.createRange();
+      range.selectNode(node);
+      return range;
+    };
+    const info = rangeOf(paragraph);
+    const error = rangeOf(container.querySelector('a')!);
+    const elsewhere = rangeOf(other);
+    const violationsMap = new Map([
+      [info, violation({ range: info, severity: 'info' })],
+      [elsewhere, violation({ range: elsewhere, severity: 'error' })],
+      [error, violation({ range: error, severity: 'error' })],
+    ]);
+
+    expect(getViolationsByElement(violationsMap, container.querySelector('a')).map(({ range }) => range)).toEqual([
+      error,
+      info,
+    ]);
+  });
+
+  it('returns no violations without violations in the map', () => {
+    expect(getViolationsByElement(undefined, document.body)).toEqual([]);
   });
 });

@@ -3,9 +3,6 @@ import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/numb
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { validationSeverity, type ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
-import AlertCircleIcon from '@tabler/icons/outline/alert-circle.svg?raw';
-import AlertTriangleIcon from '@tabler/icons/outline/alert-triangle.svg?raw';
-import InfoCircleIcon from '@tabler/icons/outline/info-circle.svg?raw';
 import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
@@ -22,6 +19,7 @@ import {
   clearValidationHighlights,
 } from '@/utils/highlights';
 import { getOverlappingRanges } from '@/utils/ranges';
+import { severityIcon } from '@/utils/validations';
 import gutterStyles from './styles';
 
 const tag = 'clippy-validations-gutter';
@@ -37,17 +35,6 @@ const SEVERITY_RANK: Record<ValidationSeverity, number> = {
   [validationSeverity.ERROR]: 2,
   [validationSeverity.INFO]: 0,
   [validationSeverity.WARNING]: 1,
-};
-
-const severityIcon = (severity: ValidationSeverity): string => {
-  switch (severity) {
-    case validationSeverity.ERROR:
-      return AlertTriangleIcon;
-    case validationSeverity.WARNING:
-      return AlertCircleIcon;
-    default:
-      return InfoCircleIcon;
-  }
 };
 
 type PositionedIndicator = {
