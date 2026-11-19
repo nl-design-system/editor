@@ -235,6 +235,26 @@ describe('Validator', () => {
     expect(violation?.corrections?.[0]?.label).toBe('Omzetten naar <h2>');
   });
 
+  it('reports only the corrections that apply to the element', () => {
+    const spy: Validation = {
+      condition: () => false,
+      corrections: [
+        { applies: () => false, execute: () => () => {}, label: { nl: 'Niet' } },
+        { applies: (element) => element.localName === 'p', execute: () => () => {}, label: { nl: 'Wel' } },
+        { execute: () => () => {}, label: { nl: 'Altijd' } },
+      ],
+      messages: { nl: { title: 'x' } },
+      rule: 'SPY',
+      scope: 'element',
+      selector: 'p',
+      severity: 'info',
+    };
+
+    const [violation] = new Validator({ validations: [spy] }).validate([fragment]);
+
+    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Wel', 'Altijd']);
+  });
+
   it('carries the solution id over to the correction', () => {
     const spy: Validation = {
       condition: () => false,

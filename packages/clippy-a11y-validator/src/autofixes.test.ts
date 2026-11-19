@@ -53,6 +53,10 @@ describe('autofixableSolutions', () => {
       rule: 'HEADING_MUST_NOT_BE_EMPTY',
       solutionIds: ['b67939a5-91e1-4570-812e-f74fd314a749'],
     });
+    expect(autofixes['af5a0a05-bf3a-4218-b0de-f635f00a1456']?.solutionIds).toEqual([
+      '77ec1d80-1931-40f3-bf4a-502cdffb98c6',
+      'e7347d49-e751-4f82-9105-0f8ef77e3bba',
+    ]);
   });
 });
 
