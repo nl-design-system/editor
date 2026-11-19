@@ -40,8 +40,8 @@ type SharedValidationDefinition<S extends Selector> = {
 
 /**
  * A fix the validator can apply itself, and the wording for the control that triggers it. Leave
- * `label` out when the host's default wording is right, which is the case for every rule this
- * package ships with a single correction.
+ * `label` out only when the host's default wording is right; every rule this package ships labels
+ * its corrections.
  *
  * Like `messages`, a label can name payload values as `{key}` placeholders; they go in as plain
  * text. A label is an imperative verb phrase naming an action, not a sentence about the element.

@@ -16,6 +16,7 @@ export const paragraphShouldNotResembleHeading = defineValidation({
   corrections: [
     {
       execute: (paragraph, context) => () => replaceWithHeading(paragraph, context),
+      label: { en: 'Convert to heading', nl: 'Omzetten naar kop' },
     },
   ],
   documentationId: 'eaff75d3-c9ae-4a03-81b0-05050d7d8b5a',

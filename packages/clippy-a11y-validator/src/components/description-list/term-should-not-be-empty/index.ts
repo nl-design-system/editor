@@ -9,6 +9,7 @@ export const descriptionTermShouldNotBeEmpty = defineValidation({
   corrections: [
     {
       execute: (list) => () => emptyTermsWithoutDescription(list).forEach((term) => term.remove()),
+      label: { en: 'Remove empty terms', nl: 'Lege termen verwijderen' },
     },
   ],
   documentationId: '17fb0798-7a0a-4900-b963-1cbb77cdcc7b',

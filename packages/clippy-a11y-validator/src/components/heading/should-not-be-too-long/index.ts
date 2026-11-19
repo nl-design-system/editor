@@ -10,6 +10,7 @@ export const headingShouldNotBeTooLong = defineValidation({
   corrections: [
     {
       execute: (heading) => () => changeTagName(heading, 'p'),
+      label: { en: 'Convert to paragraph', nl: 'Omzetten naar alinea' },
     },
   ],
   documentationId: '586da28e-8e70-4844-a0dd-61eb4ecd7017',

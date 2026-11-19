@@ -1,4 +1,4 @@
-import { selectors, validationSeverity } from '../../../consts/index.ts';
+import { selectors, validationSeverity } from '../../../consts';
 import { defineValidation } from '../../../define-validation.ts';
 import { changeTagName } from '../../../utils/dom.ts';
 import { headingValidationRules } from '../constants.ts';
@@ -14,6 +14,10 @@ export const headingLevelMustNotSkip = defineValidation({
   corrections: [
     {
       execute: (heading, context) => () => changeTagName(heading, `h${expectedHeadingLevel(context)}`),
+      label: {
+        en: 'Change to heading level {expectedHeadingLevel}',
+        nl: 'Omzetten naar kopniveau {expectedHeadingLevel}',
+      },
     },
   ],
   documentationId: '2bd2f0a4-fa95-4ce5-8e16-1dfd7d959193',

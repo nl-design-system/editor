@@ -9,6 +9,7 @@ export const headingMustNotBeEmpty = defineValidation({
   corrections: [
     {
       execute: (heading) => () => heading.remove(),
+      label: { en: 'Remove empty heading', nl: 'Lege kop verwijderen' },
     },
   ],
   documentationId: 'c4ef9fcd-016e-4f8f-aea7-6f7e5bcd6fe2',

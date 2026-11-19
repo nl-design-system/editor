@@ -18,6 +18,7 @@ export const descriptionListMustContainTerm = defineValidation({
         const empty = ownTerms(list).find((term) => !hasTextContent(term));
         if (empty) empty.textContent = '...';
       },
+      label: { en: 'Add placeholder term', nl: 'Tijdelijke term toevoegen' },
     },
   ],
   documentationId: '5ee9f34a-f0ae-43cf-a99f-08d69ebae5b6',

@@ -12,6 +12,7 @@ export const headingShouldNotContainBoldOrItalic = defineValidation({
     {
       execute: (heading) => () =>
         heading.querySelectorAll(`${selectors.BOLD}, ${selectors.ITALIC}`).forEach(unwrapElement),
+      label: { en: 'Remove formatting', nl: 'Opmaak verwijderen' },
     },
   ],
   documentationId: 'e012b43e-e5bc-415e-b520-40ee857b7c9d',

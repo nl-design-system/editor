@@ -14,6 +14,7 @@ export const headingMustStartAtLevelOne = defineValidation({
   corrections: [
     {
       execute: (heading) => () => changeTagName(heading, 'h1'),
+      label: { en: 'Change to heading level 1', nl: 'Omzetten naar kopniveau 1' },
     },
   ],
   messages,

@@ -9,6 +9,7 @@ export const linkShouldNotBeEmpty = defineValidation({
   corrections: [
     {
       execute: (link) => () => link.remove(),
+      label: { en: 'Remove empty link', nl: 'Lege link verwijderen' },
     },
   ],
   documentationId: 'd43f3487-06f8-4298-9172-be918f62f406',
