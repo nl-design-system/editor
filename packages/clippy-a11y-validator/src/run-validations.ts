@@ -1,13 +1,20 @@
 import type { Fragment } from './types/fragment.ts';
 import type { ByLocale } from './types/messages.ts';
-import type { Validation, Violation } from './types/validation.ts';
+import type { Validation, Violation, ViolationPayload } from './types/validation.ts';
 import type { LocaleOptions, ValidatorRunOptions } from './types/validator.ts';
 import { matchingElements, DocumentContext } from './document-context.ts';
 import { resolveLocalised, resolveMessages } from './messages.ts';
+import { replaceTextPlaceholders } from './utils/html.ts';
 
-/** A correction's label, resolved for the run's locale. Absent when the rule names none. */
-const localisedLabel = (label: ByLocale<string> | undefined, { fallbackLocale, locale }: Required<LocaleOptions>) =>
-  label === undefined ? {} : { label: resolveLocalised(label, locale, fallbackLocale) };
+/** A correction's label, resolved for the run's locale and filled in from the payload. Absent when the rule names none. */
+const localisedLabel = (
+  label: ByLocale<string> | undefined,
+  { fallbackLocale, locale }: Required<LocaleOptions>,
+  payload: ViolationPayload | undefined,
+) =>
+  label === undefined
+    ? {}
+    : { label: replaceTextPlaceholders(resolveLocalised(label, locale, fallbackLocale), payload) };
 
 /**
  * Runs one validation against one element, producing the parts of a violation that depend on that
@@ -23,13 +30,14 @@ const validateElement = (
     const { condition, corrections, focus, payload } = validation;
     if (condition(element)) return undefined;
 
+    const elementPayload = payload?.(element);
     return {
       corrections: corrections?.map(({ execute, label }) => ({
         execute: execute(element, documentContext.for(element)),
-        ...localisedLabel(label, locales),
+        ...localisedLabel(label, locales, elementPayload),
       })),
       focus: focus?.(element),
-      payload: payload?.(element),
+      payload: elementPayload,
     };
   }
 
@@ -37,13 +45,14 @@ const validateElement = (
   const context = documentContext.for(element);
   if (condition(element, context)) return undefined;
 
+  const documentPayload = payload?.(element, context);
   return {
     corrections: corrections?.map(({ execute, label }) => ({
       execute: execute(element, context),
-      ...localisedLabel(label, locales),
+      ...localisedLabel(label, locales, documentPayload),
     })),
     focus: focus?.(element, context),
-    payload: payload?.(element, context),
+    payload: documentPayload,
   };
 };
 

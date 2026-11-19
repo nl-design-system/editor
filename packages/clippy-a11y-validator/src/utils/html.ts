@@ -10,8 +10,8 @@ const escaped = (value: string): string => {
 };
 
 /**
- * Only the HTML fields carry placeholders, and a placeholder's value is read off the document — a
- * heading level, but also the link text an author typed. The copy around it is markup a validation
+ * In the HTML fields, a placeholder's value is read off the document — a heading level, but also the
+ * link text an author typed. The copy around it is markup a validation
  * wrote and means; the value dropped into it is not, so it goes in as text. A placeholder belongs in
  * text content, never in an attribute value: quotes are not escaped.
  */
@@ -20,3 +20,7 @@ export const replacePlaceholders = (html: string, payload: ViolationPayload | un
     const value = payload?.[key];
     return value === undefined ? placeholder : escaped(String(value));
   });
+
+/** A correction label is plain text, so its value goes in as is. */
+export const replaceTextPlaceholders = (text: string, payload: ViolationPayload | undefined): string =>
+  text.replace(PLACEHOLDER_REGEX, (placeholder, key: string) => String(payload?.[key] ?? placeholder));
