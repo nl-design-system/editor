@@ -194,6 +194,7 @@ describe('<clippy-language-changes>', () => {
       await setupWithContent('<p lang="en">Hello</p>');
 
       await expect.element(page.getByRole('heading', { name: 'Taalwijzigingen', level: 3 })).toBeVisible();
+      await expect.element(page.getByText(/Dit overzicht toont de taal van het document/)).toBeVisible();
       const link = page.getByRole('link', { name: 'Richtlijnen voor het instellen van de juiste taal' });
       await expect
         .element(link)

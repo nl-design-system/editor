@@ -143,7 +143,7 @@ export class HeadingStructure extends LitElement {
       <div class="clippy-heading-structure__guideline">
         <p class="nl-paragraph">
           ${msg(
-            'All headings in the text, in order and indented by their level. Headings show the structure of the text. People who use a screen reader use them to get an overview and to go straight to a section, so start with heading level 1 and do not skip a level.',
+            'This view shows all headings in the text, in order and indented by their level. Headings show the structure of the text. People who use a screen reader use them to get an overview and to go straight to a section, so start with heading level 1 and do not skip a level.',
           )}
         </p>
         <a

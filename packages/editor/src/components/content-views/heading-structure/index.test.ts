@@ -122,6 +122,7 @@ describe('<clippy-heading-structure>', () => {
       await setupWithContent('<h1>Titel</h1>');
 
       await expect.element(page.getByRole('heading', { name: 'Kopstructuur', level: 3 })).toBeVisible();
+      await expect.element(page.getByText(/Dit overzicht toont alle koppen in de tekst/)).toBeVisible();
       const link = page.getByRole('link', { name: 'Richtlijnen voor koppen' });
       await expect
         .element(link)

@@ -119,7 +119,7 @@ export class LanguageChanges extends LitElement {
         <h3 class="nl-heading nl-heading--level-3">${msg('Language changes')}</h3>
         <p class="nl-paragraph">
           ${msg(
-            'The language of the document and every part of the text in another language. Give text in another language than the document that language, so screen readers pronounce it correctly and translation tools recognise it.',
+            'This view shows the language of the document and every part of the text in another language. Give text in another language than the document that language, so screen readers pronounce it correctly and translation tools recognise it.',
           )}
         </p>
         <a

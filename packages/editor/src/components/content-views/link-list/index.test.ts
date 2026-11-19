@@ -139,6 +139,7 @@ describe('<clippy-link-list>', () => {
       await setupWithContent('<p><a href="/contact">Contact</a></p>');
 
       await expect.element(page.getByRole('heading', { name: 'Links', level: 3 })).toBeVisible();
+      await expect.element(page.getByText(/Dit overzicht toont alle links in de tekst/)).toBeVisible();
       const link = page.getByRole('link', { name: 'Richtlijnen voor toegankelijke linkteksten' });
       await expect
         .element(link)

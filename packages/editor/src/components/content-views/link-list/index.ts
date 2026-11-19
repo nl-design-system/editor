@@ -137,7 +137,7 @@ export class LinkList extends LitElement {
       <div class="clippy-link-list__guideline">
         <p class="nl-paragraph">
           ${msg(
-            'All links in the text, with the address they go to. Every link needs a text that says where it goes, also when it is read on its own, for example in the list of links of a screen reader.',
+            'This view shows all links in the text, with the address they go to. Every link needs a text that says where it goes, also when it is read on its own, for example in the list of links of a screen reader.',
           )}
         </p>
         <a

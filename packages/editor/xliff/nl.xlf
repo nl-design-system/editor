@@ -442,17 +442,17 @@
         <source>Guidelines for accessible link texts</source>
         <target>Richtlijnen voor toegankelijke linkteksten</target>
       </trans-unit>
-      <trans-unit id="s14f08dba54e28166">
-        <source>All headings in the text, in order and indented by their level. Headings show the structure of the text. People who use a screen reader use them to get an overview and to go straight to a section, so start with heading level 1 and do not skip a level.</source>
-        <target>Alle koppen in de tekst, op volgorde en ingesprongen naar hun niveau. Koppen laten de structuur van de tekst zien. Mensen die een screenreader gebruiken, gebruiken koppen om een overzicht te krijgen en direct naar een onderdeel te gaan. Begin daarom met kopniveau 1 en sla geen niveau over.</target>
+      <trans-unit id="sa30d8130c1344c71">
+        <source>This view shows all headings in the text, in order and indented by their level. Headings show the structure of the text. People who use a screen reader use them to get an overview and to go straight to a section, so start with heading level 1 and do not skip a level.</source>
+        <target>Dit overzicht toont alle koppen in de tekst, op volgorde en ingesprongen naar hun niveau. Koppen laten de structuur van de tekst zien. Mensen die een screenreader gebruiken, gebruiken koppen om een overzicht te krijgen en direct naar een onderdeel te gaan. Begin daarom met kopniveau 1 en sla geen niveau over.</target>
       </trans-unit>
-      <trans-unit id="s38dec3361c56a693">
-        <source>The language of the document and every part of the text in another language. Give text in another language than the document that language, so screen readers pronounce it correctly and translation tools recognise it.</source>
-        <target>De taal van het document en elk deel van de tekst in een andere taal. Geef tekst in een andere taal dan het document die taal mee, zodat screenreaders de tekst goed uitspreken en vertaaltools de taal herkennen.</target>
+      <trans-unit id="sb64768e6451e3ffe">
+        <source>This view shows the language of the document and every part of the text in another language. Give text in another language than the document that language, so screen readers pronounce it correctly and translation tools recognise it.</source>
+        <target>Dit overzicht toont de taal van het document en elk deel van de tekst in een andere taal. Geef tekst in een andere taal dan het document die taal mee, zodat screenreaders de tekst goed uitspreken en vertaaltools de taal herkennen.</target>
       </trans-unit>
-      <trans-unit id="sba1162a9b618576e">
-        <source>All links in the text, with the address they go to. Every link needs a text that says where it goes, also when it is read on its own, for example in the list of links of a screen reader.</source>
-        <target>Alle links in de tekst, met het adres waar ze naartoe gaan. Elke link heeft een tekst nodig die zegt waar de link naartoe gaat, ook als die tekst los wordt gelezen, bijvoorbeeld in de lijst met links van een screenreader.</target>
+      <trans-unit id="s3026ff0b142acfbb">
+        <source>This view shows all links in the text, with the address they go to. Every link needs a text that says where it goes, also when it is read on its own, for example in the list of links of a screen reader.</source>
+        <target>Dit overzicht toont alle links in de tekst, met het adres waar ze naartoe gaan. Elke link heeft een tekst nodig die zegt waar de link naartoe gaat, ook als die tekst los wordt gelezen, bijvoorbeeld in de lijst met links van een screenreader.</target>
       </trans-unit>
     </body>
   </file>
