@@ -34,7 +34,7 @@ const validateElement = (
     const elementContext = documentContext.for(element);
     return {
       corrections: corrections
-        ?.filter((correction) => correction.condition?.(element, elementContext) ?? true)
+        ?.filter(({ applicable }) => applicable?.(element, elementContext) ?? true)
         .map(({ execute, label, solutionId }) => ({
           execute: execute(element, elementContext),
           ...localisedLabel(label, locales, elementPayload),
@@ -52,7 +52,7 @@ const validateElement = (
   const documentPayload = payload?.(element, context);
   return {
     corrections: corrections
-      ?.filter((correction) => correction.condition?.(element, context) ?? true)
+      ?.filter(({ applicable }) => applicable?.(element, context) ?? true)
       .map(({ execute, label, solutionId }) => ({
         execute: execute(element, context),
         ...localisedLabel(label, locales, documentPayload),

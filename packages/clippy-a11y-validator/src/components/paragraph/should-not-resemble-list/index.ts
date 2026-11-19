@@ -9,7 +9,7 @@ export const paragraphShouldNotResembleList = defineValidation({
   condition: not(resemblesListItem),
   corrections: [
     {
-      condition: not(isOrderedListItem),
+      applicable: not(isOrderedListItem),
       execute:
         (paragraph, { subsequentSiblingMatches }) =>
         () =>
@@ -18,7 +18,7 @@ export const paragraphShouldNotResembleList = defineValidation({
       solutionId: 'e7347d49-e751-4f82-9105-0f8ef77e3bba',
     },
     {
-      condition: isOrderedListItem,
+      applicable: isOrderedListItem,
       execute:
         (paragraph, { subsequentSiblingMatches }) =>
         () =>
