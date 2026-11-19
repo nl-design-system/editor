@@ -18,7 +18,7 @@ for (const example of document.querySelectorAll<HTMLElement>('[data-validations]
   const gutter = example.querySelector('clippy-validations-gutter');
   if (gutter) gutter.contentElement = target;
 
-  const hub = new ClippyHub({ createDrawer: false, identifier: example.id, target, validations });
+  const hub = new ClippyHub({ createSidebar: false, identifier: example.id, target, validations });
   hub.connect({ gutter, list: example.querySelector('clippy-validations-list') });
   target.addEventListener('input', () => hub.scheduleValidation());
   hubs.push(hub);

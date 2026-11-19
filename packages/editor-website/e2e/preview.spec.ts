@@ -4,9 +4,9 @@ const trigger = (page: Page) => page.locator('clippy-accessibility-notifications
 
 const issueCount = (page: Page) => trigger(page).locator('[aria-live]');
 
-const drawer = (page: Page) => page.getByTestId('clippy-validations-drawer');
+const sidebar = (page: Page) => page.getByRole('region', { name: 'Fouten, waarschuwingen of tips' });
 
-const items = (page: Page) => drawer(page).locator('clippy-validation-item');
+const items = (page: Page) => page.locator('clippy-validations-view').locator('clippy-validation-item');
 
 const openOverview = async (page: Page, name: RegExp | string) => {
   await page.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
@@ -27,7 +27,7 @@ test.describe('Page review on the preview page', () => {
     await expect(issueCount(page)).toHaveText('Totaal 3 toegankelijkheidsmeldingen gevonden.');
   });
 
-  test('the gutter shows an indicator for each known issue without opening the drawer', async ({ page }) => {
+  test('the gutter shows an indicator for each known issue without opening the sidebar', async ({ page }) => {
     const indicators = page.locator('main clippy-validations-gutter .clippy-validations-gutter__indicator');
     await expect(issueCount(page)).toHaveText('Totaal 3 toegankelijkheidsmeldingen gevonden.');
     await expect(indicators).toHaveCount(3);
@@ -37,15 +37,15 @@ test.describe('Page review on the preview page', () => {
     await expect(indicators).toHaveCount(3);
   });
 
-  test('the drawer lists the issues', async ({ page }) => {
+  test('the validations sidebar lists the issues', async ({ page }) => {
     await openOverview(page, /^Fouten, waarschuwingen en tips/);
 
-    await expect(drawer(page)).toBeVisible();
+    await expect(sidebar(page)).toBeVisible();
     await expect(items(page)).toHaveCount(3);
     await expect(items(page).locator('.clippy-validation-item-actions').getByRole('button')).toHaveCount(3);
   });
 
-  test('reopening the drawer includes content added to main after load', async ({ page }) => {
+  test('reopening the validations sidebar includes content added to main after load', async ({ page }) => {
     await expect(issueCount(page)).toHaveText('Totaal 3 toegankelijkheidsmeldingen gevonden.');
 
     await page.locator('main').evaluate((main) => main.insertAdjacentHTML('beforeend', '<h2></h2>'));

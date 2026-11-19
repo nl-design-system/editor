@@ -1,6 +1,6 @@
 // @ts-check
 
-const DRAWER = 'clippy-validations-drawer';
+const SIDEBAR = 'clippy-sidebar';
 const SIDEBAR_TOGGLE = 'SIDEBAR_TOGGLE';
 const OPEN_INLINE_SIZE = '--clippy-drupal-open-sidebar-inline-size';
 const PREVIEW_BAR = '.node-preview-container';
@@ -16,11 +16,11 @@ export const observeSidebarOffsets = (drupal) => {
 
   const update = () => {
     let openInlineSize = 0;
-    for (const drawer of globalThis.document.querySelectorAll(DRAWER)) {
-      const width = drawer.hasAttribute('open') ? Math.round(drawer.getBoundingClientRect().width) : 0;
+    for (const sidebar of globalThis.document.querySelectorAll(SIDEBAR)) {
+      const width = sidebar.hasAttribute('open') ? Math.round(sidebar.getBoundingClientRect().width) : 0;
       const inlineSize = width < root.clientWidth ? width : 0;
       openInlineSize = Math.max(openInlineSize, inlineSize);
-      drawer.setAttribute(`data-offset-${edge}`, String(inlineSize));
+      sidebar.setAttribute(`data-offset-${edge}`, String(inlineSize));
     }
     if (openInlineSize) {
       root.style.setProperty(OPEN_INLINE_SIZE, `${openInlineSize}px`);

@@ -1,4 +1,4 @@
 ---
 title: React integratie
-intro: De Clippy Editor biedt React wrappers via <code>@lit/react</code>, waarmee de Web Components naadloos in een React-applicatie gebruikt kunnen worden. Hieronder staan twee voorbeelden. Een eenvoudige editor en zelf samengestelde meldingen met een Clippy hub, een gutter en een drawer.
+intro: De Clippy Editor biedt React wrappers via <code>@lit/react</code>, waarmee de Web Components naadloos in een React-applicatie gebruikt kunnen worden. Hieronder staan twee voorbeelden. Een eenvoudige editor en zelf samengestelde meldingen met een Clippy hub, een gutter en een zijbalk.
 ---

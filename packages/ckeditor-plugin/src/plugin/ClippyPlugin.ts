@@ -32,7 +32,7 @@ export class ClippyPlugin extends Plugin {
   private _unwatchColorScheme: (() => void) | null = null;
   private readonly _editorResizeObserver = new ResizeObserver(() => this.editor.ui.update());
 
-  // Scope drawer events to this editor so multiple CKEditors on one page don't open each other's drawer.
+  // Scope sidebar events to this editor so multiple CKEditors on one page don't open each other's sidebars.
   private get _identifier(): string {
     return `clippy-ckeditor-${this.editor.id}`;
   }
@@ -124,7 +124,7 @@ export class ClippyPlugin extends Plugin {
       'change:isSourceEditingMode',
       (_evt, _name, isSourceEditingMode) => {
         this._setNotificationsDisabled(isSourceEditingMode);
-        this._closeValidationsDrawer();
+        this._closeSidebar();
       },
     );
   }
@@ -136,7 +136,7 @@ export class ClippyPlugin extends Plugin {
     }
   }
 
-  private _closeValidationsDrawer(): void {
+  private _closeSidebar(): void {
     globalThis.dispatchEvent(
       new CustomEvent<CloseSidebarDetail>(CustomEvents.CLOSE_SIDEBAR, {
         detail: { identifier: this._identifier },
