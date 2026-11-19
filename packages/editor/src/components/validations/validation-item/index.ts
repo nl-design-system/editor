@@ -99,8 +99,8 @@ export class ValidationItem extends LitElement {
   @property({ type: String }) href?: string;
   /** What is wrong with the content, as HTML. Ignored when the `solution-html` slot is filled. */
   @property({ type: String }) explanation?: string;
-  /** Guidance on how to resolve the issue, as HTML. */
-  @property({ type: String }) solution?: string;
+  /** Ways to resolve the issue, each as HTML. */
+  @property({ attribute: false }) solutions?: string[];
   /** The fixes offered for this issue, primary first: what to run, and the label of the control that runs it. */
   @property({ attribute: false }) corrections?: ViolationCorrection[];
 
@@ -216,8 +216,18 @@ export class ValidationItem extends LitElement {
     }
   };
 
+  #renderSolutions() {
+    const solutions = this.solutions ?? [];
+    if (solutions.length <= 1) return unsafeHTML(solutions[0] ?? '');
+
+    return html`<ul class="ams-unordered-list" role="list">
+      ${solutions.map((solution) => html`<li class="ams-unordered-list__item">${unsafeHTML(solution)}</li>`)}
+    </ul>`;
+  }
+
   #renderBody() {
-    return html`<slot name="solution-html">${unsafeHTML(this.explanation ?? this.solution ?? '')}</slot>`;
+    const body = this.explanation === undefined ? this.#renderSolutions() : unsafeHTML(this.explanation);
+    return html`<slot name="solution-html">${body}</slot>`;
   }
 
   #renderLinks() {
@@ -255,7 +265,7 @@ export class ValidationItem extends LitElement {
           <clippy-icon class="nl-button__icon-start">${unsafeSVG(ChevronDownIcon)}</clippy-icon>
           <span class="nl-button__label">${msg('Solution')}</span>
         </button>
-        <div id=${solutionId} ?hidden=${!this.solutionExpanded}>${unsafeHTML(this.solution ?? '')}</div>
+        <div id=${solutionId} ?hidden=${!this.solutionExpanded}>${this.#renderSolutions()}</div>
       </div>
     `;
   }
