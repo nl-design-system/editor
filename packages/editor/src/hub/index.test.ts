@@ -366,8 +366,8 @@ describe('ClippyHub drawer session', () => {
     );
 
     await expect.poll(() => hub?.drawer?.shadowRoot?.activeElement).toBe(heading());
-    expect(heading()).toHaveTextContent('Links');
-    expect(hub.drawer!.label).toBe('Links');
+    expect(heading()).toHaveTextContent('Documentoverzicht');
+    expect(hub.drawer!.label).toBe('Documentoverzicht');
     expect(contentViews.hidden).toBe(false);
     expect(validationsView.hidden).toBe(true);
   });

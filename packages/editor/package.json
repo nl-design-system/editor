@@ -119,6 +119,7 @@
     "localize:build": "lit-localize build"
   },
   "dependencies": {
+    "@amsterdam/design-system-css": "4.5.0",
     "@gemeente-denhaag/descriptionlist": "4.1.2",
     "@lit/localize": "0.12.2",
     "@nl-design-system-candidate/button-css": "2.0.0",
