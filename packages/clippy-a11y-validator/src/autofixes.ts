@@ -13,7 +13,7 @@ export const autofixableSolutions = (validations: readonly Validation[]): Autofi
     validations.flatMap(({ corrections, documentationId, rule }) => {
       const solutionIds = [
         ...new Set((corrections ?? []).flatMap(({ solutionId }) => (solutionId === undefined ? [] : [solutionId]))),
-      ].sort();
+      ].sort((a, b) => a.localeCompare(b));
 
       return documentationId === undefined || solutionIds.length === 0
         ? []
