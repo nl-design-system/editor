@@ -274,10 +274,6 @@
         <source>Focus</source>
         <target>Focus</target>
       </trans-unit>
-      <trans-unit id="s64ef2a6c2dd1d3d1">
-        <source>Edit</source>
-        <target>Bewerken</target>
-      </trans-unit>
       <trans-unit id="s9ac7f1d0c67c0118">
         <source>Edit Image</source>
         <target>Afbeelding bewerken</target>
@@ -453,6 +449,10 @@
       <trans-unit id="s3026ff0b142acfbb">
         <source>This view shows all links in the text, with the address they go to. Every link needs a text that says where it goes, also when it is read on its own, for example in the list of links of a screen reader.</source>
         <target>Dit overzicht toont alle links in de tekst, met het adres waar ze naartoe gaan. Elke link heeft een tekst nodig die zegt waar de link naartoe gaat, ook als die tekst los wordt gelezen, bijvoorbeeld in de lijst met links van een screenreader.</target>
+      </trans-unit>
+      <trans-unit id="s9631312039bb9736">
+        <source>Add alt text</source>
+        <target>Alternatieve tekst toevoegen</target>
       </trans-unit>
     </body>
   </file>

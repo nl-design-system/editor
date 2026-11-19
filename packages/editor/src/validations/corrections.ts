@@ -57,7 +57,7 @@ export const editorCorrections: Partial<Record<CoreValidationRule, EditorCorrect
         }),
       );
     },
-    label: msg('Edit'),
+    label: msg('Add alt text'),
   }),
 };
 
