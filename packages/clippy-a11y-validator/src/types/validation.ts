@@ -47,6 +47,8 @@ type SharedValidationDefinition<S extends Selector> = {
  * text. A label is an imperative verb phrase naming an action, not a sentence about the element.
  */
 export type ElementValidationCorrection<E extends HTMLElement = HTMLElement> = {
+  /** Whether the correction fits this element. Leave it out when the correction always applies. */
+  applies?: (element: E, context: ValidationContext) => boolean;
   execute: (element: E, context: ValidationContext) => CorrectViolationFunction;
   label?: ByLocale<string>;
   /** The id of the solution in the rule's documentation that this correction carries out. */

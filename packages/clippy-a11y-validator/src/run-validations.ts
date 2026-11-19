@@ -31,12 +31,15 @@ const validateElement = (
     if (condition(element)) return undefined;
 
     const elementPayload = payload?.(element);
+    const elementContext = documentContext.for(element);
     return {
-      corrections: corrections?.map(({ execute, label, solutionId }) => ({
-        execute: execute(element, documentContext.for(element)),
-        ...localisedLabel(label, locales, elementPayload),
-        ...(solutionId === undefined ? {} : { solutionId }),
-      })),
+      corrections: corrections
+        ?.filter(({ applies }) => applies?.(element, elementContext) ?? true)
+        .map(({ execute, label, solutionId }) => ({
+          execute: execute(element, elementContext),
+          ...localisedLabel(label, locales, elementPayload),
+          ...(solutionId === undefined ? {} : { solutionId }),
+        })),
       focus: focus?.(element),
       payload: elementPayload,
     };
@@ -48,11 +51,13 @@ const validateElement = (
 
   const documentPayload = payload?.(element, context);
   return {
-    corrections: corrections?.map(({ execute, label, solutionId }) => ({
-      execute: execute(element, context),
-      ...localisedLabel(label, locales, documentPayload),
-      ...(solutionId === undefined ? {} : { solutionId }),
-    })),
+    corrections: corrections
+      ?.filter(({ applies }) => applies?.(element, context) ?? true)
+      .map(({ execute, label, solutionId }) => ({
+        execute: execute(element, context),
+        ...localisedLabel(label, locales, documentPayload),
+        ...(solutionId === undefined ? {} : { solutionId }),
+      })),
     focus: focus?.(element, context),
     payload: documentPayload,
   };
