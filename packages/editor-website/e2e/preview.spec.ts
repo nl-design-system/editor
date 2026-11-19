@@ -4,9 +4,9 @@ const trigger = (page: Page) => page.locator('clippy-accessibility-notifications
 
 const issueCount = (page: Page) => trigger(page).locator('[aria-live]');
 
-const drawer = (page: Page) => page.getByTestId('clippy-validations-drawer');
+const drawer = (page: Page) => page.getByRole('region', { name: 'Fouten, waarschuwingen of tips' });
 
-const items = (page: Page) => drawer(page).locator('clippy-validation-item');
+const items = (page: Page) => page.locator('clippy-validations-view').locator('clippy-validation-item');
 
 const openOverview = async (page: Page, name: RegExp | string) => {
   await page.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
@@ -37,7 +37,7 @@ test.describe('Page review on the preview page', () => {
     await expect(indicators).toHaveCount(3);
   });
 
-  test('the drawer lists the issues', async ({ page }) => {
+  test('the validations drawer lists the issues', async ({ page }) => {
     await openOverview(page, /^Fouten, waarschuwingen en tips/);
 
     await expect(drawer(page)).toBeVisible();
@@ -45,7 +45,7 @@ test.describe('Page review on the preview page', () => {
     await expect(items(page).locator('.clippy-validation-item-actions').getByRole('button')).toHaveCount(3);
   });
 
-  test('reopening the drawer includes content added to main after load', async ({ page }) => {
+  test('reopening the validations drawer includes content added to main after load', async ({ page }) => {
     await expect(issueCount(page)).toHaveText('Totaal 3 toegankelijkheidsmeldingen gevonden.');
 
     await page.locator('main').evaluate((main) => main.insertAdjacentHTML('beforeend', '<h2></h2>'));

@@ -306,24 +306,24 @@ test.describe('Accessibility notifications', () => {
     await expect(clippyEditor.getByRole('button', { name: 'Vetgedrukt', exact: true })).toBeVisible();
   });
 
-  test('open drawer and list notifications', async ({ page }) => {
+  test('open the validations drawer and list notifications', async ({ page }) => {
     const clippyEditor = page.locator('#clippy-editor-localhost');
     await clippyEditor.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
     await clippyEditor.getByRole('button', { name: 'Fouten, waarschuwingen en tips' }).click();
 
-    const drawer = page.getByTestId('clippy-validations-drawer');
-    await expect(drawer).toBeVisible();
-    await expect(drawer.getByRole('button', { name: 'Corrigeren' }).first()).toBeVisible();
+    const validationsView = page.locator('clippy-validations-view');
+    await expect(page.getByRole('region', { name: 'Fouten, waarschuwingen of tips' })).toBeVisible();
+    await expect(validationsView.getByRole('button', { name: 'Corrigeren' }).first()).toBeVisible();
   });
 
-  test('opening the drawer narrows the page, so the drawer covers no content', async ({ page }, testInfo) => {
+  test('opening a drawer narrows the page, so the drawer covers no content', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name === 'chromium-400-zoom', 'The drawer takes the full width there');
     const clippyEditor = page.locator('#clippy-editor-localhost');
     await clippyEditor.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
     await clippyEditor.getByRole('button', { name: 'Fouten, waarschuwingen en tips' }).click();
 
-    const drawer = page.locator('body > clippy-validations-drawer[open]');
-    await expect(drawer.getByTestId('clippy-validations-drawer')).toBeVisible();
+    const drawer = page.locator('body > clippy-sidebar[open]');
+    await expect(drawer.getByRole('region', { name: 'Fouten, waarschuwingen of tips' })).toBeVisible();
     const drawerBox = (await drawer.boundingBox())!;
     const editorBox = (await clippyEditor.boundingBox())!;
     expect(editorBox.x + editorBox.width).toBeLessThanOrEqual(drawerBox.x);
@@ -338,8 +338,8 @@ test.describe('Accessibility notifications', () => {
     await clippyEditor.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
     await clippyEditor.getByRole('button', { name: 'Fouten, waarschuwingen en tips' }).click();
 
-    const drawer = page.locator('body > clippy-validations-drawer[open]');
-    await expect(drawer.getByTestId('clippy-validations-drawer')).toBeVisible();
+    const drawer = page.locator('body > clippy-sidebar[open]');
+    await expect(drawer.getByRole('region', { name: 'Fouten, waarschuwingen of tips' })).toBeVisible();
     const drawerBox = (await drawer.boundingBox())!;
     expect(drawerBox.x).toBe(0);
     expect(await page.evaluate(() => document.documentElement.style.marginInlineEnd)).toBe('');
@@ -351,10 +351,10 @@ test.describe('Accessibility notifications', () => {
     await clippyEditor.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' }).click();
     await clippyEditor.getByRole('button', { name: 'Fouten, waarschuwingen en tips' }).click();
 
-    const drawer = page.getByTestId('clippy-validations-drawer');
-    await expect(drawer).toBeVisible();
+    const region = page.getByRole('region', { name: 'Fouten, waarschuwingen of tips' });
+    await expect(region).toBeVisible();
 
-    await drawer.getByRole('button', { name: 'Focus' }).first().click();
-    await expect(drawer).toBeVisible();
+    await page.locator('clippy-validations-view').getByRole('button', { name: 'Focus' }).first().click();
+    await expect(region).toBeVisible();
   });
 });

@@ -1,6 +1,6 @@
 // @ts-check
 
-const DRAWER = 'clippy-validations-drawer';
+const DRAWER = 'clippy-sidebar';
 const DRAWER_TOGGLE = 'VALIDATIONS_DRAWER_TOGGLE';
 const OPEN_INLINE_SIZE = '--clippy-drupal-open-drawer-inline-size';
 const PREVIEW_BAR = '.node-preview-container';

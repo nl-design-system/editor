@@ -34,24 +34,26 @@ describe('ClippyPlugin', () => {
     await expect.element(page.getByRole('button', { name: 'Toon toegankelijkheidsmeldingen' })).toBeInTheDocument();
     for (const tag of [
       'clippy-accessibility-notifications',
-      'clippy-validations-drawer',
+      'clippy-validations-view',
+      'clippy-content-views',
       'clippy-validations-gutter',
     ]) {
       expect(document.querySelector(tag), tag).toHaveAttribute('lang', 'nl');
     }
   });
 
-  it('wires the gutter to open the drawer, scoped to the same editor identifier', async () => {
+  it('wires the gutter and the views in the drawer to the same editor identifier', async () => {
     await createEditor('<h2>Kop</h2><p>Tekst</p>');
 
     const gutter = document.querySelector('clippy-validations-gutter') as Gutter | null;
-    const drawer = document.querySelector('clippy-validations-drawer');
+    const validationsView = document.querySelector('clippy-validations-view');
+    const contentViews = document.querySelector('clippy-content-views');
 
     expect(gutter).not.toBeNull();
-    expect(drawer).not.toBeNull();
     expect(gutter?.mode).toBe(validationInteractionMode.DRAWER);
     expect(gutter?.identifier).toBeTruthy();
-    expect(gutter?.identifier).toBe((drawer as { identifier?: string } | null)?.identifier);
+    expect((validationsView as { identifier?: string } | null)?.identifier).toBe(gutter?.identifier);
+    expect((contentViews as { identifier?: string } | null)?.identifier).toBe(gutter?.identifier);
   });
 
   /**
