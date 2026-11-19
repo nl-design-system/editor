@@ -2,4 +2,4 @@
 "@nl-design-system-community/drupal-ckeditor-plugin": patch
 ---
 
-The admin and front-end themes keep making room for the Clippy drawer when it opens, now that the editor replaces `clippy-validations-drawer` with `clippy-sidebar`.
+`clippy-sidebar` is appended to the admin and front-end themes, so the validations and the Content views are shown side by side with the page.
