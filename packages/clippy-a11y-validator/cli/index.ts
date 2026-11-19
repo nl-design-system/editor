@@ -239,7 +239,7 @@ for (const { corrected, file, original, violations } of results) {
   failing += violations.filter(({ severity }) => !passingSeverities.includes(severity)).length;
   console.log(relative(process.cwd(), file));
 
-  // `explanation` and `solution` are HTML for a host to render, which this output is not.
+  // `explanation` and `solutions` are HTML for a host to render, which this output is not.
   for (const { html, messages, rule, severity } of violations) {
     console.log(`${severity}: ${rule} — ${messages.title}`);
     console.log(`  ${collapsedHtmlSnippet(html)}`);

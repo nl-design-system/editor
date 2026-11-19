@@ -89,12 +89,12 @@ Each violation has:
 | `rule`        | The rule that was violated, e.g. `HEADING_MUST_NOT_BE_EMPTY`.                                                       |
 | `severity`    | `error`, `warning` or `info`.                                                                                       |
 | `element`     | The element that violates the rule.                                                                                 |
-| `messages`    | `title` (plain text), `explanation` and `solution` (HTML) and `href`, a link to the guideline.                      |
+| `messages`    | `title` (plain text), `explanation` (HTML), `solutions` (a list of HTML) and `href`, a link to the guideline.       |
 | `corrections` | Present when the validator can fix the issue, primary first: call `corrections[0].execute()` to change the element. |
 | `focus`       | Present when the validation defines one; call it to move focus to the offending markup.                             |
 | `scope`       | `element` when the element has issues in itself, `document` when the issue lies in its relation to the document.    |
 
-`explanation` and `solution` are HTML. Placeholders filled with the author's own content are escaped, but render them
+`explanation` and each of `solutions` are HTML. Placeholders filled with the author's own content are escaped, but render them
 as HTML only in a context where that is safe.
 
 ### Locales
