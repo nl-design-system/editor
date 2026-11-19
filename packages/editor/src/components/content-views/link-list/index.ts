@@ -72,15 +72,15 @@ export class LinkList extends LitElement {
     }));
   }
 
-  #scrollToLink(element: HTMLAnchorElement, range?: Range) {
+  #scrollToLink(element: HTMLAnchorElement) {
     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    const focusRange = range ?? document.createRange();
-    if (!range) focusRange.selectNodeContents(element);
+    const range = document.createRange();
+    range.selectNodeContents(element);
     this.dispatchEvent(
       new CustomEvent<FocusNodeDetail>(CustomEvents.FOCUS_NODE, {
         bubbles: true,
         composed: true,
-        detail: { identifier: this.identifier, range: focusRange },
+        detail: { identifier: this.identifier, range },
       }),
     );
   }
@@ -111,7 +111,7 @@ export class LinkList extends LitElement {
                             href="#"
                             @click=${(e: Event) => {
                               e.preventDefault();
-                              this.#scrollToLink(element, highest?.range);
+                              this.#scrollToLink(element);
                             }}
                           >
                             ${text.trim() || msg('(empty)')}

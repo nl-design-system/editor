@@ -184,7 +184,7 @@ describe('<clippy-heading-structure>', () => {
       globalThis.removeEventListener(CustomEvents.FOCUS_NODE, record);
     });
 
-    it('asks to focus the validation of the clicked heading, like its Focus button', async () => {
+    it('asks to focus the clicked heading itself, also when it has a validation', async () => {
       const { headingStructure, root } = await setupWithContent('<h1>Titel</h1>');
       headingStructure.identifier = 'editor';
       const headingRange = document.createRange();
@@ -196,7 +196,9 @@ describe('<clippy-heading-structure>', () => {
 
       headingStructure.shadowRoot!.querySelector('button')!.click();
 
-      expect(details).toEqual([{ identifier: 'editor', range: headingRange }]);
+      expect(details).toHaveLength(1);
+      expect(details[0].range.startContainer).toBe(root.querySelector('h1'));
+      expect(details[0].range.startOffset).toBe(0);
     });
 
     it('asks to focus a clicked heading without a validation', async () => {

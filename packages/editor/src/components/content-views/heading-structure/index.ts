@@ -75,15 +75,15 @@ export class HeadingStructure extends LitElement {
     }));
   }
 
-  #scrollToHeading(element: HTMLElement, range?: Range) {
+  #scrollToHeading(element: HTMLElement) {
     element.scrollIntoView({ block: 'start' });
-    const focusRange = range ?? document.createRange();
-    if (!range) focusRange.selectNodeContents(element);
+    const range = document.createRange();
+    range.selectNodeContents(element);
     this.dispatchEvent(
       new CustomEvent<FocusNodeDetail>(CustomEvents.FOCUS_NODE, {
         bubbles: true,
         composed: true,
-        detail: { identifier: this.identifier, range: focusRange },
+        detail: { identifier: this.identifier, range },
       }),
     );
   }
@@ -114,7 +114,7 @@ export class HeadingStructure extends LitElement {
                           class=${classMap(buttonClasses)}
                           @click=${(e: Event) => {
                             e.preventDefault();
-                            this.#scrollToHeading(element, highest?.range);
+                            this.#scrollToHeading(element);
                           }}
                         >
                           <span class="nl-data-badge" aria-label=${msg(str`Heading level ${level}`)}>H${level}</span>
