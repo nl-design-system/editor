@@ -22,14 +22,13 @@ describe('the core registry', () => {
     expect(mismatched).toEqual([]);
   });
 
-  /** A `{key}` placeholder is filled in per violation, so the rule's own tests cover it. */
-  it('points every correction of a documented rule at one of its own solutions', () => {
+  it('points every correction that names a solution at one of its own rule', () => {
     const misplaced = Object.values(coreValidations).flatMap(({ corrections, documentationId, rule }) =>
       documentationId === undefined
         ? []
         : (corrections ?? [])
-            .filter(({ solutionId }) => !solutionId?.includes('{'))
-            .filter(({ solutionId }) => !solutionIdsByRuleId.get(documentationId)?.includes(solutionId ?? ''))
+            .filter(({ solutionId }) => solutionId !== undefined)
+            .filter(({ solutionId }) => !solutionIdsByRuleId.get(documentationId)?.includes(solutionId!))
             .map(({ solutionId }) => ({ rule, solutionId })),
     );
 
