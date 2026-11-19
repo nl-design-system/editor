@@ -172,7 +172,7 @@ export class ClippyHub {
   }
 
   /** Shows `view` in the drawer, named and headed by its label, and opens the drawer. */
-  #show(view: ValidationsView | ContentViews | null): void {
+  #openDrawer(view: ValidationsView | ContentViews | null): void {
     const { drawer } = this;
     if (!drawer || !view) return;
     for (const other of [this.#validationsView, this.#contentViews]) {
@@ -191,10 +191,10 @@ export class ClippyHub {
     if (identifier !== this.#identifier) return;
     if (isContentView(mode)) {
       if (this.#contentViews) this.#contentViews.view = mode;
-      this.#show(this.#contentViews);
+      this.#openDrawer(this.#contentViews);
     } else {
       if (this.#validationsView) this.#validationsView.focusedValidationGroup = null;
-      this.#show(this.#validationsView);
+      this.#openDrawer(this.#validationsView);
     }
   };
 
@@ -202,7 +202,7 @@ export class ClippyHub {
     const { identifier, ranges } = (event as OpenValidationGroupEvent).detail;
     if (identifier !== this.#identifier || !this.#validationsView) return;
     this.#validationsView.focusedValidationGroup = ranges;
-    this.#show(this.#validationsView);
+    this.#openDrawer(this.#validationsView);
   };
 
   readonly #handleValidationItemFocus = (event: Event): void => {
@@ -210,7 +210,7 @@ export class ClippyHub {
     if ((event as FocusValidationItemInDrawerEvent).detail.identifier !== this.#identifier || !view) return;
     if (this.drawer?.open && !view.hidden) return;
     view.focusedValidationGroup = null;
-    this.#show(view);
+    this.#openDrawer(view);
   };
 
   readonly #handleDrawerClose = (event: Event): void => {
