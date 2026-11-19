@@ -1,6 +1,6 @@
 clippy.settings:
   type: config_object
-  label: "Clippy settings"
+  label: "Clippy Editor settings"
   constraints:
     FullyValidatable: ~
   mapping:

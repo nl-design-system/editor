@@ -74,7 +74,7 @@ function writeMetadata(version: string): void {
     `<?php
 
 $EM_CONF[$_EXTKEY] = [
-    'title' => 'Clippy',
+    'title' => 'Clippy Editor',
     'description' => ${phpString(composer.description)},
     'category' => 'be',
     'state' => 'alpha',
@@ -101,7 +101,6 @@ function writePackFiles({ name, version, license, repository, publishConfig }: M
   const { directory: _directory, ...publishSettings } = publishConfig;
   const manifest = { name, version, license, repository, publishConfig: publishSettings };
   writeFileSync(resolve(extensionOut, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`);
-  copyFileSync(resolve(packageDir, 'README.md'), resolve(extensionOut, 'README.md'));
 }
 
 export function generateExtension(): void {
