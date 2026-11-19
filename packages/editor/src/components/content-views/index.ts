@@ -1,6 +1,7 @@
+import tabsStyles from '@amsterdam/design-system-css/dist/tabs/tabs.css?inline';
 import { localized, msg } from '@lit/localize';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
-import { html, LitElement } from 'lit';
+import { html, LitElement, unsafeCSS } from 'lit';
 import '@/components/content-views/heading-structure';
 import '@/components/content-views/link-list';
 import '@/components/content-views/language-changes';
@@ -19,9 +20,13 @@ export type ContentView = (typeof CONTENT_VIEWS)[number];
 export const isContentView = (mode: DocumentOverviewMode): mode is ContentView =>
   CONTENT_VIEWS.includes(mode as ContentView);
 
+const tabId = (view: ContentView) => `clippy-content-views-tab-${view}`;
+
+const panelId = (view: ContentView) => `clippy-content-views-panel-${view}`;
+
 /**
  * The Content views of a Clippy hub, which shows them in its drawer: heading structure,
- * links and language changes, one at a time.
+ * links and language changes, with tabs to switch between them.
  *
  * @tag clippy-content-views
  *
@@ -33,7 +38,7 @@ export const isContentView = (mode: DocumentOverviewMode): mode is ContentView =
 @localized()
 @safeCustomElement(tag)
 export class ContentViews extends LitElement {
-  static override readonly styles = [contentViewsStyles];
+  static override readonly styles = [contentViewsStyles, unsafeCSS(tabsStyles)];
 
   /** The Content view to show. */
   @property()
@@ -51,9 +56,9 @@ export class ContentViews extends LitElement {
   @property({ attribute: false })
   identifier?: string;
 
-  /** The name of the shown Content view. */
+  /** The name of the Content views. */
   get label(): string {
-    return this.#getLabel(this.view);
+    return msg('Document overview');
   }
 
   override connectedCallback() {
@@ -72,13 +77,72 @@ export class ContentViews extends LitElement {
     }
   }
 
+  readonly #handleTabKeydown = async (event: KeyboardEvent) => {
+    const next = this.#getNextContentView(event.key, CONTENT_VIEWS.indexOf(this.view));
+    if (!next) return;
+
+    event.preventDefault();
+    this.view = next;
+    await this.updateComplete;
+    this.shadowRoot?.getElementById(tabId(next))?.focus();
+  };
+
+  #getNextContentView(key: string, index: number): ContentView | undefined {
+    const { length } = CONTENT_VIEWS;
+    switch (key) {
+      case 'ArrowRight':
+        return CONTENT_VIEWS[(index + 1) % length];
+      case 'ArrowLeft':
+        return CONTENT_VIEWS[(index - 1 + length) % length];
+      case 'Home':
+        return CONTENT_VIEWS[0];
+      case 'End':
+        return CONTENT_VIEWS[length - 1];
+      default:
+        return undefined;
+    }
+  }
+
+  #renderTabs() {
+    return html`<div class="clippy-content-views__tabs ams-tabs__list" role="tablist">
+      ${CONTENT_VIEWS.map((view) => {
+        const selected = view === this.view;
+        const label = this.#getLabel(view);
+        return html`<button
+          class="ams-tabs__button"
+          id=${tabId(view)}
+          role="tab"
+          type="button"
+          aria-controls=${panelId(view)}
+          aria-selected=${selected}
+          tabindex=${selected ? 0 : -1}
+          @click=${() => (this.view = view)}
+          @keydown=${this.#handleTabKeydown}
+        >
+          <span class="ams-tabs__button-label">${label}</span>
+          <span class="ams-tabs__button-label-hidden">${label}</span>
+        </button>`;
+      })}
+    </div>`;
+  }
+
   #renderPanel(view: ContentView, content: unknown) {
-    return html`<div ?hidden=${this.view !== view}>${content}</div>`;
+    return html`<div
+      class="ams-tabs__panel"
+      id=${panelId(view)}
+      role="tabpanel"
+      aria-labelledby=${tabId(view)}
+      tabindex="0"
+      ?hidden=${this.view !== view}
+    >
+      ${content}
+    </div>`;
   }
 
   override render() {
     const { htmlDocument, violationsMap } = this;
     return html`
+      ${this.#renderTabs()}
       ${this.#renderPanel(
         'heading-structure',
         html`<clippy-heading-structure
