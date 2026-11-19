@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Validation } from './types/validation.ts';
-import { autofixableSolutions } from './autofixes.ts';
+import { autofixableSolutions, autofixesJson } from './autofixes.ts';
 import { coreValidations } from './components/index.ts';
 
 const validation = (overrides: Partial<Validation>): Validation =>
@@ -53,5 +53,14 @@ describe('autofixableSolutions', () => {
       rule: 'HEADING_MUST_NOT_BE_EMPTY',
       solutionIds: ['b67939a5-91e1-4570-812e-f74fd314a749'],
     });
+  });
+});
+
+describe('autofixesJson', () => {
+  it('explains itself in a $comment next to the rules', () => {
+    const json = autofixesJson([validation({ corrections: [correction('a')], documentationId: 'rule-id' })]);
+
+    expect(json.$comment).toContain('@nl-design-system-unstable/documentation');
+    expect(json['rule-id']).toEqual({ rule: 'SPY', solutionIds: ['a'] });
   });
 });
