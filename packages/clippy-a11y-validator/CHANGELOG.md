@@ -1,5 +1,15 @@
 # @nl-design-system-community/clippy-a11y-validator
 
+## 1.0.0
+
+### Major Changes
+
+- fd06803: `messages.solution` is vervangen door `messages.solutions`, een lijst met HTML per oplossing, zoals `@nl-design-system-unstable/documentation` 2.2.0 die levert. Definitielijsten, opsommingen, tabellen, lege opmaak en alinea's die op een kop of lijst lijken gebruiken nu de teksten uit de documentatie.
+
+### Minor Changes
+
+- 17168df: Elke correctie heeft nu een label dat zegt wat de correctie doet, zoals "Lege kop verwijderen" of "Omzetten naar kopniveau 3", in plaats van het algemene "Corrigeren". Een label kan waarden uit de payload gebruiken met `{key}`, net als de meldingen.
+
 ## 0.5.0
 
 ### Minor Changes
