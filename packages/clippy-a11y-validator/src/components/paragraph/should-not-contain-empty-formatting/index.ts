@@ -10,6 +10,7 @@ export const paragraphShouldNotContainEmptyFormatting = defineValidation({
     {
       execute: (paragraph) => () => paragraph.remove(),
       label: { en: 'Remove empty paragraph', nl: 'Lege alinea verwijderen' },
+      solutionId: '50e14f8a-f248-4c6f-bc76-5e1e79347514',
     },
   ],
   documentationId: '3f813e8f-216d-4ffa-b928-9f2af13f8ef5',

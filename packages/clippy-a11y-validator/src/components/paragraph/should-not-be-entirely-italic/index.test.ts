@@ -13,8 +13,16 @@ describe('paragraphShouldNotBeEntirelyItalic', () => {
 
     expect(violation).toEqual({
       corrections: [
-        { execute: expect.any(Function), label: 'Schuingedrukt verwijderen' },
-        { execute: expect.any(Function), label: 'Omzetten naar citaat' },
+        {
+          execute: expect.any(Function),
+          label: 'Schuingedrukt verwijderen',
+          solutionId: 'c105953a-7124-421c-b4ce-1999ffe1793f',
+        },
+        {
+          execute: expect.any(Function),
+          label: 'Omzetten naar citaat',
+          solutionId: '77bb06bc-47df-4d55-9902-48f641399160',
+        },
       ],
       element: fragment.querySelector('p'),
       messages: getDocumentationComponentRuleById(paragraphShouldNotBeEntirelyItalic.documentationId),

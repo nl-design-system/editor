@@ -18,6 +18,7 @@ export const headingLevelMustNotSkip = defineValidation({
         en: 'Change to heading level {expectedHeadingLevel}',
         nl: 'Omzetten naar kopniveau {expectedHeadingLevel}',
       },
+      solutionId: 'b54d2300-40dc-40e0-a1b9-2b05ce2be165',
     },
   ],
   documentationId: '2bd2f0a4-fa95-4ce5-8e16-1dfd7d959193',

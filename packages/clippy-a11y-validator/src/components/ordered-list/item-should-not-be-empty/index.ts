@@ -10,6 +10,7 @@ export const orderedListItemShouldNotBeEmpty = defineValidation({
     {
       execute: (item) => () => item.remove(),
       label: { en: 'Remove empty list item', nl: 'Leeg lijst-item verwijderen' },
+      solutionId: 'b3e08e74-4aef-474f-abd6-6068ecbf7e72',
     },
   ],
   documentationId: 'd7c09976-3560-4e91-adcb-f2f97221cf65',

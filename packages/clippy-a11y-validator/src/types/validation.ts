@@ -49,6 +49,8 @@ type SharedValidationDefinition<S extends Selector> = {
 export type ElementValidationCorrection<E extends HTMLElement = HTMLElement> = {
   execute: (element: E, context: ValidationContext) => CorrectViolationFunction;
   label?: ByLocale<string>;
+  /** The id of the solution in the rule's documentation that this correction carries out. */
+  solutionId?: string;
 };
 
 /** A correction receives the surrounding document whatever the scope of its rule. */
@@ -93,6 +95,7 @@ export type Validation = ElementValidation | DocumentValidation;
 export type ViolationCorrection = {
   execute: CorrectViolationFunction;
   label?: string;
+  solutionId?: string;
 };
 
 export type ViolationCorrectionList = ViolationCorrection[];

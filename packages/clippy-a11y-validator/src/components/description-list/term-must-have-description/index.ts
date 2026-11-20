@@ -14,6 +14,7 @@ export const descriptionTermMustHaveDescription = defineValidation({
           term.textContent = '...';
         }),
       label: { en: 'Add placeholder terms', nl: 'Tijdelijke termen toevoegen' },
+      solutionId: '47dd7a67-10db-4ba0-9915-89f70bae7a62',
     },
   ],
   documentationId: '71b05efc-a912-4978-a483-f882abf8f7ab',

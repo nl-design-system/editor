@@ -235,6 +235,22 @@ describe('Validator', () => {
     expect(violation?.corrections?.[0]?.label).toBe('Omzetten naar <h2>');
   });
 
+  it('carries the solution id over to the correction', () => {
+    const spy: Validation = {
+      condition: () => false,
+      corrections: [{ execute: () => () => {}, solutionId: 'solution-id' }],
+      messages: { nl: { title: 'x' } },
+      rule: 'SPY',
+      scope: 'element',
+      selector: 'p',
+      severity: 'info',
+    };
+
+    const [violation] = new Validator({ validations: [spy] }).validate([fragment]);
+
+    expect(violation?.corrections?.map(({ solutionId }) => solutionId)).toEqual(['solution-id']);
+  });
+
   it('leaves the label out when the correction does not name one', () => {
     const spy: Validation = {
       condition: () => false,
