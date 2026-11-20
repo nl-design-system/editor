@@ -1,5 +1,16 @@
 # @nl-design-system-community/drupal-ckeditor-plugin
 
+## 0.7.1
+
+### Patch Changes
+
+- f490c4a: `clippy-sidebar` is appended to the admin and front-end themes, so the validations and the content views are shown side by side with the page.
+- Updated dependencies [fd06803]
+- Updated dependencies [f490c4a]
+- Updated dependencies [17168df]
+  - @nl-design-system-community/editor@4.0.0
+  - @nl-design-system-community/ckeditor-plugin@0.5.1
+
 ## 0.7.0
 
 ### Minor Changes
