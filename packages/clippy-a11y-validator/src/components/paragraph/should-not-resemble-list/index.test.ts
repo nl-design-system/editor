@@ -18,10 +18,20 @@ describe('paragraphShouldNotResembleList', () => {
     expect(violation?.messages.solutions?.join('')).toContain('Verander de regels in een opsomming.');
   });
 
-  it('labels its correction', () => {
-    const [violation] = validate('<p>- een<br>- twee<br>- drie</p>');
+  it.each([
+    ['a bulleted', '<p>- een<br>- twee</p>', 'Omzetten naar opsomming', 'e7347d49-e751-4f82-9105-0f8ef77e3bba'],
+    [
+      'a numbered',
+      '<p>1. een<br>2. twee</p>',
+      'Omzetten naar genummerde lijst',
+      '77ec1d80-1931-40f3-bf4a-502cdffb98c6',
+    ],
+  ])('offers only the correction for %s list', (_, html, label, solutionId) => {
+    const [violation] = validate(html);
 
-    expect(violation?.corrections?.map(({ label }) => label)).toEqual(['Omzetten naar lijst']);
+    expect(violation?.corrections?.map((correction) => [correction.label, correction.solutionId])).toEqual([
+      [label, solutionId],
+    ]);
   });
 
   it('flags each bullet paragraph that is continued by the next one', () => {
