@@ -171,8 +171,8 @@ importers:
         specifier: 0.12.2
         version: 0.12.2
       '@nl-design-system-community/clippy-components':
-        specifier: 3.9.0
-        version: 3.9.0
+        specifier: 3.10.1
+        version: 3.10.1
       lit:
         specifier: 3.3.3
         version: 3.3.3
@@ -312,8 +312,8 @@ importers:
         specifier: workspace:*
         version: link:../clippy-alt-text-wizard
       '@nl-design-system-community/clippy-components':
-        specifier: 3.9.0
-        version: 3.9.0
+        specifier: 3.10.1
+        version: 3.10.1
       '@tabler/icons':
         specifier: 3.50.0
         version: 3.50.0
@@ -565,8 +565,8 @@ importers:
         specifier: workspace:*
         version: link:../clippy-alt-text-wizard
       '@nl-design-system-community/clippy-components':
-        specifier: 3.9.0
-        version: 3.9.0
+        specifier: 3.10.1
+        version: 3.10.1
       '@nl-design-system-community/drupal-ckeditor-plugin':
         specifier: workspace:*
         version: link:../drupal-ckeditor-plugin/dist/clippy
@@ -2194,11 +2194,11 @@ packages:
   '@nl-design-system-candidate/skip-link-tokens@1.0.4':
     resolution: {integrity: sha512-MD1+m55nRqkj2eATcBNOLE8N5jWfvjJg2ax+POX8zXm49wJcBGTS6B/kK4kzIPbMuivYnxVtNlmA+Cz/upFBZA==}
 
-  '@nl-design-system-community/clippy-components@3.9.0':
-    resolution: {integrity: sha512-NFWw19+O8sAL71fLZZLmEDqhM7Jd1M2lKi2QoGjMQ2yRyX9p0HNlbXlN1bAYmd+YTlRO78rw0MJ0hTu9zDMqJg==}
+  '@nl-design-system-community/clippy-components@3.10.1':
+    resolution: {integrity: sha512-Y7+JZ4kOaw2Ex9IbtnGfuiD2malApWGoC/oDCXv4P4fT2s1M1v4DNCnlzXi07sgrIVOi/cTfRr7F0uYYicik2g==}
 
-  '@nl-design-system-community/design-tokens-schema@2.7.0':
-    resolution: {integrity: sha512-de6L5Ljpnk1CFmM8n8T9L+hXUM2VeNmE7E9+TFxEGIT/vvnbgUKWrhP0IK6jpEJW0MUksUb5BwJkQYkX07O0Vg==}
+  '@nl-design-system-community/design-tokens-schema@2.8.0':
+    resolution: {integrity: sha512-7PwDw4Kmb8ohV2IbtcRp8E5AyVUqgBcxtpW7Dz0i9Uc6srUxnQqbBGeJBIim5wnv1ENZQk+fVga3ZVPIPyxzZg==}
 
   '@nl-design-system-community/documentation-components@1.0.0':
     resolution: {integrity: sha512-p0VrtsHLqn+dE64nsi5Q9o4q8ILOfdMrxWxnUe2/1gJL/hCWGwyjk3TKCq/flG/f8dlp/69FPlX8+qp1JgNcGA==}
@@ -9872,7 +9872,7 @@ snapshots:
 
   '@nl-design-system-candidate/skip-link-tokens@1.0.4': {}
 
-  '@nl-design-system-community/clippy-components@3.9.0':
+  '@nl-design-system-community/clippy-components@3.10.1':
     dependencies:
       '@amsterdam/design-system-css': 4.5.0
       '@gemeente-denhaag/iconbutton': 3.2.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -9895,7 +9895,7 @@ snapshots:
       '@nl-design-system-candidate/paragraph-css': 3.0.0
       '@nl-design-system-candidate/paragraph-tokens': 1.1.3
       '@nl-design-system-candidate/skip-link-tokens': 1.0.4
-      '@nl-design-system-community/design-tokens-schema': 2.7.0
+      '@nl-design-system-community/design-tokens-schema': 2.8.0
       '@nl-design-system-community/ma-navigation-bar-css': 0.0.1
       '@projectwallace/css-parser': 0.19.3
       '@tabler/icons': 3.50.0
@@ -9922,7 +9922,7 @@ snapshots:
       - '@amsterdam/design-system-assets'
       - '@amsterdam/design-system-tokens'
 
-  '@nl-design-system-community/design-tokens-schema@2.7.0':
+  '@nl-design-system-community/design-tokens-schema@2.8.0':
     dependencies:
       '@nl-design-system-candidate/button-tokens': 1.0.0
       '@nl-design-system-candidate/code-block-tokens': 2.0.3
