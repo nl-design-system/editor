@@ -1,5 +1,14 @@
 # @nl-design-system-community/editor
 
+## 4.0.1
+
+### Patch Changes
+
+- bb64444: `@nl-design-system-community/clippy-components` bijgewerkt naar 3.10.1.
+- 1c108d7: Paginacontrole laat elementen met een `data-clippy-ignore`-attribuut weg uit de validatie en de Content views. Met de nieuwe optie `reviewIgnores` voeg je daar een CSS-selector aan toe, bijvoorbeeld voor CMS-bewerkingslinks.
+- Updated dependencies [bb64444]
+  - @nl-design-system-community/clippy-alt-text-wizard@0.2.4
+
 ## 4.0.0
 
 ### Major Changes

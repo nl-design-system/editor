@@ -1,5 +1,15 @@
 # @nl-design-system-community/typo3-ckeditor-plugin
 
+## 0.3.4
+
+### Patch Changes
+
+- 1c108d7: Nieuwe instelling `reviewIgnores`: een CSS-selector voor elementen die Paginacontrole weglaat.
+- Updated dependencies [bb64444]
+- Updated dependencies [1c108d7]
+  - @nl-design-system-community/editor@4.0.1
+  - @nl-design-system-community/ckeditor-plugin@0.5.2
+
 ## 0.3.3
 
 ### Patch Changes

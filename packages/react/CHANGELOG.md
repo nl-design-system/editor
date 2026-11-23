@@ -1,5 +1,13 @@
 # @nl-design-system-community/editor-react
 
+## 3.0.2
+
+### Patch Changes
+
+- Updated dependencies [bb64444]
+- Updated dependencies [1c108d7]
+  - @nl-design-system-community/editor@4.0.1
+
 ## 3.0.1
 
 ### Patch Changes

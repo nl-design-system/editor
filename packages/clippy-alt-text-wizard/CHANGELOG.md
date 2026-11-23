@@ -1,5 +1,11 @@
 # @nl-design-system-community/clippy-alt-text-wizard
 
+## 0.2.4
+
+### Patch Changes
+
+- bb64444: `@nl-design-system-community/clippy-components` bijgewerkt naar 3.10.1.
+
 ## 0.2.3
 
 ### Patch Changes

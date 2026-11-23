@@ -1,5 +1,15 @@
 # @nl-design-system-community/drupal-ckeditor-plugin
 
+## 0.7.2
+
+### Patch Changes
+
+- 1c108d7: Paginacontrole laat de contextuele links van Drupal ("Blok instellen", "Blok verwijderen") weg, via de nieuwe instelling voor de negeer-selector (standaard `.contextual`).
+- Updated dependencies [bb64444]
+- Updated dependencies [1c108d7]
+  - @nl-design-system-community/editor@4.0.1
+  - @nl-design-system-community/ckeditor-plugin@0.5.2
+
 ## 0.7.1
 
 ### Patch Changes
