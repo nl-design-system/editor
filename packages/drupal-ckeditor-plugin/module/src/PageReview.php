@@ -33,6 +33,7 @@ final class PageReview {
         'floatingPosition' => $settings->get('floating_position'),
         'gutter' => $settings->get('gutter_always') ? 'always' : 'drawer',
         'reviewRoot' => $settings->get('review_root'),
+        'reviewIgnores' => $settings->get('review_ignore'),
       ];
     }
   }

@@ -12,3 +12,10 @@ function clippy_install(bool $is_syncing): void {
     user_role_grant_permissions('content_editor', [PageReview::PERMISSION]);
   }
 }
+
+/**
+ * Leaves Drupal's contextual links out of Page review.
+ */
+function clippy_update_10001(): void {
+  \Drupal::configFactory()->getEditable('clippy.settings')->set('review_ignore', '.contextual')->save(TRUE);
+}

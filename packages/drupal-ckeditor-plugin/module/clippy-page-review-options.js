@@ -39,5 +39,6 @@ export const pageReviewOptions = (settings) => ({
   floatingPosition: settings?.clippy?.pageReview?.floatingPosition,
   gutter: settings?.clippy?.pageReview?.gutter,
   mount: adminBarMount(),
+  reviewIgnores: settings?.clippy?.pageReview?.reviewIgnores || undefined,
   reviewRoot: settings?.clippy?.pageReview?.reviewRoot || undefined,
 });
