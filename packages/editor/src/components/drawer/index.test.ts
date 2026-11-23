@@ -102,6 +102,54 @@ describe('<clippy-sidebar>', () => {
     expect(document.documentElement.style.marginInlineEnd).toBe('');
   });
 
+  describe('on a long page scrolled to the middle', () => {
+    const sentence = 'Een lange zin die bij een smallere pagina over meer regels wordt verdeeld. ';
+
+    const scrollParagraphToCentre = (): HTMLParagraphElement => {
+      const paragraphs = Array.from({ length: 60 }, () =>
+        Object.assign(document.createElement('p'), { textContent: sentence.repeat(12) }),
+      );
+      document.body.append(...paragraphs);
+      const paragraph = paragraphs[30];
+      const firstCharacter = document.createRange();
+      firstCharacter.setStart(paragraph.firstChild!, 0);
+      firstCharacter.setEnd(paragraph.firstChild!, 1);
+      const { height, top } = firstCharacter.getBoundingClientRect();
+      globalThis.scrollBy({ behavior: 'instant', top: top - globalThis.innerHeight / 2 + height / 2 });
+      expect(globalThis.scrollY).toBeGreaterThan(0);
+      return paragraph;
+    };
+
+    afterEach(() => {
+      globalThis.scrollTo({ behavior: 'instant', top: 0 });
+    });
+
+    it('keeps the text at the centre of the viewport in place when it opens', async () => {
+      const drawer = createDrawer();
+      document.body.replaceChildren(drawer);
+      const paragraph = scrollParagraphToCentre();
+      const before = paragraph.getBoundingClientRect().top;
+
+      drawer.open = true;
+      await drawer.updateComplete;
+
+      expect(document.documentElement.style.marginInlineEnd).not.toBe('');
+      expect(Math.abs(paragraph.getBoundingClientRect().top - before)).toBeLessThanOrEqual(1);
+    });
+
+    it('keeps the text at the centre of the viewport in place when it closes', async () => {
+      const drawer = await openDrawer();
+      const paragraph = scrollParagraphToCentre();
+      const before = paragraph.getBoundingClientRect().top;
+
+      drawer.open = false;
+      await drawer.updateComplete;
+
+      expect(document.documentElement.style.marginInlineEnd).toBe('');
+      expect(Math.abs(paragraph.getBoundingClientRect().top - before)).toBeLessThanOrEqual(1);
+    });
+  });
+
   it('closes and fires close when the close button is clicked', async () => {
     const drawer = await openDrawer();
     let closes = 0;
