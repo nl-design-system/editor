@@ -56,6 +56,14 @@ describe('<clippy-heading-structure>', () => {
   });
 
   describe('heading entries', () => {
+    it('leaves out headings inside an ignored element', async () => {
+      const { headingStructure } = await setupWithContent('<h1>Titel</h1><div data-clippy-ignore><h2>Menu</h2></div>');
+      headingStructure.ignores = '[data-clippy-ignore]';
+      await headingStructure.updateComplete;
+
+      expect(headingStructure.shadowRoot?.querySelectorAll('.clippy-heading-structure__item').length).toBe(1);
+    });
+
     it('renders one list item for a single heading', async () => {
       const { headingStructure } = await setupWithContent('<h1>Titel</h1>');
 

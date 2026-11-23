@@ -56,6 +56,9 @@ export class ContentViews extends LitElement {
   @property({ attribute: false })
   identifier?: string;
 
+  @property({ attribute: false })
+  ignores?: string;
+
   /** The name of the Content views. */
   get label(): string {
     return msg('Document overview');
@@ -140,7 +143,7 @@ export class ContentViews extends LitElement {
   }
 
   override render() {
-    const { htmlDocument, violationsMap } = this;
+    const { htmlDocument, ignores, violationsMap } = this;
     return html`
       ${this.#renderTabs()}
       ${this.#renderPanel(
@@ -148,6 +151,7 @@ export class ContentViews extends LitElement {
         html`<clippy-heading-structure
           .htmlDocument=${htmlDocument}
           .identifier=${this.identifier}
+          .ignores=${ignores}
           .violationsMap=${violationsMap}
         ></clippy-heading-structure>`,
       )}
@@ -156,6 +160,7 @@ export class ContentViews extends LitElement {
         html`<clippy-link-list
           .htmlDocument=${htmlDocument}
           .identifier=${this.identifier}
+          .ignores=${ignores}
           .violationsMap=${violationsMap}
         ></clippy-link-list>`,
       )}
@@ -164,6 +169,7 @@ export class ContentViews extends LitElement {
         html`<clippy-language-changes
           .htmlDocument=${htmlDocument}
           .identifier=${this.identifier}
+          .ignores=${ignores}
         ></clippy-language-changes>`,
       )}
     `;

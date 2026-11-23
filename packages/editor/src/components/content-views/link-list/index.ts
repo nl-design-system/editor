@@ -15,6 +15,7 @@ import type { ViolationsMap, Violation } from '@/types/validation';
 import { CustomEvents, type FocusNodeDetail } from '@/events';
 import '@/components/validations/validation-button';
 import { localizeHost } from '@/localization';
+import { ignores } from '@/utils/ignores';
 import { getViolationsByElement } from '@/utils/validations';
 import linkListStyles from './styles';
 
@@ -52,6 +53,9 @@ export class LinkList extends LitElement {
   @property({ attribute: false })
   identifier?: string;
 
+  @property({ attribute: false })
+  ignores?: string;
+
   override connectedCallback() {
     super.connectedCallback();
     localizeHost(this);
@@ -64,12 +68,14 @@ export class LinkList extends LitElement {
   get #links(): LinkEntry[] {
     const root = this.htmlDocument;
     if (!root) return [];
-    return Array.from(root.querySelectorAll<HTMLAnchorElement>('a[href]')).map((element) => ({
-      element,
-      href: element.getAttribute('href') ?? '',
-      text: element.textContent ?? '',
-      violations: getViolationsByElement(this.violationsMap, element),
-    }));
+    return Array.from(root.querySelectorAll<HTMLAnchorElement>('a[href]'))
+      .filter((element) => !ignores(element, this.ignores))
+      .map((element) => ({
+        element,
+        href: element.getAttribute('href') ?? '',
+        text: element.textContent ?? '',
+        violations: getViolationsByElement(this.violationsMap, element),
+      }));
   }
 
   #scrollToLink(element: HTMLAnchorElement) {

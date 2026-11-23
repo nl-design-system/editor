@@ -66,6 +66,30 @@ describe('ClippyHub', () => {
     expect(contentViews.violationsMap).toBe(validationsView.violationsMap);
   });
 
+  it('leaves violations inside an ignored element out and passes the ignores selector to the Content views', async () => {
+    target.innerHTML = '<h1>Titel</h1><p></p><div class="cms-ui"><p></p></div>';
+    const trigger = createTrigger();
+
+    hub = new ClippyHub({ identifier: IDENTIFIER, ignores: '.cms-ui', target });
+    hub.connect({ trigger });
+    await hub.validate();
+
+    expect(rulesIn(trigger.violationsMap)).toEqual([coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
+    expect(hub.drawer!.querySelector('clippy-content-views')!.ignores).toBe('[data-clippy-ignore], .cms-ui');
+  });
+
+  it('leaves elements marked with data-clippy-ignore out by default', async () => {
+    target.innerHTML = '<h1>Titel</h1><p></p><div data-clippy-ignore><p></p></div>';
+    const trigger = createTrigger();
+
+    hub = new ClippyHub({ identifier: IDENTIFIER, target });
+    hub.connect({ trigger });
+    await hub.validate();
+
+    expect(rulesIn(trigger.violationsMap)).toEqual([coreValidationRules.PARAGRAPH_SHOULD_NOT_BE_EMPTY]);
+    expect(hub.drawer!.querySelector('clippy-content-views')!.ignores).toBe('[data-clippy-ignore]');
+  });
+
   it('feeds a connected validations list the violations and identifier', async () => {
     target.innerHTML = '<h1>Titel</h1><p></p>';
     const list = document.body.appendChild(document.createElement('clippy-validations-list'));

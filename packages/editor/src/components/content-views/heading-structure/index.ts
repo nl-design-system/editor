@@ -17,6 +17,7 @@ import type { ViolationsMap, Violation } from '@/types/validation';
 import { CustomEvents, type FocusNodeDetail } from '@/events';
 import '@/components/validations/validation-button';
 import { localizeHost } from '@/localization';
+import { ignores } from '@/utils/ignores';
 import { getViolationsByElement } from '@/utils/validations';
 import headingStructureStyles from './styles';
 
@@ -55,6 +56,9 @@ export class HeadingStructure extends LitElement {
   @property({ attribute: false })
   identifier?: string;
 
+  @property({ attribute: false })
+  ignores?: string;
+
   override connectedCallback() {
     super.connectedCallback();
     localizeHost(this);
@@ -67,12 +71,14 @@ export class HeadingStructure extends LitElement {
   get #headings(): HeadingEntry[] {
     const root = this.htmlDocument;
     if (!root) return [];
-    return Array.from(root.querySelectorAll<HTMLElement>('h1, h2, h3, h4, h5, h6')).map((element) => ({
-      element,
-      level: Number.parseInt(element.tagName[1], 10),
-      text: element.textContent ?? '',
-      violations: getViolationsByElement(this.violationsMap, element),
-    }));
+    return Array.from(root.querySelectorAll<HTMLElement>('h1, h2, h3, h4, h5, h6'))
+      .filter((element) => !ignores(element, this.ignores))
+      .map((element) => ({
+        element,
+        level: Number.parseInt(element.tagName[1], 10),
+        text: element.textContent ?? '',
+        violations: getViolationsByElement(this.violationsMap, element),
+      }));
   }
 
   #scrollToHeading(element: HTMLElement) {

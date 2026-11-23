@@ -49,6 +49,17 @@ describe('<clippy-link-list>', () => {
   });
 
   describe('link entries', () => {
+    it('leaves out links inside an ignored element', async () => {
+      const { linkList } = await setupWithContent(
+        '<p><a href="/contact">Contact</a></p><div data-clippy-ignore><a href="/edit">Bewerken</a></div>',
+      );
+      linkList.ignores = '[data-clippy-ignore]';
+      await linkList.updateComplete;
+
+      const items = linkList.shadowRoot?.querySelectorAll('.clippy-link-list__item .nl-link');
+      expect([...(items ?? [])].map((item) => item.textContent?.trim())).toEqual(['Contact']);
+    });
+
     it('renders one list item for a single link', async () => {
       const { linkList } = await setupWithContent('<h1>Titel</h1><p><a href="https://example.com">Bezoek ons</a></p>');
 

@@ -14,6 +14,7 @@ import '@nl-design-system-community/clippy-components/clippy-icon';
 import { CustomEvents, type FocusNodeDetail } from '@/events';
 import { localizeHost } from '@/localization';
 import { findNearestAncestorAttribute } from '@/utils/domTraverser';
+import { ignores } from '@/utils/ignores';
 import languageChangesStyles from './styles';
 
 const PREVIEW_LENGTH = 20;
@@ -54,6 +55,9 @@ export class LanguageChanges extends LitElement {
   @property({ attribute: false })
   identifier?: string;
 
+  @property({ attribute: false })
+  ignores?: string;
+
   override connectedCallback() {
     super.connectedCallback();
     localizeHost(this);
@@ -73,8 +77,10 @@ export class LanguageChanges extends LitElement {
 
     // Walk all elements that carry a lang attribute in document order.
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT, {
-      acceptNode: (node: Node) =>
-        (node as Element).hasAttribute('lang') ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP,
+      acceptNode: (node: Node) => {
+        if (ignores(node as Element, this.ignores)) return NodeFilter.FILTER_REJECT;
+        return (node as Element).hasAttribute('lang') ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+      },
     });
 
     let node = walker.nextNode() as Element | null;
