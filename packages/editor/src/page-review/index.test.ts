@@ -90,6 +90,15 @@ describe('PageReview', () => {
     await expect.poll(violationCount).toBe(2);
   });
 
+  it('leaves elements matching the Review ignores selector out', async () => {
+    document.body.innerHTML = '<main><h1>Titel</h1><h2></h2><div class="cms-ui"><p></p></div></main>';
+
+    review = createPageReview({ reviewIgnores: '.cms-ui' });
+
+    await expect.poll(violationCount).toBe(1);
+    expect(contentViews()?.ignores).toBe('[data-clippy-ignore], .cms-ui');
+  });
+
   it('falls back to the main content region when the Review root selector matches nothing', async () => {
     document.body.innerHTML = '<div role="main"><h1>Titel</h1><h2></h2></div><p></p>';
 

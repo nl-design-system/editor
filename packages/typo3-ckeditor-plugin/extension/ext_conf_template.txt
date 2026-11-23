@@ -4,6 +4,8 @@ enabled = 1
 pageReview = 1
 # cat=pageReview; type=string; label=Review root selector: the CSS selector of the element Page review validates
 reviewRoot = main, [role=main]
+# cat=pageReview; type=string; label=Review ignore selector: the CSS selector of elements inside the review root that Page review leaves out, on top of elements with a data-clippy-ignore attribute
+reviewIgnores =
 # cat=pageReview; type=boolean; label=Always show gutter markers: shows the gutter markers as soon as the page loads. When off, they only show while the Page review drawer is open
 gutterAlways = 1
 # cat=pageReview; type=options[Bottom right=bottom-right,Top right=top-right]; label=Floating button position: the screen corner of the Page review button, top right or bottom right

@@ -1,5 +1,6 @@
 ckeditor: true
 page_review: true
 review_root: "main, [role=main]"
+review_ignore: ".contextual"
 gutter_always: true
 floating_position: bottom-right

@@ -15,6 +15,9 @@ clippy.settings:
       label: "Review root selector"
       constraints:
         NotBlank: []
+    review_ignore:
+      type: string
+      label: "Review ignore selector"
     gutter_always:
       type: boolean
       label: "Always show gutter markers"

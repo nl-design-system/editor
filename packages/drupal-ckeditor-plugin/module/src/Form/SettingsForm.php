@@ -50,6 +50,15 @@ final class SettingsForm extends ConfigFormBase {
         'visible' => [':input[name="page_review"]' => ['checked' => TRUE]],
       ],
     ];
+    $form['review_ignore'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Review ignore selector'),
+      '#description' => $this->t('A CSS selector for elements inside the review root that Page review leaves out, such as the contextual links Drupal adds to blocks: <code>.contextual</code>. Elements with a <code>data-clippy-ignore</code> attribute are always left out.'),
+      '#config_target' => 'clippy.settings:review_ignore',
+      '#states' => [
+        'visible' => [':input[name="page_review"]' => ['checked' => TRUE]],
+      ],
+    ];
     $form['gutter_always'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Always show gutter markers'),

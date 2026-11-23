@@ -18,6 +18,7 @@ import {
 } from '@/events';
 import { setDarkColorScheme, THEME_CLASSES, watchHostColorScheme } from '@/utils/colorScheme';
 import { debounce } from '@/utils/debounce';
+import { ignores } from '@/utils/ignores';
 import { waitForMedia } from '@/utils/waitForMedia';
 import { runValidation, VALIDATION_TIMEOUT } from '@/validations';
 
@@ -41,11 +42,18 @@ export interface ClippyHubOptions {
   colorSchemeElement?: HTMLElement;
   /** Whether the hub docks a Drawer in `<body>`. Defaults to `true`. */
   createDrawer?: boolean;
+  /**
+   * A selector for elements inside `target` that are left out of validation and the Content views,
+   * on top of the elements marked with `data-clippy-ignore`.
+   */
+  ignores?: string;
   adaptViolations?: (violationsMap: ViolationsMap) => ViolationsMap;
   /** Shows the violation of a focused drawer item. Defaults to scrolling it into view. */
   focusViolation?: (violation: Violation) => void;
   validations?: readonly Validation[];
 }
+
+const DEFAULT_IGNORES = '[data-clippy-ignore]';
 
 const identifiers = new Set<string>();
 
@@ -75,6 +83,7 @@ export class ClippyHub {
   readonly #adaptViolations: (violationsMap: ViolationsMap) => ViolationsMap;
   readonly #focusViolation: (violation: Violation) => void;
   readonly #identifier: string;
+  readonly #ignores: string;
   readonly #target: HTMLElement;
   #validations: readonly Validation[] | undefined;
   readonly #views: ClippyHubViews = {};
@@ -88,6 +97,7 @@ export class ClippyHub {
     createDrawer = true,
     focusViolation = scrollIntoView,
     identifier,
+    ignores,
     target,
     validations,
   }: ClippyHubOptions) {
@@ -100,6 +110,7 @@ export class ClippyHub {
     this.#adaptViolations = adaptViolations;
     this.#focusViolation = focusViolation;
     this.#identifier = identifier;
+    this.#ignores = ignores ? `${DEFAULT_IGNORES}, ${ignores}` : DEFAULT_IGNORES;
     this.#target = target;
     this.#validations = validations;
 
@@ -115,6 +126,7 @@ export class ClippyHub {
     this.#validationsView = document.createElement('clippy-validations-view');
     this.#contentViews = document.createElement('clippy-content-views');
     this.#contentViews.htmlDocument = target;
+    this.#contentViews.ignores = this.#ignores;
     for (const view of [this.#validationsView, this.#contentViews]) {
       view.identifier = identifier;
       view.hidden = true;
@@ -166,7 +178,8 @@ export class ClippyHub {
     }
 
     runValidation(this.#target, this.#validations, (reported) => {
-      this.#violationsMap = this.#adaptViolations(reported);
+      const kept = new Map([...reported].filter(([, { element }]) => !ignores(element, this.#ignores)));
+      this.#violationsMap = this.#adaptViolations(kept);
     });
     this.#render();
   }

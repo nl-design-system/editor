@@ -22,6 +22,7 @@ export interface PageReviewOptions {
   floatingPosition?: FloatingPosition;
   /** The Review root selector. Falls back to `main, [role=main]`, then `body`. */
   reviewRoot?: string;
+  reviewIgnores?: string;
   /** Show the gutter markers from load (default), or only while the drawer is open. */
   gutter?: 'always' | 'drawer';
 }
@@ -51,10 +52,11 @@ export class PageReview extends ClippyHub {
     floatingPosition = DEFAULT_FLOATING_POSITION,
     gutter = 'always',
     mount,
+    reviewIgnores,
     reviewRoot,
   }: PageReviewOptions) {
     const target = resolveReviewRoot(reviewRoot);
-    super({ adaptViolations: withoutCorrections, identifier: IDENTIFIER, target });
+    super({ adaptViolations: withoutCorrections, identifier: IDENTIFIER, ignores: reviewIgnores || undefined, target });
     this.#reviewRoot = target;
 
     if (mount) {

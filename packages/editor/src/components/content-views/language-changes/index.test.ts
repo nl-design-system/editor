@@ -52,6 +52,16 @@ describe('<clippy-language-changes>', () => {
   });
 
   describe('language entries', () => {
+    it('leaves out language changes inside an ignored element', async () => {
+      const { langChanges } = await setupWithContent(
+        '<p lang="en">English.</p><div data-clippy-ignore><p lang="fr">Français.</p></div>',
+      );
+      langChanges.ignores = '[data-clippy-ignore]';
+      await langChanges.updateComplete;
+
+      expect(langChanges.shadowRoot?.querySelectorAll('.clippy-language-changes__item').length).toBe(1);
+    });
+
     it('renders one list item for a single language change', async () => {
       const { langChanges } = await setupWithContent('<h1>Titel</h1><p lang="en">English paragraph.</p>');
 
