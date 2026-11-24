@@ -1,0 +1,75 @@
+---
+import Document from '../../../layouts/document.astro';
+import SectionNavigation from '../../../components/SectionNavigation.astro';
+import Section from '../../../components/Section.astro';
+import CodeBlock from '../../../components/CodeBlock.astro';
+import PackageLinks from '../../../components/PackageLinks.astro';
+import CKEditorDemo from '../../../components/CKEditorDemo.astro';
+import ckeditorPackage from '@nl-design-system-community/ckeditor-plugin/package.json';
+import { useTranslations } from '../../../i18n/translations.ts';
+
+const t = useTranslations('en');
+
+const usage = `import { ClassicEditor, Essentials, Heading, Image, ImageTextAlternative, ImageToolbar, Paragraph } from 'ckeditor5';
+import { ClippyAltTextWizard, ClippyPlugin } from '${ckeditorPackage.name}';
+import 'ckeditor5/ckeditor5.css';
+
+await ClassicEditor.create(document.querySelector('#editor'), {
+  licenseKey: 'GPL',
+  plugins: [Essentials, Heading, Paragraph, Image, ImageTextAlternative, ImageToolbar, ClippyPlugin, ClippyAltTextWizard],
+  toolbar: ['heading'],
+  image: { toolbar: ['imageTextAlternative'] },
+});`;
+---
+
+<Document title={t('library.ckeditor.title')}>
+  <SectionNavigation href={t('nav.href.libraries')} />
+  <main>
+    <h1 class="nl-heading nl-heading--level-1">CKEditor plugin</h1>
+    <p class="nl-paragraph">
+      The CKEditor plugin adds Clippy Editor to any CKEditor 5 editor, also outside Drupal and TYPO3. Editors then get
+      notifications while they write, explaining how to fix each problem. Using Drupal or TYPO3? Then the plugin is
+      already part of{' '}
+      <a class="nl-link" href={t('nav.href.library.drupal')}>
+        Clippy Editor for Drupal
+      </a>{' '}
+      and{' '}
+      <a class="nl-link" href={t('nav.href.library.typo3')}>
+        Clippy Editor for TYPO3
+      </a>
+      .
+    </p>
+    <PackageLinks pkg={ckeditorPackage} />
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Installation</h2>
+      <p class="nl-paragraph">The plugin works with CKEditor 5 version 43 or later.</p>
+      <CodeBlock code={`npm install ckeditor5 ${ckeditorPackage.name}`} />
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Usage</h2>
+      <p class="nl-paragraph">The package contains two CKEditor plugins:</p>
+      <ul>
+        <li>
+          <code>ClippyPlugin</code> shows the accessibility notifications in the editor.
+        </li>
+        <li>
+          <code>ClippyAltTextWizard</code> adds the alt-text wizard to the alt-text balloon of an image. For that, the
+          editor also needs <code>Image</code> and <code>ImageTextAlternative</code>.
+        </li>
+      </ul>
+      <p class="nl-paragraph">Add them to the plugins of your editor:</p>
+      <CodeBlock code={usage} />
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Demo</h2>
+      <p class="nl-paragraph">
+        This CKEditor contains text with accessibility problems. Edit the text and see which notifications Clippy Editor
+        gives.
+      </p>
+      <CKEditorDemo locale="en" />
+    </Section>
+  </main>
+</Document>

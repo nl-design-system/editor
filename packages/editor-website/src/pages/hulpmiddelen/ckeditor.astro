@@ -1,187 +1,75 @@
 ---
 import Document from '../../layouts/document.astro';
 import SectionNavigation from '../../components/SectionNavigation.astro';
+import Section from '../../components/Section.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
 import PackageLinks from '../../components/PackageLinks.astro';
+import CKEditorDemo from '../../components/CKEditorDemo.astro';
 import ckeditorPackage from '@nl-design-system-community/ckeditor-plugin/package.json';
 import { useTranslations } from '../../i18n/translations.ts';
 
 const t = useTranslations('nl');
+
+const usage = `import { ClassicEditor, Essentials, Heading, Image, ImageTextAlternative, ImageToolbar, Paragraph } from 'ckeditor5';
+import { ClippyAltTextWizard, ClippyPlugin } from '${ckeditorPackage.name}';
+import 'ckeditor5/ckeditor5.css';
+
+await ClassicEditor.create(document.querySelector('#editor'), {
+  licenseKey: 'GPL',
+  plugins: [Essentials, Heading, Paragraph, Image, ImageTextAlternative, ImageToolbar, ClippyPlugin, ClippyAltTextWizard],
+  toolbar: ['heading'],
+  image: { toolbar: ['imageTextAlternative'] },
+});`;
 ---
 
-<Document title="CKEditor - Clippy Editor - NL Design System">
+<Document title={t('library.ckeditor.title')}>
   <SectionNavigation href={t('nav.href.libraries')} />
   <main>
-    <div class="ma-page-section ma-page-section--with-space">
-      <h1>Clippy Editor CKEditor-plugin</h1>
+    <h1 class="nl-heading nl-heading--level-1">CKEditor-plugin</h1>
+    <p class="nl-paragraph">
+      Met de CKEditor-plugin voeg je Clippy Editor toe aan elke CKEditor 5 editor, ook buiten Drupal en TYPO3.
+      Redacteuren krijgen dan meldingen terwijl ze schrijven, met uitleg over hoe ze een probleem oplossen. Gebruik je
+      Drupal of TYPO3? Dan is de plugin al onderdeel van{' '}
+      <a class="nl-link" href={t('nav.href.library.drupal')}>
+        Clippy Editor voor Drupal
+      </a>{' '}
+      en{' '}
+      <a class="nl-link" href={t('nav.href.library.typo3')}>
+        Clippy Editor voor TYPO3
+      </a>
+      .
+    </p>
+    <PackageLinks pkg={ckeditorPackage} />
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Installeren</h2>
+      <p class="nl-paragraph">De plugin werkt met CKEditor 5 versie 43 of nieuwer.</p>
+      <CodeBlock code={`npm install ckeditor5 ${ckeditorPackage.name}`} />
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Gebruiken</h2>
+      <p class="nl-paragraph">Het pakket bevat twee CKEditor-plugins:</p>
+      <ul>
+        <li>
+          <code>ClippyPlugin</code> toont de toegankelijkheidsmeldingen in de editor.
+        </li>
+        <li>
+          <code>ClippyAltTextWizard</code> voegt de alt-tekst wizard toe aan het venster voor de alt-tekst van een
+          afbeelding. Daarvoor heeft de editor ook <code>Image</code> en <code>ImageTextAlternative</code> nodig.
+        </li>
+      </ul>
+      <p class="nl-paragraph">Voeg ze toe aan de plugins van je editor:</p>
+      <CodeBlock code={usage} />
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Demo</h2>
       <p class="nl-paragraph">
-        Een CKEditor 5-plugin waarmee je de toegankelijkheidsvalidaties van Clippy Editor toevoegt aan elke
-        CKEditor-instantie.
+        In deze CKEditor staat een tekst met toegankelijkheidsproblemen. Pas de tekst aan en bekijk welke meldingen
+        Clippy Editor geeft.
       </p>
-      <PackageLinks pkg={ckeditorPackage} />
-      <div id="ck-editor"></div>
-    </div>
+      <CKEditorDemo locale="nl" />
+    </Section>
   </main>
 </Document>
-
-<script>
-  import 'ckeditor5/ckeditor5.css';
-  import {
-    ClassicEditor,
-    Bold,
-    Essentials,
-    Heading,
-    Image,
-    ImageTextAlternative,
-    ImageToolbar,
-    ImageUpload,
-    Italic,
-    Link,
-    List,
-    Paragraph,
-    Underline,
-  } from 'ckeditor5';
-  import coreTranslations from 'ckeditor5/translations/nl.js';
-  import { ClippyAltTextWizard, ClippyPlugin } from '@nl-design-system-community/ckeditor-plugin';
-
-  const editorEl = document.querySelector<HTMLElement>('#ck-editor');
-
-  if (!editorEl) {
-    throw new Error('Missing editor element');
-  }
-
-  await ClassicEditor.create(editorEl, {
-    plugins: [
-      Essentials,
-      Heading,
-      Paragraph,
-      Bold,
-      Italic,
-      Underline,
-      Link,
-      List,
-      Image,
-      ImageTextAlternative,
-      ImageToolbar,
-      ImageUpload,
-      ClippyPlugin,
-      ClippyAltTextWizard,
-    ],
-    toolbar: [
-      'heading',
-      '|',
-      'bold',
-      'italic',
-      'underline',
-      'link',
-      '|',
-      'bulletedList',
-      'numberedList',
-      '|',
-      'insertImage',
-    ],
-    image: {
-      toolbar: ['imageTextAlternative'],
-    },
-    heading: {
-      options: [
-        { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-        { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-        { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-        { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
-        { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' },
-        { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
-        { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' },
-      ],
-    },
-    language: 'nl',
-    translations: [coreTranslations],
-    licenseKey: 'GPL',
-    initialData: `
-      <h1>NL Design System Editor kop 1</h1>
-      <h1>second h1</h1>
-        <p>
-          Onder die steden, <strong>welke</strong> <i>vanouds</i> aan de <strong><i>grafelijke</i></strong> kroon
-          van Holland gelijk zoovele edelgesteenten flonkerden, en wier macht en rijkdom tot een hechten steun
-          verstrekten aan des Landsheer gezag, was Haarlem, gelijk genoeg bekend is, een der voornaamste.
-        </p>
-        <h2>NL Design System Editor kop 2</h2>
-        <p></p>
-        <h4>Dat mag niet, he</h4>
-        <p>
-          Aan den over eener rivier gebouwd, waarvan zij zich als van
-          <a href="https://example.com">twee armen bedienen</a> kon, om, aan de eene zijde, het Haarlemmermeer en de
-          daarom gelegen landen, aan de andere hij IJ, en door het IJ, de Zuiderzee te bereiken, had zij van deze
-          gunstige ligging reeds vroeg partij getrokken, om een<a href="https://example.com"> </a>handel te drijven,
-          die, schoon zich zelden verder uitstrekkende dan de gewesten, welke om die binnenzeeën gelegen waren, haar
-          niettemin gelegenheid gaf.
-        </p>
-        <table>
-          <tbody>
-            <tr>
-              <th>Naam</th>
-              <th colspan="3">Beschrijving</th>
-            </tr>
-            <tr>
-              <td>Rij 1, cel 1</td>
-              <td>Rij 1, cel 2</td>
-              <td>Rij 1, cel 3</td>
-              <td>Rij 1, cel 4</td>
-            </tr>
-          </tbody>
-        </table>
-        <dl>
-          <dt>Foo</dt>
-          <dd>The meaning of foo</dd>
-          <dt>Bar</dt>
-          <dd>The meaning of bar</dd>
-        </dl>
-        <h2>Afbeeldingen</h2>
-        <img src="https://placehold.co/800x400" />
-        <h3>Correct lijst</h3>
-        <ul>
-          <li>Test</li>
-          <li>Test</li>
-          <li>Test</li>
-        </ul>
-        <h3>Incorrect genummerde lijst</h3>
-        <p>1 - Test<br />2 - Test<br />3 - Test</p>
-      </div>
-    `,
-  });
-</script>
-
-<style is:global>
-  :root.ma-theme--color-scheme-dark {
-    --ck-color-base-background: var(--basis-color-default-bg-document);
-    --ck-color-base-foreground: var(--basis-color-default-bg-default);
-    --ck-color-base-border: var(--basis-color-default-border-subtle);
-    --ck-color-base-text: var(--basis-color-default-color-document);
-    --ck-color-base-error: var(--basis-color-negative-color-default);
-    --ck-color-button-default-hover-background: var(--basis-color-default-bg-hover);
-    --ck-color-button-default-active-background: var(--basis-color-default-bg-active);
-    --ck-color-button-on-background: var(--basis-color-selected-bg-default);
-    --ck-color-button-on-hover-background: var(--basis-color-selected-bg-hover);
-    --ck-color-button-on-active-background: var(--basis-color-selected-bg-active);
-    --ck-color-button-on-disabled-background: var(--basis-color-disabled-bg-default);
-    --ck-color-button-on-color: var(--basis-color-selected-color-document);
-    --ck-color-list-button-on-background: var(--basis-color-selected-bg-active);
-    --ck-color-list-button-on-background-focus: var(--basis-color-selected-bg-hover);
-    --ck-color-list-button-on-text: var(--basis-color-selected-color-document);
-    --ck-color-dialog-background: var(--basis-color-default-bg-document);
-    --ck-color-dialog-form-header-border: var(--basis-color-default-border-subtle);
-    --ck-color-input-disabled-background: var(--basis-color-disabled-bg-default);
-    --ck-color-input-disabled-border: var(--basis-color-disabled-border-default);
-    --ck-color-input-disabled-text: var(--basis-color-disabled-color-default);
-    --ck-color-engine-placeholder-text: var(--basis-color-default-color-subtle);
-    --ck-color-tooltip-background: var(--basis-color-default-inverse-bg-document);
-    --ck-color-tooltip-text: var(--basis-color-default-inverse-color-document);
-  }
-
-  :root.ma-theme--color-scheme-dark .ck.ck-editor__editable {
-    color: var(--basis-color-default-color-document);
-  }
-
-  :root.ma-theme--color-scheme-dark .ck.ck-editor__editable a {
-    color: var(--basis-color-info-color-default);
-  }
-</style>
