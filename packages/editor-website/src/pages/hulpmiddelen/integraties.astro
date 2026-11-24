@@ -1,0 +1,89 @@
+---
+import Document from '../../layouts/document.astro';
+import SectionNavigation from '../../components/SectionNavigation.astro';
+import Section from '../../components/Section.astro';
+import { useTranslations } from '../../i18n/translations.ts';
+
+const t = useTranslations('nl');
+---
+
+<Document title={t('integrations.title')}>
+  <SectionNavigation href={t('nav.href.libraries')} />
+  <main>
+    <h1 class="nl-heading nl-heading--level-1">Integraties</h1>
+    <p class="nl-paragraph">
+      Clippy Editor werkt op twee plekken: tijdens het schrijven en op de gepubliceerde pagina. Hier lees je hoe dat
+      werkt en welk onderdeel past bij jouw website of CMS.
+    </p>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Tijdens het schrijven</h2>
+      <p class="nl-paragraph">
+        Terwijl een redacteur schrijft, controleert Clippy Editor de tekst in de rich-text editor. Een probleem wordt
+        gemarkeerd in de kantlijn naast de tekst, en alle meldingen staan in een paneel aan de zijkant van het scherm.
+        Bij elke melding staat wat er mis is en hoe je het oplost. Voor afbeeldingen is er een alt-tekst wizard die stap
+        voor stap helpt een goede alt-tekst te schrijven.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Op de gepubliceerde pagina</h2>
+      <p class="nl-paragraph">
+        Niet alles zie je tijdens het schrijven. Een pagina bestaat vaak uit meerdere tekstblokken, en pas op de pagina
+        zelf blijkt of de koppen samen een logische structuur vormen. Daarvoor is er Paginacontrole: een knop op de
+        pagina die de toegankelijkheidsmeldingen van de hele pagina toont, ook van een concept dat nog niet gepubliceerd
+        is.
+      </p>
+      <p class="nl-paragraph">
+        Paginacontrole laat ook overzichten zien van de kopstructuur, de links en de taalwijzigingen op de pagina.
+        Alleen ingelogde redacteuren met toestemming zien Paginacontrole; bezoekers van de website zien het niet.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Dezelfde validaties op beide plekken</h2>
+      <p class="nl-paragraph">
+        Tijdens het schrijven en op de pagina gelden dezelfde{' '}
+        <a class="nl-link" href={t('nav.href.guidelines')}>
+          validaties
+        </a>
+        , gebaseerd op de richtlijnen van NL Design System. Een redacteur krijgt op beide plekken dus dezelfde uitleg.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Welk onderdeel past bij jou?</h2>
+      <ul>
+        <li>
+          Gebruik je Drupal? Dan installeer je{' '}
+          <a class="nl-link" href={t('nav.href.library.drupal')}>
+            Clippy Editor voor Drupal
+          </a>
+          . Die bevat Clippy Editor in CKEditor en Paginacontrole.
+        </li>
+        <li>
+          Gebruik je TYPO3? Dan installeer je{' '}
+          <a class="nl-link" href={t('nav.href.library.typo3')}>
+            Clippy Editor voor TYPO3
+          </a>
+          . Die bevat Clippy Editor in elke rich-text editor en Paginacontrole.
+        </li>
+        <li>
+          Gebruik je CKEditor 5 in een ander CMS of een eigen applicatie? Dan voeg je de{' '}
+          <a class="nl-link" href={t('nav.href.library.ckeditor')}>
+            CKEditor-plugin
+          </a>{' '}
+          toe.
+        </li>
+        <li>
+          Bouw je zelf een invoerveld voor content? Dan gebruik je de{' '}
+          <a class="nl-link" href={t('nav.href.library.editor')}>
+            rich-text editor van Clippy Editor
+          </a>
+          .
+        </li>
+        <li>Paginacontrole werkt ook zonder CMS, op elke website.</li>
+      </ul>
+    </Section>
+  </main>
+</Document>

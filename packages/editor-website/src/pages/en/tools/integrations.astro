@@ -1,0 +1,89 @@
+---
+import Document from '../../../layouts/document.astro';
+import SectionNavigation from '../../../components/SectionNavigation.astro';
+import Section from '../../../components/Section.astro';
+import { useTranslations } from '../../../i18n/translations.ts';
+
+const t = useTranslations('en');
+---
+
+<Document title={t('integrations.title')}>
+  <SectionNavigation href={t('nav.href.libraries')} />
+  <main>
+    <h1 class="nl-heading nl-heading--level-1">Integrations</h1>
+    <p class="nl-paragraph">
+      Clippy Editor works in two places: while writing and on the published page. This page explains how that works and
+      which part fits your website or CMS.
+    </p>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">While writing</h2>
+      <p class="nl-paragraph">
+        While an editor writes, Clippy Editor checks the text in the rich-text editor. A problem is marked in the gutter
+        next to the text, and all notifications are listed in a panel at the side of the screen. Every notification
+        explains what is wrong and how to fix it. For images, an alt-text wizard helps step by step to write good alt
+        text.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">On the published page</h2>
+      <p class="nl-paragraph">
+        Not everything shows while writing. A page often consists of several blocks of text, and only on the page itself
+        can you see whether the headings form a logical structure together. That is what Page review is for: a button on
+        the page that shows the accessibility issues of the whole page, also for a draft that has not been published
+        yet.
+      </p>
+      <p class="nl-paragraph">
+        Page review also shows overviews of the heading structure, the links and the language changes on the page. Only
+        logged-in editors with permission see Page review; visitors of the website do not.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">The same validations in both places</h2>
+      <p class="nl-paragraph">
+        While writing and on the page, the same{' '}
+        <a class="nl-link" href={t('nav.href.guidelines')}>
+          validations
+        </a>{' '}
+        apply, based on the NL Design System guidelines. So an editor gets the same explanation in both places.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Which part fits you?</h2>
+      <ul>
+        <li>
+          Using Drupal? Install{' '}
+          <a class="nl-link" href={t('nav.href.library.drupal')}>
+            Clippy Editor for Drupal
+          </a>
+          . It contains Clippy Editor in CKEditor and Page review.
+        </li>
+        <li>
+          Using TYPO3? Install{' '}
+          <a class="nl-link" href={t('nav.href.library.typo3')}>
+            Clippy Editor for TYPO3
+          </a>
+          . It contains Clippy Editor in every rich-text editor and Page review.
+        </li>
+        <li>
+          Using CKEditor 5 in another CMS or your own application? Add the{' '}
+          <a class="nl-link" href={t('nav.href.library.ckeditor')}>
+            CKEditor plugin
+          </a>
+          .
+        </li>
+        <li>
+          Building your own content input? Use{' '}
+          <a class="nl-link" href={t('nav.href.library.editor')}>
+            Clippy Editor's rich-text editor
+          </a>
+          .
+        </li>
+        <li>Page review also works without a CMS, on any website.</li>
+      </ul>
+    </Section>
+  </main>
+</Document>
