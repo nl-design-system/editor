@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('Page basics', () => {
   test('page has correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('Toolbar configuratie - Rich-text Editor - NL Design System');
+    await expect(page).toHaveTitle('Toolbar configuratie - Clippy Editor - NL Design System');
   });
 
   test('page heading is visible', async ({ page }) => {

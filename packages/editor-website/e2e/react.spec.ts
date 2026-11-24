@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('Page basics', () => {
   test('page has correct title', async ({ page }) => {
-    await expect(page).toHaveTitle('React integratie - Rich-text Editor - NL Design System');
+    await expect(page).toHaveTitle('React integratie - Clippy Editor - NL Design System');
   });
 
   test('page has document language', async ({ page }) => {

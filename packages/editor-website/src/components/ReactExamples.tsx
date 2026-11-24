@@ -13,7 +13,7 @@ export function ReactEditorExample() {
     >
       <div slot="value">
         <h1>Kopniveau 1 in React editor</h1>
-        <p>Dit is een voorbeeld van de Clippy Editor met een Lit React wrapper</p>
+        <p>Dit is een voorbeeld van Clippy Editor met een Lit React wrapper</p>
       </div>
     </ClippyEditor>
   );
