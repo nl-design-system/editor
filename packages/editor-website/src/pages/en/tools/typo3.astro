@@ -2,7 +2,6 @@
 import Document from '../../../layouts/document.astro';
 import SectionNavigation from '../../../components/SectionNavigation.astro';
 import Section from '../../../components/Section.astro';
-import CodeBlock from '../../../components/CodeBlock.astro';
 import PackageLinks from '../../../components/PackageLinks.astro';
 import typo3Package from '@nl-design-system-community/typo3-ckeditor-plugin/package.json';
 import { useTranslations } from '../../../i18n/translations.ts';
@@ -15,30 +14,71 @@ const t = useTranslations('en');
   <main>
     <h1 class="nl-heading nl-heading--level-1">Clippy Editor for TYPO3</h1>
     <p class="nl-paragraph">
-      Clippy Editor for TYPO3 is an extension that adds Clippy Editor to every rich-text editor, whatever preset it
-      uses, so the accessibility validations are immediately available to editors.
+      Clippy Editor for TYPO3 is an extension that helps editors create accessible content: while writing in the
+      rich-text editor, and on the page itself with Page review. The{' '}
+      <a class="nl-link" href={t('nav.href.integrations')}>
+        integrations
+      </a>{' '}
+      page explains how the two work together.
     </p>
     <PackageLinks pkg={typo3Package} />
 
     <Section>
-      <h2 class="nl-heading nl-heading--level-2">Switching Clippy Editor off</h2>
-      <p class="nl-paragraph">
-        Clippy Editor is on as soon as the extension is installed. To switch it off for the whole installation, clear{' '}
-        <em>Add Clippy Editor to every rich text editor</em> under{' '}
-        <em>Admin Tools → Settings → Extension Configuration → clippy</em>.
-      </p>
-      <p class="nl-paragraph">To leave Clippy Editor out of a single preset, remove its module in that preset:</p>
-      <CodeBlock
-        code={`editor:\n  config:\n    removeImportModules:\n      - '@nl-design-system-community/clippy/clippy.js'`}
-      />
+      <h2 class="nl-heading nl-heading--level-2">What editors get</h2>
+      <ul>
+        <li>
+          Notifications in every rich-text editor while they write, explaining how to fix each problem. This works with
+          every preset, including your own.
+        </li>
+        <li>
+          Page review: a button that lets an editor check the whole page, with overviews of the headings, the links and
+          the language changes on the page.
+        </li>
+      </ul>
     </Section>
 
     <Section>
-      <h2 class="nl-heading nl-heading--level-2">Page review</h2>
+      <h2 class="nl-heading nl-heading--level-2">What you need</h2>
+      <p class="nl-paragraph">TYPO3 12.4, 13.4 or 14.</p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Who sees Page review</h2>
       <p class="nl-paragraph">
-        Backend users who are logged in see a <em>Page review</em> button on frontend pages, which shows the
-        accessibility issues of the whole page. To switch it off, clear <em>Show Page review on frontend pages</em>{' '}
-        under <em>Admin Tools → Settings → Extension Configuration → clippy</em>.
+        Everyone who is logged in to the backend sees a Page review button on frontend pages. Visitors of the website do
+        not see the button, not even when a page comes from the cache.
+      </p>
+      <p class="nl-paragraph">
+        Page review checks the whole main content of the page, not only the text from the rich-text editor. That way the
+        heading overview is right for the whole page. As a result, Page review can also report issues in parts of the
+        theme, such as the page title, that an editor cannot change.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">What you can configure</h2>
+      <p class="nl-paragraph">
+        Clippy Editor is on as soon as the extension is installed. Under{' '}
+        <em>Admin Tools → Settings → Extension Configuration → clippy</em> you set, for the whole installation:
+      </p>
+      <ul>
+        <li>whether Clippy Editor is on in the rich-text editors;</li>
+        <li>whether Page review is on;</li>
+        <li>
+          which part of the page Page review checks (the <code>&lt;main&gt;</code> element by default);
+        </li>
+        <li>which parts of the page Page review leaves out (none by default);</li>
+        <li>whether the markers in the gutter show straight away, or only while Page review is open;</li>
+        <li>which corner of the page the button sits in.</li>
+      </ul>
+      <p class="nl-paragraph">A developer can also switch Clippy Editor off for a specific rich-text editor.</p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Installing</h2>
+      <p class="nl-paragraph">
+        Download the archive from the latest release and install the extension, with or without Composer. The archive
+        contains a manual with every step.
       </p>
     </Section>
   </main>

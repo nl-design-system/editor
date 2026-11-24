@@ -14,28 +14,71 @@ const t = useTranslations('nl');
   <main>
     <h1 class="nl-heading nl-heading--level-1">Clippy Editor voor Drupal</h1>
     <p class="nl-paragraph">
-      Clippy Editor voor Drupal is een module die Clippy Editor toevoegt aan CKEditor 5, zodat de
-      toegankelijkheidsvalidaties direct beschikbaar zijn voor redacteuren.
+      Clippy Editor voor Drupal is een module die redacteuren helpt om toegankelijke content te maken: tijdens het
+      schrijven in CKEditor 5, en op de pagina zelf met Paginacontrole. Lees bij de{' '}
+      <a class="nl-link" href={t('nav.href.integrations')}>
+        integraties
+      </a>{' '}
+      hoe die twee samenwerken.
     </p>
     <PackageLinks pkg={drupalPackage} />
 
     <Section>
-      <h2 class="nl-heading nl-heading--level-2">Wat de module toevoegt</h2>
+      <h2 class="nl-heading nl-heading--level-2">Wat redacteuren krijgen</h2>
       <ul>
-        <li>Toegankelijkheidsmeldingen in de editor.</li>
-        <li>Een knop voor de alt-tekst wizard bij afbeeldingen, in tekstformaten met de afbeeldingsplugin.</li>
+        <li>Meldingen in CKEditor terwijl ze schrijven, met uitleg over hoe ze een probleem oplossen.</li>
+        <li>Een alt-tekst wizard bij afbeeldingen, in tekstformaten waarin afbeeldingen zijn toegestaan.</li>
         <li>
-          Paginacontrole: een knop op pagina's in het frontend-thema die de toegankelijkheidsmeldingen van de hele
-          pagina toont, voor gebruikers met de permissie <em>Use Page review</em>.
+          Paginacontrole: een knop waarmee een redacteur de hele pagina controleert, met overzichten van de koppen, de
+          links en de taalwijzigingen op de pagina.
         </li>
+        <li>Een editor die de lichte of donkere modus van het beheerthema volgt.</li>
       </ul>
     </Section>
 
     <Section>
-      <h2 class="nl-heading nl-heading--level-2">Instellingen</h2>
+      <h2 class="nl-heading nl-heading--level-2">Wat je nodig hebt</h2>
+      <p class="nl-paragraph">Drupal 11.1 of nieuwer, met CKEditor 5.</p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Wie Paginacontrole ziet</h2>
       <p class="nl-paragraph">
-        Ga naar <em>Configuration → Content authoring → Clippy Editor</em>. Daar zet je Clippy Editor in CKEditor en
-        Paginacontrole aan of uit, en kies je welk deel van de pagina Paginacontrole controleert.
+        Alleen gebruikers met de permissie <em>Use Page review</em> zien Paginacontrole, en alleen op pagina's in het
+        thema van de website. Bij de installatie krijgt de rol <em>Content editor</em> die permissie, als die rol
+        bestaat. Bezoekers van de website zien Paginacontrole niet.
+      </p>
+      <p class="nl-paragraph">
+        De knop staat in de beheerbalk die je website al gebruikt. Is er op een pagina geen beheerbalk, dan staat de
+        knop in een hoek van de pagina.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Wat je kunt instellen</h2>
+      <p class="nl-paragraph">
+        Onder <em>Configuration → Content authoring → Clippy Editor</em> stel je in:
+      </p>
+      <ul>
+        <li>of Clippy Editor in CKEditor aan staat;</li>
+        <li>of Paginacontrole aan staat, voor iedereen tegelijk;</li>
+        <li>
+          welk deel van de pagina Paginacontrole controleert (standaard het <code>&lt;main&gt;</code>-element);
+        </li>
+        <li>
+          welke onderdelen Paginacontrole overslaat (standaard de links die Drupal aan blokken toevoegt, zoals{' '}
+          <em>Blok instellen</em>);
+        </li>
+        <li>of de markeringen in de kantlijn meteen zichtbaar zijn, of alleen als Paginacontrole open is;</li>
+        <li>in welke hoek de knop staat op pagina's zonder beheerbalk.</li>
+      </ul>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Installeren</h2>
+      <p class="nl-paragraph">
+        Download het archief bij de nieuwste release, pak het uit in de modules van je website en zet de module aan
+        onder <em>Extend</em>. In het archief staat een handleiding met alle stappen.
       </p>
     </Section>
   </main>

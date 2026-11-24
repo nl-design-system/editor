@@ -14,28 +14,71 @@ const t = useTranslations('en');
   <main>
     <h1 class="nl-heading nl-heading--level-1">Clippy Editor for Drupal</h1>
     <p class="nl-paragraph">
-      Clippy Editor for Drupal is a module that adds Clippy Editor to CKEditor 5, so the accessibility validations are
-      immediately available to editors.
+      Clippy Editor for Drupal is a module that helps editors create accessible content: while writing in CKEditor 5,
+      and on the page itself with Page review. The{' '}
+      <a class="nl-link" href={t('nav.href.integrations')}>
+        integrations
+      </a>{' '}
+      page explains how the two work together.
     </p>
     <PackageLinks pkg={drupalPackage} />
 
     <Section>
-      <h2 class="nl-heading nl-heading--level-2">What the module adds</h2>
+      <h2 class="nl-heading nl-heading--level-2">What editors get</h2>
       <ul>
-        <li>Accessibility feedback in the editor.</li>
-        <li>An alt-text wizard button for images, in text formats with the image plugin.</li>
+        <li>Notifications in CKEditor while they write, explaining how to fix each problem.</li>
+        <li>An alt-text wizard for images, in text formats that allow images.</li>
         <li>
-          <em>Page review</em>: a button on pages in the frontend theme that shows the accessibility issues of the whole
-          page, for users with the <em>Use Page review</em> permission.
+          Page review: a button that lets an editor check the whole page, with overviews of the headings, the links and
+          the language changes on the page.
         </li>
+        <li>An editor that follows the light or dark mode of the admin theme.</li>
       </ul>
     </Section>
 
     <Section>
-      <h2 class="nl-heading nl-heading--level-2">Settings</h2>
+      <h2 class="nl-heading nl-heading--level-2">What you need</h2>
+      <p class="nl-paragraph">Drupal 11.1 or later, with CKEditor 5.</p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Who sees Page review</h2>
       <p class="nl-paragraph">
-        Go to <em>Configuration → Content authoring → Clippy Editor</em> to turn Clippy Editor in CKEditor and{' '}
-        <em>Page review</em> on or off, and to choose which part of the page <em>Page review</em> validates.
+        Only users with the <em>Use Page review</em> permission see Page review, and only on pages in the website's
+        theme. On installation, the <em>Content editor</em> role gets that permission, if the role exists. Visitors of
+        the website do not see Page review.
+      </p>
+      <p class="nl-paragraph">
+        The button sits in the admin bar your website already uses. On a page without an admin bar, the button sits in a
+        corner of the page.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">What you can configure</h2>
+      <p class="nl-paragraph">
+        Under <em>Configuration → Content authoring → Clippy Editor</em> you set:
+      </p>
+      <ul>
+        <li>whether Clippy Editor is on in CKEditor;</li>
+        <li>whether Page review is on, for everyone at once;</li>
+        <li>
+          which part of the page Page review checks (the <code>&lt;main&gt;</code> element by default);
+        </li>
+        <li>
+          which parts Page review leaves out (by default the links Drupal adds to blocks, such as
+          <em>Configure block</em>);
+        </li>
+        <li>whether the markers in the gutter show straight away, or only while Page review is open;</li>
+        <li>which corner the button sits in on pages without an admin bar.</li>
+      </ul>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Installing</h2>
+      <p class="nl-paragraph">
+        Download the archive from the latest release, unpack it into your website's modules and enable the module under{' '}
+        <em>Extend</em>. The archive contains a manual with every step.
       </p>
     </Section>
   </main>
