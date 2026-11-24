@@ -32,7 +32,7 @@ export const getNavigationItems = (locale: Locale, pathname: string): Navigation
           label: t('nav.library.a11y-validator'),
         },
         {
-          href: t('nav.href.library.ckeditor'),
+          href: t('nav.href.integrations'),
           items: [
             { href: t('nav.href.library.ckeditor'), label: 'CKEditor' },
             { href: t('nav.href.library.drupal'), label: 'Drupal' },

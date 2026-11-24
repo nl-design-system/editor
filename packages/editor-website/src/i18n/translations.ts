@@ -25,6 +25,7 @@ const translations = {
     'index.cta.github': 'Clippy Editor on GitHub',
     'index.cta.roadmap': 'Clippy Editor Roadmap',
     'index.title': 'Write accessible content with Clippy Editor - NL Design System',
+    'integrations.title': 'Integrations - Clippy Editor - NL Design System',
     'libraries.title': 'Tools - Clippy Editor - NL Design System',
     'library.a11y-validator.title': 'Accessibility validator - Clippy Editor - NL Design System',
     'library.drupal.title': 'Drupal - Clippy Editor - NL Design System',
@@ -48,6 +49,7 @@ const translations = {
     'nav.href.demo': '/en/demo',
     'nav.href.editor': '/en',
     'nav.href.guidelines': '/en/validations',
+    'nav.href.integrations': '/en/tools/integrations',
     'nav.href.language': '/',
     'nav.href.libraries': '/en/tools',
     'nav.href.library.a11y-validator': '/en/tools/accessibility-validator',
@@ -97,6 +99,7 @@ const translations = {
 
     'index.cta.roadmap': 'Clippy Editor Roadmap',
     'index.title': 'Toegankelijke content schrijven met Clippy Editor - NL Design System',
+    'integrations.title': 'Integraties - Clippy Editor - NL Design System',
     'libraries.title': 'Hulpmiddelen - Clippy Editor - NL Design System',
 
     'library.a11y-validator.title': 'Toegankelijkheidsvalidator - Clippy Editor - NL Design System',
@@ -121,6 +124,7 @@ const translations = {
     'nav.href.demo': '/demo',
     'nav.href.editor': '/',
     'nav.href.guidelines': '/validaties',
+    'nav.href.integrations': '/hulpmiddelen/integraties',
 
     'nav.href.language': '/en',
     'nav.href.libraries': '/hulpmiddelen',
