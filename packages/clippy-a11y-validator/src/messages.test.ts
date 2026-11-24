@@ -136,6 +136,27 @@ describe('resolveMessages with documentation', () => {
     expect(resolved.solutions).toEqual(['<p class="nl-paragraph">Eigen oplossing.</p>']);
   });
 
+  describe('with a solution order', () => {
+    /** "Kop gebruikt voor grotere tekst, maar de tekst is geen kop", which has two solutions. */
+    const TOO_LONG = '586da28e-8e70-4844-a0dd-61eb4ecd7017';
+    const QUOTE = '9b40ed7f-74d9-46df-8e0c-fa87582a05c0';
+
+    it('puts the named documentation solutions first', () => {
+      const resolved = resolveMessages({ nl: {} }, 'nl', 'nl', undefined, TOO_LONG, [QUOTE]);
+
+      expect(resolved.solutions?.[0]).toContain('Gebruik dan een citaatblok.');
+      expect(resolved.solutions?.[1]).toContain('Verander de kop in een gewone alinea.');
+    });
+
+    it('still lets the validation override the solutions', () => {
+      const own: ValidationMessagesByLocale = { nl: { solutions: ['<p class="nl-paragraph">Eigen oplossing.</p>'] } };
+
+      expect(resolveMessages(own, 'nl', 'nl', undefined, TOO_LONG, [QUOTE]).solutions).toEqual([
+        '<p class="nl-paragraph">Eigen oplossing.</p>',
+      ]);
+    });
+  });
+
   /** The title names the rule, not this violation, so the rule is the one that gets to name it. */
   it('keeps the title the rule gives it, whatever the validation writes', () => {
     const resolved = resolveMessages({ nl: { title: 'Eigen titel.' } }, 'nl', 'nl', undefined, ENTIRELY_BOLD);

@@ -25,7 +25,10 @@ describe('paragraphShouldNotBeEntirelyItalic', () => {
         },
       ],
       element: fragment.querySelector('p'),
-      messages: getDocumentationComponentRuleById(paragraphShouldNotBeEntirelyItalic.documentationId),
+      messages: getDocumentationComponentRuleById(
+        paragraphShouldNotBeEntirelyItalic.documentationId,
+        paragraphShouldNotBeEntirelyItalic.corrections?.flatMap(({ solutionId }) => solutionId ?? []),
+      ),
       rule: 'PARAGRAPH_SHOULD_NOT_BE_ENTIRELY_ITALIC',
       scope: 'element',
       severity: 'warning',

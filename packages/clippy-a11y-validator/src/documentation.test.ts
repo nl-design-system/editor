@@ -20,4 +20,23 @@ describe('getDocumentationComponentRuleById', () => {
       '<p class="nl-paragraph">Voeg een duidelijke koptekst toe.</p>',
     ]);
   });
+
+  describe('with a solution order', () => {
+    // Heading: Kop gebruikt voor grotere tekst, maar de tekst is geen kop
+    const id = '586da28e-8e70-4844-a0dd-61eb4ecd7017';
+    const paragraph = '<p class="nl-paragraph">Verander de kop in een gewone alinea.</p>';
+    const quote =
+      '<p class="nl-paragraph">Wil je een tekst uitlichten omdat het een citaat is? Gebruik dan een citaatblok.</p>';
+
+    it('puts the named solutions first, in the given order', () => {
+      expect(getDocumentationComponentRuleById(id, ['9b40ed7f-74d9-46df-8e0c-fa87582a05c0'])?.solutions).toEqual([
+        quote,
+        paragraph,
+      ]);
+    });
+
+    it('ignores ids the rule does not have', () => {
+      expect(getDocumentationComponentRuleById(id, ['unknown'])?.solutions).toEqual([paragraph, quote]);
+    });
+  });
 });

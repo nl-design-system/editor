@@ -310,6 +310,23 @@ describe('Validator', () => {
     expect(violation?.messages.solutions?.join('')).toContain('Verwijder de lege alinea.');
   });
 
+  it('orders the documentation solutions after the corrections that name them', () => {
+    const quoted: Validation = {
+      condition: () => false,
+      corrections: [{ execute: () => () => {}, solutionId: '9b40ed7f-74d9-46df-8e0c-fa87582a05c0' }],
+      documentationId: '586da28e-8e70-4844-a0dd-61eb4ecd7017',
+      messages: { nl: {} },
+      rule: 'QUOTED',
+      scope: 'element',
+      selector: 'p',
+      severity: 'info',
+    };
+
+    const [violation] = new Validator({ validations: [quoted] }).validate([fragment]);
+
+    expect(violation?.messages.solutions?.[0]).toContain('Gebruik dan een citaatblok.');
+  });
+
   /** As with `corrections`, hosts branch on the key being there at all. */
   it('reports no explanation at all when the validation names no documentation', () => {
     const spy: Validation = {
