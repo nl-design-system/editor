@@ -2,7 +2,6 @@
 import Document from '../../layouts/document.astro';
 import SectionNavigation from '../../components/SectionNavigation.astro';
 import Section from '../../components/Section.astro';
-import CodeBlock from '../../components/CodeBlock.astro';
 import PackageLinks from '../../components/PackageLinks.astro';
 import typo3Package from '@nl-design-system-community/typo3-ckeditor-plugin/package.json';
 import { useTranslations } from '../../i18n/translations.ts';
@@ -15,31 +14,71 @@ const t = useTranslations('nl');
   <main>
     <h1 class="nl-heading nl-heading--level-1">Clippy Editor voor TYPO3</h1>
     <p class="nl-paragraph">
-      Clippy Editor voor TYPO3 is een extensie die Clippy Editor toevoegt aan elke rich-text editor, welke preset die
-      ook gebruikt, zodat de toegankelijkheidsvalidaties direct beschikbaar zijn voor redacteuren.
+      Clippy Editor voor TYPO3 is een extensie die redacteuren helpt om toegankelijke content te maken: tijdens het
+      schrijven in de rich-text editor, en op de pagina zelf met Paginacontrole. Lees bij de{' '}
+      <a class="nl-link" href={t('nav.href.integrations')}>
+        integraties
+      </a>{' '}
+      hoe die twee samenwerken.
     </p>
     <PackageLinks pkg={typo3Package} />
 
     <Section>
-      <h2 class="nl-heading nl-heading--level-2">Clippy Editor uitzetten</h2>
-      <p class="nl-paragraph">
-        Clippy Editor staat aan zodra de extensie is geïnstalleerd. Zet Clippy Editor voor de hele installatie uit met{' '}
-        <em>Add Clippy Editor to every rich text editor</em> onder{' '}
-        <em>Admin Tools → Settings → Extension Configuration → clippy</em>.
-      </p>
-      <p class="nl-paragraph">Laat Clippy Editor weg uit één preset door de module in die preset te verwijderen:</p>
-      <CodeBlock
-        code={`editor:\n  config:\n    removeImportModules:\n      - '@nl-design-system-community/clippy/clippy.js'`}
-      />
+      <h2 class="nl-heading nl-heading--level-2">Wat redacteuren krijgen</h2>
+      <ul>
+        <li>
+          Meldingen in elke rich-text editor terwijl ze schrijven, met uitleg over hoe ze een probleem oplossen. Dat
+          werkt met elke preset, ook met je eigen presets.
+        </li>
+        <li>
+          Paginacontrole: een knop waarmee een redacteur de hele pagina controleert, met overzichten van de koppen, de
+          links en de taalwijzigingen op de pagina.
+        </li>
+      </ul>
     </Section>
 
     <Section>
-      <h2 class="nl-heading nl-heading--level-2">Paginacontrole</h2>
+      <h2 class="nl-heading nl-heading--level-2">Wat je nodig hebt</h2>
+      <p class="nl-paragraph">TYPO3 12.4, 13.4 of 14.</p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Wie Paginacontrole ziet</h2>
       <p class="nl-paragraph">
-        Ben je ingelogd in de backend, dan zie je op pagina's in de frontend een knop voor Paginacontrole. Die toont de
-        toegankelijkheidsmeldingen van de hele pagina. Zet Paginacontrole uit met{' '}
-        <em>Show Page review on frontend pages</em> onder{' '}
-        <em>Admin Tools → Settings → Extension Configuration → clippy</em>.
+        Iedereen die in de backend is ingelogd, ziet op pagina's in de frontend een knop voor Paginacontrole. Bezoekers
+        van de website zien de knop niet, ook niet als een pagina uit de cache komt.
+      </p>
+      <p class="nl-paragraph">
+        Paginacontrole controleert de hele hoofdinhoud van de pagina, niet alleen de tekst uit de rich-text editor. Zo
+        klopt het overzicht van de koppen voor de hele pagina. Daardoor kan Paginacontrole ook meldingen geven over
+        onderdelen van het thema, zoals de paginatitel, die een redacteur niet zelf kan aanpassen.
+      </p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Wat je kunt instellen</h2>
+      <p class="nl-paragraph">
+        Clippy Editor staat aan zodra de extensie is geïnstalleerd. Onder{' '}
+        <em>Admin Tools → Settings → Extension Configuration → clippy</em> stel je voor de hele installatie in:
+      </p>
+      <ul>
+        <li>of Clippy Editor in de rich-text editors aan staat;</li>
+        <li>of Paginacontrole aan staat;</li>
+        <li>
+          welk deel van de pagina Paginacontrole controleert (standaard het <code>&lt;main&gt;</code>-element);
+        </li>
+        <li>welke onderdelen van de pagina Paginacontrole overslaat (standaard geen);</li>
+        <li>of de markeringen in de kantlijn meteen zichtbaar zijn, of alleen als Paginacontrole open is;</li>
+        <li>in welke hoek van de pagina de knop staat.</li>
+      </ul>
+      <p class="nl-paragraph">Een ontwikkelaar kan Clippy Editor ook voor een specifieke rich-text editor uitzetten.</p>
+    </Section>
+
+    <Section>
+      <h2 class="nl-heading nl-heading--level-2">Installeren</h2>
+      <p class="nl-paragraph">
+        Download het archief bij de nieuwste release en installeer de extensie, met of zonder Composer. In het archief
+        staat een handleiding met alle stappen.
       </p>
     </Section>
   </main>
