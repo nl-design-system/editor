@@ -10,6 +10,7 @@ export const descriptionShouldNotBeEmpty = defineValidation({
     {
       execute: (description) => () => description.remove(),
       label: { en: 'Remove empty description', nl: 'Lege beschrijving verwijderen' },
+      solutionId: 'd6dd1429-6250-449b-8c14-f85729278d43',
     },
   ],
   documentationId: 'd43d4831-2d06-460a-980d-d52f4b18e3b6',

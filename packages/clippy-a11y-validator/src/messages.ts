@@ -13,9 +13,10 @@ export const resolveMessages = (
   fallbackLocale: Locale,
   payload?: ViolationPayload,
   documentationId?: string,
+  solutionOrder?: readonly string[],
 ): ResolvedMessages => {
   const { explanation, href, solutions, title } = resolveLocalised(messages, locale, fallbackLocale);
-  const rule = getDocumentationComponentRuleById(documentationId);
+  const rule = getDocumentationComponentRuleById(documentationId, solutionOrder);
 
   return {
     ...rule,

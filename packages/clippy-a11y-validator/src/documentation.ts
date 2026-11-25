@@ -11,12 +11,31 @@ type DocumentationComponentRule = {
   title: string;
 };
 
-const componentRulesMappedById = new Map<string, DocumentationComponentRule>(
+type DocumentationSolution = { html: string; id: string };
+
+const componentRulesMappedById = new Map(
   documentationComponentRules.rules.map(({ id, explanation, solutions, title }) => [
     id,
-    { explanation, solutions: solutions.map(({ html }) => html), title },
+    { explanation, solutions: solutions.map(({ id, html }): DocumentationSolution => ({ id, html })), title },
   ]),
 );
 
-export const getDocumentationComponentRuleById = (id?: string): DocumentationComponentRule | undefined =>
-  id === undefined ? undefined : componentRulesMappedById.get(id);
+/** The solutions `order` names come first, in that order; the rest follow in documentation order. */
+const orderSolutions = (solutions: DocumentationSolution[], order: readonly string[]): DocumentationSolution[] => {
+  const rank = (id: string) => {
+    const index = order.indexOf(id);
+    return index === -1 ? order.length : index;
+  };
+
+  return solutions.toSorted((a, b) => rank(a.id) - rank(b.id));
+};
+
+export const getDocumentationComponentRuleById = (
+  id?: string,
+  solutionOrder: readonly string[] = [],
+): DocumentationComponentRule | undefined => {
+  const rule = id === undefined ? undefined : componentRulesMappedById.get(id);
+  if (!rule) return undefined;
+
+  return { ...rule, solutions: orderSolutions(rule.solutions, solutionOrder).map(({ html }) => html) };
+};

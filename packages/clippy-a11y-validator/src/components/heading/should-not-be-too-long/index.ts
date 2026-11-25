@@ -11,6 +11,7 @@ export const headingShouldNotBeTooLong = defineValidation({
     {
       execute: (heading) => () => changeTagName(heading, 'p'),
       label: { en: 'Convert to paragraph', nl: 'Omzetten naar alinea' },
+      solutionId: '6581c26a-13b9-482d-a433-147f29110227',
     },
   ],
   documentationId: '586da28e-8e70-4844-a0dd-61eb4ecd7017',

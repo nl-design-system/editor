@@ -32,9 +32,10 @@ const validateElement = (
 
     const elementPayload = payload?.(element);
     return {
-      corrections: corrections?.map(({ execute, label }) => ({
+      corrections: corrections?.map(({ execute, label, solutionId }) => ({
         execute: execute(element, documentContext.for(element)),
         ...localisedLabel(label, locales, elementPayload),
+        ...(solutionId === undefined ? {} : { solutionId }),
       })),
       focus: focus?.(element),
       payload: elementPayload,
@@ -47,9 +48,10 @@ const validateElement = (
 
   const documentPayload = payload?.(element, context);
   return {
-    corrections: corrections?.map(({ execute, label }) => ({
+    corrections: corrections?.map(({ execute, label, solutionId }) => ({
       execute: execute(element, context),
       ...localisedLabel(label, locales, documentPayload),
+      ...(solutionId === undefined ? {} : { solutionId }),
     })),
     focus: focus?.(element, context),
     payload: documentPayload,
@@ -72,7 +74,14 @@ const toViolation = (
   return {
     element,
     focus,
-    messages: resolveMessages(messages, locales.locale, locales.fallbackLocale, payload, documentationId),
+    messages: resolveMessages(
+      messages,
+      locales.locale,
+      locales.fallbackLocale,
+      payload,
+      documentationId,
+      validation.corrections?.flatMap(({ solutionId }) => solutionId ?? []),
+    ),
     rule,
     scope,
     severity,

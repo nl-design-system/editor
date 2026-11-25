@@ -1,5 +1,10 @@
+import * as documentationComponentRules from '@nl-design-system-unstable/documentation/dist/component-rules.json' with { type: 'json' };
 import { describe, expect, it } from 'vitest';
 import { coreValidationRules, coreValidations } from './index.ts';
+
+const solutionIdsByRuleId = new Map(
+  documentationComponentRules.rules.map(({ id, solutions }) => [id, solutions.map((solution) => solution.id)]),
+);
 
 describe('the core registry', () => {
   it('implements every declared rule', () => {
@@ -15,5 +20,18 @@ describe('the core registry', () => {
     const mismatched = Object.entries(coreValidations).filter(([key, validation]) => validation.rule !== key);
 
     expect(mismatched).toEqual([]);
+  });
+
+  it('points every correction that names a solution at one of its own rule', () => {
+    const misplaced = Object.values(coreValidations).flatMap(({ corrections, documentationId, rule }) =>
+      documentationId === undefined
+        ? []
+        : (corrections ?? [])
+            .filter(({ solutionId }) => solutionId !== undefined)
+            .filter(({ solutionId }) => !solutionIdsByRuleId.get(documentationId)?.includes(solutionId!))
+            .map(({ solutionId }) => ({ rule, solutionId })),
+    );
+
+    expect(misplaced).toEqual([]);
   });
 });

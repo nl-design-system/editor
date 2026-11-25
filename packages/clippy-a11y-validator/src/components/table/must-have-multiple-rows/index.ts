@@ -20,6 +20,7 @@ export const tableMustHaveMultipleRows = defineValidation({
         (table.querySelector('tbody') ?? table).append(row);
       },
       label: { en: 'Add row', nl: 'Rij toevoegen' },
+      solutionId: '8ff21dad-b9e5-421e-af8f-c4cf5b93cb5c',
     },
   ],
   documentationId: '0b5efab9-89c7-43d5-bd25-d83c061bfa4c',

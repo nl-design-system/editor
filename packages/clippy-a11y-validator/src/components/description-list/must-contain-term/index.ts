@@ -19,6 +19,7 @@ export const descriptionListMustContainTerm = defineValidation({
         if (empty) empty.textContent = '...';
       },
       label: { en: 'Add placeholder term', nl: 'Tijdelijke term toevoegen' },
+      solutionId: '28c47937-b5bd-4993-9f0a-023fc0af52ee',
     },
   ],
   documentationId: '5ee9f34a-f0ae-43cf-a99f-08d69ebae5b6',

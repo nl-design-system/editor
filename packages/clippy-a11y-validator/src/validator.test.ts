@@ -235,6 +235,22 @@ describe('Validator', () => {
     expect(violation?.corrections?.[0]?.label).toBe('Omzetten naar <h2>');
   });
 
+  it('carries the solution id over to the correction', () => {
+    const spy: Validation = {
+      condition: () => false,
+      corrections: [{ execute: () => () => {}, solutionId: 'solution-id' }],
+      messages: { nl: { title: 'x' } },
+      rule: 'SPY',
+      scope: 'element',
+      selector: 'p',
+      severity: 'info',
+    };
+
+    const [violation] = new Validator({ validations: [spy] }).validate([fragment]);
+
+    expect(violation?.corrections?.map(({ solutionId }) => solutionId)).toEqual(['solution-id']);
+  });
+
   it('leaves the label out when the correction does not name one', () => {
     const spy: Validation = {
       condition: () => false,
@@ -292,6 +308,23 @@ describe('Validator', () => {
     expect(violation?.messages.title).toBe('Alinea heeft geen inhoud');
     expect(violation?.messages.explanation).toContain('Er is een alinea zonder inhoud.');
     expect(violation?.messages.solutions?.join('')).toContain('Verwijder de lege alinea.');
+  });
+
+  it('orders the documentation solutions after the corrections that name them', () => {
+    const quoted: Validation = {
+      condition: () => false,
+      corrections: [{ execute: () => () => {}, solutionId: '9b40ed7f-74d9-46df-8e0c-fa87582a05c0' }],
+      documentationId: '586da28e-8e70-4844-a0dd-61eb4ecd7017',
+      messages: { nl: {} },
+      rule: 'QUOTED',
+      scope: 'element',
+      selector: 'p',
+      severity: 'info',
+    };
+
+    const [violation] = new Validator({ validations: [quoted] }).validate([fragment]);
+
+    expect(violation?.messages.solutions?.[0]).toContain('Gebruik dan een citaatblok.');
   });
 
   /** As with `corrections`, hosts branch on the key being there at all. */
