@@ -1,5 +1,6 @@
 import { localized, msg, str } from '@lit/localize';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
+import srOnly from '@nl-design-system-community/clippy-components/lib/sr-only';
 import { html, LitElement, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
@@ -29,7 +30,7 @@ const tag = 'clippy-validation-button';
 @localized()
 @safeCustomElement(tag)
 export class ValidationButton extends LitElement {
-  static override readonly styles = [validationButtonStyles];
+  static override readonly styles = [validationButtonStyles, srOnly];
 
   /** The violations to open, highest severity first. */
   @property({ attribute: false })
@@ -70,14 +71,14 @@ export class ValidationButton extends LitElement {
     return html`<button
       class="clippy-validation-button clippy-validation-button--${severity}"
       type="button"
-      aria-label=${msg(str`Open validation '${title}'`)}
       @click=${this.#open}
       @mouseenter=${this.#highlight}
       @mouseleave=${clearHoverHighlight}
       @focus=${this.#highlight}
       @blur=${clearHoverHighlight}
     >
-      ${unsafeSVG(severityIcon(severity))}
+      <span class="clippy-validation-button__icon" aria-hidden="true">${unsafeSVG(severityIcon(severity))}</span>
+      <span class="sr-only">${msg(str`Open validation '${title}'`)}</span>
     </button>`;
   }
 }
