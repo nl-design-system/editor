@@ -1,6 +1,6 @@
 import type { Editor } from '@tiptap/core';
 import '@nl-design-system-community/clippy-components/clippy-lang-combobox';
-import { localized } from '@lit/localize';
+import { localized, msg } from '@lit/localize';
 import buttonCss from '@nl-design-system-candidate/button-css/button.css?inline';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
 import LanguageIcon from '@tabler/icons/outline/language.svg?raw';
@@ -83,6 +83,8 @@ export class FormatSelect extends LitElement {
     return html`
       <clippy-lang-combobox
         @change=${this.#handleValueChange}
+        hidden-label=${msg('Language')}
+        name="language"
         .options=${languageOptions.map(({ lang }) => lang)}
         value=${this.#getCurrentLanguage() ?? ''}
       >

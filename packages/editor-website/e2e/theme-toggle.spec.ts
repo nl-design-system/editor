@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures/axe.ts';
 
 const DARK_CLASS = 'ma-theme--color-scheme-dark';
 
@@ -17,6 +17,14 @@ test.describe('Dark mode toggle', () => {
 
     await expect(toggle).toHaveAttribute('aria-pressed', 'true');
     await expect(html).toHaveClass(new RegExp(DARK_CLASS));
+  });
+
+  test('has no detectable WCAG 2.2 AA violations in dark mode', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Donkere modus' }).click();
+    await expect(page.locator('html')).toHaveClass(new RegExp(DARK_CLASS));
+
+    await expect(page).not.toHaveAutoDetectableA11yIssues();
   });
 
   test('persists the choice across reloads', async ({ page }) => {

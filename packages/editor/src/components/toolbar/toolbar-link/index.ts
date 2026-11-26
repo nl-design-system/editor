@@ -170,7 +170,6 @@ export class ToolbarLink extends LitElement {
     return html`
       <clippy-button
         @click=${this.#openLinkDialog}
-        aria-controls="clippy-link-dialog"
         .pressed=${this.editor?.isActive('link') ?? false}
         icon-only
         toggle

@@ -1,4 +1,5 @@
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
+import { msg } from '@lit/localize';
 import { Editor } from '@tiptap/core';
 import type { ClippyHubController } from '@/controllers/ClippyHubController';
 import { editorExtensions } from '@/extensions';
@@ -33,6 +34,7 @@ export class TiptapEditorController implements ReactiveController {
       editable: editable(),
       editorProps: {
         attributes: {
+          'aria-label': msg('Editor content'),
           class: 'clippy-content',
         },
       },
