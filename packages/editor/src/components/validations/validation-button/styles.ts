@@ -30,6 +30,10 @@ export default css`
     }
   }
 
+  .clippy-validation-button__icon {
+    display: flex;
+  }
+
   .clippy-validation-button--error {
     color: var(--basis-color-negative-color-default);
   }

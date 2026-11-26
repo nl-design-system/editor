@@ -3,6 +3,7 @@ import numberBadgeStyles from '@nl-design-system-candidate/number-badge-css/numb
 import paragraphStyle from '@nl-design-system-candidate/paragraph-css/paragraph.css?inline';
 import { validationSeverity, type ValidationSeverity } from '@nl-design-system-community/clippy-a11y-validator';
 import { safeCustomElement } from '@nl-design-system-community/clippy-components/lib/decorators';
+import srOnly from '@nl-design-system-community/clippy-components/lib/sr-only';
 import { html, LitElement, nothing, unsafeCSS, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
@@ -93,7 +94,7 @@ const toggleCountByRange = (indicators: PositionedIndicator[]): Map<Range, numbe
 @localized()
 @safeCustomElement(tag)
 export class Gutter extends LitElement {
-  static override readonly styles = [gutterStyles, unsafeCSS(paragraphStyle), unsafeCSS(numberBadgeStyles)];
+  static override readonly styles = [gutterStyles, unsafeCSS(paragraphStyle), unsafeCSS(numberBadgeStyles), srOnly];
 
   /**
    * Display mode for validation interactions.
@@ -281,9 +282,6 @@ export class Gutter extends LitElement {
     return html`<div class="clippy-validations-gutter__toggle-anchor">
       <button
         class="clippy-validations-gutter__toggle clippy-validations-gutter__toggle--${severity}"
-        aria-label=${
-          count > 1 ? msg(str`Open ${count} validations on this line`) : msg(str`Open validation '${title}'`)
-        }
         tabindex=${this.#tabIndexFor(range)}
         @click=${() => this.#handleToggleClick(range)}
         @mouseenter=${() => this.#highlightRange(range, violation)}
@@ -304,6 +302,9 @@ export class Gutter extends LitElement {
             : nothing
         }
         <span class="clippy-validations-gutter__icon" aria-hidden="true">${unsafeSVG(severityIcon(severity))}</span>
+        <span class="sr-only"
+          >${count > 1 ? msg(str`Open ${count} validations on this line`) : msg(str`Open validation '${title}'`)}</span
+        >
       </button>
     </div>`;
   }
