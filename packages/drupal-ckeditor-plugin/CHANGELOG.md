@@ -1,5 +1,13 @@
 # @nl-design-system-community/drupal-ckeditor-plugin
 
+## 0.7.3
+
+### Patch Changes
+
+- Updated dependencies [b065112]
+  - @nl-design-system-community/editor@4.0.2
+  - @nl-design-system-community/ckeditor-plugin@0.5.3
+
 ## 0.7.2
 
 ### Patch Changes

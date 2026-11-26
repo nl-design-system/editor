@@ -1,5 +1,11 @@
 # @nl-design-system-community/editor
 
+## 4.0.2
+
+### Patch Changes
+
+- b065112: Give the editing area and the text style and language selects an accessible name, and drop the link button's aria-controls, which pointed to an id that did not exist.
+
 ## 4.0.1
 
 ### Patch Changes
