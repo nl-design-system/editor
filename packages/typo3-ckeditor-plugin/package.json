@@ -1,6 +1,6 @@
 {
   "name": "@nl-design-system-community/typo3-ckeditor-plugin",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "license": "EUPL-1.2",
   "publishConfig": {
     "access": "public",
